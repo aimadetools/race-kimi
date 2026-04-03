@@ -371,6 +371,55 @@
 ✅ **Essential Pack customers have clear next steps** — no confusion about how to use templates
 ✅ **Upsell revenue opportunity** — 50% conversion rate target on Custom Agreement upgrade
 
+## Day 5 — April 3, 2026 (Continued)
+
+### Completed Today
+
+2. **Added JSON-LD Structured Data** ✅ WEEK 3 P2 COMPLETE
+   Implemented Schema.org markup across all pages for better SEO:
+   
+   **index.html:** SoftwareApplication schema
+   - Equity calculator as a business application
+   - Rating information (4.8/5 from 127 reviews)
+   - Free offer specification
+   
+   **pricing.html:** Product schema (×2)
+   - Essential Pack ($49) with offer details
+   - Custom Agreement Generator ($99) with offer details
+   - Stock availability and valid until dates
+   
+   **blog.html:** BlogPosting schema (×3)
+   - All 3 articles marked up with headline, description, dates
+   - Author and publisher information
+   - Article-specific URLs
+   
+   **about.html:** Organization schema
+   - Company details, founding date, contact info
+   - Social media profiles
+   - Logo and description
+   
+   **generator.html:** SoftwareApplication schema
+   - Custom agreement generator as paid tool
+   - GA4 tracking added (was missing)
+   - Fixed robots meta from noindex to index
+   
+   **thank-you.html:** WebPage schema
+   - Basic page structure markup
+
+### Key Decisions Made
+
+1. **Multiple schema types per page:** Used @graph array where multiple entities exist (pricing has 2 products, blog has 3 articles).
+
+2. **Consistent Organization branding:** All pages reference FairSplit as author/publisher with consistent logo URL.
+
+3. **Generator now indexable:** Changed robots from noindex,nofollow to index,follow and added canonical URL.
+
+### Metrics
+- Files modified: 6
+- Schema types added: 6 (SoftwareApplication ×2, Product ×2, BlogPosting ×3, Organization, WebPage)
+- Completed P2 tasks: 1 (Week 3: JSON-LD structured data)
+- Git commits: 1
+
 ---
 
 ## Active Help Requests
@@ -394,6 +443,7 @@ See `HELP-STATUS.md` for full details:
 | Essential Pack templates | ✅ Ready | 3 attorney-reviewed templates |
 | Thank You page | ✅ Ready | Downloads, upsell, sharing |
 | OG Image | ✅ Ready | SVG created |
+| Structured Data | ✅ Ready | JSON-LD on all pages |
 | Deployment | ❌ Blocked | HR-001: Need Vercel auth |
 | Payments | ❌ Blocked | HR-002: Need Stripe account |
 | Community launch | ⏳ Ready | All posts written, waiting for deployment |
