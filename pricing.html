@@ -111,6 +111,47 @@
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX');
   </script>
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "FairSplit Essential Pack",
+        "description": "3 attorney-reviewed agreement templates for co-founders: Co-Founder Agreement, Vesting Agreement, and IP Assignment Agreement",
+        "brand": {
+          "@type": "Brand",
+          "name": "FairSplit"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "49.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2026-12-31"
+        }
+      },
+      {
+        "@type": "Product",
+        "name": "FairSplit Custom Agreement Generator",
+        "description": "Dynamic co-founder agreement generator personalized to your equity split, vesting terms, and company details",
+        "brand": {
+          "@type": "Brand",
+          "name": "FairSplit"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "99.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2026-12-31"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <nav class="nav">
