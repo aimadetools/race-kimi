@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — FairSplit</title>
+  <meta name="description" content="Articles on co-founder equity, vesting schedules, startup agreements, and how to split ownership fairly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,12,16,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 700; font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; color: var(--text-muted); }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      border: 1px solid transparent; cursor: pointer; transition: transform .08s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+
+    header { padding: 64px 0 18px; }
+    header h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 0 0 10px; }
+    header p { color: var(--text-muted); font-size: 1.1rem; max-width: 680px; margin: 0; }
+
+    section { padding: 30px 0; }
+    .posts { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 760px) { .posts { grid-template-columns: 1fr 1fr; } }
+    .post {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .post .date { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .post h2 { font-size: 1.15rem; margin: 0 0 8px; }
+    .post p { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 14px; flex: 1; }
+    .post a { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+
+    .article { max-width: 780px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .article h2 { font-size: 1.4rem; margin-top: 0; }
+    .article h3 { font-size: 1.1rem; margin: 22px 0 8px; }
+    .article p { color: var(--text-muted); margin: 0 0 12px; }
+    .article ul { color: var(--text-muted); padding-left: 20px; margin: 0 0 12px; }
+    .article li { margin-bottom: 6px; }
+
+    footer { padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 24px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <a class="btn btn-primary" href="index.html#calculator">Try Calculator</a>
+    </div>
+  </nav>
+
+  <header>
+    <div class="container">
+      <h1>FairSplit Blog</h1>
+      <p>Practical guides on equity splits, co-founder agreements, vesting schedules, and startup legal basics.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="container posts">
+      <div class="post">
+        <div class="date">April 3, 2026</div>
+        <h2>The Only Fair Way to Split Equity With a Co-Founder</h2>
+        <p>Why 50/50 is usually wrong, and how to use a contribution-based model to keep both founders happy and motivated.</p>
+        <a href="#post-1">Read article →</a>
+      </div>
+      <div class="post">
+        <div class="date">April 3, 2026</div>
+        <h2>Vesting Schedules Explained for First-Time Founders</h2>
+        <p>What is a 4-year vest with a 1-year cliff? Why does it matter? And how do you write it into your agreement?</p>
+        <a href="#post-2">Read article →</a>
+      </div>
+      <div class="post">
+        <div class="date">April 3, 2026</div>
+        <h2>IP Assignment: Why Every Co-Founder Needs One</h2>
+        <p>If your startup doesn't own the code and ideas your team creates, you don't really have a company. Here's how to fix that.</p>
+        <a href="#post-3">Read article →</a>
+      </div>
+      <div class="post">
+        <div class="date">Coming soon</div>
+        <h2>How to Have the Equity Conversation Without Ruining the Friendship</h2>
+        <p>A step-by-step script for talking about money, ownership, and expectations with your co-founder.</p>
+        <a href="#">Coming soon</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="post-1">
+    <div class="container">
+      <article class="article">
+        <h2>The Only Fair Way to Split Equity With a Co-Founder</h2>
+        <p>The most common mistake new founders make is splitting equity 50/50. It feels safe. It feels friendly. But it ignores reality.</p>
+        <p>What if one founder quits their job to work full-time while the other keeps a day job? What if one founder invests $20,000 while the other invests $0? What if one brings years of industry experience and a network, while the other is learning on the job?</p>
+        <p>A 50/50 split pretends these differences don't exist. Over time, resentment builds. The founder doing more work starts to feel cheated. Conversations get awkward. In the worst cases, the partnership collapses and the startup dies.</p>
+
+        <h3>The contribution-based alternative</h3>
+        <p>A better approach is to split equity based on what each founder actually contributes. At FairSplit, we use a simple weighted model:</p>
+        <ul>
+          <li><strong>Time:</strong> Count the hours each founder works and multiply by a fair market hourly rate. Adjust for experience level.</li>
+          <li><strong>Cash:</strong> Value cash contributions at a higher multiplier (usually 4x) because cash is more scarce and risky than time.</li>
+          <li><strong>IP and prior work:</strong> If a founder built the prototype, filed patents, or brought valuable code, assign a fair market value to that contribution.</li>
+        </ul>
+        <p>Add up each founder's weighted contributions, then divide by the total. That's your fair split.</p>
+
+        <h3>Why this works</h3>
+        <p>This method isn't perfect, but it has one huge advantage: it's transparent. Both founders can see exactly how the numbers are calculated. It turns a subjective, emotional conversation into an objective, rational one.</p>
+        <p>And if circumstances change later? That's what vesting is for. (We'll cover vesting in the next post.)</p>
+        <p><a href="index.html#calculator" style="color:var(--accent);">Try the free FairSplit calculator →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="post-2">
+    <div class="container">
+      <article class="article">
+        <h2>Vesting Schedules Explained for First-Time Founders</h2>
+        <p>You and your co-founder agree on a fair equity split. Great. Now what happens if one of you leaves after three months?</p>
+        <p>Without vesting, the departing founder keeps their full ownership forever—even if they stopped contributing. That's unfair to the founder who stays and does the hard work of building the company.</p>
+
+        <h3>What is vesting?</h3>
+        <p>Vesting means you earn your equity over time instead of getting it all upfront. The standard startup vesting schedule is:</p>
+        <ul>
+          <li><strong>4-year vesting:</strong> You earn your full equity over four years.</li>
+          <li><strong>1-year cliff:</strong> If you leave before the first year, you get nothing.</li>
+          <li><strong>Monthly vesting after the cliff:</strong> After year one, you earn 1/48 of your equity each month.</li>
+        </ul>
+
+        <h3>Why the cliff matters</h3>
+        <p>The one-year cliff protects the company from a founder who joins, does almost nothing, and leaves with a chunk of ownership. It also gives both founders a full year to prove the partnership works.</p>
+
+        <h3>Single-trigger vs. double-trigger acceleration</h3>
+        <p>Some agreements include "acceleration" clauses that speed up vesting if the company is acquired. Single-trigger acceleration means vesting accelerates on any acquisition. Double-trigger means it only accelerates if you're fired or demoted after the acquisition.</p>
+        <p>Most investors prefer double-trigger because it keeps founders motivated to stay after an acquisition.</p>
+
+        <h3>How to add vesting to your agreement</h3>
+        <p>Our Essential Pack includes a vesting agreement template with standard 4-year / 1-year cliff language. You can customize it to fit your situation. <a href="pricing.html" style="color:var(--accent);">Get the templates →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="post-3">
+    <div class="container">
+      <article class="article">
+        <h2>IP Assignment: Why Every Co-Founder Needs One</h2>
+        <p>Here's a nightmare scenario: two founders build a SaaS together. One writes all the code. The other designs the product and markets it. They never sign an IP assignment agreement.</p>
+        <p>A year later, the technical founder leaves—and takes the code with them. Or worse, a competitor claims the departing founder is infringing their rights by working on the product.</p>
+        <p>Without a clear IP assignment, the company might not legally own the very thing it's trying to sell.</p>
+
+        <h3>What does an IP assignment do?</h3>
+        <p>An IP assignment agreement is a contract where founders agree that any intellectual property they create for the company belongs to the company. This includes:</p>
+        <ul>
+          <li>Code and software</li>
+          <li>Designs and branding</li>
+          <li>Product ideas and business plans</li>
+          <li>Patents and trademarks</li>
+        </ul>
+
+        <h3>When should you sign it?</h3>
+        <p>Before you start working together. If you've already been working for a while, sign it retroactively as soon as possible. The longer you wait, the riskier it gets.</p>
+
+        <h3>Do you really need a lawyer?</h3>
+        <p>For most early-stage startups, a standard IP assignment template is enough to get started. Our template is attorney-reviewed and covers the essential language you need. As you raise funding or expand internationally, you'll want a lawyer to customize it. But don't let the absence of a $500/hour attorney stop you from protecting your company today.</p>
+        <p><a href="pricing.html" style="color:var(--accent);">Get the IP assignment template →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 FairSplit. Built for founders, by founders.</div>
+      <div style="display:flex;gap:18px;">
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

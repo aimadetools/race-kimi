@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — FairSplit</title>
+  <meta name="description" content="FairSplit pricing: free equity calculator, $49 Essential Pack, or $99 Custom Agreement. No subscriptions. No hidden fees.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,12,16,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 700; font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; color: var(--text-muted); }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      border: 1px solid transparent; cursor: pointer; transition: transform .08s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+
+    header { padding: 64px 0 18px; text-align: center; }
+    header h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 0 0 10px; }
+    header p { color: var(--text-muted); font-size: 1.1rem; max-width: 640px; margin: 0 auto; }
+
+    section { padding: 30px 0; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 860px) { .pricing-grid { grid-template-columns: 1fr; } }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+    .pricing-card.popular { border-color: rgba(99,102,241,0.5); background: linear-gradient(180deg, rgba(99,102,241,0.08), var(--surface)); }
+    .pricing-card .tier { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px; }
+    .pricing-card .price { font-size: 2rem; font-weight: 700; margin: 0 0 6px; }
+    .pricing-card .price span { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
+    .pricing-card ul { list-style: none; padding: 0; margin: 12px 0 18px; flex: 1; }
+    .pricing-card li { padding: 6px 0; font-size: 0.95rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px; }
+    .pricing-card li::before { content: "✓"; color: var(--success); font-weight: 700; }
+
+    .faq { max-width: 820px; margin: 0 auto; }
+    .faq h2 { font-size: 1.4rem; margin: 0 0 16px; }
+    .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
+    .faq-item h3 { font-size: 1rem; margin: 0 0 6px; }
+    .faq-item p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
+
+    .guarantee { text-align: center; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 8px; }
+    .guarantee p { color: var(--text-muted); margin: 0; }
+
+    footer { padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 24px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <a class="btn btn-primary" href="index.html#calculator">Try Calculator</a>
+    </div>
+  </nav>
+
+  <header>
+    <div class="container">
+      <h1>Simple, one-time pricing</h1>
+      <p>No subscriptions. No hidden fees. Buy what you need, when you need it. If you're not happy, we'll refund you within 7 days.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="tier">Free</div>
+          <div class="price">$0</div>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin:0 0 10px;">Perfect for exploring and having the equity conversation.</p>
+          <ul>
+            <li>Full interactive equity calculator</li>
+            <li>Basic framework guide</li>
+            <li>Email tips on co-founder negotiations</li>
+            <li>Community support</li>
+          </ul>
+          <a class="btn btn-ghost" href="index.html#calculator" style="width:100%;">Use calculator</a>
+        </div>
+        <div class="pricing-card popular">
+          <div class="tier">Essential Pack</div>
+          <div class="price">$49 <span>one-time</span></div>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin:0 0 10px;">The fastest way to make your split official.</p>
+          <ul>
+            <li>Standard co-founder agreement</li>
+            <li>Vesting agreement template</li>
+            <li>IP assignment template</li>
+            <li>Google Docs + Word formats</li>
+            <li>Attorney-reviewed language</li>
+          </ul>
+          <a class="btn btn-primary" href="https://buy.stripe.com/example-essential" style="width:100%;">Buy Essential Pack</a>
+        </div>
+        <div class="pricing-card">
+          <div class="tier">Custom Agreement</div>
+          <div class="price">$99 <span>one-time</span></div>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin:0 0 10px;">A personalized agreement based on your inputs.</p>
+          <ul>
+            <li>Everything in Essential</li>
+            <li>Dynamic agreement generator</li>
+            <li>Customized to your calculator inputs</li>
+            <li>Ready to sign in minutes</li>
+            <li>Download as Word or PDF</li>
+          </ul>
+          <a class="btn btn-ghost" href="https://buy.stripe.com/example-custom" style="width:100%;">Buy Custom Agreement</a>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <p>💡 <strong>7-day money-back guarantee.</strong> If the templates don't work for your situation, email us and we'll refund you—no questions asked.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-item">
+        <h3>Are these documents legally binding?</h3>
+        <p>Our templates are attorney-reviewed and designed for standard US startup structures. They are a strong starting point, but we always recommend having a local attorney review the final document for your specific state and situation.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What's the difference between Essential and Custom?</h3>
+        <p>The Essential Pack gives you three high-quality templates you fill in manually. The Custom Agreement uses your calculator inputs to generate a personalized document with names, percentages, and clauses pre-filled.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Do I need a subscription?</h3>
+        <p>Nope. FairSplit is built around one-time purchases. You buy the pack or generator once and it's yours forever. No recurring charges, no cancellation hassle.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I use this outside the US?</h3>
+        <p>The templates are drafted with US law in mind. If you're outside the US, they're still a useful framework, but you should have a local lawyer adapt the language to your jurisdiction.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What if I have more than two co-founders?</h3>
+        <p>The calculator supports any number of founders. The Custom Agreement currently supports up to four co-founders. If you have a larger team, contact us and we'll help.</p>
+      </div>
+      <div class="faq-item">
+        <h3>How do I get my files after purchase?</h3>
+        <p>Immediately after payment, you'll receive a secure download link via email. The link stays active for 30 days, and you can download the files as many times as you need.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 FairSplit. Built for founders, by founders.</div>
+      <div style="display:flex;gap:18px;">
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
