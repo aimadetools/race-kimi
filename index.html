@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FairSplit — Split Equity Fairly. No Lawyers. No Fights.</title>
   <meta name="description" content="Free founder equity calculator. Split startup equity fairly based on time, money, skills, and IP. Generate co-founder agreements instantly.">
+  <meta name="keywords" content="co-founder equity split, founder equity calculator, startup equity, co-founder agreement, vesting schedule, IP assignment">
+  <meta name="author" content="FairSplit">
+  <meta property="og:title" content="FairSplit — Split Equity Fairly. No Lawyers. No Fights.">
+  <meta property="og:description" content="Free interactive calculator for co-founders. Split equity based on time, cash, skills, and IP. Generate agreements instantly.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fairsplit.co">
+  <meta property="og:image" content="https://fairsplit.co/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FairSplit — Split Equity Fairly">
+  <meta name="twitter:description" content="Free founder equity calculator. No lawyers, no 50/50 guessing.">
+  <meta name="twitter:image" content="https://fairsplit.co/og-image.png">
+  <link rel="canonical" href="https://fairsplit.co">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -142,6 +154,14 @@
     /* Utilities */
     .text-gradient { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
   <nav class="nav">
@@ -193,6 +213,16 @@
           <div style="margin-top:12px;">
             <a class="btn btn-primary" href="pricing.html" style="width:100%;">Lock it in with an agreement →</a>
           </div>
+        </div>
+
+        <div class="card" id="emailCapture" style="margin-top:16px; display:none;">
+          <h4 style="margin:0 0 8px;">📧 Get the equity negotiation guide</h4>
+          <p style="font-size:0.9rem; color:var(--text-muted); margin:0 0 12px;">Enter your email to receive our free guide: "How to Have the Equity Conversation Without Ruining the Friendship"</p>
+          <form id="emailForm" style="display:flex; gap:8px; flex-wrap:wrap;">
+            <input type="email" id="emailInput" placeholder="you@example.com" required style="flex:1; min-width:200px; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px; font-size:0.95rem;">
+            <button type="submit" class="btn btn-primary">Get free guide</button>
+          </form>
+          <div id="emailSuccess" style="display:none; margin-top:10px; color:var(--success); font-size:0.9rem;">✓ Thanks! Check your inbox soon.</div>
         </div>
       </div>
     </div>
@@ -388,6 +418,38 @@
 
       results.style.display = 'block';
       results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
+      // Show email capture after calculation
+      document.getElementById('emailCapture').style.display = 'block';
+      
+      // Track calculator use in GA
+      gtag && gtag('event', 'calculator_used', {
+        'event_category': 'engagement',
+        'event_label': 'founder_count',
+        'value': blocks.length
+      });
+    });
+
+    // Email capture form handling
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      if (email) {
+        // For now, just show success (in production, this would POST to a backend or Google Sheet)
+        document.getElementById('emailForm').style.display = 'none';
+        document.getElementById('emailSuccess').style.display = 'block';
+        
+        // Track email capture in GA
+        gtag && gtag('event', 'email_captured', {
+          'event_category': 'lead',
+          'event_label': 'calculator_results'
+        });
+        
+        // Store in localStorage for now (until backend is set up)
+        const emails = JSON.parse(localStorage.getItem('fairsplit_emails') || '[]');
+        emails.push({ email: email, date: new Date().toISOString() });
+        localStorage.setItem('fairsplit_emails', JSON.stringify(emails));
+      }
     });
 
     // Seed with 2 founders

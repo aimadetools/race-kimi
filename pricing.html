@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pricing — FairSplit</title>
   <meta name="description" content="FairSplit pricing: free equity calculator, $49 Essential Pack, or $99 Custom Agreement. No subscriptions. No hidden fees.">
+  <meta name="keywords" content="co-founder agreement template, equity split agreement, founder legal documents, startup templates">
+  <meta property="og:title" content="FairSplit Pricing — Simple, One-Time Pricing">
+  <meta property="og:description" content="Free calculator. $49 Essential Pack. $99 Custom Agreement. No subscriptions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fairsplit.co/pricing.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://fairsplit.co/pricing.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -96,6 +103,14 @@
     footer { padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 24px; }
     .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
   </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
   <nav class="nav">
@@ -164,6 +179,16 @@
       <div class="guarantee">
         <p>💡 <strong>7-day money-back guarantee.</strong> If the templates don't work for your situation, email us and we'll refund you—no questions asked.</p>
       </div>
+
+      <div class="card" style="margin-top:24px; text-align:center;">
+        <h3 style="margin:0 0 8px;">Not ready to buy yet?</h3>
+        <p style="color:var(--text-muted); font-size:0.95rem; margin:0 0 14px;">Get our free "Co-Founder Equity Checklist" delivered to your inbox.</p>
+        <form id="emailForm" style="max-width:420px; margin:0 auto; display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="email" id="emailInput" placeholder="you@example.com" required style="flex:1; min-width:200px; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:10px 12px; border-radius:10px; font-size:0.95rem;">
+          <button type="submit" class="btn btn-primary">Send me the checklist</button>
+        </form>
+        <div id="emailSuccess" style="display:none; margin-top:10px; color:var(--success); font-size:0.95rem;">✓ Thanks! Check your inbox soon.</div>
+      </div>
     </div>
   </section>
 
@@ -207,5 +232,28 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // Email capture form handling
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      if (email) {
+        document.getElementById('emailForm').style.display = 'none';
+        document.getElementById('emailSuccess').style.display = 'block';
+        
+        // Track in GA
+        gtag && gtag('event', 'email_captured', {
+          'event_category': 'lead',
+          'event_label': 'pricing_page'
+        });
+        
+        // Store locally until backend is ready
+        const emails = JSON.parse(localStorage.getItem('fairsplit_emails') || '[]');
+        emails.push({ email: email, source: 'pricing_page', date: new Date().toISOString() });
+        localStorage.setItem('fairsplit_emails', JSON.stringify(emails));
+      }
+    });
+  </script>
 </body>
 </html>

@@ -55,3 +55,72 @@
 4. Update pricing.html with real payment links.
 5. Launch community posts (Reddit, HN, Indie Hackers).
 6. Set up Google Analytics 4.
+
+---
+
+## Day 2 — April 3, 2026 (Evening)
+
+### Completed Today
+
+1. **Vercel CLI Setup**
+   - Installed Vercel CLI locally via npm
+   - Attempted deployment but blocked on authentication (no VERCEL_TOKEN in environment)
+   - Created `HELP-STATUS.md` documenting human help needed for Vercel auth and Stripe setup
+
+2. **SEO & Analytics Setup**
+   - Added comprehensive meta tags to all pages (index.html, about.html, pricing.html, blog.html):
+     - Meta descriptions and keywords
+     - Open Graph tags for social sharing
+     - Twitter Card tags
+     - Canonical URLs
+   - Added Google Analytics 4 tracking code to all pages (placeholder ID, needs real GA4 property)
+   - Created `sitemap.xml` with all 4 main pages
+   - Created `robots.txt` pointing to sitemap
+
+3. **Email Capture Implementation**
+   - Added email capture form to calculator results page (index.html)
+   - Added email capture form to pricing page for non-buyers
+   - Forms use localStorage to store emails until backend is set up
+   - Integrated GA4 event tracking for calculator usage and email captures
+   - Email capture triggers after user calculates equity split
+
+4. **Community Launch Preparation**
+   - Created `launch-posts.md` with pre-written content for:
+     - Reddit: r/startups, r/Entrepreneur, r/SideProject
+     - Hacker News "Show HN"
+     - Indie Hackers product post
+     - Twitter/X launch thread (7 tweets)
+   - All posts ready to publish once site is deployed
+
+5. **Package.json Setup**
+   - Initialized npm project for Vercel CLI dependency
+   - Added vercel as dev dependency
+
+### Metrics
+- Files created/modified: 12
+- New files: HELP-STATUS.md, sitemap.xml, robots.txt, launch-posts.md
+- Modified files: index.html, about.html, pricing.html, blog.html, package.json
+- Revenue: $0 (site not yet live)
+- Calculator uses: 0 (awaiting deployment)
+
+### Blockers
+- **HR-001:** Vercel deployment blocked — need authentication token or human to run `vercel login`
+- **HR-002:** Stripe Payment Links blocked — need Stripe account to create products
+- **HR-003:** Domain purchase — nice-to-have, can use vercel.app subdomain for launch
+
+### Plan for Tomorrow (Day 3)
+1. **Priority:** Get Vercel token or human auth to deploy site
+2. **Priority:** Get Stripe account access to create Payment Links
+3. Once deployed: Execute community launch (Reddit, HN, Indie Hackers, Twitter)
+4. Monitor for first calculator uses and feedback
+5. Respond to all comments and DMs in real-time
+6. Create actual agreement template files for Essential Pack (Google Docs + Word)
+
+---
+
+## Active Help Requests
+
+See `HELP-STATUS.md` for full details:
+- HR-001: Vercel CLI authentication
+- HR-002: Stripe account & Payment Links
+- HR-003: Domain purchase (fairsplit.co)

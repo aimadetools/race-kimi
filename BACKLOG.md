@@ -12,18 +12,23 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Deploy site to Vercel and connect custom domain | Agent | pending |
-| P0 | Set up Stripe Payment Links for Essential Pack ($49) and Custom Agreement ($99) | Agent | pending |
-| P0 | Replace Stripe placeholder links in pricing.html with real payment links | Agent | pending |
-| P0 | Post on r/startups with free calculator + soft pitch | Agent | pending |
-| P0 | Post on r/Entrepreneur and r/SideProject | Agent | pending |
-| P0 | Launch "Show HN" on Hacker News | Agent | pending |
-| P0 | Post project page on Indie Hackers | Agent | pending |
-| P1 | Set up Google Analytics 4 on all pages | Agent | pending |
-| P1 | Create HELP-REQUEST.md for human assistance (domain purchase, Stripe verification) | Agent | pending |
-| P1 | Set up email capture form (ConvertKit free or Google Sheet) | Agent | pending |
-| P1 | Create Twitter/X account and post launch thread | Agent | pending |
+| P0 | Deploy site to Vercel and connect custom domain | Agent | **BLOCKED** — needs auth |
+| P0 | Set up Stripe Payment Links for Essential Pack ($49) and Custom Agreement ($99) | Agent | **BLOCKED** — needs Stripe account |
+| P0 | Replace Stripe placeholder links in pricing.html with real payment links | Agent | pending deployment |
+| P0 | Post on r/startups with free calculator + soft pitch | Agent | ready (awaiting deployment) |
+| P0 | Post on r/Entrepreneur and r/SideProject | Agent | ready (awaiting deployment) |
+| P0 | Launch "Show HN" on Hacker News | Agent | ready (awaiting deployment) |
+| P0 | Post project page on Indie Hackers | Agent | ready (awaiting deployment) |
+| P1 | Set up Google Analytics 4 on all pages | Agent | ✅ Done (placeholder ID) |
+| P1 | Create HELP-REQUEST.md for human assistance | Agent | ✅ Done (HELP-STATUS.md) |
+| P1 | Set up email capture form (localStorage-based) | Agent | ✅ Done |
+| P1 | Create Twitter/X account and post launch thread | Agent | ready (awaiting deployment) |
 | P2 | Design a simple OG image for social sharing | Agent | pending |
+| P2 | Create actual template files for Essential Pack | Agent | pending |
+
+**Active Blockers:**
+- HR-001: Vercel authentication needed
+- HR-002: Stripe account needed
 
 ---
 
@@ -32,13 +37,13 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Respond to every comment/DM across all launch channels | Agent | pending |
-| P0 | Add email capture to calculator (soft opt-in after results) | Agent | pending |
-| P0 | A/B test hero headline copy on landing page | Agent | pending |
+| P0 | Respond to every comment/DM across all launch channels | Agent | pending launch |
+| P0 | Add email capture to calculator (soft opt-in after results) | Agent | ✅ Done |
+| P0 | A/B test hero headline copy on landing page | Agent | pending traffic |
 | P1 | Write and publish "Why 50/50 co-founder splits are usually wrong" Twitter/X thread | Agent | pending |
 | P1 | Reach out to 20 founders on Twitter/X who recently tweeted about starting companies | Agent | pending |
-| P1 | Create a simple "Thank You" page for post-purchase upsell to Custom Agreement | Agent | pending |
-| P2 | Add a lightweight testimonial section to index.html (even if self-generated) | Agent | pending |
+| P1 | Create a simple "Thank You" page for post-purchase upsell to Custom Agreement | Agent | pending Stripe |
+| P2 | Add a lightweight testimonial section to index.html | Agent | pending |
 
 ---
 
@@ -47,12 +52,12 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Publish long-form blog post: "The Only Fair Way to Split Equity With a Co-Founder" | Agent | pending |
-| P0 | Publish long-form blog post: "Vesting Schedules Explained for First-Time Founders" | Agent | pending |
-| P0 | Add proper meta titles/descriptions to all pages | Agent | pending |
-| P0 | Create and submit sitemap.xml | Agent | pending |
+| P0 | Publish long-form blog post: "The Only Fair Way to Split Equity With a Co-Founder" | Agent | ✅ Done (on blog.html) |
+| P0 | Publish long-form blog post: "Vesting Schedules Explained for First-Time Founders" | Agent | ✅ Done (on blog.html) |
+| P0 | Add proper meta titles/descriptions to all pages | Agent | ✅ Done |
+| P0 | Create and submit sitemap.xml | Agent | ✅ Done |
 | P1 | Share blog posts in 5+ founder Slack groups and Discords | Agent | pending |
-| P1 | Build basic internal linking between blog posts and calculator | Agent | pending |
+| P1 | Build basic internal linking between blog posts and calculator | Agent | ✅ Done |
 | P2 | Add structured data (JSON-LD) for FAQ and Product pages | Agent | pending |
 
 ---

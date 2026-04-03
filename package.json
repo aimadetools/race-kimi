@@ -1,0 +1,23 @@
+{
+  "name": "race-kimi",
+  "version": "1.0.0",
+  "description": "> Split equity fairly. No lawyers. No fights.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aimadetools/race-kimi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aimadetools/race-kimi/issues"
+  },
+  "homepage": "https://github.com/aimadetools/race-kimi#readme",
+  "dependencies": {
+    "vercel": "^50.38.3"
+  }
+}
