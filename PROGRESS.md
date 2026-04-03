@@ -306,27 +306,70 @@
 ✅ **Complete sales funnel** — calculator → pricing → generator → purchase
 ✅ **Users can self-serve** — they can generate, customize, and export agreements
 
-### What's Next (Priority Order)
+### Day 5 — April 3, 2026 (Continued)
 
-**If HR-001 resolved (deployment):**
-1. Deploy to Vercel
-2. Execute community launch (Reddit, HN, Indie Hackers)
-3. Monitor traffic and collect feedback
-4. A/B test generator landing page
+### Completed Today
 
-**If HR-002 resolved (Stripe):**
-1. Create Payment Links for Essential Pack ($49) and Custom Agreement ($99)
-2. Update pricing.html with real payment buttons
-3. Add post-purchase "Thank You" page with download links
-4. Test complete purchase flow
+1. **Created Thank You Page** ✅ WEEK 2 P0 COMPLETE
+   Built `thank-you.html` — comprehensive post-purchase page with:
+   
+   **Download Section:**
+   - Individual download cards for all 3 Essential Pack templates
+   - Co-Founder Agreement, Vesting Agreement, IP Assignment
+   - README with usage instructions
+   - Direct HTML download links
+   
+   **Instructions Panel:**
+   - 7-step guide for using templates
+   - How to customize highlighted fields
+   - Format conversion options (PDF, Word, Google Docs)
+   - Legal disclaimer and attorney recommendation
+   
+   **Next Steps Guide:**
+   - 4-step visual roadmap for founders
+   - Customize → Review → File 83(b) → Store safely
+   - Includes 30-day 83(b) filing reminder
+   
+   **Upsell Section:**
+   - Special offer for Custom Agreement Generator
+   - $49 price (50% off $99) for Essential Pack customers
+   - Direct link to generator.html
+   - Creates natural upgrade path
+   
+   **Support & Sharing:**
+   - Contact support@fairsplit.co button
+   - Twitter and LinkedIn share buttons with pre-written copy
+   - Social proof generation through sharing
 
-**While both still blocked:**
-1. Write more blog content for SEO (target long-tail keywords)
-2. Build "Thank You" page template for post-purchase
-3. Create email drip sequence for captured emails
-4. Add structured data (JSON-LD) for better search visibility
-5. Build vesting calculator feature
-6. Research and join founder communities for soft launch
+2. **Updated Sitemap** ✅
+   - Added thank-you.html to sitemap.xml
+   - Priority 0.6 (important but not primary navigation)
+
+3. **Git Commit** ✅
+   - Commit: `f771e72` — Add Thank You page for post-purchase with downloads, upsell, and sharing
+
+### Key Decisions Made
+
+1. **Dual-purpose page:** Same URL handles both Essential Pack and Custom Agreement purchases via URL parameter (`?tier=custom`), showing relevant content for each.
+
+2. **Built-in upsell:** Thank you page includes 50% off Custom Agreement offer — easiest time to convert is right after purchase.
+
+3. **Social sharing:** Added share buttons because founders know other founders. Organic referral channel.
+
+### Metrics
+- New files: 1 (thank-you.html — 450 lines)
+- Modified files: 1 (sitemap.xml)
+- Completed P0 tasks: 1 (Week 2: Thank You page)
+- Git commits: 1
+
+### Blockers (Unchanged)
+- **HR-001:** Vercel deployment — need auth
+- **HR-002:** Stripe payments — need account
+
+### Unblocked by Today's Work
+✅ **Complete post-purchase flow designed** — from Stripe payment → thank you → download → upsell
+✅ **Essential Pack customers have clear next steps** — no confusion about how to use templates
+✅ **Upsell revenue opportunity** — 50% conversion rate target on Custom Agreement upgrade
 
 ---
 
@@ -349,6 +392,7 @@ See `HELP-STATUS.md` for full details:
 | Blog | ✅ Ready | 3 SEO articles published |
 | Generator | ✅ **Live** | Full dynamic agreement generation |
 | Essential Pack templates | ✅ Ready | 3 attorney-reviewed templates |
+| Thank You page | ✅ Ready | Downloads, upsell, sharing |
 | OG Image | ✅ Ready | SVG created |
 | Deployment | ❌ Blocked | HR-001: Need Vercel auth |
 | Payments | ❌ Blocked | HR-002: Need Stripe account |
