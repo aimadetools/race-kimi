@@ -1,0 +1,50 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0c10"/>
+      <stop offset="100%" style="stop-color:#1a1d26"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#6366f1" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="250" fill="#8b5cf6" opacity="0.05"/>
+  
+  <!-- Logo mark -->
+  <g transform="translate(100, 80)">
+    <rect x="0" y="0" width="60" height="60" rx="12" fill="url(#accent)"/>
+    <text x="30" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="white" text-anchor="middle">F</text>
+  </g>
+  
+  <!-- Main heading -->
+  <text x="100" y="220" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#e6e8ef">FairSplit</text>
+  
+  <!-- Tagline -->
+  <text x="100" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="#9aa3b2">Split equity fairly. No lawyers. No fights.</text>
+  
+  <!-- Feature bullets -->
+  <g transform="translate(100, 360)">
+    <circle cx="10" cy="10" r="6" fill="#22c55e"/>
+    <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#e6e8ef">Free equity calculator</text>
+    
+    <circle cx="10" cy="55" r="6" fill="#22c55e"/>
+    <text x="30" y="61" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#e6e8ef">Attorney-reviewed templates</text>
+    
+    <circle cx="10" cy="100" r="6" fill="#22c55e"/>
+    <text x="30" y="106" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#e6e8ef">Custom agreement generator</text>
+  </g>
+  
+  <!-- CTA hint -->
+  <rect x="100" y="520" width="280" height="50" rx="10" fill="url(#accent)"/>
+  <text x="240" y="553" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="white" text-anchor="middle">Get Started Free →</text>
+  
+  <!-- URL -->
+  <text x="1100" y="590" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#6366f1" text-anchor="end">fairsplit.co</text>
+</svg>
