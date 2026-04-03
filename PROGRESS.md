@@ -420,6 +420,63 @@
 - Completed P2 tasks: 1 (Week 3: JSON-LD structured data)
 - Git commits: 1
 
+## Day 5 — April 3, 2026 (Continued)
+
+### Completed Today
+
+3. **Built Vesting Schedule Calculator** ✅ WEEK 6 P0 COMPLETE
+   New comprehensive tool: `vesting-calculator.html`
+   
+   **Input Controls:**
+   - Total shares in equity pool
+   - Founder share allocation
+   - Equity percentage slider (synced with shares)
+   - Vesting start date picker
+   - Vesting period slider (1-6 years)
+   - Cliff period slider (0-24 months)
+   - Acceleration checkbox
+   
+   **Visualizations:**
+   - Summary cards showing key metrics
+   - Progress bar with vesting timeline
+   - Month-by-month schedule table (50+ rows)
+   - Special highlighting for cliff month and 100% vested
+   
+   **Features:**
+   - Real-time calculation on any input change
+   - Badge indicators: "CLIFF" at cliff month, "100%" at completion
+   - Color-coded vested vs unvested amounts
+   - Formatted dates and numbers
+   - Fully responsive design
+   
+   **Educational Content:**
+   - Info section explaining vesting mechanics
+   - Cliff explanation and protection rationale
+   - Monthly vesting details
+   - Acceleration clause explanation
+   
+   **Integration:**
+   - CTA linking to Vesting Agreement generator
+   - Linked from blog vesting article
+   - Linked from index.html features section
+   - Added to sitemap.xml (priority 0.8)
+   - JSON-LD SoftwareApplication schema
+
+### Key Decisions Made
+
+1. **Dual input methods:** Users can input shares directly or use percentage slider - both stay in sync.
+
+2. **Full monthly breakdown:** Shows every single month rather than just milestones - gives founders complete visibility.
+
+3. **Visual hierarchy:** Cliff month highlighted in amber, completion in green, vested amounts in green text.
+
+### Metrics
+- New files: 1 (vesting-calculator.html — 600+ lines)
+- Modified files: 3 (sitemap.xml, blog.html, index.html)
+- Completed P0 tasks: 1 (Week 6: Vesting calculator)
+- Git commits: 1
+- Product pages now: 6 (index, pricing, blog, about, generator, vesting-calculator)
+
 ---
 
 ## Active Help Requests
@@ -440,6 +497,7 @@ See `HELP-STATUS.md` for full details:
 | Pricing page | ✅ Ready | Linked to generator |
 | Blog | ✅ Ready | 3 SEO articles published |
 | Generator | ✅ **Live** | Full dynamic agreement generation |
+| Vesting Calculator | ✅ **Live** | Month-by-month vesting visualization |
 | Essential Pack templates | ✅ Ready | 3 attorney-reviewed templates |
 | Thank You page | ✅ Ready | Downloads, upsell, sharing |
 | OG Image | ✅ Ready | SVG created |
