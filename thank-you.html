@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You for Your Purchase | FairSplit</title>
+  <meta name="description" content="Download your FairSplit agreement templates. Your co-founder equity documents are ready.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Thank You for Your Purchase | FairSplit">
+  <meta property="og:description" content="Download your FairSplit agreement templates. Your co-founder equity documents are ready.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fairsplit.co/thank-you.html">
+  <meta property="og:image" content="https://fairsplit.co/assets/og-image.svg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Thank You for Your Purchase | FairSplit">
+  <meta name="twitter:description" content="Download your FairSplit agreement templates. Your co-founder equity documents are ready.">
+  <meta name="twitter:image" content="https://fairsplit.co/assets/og-image.svg">
+  
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+    
+    // Track purchase event
+    gtag('event', 'purchase', {
+      transaction_id: 'T_' + Date.now(),
+      value: 0, // Will be set dynamically
+      currency: 'USD'
+    });
+  </script>
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: #1a1a1a;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --border: #27272a;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 10rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      font-size: 2.5rem;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Main Content */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Download Cards */
+    .downloads-section {
+      margin: 3rem 0;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .download-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    
+    .download-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+    
+    .download-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    
+    .download-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .file-icon {
+      font-size: 1.5rem;
+    }
+    
+    .download-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    
+    .download-btn:hover {
+      background: var(--accent-hover);
+    }
+    
+    .download-btn.secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    
+    .download-btn.secondary:hover {
+      background: var(--border);
+    }
+    
+    /* Instructions */
+    .instructions {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .instructions h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .instructions ol {
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+    
+    .instructions li {
+      margin-bottom: 0.75rem;
+    }
+    
+    .instructions strong {
+      color: var(--text-primary);
+    }
+    
+    /* Next Steps */
+    .next-steps {
+      margin: 3rem 0;
+    }
+    
+    .next-steps h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .step-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin: 0 auto 1rem;
+    }
+    
+    .step-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .step-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Upsell Section */
+    .upsell {
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+    
+    .upsell-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    
+    .upsell h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .upsell p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .upsell-price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    
+    .upsell-price span {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-decoration: line-through;
+      margin-left: 0.5rem;
+    }
+    
+    .upsell-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+    
+    .upsell-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    }
+    
+    .upsell-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+    }
+    
+    /* Support Section */
+    .support {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+    
+    .support h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .support p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .support-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    
+    .support-btn:hover {
+      background: var(--border);
+    }
+    
+    /* Referral Section */
+    .referral {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+    
+    .referral h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .referral p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .share-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .share-btn.twitter {
+      background: #1da1f2;
+      color: #fff;
+    }
+    
+    .share-btn.linkedin {
+      background: #0077b5;
+      color: #fff;
+    }
+    
+    .share-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    footer p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .upsell {
+        padding: 1.5rem;
+      }
+      
+      .upsell h2 {
+        font-size: 1.4rem;
+      }
+    }
+    
+    /* Print styles */
+    @media print {
+      nav, .upsell, .support, .referral, footer {
+        display: none;
+      }
+      
+      .hero {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">⚖️ FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Calculator</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="success-icon">✓</div>
+    <h1>Thank You for Your Purchase!</h1>
+    <p>Your co-founder agreement templates are ready for download. Follow the instructions below to customize them for your startup.</p>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    
+    <!-- Essential Pack Downloads -->
+    <section class="downloads-section" id="essential-pack">
+      <h2 class="section-title">📦 Your Essential Pack Downloads</h2>
+      <div class="download-grid">
+        <div class="download-card">
+          <h3><span class="file-icon">📄</span> Co-Founder Agreement</h3>
+          <p>Complete agreement covering equity split, vesting terms, roles, IP assignment, and decision-making processes.</p>
+          <a href="templates/essential-pack/cofounder-agreement.html" download class="download-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Download HTML
+          </a>
+        </div>
+        
+        <div class="download-card">
+          <h3><span class="file-icon">📊</span> Vesting Agreement</h3>
+          <p>Detailed vesting schedule with 4-year vesting, 1-year cliff, acceleration clauses, and 83(b) election guidance.</p>
+          <a href="templates/essential-pack/vesting-agreement.html" download class="download-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Download HTML
+          </a>
+        </div>
+        
+        <div class="download-card">
+          <h3><span class="file-icon">🔒</span> IP Assignment Agreement</h3>
+          <p>Comprehensive IP assignment covering pre-existing IP disclosure, current/future work product assignment, and moral rights waiver.</p>
+          <a href="templates/essential-pack/ip-assignment.html" download class="download-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Download HTML
+          </a>
+        </div>
+        
+        <div class="download-card">
+          <h3><span class="file-icon">📖</span> README & Instructions</h3>
+          <p>Complete guide on how to use each template, when to use them, customization instructions, and important legal notices.</p>
+          <a href="templates/essential-pack/README.md" download class="download-btn secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Download README
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instructions -->
+    <section class="instructions">
+      <h2>📝 How to Use Your Templates</h2>
+      <ol>
+        <li><strong>Download all files</strong> using the buttons above. Each template is in HTML format for maximum compatibility.</li>
+        <li><strong>Open in your browser</strong> to view the formatted document with all sections clearly displayed.</li>
+        <li><strong>Customize the highlighted fields</strong> — look for <code style="background: rgba(255,255,0,0.3); padding: 0.1rem 0.3rem; border-radius: 4px;">[BRACKETED FIELDS]</code> in yellow highlight. Replace these with your specific information.</li>
+        <li><strong>Convert to your preferred format:</strong> Print to PDF from your browser, copy into Google Docs, or save as Microsoft Word.</li>
+        <li><strong>Review with all co-founders</strong> and make sure everyone agrees on all terms before signing.</li>
+        <li><strong>Consult an attorney</strong> if your situation is complex. These templates cover standard scenarios but cannot replace personalized legal advice.</li>
+        <li><strong>Sign and date</strong> all agreements. Keep signed copies for all founders and consider notarizing for added protection.</li>
+      </ol>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="next-steps">
+      <h2>✅ Recommended Next Steps</h2>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Customize Your Agreements</h3>
+          <p>Fill in all bracketed fields with your company and founder details within the next 48 hours while the discussions are fresh.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Schedule a Founders Meeting</h3>
+          <p>Set up a meeting with all co-founders to review the agreements together and discuss any concerns or modifications.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>File 83(b) Elections</h3>
+          <p>If your vesting agreement involves stock subject to vesting, file 83(b) elections with the IRS within 30 days of signing.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h3>Store Documents Safely</h3>
+          <p>Keep signed originals in a secure location and digital copies in your company records (Google Drive, Dropbox, etc.).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upsell Section -->
+    <section class="upsell" id="custom-upgrade">
+      <div class="upsell-badge">Special Offer</div>
+      <h2>⚡ Want a Completely Custom Agreement?</h2>
+      <p>Upgrade to our Custom Agreement Generator for a personalized co-founder agreement tailored to your exact equity split, vesting terms, and company details.</p>
+      
+      <div class="upsell-price">
+        $49 <span>$99</span>
+      </div>
+      
+      <a href="generator.html" class="upsell-btn">Generate Custom Agreement →</a>
+      <p class="upsell-note">Limited time offer: 50% off for Essential Pack customers. Generate a fully personalized agreement in minutes.</p>
+    </section>
+
+    <!-- Support Section -->
+    <section class="support">
+      <h2>❓ Need Help?</h2>
+      <p>Have questions about using your templates or customizing them for your specific situation? We're here to help.</p>
+      <a href="mailto:support@fairsplit.co" class="support-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Contact Support
+      </a>
+    </section>
+
+    <!-- Referral Section -->
+    <section class="referral">
+      <h2>🚀 Know Other Founders?</h2>
+      <p>Help other startup teams protect their partnerships. Share FairSplit with founders who need co-founder agreements.</p>
+      <div class="share-buttons">
+        <a href="https://twitter.com/intent/tweet?text=Just%20got%20my%20co-founder%20agreements%20from%20%40FairSplit!%20If%20you%27re%20starting%20a%20company%20with%20partners%2C%20you%20need%20this.&url=https%3A%2F%2Ffairsplit.co" target="_blank" class="share-btn twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+          </svg>
+          Share on Twitter
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ffairsplit.co" target="_blank" class="share-btn linkedin">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+          </svg>
+          Share on LinkedIn
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Calculator</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+    <p>© 2026 FairSplit. All rights reserved. | Made for founders, by founders.</p>
+  </footer>
+
+  <script>
+    // Track downloads
+    document.querySelectorAll('.download-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const fileName = this.getAttribute('href').split('/').pop();
+        gtag('event', 'download', {
+          event_category: 'engagement',
+          event_label: fileName
+        });
+      });
+    });
+
+    // Track upsell clicks
+    document.querySelector('.upsell-btn').addEventListener('click', function() {
+      gtag('event', 'click', {
+        event_category: 'upsell',
+        event_label: 'custom_agreement_from_thank_you'
+      });
+    });
+
+    // Detect purchase tier from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const tier = urlParams.get('tier');
+    const amount = tier === 'custom' ? 99 : 49;
+    
+    // Update GA4 purchase event with correct amount
+    gtag('event', 'purchase', {
+      transaction_id: 'T_' + Date.now(),
+      value: amount,
+      currency: 'USD',
+      items: [{
+        item_name: tier === 'custom' ? 'Custom Agreement' : 'Essential Pack',
+        item_id: tier === 'custom' ? 'custom_001' : 'essential_001',
+        price: amount,
+        quantity: 1
+      }]
+    });
+
+    // Show/hide sections based on purchase tier
+    if (tier === 'custom') {
+      document.getElementById('essential-pack').style.display = 'none';
+      document.querySelector('.hero h1').textContent = 'Your Custom Agreement is Ready!';
+      document.querySelector('.hero p').textContent = 'Access your personalized co-founder agreement generator below.';
+      document.getElementById('custom-upgrade').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
