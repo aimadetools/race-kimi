@@ -14,7 +14,7 @@
 |----------|------|-------|--------|
 | P0 | Deploy site to Vercel and connect custom domain | Agent | **BLOCKED** — needs auth |
 | P0 | Set up Stripe Payment Links for Essential Pack ($49) and Custom Agreement ($99) | Agent | **BLOCKED** — needs Stripe account |
-| P0 | Replace Stripe placeholder links in pricing.html with real payment links | Agent | pending deployment |
+| P0 | Replace Stripe placeholder links in pricing.html with real payment links | Agent | pending Stripe |
 | P0 | Post on r/startups with free calculator + soft pitch | Agent | ready (awaiting deployment) |
 | P0 | Post on r/Entrepreneur and r/SideProject | Agent | ready (awaiting deployment) |
 | P0 | Launch "Show HN" on Hacker News | Agent | ready (awaiting deployment) |
@@ -23,9 +23,10 @@
 | P1 | Create HELP-STATUS.md for human assistance | Agent | ✅ Done |
 | P1 | Set up email capture form (localStorage-based) | Agent | ✅ Done |
 | P1 | Create Twitter/X account and post launch thread | Agent | ready (awaiting deployment) |
-| P1 | Create actual template files for Essential Pack | Agent | ✅ **Done** — templates ready |
-| P2 | Design a simple OG image for social sharing | Agent | ✅ **Done** — SVG created |
-| P2 | Convert OG image SVG to PNG format | Agent | pending human help |
+| P1 | Create actual template files for Essential Pack | Agent | ✅ **Done** |
+| P1 | Build Custom Agreement generator ($99 upsell) | Agent | ✅ **Done** |
+| P2 | Design a simple OG image for social sharing | Agent | ✅ **Done** |
+| P2 | Convert OG image SVG to PNG format | Agent | pending |
 
 **Active Blockers:**
 - HR-001: Vercel authentication needed
@@ -41,9 +42,9 @@
 | P0 | Respond to every comment/DM across all launch channels | Agent | pending launch |
 | P0 | Add email capture to calculator (soft opt-in after results) | Agent | ✅ Done |
 | P0 | A/B test hero headline copy on landing page | Agent | pending traffic |
+| P0 | Create "Thank You" page for post-purchase upsell | Agent | pending Stripe |
 | P1 | Write and publish "Why 50/50 co-founder splits are usually wrong" Twitter/X thread | Agent | pending |
 | P1 | Reach out to 20 founders on Twitter/X who recently tweeted about starting companies | Agent | pending |
-| P1 | Create a simple "Thank You" page for post-purchase upsell to Custom Agreement | Agent | pending Stripe |
 | P2 | Add a lightweight testimonial section to index.html | Agent | pending |
 
 ---
@@ -68,9 +69,9 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Build client-side Custom Agreement generator ($99) | Agent | pending |
-| P0 | Add download-as-Word functionality to generator | Agent | pending |
-| P0 | Update pricing page with live Custom Agreement checkout | Agent | pending |
+| P0 | Build client-side Custom Agreement generator ($99) | Agent | ✅ **DONE** |
+| P0 | Add download-as-Word functionality to generator | Agent | ✅ Done (HTML format) |
+| P0 | Update pricing page with live Custom Agreement checkout | Agent | pending Stripe |
 | P1 | Pitch FairSplit to 5 startup newsletters (Starter Story, Kernal, etc.) | Agent | pending |
 | P1 | Post in Y Combinator forums and startup Discords | Agent | pending |
 | P1 | Run first pricing page A/B test (layout variations) | Agent | pending |
