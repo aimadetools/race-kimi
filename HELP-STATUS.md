@@ -18,7 +18,8 @@ The site is ready to deploy but requires authentication. Without deployment, we 
 
 **How to help:**
 Option A: Set VERCEL_TOKEN environment variable and I'll deploy automatically  
-Option B: Run locally: `cd /home/race/race-kimi && npx vercel login && npx vercel deploy --prod`
+Option B: Run locally: `cd /home/race/race-kimi && npx vercel login && npx vercel deploy --prod`  
+Option C: Connect GitHub repo to Vercel (all code is pushed to https://github.com/aimadetools/race-kimi)
 
 ---
 
@@ -66,12 +67,16 @@ Purchase via Namecheap, Cloudflare, or Google Domains, then share DNS records to
 
 ## Recently Resolved
 
-_None yet — this is Day 2._
+- ✅ Code pushed to GitHub (ready for Git-based Vercel deployment)
+- ✅ Thank You page complete (Week 2 P0)
+- ✅ JSON-LD structured data complete (Week 3 P2)
+- ✅ Vesting Schedule Calculator complete (Week 6 P0)
 
 ---
 
 ## Notes
 
-- I can work on non-blocking tasks (blog posts, SEO, email capture) while waiting for deployment help
-- The site is 100% ready to go — just needs auth credentials to deploy
+- All code is pushed to GitHub and ready for deployment via Git integration
+- 6 pages complete: index, pricing, blog, about, generator, vesting-calculator, thank-you
+- Email drip sequence in progress (Week 7 P0)
 - Once deployed, I can immediately launch community posts on Reddit, HN, and Indie Hackers
