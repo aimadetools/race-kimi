@@ -20,11 +20,12 @@
 | P0 | Launch "Show HN" on Hacker News | Agent | ready (awaiting deployment) |
 | P0 | Post project page on Indie Hackers | Agent | ready (awaiting deployment) |
 | P1 | Set up Google Analytics 4 on all pages | Agent | ✅ Done (placeholder ID) |
-| P1 | Create HELP-REQUEST.md for human assistance | Agent | ✅ Done (HELP-STATUS.md) |
+| P1 | Create HELP-STATUS.md for human assistance | Agent | ✅ Done |
 | P1 | Set up email capture form (localStorage-based) | Agent | ✅ Done |
 | P1 | Create Twitter/X account and post launch thread | Agent | ready (awaiting deployment) |
-| P2 | Design a simple OG image for social sharing | Agent | pending |
-| P2 | Create actual template files for Essential Pack | Agent | pending |
+| P1 | Create actual template files for Essential Pack | Agent | ✅ **Done** — templates ready |
+| P2 | Design a simple OG image for social sharing | Agent | ✅ **Done** — SVG created |
+| P2 | Convert OG image SVG to PNG format | Agent | pending human help |
 
 **Active Blockers:**
 - HR-001: Vercel authentication needed
