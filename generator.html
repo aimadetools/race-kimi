@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Agreement Generator — FairSplit</title>
+  <meta name="description" content="Generate a customized co-founder agreement based on your equity split. Personalized, ready-to-sign, and attorney-reviewed.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,12,16,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 700; font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      border: 1px solid transparent; cursor: pointer; transition: transform .08s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-success { background: var(--success); color: #fff; }
+
+    /* Hero */
+    .hero { padding: 48px 0 32px; text-align: center; }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 12px;
+    }
+    .hero p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+
+    /* Generator */
+    .generator { padding: 0 0 64px; }
+    .generator-grid {
+      display: grid; grid-template-columns: 1fr; gap: 24px;
+    }
+    @media (min-width: 900px) { .generator-grid { grid-template-columns: 380px 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .card h2 { font-size: 1.1rem; margin: 0 0 16px; }
+    .card h3 { font-size: 1rem; margin: 20px 0 12px; color: var(--text-muted); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--text); font-size: 0.95rem; font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .founder-input {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; margin-bottom: 12px;
+    }
+    .founder-input h4 { margin: 0 0 12px; font-size: 0.95rem; color: var(--text-muted); }
+
+    .checkbox-group {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.9rem; color: var(--text-muted); margin: 12px 0;
+    }
+    .checkbox-group input { margin-top: 2px; }
+
+    /* Preview */
+    .preview-container {
+      background: #fff; color: #333;
+      border-radius: var(--radius);
+      min-height: 600px;
+      display: flex; flex-direction: column;
+    }
+    .preview-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: #f5f5f5; border-radius: var(--radius) var(--radius) 0 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .preview-header h3 { margin: 0; font-size: 0.95rem; color: #666; }
+    .preview-actions { display: flex; gap: 8px; }
+    .preview-actions button {
+      padding: 8px 14px; font-size: 0.85rem; border-radius: 6px;
+      border: 1px solid #ccc; background: #fff; cursor: pointer;
+    }
+    .preview-actions button:hover { background: #f0f0f0; }
+
+    .preview-content {
+      flex: 1; padding: 40px; overflow: auto;
+      font-family: Georgia, serif; line-height: 1.7;
+    }
+    .preview-content h1 { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; }
+    .preview-content h2 { margin-top: 30px; color: #222; font-family: Georgia, serif; }
+    .preview-content p { margin: 12px 0; }
+    .preview-content ul { margin: 12px 0; padding-left: 24px; }
+    .preview-content .signature-line {
+      border-top: 1px solid #333; width: 300px; margin-top: 40px;
+    }
+
+    .locked-overlay {
+      position: absolute; inset: 0;
+      background: rgba(11,12,16,0.95);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: var(--radius);
+      padding: 40px; text-align: center;
+    }
+    .locked-overlay h3 { margin: 0 0 12px; }
+    .locked-overlay p { color: var(--text-muted); margin: 0 0 24px; max-width: 400px; }
+    .preview-wrapper { position: relative; }
+
+    .badge {
+      display: inline-block; padding: 4px 10px; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+    }
+    .badge-preview { background: var(--warning); color: #000; }
+
+    /* Footer */
+    .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="logo">FairSplit</a>
+        <a href="index.html" class="btn btn-ghost">← Back to Calculator</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Custom Agreement Generator</h1>
+      <p>Answer a few questions. Get a personalized co-founder agreement. Ready to sign in minutes.</p>
+    </div>
+  </section>
+
+  <section class="generator">
+    <div class="container">
+      <div class="generator-grid">
+        <!-- Input Panel -->
+        <div class="input-panel">
+          <div class="card">
+            <h2>📋 Company Details</h2>
+            <div class="form-group">
+              <label>Company Name</label>
+              <input type="text" id="companyName" placeholder="Acme Inc.">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>State of Incorporation</label>
+                <select id="state">
+                  <option value="Delaware">Delaware</option>
+                  <option value="California">California</option>
+                  <option value="New York">New York</option>
+                  <option value="Texas">Texas</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Formation Date</label>
+                <input type="date" id="formationDate">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Business Description</label>
+              <textarea id="businessDescription" rows="2" placeholder="Software development and SaaS products"></textarea>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>👥 Founder Details</h2>
+            <div id="foundersContainer">
+              <!-- Founder 1 -->
+              <div class="founder-input">
+                <h4>Founder 1</h4>
+                <div class="form-group">
+                  <label>Full Legal Name</label>
+                  <input type="text" class="founder-name" placeholder="Jane Doe">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Equity %</label>
+                    <input type="number" class="founder-equity" placeholder="60" min="0" max="100">
+                  </div>
+                  <div class="form-group">
+                    <label>Role/Title</label>
+                    <input type="text" class="founder-role" placeholder="CEO">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Address</label>
+                  <input type="text" class="founder-address" placeholder="123 Main St, City, State 12345">
+                </div>
+              </div>
+              <!-- Founder 2 -->
+              <div class="founder-input">
+                <h4>Founder 2</h4>
+                <div class="form-group">
+                  <label>Full Legal Name</label>
+                  <input type="text" class="founder-name" placeholder="John Smith">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Equity %</label>
+                    <input type="number" class="founder-equity" placeholder="40" min="0" max="100">
+                  </div>
+                  <div class="form-group">
+                    <label>Role/Title</label>
+                    <input type="text" class="founder-role" placeholder="CTO">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Address</label>
+                  <input type="text" class="founder-address" placeholder="456 Oak Ave, City, State 12345">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>⚙️ Agreement Terms</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Vesting Years</label>
+                <select id="vestingYears">
+                  <option value="4" selected>4 years</option>
+                  <option value="3">3 years</option>
+                  <option value="2">2 years</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Cliff Period</label>
+                <select id="cliffMonths">
+                  <option value="12" selected>1 year</option>
+                  <option value="6">6 months</option>
+                  <option value="0">No cliff</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Total Authorized Shares</label>
+                <input type="number" id="totalShares" value="10000000" step="1000000">
+              </div>
+              <div class="form-group">
+                <label>Decision Threshold</label>
+                <select id="decisionThreshold">
+                  <option value="51">Simple majority (51%)</option>
+                  <option value="75" selected>Supermajority (75%)</option>
+                  <option value="100">Unanimous (100%)</option>
+                </select>
+              </div>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="includeNonCompete" checked>
+              <label for="includeNonCompete">Include non-compete clause (varies by state)</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="includeAcceleration" checked>
+              <label for="includeAcceleration">Include acceleration on acquisition</label>
+            </div>
+          </div>
+
+          <button class="btn btn-success" style="width: 100%; margin-top: 16px; padding: 14px; font-size: 1rem;" onclick="generateAgreement()">
+            🔄 Update Preview
+          </button>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-wrapper">
+          <div class="preview-container">
+            <div class="preview-header">
+              <h3><span class="badge badge-preview">Preview Mode</span> — Your Custom Agreement</h3>
+              <div class="preview-actions">
+                <button onclick="printAgreement()">🖨️ Print / PDF</button>
+                <button onclick="downloadHTML()">💾 Download HTML</button>
+              </div>
+            </div>
+            <div class="preview-content" id="previewContent">
+              <p style="color: #999; text-align: center; padding: 60px 0;">
+                Fill in the form and click "Update Preview" to generate your agreement.
+              </p>
+            </div>
+          </div>
+          <div class="locked-overlay" id="purchaseOverlay">
+            <h3>🔒 Complete Your Purchase</h3>
+            <p>This is a preview of your custom agreement. Purchase to unlock the full document download, Word export, and attorney review checklist.</p>
+            <div style="background: var(--surface); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border);">
+              <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">$99</div>
+              <div style="color: var(--text-muted); font-size: 0.9rem;">One-time purchase • Instant delivery</div>
+              <ul style="text-align: left; color: var(--text-muted); font-size: 0.9rem; margin: 16px 0 0; padding-left: 20px;">
+                <li>Customized agreement PDF</li>
+                <li>Editable Word document</li>
+                <li>Attorney review checklist</li>
+                <li>Signing instructions</li>
+              </ul>
+            </div>
+            <a href="#" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.1rem;">Purchase Custom Agreement →</a>
+            <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">Or <a href="pricing.html" style="color: var(--accent);">view all pricing options</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 FairSplit. For educational purposes. Not legal advice. Consult an attorney.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Set default date to today
+    document.getElementById('formationDate').valueAsDate = new Date();
+
+    function generateAgreement() {
+      const companyName = document.getElementById('companyName').value || '[COMPANY NAME]';
+      const state = document.getElementById('state').value;
+      const formationDate = document.getElementById('formationDate').value || '[DATE]';
+      const businessDescription = document.getElementById('businessDescription').value || '[BUSINESS DESCRIPTION]';
+      const vestingYears = document.getElementById('vestingYears').value;
+      const cliffMonths = document.getElementById('cliffMonths').value;
+      const totalShares = document.getElementById('totalShares').value;
+      const decisionThreshold = document.getElementById('decisionThreshold').value;
+      const includeNonCompete = document.getElementById('includeNonCompete').checked;
+      const includeAcceleration = document.getElementById('includeAcceleration').checked;
+
+      // Get founder data
+      const founderInputs = document.querySelectorAll('.founder-input');
+      const founders = [];
+      founderInputs.forEach((input, index) => {
+        const name = input.querySelector('.founder-name').value || `[FOUNDER ${index + 1} NAME]`;
+        const equity = input.querySelector('.founder-equity').value || '0';
+        const role = input.querySelector('.founder-role').value || `[ROLE ${index + 1}]`;
+        const address = input.querySelector('.founder-address').value || `[ADDRESS ${index + 1}]`;
+        const shares = Math.round((parseFloat(equity) / 100) * parseInt(totalShares));
+        founders.push({ name, equity, role, address, shares });
+      });
+
+      const cliffText = cliffMonths === '0' ? 'no cliff' : `${cliffMonths}-month cliff`;
+      const accelerationText = includeAcceleration ? 
+        `Upon a Change of Control (merger, acquisition, or sale of substantially all assets), 100% of unvested shares shall immediately vest (single-trigger acceleration).` : 
+        `No acceleration provisions included.`;
+      
+      const nonCompeteText = includeNonCompete ? 
+        `<h2>NON-COMPETE</h2>
+    <p>During their involvement with the Company and for a period of 12 months thereafter, Founders agree not to engage in any business that directly competes with the Company's core business.</p>
+    <p><em>Note: Non-compete enforceability varies by jurisdiction. Consult an attorney to ensure compliance with local laws.</em></p>` : '';
+
+      const agreementHTML = `
+<h1>CO-FOUNDER AGREEMENT</h1>
+<p style="text-align: center; color: #666;">${companyName}</p>
+
+<h2>1. PARTIES</h2>
+<p>This Co-Founder Agreement ("Agreement") is entered into as of ${formationDate} (the "Effective Date") by and between:</p>
+${founders.map((f, i) => `<p><strong>Founder ${i + 1}:</strong> ${f.name}, residing at ${f.address} ("Founder ${i + 1}")</p>`).join('\n')}
+<p>(Collectively referred to as the "Founders" and individually as a "Founder")</p>
+
+<h2>2. COMPANY FORMATION</h2>
+<p>The Founders intend to form a ${state} corporation (the "Company") to engage in ${businessDescription}.</p>
+<p>The Company shall be initially capitalized with ${parseInt(totalShares).toLocaleString()} authorized shares of Common Stock.</p>
+
+<h2>3. EQUITY SPLIT</h2>
+<p>The Founders agree to the following equity ownership split:</p>
+<ul>
+${founders.map((f, i) => `<li><strong>${f.name}:</strong> ${f.equity}% (${f.shares.toLocaleString()} shares)</li>`).join('\n')}
+</ul>
+
+<h2>4. VESTING SCHEDULE</h2>
+<p>All shares issued to Founders shall be subject to a ${vestingYears}-year vesting schedule with a ${cliffText}.</p>
+<p><strong>Vesting Terms:</strong></p>
+<ul>
+  <li><strong>Cliff Period:</strong> ${cliffMonths === '0' ? 'No cliff period' : `No shares vest during the first ${cliffMonths} months`}</li>
+  ${cliffMonths !== '0' ? `<li><strong>After Cliff:</strong> ${Math.round((parseInt(cliffMonths) / (parseInt(vestingYears) * 12)) * 100)}% of shares vest immediately upon completion of the cliff period</li>` : ''}
+  <li><strong>Ongoing Vesting:</strong> Remaining shares vest monthly over the remaining ${parseInt(vestingYears) * 12 - parseInt(cliffMonths)} months</li>
+</ul>
+<p>${accelerationText}</p>
+
+<h2>5. ROLES AND RESPONSIBILITIES</h2>
+${founders.map((f, i) => `<p><strong>${f.name} — ${f.role}:</strong> Responsible for day-to-day operations and strategic decisions within their domain.</p>`).join('\n')}
+
+<h2>6. DECISION MAKING</h2>
+<p><strong>Day-to-Day Decisions:</strong> Each Founder has authority over their respective domain.</p>
+<p><strong>Major Decisions:</strong> Require approval of Founders holding at least ${decisionThreshold}% of equity. Major decisions include:</p>
+<ul>
+  <li>Issuance of new equity or convertible instruments</li>
+  <li>Sale or merger of the Company</li>
+  <li>Raising debt or equity financing exceeding $100,000</li>
+  <li>Hiring employees with annual compensation exceeding $100,000</li>
+  <li>Entering into material contracts exceeding $50,000</li>
+</ul>
+
+<h2>7. INTELLECTUAL PROPERTY</h2>
+<p>All intellectual property created by either Founder relating to the Company's business shall be assigned to the Company. This includes code, designs, trademarks, patents, and trade secrets.</p>
+
+<h2>8. CONFIDENTIALITY</h2>
+<p>Founders agree to maintain strict confidentiality regarding all Company business, trade secrets, and proprietary information, both during and after their involvement with the Company.</p>
+
+${nonCompeteText}
+
+<h2>9. TERMINATION</h2>
+<p>Upon termination of a Founder's involvement:</p>
+<ul>
+  <li>Unvested shares are forfeited to the Company</li>
+  <li>Vested shares are retained by the departing Founder</li>
+  <li>The Company has the right to repurchase vested shares at fair market value</li>
+</ul>
+
+<h2>10. DISPUTE RESOLUTION</h2>
+<p>Any disputes shall first be addressed through good-faith negotiation. If unresolved, disputes shall be submitted to binding arbitration in ${state}.</p>
+
+<h2>11. GOVERNING LAW</h2>
+<p>This Agreement shall be governed by the laws of ${state}.</p>
+
+<h2>SIGNATURES</h2>
+<p>IN WITNESS WHEREOF, the Founders have executed this Agreement as of the Effective Date.</p>
+${founders.map((f, i) => `
+<div style="margin-top: 40px;">
+  <p><strong>${f.name}</strong></p>
+  <div class="signature-line"></div>
+  <p>Signature<br>Date: _______________</p>
+</div>
+`).join('\n')}
+
+<div style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 12px; color: #666; text-align: center;">
+  <p>Generated by FairSplit (fairsplit.co) — For educational purposes. Not legal advice.</p>
+  <p>Consult with an attorney before signing.</p>
+</div>
+`;
+
+      document.getElementById('previewContent').innerHTML = agreementHTML;
+    }
+
+    function printAgreement() {
+      const content = document.getElementById('previewContent').innerHTML;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+        <head>
+          <title>Co-Founder Agreement — FairSplit</title>
+          <style>
+            body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.7; color: #333; }
+            h1 { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; }
+            h2 { margin-top: 30px; color: #222; }
+            p { margin: 12px 0; }
+            ul { margin: 12px 0; padding-left: 24px; }
+            .signature-line { border-top: 1px solid #333; width: 300px; margin-top: 40px; }
+          </style>
+        </head>
+        <body>${content}</body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function downloadHTML() {
+      const content = document.getElementById('previewContent').innerHTML;
+      const fullHTML = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Co-Founder Agreement</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.7; color: #333; }
+    h1 { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; }
+    h2 { margin-top: 30px; color: #222; }
+    p { margin: 12px 0; }
+    ul { margin: 12px 0; padding-left: 24px; }
+    .signature-line { border-top: 1px solid #333; width: 300px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+${content}
+</body>
+</html>`;
+      
+      const blob = new Blob([fullHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cofounder-agreement.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Auto-generate on load with sample data
+    window.addEventListener('load', () => {
+      document.getElementById('companyName').value = 'Sample Startup Inc.';
+      document.querySelectorAll('.founder-name')[0].value = 'Jane Doe';
+      document.querySelectorAll('.founder-equity')[0].value = '60';
+      document.querySelectorAll('.founder-role')[0].value = 'CEO';
+      document.querySelectorAll('.founder-address')[0].value = '123 Innovation Way, San Francisco, CA 94105';
+      document.querySelectorAll('.founder-name')[1].value = 'John Smith';
+      document.querySelectorAll('.founder-equity')[1].value = '40';
+      document.querySelectorAll('.founder-role')[1].value = 'CTO';
+      document.querySelectorAll('.founder-address')[1].value = '456 Tech Blvd, San Francisco, CA 94105';
+      generateAgreement();
+    });
+  </script>
+</body>
+</html>
