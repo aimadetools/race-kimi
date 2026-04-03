@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vesting Schedule Calculator — FairSplit</title>
+  <meta name="description" content="Free vesting schedule calculator. Visualize 4-year vesting with 1-year cliff. Calculate shares vested monthly. Plan founder equity timing.">
+  <meta name="keywords" content="vesting schedule calculator, equity vesting, 4 year vesting 1 year cliff, founder vesting, startup equity timeline">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vesting Schedule Calculator — FairSplit">
+  <meta property="og:description" content="Free tool to visualize your vesting schedule. See exactly when your equity unlocks month by month.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fairsplit.co/vesting-calculator.html">
+  <meta property="og:image" content="https://fairsplit.co/assets/og-image.svg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vesting Schedule Calculator — FairSplit">
+  <meta name="twitter:description" content="Free tool to visualize your vesting schedule. See exactly when your equity unlocks.">
+  <meta name="twitter:image" content="https://fairsplit.co/assets/og-image.svg">
+  
+  <link rel="canonical" href="https://fairsplit.co/vesting-calculator.html">
+  
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FairSplit Vesting Schedule Calculator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Free vesting schedule calculator. Visualize 4-year vesting with 1-year cliff. Calculate shares vested monthly.",
+    "author": {
+      "@type": "Organization",
+      "name": "FairSplit",
+      "url": "https://fairsplit.co"
+    }
+  }
+  </script>
+  
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --surface-3: #252a36;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 12, 16, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+    
+    /* Calculator Grid */
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 900px) {
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Input Panel */
+    .input-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      height: fit-content;
+    }
+    
+    .input-panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .form-group small {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    
+    .slider-container {
+      margin-top: 0.5rem;
+    }
+    
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--surface-3);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    
+    .slider-value {
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+    
+    .checkbox-group label {
+      margin-bottom: 0;
+      font-weight: 400;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    
+    /* Results Panel */
+    .results-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    /* Summary Cards */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    
+    .summary-card .label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .summary-card .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .summary-card .subvalue {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Chart Section */
+    .chart-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    
+    .chart-container h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      height: 32px;
+      background: var(--surface-3);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 16px;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: white;
+    }
+    
+    .milestone-markers {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    
+    /* Schedule Table */
+    .schedule-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .schedule-container h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      padding-bottom: 0.5rem;
+    }
+    
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .schedule-table th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      position: sticky;
+      top: 40px;
+      background: var(--surface);
+    }
+    
+    .schedule-table tr:hover {
+      background: var(--surface-2);
+    }
+    
+    .vested-amount {
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    .unvested-amount {
+      color: var(--text-muted);
+    }
+    
+    .cliff-row {
+      background: rgba(245, 158, 11, 0.1) !important;
+    }
+    
+    .cliff-badge {
+      display: inline-block;
+      background: var(--warning);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    
+    .fully-vested-row {
+      background: rgba(34, 197, 94, 0.1) !important;
+    }
+    
+    .fully-vested-badge {
+      display: inline-block;
+      background: var(--success);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    
+    /* Info Section */
+    .info-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .info-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    
+    .info-section p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+    
+    .info-section strong {
+      color: var(--text);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .cta-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .cta-section p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    
+    .cta-btn:hover {
+      opacity: 0.9;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .summary-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">⚖️ FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Calculator</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Vesting Schedule Calculator</h1>
+    <p>Visualize exactly when your equity unlocks. Plan your 4-year vesting with cliff period month by month.</p>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="calculator-grid">
+      <!-- Input Panel -->
+      <div class="input-panel">
+        <h2>📊 Your Equity Details</h2>
+        
+        <div class="form-group">
+          <label for="totalShares">Total Shares Allocated</label>
+          <input type="number" id="totalShares" value="1000000" min="1" step="1000">
+          <small>Total shares in your equity pool</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="founderShares">Your Share Allocation</label>
+          <input type="number" id="founderShares" value="400000" min="1" step="1000">
+          <small>Your portion of the total shares</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="equityPercent">Equity Percentage</label>
+          <div class="slider-container">
+            <input type="range" id="equityPercent" class="slider" value="40" min="1" max="100">
+            <div class="slider-value" id="equityPercentValue">40%</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="startDate">Vesting Start Date</label>
+          <input type="date" id="startDate">
+          <small>When your vesting clock starts</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="vestingYears">Vesting Period (Years)</label>
+          <div class="slider-container">
+            <input type="range" id="vestingYears" class="slider" value="4" min="1" max="6" step="1">
+            <div class="slider-value" id="vestingYearsValue">4 years</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="cliffMonths">Cliff Period (Months)</label>
+          <div class="slider-container">
+            <input type="range" id="cliffMonths" class="slider" value="12" min="0" max="24" step="1">
+            <div class="slider-value" id="cliffMonthsValue">12 months</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="acceleration" checked>
+            <label for="acceleration">Include acceleration on acquisition</label>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="calculateVesting()">Update Schedule</button>
+      </div>
+      
+      <!-- Results Panel -->
+      <div class="results-panel">
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="label">Your Equity</div>
+            <div class="value" id="summaryEquity">40%</div>
+            <div class="subvalue" id="summaryShares">400,000 shares</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Monthly Vesting</div>
+            <div class="value" id="summaryMonthly">8,333</div>
+            <div class="subvalue">shares/month</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Cliff Vesting</div>
+            <div class="value" id="summaryCliff">400,000</div>
+            <div class="subvalue" id="summaryCliffLabel">shares at month 12</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Fully Vested</div>
+            <div class="value" id="summaryDate">Apr 2030</div>
+            <div class="subvalue">4 years from start</div>
+          </div>
+        </div>
+        
+        <!-- Progress Chart -->
+        <div class="chart-container">
+          <h3>📈 Vesting Progress</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+          </div>
+          <div class="milestone-markers">
+            <span>Start</span>
+            <span>Cliff</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        
+        <!-- Schedule Table -->
+        <div class="schedule-container">
+          <h3>📅 Month-by-Month Schedule</h3>
+          <table class="schedule-table" id="scheduleTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Month</th>
+                <th>Shares Vested</th>
+                <th>Cumulative</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody">
+              <!-- Generated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Info Section -->
+    <div class="info-section">
+      <h3>ℹ️ How Vesting Works</h3>
+      <p><strong>Vesting</strong> means you earn your equity over time rather than getting it all at once. This protects the company if a founder leaves early.</p>
+      <p><strong>The Cliff:</strong> During the cliff period (usually 12 months), no equity vests. At the cliff date, you vest a lump sum. If you leave before the cliff, you get nothing.</p>
+      <p><strong>Monthly Vesting:</strong> After the cliff, equity vests monthly. With a 4-year vest and 1-year cliff, you vest 25% at month 12, then 1/36 of your equity each month for the next 36 months.</p>
+      <p><strong>Acceleration:</strong> If your company is acquired, acceleration clauses can speed up vesting. Single-trigger (acquisition) or double-trigger (acquisition + termination) are common.</p>
+    </div>
+    
+    <!-- CTA -->
+    <div class="cta-section">
+      <h3>🚀 Ready to Document Your Vesting?</h3>
+      <p>Generate a legally binding vesting agreement with your custom schedule.</p>
+      <a href="generator.html" class="cta-btn">Create Vesting Agreement →</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Calculator</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+    <p>© 2026 FairSplit. All rights reserved. | Made for founders, by founders.</p>
+  </footer>
+
+  <script>
+    // Set default start date to today
+    document.getElementById('startDate').valueAsDate = new Date();
+    
+    // Sync equity percentage and shares
+    const totalSharesInput = document.getElementById('totalShares');
+    const founderSharesInput = document.getElementById('founderShares');
+    const equityPercentInput = document.getElementById('equityPercent');
+    const equityPercentValue = document.getElementById('equityPercentValue');
+    
+    function updateEquityFromShares() {
+      const total = parseInt(totalSharesInput.value) || 1;
+      const founder = parseInt(founderSharesInput.value) || 0;
+      const percent = Math.round((founder / total) * 100);
+      equityPercentInput.value = percent;
+      equityPercentValue.textContent = percent + '%';
+    }
+    
+    function updateSharesFromEquity() {
+      const total = parseInt(totalSharesInput.value) || 1;
+      const percent = parseInt(equityPercentInput.value);
+      const founder = Math.round((percent / 100) * total);
+      founderSharesInput.value = founder;
+      equityPercentValue.textContent = percent + '%';
+    }
+    
+    founderSharesInput.addEventListener('input', updateEquityFromShares);
+    totalSharesInput.addEventListener('input', updateEquityFromShares);
+    equityPercentInput.addEventListener('input', updateSharesFromEquity);
+    
+    // Update slider values
+    document.getElementById('vestingYears').addEventListener('input', function() {
+      document.getElementById('vestingYearsValue').textContent = this.value + ' years';
+    });
+    
+    document.getElementById('cliffMonths').addEventListener('input', function() {
+      document.getElementById('cliffMonthsValue').textContent = this.value + ' months';
+    });
+    
+    // Calculate vesting schedule
+    function calculateVesting() {
+      const totalShares = parseInt(totalSharesInput.value) || 1000000;
+      const founderShares = parseInt(founderSharesInput.value) || 400000;
+      const startDate = new Date(document.getElementById('startDate').value);
+      const vestingYears = parseInt(document.getElementById('vestingYears').value);
+      const cliffMonths = parseInt(document.getElementById('cliffMonths').value);
+      const hasAcceleration = document.getElementById('acceleration').checked;
+      
+      const totalMonths = vestingYears * 12;
+      const vestingMonths = totalMonths - cliffMonths;
+      
+      // Calculate cliff shares (vested at cliff)
+      const cliffShares = vestingMonths > 0 
+        ? Math.round(founderShares * (cliffMonths / totalMonths))
+        : founderShares;
+      
+      // Monthly vesting after cliff
+      const monthlyShares = vestingMonths > 0
+        ? Math.round((founderShares - cliffShares) / vestingMonths)
+        : 0;
+      
+      // Update summary cards
+      const equityPercent = Math.round((founderShares / totalShares) * 100);
+      document.getElementById('summaryEquity').textContent = equityPercent + '%';
+      document.getElementById('summaryShares').textContent = founderShares.toLocaleString() + ' shares';
+      document.getElementById('summaryMonthly').textContent = monthlyShares.toLocaleString();
+      document.getElementById('summaryCliff').textContent = cliffShares.toLocaleString();
+      document.getElementById('summaryCliffLabel').textContent = 'shares at month ' + cliffMonths;
+      
+      // Calculate fully vested date
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + totalMonths);
+      document.getElementById('summaryDate').textContent = endDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      
+      // Generate schedule table
+      const tbody = document.getElementById('scheduleBody');
+      tbody.innerHTML = '';
+      
+      let cumulativeShares = 0;
+      
+      for (let month = 0; month <= totalMonths; month++) {
+        const row = document.createElement('tr');
+        const currentDate = new Date(startDate);
+        currentDate.setMonth(currentDate.getMonth() + month);
+        
+        // Calculate vested shares for this month
+        let vestedThisMonth = 0;
+        let isCliffMonth = false;
+        let isFullyVested = false;
+        
+        if (month === 0) {
+          vestedThisMonth = 0;
+        } else if (month <= cliffMonths) {
+          if (month === cliffMonths) {
+            vestedThisMonth = cliffShares;
+            isCliffMonth = true;
+          } else {
+            vestedThisMonth = 0;
+          }
+        } else {
+          vestedThisMonth = monthlyShares;
+        }
+        
+        cumulativeShares += vestedThisMonth;
+        
+        if (month === totalMonths) {
+          isFullyVested = true;
+          // Adjust for rounding
+          if (cumulativeShares !== founderShares) {
+            vestedThisMonth += (founderShares - cumulativeShares);
+            cumulativeShares = founderShares;
+          }
+        }
+        
+        const percentage = ((cumulativeShares / founderShares) * 100).toFixed(1);
+        
+        if (isCliffMonth) row.classList.add('cliff-row');
+        if (isFullyVested) row.classList.add('fully-vested-row');
+        
+        row.innerHTML = `
+          <td>${currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</td>
+          <td>Month ${month}${isCliffMonth ? '<span class="cliff-badge">CLIFF</span>' : ''}${isFullyVested ? '<span class="fully-vested-badge">100%</span>' : ''}</td>
+          <td class="${vestedThisMonth > 0 ? 'vested-amount' : 'unvested-amount'}">${vestedThisMonth > 0 ? '+' + vestedThisMonth.toLocaleString() : '-'}</td>
+          <td class="${cumulativeShares > 0 ? 'vested-amount' : ''}">${cumulativeShares.toLocaleString()}</td>
+          <td>${percentage}%</td>
+        `;
+        
+        tbody.appendChild(row);
+      }
+      
+      // Update progress bar
+      const progressFill = document.getElementById('progressFill');
+      progressFill.style.width = '100%';
+      progressFill.textContent = '100% vested';
+      
+      // Track event
+      gtag('event', 'vesting_calculated', {
+        event_category: 'calculator',
+        event_label: vestingYears + 'yr_' + cliffMonths + 'mo'
+      });
+    }
+    
+    // Calculate on page load
+    calculateVesting();
+  </script>
+</body>
+</html>
