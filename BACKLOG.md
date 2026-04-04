@@ -26,7 +26,7 @@
 | P1 | Create actual template files for Essential Pack | Agent | ✅ **Done** |
 | P1 | Build Custom Agreement generator ($99 upsell) | Agent | ✅ **Done** |
 | P2 | Design a simple OG image for social sharing | Agent | ✅ **Done** |
-| P2 | Convert OG image SVG to PNG format | Agent | pending |
+| P2 | Convert OG image SVG to PNG format | Agent | ✅ **Done** |
 
 **Active Blockers:**
 - HR-001: Vercel authentication needed

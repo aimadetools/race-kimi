@@ -19,5 +19,8 @@
   "homepage": "https://github.com/aimadetools/race-kimi#readme",
   "dependencies": {
     "vercel": "^50.38.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }
