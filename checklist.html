@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-Founder Equity Checklist - FairSplit</title>
+    <meta name="description" content="Free comprehensive checklist for splitting equity with your co-founder. Avoid disputes with this step-by-step guide.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="/assets/css/fairsplit.min.css">
+    
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .checklist-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        .checklist-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+        
+        .checklist-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .checklist-header .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .section-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .section-title {
+            flex: 1;
+        }
+        
+        .section-title h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .checklist-items {
+            list-style: none;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .checklist-item:hover {
+            background: rgba(255,255,255,0.06);
+        }
+        
+        .checklist-item.completed {
+            opacity: 0.6;
+        }
+        
+        .checklist-item.completed .item-text {
+            text-decoration: line-through;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-secondary);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .checklist-item.completed .checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .checkbox svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .checklist-item.completed .checkbox svg {
+            opacity: 1;
+        }
+        
+        .item-content {
+            flex: 1;
+        }
+        
+        .item-text {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .item-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .priority {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+        
+        .priority.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .priority.high {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .priority.medium {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary);
+        }
+        
+        .progress-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .progress-title {
+            font-weight: 600;
+        }
+        
+        .progress-percent {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .action-box {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 32px;
+        }
+        
+        .action-box h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .action-box p {
+            opacity: 0.9;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: var(--primary-dark);
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid rgba(255,255,255,0.3);
+            margin-left: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tip-box {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .tip-box strong {
+            color: var(--success);
+        }
+        
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .warning-box strong {
+            color: var(--warning);
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .checklist-container {
+                max-width: 100%;
+                padding: 20px;
+            }
+            
+            .section {
+                background: white;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+            
+            .progress-section {
+                display: none;
+            }
+            
+            .action-box {
+                display: none;
+            }
+            
+            .checkbox {
+                border-color: #999;
+            }
+            
+            .checklist-item.completed .checkbox {
+                background: #22c55e;
+                border-color: #22c55e;
+            }
+            
+            .nav {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .checklist-header h1 {
+                font-size: 28px;
+            }
+            
+            .section {
+                padding: 24px;
+            }
+            
+            .section-number {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .section-title h2 {
+                font-size: 18px;
+            }
+            
+            .action-box {
+                padding: 24px;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="logo">FairSplit</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Calculator</a>
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/blog" class="nav-link">Blog</a>
+                <a href="/generator" class="nav-link">Generator</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main" class="checklist-container">
+        <!-- Progress Tracker -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-title">Your Progress</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;">
+                <span id="completedCount">0</span> of <span id="totalCount">0</span> items completed
+            </p>
+        </div>
+        
+        <!-- Header -->
+        <header class="checklist-header">
+            <div class="logo">📋 FairSplit</div>
+            <h1>The Co-Founder Equity Checklist</h1>
+            <p class="subtitle">A comprehensive guide to splitting equity fairly, protecting your startup, and avoiding founder disputes. Complete all critical items before you write your first line of code together.</p>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>30 minutes to complete</span>
+                </div>
+                <div class="meta-item">
+                    <span>📄</span>
+                    <span>Print or use digitally</span>
+                </div>
+                <div class="meta-item">
+                    <span>🎯</span>
+                    <span>22 action items</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Section 1: Before the Conversation -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div class="section-title">
+                    <h2>Before the Conversation</h2>
+                    <p>Prepare yourself and gather the necessary information</p>
+                </div>
+            </div>
+            
+            <ul class="checklist-items">
+                <li class="checklist-item" data-section="1">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Research market rates for each founder's role
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Check AngelList, Glassdoor, or industry reports for salary benchmarks in your market</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="1">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Calculate each founder's time commitment
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Hours per week × weeks committed = total time investment</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="1">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Document any cash investments
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Incorporation costs, software licenses, equipment, legal fees</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="1">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            List IP and prior work contributions
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Code, designs, patents, domain names, customer relationships brought to the table</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="1">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Assess experience level multipliers
+                            <span class="priority medium">Medium</span>
+                        </div>
+                        <div class="item-note">First-time founder (1.0x), Some startup experience (1.2x), Serial founder/expert (1.5x)</div>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> Use our free <a href="/" style="color: var(--success);">equity calculator</a> to get a data-driven starting point for your conversation. It factors in all the above inputs and gives you a suggested split.
+            </div>
+        </section>
+        
+        <!-- Section 2: The Equity Conversation -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div class="section-title">
+                    <h2>The Equity Conversation</h2>
+                    <p>Have the crucial discussion with your co-founder</p>
+                </div>
+            </div>
+            
+            <ul class="checklist-items">
+                <li class="checklist-item" data-section="2">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Schedule a dedicated, uninterrupted meeting
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">This is not a conversation to have over Slack. Book 2 hours with no distractions.</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="2">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Share your preparation work transparently
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Both founders should share their time, cash, and IP calculations openly</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="2">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Discuss roles and responsibilities
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Who is CEO? Who handles product, engineering, sales, operations? Write it down.</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="2">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Agree on a decision-making framework
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">What happens when you disagree? Simple majority? CEO tie-breaker? Veto rights?</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="2">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Discuss vesting terms upfront
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">4-year vesting with 1-year cliff is standard. Both founders should vest equally.</div>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="warning-box">
+                <strong>⚠️ Warning:</strong> If you can't have this conversation without tension, that's a red flag. Co-founder disputes are the #1 cause of startup failure. Address issues now before they fester.
+            </div>
+        </section>
+        
+        <!-- Section 3: Making It Legal -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div class="section-title">
+                    <h2>Making It Legal</h2>
+                    <p>Document everything with proper agreements</p>
+                </div>
+            </div>
+            
+            <ul class="checklist-items">
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Sign a Co-Founder Agreement
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Equity split, roles, vesting schedule, decision-making, and dispute resolution</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Complete IP Assignment Agreements
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Transfer all pre-existing IP and future work to the company. Investors will require this.</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            File 83(b) Election within 30 days
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Mail to IRS within 30 days of receiving equity or face massive tax penalties</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Sign Confidentiality Agreements
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Protect trade secrets, customer lists, and proprietary information</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Define termination and departure terms
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">What happens if someone leaves? Good leaver vs bad leaver provisions</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="3">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Consider non-compete clauses
+                            <span class="priority medium">Medium</span>
+                        </div>
+                        <div class="item-note">Prevent departed founders from starting competing businesses (check local enforceability)</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Section 4: Ongoing Maintenance -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div class="section-title">
+                    <h2>Ongoing Maintenance</h2>
+                    <p>Keep your agreement current as things change</p>
+                </div>
+            </div>
+            
+            <ul class="checklist-items">
+                <li class="checklist-item" data-section="4">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Schedule quarterly equity check-ins
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Review if the split still feels fair given actual contributions vs. projections</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="4">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Document any significant contribution changes
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">If someone increases/decreases time commitment, write it down and both sign</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="4">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Update agreements when raising funding
+                            <span class="priority critical">Critical</span>
+                        </div>
+                        <div class="item-note">Investors will require clean agreements. Update before due diligence, not during.</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="4">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Maintain a cap table
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Track all equity, options, and ownership changes from day one</div>
+                    </div>
+                </li>
+                <li class="checklist-item" data-section="4">
+                    <div class="checkbox">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-text">
+                            Store documents securely with backups
+                            <span class="priority high">High</span>
+                        </div>
+                        <div class="item-note">Originals in safe deposit box, scanned copies in cloud storage, both founders have access</div>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> Set calendar reminders for your quarterly check-ins now. It's easy to forget once you're in the weeds building.
+            </div>
+        </section>
+        
+        <!-- Action Box -->
+        <div class="action-box">
+            <h3>Ready to Make It Official?</h3>
+            <p>Get attorney-reviewed co-founder agreement templates that cover all the critical items in this checklist.</p>
+            <div style="margin-top: 8px;">
+                <a href="/checkout?product=essential" class="btn-primary">
+                    Get Essential Pack — $49
+                    <span>→</span>
+                </a>
+                <a href="/" class="btn-secondary">Try Free Calculator</a>
+            </div>
+            <p style="margin-top: 16px; font-size: 14px; opacity: 0.8;">Includes Co-Founder Agreement, Vesting Agreement, and IP Assignment templates</p>
+        </div>
+        
+        <!-- Footer -->
+        <footer style="text-align: center; padding-top: 40px; color: var(--text-secondary); font-size: 14px;">
+            <p>© 2026 FairSplit. This checklist is for informational purposes and does not constitute legal advice.</p>
+            <p style="margin-top: 8px;">Generated from <a href="/" style="color: var(--primary);">fairsplit.co</a></p>
+        </footer>
+    </main>
+    
+    <script>
+        // Progress tracking
+        const items = document.querySelectorAll('.checklist-item');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const completedCount = document.getElementById('completedCount');
+        const totalCount = document.getElementById('totalCount');
+        
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('fairsplit_checklist_progress');
+            if (saved) {
+                const completed = JSON.parse(saved);
+                items.forEach((item, index) => {
+                    if (completed.includes(index)) {
+                        item.classList.add('completed');
+                    }
+                });
+            }
+            updateProgress();
+        }
+        
+        // Save progress to localStorage
+        function saveProgress() {
+            const completed = [];
+            items.forEach((item, index) => {
+                if (item.classList.contains('completed')) {
+                    completed.push(index);
+                }
+            });
+            localStorage.setItem('fairsplit_checklist_progress', JSON.stringify(completed));
+        }
+        
+        // Update progress display
+        function updateProgress() {
+            const total = items.length;
+            const completed = document.querySelectorAll('.checklist-item.completed').length;
+            const percent = Math.round((completed / total) * 100);
+            
+            progressFill.style.width = percent + '%';
+            progressPercent.textContent = percent + '%';
+            completedCount.textContent = completed;
+            totalCount.textContent = total;
+        }
+        
+        // Toggle item completion
+        items.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Don't toggle if clicking a link
+                if (e.target.tagName === 'A') return;
+                
+                this.classList.toggle('completed');
+                saveProgress();
+                updateProgress();
+                
+                // Track in GA4 if available
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'checklist_toggle', {
+                        'section': this.dataset.section,
+                        'completed': this.classList.contains('completed')
+                    });
+                }
+            });
+        });
+        
+        // Initialize
+        totalCount.textContent = items.length;
+        loadProgress();
+        
+        // Track page view
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                'page_title': 'Co-Founder Equity Checklist',
+                'page_location': window.location.href
+            });
+        }
+    </script>
+</body>
+</html>

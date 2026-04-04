@@ -46,7 +46,7 @@
 | P1 | Write and publish "Why 50/50 co-founder splits are usually wrong" Twitter/X thread | Agent | pending |
 | P1 | Reach out to 20 founders on Twitter/X who recently tweeted about starting companies | Agent | pending deployment |
 | P1 | Apply shared CSS to remaining pages (pricing, about, generator) | Agent | in progress |
-| P1 | Build "Co-Founder Equity Checklist" lead magnet PDF | Agent | pending |
+| P1 | Build "Co-Founder Equity Checklist" lead magnet PDF | Agent | ✅ **Done** |
 | P2 | Add a lightweight testimonial section to index.html | Agent | pending |
 
 ---
