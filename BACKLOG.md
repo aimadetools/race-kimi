@@ -124,7 +124,7 @@
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
 | P0 | Build "Co-Founder Quiz" for social sharing (e.g., "What's your founder style?") | Agent | ✅ **Done** |
-| P0 | Add shareable result cards with FairSplit branding | Agent | pending |
+| P0 | Add shareable result cards with FairSplit branding | Agent | ✅ **Done** |
 | P1 | Guest post on 2-3 indie founder blogs | Agent | pending |
 | P1 | Launch free "Co-Founder Equity Split Checklist" lead magnet | Agent | pending |
 | P2 | Run a small Twitter/X ad experiment ($20-30) if budget allows | Agent | pending |
@@ -138,7 +138,7 @@
 |----------|------|-------|--------|
 | P0 | Publish video explainer: "How to split equity fairly in 5 minutes" | Agent | pending |
 | P0 | Write first customer case study (interview early buyer) | Agent | pending |
-| P1 | Create a comparison page vs doing 50/50 or hiring a lawyer | Agent | pending |
+| P1 | Create a comparison page vs doing 50/50 or hiring a lawyer | Agent | ✅ **Done** |
 | P1 | Pitch podcast appearances on 5 startup/indie hacker podcasts | Agent | pending |
 | P2 | Build a simple founder glossary / wiki page for SEO | Agent | pending |
 
