@@ -170,7 +170,7 @@
           <span class="badge">⚡ Instant agreements</span>
           <span class="badge">💸 From $49</span>
         </div>
-        <h1>Split equity fairly.<br>No lawyers. <span class="text-gradient">No fights.</span></h1>
+        <h1 id="heroHeadline">Split equity fairly.<br>No lawyers. <span class="text-gradient">No fights.</span></h1>
         <p class="lead">FairSplit helps co-founders calculate a fair equity split based on time, cash, skills, and IP—then generates a ready-to-sign agreement. Stop guessing with 50/50.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <a class="btn btn-primary" href="#calculator">Calculate your split</a>
@@ -521,6 +521,32 @@
         localStorage.setItem('fairsplit_emails', JSON.stringify(emails));
       }
     });
+
+    // Hero headline A/B test
+    (function() {
+      const abKey = 'fairsplit_ab_headline';
+      let variant = localStorage.getItem(abKey);
+      if (!variant) {
+        const r = Math.random();
+        if (r < 0.5) variant = 'control';
+        else if (r < 0.75) variant = 'variant_a';
+        else variant = 'variant_b';
+        localStorage.setItem(abKey, variant);
+      }
+      const headlines = {
+        control: 'Split equity fairly.<br>No lawyers. <span class="text-gradient">No fights.</span>',
+        variant_a: 'Stop guessing on<br>co-founder equity.',
+        variant_b: 'The only fair way to<br>split startup equity.'
+      };
+      const el = document.getElementById('heroHeadline');
+      if (el && headlines[variant]) {
+        el.innerHTML = headlines[variant];
+      }
+      gtag && gtag('event', 'ab_test_view', {
+        'event_category': 'ab_test',
+        'event_label': 'hero_headline_' + variant
+      });
+    })();
 
     // Load from URL params if present, otherwise seed with 2 founders
     if (!loadFromURL()) {
