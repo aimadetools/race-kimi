@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — FairSplit</title>
+  <meta name="description" content="Complete your FairSplit purchase. Secure payment for Essential Pack or Custom Agreement.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Checkout — FairSplit">
+  <meta property="og:description" content="Complete your FairSplit purchase securely.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://race-kimi.vercel.app/checkout.html">
+  <meta property="og:image" content="https://race-kimi.vercel.app/assets/og-image.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://race-kimi.vercel.app/assets/og-image.png">
+  <link rel="canonical" href="https://race-kimi.vercel.app/checkout.html">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/fairsplit.min.css">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    
+    .checkout { padding: 48px 0 64px; }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    @media (max-width: 900px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+    
+    .checkout-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    
+    .checkout-form h2 {
+      margin: 0 0 24px;
+      font-size: 1.4rem;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .form-group input::placeholder {
+      color: #6b7280;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    
+    .payment-methods {
+      display: grid;
+      gap: 12px;
+    }
+    
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .payment-method:hover {
+      border-color: var(--accent);
+    }
+    
+    .payment-method.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .payment-method input {
+      width: auto;
+    }
+    
+    .payment-method-info {
+      flex: 1;
+    }
+    
+    .payment-method-name {
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .payment-method-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 2px 0 0;
+    }
+    
+    .order-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+    }
+    
+    .order-summary h3 {
+      margin: 0 0 20px;
+      font-size: 1.1rem;
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .order-item:last-of-type {
+      border-bottom: none;
+    }
+    
+    .order-item-name {
+      font-weight: 500;
+    }
+    
+    .order-item-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      margin-top: 12px;
+      border-top: 2px solid var(--border);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    
+    .order-total .price {
+      color: var(--success);
+    }
+    
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--success);
+      margin-top: 16px;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 20px;
+      font-size: 1.05rem;
+    }
+    
+    .guarantee-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+    
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    
+    .success-message.show {
+      display: block;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+    }
+    
+    .success-message h2 {
+      margin: 0 0 12px;
+    }
+    
+    .success-message p {
+      color: var(--text-muted);
+      margin: 0 0 24px;
+    }
+    
+    .what-happens-next {
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: left;
+      margin-top: 24px;
+    }
+    
+    .what-happens-next h3 {
+      margin: 0 0 16px;
+      font-size: 1rem;
+    }
+    
+    .what-happens-next ol {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text-muted);
+    }
+    
+    .what-happens-next li {
+      margin-bottom: 8px;
+    }
+    
+    .hidden { display: none !important; }
+  </style>
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html" aria-label="FairSplit Home">⚡ FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Calculator</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main" class="checkout">
+    <div class="container">
+      <div id="checkout-form" class="checkout-grid">
+        <div class="checkout-form">
+          <h2>Contact Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" required placeholder="Alex">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" required placeholder="Chen">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required placeholder="alex@startup.com">
+          </div>
+          
+          <div class="form-group">
+            <label for="company">Company/Startup Name</label>
+            <input type="text" id="company" name="company" placeholder="Acme Inc.">
+          </div>
+          
+          <h2 style="margin-top: 32px;">Payment Method</h2>
+          
+          <div class="payment-methods">
+            <label class="payment-method selected" data-method="paypal">
+              <input type="radio" name="payment" value="paypal" checked>
+              <div class="payment-method-info">
+                <p class="payment-method-name">PayPal</p>
+                <p class="payment-method-desc">Pay securely with your PayPal account</p>
+              </div>
+            </label>
+            
+            <label class="payment-method" data-method="transfer">
+              <input type="radio" name="payment" value="transfer">
+              <div class="payment-method-info">
+                <p class="payment-method-name">Bank Transfer (US)</p>
+                <p class="payment-method-desc">Direct ACH transfer (1-2 business days)</p>
+              </div>
+            </label>
+            
+            <label class="payment-method" data-method="crypto">
+              <input type="radio" name="payment" value="crypto">
+              <div class="payment-method-info">
+                <p class="payment-method-name">Cryptocurrency</p>
+                <p class="payment-method-desc">BTC, ETH, or USDC (fast confirmation)</p>
+              </div>
+            </label>
+            
+            <label class="payment-method" data-method="invoice">
+              <input type="radio" name="payment" value="invoice">
+              <div class="payment-method-info">
+                <p class="payment-method-name">Invoice (Business)</p>
+                <p class="payment-method-desc">We'll send you an invoice payable in 14 days</p>
+              </div>
+            </label>
+          </div>
+          
+          <div class="form-group" style="margin-top: 24px;">
+            <label for="notes">Order Notes (Optional)</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Any special requirements or questions..."></textarea>
+          </div>
+          
+          <button type="button" id="completeOrder" class="btn btn-primary submit-btn">
+            Complete Order — <span id="buttonPrice">$49</span>
+          </button>
+          
+          <p class="guarantee-text">
+            🔒 Secure checkout. 7-day money-back guarantee. 
+            Questions? Email <a href="mailto:support@fairsplit.co">support@fairsplit.co</a>
+          </p>
+        </div>
+        
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          
+          <div class="order-item">
+            <div>
+              <div class="order-item-name" id="summaryItem">Essential Pack</div>
+              <div class="order-item-desc">3 agreement templates</div>
+            </div>
+            <div id="summaryPrice">$49</div>
+          </div>
+          
+          <div class="order-item">
+            <div>
+              <div class="order-item-name">Discount</div>
+            </div>
+            <div style="color: var(--success);">-$0</div>
+          </div>
+          
+          <div class="order-total">
+            <span>Total</span>
+            <span class="price" id="totalPrice">$49</span>
+          </div>
+          
+          <div class="secure-badge">
+            <span>🔒</span>
+            <span>Secure checkout. Your data is encrypted and never shared.</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="success-message" class="success-message" style="display: none; max-width: 600px; margin: 0 auto;">
+        <div class="success-icon">✓</div>
+        <h2>Order Received!</h2>
+        <p>Thank you for your purchase. We've sent a confirmation email with next steps.</p>
+        
+        <div class="what-happens-next">
+          <h3>What Happens Next</h3>
+          <ol id="next-steps">
+            <li>Check your email for payment instructions</li>
+            <li>Complete payment using your selected method</li>
+            <li>Once confirmed, you'll receive instant access to your files</li>
+          </ol>
+        </div>
+        
+        <a href="index.html" class="btn btn-primary" style="margin-top: 24px;">Back to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">⚡ FairSplit</div>
+        <p class="footer-desc">Split equity fairly. No lawyers. No fights.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Calculator</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="generator.html">Agreement Generator</a></li>
+          <li><a href="quiz.html">Co-Founder Quiz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul class="footer-links">
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="vesting-calculator.html">Vesting Calculator</a></li>
+          <li><a href="scenario-compare.html">Scenario Compare</a></li>
+          <li><a href="affiliates.html">Affiliate Program</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="comparison.html">FairSplit vs Lawyer</a></li>
+          <li><a href="mailto:support@fairsplit.co">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+      © 2026 FairSplit. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="/assets/js/affiliate-tracker.js"></script>
+  <script>
+    // Parse URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get('product') || 'essential';
+    const discount = params.get('discount') || '';
+    
+    // Product configuration
+    const products = {
+      essential: {
+        name: 'Essential Pack',
+        desc: '3 agreement templates',
+        price: 49,
+        priceDisplay: '$49'
+      },
+      custom: {
+        name: 'Custom Agreement',
+        desc: 'Personalized agreement',
+        price: 99,
+        priceDisplay: '$99'
+      },
+      bundle: {
+        name: 'Complete Bundle',
+        desc: 'Essential + Custom',
+        price: 129,
+        priceDisplay: '$129'
+      }
+    };
+    
+    // Get selected product
+    const selectedProduct = products[product] || products.essential;
+    
+    // Apply discount if valid
+    let finalPrice = selectedProduct.price;
+    let discountAmount = 0;
+    
+    if (discount === 'ESSENTIAL10' && product === 'essential') {
+      discountAmount = Math.round(selectedProduct.price * 0.10);
+      finalPrice = selectedProduct.price - discountAmount;
+    } else if (discount === 'UPGRADE50' && product === 'custom') {
+      discountAmount = Math.round(selectedProduct.price * 0.50);
+      finalPrice = selectedProduct.price - discountAmount;
+    }
+    
+    // Update order summary
+    document.getElementById('summaryItem').textContent = selectedProduct.name;
+    document.querySelector('.order-item-desc').textContent = selectedProduct.desc;
+    document.getElementById('summaryPrice').textContent = selectedProduct.priceDisplay;
+    document.getElementById('totalPrice').textContent = '$' + finalPrice;
+    document.getElementById('buttonPrice').textContent = '$' + finalPrice;
+    
+    // Update discount display
+    const discountRow = document.querySelector('.order-item:nth-child(2) div:last-child');
+    if (discountAmount > 0) {
+      discountRow.textContent = '-$' + discountAmount;
+    } else {
+      discountRow.textContent = '-$0';
+    }
+    
+    // Payment method selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+        this.classList.add('selected');
+        this.querySelector('input').checked = true;
+      });
+    });
+    
+    // Complete order
+    document.getElementById('completeOrder').addEventListener('click', function() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const company = document.getElementById('company').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+      
+      // Validation
+      if (!firstName || !lastName || !email) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      
+      // Get affiliate referral
+      const affiliateRef = localStorage.getItem('fairsplit_affiliate');
+      let refCode = '';
+      if (affiliateRef) {
+        try {
+          refCode = JSON.parse(affiliateRef).code;
+        } catch (e) {}
+      }
+      
+      // Build order data
+      const orderData = {
+        product: selectedProduct.name,
+        amount: finalPrice,
+        originalPrice: selectedProduct.price,
+        discount: discountAmount,
+        discountCode: discount,
+        customer: {
+          firstName,
+          lastName,
+          email,
+          company
+        },
+        paymentMethod,
+        notes,
+        affiliate: refCode,
+        timestamp: new Date().toISOString(),
+        orderId: 'FS' + Date.now()
+      };
+      
+      // Store order in localStorage for admin review
+      const orders = JSON.parse(localStorage.getItem('fairsplit_orders') || '[]');
+      orders.push(orderData);
+      localStorage.setItem('fairsplit_orders', JSON.stringify(orders));
+      
+      // Track in GA4
+      gtag('event', 'purchase', {
+        transaction_id: orderData.orderId,
+        value: finalPrice,
+        currency: 'USD',
+        items: [{
+          item_name: selectedProduct.name,
+          price: finalPrice
+        }]
+      });
+      
+      // Show success message with payment-specific instructions
+      document.getElementById('checkout-form').style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
+      
+      // Update next steps based on payment method
+      const nextStepsList = document.getElementById('next-steps');
+      let stepsHtml = '';
+      
+      if (paymentMethod === 'paypal') {
+        stepsHtml = `
+          <li>Send $${finalPrice} via PayPal to: <strong>payments@fairsplit.co</strong></li>
+          <li>Include your Order ID in the note: <strong>${orderData.orderId}</strong></li>
+          <li>We'll confirm payment and email your files within 2 hours</li>
+        `;
+      } else if (paymentMethod === 'transfer') {
+        stepsHtml = `
+          <li>Check your email for our bank transfer details</li>
+          <li>Send $${finalPrice} via ACH with reference: <strong>${orderData.orderId}</strong></li>
+          <li>We'll confirm payment and email your files within 24 hours</li>
+        `;
+      } else if (paymentMethod === 'crypto') {
+        stepsHtml = `
+          <li>Check your email for our crypto wallet addresses (BTC/ETH/USDC)</li>
+          <li>Send $${finalPrice} equivalent and reply with transaction ID</li>
+          <li>We'll confirm and email your files within 1 hour</li>
+        `;
+      } else if (paymentMethod === 'invoice') {
+        stepsHtml = `
+          <li>We'll email you an invoice within 2 hours</li>
+          <li>Pay via bank transfer, check, or card (invoice includes payment link)</li>
+          <li>Once paid, you'll receive instant access to your files</li>
+        `;
+      }
+      
+      nextStepsList.innerHTML = stepsHtml;
+      
+      // Send order notification (in production, this would be a server call)
+      console.log('Order received:', orderData);
+      
+      // Also try to send to a form endpoint if available
+      fetch('https://formspree.io/f/YOUR_FORM_ID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: `New Order: ${orderData.orderId}`,
+          message: JSON.stringify(orderData, null, 2)
+        })
+      }).catch(() => {
+        // Formspree not configured yet, order is stored in localStorage
+      });
+    });
+  </script>
+</body>
+</html>
