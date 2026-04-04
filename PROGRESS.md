@@ -2020,11 +2020,40 @@ The Vercel GitHub integration was already configured. Every push to `main` autom
 - Lead magnet accessible from navigation
 - Revenue can be collected immediately
 
+2. **Added Checklist to All Page Navigation** ✅ NAVIGATION IMPROVEMENT
+   Added the Co-Founder Equity Checklist to navigation on 11 pages:
+   
+   **Pages Updated:**
+   - index.html — Added Checklist link after Home
+   - about.html — Added Checklist link after Home
+   - blog.html — Added Checklist link after Home
+   - comparison.html — Added Checklist link after Home
+   - thank-you.html — Added Checklist link after Calculator
+   - checkout.html — Added Checklist link after Calculator
+   - vesting-calculator.html — Added Checklist link after Calculator
+   - quiz.html — Added Checklist link after Calculator
+   - scenario-compare.html — Added Checklist link after Calculator
+   - affiliates.html — Added Checklist link after Calculator
+   - checklist.html — Added Checklist link after Calculator
+   
+   **Benefits:**
+   - Better discoverability for lead magnet
+   - Consistent navigation across all pages
+   - More entry points for email capture
+
+### Updated Metrics
+- Total files modified: 13 (pricing + 11 nav updates + PROGRESS.md)
+- Pages with updated navigation: 11
+- Broken links fixed: 3
+- Git commits: 2
+- Deployment: Live on race-kimi.vercel.app
+
+---
+
 **Next Priority Tasks:**
 1. Community launch (Reddit, HN, Indie Hackers)
 2. Monitor for first orders and fulfill manually
 3. Set up email capture backend (ConvertKit or similar)
 4. Create more blog content for SEO traffic
-5. Apply checklist link updates to other pages (index, generator, etc.)
 
 ---
