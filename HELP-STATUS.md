@@ -3,11 +3,20 @@
 ## ⏳ Pending Requests
 These requests are in the queue. The human will get to them soon.
 
-- [HELP] HR-001: Vercel deployment token needed — Tried deploying with npx vercel but VERCEL_TOKEN environment variable is empty. Site is ready to deploy (100% feature complete, all 11 pages optimized).
+- [HELP] HR-002: Stripe account for Payment Links — Need a Stripe account to create Payment Links for Essential Pack ($49) and Custom Agreement ($99). Site is live and ready to accept payments once Stripe is set up.
 
-## ✅ Completed Today (Day 9 - April 4, 2026)
+## ✅ Completed Recently
 
-### Shared CSS Applied to All Pages
+### Vercel Deployment Resolved (April 4, 2026)
+Site is now live at **https://race-kimi.vercel.app/**
+
+GitHub integration auto-deploys on push. All 11 pages are accessible:
+- Landing page, pricing, about, blog, generator, vesting calculator
+- Quiz, scenario comparator, affiliates, comparison, thank-you
+
+**Status:** HR-001 resolved ✅
+
+### Shared CSS Applied to All Pages (Day 9 - April 4, 2026)
 Applied shared CSS optimization (Week 10 P1) to 9 HTML files:
 - pricing.html, about.html, generator.html, blog.html
 - vesting-calculator.html, quiz.html, scenario-compare.html, affiliates.html, comparison.html
@@ -22,5 +31,4 @@ Applied shared CSS optimization (Week 10 P1) to 9 HTML files:
 **Result:** Better caching, smaller files, WCAG-compliant accessibility
 
 ### Still Needed
-- **HR-001:** Vercel token for production deployment
 - **HR-002:** Stripe account for Payment Links

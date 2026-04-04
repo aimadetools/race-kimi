@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Co-Founder Equity Checklist — FairSplit</title>
+  <meta name="description" content="A free, printable checklist to help co-founders split equity fairly and protect their startup.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-light: #e0e7ff;
+      --success: #22c55e;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .page {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 48px 56px;
+    }
+    header {
+      text-align: center;
+      padding-bottom: 28px;
+      border-bottom: 2px solid var(--accent);
+      margin-bottom: 28px;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .logo span { color: var(--text); }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 12px 0 8px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin-bottom: 26px;
+      page-break-inside: avoid;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+      padding: 10px 14px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .num {
+      background: var(--accent);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .checklist li strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .checklist li .hint {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .notes-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      min-height: 56px;
+      background: var(--surface);
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .highlight-box {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 18px 0;
+      font-size: 0.9rem;
+    }
+    .highlight-box strong {
+      color: #a16207;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    footer {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+    footer .cta {
+      background: var(--accent);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin: 0;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { padding: 24px 32px; max-width: 100%; }
+      .section { page-break-inside: avoid; }
+      footer { page-break-inside: avoid; }
+      .no-print { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 24px; }
+      header h1 { font-size: 1.5rem; }
+    }
+
+    .download-bar {
+      text-align: center;
+      padding: 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .download-bar button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="download-bar no-print">
+    <button onclick="window.print()">🖨️ Print or Save as PDF</button>
+  </div>
+
+  <div class="page">
+    <header>
+      <div class="logo">Fair<span>Split</span></div>
+      <h1>The Co-Founder Equity Checklist</h1>
+      <p>A step-by-step guide to splitting equity fairly, protecting your IP, and avoiding the disputes that kill startups.</p>
+    </header>
+
+    <div class="highlight-box">
+      <strong>⚠️ Why this matters</strong>
+      65% of startup failures trace back to co-founder conflict. The #1 cause? Equity disagreements that could have been prevented with a transparent conversation upfront. Use this checklist before you incorporate, before you raise money, and before resentment has a chance to grow.
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <div class="section-title"><span class="num">1</span> Have the Hard Conversation First</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Discuss expectations openly.</strong> <span class="hint">How many hours per week will each founder work? For how long?</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Agree on roles and responsibilities.</strong> <span class="hint">Who is CEO? Who owns product, engineering, sales, ops?</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Talk about cash contributions.</strong> <span class="hint">Will anyone invest personal savings? How much? When?</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Disclose prior IP and side projects.</strong> <span class="hint">What code, designs, patents, or relationships are being brought in?</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Set a decision-making framework.</strong> <span class="hint">What happens when you disagree? Tie-breaker rules prevent deadlock.</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section">
+      <div class="section-title"><span class="num">2</span> Quantify Each Founder's Contribution</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Time commitment:</strong> <span class="hint">Hours per week × weeks committed × fair market rate</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Cash investment:</strong> <span class="hint">Money invested into the company (not expenses). Typically weighted 3-4× vs time.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>IP and prior work:</strong> <span class="hint">Code, designs, patents, data, relationships brought into the company</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Experience and network:</strong> <span class="hint">Domain expertise, previous exits, valuable connections</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Use a calculator.</strong> <span class="hint">Run the numbers together at fairsplit.co to remove emotion from the decision.</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <div class="section-title"><span class="num">3</span> Protect Everyone with Vesting</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Set a vesting schedule.</strong> <span class="hint">Standard: 4 years with a 1-year cliff. Shorter for late-stage founders.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Define what happens if someone leaves early.</strong> <span class="hint">Good leaver vs bad leaver provisions protect both sides.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Consider acceleration clauses.</strong> <span class="hint">Single-trigger (acquisition) and double-trigger (acquisition + termination).</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>File 83(b) elections within 30 days.</strong> <span class="hint">Missing this window can cost founders tens of thousands in taxes.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Use a vesting calculator.</strong> <span class="hint">Model your schedule month-by-month at fairsplit.co/vesting-calculator</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section">
+      <div class="section-title"><span class="num">4</span> Lock Down IP Ownership</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>List all pre-existing IP.</strong> <span class="hint">Document what each founder owned before the company started.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Assign future IP to the company.</strong> <span class="hint">Everything created for the business should belong to the entity, not individuals.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Disclose third-party components.</strong> <span class="hint">Open-source libraries, licensed assets, contractor work — list them all.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Get IP assignments in writing.</strong> <span class="hint">Verbal agreements are worthless to investors and acquirers.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Consider moral rights waivers.</strong> <span class="hint">Important if you have international founders or operate globally.</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section">
+      <div class="section-title"><span class="num">5</span> Document Everything in a Signed Agreement</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Co-Founder Agreement:</strong> <span class="hint">Equity split, roles, vesting, decision-making, termination, dispute resolution</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Vesting Agreement:</strong> <span class="hint">Detailed schedule, repurchase terms, acceleration, 83(b) instructions</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>IP Assignment Agreement:</strong> <span class="hint">Pre-existing IP disclosure, assignment of future work, third-party disclosures</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>All founders sign before any major milestone.</strong> <span class="hint">Before fundraising, before hiring, before launching — ideally before writing the first line of code together.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Have an attorney review.</strong> <span class="hint">Templates get you 90% there. A 1-hour lawyer review gets you to 100%.</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="section">
+      <div class="section-title"><span class="num">6</span> Plan for the Future</div>
+      <ul class="checklist">
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Set a review date.</strong> <span class="hint">Revisit the agreement annually or after any major change (new founder, funding, pivot).</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Keep originals in a safe place.</strong> <span class="hint">Signed PDFs, cap table, 83(b) filings — store with your company records.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Share with your lawyer and accountant.</strong> <span class="hint">They need to know the structure for future advice and filings.</span></div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div><strong>Update when things change.</strong> <span class="hint">New co-founders, funding rounds, or role shifts should trigger an amendment.</span></div>
+        </li>
+      </ul>
+      <div class="notes-box">Notes:</div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>🎯 Need the actual agreements?</strong>
+      FairSplit offers attorney-reviewed co-founder agreement templates ($49) and a custom agreement generator ($99) that turns your specific details into a signed, professional document.
+    </div>
+
+    <footer>
+      <div class="cta">Get free tools and templates at fairsplit.co</div>
+      <p>Brought to you by <a href="https://race-kimi.vercel.app/">FairSplit</a> — split equity fairly. no lawyers. no fights.</p>
+      <p style="margin-top:8px; font-size:0.75rem; color:#94a3b8;">This checklist is for informational purposes only and does not constitute legal advice. Always consult a qualified attorney for your specific situation.</p>
+    </footer>
+  </div>
+</body>
+</html>
