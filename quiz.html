@@ -418,6 +418,17 @@
             cursor: pointer;
         }
         
+        .share-download {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #resultCanvas {
+            display: none;
+        }
+        
         .cta-section {
             margin-top: 3rem;
             padding-top: 2rem;
@@ -590,8 +601,13 @@
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         Copy Link
                     </button>
+                    <button class="share-btn share-download" onclick="downloadResultCard()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Download Card
+                    </button>
                 </div>
             </div>
+            <canvas id="resultCanvas" width="1200" height="630"></canvas>
             
             <div class="cta-section">
                 <h3>Ready to Split Equity Fairly?</h3>
@@ -847,6 +863,9 @@
             document.getElementById('linkedinShare').href = 
                 `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
             
+            // Generate shareable result card
+            generateResultCard(archetype);
+            
             // Track completion
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'quiz_complete', { 
@@ -863,6 +882,133 @@
             
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'quiz_share', { event_category: 'engagement', event_label: 'copy_link' });
+            }
+        }
+        
+        function wrapText(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + ' ' + word).width;
+                if (width < maxWidth) {
+                    currentLine += ' ' + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+        
+        function generateResultCard(archetype) {
+            const canvas = document.getElementById('resultCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#0a0a0f');
+            gradient.addColorStop(1, '#1a1a25');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+            
+            // Accent border at top
+            const accentGradient = ctx.createLinearGradient(0, 0, 1200, 0);
+            accentGradient.addColorStop(0, '#6366f1');
+            accentGradient.addColorStop(0.5, '#818cf8');
+            accentGradient.addColorStop(1, '#4f46e5');
+            ctx.fillStyle = accentGradient;
+            ctx.fillRect(0, 0, 1200, 8);
+            
+            // FairSplit branding
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚖️ FairSplit', 60, 70);
+            
+            // Emoji
+            ctx.font = '120px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(archetype.emoji, 600, 200);
+            
+            // Title
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 64px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText(archetype.title, 600, 300);
+            
+            // Subtitle
+            ctx.fillStyle = '#818cf8';
+            ctx.font = '32px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText(archetype.subtitle, 600, 350);
+            
+            // Traits
+            let traitX = 600;
+            const totalTraitsWidth = archetype.traits.reduce((sum, trait) => {
+                ctx.font = '20px -apple-system, BlinkMacSystemFont, sans-serif';
+                return sum + ctx.measureText(trait).width + 50;
+            }, -20);
+            traitX = (1200 - totalTraitsWidth) / 2 + 15;
+            
+            archetype.traits.forEach(trait => {
+                const width = ctx.measureText(trait).width + 24;
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.15)';
+                ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+                ctx.lineWidth = 1;
+                roundRect(ctx, traitX, 380, width, 36, 18);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.fillStyle = '#a5b4fc';
+                ctx.font = '20px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(trait, traitX + 12, 406);
+                traitX += width + 12;
+            });
+            
+            // Equity advice
+            ctx.fillStyle = '#a0a0b0';
+            ctx.font = '22px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'center';
+            const adviceLines = wrapText(ctx, archetype.equityAdvice, 1000);
+            let adviceY = 460;
+            adviceLines.forEach(line => {
+                ctx.fillText(line, 600, adviceY);
+                adviceY += 34;
+            });
+            
+            // Bottom CTA
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Discover your founder style → fairsplit.co/quiz', 600, 580);
+        }
+        
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+        
+        function downloadResultCard() {
+            const canvas = document.getElementById('resultCanvas');
+            const link = document.createElement('a');
+            const archetype = document.getElementById('resultTitle').textContent.replace(/\s+/g, '-').toLowerCase();
+            link.download = `fairsplit-${archetype}-result.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_share', { event_category: 'engagement', event_label: 'download_card' });
             }
         }
     </script>
