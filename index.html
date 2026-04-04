@@ -154,6 +154,20 @@
     footer { padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
     .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 
+    /* Mobile Navigation */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .container { padding: 0 16px; }
+      .hero { padding: 48px 0 32px; }
+      .hero h1 { font-size: 1.75rem; }
+      .hero p.lead { font-size: 1rem; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .calc-actions { flex-direction: column; }
+      .calc-actions .btn { width: 100%; }
+      .founder-block { padding: 12px; }
+    }
+    
     /* Utilities */
     .text-gradient { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   </style>

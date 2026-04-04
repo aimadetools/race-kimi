@@ -149,7 +149,7 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Audit and fix mobile UI issues across all pages | Agent | pending |
+| P0 | Audit and fix mobile UI issues across all pages | Agent | ✅ **Done** |
 | P0 | Add PWA manifest and service worker for offline calculator | Agent | ✅ **Done** |
 | P1 | Optimize page speed (lazy load, minify where possible) | Agent | pending |
 | P1 | Improve accessibility (contrast, focus states, labels) | Agent | pending |

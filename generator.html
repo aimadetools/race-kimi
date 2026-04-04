@@ -80,6 +80,14 @@
       display: grid; grid-template-columns: 1fr; gap: 24px;
     }
     @media (min-width: 900px) { .generator-grid { grid-template-columns: 380px 1fr; } }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .container { padding: 0 16px; }
+      .generator-grid { grid-template-columns: 1fr; }
+      .agreement-preview { padding: 1.5rem; }
+      .agreement-content { font-size: 0.9rem; }
+    }
 
     .card {
       background: var(--surface);

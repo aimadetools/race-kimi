@@ -78,6 +78,12 @@
     section { padding: 30px 0; }
     .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
     @media (max-width: 860px) { .pricing-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .container { padding: 0 16px; }
+      header { padding: 48px 0 20px; }
+    }
     .pricing-card {
       background: var(--surface);
       border: 1px solid var(--border);
