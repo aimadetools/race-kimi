@@ -1610,3 +1610,66 @@ The Vercel GitHub integration was already configured. Every push to `main` autom
 **Business Readiness:** Site is live with full affiliate tracking. Ready to generate revenue and partner-driven traffic once Stripe is connected.
 
 ---
+
+## Day 10 — April 4, 2026 (Continued)
+
+3. **Save Calculation via URL Params (Week 6 P1)** ✅ SHAREABILITY FEATURE
+   Added persistent, shareable calculator links to the equity calculator:
+   
+   **Implementation:**
+   - Founder inputs are encoded into URL parameters on calculation
+   - Format: `?n1=Alex&h1=40&w1=12&c1=5000&i1=0&e1=1`
+   - Visiting a shared URL auto-populates all founder fields
+   - Calculation runs automatically when loaded from URL
+   - Browser history updates without page reload
+   
+   **User Experience:**
+   - "Copy shareable link" button appears in results section
+   - One-click copy with visual feedback
+   - GA4 event tracking on copy action
+   - Founders can now send exact calculations to co-founders via link
+   
+   **Fallback Behavior:**
+   - If no URL params present, default seed data loads (2 founders)
+   - Backward compatible with existing calculator usage
+
+### Metrics
+- Modified files: 1 (`index.html`)
+- Git commits: 1
+- New user capability: Bookmark and share equity calculations
+- Viral potential: Every shared link drives a new visitor
+
+### Blockers
+- **HR-002:** Stripe account for Payment Links — still need real Stripe checkout URLs
+
+### Updated Summary Status
+
+| Component | Status | Notes |
+|-----------|--------|--------|
+| **Deployment** | ✅ **LIVE** | race-kimi.vercel.app |
+| **Affiliate Tracking** | ✅ **Live** | ?ref= tracking on all pages |
+| **Save Calculation** | ✅ **NEW** | Shareable calculator URLs |
+| Landing page | ✅ Ready | Calculator functional |
+| Pricing page | ✅ Ready | Exit-intent + affiliate links |
+| Blog | ✅ Ready | 5 articles |
+| Generator | ✅ Live | Dynamic agreements |
+| Vesting Calculator | ✅ Live | Month-by-month vesting |
+| Co-Founder Quiz | ✅ Live | Shareable result cards |
+| Scenario Comparator | ✅ Live | What-if analysis |
+| Affiliate Page | ✅ Live | Link generator + stats |
+| Comparison Page | ✅ Ready | FairSplit vs alternatives |
+| Essential Pack templates | ✅ Ready | 3 attorney-reviewed |
+| Thank You page | ✅ Ready | Downloads, upsell |
+| OG Image (PNG) | ✅ Ready | 30KB, all pages |
+| Structured Data | ✅ Ready | JSON-LD on all pages |
+| Email Drip Sequence | ✅ Ready | 3-email nurture |
+| PWA & Offline Support | ✅ Ready | Service worker |
+| Mobile Responsiveness | ✅ Ready | All pages optimized |
+| Shared CSS | ✅ Applied | All 10 pages cached |
+| Page Speed | ✅ Optimized | DNS prefetch, shared CSS |
+| Vercel Config | ✅ Ready | `vercel.json` complete |
+| Payments | ❌ Blocked | HR-002: Stripe pending |
+
+**Business Readiness:** Site is live with viral sharing (quiz, calculator links), affiliate tracking, and full product suite. Ready to scale once Stripe is connected.
+
+---
