@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FairSplit vs Lawyer vs 50/50 — What's the Best Way to Split Equity?</title>
+  <meta name="description" content="Compare FairSplit's $49 agreement templates against hiring a lawyer for $1,500+ or doing a risky 50/50 split. See cost, time, and risk differences.">
+  <meta name="keywords" content="co-founder agreement cost, equity split lawyer, 50/50 equity split, founder agreement template">
+  <meta property="og:title" content="FairSplit vs Lawyer vs 50/50 — What's the Best Way to Split Equity?">
+  <meta property="og:description" content="Compare FairSplit's $49 templates against $1,500+ lawyers and risky handshake deals.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fairsplit.co/comparison.html">
+  <meta property="og:image" content="https://fairsplit.co/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://fairsplit.co/assets/og-image.png">
+  <link rel="canonical" href="https://fairsplit.co/comparison.html">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141a;
+      --surface-2: #1a1d26;
+      --text: #e6e8ef;
+      --text-muted: #9aa3b2;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --border: #252a36;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,12,16,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 700; font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; color: var(--text-muted); }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      border: 1px solid transparent; cursor: pointer; transition: transform .08s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+
+    header { padding: 64px 0 24px; text-align: center; }
+    header h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 0 0 10px; }
+    header p { color: var(--text-muted); font-size: 1.1rem; max-width: 680px; margin: 0 auto; }
+
+    section { padding: 40px 0; }
+    .section-title { font-size: 1.5rem; margin: 0 0 20px; text-align: center; }
+
+    /* Comparison Cards */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 900px) {
+      .compare-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+    }
+    .compare-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, var(--surface) 100%);
+    }
+    .badge {
+      position: absolute;
+      top: -10px; right: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-size: 0.75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .compare-card h3 { font-size: 1.15rem; margin: 0 0 6px; }
+    .compare-card .price {
+      font-size: 2rem; font-weight: 700; margin: 0 0 16px;
+    }
+    .compare-card .price span {
+      font-size: 0.95rem; font-weight: 500; color: var(--text-muted);
+    }
+    .compare-card ul {
+      list-style: none; padding: 0; margin: 0 0 16px;
+    }
+    .compare-card li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.95rem; color: var(--text-muted);
+    }
+    .compare-card li:last-child { border-bottom: none; }
+    .icon { flex-shrink: 0; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 12px; }
+    .icon.good { background: rgba(34,197,94,0.15); color: var(--success); }
+    .icon.bad { background: rgba(239,68,68,0.15); color: var(--error); }
+    .icon.warn { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 0.95rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    }
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-muted); font-weight: 500; background: var(--surface-2); }
+    td { color: var(--text); }
+    tr:last-child td { border-bottom: none; }
+    .highlight { color: var(--success); font-weight: 600; }
+    .lowlight { color: var(--error); font-weight: 600; }
+
+    /* FAQ */
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .faq-item h4 { margin: 0 0 6px; font-size: 1rem; }
+    .faq-item p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 24px;
+      margin-top: 24px;
+    }
+    .cta-section h2 { font-size: 1.5rem; margin: 0 0 10px; }
+    .cta-section p { color: var(--text-muted); margin: 0 0 18px; }
+
+    footer { padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 24px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .container { padding: 0 16px; }
+      header { padding: 48px 0 20px; }
+      header h1 { font-size: 1.75rem; }
+    }
+  </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "FairSplit vs Lawyer vs 50/50 Comparison",
+    "description": "Compare FairSplit's $49 templates against $1,500+ lawyers and risky handshake deals.",
+    "url": "https://fairsplit.co/comparison.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "FairSplit",
+      "url": "https://fairsplit.co"
+    }
+  }
+  </script>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">FairSplit</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </div>
+      <a class="btn btn-primary" href="index.html#calculator">Try Calculator</a>
+    </div>
+  </nav>
+
+  <header>
+    <div class="container">
+      <h1>FairSplit vs Lawyer vs 50/50</h1>
+      <p>What's the best way to split equity and protect your startup? Here's the honest comparison most founders wish they had seen before it was too late.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <div class="compare-grid">
+        <!-- DIY 50/50 -->
+        <div class="compare-card">
+          <h3>🤝 Handshake / 50/50 Split</h3>
+          <div class="price">$0 <span>upfront</span></div>
+          <ul>
+            <li><span class="icon good">✓</span> Costs nothing today</li>
+            <li><span class="icon bad">✕</span> No legal protection</li>
+            <li><span class="icon bad">✕</span> Vague on vesting & IP</li>
+            <li><span class="icon bad">✕</span> High dispute risk</li>
+            <li><span class="icon bad">✕</span> Investors may require redo</li>
+          </ul>
+          <p style="color:var(--text-muted);font-size:.9rem;margin:0;">The "we'll figure it out later" approach. Later usually means during a conflict, when lawyers cost 10x more.</p>
+        </div>
+
+        <!-- FairSplit -->
+        <div class="compare-card featured">
+          <span class="badge">RECOMMENDED</span>
+          <h3>⚖️ FairSplit</h3>
+          <div class="price">$49–$99 <span>one-time</span></div>
+          <ul>
+            <li><span class="icon good">✓</span> Attorney-reviewed templates</li>
+            <li><span class="icon good">✓</span> Custom agreement generator</li>
+            <li><span class="icon good">✓</span> Vesting + IP clauses included</li>
+            <li><span class="icon good">✓</span> Ready in under 30 minutes</li>
+            <li><span class="icon good">✓</span> Investor-ready documents</li>
+          </ul>
+          <a class="btn btn-primary" href="pricing.html" style="width:100%;">Get Started</a>
+        </div>
+
+        <!-- Lawyer -->
+        <div class="compare-card">
+          <h3>⚖️ Startup Lawyer</h3>
+          <div class="price">$1,500+ <span>typical cost</span></div>
+          <ul>
+            <li><span class="icon good">✓</span> Fully customized to you</li>
+            <li><span class="icon good">✓</span> Attorney-client privilege</li>
+            <li><span class="icon warn">~</span> 1–2 week turnaround</li>
+            <li><span class="icon bad">✕</span> Expensive for pre-revenue</li>
+            <li><span class="icon bad">✕</span> Billable hours add up fast</li>
+          </ul>
+          <p style="color:var(--text-muted);font-size:.9rem;margin:0;">Best for complex cap tables or funded startups. Overkill for most two-founder MVPs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="section-title">Side-by-Side Comparison</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>50/50 Handshake</th>
+              <th>FairSplit</th>
+              <th>Startup Lawyer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Upfront Cost</td>
+              <td class="lowlight">$0</td>
+              <td class="highlight">$49–$99</td>
+              <td class="lowlight">$1,500–$5,000</td>
+            </tr>
+            <tr>
+              <td>Time to Complete</td>
+              <td>5 minutes</td>
+              <td class="highlight">15–30 minutes</td>
+              <td>1–2 weeks</td>
+            </tr>
+            <tr>
+              <td>Vesting Clauses</td>
+              <td class="lowlight">Rarely included</td>
+              <td class="highlight">Included</td>
+              <td class="highlight">Included</td>
+            </tr>
+            <tr>
+              <td>IP Assignment</td>
+              <td class="lowlight">Often missed</td>
+              <td class="highlight">Included</td>
+              <td class="highlight">Included</td>
+            </tr>
+            <tr>
+              <td>Dispute Protection</td>
+              <td class="lowlight">Minimal</td>
+              <td class="highlight">Strong</td>
+              <td class="highlight">Strong</td>
+            </tr>
+            <tr>
+              <td>Investor-Ready</td>
+              <td class="lowlight">Usually not</td>
+              <td class="highlight">Yes</td>
+              <td class="highlight">Yes</td>
+            </tr>
+            <tr>
+              <td>Customized to You</td>
+              <td class="lowlight">No</td>
+              <td>Partially (generator)</td>
+              <td class="highlight">Fully</td>
+            </tr>
+            <tr>
+              <td>Ongoing Legal Advice</td>
+              <td class="lowlight">No</td>
+              <td class="lowlight">No</td>
+              <td class="highlight">Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="section-title">Common Questions</h2>
+      <div class="faq-item">
+        <h4>Is a 50/50 split ever a good idea?</h4>
+        <p>Sometimes—but only when contributions, risk, and roles are truly equal. Most startups have asymmetry (one founder quits a job, another keeps theirs; one brings IP, the other brings cash). FairSplit's calculator helps you find the split that matches reality, not friendship.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Can't we just use a free template from the internet?</h4>
+        <p>Free templates often miss critical clauses like 83(b) election guidance, double-trigger acceleration, and pre-existing IP disclosure. FairSplit's templates were built specifically for startup co-founders and cover the edge cases that sink deals.</p>
+      </div>
+      <div class="faq-item">
+        <h4>When should we actually hire a lawyer?</h4>
+        <p>Hire a lawyer when you have a complex cap table, multiple funding rounds, or non-standard terms. For most pre-seed and bootstrapped startups with 2–4 co-founders, FairSplit covers 90% of what you need at 3% of the cost.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What happens if we don't document our equity split?</h4>
+        <p>Disputes become "he said, she said." IP ownership gets murky. Investors demand a clean cap table and may walk if agreements are missing. The cost of fixing it later is always higher than doing it right today.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="cta-section">
+        <h2>Don't let a handshake cost you your company.</h2>
+        <p>Get attorney-reviewed co-founder agreements for $49. Generate a custom agreement for $99.</p>
+        <a class="btn btn-primary" href="pricing.html">See Pricing</a>
+        <a class="btn btn-ghost" href="index.html#calculator" style="margin-left:10px;">Try Free Calculator</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 FairSplit. Built for founders, by founders.</div>
+      <div style="display:flex;gap:18px;">
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('SW registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('SW registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
