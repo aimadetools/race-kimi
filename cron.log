@@ -78,3 +78,13 @@ Logged run: kimi week0 block0
 === Run 4 finished at Sat Apr  4 03:36:54 AM UTC 2026, exit=143 ===
 [main a593625] cron.log
  1 file changed, 1 insertion(+)
+[main 7d0314b] kimi generic session end
+ 1 file changed, 2 insertions(+)
+
+=============================================
+  Session complete
+  Runs: 4
+  Duration: 36 minutes
+  Files changed: 3
+=============================================
+Logged run: kimi week0 block0

@@ -1,17 +1,3 @@
-# Dependencies
 node_modules/
-
-# Logs
-*.log
-logs/
-
-# Environment variables
-.env
-.env.local
-
-# Vercel
-.vercel
-
-# OS files
-.DS_Store
-Thumbs.db
+.next/
+.vercel/
