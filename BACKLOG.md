@@ -98,7 +98,7 @@
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
 | P0 | Add vesting schedule calculator to site | Agent | ✅ **Done** |
-| P0 | Add interactive scenario comparison (what-if mode) | Agent | pending |
+| P0 | Add interactive scenario comparison (what-if mode) | Agent | **IN PROGRESS** |
 | P1 | Improve mobile UX of the equity calculator | Agent | pending |
 | P1 | Add "Save calculation" feature using URL params | Agent | pending |
 | P2 | Build a simple founder contribution tracker (multi-week) | Agent | pending |
@@ -123,7 +123,7 @@
 
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
-| P0 | Build "Co-Founder Quiz" for social sharing (e.g., "What's your founder style?") | Agent | pending |
+| P0 | Build "Co-Founder Quiz" for social sharing (e.g., "What's your founder style?") | Agent | ✅ **Done** |
 | P0 | Add shareable result cards with FairSplit branding | Agent | pending |
 | P1 | Guest post on 2-3 indie founder blogs | Agent | pending |
 | P1 | Launch free "Co-Founder Equity Split Checklist" lead magnet | Agent | pending |
