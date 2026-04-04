@@ -354,7 +354,7 @@
                 <li>Signing instructions</li>
               </ul>
             </div>
-            <a href="#" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.1rem;">Purchase Custom Agreement →</a>
+            <a href="https://buy.stripe.com/example-custom" class="btn btn-primary" data-affiliate-link style="padding: 14px 32px; font-size: 1.1rem;">Purchase Custom Agreement →</a>
             <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">Or <a href="pricing.html" style="color: var(--accent);">view all pricing options</a></p>
           </div>
         </div>
@@ -508,7 +508,8 @@ ${founders.map((f, i) => `
             .signature-line { border-top: 1px solid #333; width: 300px; margin-top: 40px; }
           </style>
         </head>
-        <body>${content}<script>
+        <body>${content}<script src="/assets/js/affiliate-tracker.js"></script>
+<script>
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -686,6 +686,40 @@
             </div>
         </section>
         
+        <!-- Affiliate Link Generator -->
+        <section style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin: 2rem 0;">
+            <h2 class="section-title" style="margin-top: 0;">🔗 Generate Your Referral Link</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Enter your affiliate code to create your unique tracking link and view your local stats.</p>
+            
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <input type="text" id="affCodeInput" placeholder="your-code" style="flex: 1; min-width: 200px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); padding: 0.875rem 1rem; border-radius: 0.75rem; font-size: 1rem;">
+                <button onclick="generateLink()" class="btn btn-primary">Generate Link</button>
+            </div>
+            
+            <div id="affLinkResult" style="display: none; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem;">
+                <p style="margin: 0 0 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">Your referral link:</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <input type="text" id="affLinkOutput" readonly style="flex: 1; min-width: 200px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.95rem;">
+                    <button onclick="copyLink()" class="btn btn-secondary" id="copyBtn">Copy</button>
+                </div>
+            </div>
+            
+            <div id="affStats" style="display: none;">
+                <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--text-secondary);">Your Stats (Browser-Tracked)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+                    <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; text-align: center;">
+                        <div style="font-size: 1.75rem; font-weight: 700; color: var(--accent-light);" id="statClicks">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Clicks</div>
+                    </div>
+                    <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; text-align: center;">
+                        <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);" id="statConversions">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Conversions</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 1rem;">These stats are tracked locally in your browser. Final commission payouts are verified through our backend dashboard.</p>
+            </div>
+        </section>
+        
         <!-- CTA -->
         <section class="cta-section">
             <h2>Ready to Start Earning?</h2>
@@ -703,6 +737,7 @@
         <p style="margin-top: 1rem;">© 2026 FairSplit. Built for founders, by founders.</p>
     </footer>
     
+    <script src="/assets/js/affiliate-tracker.js"></script>
     <script>
         function updateEarnings() {
             const slider = document.getElementById('referralSlider');
@@ -715,6 +750,35 @@
             document.getElementById('customerRevenue').textContent = '$' + (sales * avgOrderValue).toLocaleString();
             document.getElementById('commission').textContent = '$' + commission.toLocaleString();
         }
+        
+        function generateLink() {
+            const code = document.getElementById('affCodeInput').value;
+            if (!code.trim()) return;
+            
+            const link = window.generateAffiliateLink(code);
+            document.getElementById('affLinkOutput').value = link;
+            document.getElementById('affLinkResult').style.display = 'block';
+            
+            const stats = window.getAffiliateStats(code);
+            document.getElementById('statClicks').textContent = stats.clicks || 0;
+            document.getElementById('statConversions').textContent = stats.conversions || 0;
+            document.getElementById('affStats').style.display = 'block';
+        }
+        
+        function copyLink() {
+            const output = document.getElementById('affLinkOutput');
+            output.select();
+            document.execCommand('copy');
+            const btn = document.getElementById('copyBtn');
+            const original = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = original, 1500);
+        }
+        
+        // Allow Enter key to generate
+        document.getElementById('affCodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateLink();
+        });
         
         // Initialize
         updateEarnings();
