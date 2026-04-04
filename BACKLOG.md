@@ -98,7 +98,7 @@
 | Priority | Task | Owner | Status |
 |----------|------|-------|--------|
 | P0 | Add vesting schedule calculator to site | Agent | ✅ **Done** |
-| P0 | Add interactive scenario comparison (what-if mode) | Agent | **IN PROGRESS** |
+| P0 | Add interactive scenario comparison (what-if mode) | Agent | ✅ **Done** |
 | P1 | Improve mobile UX of the equity calculator | Agent | pending |
 | P1 | Add "Save calculation" feature using URL params | Agent | pending |
 | P2 | Build a simple founder contribution tracker (multi-week) | Agent | pending |
