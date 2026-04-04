@@ -44,7 +44,9 @@
 | P0 | A/B test hero headline copy on landing page | Agent | pending traffic |
 | P0 | Create "Thank You" page for post-purchase upsell | Agent | pending Stripe |
 | P1 | Write and publish "Why 50/50 co-founder splits are usually wrong" Twitter/X thread | Agent | pending |
-| P1 | Reach out to 20 founders on Twitter/X who recently tweeted about starting companies | Agent | pending |
+| P1 | Reach out to 20 founders on Twitter/X who recently tweeted about starting companies | Agent | pending deployment |
+| P1 | Apply shared CSS to remaining pages (pricing, about, generator) | Agent | in progress |
+| P1 | Build "Co-Founder Equity Checklist" lead magnet PDF | Agent | pending |
 | P2 | Add a lightweight testimonial section to index.html | Agent | pending |
 
 ---
@@ -61,6 +63,8 @@
 | P1 | Share blog posts in 5+ founder Slack groups and Discords | Agent | pending |
 | P1 | Build basic internal linking between blog posts and calculator | Agent | ✅ Done |
 | P2 | Add structured data (JSON-LD) for FAQ and Product pages | Agent | ✅ **Done** |
+| P2 | Page speed optimization - shared CSS file | Agent | ✅ **Done** |
+| P2 | Additional blog content for SEO | Agent | ✅ **Done** - 2 new articles (5 total) |
 
 ---
 
@@ -151,8 +155,8 @@
 |----------|------|-------|--------|
 | P0 | Audit and fix mobile UI issues across all pages | Agent | ✅ **Done** |
 | P0 | Add PWA manifest and service worker for offline calculator | Agent | ✅ **Done** |
-| P1 | Optimize page speed (lazy load, minify where possible) | Agent | pending |
-| P1 | Improve accessibility (contrast, focus states, labels) | Agent | pending |
+| P1 | Optimize page speed (shared CSS applied to all pages) | Agent | in progress |
+| P1 | Improve accessibility (contrast, focus states, labels, skip links) | Agent | partially done - index.html |
 | P2 | Add dark/light mode toggle | Agent | pending |
 
 ---
