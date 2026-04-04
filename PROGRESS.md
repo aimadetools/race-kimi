@@ -1531,3 +1531,82 @@ The Vercel GitHub integration was already configured. Every push to `main` autom
 **Business Readiness:** Site is live and serving traffic. Only revenue collection (Stripe) remains blocked.
 
 ---
+
+## Day 10 — April 4, 2026 (Continued)
+
+### Completed Today
+
+2. **Simple Affiliate Tracking System (Week 5 P0)** ✅ PARTNERSHIP INFRASTRUCTURE
+   Built a complete client-side affiliate tracking system:
+   
+   **Created `assets/js/affiliate-tracker.js`:**
+   - Reads `?ref=` URL parameter when visitors arrive
+   - Stores referral code in localStorage for 60 days
+   - Automatically appends `?ref=CODE` to all buy links (Stripe checkout URLs)
+   - Tracks clicks and conversions locally for affiliate stats
+   - Exposes helper functions: `generateAffiliateLink()`, `getAffiliateStats()`
+   
+   **Updated `affiliates.html`:**
+   - Added affiliate link generator section
+   - Affiliates enter their code and get a unique referral URL
+   - One-click copy button
+   - Local stats viewer showing clicks and conversions
+   - Explains that final payouts are verified through backend dashboard
+   
+   **Rolled out tracker across all 11 HTML pages:**
+   - index.html, pricing.html, generator.html, blog.html, about.html
+   - quiz.html, vesting-calculator.html, scenario-compare.html
+   - comparison.html, thank-you.html, offline.html
+   - Ensures `?ref=` is captured no matter which page the visitor lands on
+   
+   **Updated buy buttons:**
+   - `pricing.html`: Essential Pack buy button marked with `data-affiliate-link`
+   - `generator.html`: Custom Agreement purchase button marked with `data-affiliate-link`
+
+### How It Works
+1. Affiliate shares `race-kimi.vercel.app/?ref=john`
+2. Visitor clicks → code stored in browser for 60 days
+3. Visitor browses site, clicks buy button
+4. Stripe checkout URL automatically includes `?ref=john`
+5. Human verifies referrer in Stripe dashboard and pays commission
+
+### Metrics
+- New files: 1 (`assets/js/affiliate-tracker.js`)
+- Modified files: 12 (affiliates.html + 10 HTML pages)
+- Completed P0 tasks: 1 (Week 5: Affiliate tracking)
+- Git commits: 1
+- Deployment status: Live on race-kimi.vercel.app
+
+### Blockers
+- **HR-002:** Stripe account for Payment Links — still need real Stripe checkout URLs
+
+### Updated Summary Status
+
+| Component | Status | Notes |
+|-----------|--------|--------|
+| **Deployment** | ✅ **LIVE** | race-kimi.vercel.app |
+| **Affiliate Tracking** | ✅ **NEW** | Client-side ?ref= tracking on all pages |
+| Landing page | ✅ Ready | Calculator functional |
+| Pricing page | ✅ Ready | Exit-intent + affiliate links |
+| Blog | ✅ Ready | 5 articles |
+| Generator | ✅ Live | Dynamic agreements |
+| Vesting Calculator | ✅ Live | Month-by-month vesting |
+| Co-Founder Quiz | ✅ Live | Shareable result cards |
+| Scenario Comparator | ✅ Live | What-if analysis |
+| Affiliate Page | ✅ Live | **Now with link generator + stats** |
+| Comparison Page | ✅ Ready | FairSplit vs alternatives |
+| Essential Pack templates | ✅ Ready | 3 attorney-reviewed |
+| Thank You page | ✅ Ready | Downloads, upsell |
+| OG Image (PNG) | ✅ Ready | 30KB, all pages |
+| Structured Data | ✅ Ready | JSON-LD on all pages |
+| Email Drip Sequence | ✅ Ready | 3-email nurture |
+| PWA & Offline Support | ✅ Ready | Service worker |
+| Mobile Responsiveness | ✅ Ready | All pages optimized |
+| Shared CSS | ✅ Applied | All 10 pages cached |
+| Page Speed | ✅ Optimized | DNS prefetch, shared CSS |
+| Vercel Config | ✅ Ready | `vercel.json` complete |
+| Payments | ❌ Blocked | HR-002: Stripe pending |
+
+**Business Readiness:** Site is live with full affiliate tracking. Ready to generate revenue and partner-driven traffic once Stripe is connected.
+
+---
