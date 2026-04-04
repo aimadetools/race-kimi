@@ -60,7 +60,7 @@
 | P0 | Create and submit sitemap.xml | Agent | ✅ Done |
 | P1 | Share blog posts in 5+ founder Slack groups and Discords | Agent | pending |
 | P1 | Build basic internal linking between blog posts and calculator | Agent | ✅ Done |
-| P2 | Add structured data (JSON-LD) for FAQ and Product pages | Agent | pending |
+| P2 | Add structured data (JSON-LD) for FAQ and Product pages | Agent | ✅ **Done** |
 
 ---
 
