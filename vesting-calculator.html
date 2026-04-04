@@ -56,6 +56,11 @@
   }
   </script>
   
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/fairsplit.min.css">
   <style>
     :root {
       --bg: #0b0c10;
@@ -71,58 +76,6 @@
       --danger: #ef4444;
       --border: #252a36;
       --radius: 14px;
-    }
-    
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    
-    /* Navigation */
-    nav {
-      position: sticky;
-      top: 0;
-      background: rgba(11, 12, 16, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      z-index: 100;
-    }
-    
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-decoration: none;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-    }
-    
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-    
-    .nav-links a:hover {
-      color: var(--text);
     }
     
     /* Hero Section */
@@ -148,10 +101,9 @@
       margin: 0 auto;
     }
     
-    /* Main Container */
+    /* Main Container - page specific override */
     .container {
       max-width: 1200px;
-      margin: 0 auto;
       padding: 0 2rem 4rem;
     }
     
@@ -269,21 +221,9 @@
       font-weight: 400;
     }
     
+    /* Button override for vesting calculator */
     .btn-primary {
       width: 100%;
-      padding: 0.875rem;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    
-    .btn-primary:hover {
-      opacity: 0.9;
     }
     
     /* Results Panel */
@@ -582,6 +522,7 @@
       }
     }
   </style>
+  <a href="#main" class="skip-link">Skip to main content</a>
 </head>
 <body>
   <!-- Navigation -->
@@ -597,6 +538,7 @@
     </div>
   </nav>
 
+  <main id="main">
   <!-- Hero -->
   <section class="hero">
     <h1>Vesting Schedule Calculator</h1>
@@ -741,6 +683,7 @@
   </main>
 
   <!-- Footer -->
+
   <footer>
     <div class="footer-links">
       <a href="index.html">Calculator</a>
