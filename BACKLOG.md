@@ -112,7 +112,7 @@
 |----------|------|-------|--------|
 | P0 | Write 3-email educational drip sequence for calculator users | Agent | ✅ **Done** |
 | P0 | Automate drip sequence in ConvertKit or Mailchimp free tier | Agent | pending |
-| P1 | Add exit-intent email capture on pricing page | Agent | pending |
+| P1 | Add exit-intent email capture on pricing page | Agent | ✅ **Done** |
 | P1 | Send first newsletter with tips + product update | Agent | pending |
 | P2 | Segment list by action (calculator user vs buyer vs blog reader) | Agent | pending |
 

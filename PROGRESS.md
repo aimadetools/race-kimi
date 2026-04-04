@@ -963,3 +963,45 @@ While deployment remains blocked (HR-001, HR-002), highest-value next tasks:
 **Overall: 100% Product Ready** — All features complete. Only deployment/payment blockers remain.
 
 ---
+
+---
+
+## Day 7 — April 4, 2026 (Continued)
+
+3. **Exit-Intent Email Capture (Week 7 P1)** ✅ CONVERSION OPTIMIZATION
+   Added exit-intent modal to pricing page to capture leaving visitors:
+   
+   **Features:**
+   - Triggers when mouse leaves viewport towards top (exit intent)
+   - Shows once per visitor (stored in localStorage)
+   - Offers free "Co-Founder Equity Checklist" + 10% discount
+   - Clean, non-intrusive design matching site aesthetic
+   - Smooth animations for open/close
+   
+   **Modal Contents:**
+   - Attention-grabbing headline with gift emoji
+   - Value proposition with 4 bullet points
+   - Email input field
+   - CTA button: "Send Me The Checklist + 10% Off"
+   - "No thanks" dismiss option
+   - Close (X) button
+   
+   **Technical Implementation:**
+   - Exit detection via `mouseleave` event on document
+   - Modal state persisted in localStorage (shows only once)
+   - Closes on: X button, "No thanks", overlay click, Escape key
+   - GA4 tracking for modal shown and email captured
+   - Stores email with `has_discount: true` flag for future use
+   
+   **Benefits:**
+   - Captures non-buyers before they leave
+   - Builds email list for drip campaigns
+   - Discount incentive increases future conversion
+   - Once-per-visitor limit prevents annoyance
+
+### Metrics
+- Pages with exit-intent capture: 1 (pricing.html)
+- Offer value: Free checklist + 10% discount
+- Estimated conversion lift: 5-15% of abandoning visitors
+
+---
