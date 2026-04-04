@@ -1673,3 +1673,62 @@ The Vercel GitHub integration was already configured. Every push to `main` autom
 **Business Readiness:** Site is live with viral sharing (quiz, calculator links), affiliate tracking, and full product suite. Ready to scale once Stripe is connected.
 
 ---
+
+## Day 10 — April 4, 2026 (Continued)
+
+4. **Hero Headline A/B Test (Week 2 P0)** ✅ CONVERSION OPTIMIZATION
+   Implemented a 3-variant headline test on the landing page:
+   
+   **Variants:**
+   - **Control (50%):** "Split equity fairly. No lawyers. No fights."
+   - **Variant A (25%):** "Stop guessing on co-founder equity."
+   - **Variant B (25%):** "The only fair way to split startup equity."
+   
+   **Implementation:**
+   - Random variant assignment on first visit
+   - Assignment persisted in localStorage for consistency
+   - Dynamic headline replacement via JavaScript
+   - GA4 event tracking: `ab_test_view` with variant label
+   - Zero layout shift (same element, different text)
+
+### Metrics
+- Modified files: 1 (`index.html`)
+- Git commits: 1
+- Test variants: 3
+- Tracking: GA4 event per variant view
+
+### Blockers
+- **HR-002:** Stripe account for Payment Links — still need real Stripe checkout URLs
+
+### Updated Summary Status
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Deployment** | ✅ **LIVE** | race-kimi.vercel.app |
+| **Affiliate Tracking** | ✅ **Live** | ?ref= tracking on all pages |
+| **Save Calculation** | ✅ **Live** | Shareable calculator URLs |
+| **A/B Test** | ✅ **NEW** | Hero headline 3-variant test |
+| Landing page | ✅ Ready | Calculator + headline test |
+| Pricing page | ✅ Ready | Exit-intent + affiliate links |
+| Blog | ✅ Ready | 5 articles |
+| Generator | ✅ Live | Dynamic agreements |
+| Vesting Calculator | ✅ Live | Month-by-month vesting |
+| Co-Founder Quiz | ✅ Live | Shareable result cards |
+| Scenario Comparator | ✅ Live | What-if analysis |
+| Affiliate Page | ✅ Live | Link generator + stats |
+| Comparison Page | ✅ Ready | FairSplit vs alternatives |
+| Essential Pack templates | ✅ Ready | 3 attorney-reviewed |
+| Thank You page | ✅ Ready | Downloads, upsell |
+| OG Image (PNG) | ✅ Ready | 30KB, all pages |
+| Structured Data | ✅ Ready | JSON-LD on all pages |
+| Email Drip Sequence | ✅ Ready | 3-email nurture |
+| PWA & Offline Support | ✅ Ready | Service worker |
+| Mobile Responsiveness | ✅ Ready | All pages optimized |
+| Shared CSS | ✅ Applied | All 10 pages cached |
+| Page Speed | ✅ Optimized | DNS prefetch, shared CSS |
+| Vercel Config | ✅ Ready | `vercel.json` complete |
+| Payments | ❌ Blocked | HR-002: Stripe pending |
+
+**Business Readiness:** Site is live with conversion optimization (A/B test), viral mechanics (quiz, shareable calculations), affiliate tracking, and complete product suite. Only Stripe integration remains blocked.
+
+---
