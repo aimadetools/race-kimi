@@ -324,7 +324,7 @@
 
     let founderCount = 0;
 
-    function addFounder(name = '', hours = 20, cash = 0, ip = 0, experience = 1) {
+    function addFounder(name = '', hours = 20, weeks = 12, cash = 0, ip = 0, experience = 1) {
       founderCount++;
       const div = document.createElement('div');
       div.className = 'founder-block';
@@ -343,7 +343,7 @@
           </div>
           <div class="field">
             <label>Duration (weeks)</label>
-            <input type="number" class="f-weeks" value="12" min="1">
+            <input type="number" class="f-weeks" value="${weeks}" min="1">
           </div>
         </div>
         <div class="row">
@@ -370,9 +370,54 @@
       foundersContainer.appendChild(div);
     }
 
+    function clearFounders() {
+      foundersContainer.innerHTML = '';
+      founderCount = 0;
+    }
+
+    function buildShareableURL() {
+      const blocks = foundersContainer.querySelectorAll('.founder-block');
+      const params = new URLSearchParams();
+      blocks.forEach((block, idx) => {
+        const i = idx + 1;
+        params.set('n' + i, block.querySelector('.f-name').value || '');
+        params.set('h' + i, block.querySelector('.f-hours').value || '0');
+        params.set('w' + i, block.querySelector('.f-weeks').value || '0');
+        params.set('c' + i, block.querySelector('.f-cash').value || '0');
+        params.set('i' + i, block.querySelector('.f-ip').value || '0');
+        params.set('e' + i, block.querySelector('.f-exp').value || '1');
+      });
+      const url = new URL(window.location.href);
+      url.search = params.toString();
+      return url.toString();
+    }
+
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const founders = [];
+      for (let i = 1; i <= 10; i++) {
+        if (params.has('n' + i) || params.has('h' + i)) {
+          founders.push({
+            name: params.get('n' + i) || '',
+            hours: parseFloat(params.get('h' + i)) || 0,
+            weeks: parseFloat(params.get('w' + i)) || 12,
+            cash: parseFloat(params.get('c' + i)) || 0,
+            ip: parseFloat(params.get('i' + i)) || 0,
+            experience: parseFloat(params.get('e' + i)) || 1
+          });
+        }
+      }
+      if (founders.length > 0) {
+        clearFounders();
+        founders.forEach(f => addFounder(f.name, f.hours, f.weeks, f.cash, f.ip, f.experience));
+        return true;
+      }
+      return false;
+    }
+
     document.getElementById('addFounder').addEventListener('click', () => addFounder());
 
-    document.getElementById('calcBtn').addEventListener('click', () => {
+    function renderResults() {
       const blocks = foundersContainer.querySelectorAll('.founder-block');
       if (blocks.length === 0) return;
 
@@ -406,6 +451,19 @@
         resultsBody.appendChild(row);
       });
 
+      // Add shareable link button
+      const shareUrl = buildShareableURL();
+      const shareDiv = document.createElement('div');
+      shareDiv.style.cssText = 'margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: center;';
+      shareDiv.innerHTML = `
+        <p style="margin: 0 0 10px; color: var(--text-muted); font-size: 0.9rem;">Share this calculation with your co-founder</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+          <input type="text" id="shareUrl" readonly value="${shareUrl.replace(/"/g, '&quot;')}" style="flex: 1; min-width: 220px; max-width: 400px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); padding: 10px 12px; border-radius: 10px; font-size: 0.9rem;">
+          <button onclick="copyShareUrl()" class="btn btn-ghost" style="font-size: 0.9rem; padding: 10px 18px;">Copy link</button>
+        </div>
+      `;
+      resultsBody.appendChild(shareDiv);
+
       results.style.display = 'block';
       results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       
@@ -418,7 +476,29 @@
         'event_label': 'founder_count',
         'value': blocks.length
       });
-    });
+
+      // Update browser URL without reloading
+      const newUrl = buildShareableURL();
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    window.copyShareUrl = function() {
+      const input = document.getElementById('shareUrl');
+      if (!input) return;
+      input.select();
+      document.execCommand('copy');
+      const btn = input.nextElementSibling;
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = original, 1500);
+      
+      gtag && gtag('event', 'share_link_copied', {
+        'event_category': 'engagement',
+        'event_label': 'calculator_share'
+      });
+    };
+
+    document.getElementById('calcBtn').addEventListener('click', renderResults);
 
     // Email capture form handling
     document.getElementById('emailForm').addEventListener('submit', function(e) {
@@ -442,9 +522,14 @@
       }
     });
 
-    // Seed with 2 founders
-    addFounder('Founder 1', 40, 5000, 0, 1);
-    addFounder('Founder 2', 20, 0, 10000, 1.25);
+    // Load from URL params if present, otherwise seed with 2 founders
+    if (!loadFromURL()) {
+      addFounder('Founder 1', 40, 12, 5000, 0, 1);
+      addFounder('Founder 2', 20, 12, 0, 10000, 1.25);
+    } else {
+      // Auto-calculate if loaded from URL
+      renderResults();
+    }
   </script>
 <script src="/assets/js/affiliate-tracker.js"></script>
 <script>
