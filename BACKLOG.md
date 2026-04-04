@@ -86,7 +86,7 @@
 |----------|------|-------|--------|
 | P0 | Outreach to 10 startup newsletters/blogs for features or guest posts | Agent | pending |
 | P0 | Set up simple affiliate program (20% commission, manual tracking) | Agent | pending |
-| P1 | Create affiliate landing page with terms and payout info | Agent | pending |
+| P1 | Create affiliate landing page with terms and payout info | Agent | ✅ **Done** |
 | P1 | Reach out to 10 indie startup coaches for partnership | Agent | pending |
 | P2 | Build a simple referral tracking param (?ref=) for Stripe links | Agent | pending |
 
