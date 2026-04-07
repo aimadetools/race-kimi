@@ -70,10 +70,10 @@ These are essential for launch and first customer acquisition.
   - Write bio and pinned tweet
   - Follow target audience (SaaS founders, indie hackers)
 
-- [ ] **Content Creation**
-  - Write "10 SaaS Changelogs That Drive Engagement" blog post
-  - Write "How to Write Changelogs Your Customers Actually Read" guide
-  - Create changelog template library (5 templates)
+- [ ] **Content Creation** (In Progress)
+  - [x] Write "10 SaaS Changelogs That Drive Engagement" blog post
+  - [ ] Write "How to Write Changelogs Your Customers Actually Read" guide
+  - [ ] Create changelog template library (5 templates)
 
 - [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
