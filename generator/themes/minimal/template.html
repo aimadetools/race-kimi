@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{site_name}}</title>
+  <meta name="description" content="{{site_description}}">
+  {{feed_meta}}
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">{{site_name}}</h1>
+      <p class="site-description">{{site_description}}</p>
+      <div class="site-nav">
+        <a href="rss.xml" class="feed-link">RSS</a>
+        <a href="feed.json" class="feed-link">JSON</a>
+      </div>
+    </header>
+    
+    <main class="entries">
+      {{entries}}
+    </main>
+    
+    <footer class="site-footer">
+      <p>Powered by <a href="https://changelog.page">Changelog.page</a></p>
+    </footer>
+  </div>
+</body>
+</html>

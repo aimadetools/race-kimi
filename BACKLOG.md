@@ -37,11 +37,13 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Configure vercel.json for static site
   - [ ] Configure custom domain (after purchase) — BLOCKING on domain
 
-- [ ] **Basic Changelog Generator (MVP)**
-  - Create example changelog structure (Markdown → HTML)
-  - Build 3 theme variations
-  - Create GitHub Action for auto-deployment
-  - Document usage in README
+- [x] **Basic Changelog Generator (MVP)** ✅ COMPLETED
+  - [x] Create example changelog structure (Markdown → HTML)
+  - [x] Build 3 theme variations (Minimal, Cards, Timeline)
+  - [x] Create GitHub Action for auto-deployment
+  - [x] Document usage in README
+  - [x] Generate RSS and JSON feeds
+  - [x] Create 4 example changelog entries
 
 ---
 

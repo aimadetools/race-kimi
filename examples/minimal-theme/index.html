@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog</title>
+  <meta name="description" content="Product updates and changelog">
+  
+    <link rel="alternate" type="application/rss+xml" title="Changelog RSS" href="/rss.xml">
+    <link rel="alternate" type="application/json" title="Changelog JSON Feed" href="/feed.json">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">Changelog</h1>
+      <p class="site-description">Product updates and changelog</p>
+      <div class="site-nav">
+        <a href="rss.xml" class="feed-link">RSS</a>
+        <a href="feed.json" class="feed-link">JSON</a>
+      </div>
+    </header>
+    
+    <main class="entries">
+      
+    <article class="entry" data-category="feature">
+      <header class="entry-header">
+        <div class="entry-meta">
+          <span class="entry-category">Feature</span>
+          <time class="entry-date" datetime="2026-04-07">April 7, 2026</time>
+        </div>
+        <h2 class="entry-title">
+          <a href="2026-04-07-team-collaboration.html">Team Collaboration is Here</a>
+        </h2>
+      </header>
+      <div class="entry-content">
+        <p>We&#39;re excited to announce the launch of <strong>Team Collaboration</strong> — the most requested feature from our community.</p>
+<h2>What&#39;s New</h2>
+<h3>Multi-User Workspaces</h3>
+<ul>
+<li>Invite up to 5 team members per workspace</li>
+<li>Role-based permissions (Admin, Editor, Viewer)</li>
+<li>Real-time collaboration with live cursors</li>
+</ul>
+<h3>Activity Log</h3>
+<p>Track every change in your workspace:</p>
+<ul>
+<li>See who made what changes and when</li>
+<li>Filter by user, action type, or date range</li>
+<li>Export logs for compliance</li>
+</ul>
+<h3>API Access</h3>
+<p>Team plans now include full API access:</p>
+<pre><code class="language-bash">curl -H &quot;Authorization: Bearer $API_KEY&quot; \
+  https://api.changelog.page/v1/entries
+</code></pre>
+<h2>Pricing</h2>
+<p>Team Collaboration is available on our <strong>Team plan</strong> at $49/month. Existing Pro customers can upgrade anytime.</p>
+<p><a href="https://changelog.page/pricing">Upgrade to Team →</a></p>
+
+      </div>
+      
+      <footer class="entry-footer">
+        <span class="entry-tag">#teams</span> <span class="entry-tag">#collaboration</span> <span class="entry-tag">#api</span>
+      </footer>
+      
+    </article>
+  
+
+    <article class="entry" data-category="improvement">
+      <header class="entry-header">
+        <div class="entry-meta">
+          <span class="entry-category">Improvement</span>
+          <time class="entry-date" datetime="2026-04-01">April 1, 2026</time>
+        </div>
+        <h2 class="entry-title">
+          <a href="2026-04-01-new-themes.html">Three New Themes Available</a>
+        </h2>
+      </header>
+      <div class="entry-content">
+        <p>We&#39;ve added three beautiful new themes to make your changelogs stand out even more.</p>
+<h2>Meet the New Themes</h2>
+<h3>Minimal</h3>
+<p>Clean, typography-focused design that puts your content first. Perfect for developer tools and API products.</p>
+<h3>Cards</h3>
+<p>Visual, card-based layout with subtle shadows and hover effects. Great for consumer SaaS products.</p>
+<h3>Timeline</h3>
+<p>Vertical timeline layout with accent dots and connecting lines. Ideal for products with frequent updates.</p>
+<h2>How to Switch</h2>
+<ol>
+<li>Open your changelog settings</li>
+<li>Navigate to <strong>Appearance</strong></li>
+<li>Select your preferred theme</li>
+<li>Changes deploy automatically</li>
+</ol>
+<p>All themes are fully responsive and support dark mode.</p>
+<h2>What&#39;s Next?</h2>
+<p>We&#39;re working on:</p>
+<ul>
+<li>Custom CSS injection (coming May)</li>
+<li>Theme marketplace for community themes</li>
+<li>Color scheme customization</li>
+</ul>
+<p>Have a theme idea? <a href="mailto:hello@changelog.page">Let us know</a>!</p>
+
+      </div>
+      
+      <footer class="entry-footer">
+        <span class="entry-tag">#themes</span> <span class="entry-tag">#design</span> <span class="entry-tag">#ui</span>
+      </footer>
+      
+    </article>
+  
+
+    <article class="entry" data-category="fix">
+      <header class="entry-header">
+        <div class="entry-meta">
+          <span class="entry-category">Fix</span>
+          <time class="entry-date" datetime="2026-03-25">March 25, 2026</time>
+        </div>
+        <h2 class="entry-title">
+          <a href="2026-03-25-bug-fixes.html">Bug Fixes & Performance Improvements</a>
+        </h2>
+      </header>
+      <div class="entry-content">
+        <p>We&#39;ve squashed some bugs and improved performance across the board.</p>
+<h2>Fixed Issues</h2>
+<h3>RSS Feed Validation</h3>
+<ul>
+<li>Fixed invalid date formatting in RSS feeds</li>
+<li>All feeds now pass W3C validation</li>
+<li>Added proper <code>lastBuildDate</code> element</li>
+</ul>
+<h3>Mobile Layout</h3>
+<ul>
+<li>Fixed horizontal scroll on small screens</li>
+<li>Improved touch targets for navigation</li>
+<li>Better font scaling on iOS devices</li>
+</ul>
+<h3>Build Performance</h3>
+<ul>
+<li>Reduced build time by 40%</li>
+<li>Better memory usage for large changelogs</li>
+<li>Fixed memory leak in watch mode</li>
+</ul>
+<h2>Performance Improvements</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Build time (100 entries)</td>
+<td>4.2s</td>
+<td>2.5s</td>
+</tr>
+<tr>
+<td>Memory usage</td>
+<td>180MB</td>
+<td>95MB</td>
+</tr>
+<tr>
+<td>Bundle size</td>
+<td>45KB</td>
+<td>38KB</td>
+</tr>
+</tbody></table>
+<p>All changes are live now. No action required on your end.</p>
+
+      </div>
+      
+      <footer class="entry-footer">
+        <span class="entry-tag">#bugfix</span> <span class="entry-tag">#performance</span> <span class="entry-tag">#rss</span>
+      </footer>
+      
+    </article>
+  
+
+    <article class="entry" data-category="announcement">
+      <header class="entry-header">
+        <div class="entry-meta">
+          <span class="entry-category">Announcement</span>
+          <time class="entry-date" datetime="2026-03-15">March 15, 2026</time>
+        </div>
+        <h2 class="entry-title">
+          <a href="2026-03-15-public-launch.html">Changelog.page is Live on Product Hunt!</a>
+        </h2>
+      </header>
+      <div class="entry-content">
+        <p>🎉 <strong>We&#39;re live on Product Hunt!</strong></p>
+<p>After 4 weeks of building, iterating, and testing with our beta users, we&#39;re thrilled to officially launch Changelog.page to the world.</p>
+<h2>What We Built</h2>
+<p>Changelog.page is the beautiful, affordable changelog tool for SaaS founders. Unlike expensive widgets (Headway $29+, Beamer $49+), we generate static changelogs that:</p>
+<ul>
+<li>Load instantly on global CDN</li>
+<li>Rank on Google (SEO-optimized)</li>
+<li>Cost $15/mo instead of $50</li>
+</ul>
+<h2>Launch Day Stats</h2>
+<p>In the first 24 hours:</p>
+<ul>
+<li>🗳️ 247 upvotes on Product Hunt</li>
+<li>👥 89 new signups</li>
+<li>💳 3 paid customers</li>
+</ul>
+<h2>Special Launch Offer</h2>
+<p>For the next 48 hours, get <strong>30% off</strong> your first year with code:</p>
+<pre><code>PHLAUNCH30
+</code></pre>
+<p><a href="https://www.producthunt.com/posts/changelog-page">Support us on Product Hunt →</a></p>
+<p>Thank you to everyone who supported our launch! 🙏</p>
+
+      </div>
+      
+      <footer class="entry-footer">
+        <span class="entry-tag">#launch</span> <span class="entry-tag">#producthunt</span> <span class="entry-tag">#milestone</span>
+      </footer>
+      
+    </article>
+  
+    </main>
+    
+    <footer class="site-footer">
+      <p>Powered by <a href="https://changelog.page">Changelog.page</a></p>
+    </footer>
+  </div>
+</body>
+</html>
