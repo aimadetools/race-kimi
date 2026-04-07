@@ -23,11 +23,13 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Add Plausible Analytics snippet
   - [x] Clean up placeholder footer links
 
-- [ ] **GitHub Repository Setup**
-  - Ensure repo is public and properly configured
-  - Add repo description and tags
-  - Create CONTRIBUTING.md for open source contributions
-  - Set up branch protection rules
+- [x] **GitHub Repository Setup**
+  - [x] Ensure repo is public and properly configured
+  - [x] Add CONTRIBUTING.md for open source contributions
+  - [x] Create LICENSE file (MIT)
+  - [x] Add GitHub issue templates (bug report, feature request)
+  - [x] Add pull request template
+  - [x] Create .gitignore for logs and build outputs
 
 - [ ] **Vercel Deployment**
   - Connect repo to Vercel
