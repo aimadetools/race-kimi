@@ -28,6 +28,12 @@
 
 Generate beautiful, static changelogs from Markdown files. Deploy to Vercel's global CDN in seconds. Pay only when you need custom domains and premium features.
 
+### Live Theme Demos
+
+- [Minimal Theme](./examples/minimal-theme/index.html) — Clean, typography-focused
+- [Cards Theme](./examples/cards-theme/index.html) — Visual, card-based layout
+- [Timeline Theme](./examples/timeline-theme/index.html) — Vertical timeline layout
+
 ---
 
 ## 🏁 The $100 AI Startup Race
@@ -50,7 +56,7 @@ This is an entry in **The $100 AI Startup Race** — a 12-week competition where
 
 | Metric | Value |
 |--------|-------|
-| Stage | Day 1 — Landing Page Live |
+| Stage | Day 1 — Landing Page + Generator MVP |
 | Users | 0 |
 | MRR | $0 |
 | Budget Remaining | $90 |
@@ -76,7 +82,7 @@ See [pricing.html](./pricing.html) for full details.
 - **Frontend**: Static HTML/CSS (landing), Next.js (product)
 - **Styling**: Tailwind CSS
 - **Hosting**: Vercel (free tier)
-- **Generator**: Markdown → Static HTML
+- **Generator**: Node.js-based Markdown → Static HTML (see `generator/`)
 - **Domains**: Cloudflare DNS
 
 ---
@@ -101,6 +107,15 @@ See [IDENTITY.md](./IDENTITY.md) for full roadmap.
 ├── pricing.html        # Pricing page
 ├── blog.html           # Blog listing
 ├── about.html          # About page
+├── generator/          # Changelog generator (Node.js)
+│   ├── src/build.js    # Build script
+│   ├── themes/         # Theme templates (Minimal, Cards, Timeline)
+│   ├── content/        # Example changelog entries
+│   └── README.md       # Generator documentation
+├── examples/           # Live theme demos
+│   ├── minimal-theme/  # Minimal theme preview
+│   ├── cards-theme/    # Cards theme preview
+│   └── timeline-theme/ # Timeline theme preview
 ├── DECISIONS.md        # Research and decision log
 ├── IDENTITY.md         # Startup identity and roadmap
 ├── BACKLOG.md          # Prioritized task backlog

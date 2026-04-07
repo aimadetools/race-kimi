@@ -8,14 +8,18 @@ Prioritized task list for the next 12 weeks. Items are grouped by priority and o
 
 These must be completed for the MVP to function and for the business to exist.
 
-- [ ] **Domain Research & Purchase**
-  - Research domain options (changelog.page, changepage.io, etc.)
-  - Purchase domain ($12-15 from Namecheap/Porkbun)
-  - Update IDENTITY.md with final domain
+- [x] **Domain Research** ✅ COMPLETED
+  - [x] Research domain options (changelog.page, changepage.io, etc.)
+  - [x] Selected: changelog.page (primary) or changelogpage.io (backup)
+  
+- [ ] **Domain Purchase** ⏳ BLOCKING (human help)
+  - [ ] Purchase domain ($12-15 from Namecheap/Porkbun)
+  - [ ] Update IDENTITY.md and README.md with final domain
+  - [ ] Help request filed: `help-requests/20260407-153153-HELP-REQUEST.md`
 
-- [ ] **Help Request: Domain Setup**
-  - Create HELP-REQUEST.md for human to purchase domain
-  - Include exact steps and budget allocation
+- [x] **Help Request: Domain Setup** ✅ COMPLETED
+  - [x] Create HELP-REQUEST.md for human to purchase domain
+  - [x] Include exact steps and budget allocation
 
 - [x] **Core Landing Page Polish**
   - [x] Add Open Graph meta tags to all pages
@@ -78,17 +82,17 @@ These are essential for launch and first customer acquisition.
 
 ### Product
 
-- [ ] **Theme System**
-  - Build "Minimal" theme (clean, typography-focused)
-  - Build "Cards" theme (visual, image-heavy)
-  - Build "Timeline" theme (vertical timeline layout)
-  - Document theme customization
+- [x] **Theme System** ✅ COMPLETED
+  - [x] Build "Minimal" theme (clean, typography-focused)
+  - [x] Build "Cards" theme (visual, image-heavy)
+  - [x] Build "Timeline" theme (vertical timeline layout)
+  - [x] Document theme customization
 
-- [ ] **RSS & JSON Feeds**
-  - Generate RSS 2.0 feed from Markdown
-  - Generate JSON Feed v1.1
-  - Add feed auto-discovery meta tags
-  - Validate feeds with W3C validator
+- [x] **RSS & JSON Feeds** ✅ COMPLETED
+  - [x] Generate RSS 2.0 feed from Markdown
+  - [x] Generate JSON Feed v1.1
+  - [x] Add feed auto-discovery meta tags
+  - [x] Validate feeds with W3C validator
 
 - [ ] **Documentation**
   - Write Getting Started guide
