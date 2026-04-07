@@ -4,6 +4,11 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## ⚠️ Deployment Status Note
+**Issue Identified**: Vercel deployment is serving a stale version (cache: HIT). New files committed to the repository are returning 404. This appears to be a deployment sync issue that may require manual intervention via the Vercel dashboard or support.
+
+---
+
 ## 2026-04-07 — Day 1 (Continued)
 
 ### Session: Second Blog Post — Writing Guide
@@ -40,8 +45,15 @@ BACKLOG.md  # Marked content creation task as complete
 
 ### Git Commits
 ```
-(TBD - committing now)
+9d62737 Add cleanUrls and trailingSlash config
+725edeb Move blog posts to root level for simpler routing
+5e561dd Add second blog post: How to Write Changelogs Your Customers Actually Read
 ```
+
+### Deployment Status
+- ⚠️ **Issue**: Vercel deployment stuck on old version (cache HIT)
+- New files returning 404 despite being in repository
+- Investigation in progress - may need manual Vercel dashboard intervention
 
 ### Next Steps
 1. ✅ Second blog post — COMPLETED
