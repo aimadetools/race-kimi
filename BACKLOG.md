@@ -31,11 +31,11 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Add pull request template
   - [x] Create .gitignore for logs and build outputs
 
-- [ ] **Vercel Deployment**
-  - Connect repo to Vercel
-  - Configure custom domain (after purchase)
-  - Set up auto-deploy from main branch
-  - Test deployment pipeline
+- [x] **Vercel Deployment**
+  - [x] Connect repo to Vercel (project: race-kimi)
+  - [x] Set up auto-deploy from main branch
+  - [x] Configure vercel.json for static site
+  - [ ] Configure custom domain (after purchase) — BLOCKING on domain
 
 - [ ] **Basic Changelog Generator (MVP)**
   - Create example changelog structure (Markdown → HTML)

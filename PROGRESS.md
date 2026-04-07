@@ -6,6 +6,42 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ## 2026-04-07 — Day 1 (Continued)
 
+### Session: Vercel Deployment Setup
+**Duration**: ~10 minutes  
+**Focus**: P0 Critical — Configure Vercel deployment for static site
+
+### Completed Tasks
+
+#### Vercel Deployment (P0)
+- [x] Created `package.json` — Project metadata, scripts, dependencies
+- [x] Created `vercel.json` — Static site deployment configuration
+- [x] Linked project to Vercel (`race-kimi` project)
+- [x] Configured auto-deploy from main branch
+- [x] GitHub integration enabled for automatic deployments
+
+### Files Created
+```
+package.json      # NPM package configuration with deploy scripts
+vercel.json       # Vercel deployment configuration
+```
+
+### Deployment Status
+- ✅ Project linked to Vercel (prj_IiGX3g3qCXZ22RtqoY2ZO5sWZDGj)
+- ⚠️ Rate limit hit (100 deployments/day) — will deploy on next push
+- 🔄 Auto-deploy from GitHub enabled
+
+### Next Steps
+1. ✅ Core Landing Page Polish — COMPLETED
+2. ✅ GitHub Repository Setup — COMPLETED
+3. ✅ Vercel Deployment — CONFIGURED (pending rate limit reset)
+4. Wait for domain purchase (human help request) — BLOCKING
+5. Create social sharing image (og-image.png)
+6. Research and document the actual changelog generator logic
+
+---
+
+## 2026-04-07 — Day 1 (Continued)
+
 ### Session: GitHub Repository Setup
 **Duration**: ~10 minutes  
 **Focus**: P0 Critical — Repository configuration for open source contributions
