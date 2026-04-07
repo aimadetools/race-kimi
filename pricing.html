@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing — Changelog.page</title>
+    <meta name="description" content="Simple, transparent pricing. Start free, upgrade when you need more. From $0 to $49/month.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .page-header { padding: 80px 0 40px; text-align: center; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .pricing-toggle { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 40px 0; }
+        .pricing-toggle span { color: var(--text-secondary); }
+        .pricing-toggle span.active { color: var(--text); }
+        .toggle { width: 56px; height: 28px; background: var(--bg-tertiary); border-radius: 14px; position: relative; cursor: pointer; transition: background 0.2s; }
+        .toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: var(--primary); border-radius: 50%; top: 2px; left: 2px; transition: transform 0.2s; }
+        .toggle.annual::after { transform: translateX(28px); }
+        .save-badge { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 4px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 40px 32px; position: relative; }
+        .pricing-card.popular { border-color: var(--primary); transform: scale(1.02); }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 6px 20px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+        .pricing-card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+        .pricing-card .description { color: var(--text-secondary); margin-bottom: 24px; }
+        .pricing-card .price { font-size: 3.5rem; font-weight: 800; margin-bottom: 8px; }
+        .pricing-card .price span { font-size: 1rem; color: var(--text-secondary); font-weight: 400; }
+        .pricing-card .price .period { font-size: 0.875rem; color: var(--text-muted); }
+        .pricing-card ul { list-style: none; margin: 32px 0; }
+        .pricing-card li { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text-secondary); }
+        .pricing-card li::before { content: '✓'; color: var(--success); font-weight: 700; }
+        .pricing-card li.muted { color: var(--text-muted); text-decoration: line-through; }
+        .pricing-card li.muted::before { content: '×'; color: var(--text-muted); }
+
+        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; width: 100%; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-tertiary); border-color: var(--text-muted); }
+
+        .faq-section { padding: 100px 0; border-top: 1px solid var(--border); }
+        .faq-section h2 { text-align: center; font-size: 2rem; margin-bottom: 60px; }
+        .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 32px; max-width: 900px; margin: 0 auto; }
+        .faq-item h3 { font-size: 1.125rem; margin-bottom: 12px; }
+        .faq-item p { color: var(--text-secondary); }
+
+        .compare-section { padding: 100px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+        .compare-section h2 { text-align: center; font-size: 2rem; margin-bottom: 16px; }
+        .compare-section > p { text-align: center; color: var(--text-secondary); margin-bottom: 60px; }
+        .compare-table { max-width: 800px; margin: 0 auto; background: var(--bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+        .compare-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 16px 24px; border-bottom: 1px solid var(--border); }
+        .compare-row:last-child { border-bottom: none; }
+        .compare-row.header { background: var(--bg-tertiary); font-weight: 600; }
+        .compare-row div { color: var(--text-secondary); }
+        .compare-row div:first-child { color: var(--text); }
+        .compare-row .highlight { color: var(--primary-light); font-weight: 600; }
+        .compare-row .check { color: var(--success); }
+
+        .cta-section { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 32px; }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 60px; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 16px; max-width: 300px; }
+        .footer-links h4 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.05em; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.875rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card.popular { transform: none; }
+            .faq-grid { grid-template-columns: 1fr; }
+            .compare-row { grid-template-columns: 2fr 1fr; }
+            .compare-row div:nth-child(3), .compare-row div:nth-child(4) { display: none; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="blog.html">Blog</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Simple, transparent pricing</h1>
+            <p>Start free, upgrade when you need more. No credit card required to get started.</p>
+        </div>
+    </header>
+
+    <section style="padding: 0 0 60px;">
+        <div class="container">
+            <div class="pricing-toggle">
+                <span class="active">Monthly</span>
+                <div class="toggle" onclick="this.classList.toggle('annual')"></div>
+                <span>Annual <span class="save-badge">Save 20%</span></span>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <p class="description">Perfect for side projects and open source</p>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul>
+                        <li>1 public changelog</li>
+                        <li>changelog.page subdomain</li>
+                        <li>3 basic themes</li>
+                        <li>RSS & JSON feed</li>
+                        <li>GitHub sync</li>
+                        <li>Community support</li>
+                        <li class="muted">Custom domain</li>
+                        <li class="muted">Private changelogs</li>
+                        <li class="muted">Analytics</li>
+                    </ul>
+                    <a href="https://github.com/aimadetools/race-kimi" class="btn btn-secondary">Get Started Free</a>
+                </div>
+
+                <div class="pricing-card popular">
+                    <span class="popular-badge">Most Popular</span>
+                    <h3>Pro</h3>
+                    <p class="description">For serious SaaS founders</p>
+                    <div class="price">$15<span>/mo</span></div>
+                    <div class="period">or $144/year (save $36)</div>
+                    <ul>
+                        <li>Everything in Free, plus:</li>
+                        <li>Custom domain</li>
+                        <li>10+ premium themes</li>
+                        <li>Private changelogs</li>
+                        <li>Scheduled posts</li>
+                        <li>Basic analytics</li>
+                        <li>Remove branding</li>
+                        <li>Email support</li>
+                        <li class="muted">API access</li>
+                    </ul>
+                    <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Team</h3>
+                    <p class="description">For growing product teams</p>
+                    <div class="price">$49<span>/mo</span></div>
+                    <div class="period">or $468/year (save $120)</div>
+                    <ul>
+                        <li>Everything in Pro, plus:</li>
+                        <li>Unlimited changelogs</li>
+                        <li>API access</li>
+                        <li>Integrations (GitHub, Linear)</li>
+                        <li>Webhooks</li>
+                        <li>Team collaboration (5 seats)</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority support</li>
+                        <li>Custom onboarding</li>
+                    </ul>
+                    <a href="https://github.com/aimadetools/race-kimi" class="btn btn-secondary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="compare-section">
+        <div class="container">
+            <h2>Compare plans</h2>
+            <p>Find the perfect plan for your needs</p>
+            <div class="compare-table">
+                <div class="compare-row header">
+                    <div>Feature</div>
+                    <div>Free</div>
+                    <div class="highlight">Pro</div>
+                    <div>Team</div>
+                </div>
+                <div class="compare-row">
+                    <div>Public changelogs</div>
+                    <div>1</div>
+                    <div class="highlight">1</div>
+                    <div>Unlimited</div>
+                </div>
+                <div class="compare-row">
+                    <div>Custom domain</div>
+                    <div>—</div>
+                    <div class="highlight check">✓</div>
+                    <div class="check">✓</div>
+                </div>
+                <div class="compare-row">
+                    <div>Themes</div>
+                    <div>3 basic</div>
+                    <div class="highlight">10+ premium</div>
+                    <div>All + custom</div>
+                </div>
+                <div class="compare-row">
+                    <div>Private changelogs</div>
+                    <div>—</div>
+                    <div class="highlight">3</div>
+                    <div>Unlimited</div>
+                </div>
+                <div class="compare-row">
+                    <div>RSS & JSON feeds</div>
+                    <div class="check">✓</div>
+                    <div class="highlight check">✓</div>
+                    <div class="check">✓</div>
+                </div>
+                <div class="compare-row">
+                    <div>Analytics</div>
+                    <div>—</div>
+                    <div class="highlight">Basic</div>
+                    <div>Advanced</div>
+                </div>
+                <div class="compare-row">
+                    <div>API access</div>
+                    <div>—</div>
+                    <div>—</div>
+                    <div class="check">✓</div>
+                </div>
+                <div class="compare-row">
+                    <div>Team seats</div>
+                    <div>1</div>
+                    <div class="highlight">1</div>
+                    <div>5</div>
+                </div>
+                <div class="compare-row">
+                    <div>Support</div>
+                    <div>Community</div>
+                    <div class="highlight">Email</div>
+                    <div>Priority</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Can I change plans at any time?</h3>
+                    <p>Yes, you can upgrade or downgrade your plan at any time. When upgrading, you'll be charged the prorated difference. When downgrading, you'll keep your Pro features until the end of your billing period.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do I need a credit card to start?</h3>
+                    <p>No. The Free plan requires no credit card. You can use Changelog.page indefinitely for free. We only ask for payment information when you choose to upgrade.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What happens if I cancel?</h3>
+                    <p>Your changelog remains accessible, but Pro features will be disabled after your billing period ends. You can reactivate at any time and your settings will be restored.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is there a limit on visitors?</h3>
+                    <p>No. All plans include unlimited visitors and bandwidth. Your changelog is served via a global CDN, so it will remain fast no matter how popular it gets.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you offer refunds?</h3>
+                    <p>Yes, we offer a 14-day money-back guarantee. If you're not satisfied with Changelog.page for any reason, contact us within 14 days for a full refund.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I get a custom plan?</h3>
+                    <p>For teams with specific needs (more seats, SLA, custom integrations), contact us and we'll create a custom plan that works for you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Still have questions?</h2>
+            <p>We're here to help. Reach out and we'll get back to you within 24 hours.</p>
+            <a href="mailto:hello@changelog.page" class="btn btn-primary" style="display: inline-flex; width: auto; padding: 14px 32px;">
+                Contact Support
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">📝</div>
+                        Changelog.page
+                    </a>
+                    <p>Beautiful changelogs for SaaS products.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="https://github.com/aimadetools/race-kimi">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Changelog.page</span>
+                <span>Built for The $100 AI Startup Race</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

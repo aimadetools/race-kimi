@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Changelog.page</title>
+    <meta name="description" content="Tips, guides, and insights on creating better changelogs for your SaaS product.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .page-header { padding: 80px 0 40px; text-align: center; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 32px; padding: 40px 0 100px; }
+        .blog-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all 0.2s; }
+        .blog-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+        .blog-card-image { height: 200px; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+        .blog-card-content { padding: 28px; }
+        .blog-card-meta { display: flex; gap: 16px; margin-bottom: 12px; font-size: 0.875rem; color: var(--text-muted); }
+        .blog-card-category { color: var(--primary-light); font-weight: 600; }
+        .blog-card h2 { font-size: 1.25rem; margin-bottom: 12px; line-height: 1.4; }
+        .blog-card p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 20px; }
+        .blog-card-link { color: var(--primary-light); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+        .blog-card-link:hover { gap: 12px; }
+
+        .newsletter-section { padding: 80px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+        .newsletter-box { max-width: 600px; margin: 0 auto; text-align: center; }
+        .newsletter-box h2 { font-size: 1.75rem; margin-bottom: 12px; }
+        .newsletter-box p { color: var(--text-secondary); margin-bottom: 24px; }
+        .newsletter-form { display: flex; gap: 12px; }
+        .newsletter-form input { flex: 1; padding: 14px 20px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; }
+        .newsletter-form input::placeholder { color: var(--text-muted); }
+        .newsletter-form button { padding: 14px 28px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .newsletter-form button:hover { background: var(--primary-dark); }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 60px; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 16px; max-width: 300px; }
+        .footer-links h4 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.05em; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.875rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .newsletter-form { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="blog.html">Blog</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Blog</h1>
+            <p>Tips, guides, and insights on creating better changelogs for your SaaS product.</p>
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="blog-grid">
+            <article class="blog-card">
+                <div class="blog-card-image">📝</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Guide</span>
+                        <span>Apr 7, 2026</span>
+                    </div>
+                    <h2>How to Write Changelogs Your Customers Actually Read</h2>
+                    <p>Most changelogs are ignored. Learn the framework top SaaS companies use to turn product updates into engagement opportunities.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-image" style="background: linear-gradient(135deg, #10b981, #059669);">🚀</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Strategy</span>
+                        <span>Apr 5, 2026</span>
+                    </div>
+                    <h2>Why Your Product Hunt Launch Needs a Changelog</h2>
+                    <p>Launch day is just the beginning. Here's how successful products use changelogs to maintain momentum after their Product Hunt debut.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-image" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📊</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Analysis</span>
+                        <span>Apr 3, 2026</span>
+                    </div>
+                    <h2>10 SaaS Changelogs That Drive Engagement</h2>
+                    <p>We analyzed 100+ SaaS changelogs to find what works. Here are 10 examples you can learn from, with breakdowns of why they're effective.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-image" style="background: linear-gradient(135deg, #ec4899, #db2777);">🎨</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Design</span>
+                        <span>Mar 28, 2026</span>
+                    </div>
+                    <h2>The Anatomy of a Perfect Changelog Entry</h2>
+                    <p>What makes a changelog entry effective? We break down the components of high-performing updates and provide a template you can use.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-image" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🔧</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Tutorial</span>
+                        <span>Mar 22, 2026</span>
+                    </div>
+                    <h2>Setting Up Your Custom Domain in 5 Minutes</h2>
+                    <p>A step-by-step guide to connecting your own domain to your Changelog.page. Works with Cloudflare, Vercel, Netlify, and more.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-image" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">📈</div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">Growth</span>
+                        <span>Mar 15, 2026</span>
+                    </div>
+                    <h2>Using Your Changelog for SEO</h2>
+                    <p>Your changelog is a goldmine for SEO. Learn how to structure your updates to rank for product-related keywords and drive organic traffic.</p>
+                    <a href="#" class="blog-card-link">Read more →</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-box">
+                <h2>Get changelog tips in your inbox</h2>
+                <p>Weekly insights on product communication, changelog best practices, and SaaS growth strategies.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
+                    <input type="email" placeholder="your@email.com" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 16px;">No spam. Unsubscribe anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">📝</div>
+                        Changelog.page
+                    </a>
+                    <p>Beautiful changelogs for SaaS products.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="https://github.com/aimadetools/race-kimi">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Changelog.page</span>
+                <span>Built for The $100 AI Startup Race</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

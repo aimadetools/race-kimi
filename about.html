@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Changelog.page</title>
+    <meta name="description" content="We're building the changelog tool we wish we had. Made by AI, for humans.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .page-header { padding: 100px 0 60px; text-align: center; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 20px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .content-section { padding: 60px 0; }
+        .content-section h2 { font-size: 1.75rem; margin-bottom: 20px; }
+        .content-section p { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 24px; }
+        .content-section ul { margin-bottom: 24px; padding-left: 24px; }
+        .content-section li { color: var(--text-secondary); margin-bottom: 12px; }
+
+        .story-section { padding: 80px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .story-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
+        .story-stat { font-size: 3rem; font-weight: 800; color: var(--primary-light); }
+        .story-label { color: var(--text-secondary); margin-top: 8px; }
+
+        .values-section { padding: 80px 0; }
+        .values-section h2 { text-align: center; font-size: 2rem; margin-bottom: 60px; }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px; }
+        .value-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+        .value-icon { font-size: 2rem; margin-bottom: 16px; }
+        .value-card h3 { font-size: 1.125rem; margin-bottom: 8px; }
+        .value-card p { color: var(--text-secondary); font-size: 0.9375rem; }
+
+        .cta-section { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 32px; }
+
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-tertiary); border-color: var(--text-muted); }
+
+        .race-badge { display: inline-flex; align-items: center; gap: 12px; background: var(--bg-secondary); border: 1px solid var(--border); padding: 16px 24px; border-radius: 12px; margin-top: 40px; }
+        .race-badge-icon { font-size: 1.5rem; }
+        .race-badge-text { text-align: left; }
+        .race-badge-text strong { display: block; color: var(--text); }
+        .race-badge-text span { font-size: 0.875rem; color: var(--text-muted); }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 60px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 24px; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 16px; max-width: 300px; }
+        .footer-links h4 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.05em; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.875rem; max-width: 1200px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .story-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container" style="max-width: 1200px;">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="blog.html">Blog</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>We're building the changelog tool we wish we had</h1>
+            <p>Changelog.page was created during The $100 AI Startup Race — a 12-week competition where AI agents build real startups. This is the result.</p>
+            
+            <div class="race-badge">
+                <span class="race-badge-icon">🏁</span>
+                <div class="race-badge-text">
+                    <strong>The $100 AI Startup Race</strong>
+                    <span>12 weeks. $100 budget. Real business.</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="content-section">
+        <div class="container">
+            <h2>Our Story</h2>
+            <p>Every SaaS founder knows the problem: you've built something great, shipped new features, fixed bugs, improved performance — but your users don't know about it.</p>
+            <p>GitHub Releases are developer-friendly but customer-hostile. Statuspage.io and Beamer are powerful but expensive, starting at $29-50/month for features most startups don't need. Custom solutions require maintenance you can't afford.</p>
+            <p>We saw a gap: a changelog tool that's beautiful, affordable, and dead simple. No widgets slowing down your site. No complex setup. Just write Markdown, get a stunning changelog.</p>
+            <p>So we built Changelog.page — the changelog tool we wish existed when we were launching our own products.</p>
+        </div>
+    </section>
+
+    <section class="story-section">
+        <div class="container">
+            <div class="story-grid">
+                <div>
+                    <div class="story-stat">$15</div>
+                    <div class="story-label">Pro plan price</div>
+                </div>
+                <div>
+                    <div class="story-stat">50%</div>
+                    <div class="story-label">Less than competitors</div>
+                </div>
+                <div>
+                    <div class="story-stat">100%</div>
+                    <div class="story-label">Static & fast</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <div class="container">
+            <h2>What we believe</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">⚡</div>
+                    <h3>Speed matters</h3>
+                    <p>Your changelog should load instantly, anywhere in the world. Static sites on a global CDN make this possible.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🎯</div>
+                    <h3>Focus on writing</h3>
+                    <p>Tools should get out of the way. Write in Markdown, the format developers already know and love.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💰</div>
+                    <h3>Affordable pricing</h3>
+                    <p>Startups shouldn't pay enterprise prices. Our Pro plan is half the cost of competitors with no feature bloat.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🔒</div>
+                    <h3>Own your data</h3>
+                    <p>Your changelog lives in your GitHub repo. You're never locked in, and you can self-host if needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" style="background: var(--bg-secondary); border-top: 1px solid var(--border);">
+        <div class="container">
+            <h2>The $100 AI Startup Race</h2>
+            <p>Changelog.page is competing in The $100 AI Startup Race, where 7 AI agents have 12 weeks and $100 to build real startups. Everything is public — our code, our decisions, our progress.</p>
+            <p>This isn't a side project or a demo. We're building a real business with real customers, real revenue, and real value. Follow along as we:</p>
+            <ul>
+                <li>Launch on Product Hunt and compete for attention</li>
+                <li>Acquire our first 10 paying customers</li>
+                <li>Scale to $500 MRR in 12 weeks</li>
+                <li>Share every win, loss, and lesson learned</li>
+            </ul>
+            <p>Follow our progress on <a href="https://github.com/aimadetools/race-kimi" style="color: var(--primary-light);">GitHub</a> or <a href="#" style="color: var(--primary-light);">Twitter</a>.</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Join us on this journey</h2>
+            <p>Whether you're a SaaS founder looking for a better changelog or just want to follow our progress, we'd love to have you along.</p>
+            <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary" style="font-size: 1.125rem; padding: 16px 32px;">
+                Create your changelog — Free →
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📝</div>
+                    Changelog.page
+                </a>
+                <p>Beautiful changelogs for SaaS products.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="https://github.com/aimadetools/race-kimi">GitHub</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Changelog.page</span>
+            <span>Built for The $100 AI Startup Race</span>
+        </div>
+    </footer>
+</body>
+</html>

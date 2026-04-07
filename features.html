@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features — Changelog.page</title>
+    <meta name="description" content="Everything you need for beautiful changelogs. Static hosting, custom domains, RSS feeds, and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .page-header { padding: 80px 0 60px; text-align: center; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .feature-section { padding: 80px 0; border-top: 1px solid var(--border); }
+        .feature-section:nth-child(even) { background: var(--bg-secondary); }
+        .feature-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .feature-row.reverse { direction: rtl; }
+        .feature-row.reverse > * { direction: ltr; }
+        .feature-content h2 { font-size: 2rem; margin-bottom: 16px; }
+        .feature-content p { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 24px; }
+        .feature-list { list-style: none; }
+        .feature-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; color: var(--text-secondary); }
+        .feature-list li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+
+        .feature-visual { background: var(--bg-tertiary); border-radius: 16px; padding: 40px; border: 1px solid var(--border); }
+        .code-block { background: #0d1117; border-radius: 12px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; overflow-x: auto; }
+        .code-block .comment { color: #8b949e; }
+        .code-block .keyword { color: #ff7b72; }
+        .code-block .string { color: #a5d6ff; }
+        .code-header { display: flex; gap: 8px; margin-bottom: 16px; }
+        .code-header span { width: 12px; height: 12px; border-radius: 50%; }
+
+        .grid-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 60px; }
+        .grid-feature { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+        .grid-feature-icon { width: 48px; height: 48px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .grid-feature h3 { font-size: 1.125rem; margin-bottom: 8px; }
+        .grid-feature p { color: var(--text-secondary); font-size: 0.9375rem; }
+
+        .cta-section { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
+        .cta-section h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 32px; }
+
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-tertiary); border-color: var(--text-muted); }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 60px; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 16px; max-width: 300px; }
+        .footer-links h4 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.05em; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.875rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .feature-row { grid-template-columns: 1fr; gap: 40px; }
+            .feature-row.reverse { direction: ltr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="blog.html">Blog</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Everything you need for beautiful changelogs</h1>
+            <p>Static hosting, custom domains, RSS feeds, and more. All without the complexity.</p>
+        </div>
+    </header>
+
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-row">
+                <div class="feature-content">
+                    <h2>Write in Markdown</h2>
+                    <p>Use the format developers already know and love. No complex WYSIWYG editors, no proprietary formats. Just plain text that version controls beautifully.</p>
+                    <ul class="feature-list">
+                        <li>GitHub-flavored Markdown support</li>
+                        <li>YAML frontmatter for metadata</li>
+                        <li>Syntax highlighting for code blocks</li>
+                        <li>Automatic table of contents</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span style="background: #ff5f56;"></span>
+                            <span style="background: #ffbd2e;"></span>
+                            <span style="background: #27ca40;"></span>
+                        </div>
+                        <span class="comment">---</span><br>
+                        <span class="keyword">date:</span> <span class="string">2026-04-07</span><br>
+                        <span class="keyword">title:</span> <span class="string">"Custom domains now available"</span><br>
+                        <span class="keyword">category:</span> <span class="string">feature</span><br>
+                        <span class="comment">---</span><br><br>
+                        We're excited to announce that Pro plan users<br>
+                        can now connect their own custom domains.<br><br>
+                        <span class="comment">## What's new</span><br><br>
+                        - Host at <span class="string">`changelog.yoursaas.com`</span><br>
+                        - SSL certificates included<br>
+                        - One-click DNS setup
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-row reverse">
+                <div class="feature-content">
+                    <h2>Static Site Generation</h2>
+                    <p>Your changelog is compiled to static HTML at build time. This means lightning-fast load times, perfect Lighthouse scores, and zero server maintenance.</p>
+                    <ul class="feature-list">
+                        <li>100/100 Lighthouse scores</li>
+                        <li>Global CDN distribution</li>
+                        <li>Instant page loads</li>
+                        <li>No server to manage or scale</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--success);">100</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">Performance</div>
+                        </div>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--success);">100</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">Accessibility</div>
+                        </div>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--success);">100</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">Best Practices</div>
+                        </div>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--success);">100</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">SEO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-row">
+                <div class="feature-content">
+                    <h2>Custom Domains</h2>
+                    <p>Build trust with your customers by hosting your changelog on your own domain. SSL certificates are automatic and free.</p>
+                    <ul class="feature-list">
+                        <li>Use any subdomain or path</li>
+                        <li>Automatic SSL certificates</li>
+                        <li>DNS setup guides for major providers</li>
+                        <li>Free domain health monitoring</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div style="background: var(--bg); padding: 24px; border-radius: 12px;">
+                        <div style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">Your custom domain</div>
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.125rem; color: var(--success);">changelog.yoursaas.com ✓</div>
+                        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                            <div style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">SSL Certificate</div>
+                            <div style="display: flex; align-items: center; gap: 8px; color: var(--success);">
+                                <span>🔒</span> Active & Auto-renewing
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-section" style="background: var(--bg-secondary);">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 16px;">And much more</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 60px;">Every feature you need to run a professional changelog</p>
+            <div class="grid-features">
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">📡</div>
+                    <h3>RSS & JSON Feeds</h3>
+                    <p>Automatically generated feeds let users subscribe to updates in their favorite reader or integrate with other tools.</p>
+                </div>
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">🎨</div>
+                    <h3>Beautiful Themes</h3>
+                    <p>Choose from multiple professionally designed themes, each optimized for readability and conversion.</p>
+                </div>
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">🔒</div>
+                    <h3>Private Changelogs</h3>
+                    <p>Password-protect internal changelogs or beta release notes. Perfect for teams and early access programs.</p>
+                </div>
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">📊</div>
+                    <h3>Analytics</h3>
+                    <p>Track views, popular posts, and subscriber growth. Understand what updates your users care about most.</p>
+                </div>
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">🚀</div>
+                    <h3>Scheduled Posts</h3>
+                    <p>Write now, publish later. Schedule posts to go live at the perfect time for your audience.</p>
+                </div>
+                <div class="grid-feature">
+                    <div class="grid-feature-icon">⚡</div>
+                    <h3>GitHub Integration</h3>
+                    <p>Sync with GitHub releases, pull changelog entries from issues, or trigger deploys with Actions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to get started?</h2>
+            <p>Create your changelog in minutes. No credit card required.</p>
+            <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary" style="font-size: 1.125rem; padding: 16px 32px;">
+                Create your changelog — Free →
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">📝</div>
+                        Changelog.page
+                    </a>
+                    <p>Beautiful changelogs for SaaS products.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="https://github.com/aimadetools/race-kimi">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Changelog.page</span>
+                <span>Built for The $100 AI Startup Race</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
