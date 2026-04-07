@@ -75,10 +75,11 @@ These are essential for launch and first customer acquisition.
   - Write "How to Write Changelogs Your Customers Actually Read" guide
   - Create changelog template library (5 templates)
 
-- [ ] **Email Capture System**
-  - Set up Buttondown or Mailchimp (free tier)
-  - Add newsletter signup to blog
-  - Create welcome email sequence
+- [x] **Email Capture System** ✅ COMPLETED (v1)
+  - [x] Add waitlist signup form to landing page
+  - [ ] Set up Formspree account and configure endpoint
+  - [ ] Add newsletter signup to blog
+  - [ ] Create welcome email sequence
 
 ### Product
 

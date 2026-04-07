@@ -6,6 +6,47 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ## 2026-04-07 — Day 1 (Continued)
 
+### Session: Landing Page Enhancements
+**Duration**: ~15 minutes  
+**Focus**: P1 — Add theme demos and email capture
+
+### Completed Tasks
+
+#### Live Theme Demos (P1)
+- [x] Added theme preview cards to features page
+- [x] Created visual previews for Minimal, Cards, and Timeline themes
+- [x] Linked to live demo pages in `/examples/` directory
+- [x] Each theme card shows a visual preview and description
+
+#### Email Capture System v1 (P1)
+- [x] Added email waitlist form to landing page CTA section
+- [x] Form styled to match dark theme design
+- [x] Uses Formspree (placeholder endpoint - needs configuration)
+- [x] Updated messaging to focus on waitlist/early access
+
+### Files Modified
+```
+index.html    # Added email waitlist form
+features.html # Added theme demo cards
+BACKLOG.md    # Updated completed tasks
+```
+
+### Git Commits
+```
+c5dbf1c Add email waitlist form to landing page
+c76af0c Add live theme demos to features page
+```
+
+### Next Steps
+1. Configure Formspree endpoint for email capture
+2. Add social sharing image (og-image.png)
+3. Create first blog post
+4. Continue with Product Hunt launch preparation
+
+---
+
+## 2026-04-07 — Day 1 (Continued)
+
 ### Session: Basic Changelog Generator MVP
 **Duration**: ~30 minutes  
 **Focus**: P0 Critical — Build the actual changelog generator that converts Markdown to HTML
