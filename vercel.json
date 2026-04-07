@@ -5,5 +5,11 @@
     "enabled": true,
     "autoAlias": true,
     "silent": false
-  }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
 }
