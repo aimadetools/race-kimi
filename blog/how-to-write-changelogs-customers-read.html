@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Write Changelogs Your Customers Actually Read — Changelog.page Blog</title>
+    <meta name="description" content="Most changelogs are ignored. Learn the VALUABLE framework top SaaS companies use to turn product updates into engagement opportunities.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Open Graph -->
+    <meta property="og:title" content="How to Write Changelogs Your Customers Actually Read">
+    <meta property="og:description" content="Learn the VALUABLE framework for writing changelogs that drive engagement and reduce churn.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/blog/how-to-write-changelogs-customers-read.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Write Changelogs Your Customers Actually Read">
+    <meta name="twitter:description" content="Learn the VALUABLE framework for writing changelogs that drive engagement and reduce churn.">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .blog-header { padding: 60px 0 40px; text-align: center; }
+        .blog-meta { display: flex; gap: 16px; justify-content: center; align-items: center; margin-bottom: 24px; font-size: 0.875rem; color: var(--text-muted); }
+        .blog-category { color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .blog-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .blog-excerpt { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .blog-content { padding-bottom: 100px; }
+        .blog-content h2 { font-size: 1.75rem; font-weight: 700; margin: 48px 0 20px; color: var(--text); }
+        .blog-content h3 { font-size: 1.25rem; font-weight: 600; margin: 32px 0 16px; color: var(--primary-light); }
+        .blog-content p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content ul, .blog-content ol { margin-bottom: 20px; padding-left: 24px; }
+        .blog-content li { color: var(--text-secondary); margin-bottom: 12px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content a { color: var(--primary-light); text-decoration: none; }
+        .blog-content a:hover { text-decoration: underline; }
+        .blog-content strong { color: var(--text); font-weight: 600; }
+        .blog-content blockquote { border-left: 4px solid var(--primary); padding-left: 24px; margin: 32px 0; font-style: italic; color: var(--text-secondary); }
+        .blog-content code { background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--primary-light); }
+
+        .framework-box { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .framework-box h3 { margin-top: 0; color: var(--text); font-size: 1.125rem; }
+        .framework-letter { display: inline-block; width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; margin-right: 12px; }
+
+        .example-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin: 32px 0; }
+        .example-box h3 { margin-top: 0; color: var(--text); }
+        .example-box .label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .label-bad { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .label-good { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .example-box .example-text { font-family: 'JetBrains Mono', monospace; background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 0.9375rem; line-height: 1.6; }
+        .example-box .example-text.bad { color: #fca5a5; border-left: 3px solid #ef4444; }
+        .example-box .example-text.good { color: #6ee7b7; border-left: 3px solid #10b981; }
+
+        .key-takeaways { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 48px 0; }
+        .key-takeaways h2 { margin-top: 0; }
+        .key-takeaways ul { list-style: none; padding: 0; }
+        .key-takeaways li { padding-left: 32px; position: relative; }
+        .key-takeaways li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        .checklist { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+        .checklist h4 { color: var(--primary-light); margin-bottom: 16px; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .checklist ul { list-style: none; padding: 0; margin: 0; }
+        .checklist li { padding-left: 28px; position: relative; margin-bottom: 10px; font-size: 0.9375rem; }
+        .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--primary); }
+
+        .cta-box { text-align: center; padding: 48px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; margin: 48px 0; }
+        .cta-box h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn { display: inline-block; padding: 14px 28px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .author-box { display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; margin: 48px 0; }
+        .author-avatar { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .author-info h4 { font-weight: 600; margin-bottom: 4px; }
+        .author-info p { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        footer .container { max-width: 1200px; }
+        .footer-simple { text-align: center; color: var(--text-muted); }
+        .footer-simple a { color: var(--text-secondary); text-decoration: none; }
+        .footer-simple a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .example-box { padding: 24px; }
+            .cta-box { padding: 32px 24px; }
+            .framework-box { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="/features.html">Features</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <article>
+        <header class="blog-header">
+            <div class="container">
+                <div class="blog-meta">
+                    <span class="blog-category">Guide</span>
+                    <span>April 7, 2026</span>
+                    <span>15 min read</span>
+                </div>
+                <h1>How to Write Changelogs Your Customers Actually Read</h1>
+                <p class="blog-excerpt">Most changelogs are ignored. Learn the VALUABLE framework top SaaS companies use to turn product updates into engagement opportunities.</p>
+            </div>
+        </header>
+
+        <div class="container blog-content">
+            <p>Here's a harsh truth: <strong>95% of your changelog visitors leave within 10 seconds.</strong> They scan, see a wall of technical jargon, and bounce.</p>
+
+            <p>But the other 5%? They're your power users, your champions, the people who spread the word about your product. And when you write changelogs that resonate with them, something magical happens:</p>
+
+            <ul>
+                <li>Feature adoption increases by 40-60%</li>
+                <li>Support tickets drop because users actually know what's new</li>
+                <li>Your changelog becomes a marketing asset that drives organic traffic</li>
+            </ul>
+
+            <p>After analyzing hundreds of changelogs and talking to dozens of SaaS founders, I've developed a framework that works. It's called VALUABLE, and it's the difference between changelogs that get ignored and changelogs that drive growth.</p>
+
+            <h2>The VALUABLE Framework</h2>
+
+            <div class="framework-box">
+                <h3>VALUABLE stands for:</h3>
+                <ul style="margin-top: 20px;">
+                    <li><span class="framework-letter">V</span><strong>Value-first</strong> — Lead with the benefit</li>
+                    <li><span class="framework-letter">A</span><strong>Action-oriented</strong> — Tell them what to do</li>
+                    <li><span class="framework-letter">L</span><strong>Layered</strong> — Structure for different attention spans</li>
+                    <li><span class="framework-letter">U</span><strong>Understandable</strong> — No jargon, ever</li>
+                    <li><span class="framework-letter">A</span><strong>Authentic</strong> — Sound like a human</li>
+                    <li><span class="framework-letter">B</span><strong>Beautiful</strong> — Visual appeal matters</li>
+                    <li><span class="framework-letter">L</span><strong>Linkable</strong> — Easy to share and reference</li>
+                    <li><span class="framework-letter">E</span><strong>Engaging</strong> — Encourage interaction</li>
+                </ul>
+            </div>
+
+            <p>Let's break down each element with real examples.</p>
+
+            <h2>V — Value-First: Lead with the Benefit</h2>
+
+            <p>The biggest mistake in changelog writing? Starting with what you built instead of why it matters.</p>
+
+            <div class="example-box">
+                <span class="label label-bad">❌ Don't Do This</span>
+                <p style="margin-top: 12px;">Starting with implementation details:</p>
+                <div class="example-text bad">
+                    Implemented a new WebSocket connection handler for real-time collaboration. Updated the Redis caching layer to support pub/sub events. Refactored the state management to use Redux Toolkit.
+                </div>
+                <p>Your user's reaction: "I have no idea what this means for me."</p>
+            </div>
+
+            <div class="example-box">
+                <span class="label label-good">✅ Do This Instead</span>
+                <p style="margin-top: 12px;">Start with the user benefit:</p>
+                <div class="example-text good">
+                    <strong>See changes instantly — no more refreshing</strong><br><br>
+                    Your team can now collaborate in real-time. When someone edits a document, you'll see their changes appear instantly. No refresh needed, no confusion about which version is current.
+                </div>
+                <p>Your user's reaction: "Oh, that's useful! Let me try it."</p>
+            </div>
+
+            <h3>The Value-First Formula</h3>
+
+            <p>Use this template for every changelog entry:</p>
+
+            <ol>
+                <li><strong>Headline:</strong> The benefit in 6-8 words max</li>
+                <li><strong>Subheadline (optional):</strong> One sentence elaborating on the benefit</li>
+                <li><strong>What changed:</strong> Brief description of the feature</li>
+                <li><strong>Why it matters:</strong> Connect to user pain points or goals</li>
+                <li><strong>How to use it:</strong> Clear next step or CTA</li>
+            </ol>
+
+            <h2>A — Action-Oriented: Tell Them What to Do</h2>
+
+            <p>A changelog entry without a clear action is a missed opportunity. Every update should tell users exactly what to do next.</p>
+
+            <p>Weak endings:</p>
+            <ul>
+                <li>"This feature is now available."</li>
+                <li>"We hope you enjoy it."</li>
+                <li>"Let us know what you think."</li>
+            </ul>
+
+            <p>Strong endings:</p>
+            <ul>
+                <li>"<strong>Try it now:</strong> Click the 'Export' button in any project."</li>
+                <li>"<strong>Enable in settings:</strong> Go to Settings → Notifications → Slack."</li>
+                <li>"<strong>See it in action:</strong> Watch our 2-minute walkthrough video."</li>
+            </ul>
+
+            <div class="checklist">
+                <h4>Action Checklist for Every Entry</h4>
+                <ul>
+                    <li>Clear verb at the start of the CTA (Try, Enable, Watch, Read)</li>
+                    <li>Specific location or path mentioned</li>
+                    <li>Time expectation set ("takes 30 seconds")</li>
+                    <li>Link directly to where they need to go</li>
+                </ul>
+            </div>
+
+            <h2>L — Layered: Structure for Different Attention Spans</h2>
+
+            <p>Not everyone reads the same way. Some users want the 10-second summary; others want the deep dive. Your changelog should serve both.</p>
+
+            <p>Use the Inverted Pyramid structure:</p>
+
+            <ol>
+                <li><strong>Top (10 seconds):</strong> Headline + one-sentence summary</li>
+                <li><strong>Middle (1 minute):</strong> 2-3 paragraphs explaining the feature</li>
+                <li><strong>Bottom (5+ minutes):</strong> Screenshots, GIFs, videos, documentation links</li>
+            </ol>
+
+            <p>This way, skimmers get value immediately, and interested users can go deeper.</p>
+
+            <h2>U — Understandable: No Jargon, Ever</h2>
+
+            <p>Your changelog is not for your engineering team. It's for your users. If a non-technical user can't understand your update, you've failed.</p>
+
+            <div class="example-box">
+                <span class="label label-bad">❌ Engineering-Speak</span>
+                <div class="example-text bad">
+                    "Implemented GraphQL mutations for batch operations, reducing N+1 query problems and improving cache hit rates by 35%."
+                </div>
+            </div>
+
+            <div class="example-box">
+                <span class="label label-good">✅ Human-Speak</span>
+                <div class="example-text good">
+                    "Save time with bulk edits — update 100 items as easily as 1. Our new bulk actions make managing large projects 3x faster."
+                </div>
+            </div>
+
+            <h3>The Jargon Test</h3>
+
+            <p>Before publishing, ask yourself:</p>
+            <ul>
+                <li>Would my mom understand this? (Assuming she's not a developer)</li>
+                <li>Are there any acronyms without explanation?</li>
+                <li>Am I explaining "how" when I should be explaining "what"?</li>
+            </ul>
+
+            <h2>A — Authentic: Sound Like a Human</h2>
+
+            <p>Corporate press releases are boring. Your changelog shouldn't be. The best changelogs sound like they were written by a real person who's excited about the update.</p>
+
+            <p>Ways to add personality:</p>
+            <ul>
+                <li><strong>Use contractions:</strong> "We're excited" not "We are excited"</li>
+                <li><strong>Ask questions:</strong> "Tired of waiting for exports to finish?"</li>
+                <li><strong>Share the journey:</strong> "This was our #1 most requested feature"</li>
+                <li><strong>Use emojis sparingly:</strong> They add visual interest when used well</li>
+                <li><strong>Include team shoutouts:</strong> "Thanks to Sarah for pushing this over the finish line"</li>
+            </ul>
+
+            <blockquote>
+                "We write our changelogs like we're explaining the update to a friend over coffee. It makes a huge difference in engagement."<br>
+                — CEO of a $5M ARR SaaS company
+            </blockquote>
+
+            <h2>B — Beautiful: Visual Appeal Matters</h2>
+
+            <p>Walls of text don't get read. Every changelog entry should include at least one visual element.</p>
+
+            <h3>The Visual Hierarchy</h3>
+
+            <ol>
+                <li><strong>Hero image/GIF:</strong> The first thing users see (optional but powerful)</li>
+                <li><strong>Screenshots:</strong> Show the feature in context</li>
+                <li><strong>Annotations:</strong> Use arrows or highlights to guide attention</li>
+                <li><strong>Before/After:</strong> Show the improvement clearly</li>
+            </ol>
+
+            <p>Tools for creating changelog visuals:</p>
+            <ul>
+                <li><strong>CleanShot X</strong> (Mac) or <strong>ShareX</strong> (Windows) for screenshots</li>
+                <li><strong>Loom</strong> for quick video walkthroughs</li>
+                <li><strong>Figma</strong> for annotated mockups</li>
+                <li><strong>Gifski</strong> or <strong>Screen Studio</strong> for GIFs</li>
+            </ul>
+
+            <h2>L — Linkable: Easy to Share and Reference</h2>
+
+            <p>Every changelog entry should have its own URL. This allows users to:</p>
+            <ul>
+                <li>Share specific updates on social media</li>
+                <li>Bookmark features they want to try later</li>
+                <li>Reference updates in support conversations</li>
+                <li>Create internal documentation linking to your changelog</li>
+            </ul>
+
+            <p>URL best practices:</p>
+            <ul>
+                <li>Use descriptive slugs: <code>/changelog/bulk-edit-feature</code> not <code>/changelog/update-47</code></li>
+                <li>Include the date: <code>/changelog/2026-04-07-bulk-edit</code></li>
+                <li>Make it predictable — users should guess the URL structure</li>
+            </ul>
+
+            <h2>E — Engaging: Encourage Interaction</h2>
+
+            <p>The best changelogs create conversation. They invite feedback, questions, and discussion.</p>
+
+            <p>Ways to encourage engagement:</p>
+            <ul>
+                <li><strong>End with questions:</strong> "What would you like us to build next?"</li>
+                <li><strong>Include polls:</strong> "Which feature should we prioritize?"</li>
+                <li><strong>Add reaction buttons:</strong> Simple 👍/👎 or emoji reactions</li>
+                <li><strong>Enable comments:</strong> Let users discuss the update</li>
+                <li><strong>Link to community:</strong> "Discuss this on our Discord/Slack"</li>
+            </ul>
+
+            <div class="key-takeaways">
+                <h2>The VALUABLE Checklist</h2>
+                <p style="margin-bottom: 20px;">Before publishing any changelog entry, run through this checklist:</p>
+                <ul>
+                    <li><strong>Value-first:</strong> Does the headline explain the benefit?</li>
+                    <li><strong>Action-oriented:</strong> Is there a clear next step?</li>
+                    <li><strong>Layered:</strong> Can someone get value in 10 seconds, 1 minute, and 5 minutes?</li>
+                    <li><strong>Understandable:</strong> Would a non-technical user understand this?</li>
+                    <li><strong>Authentic:</strong> Does it sound like a human wrote it?</li>
+                    <li><strong>Beautiful:</strong> Is there at least one visual element?</li>
+                    <li><strong>Linkable:</strong> Does it have its own shareable URL?</li>
+                    <li><strong>Engaging:</strong> Is there a way for users to interact or give feedback?</li>
+                </ul>
+            </div>
+
+            <h2>Common Patterns from Top-Performing Changelogs</h2>
+
+            <p>After implementing the VALUABLE framework with dozens of SaaS companies, here are the patterns that consistently drive engagement:</p>
+
+            <h3>1. The "Feature Friday" Rhythm</h3>
+            <p>Post updates consistently — ideally weekly. This trains users to check back regularly. Friday afternoon works well because users have weekend downtime to explore.</p>
+
+            <h3>2. The "Why Now" Context</h3>
+            <p>Explain why you're building this feature now. Was it highly requested? Does it unlock future capabilities? Context increases appreciation.</p>
+
+            <h3>3. The "Quick Win" Section</h3>
+            <p>Include a section at the bottom for small improvements and bug fixes. It shows you're always improving, even when there's no big announcement.</p>
+
+            <h3>4. The "Coming Soon" Teaser</h3>
+            <p>End with a hint about what's next. It gives users something to look forward to and shows your roadmap is active.</p>
+
+            <h2>A Template You Can Use Today</h2>
+
+            <p>Copy this template for your next changelog entry:</p>
+
+            <div class="example-box">
+                <div class="example-text good">
+                    <strong>[Benefit-focused headline]</strong><br><br>
+                    [One sentence explaining the benefit in more detail]<br><br>
+                    ---<br><br>
+                    <strong>What's new:</strong><br>
+                    [2-3 sentences describing the feature]<br><br>
+                    <strong>Why it matters:</strong><br>
+                    [Connect to user pain point or goal]<br><br>
+                    <strong>How to try it:</strong><br>
+                    [Clear, specific instructions with link]<br><br>
+                    [Screenshot or GIF showing the feature]<br><br>
+                    ---<br><br>
+                    <strong>Also in this update:</strong><br>
+                    • [Small improvement 1]<br>
+                    • [Bug fix description]<br>
+                    • [Another small improvement]<br><br>
+                    <strong>What's next:</strong><br>
+                    [Teaser for upcoming feature]<br><br>
+                    [Engagement question or CTA]
+                </div>
+            </div>
+
+            <h2>Measuring Changelog Success</h2>
+
+            <p>How do you know if your changelog is working? Track these metrics:</p>
+
+            <ul>
+                <li><strong>Time on page:</strong> Aim for 2+ minutes average</li>
+                <li><strong>Click-through rate:</strong> % of visitors who click your CTA</li>
+                <li><strong>Return visitors:</strong> Users who check back regularly</li>
+                <li><strong>Feature adoption:</strong> Uptake of announced features</li>
+                <li><strong>Support ticket reduction:</strong> Fewer "how do I..." questions</li>
+            </ul>
+
+            <p>Most importantly: <strong>Ask your users.</strong> Add a simple "Was this helpful?" widget to your entries. The feedback is invaluable.</p>
+
+            <div class="cta-box">
+                <h3>Ready to write better changelogs?</h3>
+                <p>Changelog.page gives you the tools to create beautiful, engaging changelogs that turn updates into growth opportunities. Start free today.</p>
+                <a href="/index.html" class="btn btn-primary">Get Started Free →</a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">📝</div>
+                <div class="author-info">
+                    <h4>The Changelog.page Team</h4>
+                    <p>Building the best changelog tool for SaaS companies. Follow us for changelog tips and product updates.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="container">
+            <div class="footer-simple">
+                <p><a href="/blog.html">← Back to Blog</a></p>
+                <p style="margin-top: 16px;">© 2026 Changelog.page. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

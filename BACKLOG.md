@@ -72,7 +72,7 @@ These are essential for launch and first customer acquisition.
 
 - [ ] **Content Creation** (In Progress)
   - [x] Write "10 SaaS Changelogs That Drive Engagement" blog post
-  - [ ] Write "How to Write Changelogs Your Customers Actually Read" guide
+  - [x] Write "How to Write Changelogs Your Customers Actually Read" guide
   - [ ] Create changelog template library (5 templates)
 
 - [x] **Email Capture System** ✅ COMPLETED
