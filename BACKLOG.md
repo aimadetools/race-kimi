@@ -57,12 +57,12 @@ These are essential for launch and first customer acquisition.
 
 ### Marketing & Launch
 
-- [ ] **Product Hunt Launch Preparation**
-  - Write launch copy (headline, description, first comment)
-  - Create 5 screenshot assets (1200x800)
-  - Prepare maker response templates
-  - Line up 10+ supporters for launch day
-  - Schedule launch for optimal day (Tuesday-Thursday)
+- [x] **Product Hunt Launch Preparation** ✅ COMPLETED
+  - [x] Write launch copy (headline, description, first comment)
+  - [x] Create 5 screenshot assets (1200x800)
+  - [x] Prepare maker response templates
+  - [ ] Line up 10+ supporters for launch day (do 1 week before launch)
+  - [ ] Schedule launch for optimal day (Tuesday-Thursday) (do when ready)
 
 - [ ] **Social Media Setup**
   - Create Twitter/X account (@changelogpage)
