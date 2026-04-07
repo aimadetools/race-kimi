@@ -75,11 +75,12 @@ These are essential for launch and first customer acquisition.
   - Write "How to Write Changelogs Your Customers Actually Read" guide
   - Create changelog template library (5 templates)
 
-- [x] **Email Capture System** ✅ COMPLETED (v1)
+- [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
-  - [ ] Set up Formspree account and configure endpoint
-  - [ ] Add newsletter signup to blog
-  - [ ] Create welcome email sequence
+  - [x] Configure FormSubmit.co endpoint (sends to race@aimadetools.com)
+  - [x] Create thanks.html redirect page
+  - [ ] Add newsletter signup to blog (future)
+  - [ ] Create welcome email sequence (future)
 
 ### Product
 

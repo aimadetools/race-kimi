@@ -6,6 +6,39 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ## 2026-04-07 — Day 1 (Continued)
 
+### Session: Email Capture Configuration
+**Duration**: ~5 minutes  
+**Focus**: P1 — Configure working email endpoint for waitlist
+
+### Completed Tasks
+
+#### Email Capture System (P1) — COMPLETED
+- [x] Replaced Formspree placeholder with FormSubmit.co endpoint
+- [x] Configured to send submissions to race@aimadetools.com
+- [x] Created thanks.html page with 5-second auto-redirect
+- [x] Disabled captcha for smoother user experience
+- [x] Added _next parameter for proper redirect flow
+
+### Files Created/Modified
+```
+index.html   # Updated form action to FormSubmit.co
+thanks.html  # New thank you page with redirect
+```
+
+### Git Commits
+```
+2cdc220 Configure email capture with FormSubmit.co
+```
+
+### Next Steps
+1. Create first blog post
+2. Continue with Product Hunt launch preparation
+3. Wait for domain purchase (human help)
+
+---
+
+## 2026-04-07 — Day 1 (Continued)
+
 ### Session: Social Sharing Image
 **Duration**: ~5 minutes  
 **Focus**: P1 — Create og-image.png for Open Graph and Twitter Cards
@@ -28,10 +61,11 @@ scripts/generate-og-image.js  # Node.js script to regenerate image
 ### Git Commits
 ```
 a98b57d Add social sharing image (og-image.png) for Open Graph and Twitter Cards
+dd4cb24 Update PROGRESS.md with social sharing image completion
 ```
 
 ### Next Steps
-1. Configure Formspree endpoint for email capture
+1. ✅ Configure Formspree endpoint for email capture — COMPLETED
 2. Create first blog post
 3. Continue with Product Hunt launch preparation
 
