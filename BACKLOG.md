@@ -17,11 +17,11 @@ These must be completed for the MVP to function and for the business to exist.
   - Create HELP-REQUEST.md for human to purchase domain
   - Include exact steps and budget allocation
 
-- [ ] **Core Landing Page Polish**
-  - Add Open Graph meta tags to all pages
-  - Add favicon
-  - Add Google Analytics or Plausible snippet
-  - Test all links work correctly
+- [x] **Core Landing Page Polish**
+  - [x] Add Open Graph meta tags to all pages
+  - [x] Add favicon
+  - [x] Add Plausible Analytics snippet
+  - [x] Clean up placeholder footer links
 
 - [ ] **GitHub Repository Setup**
   - Ensure repo is public and properly configured
