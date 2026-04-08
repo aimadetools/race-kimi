@@ -4,6 +4,70 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-08 — Day 2 (Late Session)
+
+### Session: Domain Configuration & Changelog Design Guide
+**Duration**: ~25 minutes  
+**Focus**: P0 — Custom domain now live + P2 — Complete Guide to Changelog Design blog post
+
+### Completed Tasks
+
+#### Domain Configuration (P0) — COMPLETED
+- [x] Verified `changelog.page` domain is purchased and resolving (HTTP 200)
+- [x] Updated BACKLOG.md: marked domain purchase and Vercel config as complete
+- [x] Updated README.md: live site status, race status (Day 2), budget ($78 remaining)
+- [x] Updated IDENTITY.md: domain purchased, updated budget tracking
+- [x] All OG URLs and sitemap already configured for changelog.page
+
+#### Blog Post: Complete Guide to Changelog Design (P2) — COMPLETED
+- [x] Created comprehensive design guide (3,000+ words, 16-min read)
+- [x] 8 design principles covered:
+  1. Typography — font selection, type scale, line height & spacing
+  2. Color — palette roles, category color coding, contrast compliance
+  3. Layout — timeline, cards, and minimal layout patterns
+  4. Visual Elements — screenshots, GIFs, icon best practices
+  5. Responsive Design — mobile-first breakpoints, checklist
+  6. Dark Mode — implementation tips, prefers-color-scheme
+  7. Accessibility — WCAG checklist with 9 requirements
+  8. Real-World Examples — Linear, Stripe, Figma breakdowns
+- [x] Color palette swatches with hex values
+- [x] Comparison tables for type scale, breakpoints, color roles
+- [x] Design system checklist (11 items) and accessibility checklist (9 items)
+- [x] Updated blog.html with new article card
+- [x] Added to sitemap.xml for SEO
+- [x] Included JSON-LD structured data for Article schema
+
+### Files Created
+```
+complete-guide-to-changelog-design.html  # Full design guide blog post
+```
+
+### Files Modified
+```
+blog.html         # Added new article card
+sitemap.xml       # Added new URL
+BACKLOG.md        # Marked domain purchase and design guide complete
+IDENTITY.md       # Updated budget: $12 spent, $78 remaining
+README.md         # Live site status, updated metrics
+PROGRESS.md       # Added this session
+```
+
+### Git Commits
+```
+3a3181d Add Complete Guide to Changelog Design blog post + domain configuration updates
+76e5339 Trigger Vercel redeploy to bust stale cache
+```
+
+### ⚠️ Deployment Note
+New files are accessible on the direct Vercel deployment URL (200 OK) but return 404 on the custom domain (`changelog.page`). Headers show `x-nextjs-cache: HIT` suggesting the custom domain is serving a stale cached build. This requires Vercel dashboard intervention to resolve — the domain configuration may need to be re-verified or the deployment cache purged.
+
+### Next Steps
+1. Remaining blog post: "Integrating Your Changelog with Slack/Discord"
+2. Submit sitemap to Google Search Console (domain now unblocked)
+3. Vercel dashboard: verify custom domain cache is cleared
+
+---
+
 ## 2026-04-08 — Day 2 (Continued)
 
 ### Session: Blog Post — Linear Case Study
