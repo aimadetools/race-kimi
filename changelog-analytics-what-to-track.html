@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog Analytics: What to Track and Why — Changelog.page Blog</title>
+    <meta name="description" content="Discover the key metrics for measuring changelog success. Learn what to track, how to interpret the data, and how to use analytics to improve user engagement.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Changelog Analytics: What to Track and Why">
+    <meta property="og:description" content="Discover the key metrics for measuring changelog success and learn how to use analytics to improve user engagement.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/changelog-analytics-what-to-track.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta property="article:published_time" content="2026-04-08">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Changelog Analytics: What to Track and Why">
+    <meta name="twitter:description" content="Discover the key metrics for measuring changelog success and learn how to use analytics to improve user engagement.">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Changelog Analytics: What to Track and Why",
+      "description": "Discover the key metrics for measuring changelog success. Learn what to track, how to interpret the data, and how to use analytics to improve user engagement.",
+      "image": "https://changelog.page/og-image.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Changelog.page"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Changelog.page",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://changelog.page/favicon.svg"
+        }
+      },
+      "datePublished": "2026-04-08",
+      "dateModified": "2026-04-08",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://changelog.page/changelog-analytics-what-to-track.html"
+      }
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        nav a { color: var(--text); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        nav a:hover { color: var(--primary-light); }
+
+        article { padding: 60px 0; }
+
+        .article-header { margin-bottom: 48px; }
+        .article-meta { display: flex; gap: 16px; color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+        .article-category { color: var(--primary-light); font-weight: 500; }
+        h1 { font-size: 42px; line-height: 1.2; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.02em; }
+        .article-subtitle { font-size: 20px; color: var(--text-secondary); line-height: 1.6; }
+
+        h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; color: var(--text); letter-spacing: -0.01em; }
+        h3 { font-size: 22px; font-weight: 600; margin: 32px 0 16px; color: var(--text); }
+        h4 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; color: var(--text); }
+
+        p { margin-bottom: 20px; color: var(--text-secondary); font-size: 17px; line-height: 1.8; }
+
+        a { color: var(--primary-light); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        ul, ol { margin: 20px 0; padding-left: 24px; color: var(--text-secondary); }
+        li { margin-bottom: 12px; font-size: 17px; line-height: 1.7; }
+
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        .metric-card h4 { margin-top: 0; color: var(--primary-light); }
+        .metric-card .formula {
+            background: var(--bg-tertiary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text);
+            margin: 12px 0;
+        }
+
+        .dashboard-preview {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+        .dashboard-preview h4 { margin-top: 0; }
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .metric-box {
+            background: var(--bg-tertiary);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .metric-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .metric-change.positive { color: var(--success); }
+        .metric-change.negative { color: #ef4444; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 15px;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td { color: var(--text-secondary); }
+        tr:hover td { background: var(--bg-secondary); }
+
+        blockquote {
+            border-left: 4px solid var(--primary);
+            padding: 20px 24px;
+            margin: 32px 0;
+            background: var(--bg-secondary);
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        blockquote p:last-child { margin-bottom: 0; }
+
+        .tip-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+        .tip-box h4 { margin-top: 0; color: var(--primary-light); display: flex; align-items: center; gap: 8px; }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin: 48px 0;
+        }
+        .cta-box h3 { color: white; margin: 0 0 12px; }
+        .cta-box p { color: rgba(255,255,255,0.9); margin-bottom: 24px; }
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary-dark);
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+
+        .author-box {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 48px;
+        }
+        .author-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .author-info h4 { margin: 0 0 4px; }
+        .author-info p { margin: 0; font-size: 15px; }
+
+        footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 14px; }
+        footer a { color: var(--text-secondary); }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 32px; }
+            h2 { font-size: 24px; }
+            h3 { font-size: 20px; }
+            .metric-row { grid-template-columns: repeat(2, 1fr); }
+            .cta-box { padding: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                Changelog.page
+            </a>
+            <a href="/blog.html">← Back to Blog</a>
+        </div>
+    </nav>
+
+    <article>
+        <div class="container">
+            <header class="article-header">
+                <div class="article-meta">
+                    <span class="article-category">Analytics</span>
+                    <span>April 8, 2026</span>
+                    <span>14 min read</span>
+                </div>
+                <h1>Changelog Analytics: What to Track and Why</h1>
+                <p class="article-subtitle">You can't improve what you don't measure. Learn the essential metrics for understanding how users engage with your changelog and how to turn that data into actionable insights.</p>
+            </header>
+
+            <p>Most companies treat their changelog as a static announcement board. They publish updates, hope someone reads them, and move on. But the companies that get the most value from their changelogs treat them as a product feature—and measure them like one.</p>
+
+            <p>The difference is striking. Teams that actively track changelog analytics see <strong>3x higher engagement</strong> than those that don't. They know which updates resonate, which fall flat, and how to optimize their communication strategy.</p>
+
+            <p>In this guide, we'll cover the metrics that actually matter, how to track them, and what to do with the insights you gather.</p>
+
+            <h2>The Changelog Analytics Framework</h2>
+
+            <p>Changelog analytics fall into three categories: <strong>Reach metrics</strong> (who's seeing your updates), <strong>Engagement metrics</strong> (how they're interacting), and <strong>Impact metrics</strong> (what actions they take). Together, these paint a complete picture of your changelog's performance.</p>
+
+            <h3>1. Reach Metrics: Understanding Your Audience</h3>
+
+            <p>Before you can optimize engagement, you need to know who's seeing your changelog and how they find it.</p>
+
+            <div class="metric-card">
+                <h4>📊 Total Unique Visitors</h4>
+                <p>The number of distinct people who view your changelog in a given period. This is your baseline for growth.</p>
+                <div class="formula">Monthly Growth Rate = (This Month - Last Month) / Last Month × 100</div>
+                <p><strong>Benchmark:</strong> Healthy changelogs see 10-20% month-over-month growth in the first year.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>🔍 Traffic Sources</h4>
+                <p>Where your visitors come from reveals a lot about your changelog's role in your ecosystem:</p>
+                <ul>
+                    <li><strong>Direct traffic:</strong> Users who bookmarked your changelog or type the URL directly—these are your power users</li>
+                    <li><strong>In-app links:</strong> Users clicking from your product—shows integration success</li>
+                    <li><strong>Organic search:</strong> People finding you via Google—indicates SEO effectiveness</li>
+                    <li><strong>Social/referral:</strong> Traffic from Twitter, LinkedIn, or other sites—shows shareability</li>
+                </ul>
+            </div>
+
+            <div class="metric-card">
+                <h4>🌍 New vs. Returning Visitors</h4>
+                <p>The ratio of first-time visitors to returning readers. A healthy changelog typically sees:</p>
+                <ul>
+                    <li><strong>60-70% returning visitors</strong> (your engaged user base checking for updates)</li>
+                    <li><strong>30-40% new visitors</strong> (prospects researching your product)</li>
+                </ul>
+                <p>If new visitors dominate, your existing users don't know about your changelog. If returning visitors are too high, you may not be attracting prospects effectively.</p>
+            </div>
+
+            <h3>2. Engagement Metrics: Measuring Interest</h3>
+
+            <p>Reach tells you who's showing up. Engagement tells you if they care.</p>
+
+            <div class="metric-card">
+                <h4>⏱️ Time on Page</h4>
+                <p>How long visitors spend reading your changelog. This indicates content quality and relevance.</p>
+                <table>
+                    <tr>
+                        <th>Time Range</th>
+                        <th>Interpretation</th>
+                    </tr>
+                    <tr>
+                        <td>&lt; 30 seconds</td>
+                        <td>Skimming or didn't find what they needed</td>
+                    </tr>
+                    <tr>
+                        <td>30 sec – 2 min</td>
+                        <td>Scanning for specific updates</td>
+                    </tr>
+                    <tr>
+                        <td>2 – 5 min</td>
+                        <td>Reading one or two entries in detail</td>
+                    </tr>
+                    <tr>
+                        <td>&gt; 5 min</td>
+                        <td>Deep engagement, likely reading multiple entries</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="metric-card">
+                <h4>📄 Pages Per Session</h4>
+                <p>How many individual entries visitors read in one visit. Higher is better—it means your content is compelling enough to explore.</p>
+                <div class="formula">Average Pages Per Session = Total Page Views / Total Sessions</div>
+                <p><strong>Benchmark:</strong> 2.5+ pages per session indicates strong content engagement.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>📉 Bounce Rate</h4>
+                <p>Percentage of visitors who leave after viewing only one page. For changelogs, context matters:</p>
+                <ul>
+                    <li><strong>Low bounce rate (20-40%):</strong> Visitors are exploring multiple entries</li>
+                    <li><strong>High bounce rate (60%+):</strong> Content may not match expectations or navigation is unclear</li>
+                </ul>
+                <p>Note: A high bounce rate on individual entry pages isn't necessarily bad—users may have found exactly what they needed.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>🔥 Entry-Level Engagement</h4>
+                <p>Track performance of individual entries to identify what resonates:</p>
+                <ul>
+                    <li><strong>Views per entry</strong> — which updates attract the most attention</li>
+                    <li><strong>Scroll depth</strong> — how much of each entry people actually read</li>
+                    <li><strong>Click-through rate on links</strong> — are your CTAs effective?</li>
+                </ul>
+            </div>
+
+            <h3>3. Impact Metrics: Tracking Business Value</h3>
+
+            <p>Engagement is great, but impact is what matters. These metrics connect your changelog to business outcomes.</p>
+
+            <div class="metric-card">
+                <h4>🎯 Feature Adoption Rate</h4>
+                <p>The percentage of changelog readers who try a new feature within 7 days of reading about it.</p>
+                <div class="formula">Adoption Rate = Users Who Tried Feature / Users Who Viewed the Entry × 100</div>
+                <p><strong>How to track:</strong> Use UTM parameters on feature links in your changelog, then correlate with product analytics.</p>
+                <p><strong>Benchmark:</strong> 15-25% adoption rate is excellent for non-critical features; 40%+ for highly requested features.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>💬 Support Ticket Reduction</h4>
+                <p>A well-maintained changelog reduces "where is X?" and "when will Y be ready?" questions.</p>
+                <div class="formula">Ticket Reduction = (Baseline Tickets - Post-Changelog Tickets) / Baseline Tickets × 100</div>
+                <p><strong>Benchmark:</strong> Teams report 20-30% reduction in feature-related support tickets after implementing a public changelog.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>🔄 Subscription/Upgrade Rate</h4>
+                <p>For freemium products, track how changelog readers convert to paid plans.</p>
+                <p>Compare conversion rates between:</p>
+                <ul>
+                    <li>Users who visited your changelog</li>
+                    <li>Users who didn't visit your changelog</li>
+                </ul>
+                <p><strong>Benchmark:</strong> Changelog visitors typically convert 2-3x higher than non-visitors.</p>
+            </div>
+
+            <div class="metric-card">
+                <h4>📧 RSS/Email Subscribers</h4>
+                <p>The number of users who subscribe to get updates automatically. This is your core engaged audience.</p>
+                <p><strong>Healthy growth:</strong> 5-10% of unique visitors should convert to subscribers.</p>
+            </div>
+
+            <h2>Setting Up Your Analytics Dashboard</h2>
+
+            <p>Here's a practical framework for building your changelog analytics setup:</p>
+
+            <div class="dashboard-preview">
+                <h4>📊 Recommended Dashboard Layout</h4>
+                <div class="metric-row">
+                    <div class="metric-box">
+                        <div class="metric-value">2,847</div>
+                        <div class="metric-label">Monthly Visitors</div>
+                        <div class="metric-change positive">↑ 18%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">3.2</div>
+                        <div class="metric-label">Pages/Session</div>
+                        <div class="metric-change positive">↑ 0.4</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">2:47</div>
+                        <div class="metric-label">Avg. Time</div>
+                        <div class="metric-change positive">↑ 12%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">23%</div>
+                        <div class="metric-label">Feature Adoption</div>
+                        <div class="metric-change positive">↑ 5%</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Tools You'll Need</h3>
+
+            <ol>
+                <li><strong>Web Analytics:</strong> Plausible (privacy-friendly), Fathom, or Google Analytics 4</li>
+                <li><strong>Product Analytics:</strong> Mixpanel, Amplitude, or PostHog to track feature adoption</li>
+                <li><strong>Heatmap Tool:</strong> Hotjar or Clarity to see where people scroll and click</li>
+                <li><strong>Feed Analytics:</strong> Most RSS feed services provide subscriber counts and engagement data</li>
+            </ol>
+
+            <h3>Setting Up Conversion Tracking</h3>
+
+            <p>To connect changelog views to feature adoption, implement this tracking pattern:</p>
+
+            <ol>
+                <li><strong>Add UTM parameters</strong> to all feature links in your changelog:<br>
+                <code>?utm_source=changelog&utm_medium=web&utm_campaign=feature_name</code></li>
+                <li><strong>Create events</strong> in your product analytics for feature usage</li>
+                <li><strong>Build a funnel</strong> showing: View Changelog → Click Feature Link → Use Feature</li>
+                <li><strong>Analyze drop-off points</strong> to identify friction</li>
+            </ol>
+
+            <h2>What the Data Tells You: A Diagnostic Guide</h2>
+
+            <p>Here's how to interpret common patterns in your analytics:</p>
+
+            <table>
+                <tr>
+                    <th>Symptom</th>
+                    <th>Likely Cause</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>High traffic, low time on page</td>
+                    <td>Content doesn't match visitor expectations</td>
+                    <td>Improve entry titles; add clearer categorization</td>
+                </tr>
+                <tr>
+                    <td>Low returning visitor rate</td>
+                    <td>Users don't know changelog exists</td>
+                    <td>Add in-app notifications; email digest</td>
+                </tr>
+                <tr>
+                    <td>High engagement, low adoption</td>
+                    <td>Feature is hard to find or use</td>
+                    <td>Add direct links; improve onboarding</td>
+                </tr>
+                <tr>
+                    <td>Spikes in specific entries</td>
+                    <td>Viral sharing or search traffic</td>
+                    <td>Double down on that content type/topic</td>
+                </tr>
+                <tr>
+                    <td>Declining traffic over time</td>
+                    <td>Irregular publishing schedule</td>
+                    <td>Commit to consistent update frequency</td>
+                </tr>
+            </table>
+
+            <h2>Advanced: Segmenting Your Analysis</h2>
+
+            <p>Aggregate data only tells part of the story. Segment your analytics to uncover deeper insights:</p>
+
+            <h4>By User Type</h4>
+            <ul>
+                <li><strong>Free vs. Paid users</strong> — Do paid users engage more? They should.</li>
+                <li><strong>New vs. Established users</strong> — New users may need different content</li>
+                <li><strong>Power users vs. casual users</strong> — Identify your most engaged segment</li>
+            </ul>
+
+            <h4>By Content Type</h4>
+            <ul>
+                <li><strong>Feature announcements</strong> vs. <strong>bug fixes</strong> vs. <strong>improvements</strong></li>
+                <li><strong>Visual updates</strong> (with images/GIFs) vs. <strong>text-only</strong></li>
+                <li><strong>Major releases</strong> vs. <strong>minor updates</strong></li>
+            </ul>
+
+            <h4>By Entry Age</h4>
+            <ul>
+                <li><strong>First 7 days</strong> — Initial spike from notifications</li>
+                <li><strong>30-90 days</strong> — Long-tail organic traffic</li>
+                <li><strong>Evergreen content</strong> — Entries that continue to drive traffic</li>
+            </ul>
+
+            <h2>Building a Data-Driven Changelog Culture</h2>
+
+            <p>Analytics shouldn't be a one-time setup. Build ongoing practices:</p>
+
+            <div class="tip-box">
+                <h4>💡 Weekly Changelog Review Ritual</h4>
+                <p>Spend 15 minutes each week reviewing:</p>
+                <ul>
+                    <li>Top 3 most-viewed entries from the past week</li>
+                    <li>Entries with unusually high or low engagement</li>
+                    <li>Conversion rates on feature announcements</li>
+                    <li>Subscriber growth and sources</li>
+                </ul>
+                <p>Use these insights to inform your next updates.</p>
+            </div>
+
+            <h3>Quarterly Changelog Audit</h3>
+
+            <p>Every quarter, conduct a deeper analysis:</p>
+
+            <ol>
+                <li><strong>Identify your top 10 entries</strong> by total engagement—what do they have in common?</li>
+                <li><strong>Review underperforming content</strong>—was it the topic, timing, or presentation?</li>
+                <li><strong>Analyze subscriber growth trends</strong>—what drove spikes?</li>
+                <li><strong>Survey your most engaged users</strong>—what do they want more of?</li>
+                <li><strong>Set goals</strong> for the next quarter based on your findings</li>
+            </ol>
+
+            <h2>Privacy-First Analytics</h2>
+
+            <p>As privacy regulations tighten and users become more privacy-conscious, consider privacy-friendly analytics tools:</p>
+
+            <table>
+                <tr>
+                    <th>Tool</th>
+                    <th>Price</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td><strong>Plausible</strong></td>
+                    <td>$9/month</td>
+                    <td>Simple, GDPR-compliant, lightweight</td>
+                </tr>
+                <tr>
+                    <td><strong>Fathom</strong></td>
+                    <td>$14/month</td>
+                    <td>Privacy-first with good reporting</td>
+                </tr>
+                <tr>
+                    <td><strong>Simple Analytics</strong></td>
+                    <td>$19/month</td>
+                    <td>Clean interface, no cookies needed</td>
+                </tr>
+                <tr>
+                    <td><strong>Umami</strong></td>
+                    <td>Free (self-hosted)</td>
+                    <td>Technical users who want full control</td>
+                </tr>
+            </table>
+
+            <h2>Key Takeaways</h2>
+
+            <ul>
+                <li><strong>Measure what matters:</strong> Focus on reach, engagement, and impact metrics—not vanity numbers</li>
+                <li><strong>Set baselines first:</strong> You can't improve without knowing where you started</li>
+                <li><strong>Segment your data:</strong> Aggregate numbers hide important patterns</li>
+                <li><strong>Connect to outcomes:</strong> The ultimate metric is feature adoption and user satisfaction</li>
+                <li><strong>Review regularly:</strong> Make analytics a habit, not a one-time setup</li>
+                <li><strong>Act on insights:</strong> Data is useless without action—use what you learn to improve</li>
+            </ul>
+
+            <p>Remember: the goal isn't perfect analytics—it's understanding your users well enough to serve them better. Start with the basics, add complexity as you grow, and always keep the focus on delivering value to your readers.</p>
+
+            <div class="cta-box">
+                <h3>Ready to Track Your Changelog?</h3>
+                <p>Changelog.page includes built-in analytics integration. Set up in minutes, gain insights forever.</p>
+                <a href="/" class="cta-button">Get Started Free →</a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">📝</div>
+                <div class="author-info">
+                    <h4>The Changelog.page Team</h4>
+                    <p>Helping SaaS teams communicate product updates effectively. Built in the $100 AI Startup Race.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Changelog.page — Built with 💜 in the <a href="#">$100 AI Startup Race</a></p>
+        </div>
+    </footer>
+</body>
+</html>
