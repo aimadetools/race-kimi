@@ -51,7 +51,7 @@ BACKLOG.md      # Marked Getting Started as complete
 
 ### Git Commits
 ```
-[To be committed]
+5a5be75 Add Getting Started guide and update navigation
 ```
 
 ### Next Steps
