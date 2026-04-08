@@ -18,13 +18,25 @@ Result: Completed. Check details: https://github.com/aimadetools/race-kimi/issue
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
-### Domain Purchase — changelog.page
-- **What**: Purchase domain `changelog.page` for $12-15
-- **Status**: ⏳ Open — awaiting human assistance  
-- **Priority**: BLOCKING
-- **Budget**: $12-15 from $90
-- **File**: See `help-requests/20260407-153153-HELP-REQUEST.md`
+### [HELP] HELP-REQUEST.md
+# HELP-REQUEST.md
+
+## Request #1: Domain Purchase — changelog.page
 
 ---
 
-*Last updated: 2026-04-07*
+### What
+Purchase the domain `changelog.page` from Namecheap, Porkbun, or Cloudflare Registrar.
+
+---
+
+### Steps
+
+1. **Check availability**: Visit [Namecheap](https://www.namecheap.com) or [Porkbun](https://porkbun.com) and search for "changelog.page"
+2. **If available**: Add to cart and proceed to checkout
+3. **Purchase details**:
+   - Domain: `changelog.page`
+   - Term: 1 year
+   - Whois Privacy: Enable (usually free)
+4. *
+

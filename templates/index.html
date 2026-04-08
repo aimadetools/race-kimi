@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog Templates — Changelog.page</title>
+    <meta name="description" content="Free, ready-to-use changelog templates for SaaS products, APIs, mobile apps, open source projects, and design systems.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Changelog Templates — Changelog.page">
+    <meta property="og:description" content="Free, ready-to-use changelog templates. Copy, customize, publish.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://changelog.page/templates/">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Changelog Templates — Changelog.page">
+    <meta name="twitter:description" content="Free, ready-to-use changelog templates. Copy, customize, publish.">
+    <meta name="twitter:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #22c55e;
+            --radius: 12px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        
+        /* Templates Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .template-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+        }
+        
+        .template-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .template-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .template-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .template-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .template-tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Features Section */
+        .features {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 1.75rem;
+            margin-bottom: 3rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature {
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin: 0 auto 1rem;
+        }
+        
+        .feature h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            margin-top: 5rem;
+            padding: 4rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .cta h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            color: var(--text);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <ul class="nav-links">
+                <li><a href="/features.html">Features</a></li>
+                <li><a href="/pricing.html">Pricing</a></li>
+                <li><a href="/templates/" class="active">Templates</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Free Changelog <span>Templates</span></h1>
+        <p>Ready-to-use templates for SaaS products, APIs, mobile apps, open source projects, and design systems. Copy, customize, publish.</p>
+        <span class="badge">
+            <span>✓</span>
+            Open Source & Free Forever
+        </span>
+    </section>
+
+    <div class="container">
+        <div class="templates-grid">
+            <a href="saas-product-updates.md" class="template-card">
+                <div class="template-icon">🚀</div>
+                <h3>SaaS Product Updates</h3>
+                <p>Perfect for SaaS companies announcing new features, improvements, and bug fixes to customers. Includes structured sections for features, improvements, bug fixes, and upcoming roadmap.</p>
+                <div class="template-meta">
+                    <span class="template-tag">SaaS</span>
+                    <span class="template-tag">Product</span>
+                    <span class="template-tag">B2B</span>
+                </div>
+            </a>
+
+            <a href="api-developer-tools.md" class="template-card">
+                <div class="template-icon">🔌</div>
+                <h3>API & Developer Tools</h3>
+                <p>Designed for API platforms and developer tools. Emphasizes technical details, code examples, migration guides, and breaking changes while maintaining readability.</p>
+                <div class="template-meta">
+                    <span class="template-tag">API</span>
+                    <span class="template-tag">Developer</span>
+                    <span class="template-tag">SDK</span>
+                </div>
+            </a>
+
+            <a href="mobile-app-release.md" class="template-card">
+                <div class="template-icon">📱</div>
+                <h3>Mobile App Release</h3>
+                <p>Optimized for iOS and Android app updates. Highlights new features with app store requirements in mind. Includes download CTAs and condensed notes for app stores.</p>
+                <div class="template-meta">
+                    <span class="template-tag">iOS</span>
+                    <span class="template-tag">Android</span>
+                    <span class="template-tag">Mobile</span>
+                </div>
+            </a>
+
+            <a href="open-source-project.md" class="template-card">
+                <div class="template-icon">🌟</div>
+                <h3>Open Source Project</h3>
+                <p>Crafted for open source projects. Balances technical details for contributors with accessible summaries for users. Includes contributor credits and migration guides.</p>
+                <div class="template-meta">
+                    <span class="template-tag">Open Source</span>
+                    <span class="template-tag">GitHub</span>
+                    <span class="template-tag">Community</span>
+                </div>
+            </a>
+
+            <a href="design-ux-improvements.md" class="template-card">
+                <div class="template-icon">🎨</div>
+                <h3>Design & UX Improvements</h3>
+                <p>Perfect for design systems, UI libraries, and products where visual polish matters. Focuses on the "why" behind design decisions with accessibility details.</p>
+                <div class="template-meta">
+                    <span class="template-tag">Design</span>
+                    <span class="template-tag">UX</span>
+                    <span class="template-tag">Accessibility</span>
+                </div>
+            </a>
+        </div>
+
+        <section class="features">
+            <h2>What's Included in Every Template</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">📋</div>
+                    <h4>YAML Frontmatter</h4>
+                    <p>Properly structured metadata for dates, categories, and featured flags</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📖</div>
+                    <h4>Usage Instructions</h4>
+                    <p>Step-by-step guide on how to customize and use the template</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <h4>Best Practices</h4>
+                    <p>Tips on what to include and common mistakes to avoid</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <h4>Full Examples</h4>
+                    <p>Complete, realistic examples you can copy and modify</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>Ready to Create Your Changelog?</h2>
+            <p>Get started with Changelog.page and publish beautiful changelogs in minutes. Free tier includes all templates.</p>
+            <a href="/" class="btn">
+                Get Started Free →
+            </a>
+        </section>
+    </div>
+
+    <footer>
+        <p>Templates provided by <a href="/">Changelog.page</a> — Beautiful changelogs for SaaS products</p>
+    </footer>
+
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+</body>
+</html>
