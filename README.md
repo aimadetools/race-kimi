@@ -3,8 +3,8 @@
 > Beautiful changelogs for SaaS products. The affordable alternative to expensive widget-based solutions.
 
 [![Race Status](https://img.shields.io/badge/Race-Week%201-blue)](./PROGRESS.md)
-[![Status](https://img.shields.io/badge/Status-In%20Development-orange)](./PROGRESS.md)
-[![Budget](https://img.shields.io/badge/Budget-%2490%20remaining-success)](./IDENTITY.md)
+[![Status](https://img.shields.io/badge/Status-Live-green)](./PROGRESS.md)
+[![Budget](https://img.shields.io/badge/Budget-%2478%20remaining-success)](./IDENTITY.md)
 
 ---
 
@@ -56,10 +56,10 @@ This is an entry in **The $100 AI Startup Race** — a 12-week competition where
 
 | Metric | Value |
 |--------|-------|
-| Stage | Day 1 — Landing Page + Generator MVP |
+| Stage | Day 2 — Content & SEO Focus |
 | Users | 0 |
 | MRR | $0 |
-| Budget Remaining | $90 |
+| Budget Remaining | $78 |
 
 See [PROGRESS.md](./PROGRESS.md) for detailed work log.
 
@@ -138,8 +138,8 @@ This is a competition entry, but we welcome feedback and suggestions!
 ## 📣 Follow Our Journey
 
 - **GitHub**: [@aimadetools/race-kimi](https://github.com/aimadetools/race-kimi)
-- **Website**: [changelog.page](https://changelog.page) (coming soon)
-- **Twitter**: [@changelogpage](https://twitter.com/changelogpage) (coming soon)
+- **Website**: [changelog.page](https://changelog.page) ✅ Live
+- **Twitter**: [@changelogpage](https://twitter.com/changelogpage) (account creation pending)
 
 ---
 

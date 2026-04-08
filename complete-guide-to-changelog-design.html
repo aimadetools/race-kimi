@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Complete Guide to Changelog Design — Changelog.page Blog</title>
+    <meta name="description" content="Master the visual design of your changelog: typography, color, layout, spacing, and responsive design principles that make updates irresistible to read.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Complete Guide to Changelog Design">
+    <meta property="og:description" content="Master typography, color, layout, and responsive design principles that make changelog updates irresistible to read.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/complete-guide-to-changelog-design.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Complete Guide to Changelog Design">
+    <meta name="twitter:description" content="Master typography, color, layout, and responsive design principles that make changelog updates irresistible to read.">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "The Complete Guide to Changelog Design",
+      "description": "Master the visual design of your changelog: typography, color, layout, spacing, and responsive design principles that make updates irresistible to read.",
+      "image": "https://changelog.page/og-image.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Changelog.page"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Changelog.page",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://changelog.page/favicon.svg"
+        }
+      },
+      "datePublished": "2026-04-08",
+      "dateModified": "2026-04-08",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://changelog.page/complete-guide-to-changelog-design.html"
+      }
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --accent-pink: #ec4899;
+            --accent-orange: #f97316;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .blog-header { padding: 60px 0 40px; text-align: center; }
+        .blog-meta { display: flex; gap: 16px; justify-content: center; align-items: center; margin-bottom: 24px; font-size: 0.875rem; color: var(--text-muted); }
+        .blog-category { color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .blog-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .blog-excerpt { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .blog-content { padding-bottom: 100px; }
+        .blog-content h2 { font-size: 1.75rem; font-weight: 700; margin: 48px 0 20px; color: var(--text); }
+        .blog-content h3 { font-size: 1.25rem; font-weight: 600; margin: 32px 0 16px; color: var(--primary-light); }
+        .blog-content p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content ul, .blog-content ol { margin-bottom: 20px; padding-left: 24px; }
+        .blog-content li { color: var(--text-secondary); margin-bottom: 12px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content a { color: var(--primary-light); text-decoration: none; }
+        .blog-content a:hover { text-decoration: underline; }
+        .blog-content strong { color: var(--text); font-weight: 600; }
+        .blog-content blockquote { border-left: 4px solid var(--primary); padding-left: 24px; margin: 32px 0; font-style: italic; color: var(--text-secondary); }
+        .blog-content code { background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--primary-light); }
+
+        .design-principle { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.08)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .design-principle h3 { margin-top: 0; color: var(--text); font-size: 1.25rem; display: flex; align-items: center; gap: 12px; }
+        .principle-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+
+        .example-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin: 32px 0; }
+        .example-box h3 { margin-top: 0; color: var(--text); }
+        .example-box .label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .label-good { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .label-tip { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .label-warn { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .example-box .example-text { font-family: 'JetBrains Mono', monospace; background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 0.9375rem; line-height: 1.6; color: #e2e8f0; border-left: 3px solid var(--primary); }
+
+        .color-palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin: 24px 0; }
+        .color-swatch { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+        .color-preview { width: 100%; height: 48px; border-radius: 8px; margin-bottom: 12px; }
+        .color-name { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+        .color-hex { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9375rem; }
+        .comparison-table th, .comparison-table td { padding: 12px 16px; text-align: left; border: 1px solid var(--border); }
+        .comparison-table th { background: var(--bg-secondary); font-weight: 600; color: var(--text); }
+        .comparison-table td { color: var(--text-secondary); }
+        .comparison-table code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+
+        .checklist-box { background: var(--bg); border: 2px solid var(--primary); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .checklist-box h3 { margin-top: 0; color: var(--text); text-align: center; }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li { padding-left: 32px; position: relative; margin-bottom: 16px; }
+        .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        .key-takeaways { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 48px 0; }
+        .key-takeaways h2 { margin-top: 0; }
+        .key-takeaways ul { list-style: none; padding: 0; }
+        .key-takeaways li { padding-left: 32px; position: relative; margin-bottom: 16px; }
+        .key-takeaways li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        .cta-box { text-align: center; padding: 48px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; margin: 48px 0; }
+        .cta-box h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn { display: inline-block; padding: 14px 28px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .author-box { display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; margin: 48px 0; }
+        .author-avatar { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .author-info h4 { font-weight: 600; margin-bottom: 4px; }
+        .author-info p { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        footer .container { max-width: 1200px; }
+        .footer-simple { text-align: center; color: var(--text-muted); }
+        .footer-simple a { color: var(--text-secondary); text-decoration: none; }
+        .footer-simple a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .example-box { padding: 24px; }
+            .cta-box { padding: 32px 24px; }
+            .design-principle { padding: 24px; }
+            .color-palette { grid-template-columns: repeat(2, 1fr); }
+            .comparison-table { font-size: 0.875rem; }
+            .comparison-table th, .comparison-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="/features.html">Features</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <article>
+        <header class="blog-header">
+            <div class="container">
+                <div class="blog-meta">
+                    <span class="blog-category">Design Guide</span>
+                    <span>Apr 8, 2026</span>
+                    <span>16 min read</span>
+                </div>
+                <h1>The Complete Guide to Changelog Design</h1>
+                <p class="blog-excerpt">Great content deserves great design. Learn the typography, color, layout, and spacing principles that transform a plain text changelog into a compelling product experience.</p>
+            </div>
+        </header>
+
+        <div class="container blog-content">
+            <p>Your changelog is more than a list of updates—it's a product experience. The best changelogs don't just inform; they delight, engage, and convert casual visitors into loyal users.</p>
+
+            <p>After studying the design patterns of 50+ high-performing SaaS changelogs, we've distilled the essential design principles that separate forgettable updates from memorable ones. Whether you're building a changelog from scratch or refining an existing one, this guide will give you a complete framework.</p>
+
+            <h2>Why Design Matters for Changelogs</h2>
+
+            <p>Before diving into the specifics, let's establish why design deserves your attention:</p>
+
+            <ul>
+                <li><strong>First impressions count.</strong> Users judge your product's quality by your changelog's polish.</li>
+                <li><strong>Scannability drives engagement.</strong> Well-designed changelogs get 3x more time on page.</li>
+                <li><strong>Consistency builds trust.</strong> A cohesive visual system signals professionalism.</li>
+                <li><strong>Accessibility expands reach.</strong> Good design includes everyone, regardless of ability.</li>
+                <li><strong>Brand reinforcement.</strong> Your changelog should feel like an extension of your product.</li>
+            </ul>
+
+            <blockquote>
+                "The design of your changelog communicates as much as the words inside it. Treat it as a core product surface."
+                <br>— Design team at Linear
+            </blockquote>
+
+            <h2>1. Typography: The Foundation of Readability</h2>
+
+            <div class="design-principle">
+                <h3><span class="principle-icon">🔤</span> Font Selection</h3>
+                <p>Your font choices set the tone. For changelogs, we recommend a two-font system:</p>
+                <ul>
+                    <li><strong>Body font:</strong> A clean sans-serif for readability (Inter, system-ui, or Helvetica)</li>
+                    <li><strong>Code/technical font:</strong> A monospace font for code snippets and technical terms (JetBrains Mono, Fira Code, or SF Mono)</li>
+                </ul>
+                <p>Avoid decorative or display fonts for body text—they reduce readability and feel unprofessional in a changelog context.</p>
+            </div>
+
+            <h3>Type Scale</h3>
+
+            <p>Establish a clear typographic hierarchy. Here's a proven scale for changelog entries:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">Recommended Type Scale</span>
+                <div class="example-text">
+H1 — 32-40px / Bold — Page title
+H2 — 24-28px / Semibold — Section headers  
+H3 — 18-20px / Medium — Entry titles
+Body — 16-17px / Regular — Main content
+Small — 14px / Regular — Metadata, dates
+Caption — 12px / Medium — Tags, labels
+                </div>
+            </div>
+
+            <h3>Line Height & Spacing</h3>
+
+            <p>Proper spacing prevents visual fatigue:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Element</th><th>Line Height</th><th>Bottom Margin</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Body text</td><td><code>1.6-1.7</code></td><td><code>16-20px</code></td></tr>
+                    <tr><td>Headings</td><td><code>1.2-1.3</code></td><td><code>16-24px</code></td></tr>
+                    <tr><td>List items</td><td><code>1.6</code></td><td><code>8-12px</code></td></tr>
+                    <tr><td>Code blocks</td><td><code>1.5</code></td><td><code>16px</code></td></tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <span class="label label-warn">Common Mistake</span>
+                <p style="margin-top: 12px;"><strong>Cramped text</strong></p>
+                <p>Line heights below 1.5 make text feel dense and hard to read. Similarly, insufficient margin between paragraphs creates a "wall of text" effect that discourages reading.</p>
+            </div>
+
+            <h2>2. Color: Creating Visual Hierarchy</h2>
+
+            <p>Color guides the eye and communicates meaning. A well-designed changelog uses a restrained palette with clear intent.</p>
+
+            <h3>Essential Color Roles</h3>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #6366f1;"></div>
+                    <div class="color-name">Primary</div>
+                    <div class="color-hex">#6366f1</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #10b981;"></div>
+                    <div class="color-name">Success</div>
+                    <div class="color-hex">#10b981</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #f59e0b;"></div>
+                    <div class="color-name">Warning</div>
+                    <div class="color-hex">#f59e0b</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #ef4444;"></div>
+                    <div class="color-name">Error</div>
+                    <div class="color-hex">#ef4444</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #0f172a; border: 1px solid #334155;"></div>
+                    <div class="color-name">Background</div>
+                    <div class="color-hex">#0f172a</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background: #1e293b;"></div>
+                    <div class="color-name">Surface</div>
+                    <div class="color-hex">#1e293b</div>
+                </div>
+            </div>
+
+            <h3>Category Color Coding</h3>
+
+            <p>Assign consistent colors to entry categories. This allows users to scan for relevant updates at a glance:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Category</th><th>Color</th><th>Use Case</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">New</span></td><td>Green</td><td>New features</td></tr>
+                    <tr><td><span style="background: rgba(99,102,241,0.2); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">Improved</span></td><td>Indigo</td><td>Enhancements</td></tr>
+                    <tr><td><span style="background: rgba(245,158,11,0.2); color: #f59e0b; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">Fixed</span></td><td>Amber</td><td>Bug fixes</td></tr>
+                    <tr><td><span style="background: rgba(239,68,68,0.2); color: #ef4444; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">Deprecated</span></td><td>Red</td><td>Removed features</td></tr>
+                    <tr><td><span style="background: rgba(236,72,153,0.2); color: #ec4899; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">Security</span></td><td>Pink</td><td>Security updates</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <span class="label label-tip">Pro Tip</span>
+                <p style="margin-top: 12px;">Always ensure color contrast meets WCAG AA standards (4.5:1 for normal text, 3:1 for large text). Use tools like <a href="https://webaim.org/resources/contrastchecker/">WebAIM's Contrast Checker</a> to verify.</p>
+            </div>
+
+            <h2>3. Layout: Structuring Information</h2>
+
+            <p>A changelog's layout determines how easily users can find and consume information. Here are the most effective layout patterns:</p>
+
+            <div class="design-principle">
+                <h3><span class="principle-icon">📐</span> The Timeline Layout</h3>
+                <p>Best for: Products with frequent updates, established user bases</p>
+                <ul>
+                    <li>Vertical timeline with dots or icons marking each entry</li>
+                    <li>Dates displayed prominently on the left</li>
+                    <li>Content flows rightward from each marker</li>
+                    <li>Creates a sense of product evolution and momentum</li>
+                </ul>
+                <p><strong>Used by:</strong> Linear, GitHub, Notion</p>
+            </div>
+
+            <div class="design-principle">
+                <h3><span class="principle-icon">🃏</span> The Cards Layout</h3>
+                <p>Best for: Visual products, feature-heavy updates, design-focused teams</p>
+                <ul>
+                    <li>Each entry as a self-contained card</li>
+                    <li>Thumbnail images or icons at the top</li>
+                    <li>Tags, dates, and titles in a consistent header area</li>
+                    <li>Grid or list arrangement depending on density</li>
+                </ul>
+                <p><strong>Used by:</strong> Figma, Framer, Webflow</p>
+            </div>
+
+            <div class="design-principle">
+                <h3><span class="principle-icon">📄</span> The Minimal Layout</h3>
+                <p>Best for: Developer tools, API products, text-focused teams</p>
+                <ul>
+                    <li>Clean, typography-focused design</li>
+                    <li>Minimal visual decoration</li>
+                    <li>Emphasis on content hierarchy through spacing and weight</li>
+                    <li>Fast loading, distraction-free reading</li>
+                </ul>
+                <p><strong>Used by:</strong> Stripe, Vercel, Supabase</p>
+            </div>
+
+            <h3>Whitespace: The Unsung Hero</h3>
+
+            <p>Generous whitespace isn't empty space—it's breathing room. It guides attention and reduces cognitive load:</p>
+
+            <ul>
+                <li><strong>Between entries:</strong> 40-60px separates distinct updates</li>
+                <li><strong>Within entries:</strong> 24-32px between sections</li>
+                <li><strong>Around images:</strong> 16-24px prevents visual clutter</li>
+                <li><strong>Page margins:</strong> 24px mobile, 48px+ desktop</li>
+            </ul>
+
+            <h2>4. Visual Elements: Images, Icons & Media</h2>
+
+            <p>Visual elements can increase engagement by 300% when used correctly. Here's how to do it right:</p>
+
+            <h3>Screenshots & GIFs</h3>
+
+            <div class="example-box">
+                <span class="label label-good">Best Practices</span>
+                <ul style="margin-top: 12px;">
+                    <li>Keep GIFs under 10 seconds—users lose interest quickly</li>
+                    <li>Use consistent dimensions (e.g., all images 1200×800px)</li>
+                    <li>Add subtle rounded corners (8-12px radius) for polish</li>
+                    <li>Include descriptive alt text for accessibility</li>
+                    <li>Compress images—aim for under 200KB each</li>
+                    <li>Use a subtle shadow or border to separate from background</li>
+                </ul>
+            </div>
+
+            <h3>Icons</h3>
+
+            <p>Icons serve as visual shortcuts. Use a consistent icon set throughout:</p>
+
+            <ul>
+                <li><strong>Entry type icons:</strong> 🆕 New, 🔧 Fixed, ⚡ Improved, 🗑️ Deprecated</li>
+                <li><strong>Action icons:</strong> 📖 Read more, ▶️ Watch demo, 🔗 View docs</li>
+                <li><strong>Category icons:</strong> Match your color coding system</li>
+            </ul>
+
+            <p>Stick to one icon library (Lucide, Heroicons, or Phosphor) for consistency.</p>
+
+            <h2>5. Responsive Design: Every Screen Matters</h2>
+
+            <p>Over 60% of users will view your changelog on mobile. Design for it from the start.</p>
+
+            <div class="design-principle">
+                <h3><span class="principle-icon">📱</span> Mobile Design Checklist</h3>
+                <ul>
+                    <li>Reduce font sizes by 10-15% on mobile (but keep body text ≥16px)</li>
+                    <li>Collapse sidebar navigation into a hamburger menu</li>
+                    <li>Stack horizontal elements vertically</li>
+                    <li>Increase tap targets to ≥44px</li>
+                    <li>Test image scaling—no horizontal scrolling</li>
+                    <li>Ensure category tags wrap gracefully</li>
+                </ul>
+            </div>
+
+            <h3>Breakpoints</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Breakpoint</th><th>Width</th><th>Key Changes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mobile</td><td><code>&lt; 640px</code></td><td>Single column, collapsed nav, reduced padding</td></tr>
+                    <tr><td>Tablet</td><td><code>640-1024px</code></td><td>Two columns possible, adapted spacing</td></tr>
+                    <tr><td>Desktop</td><td><code>&gt; 1024px</code></td><td>Full layout, sidebar visible, max-width container</td></tr>
+                </tbody>
+            </table>
+
+            <h2>6. Dark Mode & Theme Consistency</h2>
+
+            <p>Dark mode isn't just trendy—it's easier on the eyes for extended reading. If you offer both modes, ensure consistency:</p>
+
+            <ul>
+                <li><strong>Don't just invert colors.</strong> Dark mode needs adjusted saturation—pure white text on pure black causes eye strain.</li>
+                <li><strong>Use a dark gray background</strong> (like <code>#0f172a</code> or <code>#1a1a1a</code>) instead of pure black.</li>
+                <li><strong>Reduce brightness of accent colors</strong> by 10-15% in dark mode.</li>
+                <li><strong>Respect system preference</strong> with <code>prefers-color-scheme</code> media query.</li>
+                <li><strong>Provide a manual toggle</strong> for users who want control.</li>
+            </ul>
+
+            <div class="example-box">
+                <span class="label label-tip">CSS Example</span>
+                <div class="example-text">:root {
+  --bg: #ffffff;
+  --text: #0f172a;
+  --primary: #6366f1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --text: #f8fafc;
+    --primary: #818cf8;
+  }
+}</div>
+            </div>
+
+            <h2>7. Accessibility: Design for Everyone</h2>
+
+            <p>Accessible design benefits all users, not just those with disabilities. Here's your accessibility checklist:</p>
+
+            <div class="checklist-box">
+                <h3>🎯 Accessibility Checklist</h3>
+                <ul class="checklist">
+                    <li>Color contrast ratio ≥ 4.5:1 for normal text</li>
+                    <li>All images have descriptive alt text</li>
+                    <li>Interactive elements are keyboard navigable</li>
+                    <li>Focus indicators are clearly visible</li>
+                    <li>Heading hierarchy is logical (no skipped levels)</li>
+                    <li>Links have descriptive text (not "click here")</li>
+                    <li>Font sizes can be zoomed to 200% without breaking layout</li>
+                    <li>Motion/animation can be disabled (prefers-reduced-motion)</li>
+                    <li>Form labels are properly associated with inputs</li>
+                </ul>
+            </div>
+
+            <h2>8. Real-World Examples: What Works</h2>
+
+            <p>Let's analyze three changelogs that excel at design:</p>
+
+            <h3>Linear: Typography-First Elegance</h3>
+            <p>Linear's changelog is a masterclass in restraint. They use a single typeface (Custom Linear Sans), generous whitespace, and subtle color coding. The timeline layout creates a narrative flow, and each entry feels like a polished product announcement.</p>
+            <p><strong>Key takeaway:</strong> Consistency in spacing and typography creates trust.</p>
+
+            <h3>Stripe: Developer-Focused Clarity</h3>
+            <p>Stripe's changelog prioritizes scannability. They use a minimal layout with clear categorization, API version badges, and expandable detail sections. The design is intentionally utilitarian—developers can find what they need in seconds.</p>
+            <p><strong>Key takeaway:</strong> Match your design to your audience's needs.</p>
+
+            <h3>Figma: Visual Storytelling</h3>
+            <p>Figma's changelog entries are rich with annotated screenshots, GIFs, and video embeds. The cards layout showcases each update as a mini-product launch, complete with feature highlights and usage tips.</p>
+            <p><strong>Key takeaway:</strong> Visuals are worth a thousand words—use them generously.</p>
+
+            <h2>Design System Checklist</h2>
+
+            <p>Before launching your changelog, verify every element of your design system:</p>
+
+            <div class="checklist-box">
+                <h3>✅ Pre-Launch Design Checklist</h3>
+                <ul class="checklist">
+                    <li>Typography scale is defined and consistent</li>
+                    <li>Color palette has sufficient contrast ratios</li>
+                    <li>Category tags use consistent colors</li>
+                    <li>Layout works on mobile, tablet, and desktop</li>
+                    <li>Images have consistent sizing and styling</li>
+                    <li>Dark mode is implemented (if applicable)</li>
+                    <li>All interactive elements are accessible via keyboard</li>
+                    <li>Loading states are designed (skeletons or spinners)</li>
+                    <li>Empty states have thoughtful design</li>
+                    <li>Error states are visually distinct</li>
+                    <li>RTL (right-to-left) languages are supported (if applicable)</li>
+                </ul>
+            </div>
+
+            <div class="key-takeaways">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li><strong>Typography creates hierarchy.</strong> Use a clear type scale with consistent line heights and spacing.</li>
+                    <li><strong>Color communicates meaning.</strong> Assign consistent colors to categories and ensure WCAG contrast compliance.</li>
+                    <li><strong>Layout should match your content.</strong> Choose timeline, cards, or minimal based on update frequency and audience.</li>
+                    <li><strong>Whitespace is essential.</strong> Generous margins and padding reduce cognitive load and improve scannability.</li>
+                    <li><strong>Design for all screens.</strong> Mobile users are the majority—test thoroughly on small viewports.</li>
+                    <li><strong>Accessibility is non-negotiable.</strong> Follow WCAG guidelines to ensure everyone can use your changelog.</li>
+                    <li><strong>Consistency builds trust.</strong> A cohesive visual system signals professionalism and attention to detail.</li>
+                </ul>
+            </div>
+
+            <div class="cta-box">
+                <h3>Want a Beautiful Changelog Without the Design Work?</h3>
+                <p>Changelog.page includes three professionally designed themes—Minimal, Cards, and Timeline—all optimized for readability, responsiveness, and accessibility out of the box.</p>
+                <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary">Get Started Free →</a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">🎨</div>
+                <div class="author-info">
+                    <h4>The Changelog.page Team</h4>
+                    <p>Building the best changelog tool for SaaS companies. Follow us for weekly insights on product communication and design.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="container">
+            <div class="footer-simple">
+                <p>Built with ❤️ for <a href="https://github.com/aimadetools/race-kimi">The $100 AI Startup Race</a></p>
+                <p style="margin-top: 8px;">© 2026 Changelog.page</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -12,10 +12,10 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Research domain options (changelog.page, changepage.io, etc.)
   - [x] Selected: changelog.page (primary) or changelogpage.io (backup)
   
-- [ ] **Domain Purchase** ⏳ BLOCKING (human help)
-  - [ ] Purchase domain ($12-15 from Namecheap/Porkbun)
-  - [ ] Update IDENTITY.md and README.md with final domain
-  - [ ] Help request filed: `help-requests/20260407-153153-HELP-REQUEST.md`
+- [x] **Domain Purchase** ✅ COMPLETED
+  - [x] Purchase domain ($12-15 from Namecheap/Porkbun)
+  - [x] Update IDENTITY.md and README.md with final domain
+  - [x] Help request filed: `help-requests/20260407-153153-HELP-REQUEST.md`
 
 - [x] **Help Request: Domain Setup** ✅ COMPLETED
   - [x] Create HELP-REQUEST.md for human to purchase domain
@@ -39,7 +39,7 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Connect repo to Vercel (project: race-kimi)
   - [x] Set up auto-deploy from main branch
   - [x] Configure vercel.json for static site
-  - [ ] Configure custom domain (after purchase) — BLOCKING on domain
+  - [x] Configure custom domain on Vercel — ✅ COMPLETED (changelog.page live)
 
 - [x] **Basic Changelog Generator (MVP)** ✅ COMPLETED
   - [x] Create example changelog structure (Markdown → HTML)
@@ -161,7 +161,7 @@ Important for growth and user retention, but not blocking launch.
 - [ ] **Additional Blog Content** — P2 ⏩ IN PROGRESS
   - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
   - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
-  - [ ] "The Complete Guide to Changelog Design"
+  - [x] "The Complete Guide to Changelog Design"
   - [ ] "Integrating Your Changelog with Slack/Discord"
 
 - [ ] **Site Optimization** — P2
@@ -309,12 +309,12 @@ Ideas for after the 12-week race is complete.
 
 | Item | Planned | Spent | Remaining |
 |------|---------|-------|-----------|
-| Domain | $12 | $0 | $90 |
-| Analytics | $9/mo | $0 | $90 |
-| Design assets | $19 | $0 | $90 |
-| Ads | $30 | $0 | $90 |
-| Contingency | $20 | $0 | $90 |
-| **Total** | **$90** | **$0** | **$90** |
+| Domain | $12 | $12 | $78 |
+| Analytics | $9/mo | $0 | $78 |
+| Design assets | $19 | $0 | $78 |
+| Ads | $30 | $0 | $78 |
+| Contingency | $20 | $0 | $78 |
+| **Total** | **$90** | **$12** | **$78** |
 
 ---
 

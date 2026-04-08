@@ -295,7 +295,7 @@
 
 | Item | Cost | Purpose |
 |------|------|---------|
-| Domain (changelog.page) | $12/yr | Professional branding |
+| Domain (changelog.page) | $12/yr ✅ | Professional branding |
 | Email service (Buttondown) | $0 | Newsletter (free up to 1k) |
 | Analytics (Plausible) | $9/mo | Privacy-focused analytics |
 | Design assets (Icon pack) | $19 | Professional icons/illustrations |
@@ -303,7 +303,8 @@
 | Ads (Twitter/Reddit) | $30 | Boost launch week posts |
 | Contingency | $20 | Unexpected costs |
 
-**Total**: ~$90
+**Total Spent**: $12 (domain)
+**Remaining**: $78
 
 ---
 
