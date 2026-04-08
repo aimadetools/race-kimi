@@ -20,7 +20,63 @@
     
     <!-- Plausible Analytics -->
     <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
-    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Changelog.page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Changelog.page is a static site generator that turns Markdown files into beautiful, customizable changelog pages. It's designed for SaaS companies, indie hackers, and open-source projects who want to communicate product updates to their users."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Changelog.page free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! The core generator is open source and free to use forever. You can generate unlimited changelogs, use all three themes (Minimal, Cards, Timeline), host on any static hosting platform, and customize the templates however you want."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to set up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most users have their first changelog live in 5-10 minutes. Clone the repository, install dependencies, write your first entry, and deploy. If you're new to static site generators, budget 15-20 minutes for your first setup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What themes are available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Changelog.page includes three built-in themes: Minimal (clean, typography-focused), Cards (visual, card-based layout), and Timeline (vertical timeline with accent dots). Switch themes by setting the THEME environment variable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it support RSS feeds?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Changelog.page automatically generates both RSS 2.0 and JSON Feed v1.1 feeds from your Markdown entries. The feeds include entry titles, content, publication dates, categories, author information, and links to individual entry pages."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use a custom domain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can host your changelog on any custom domain. We have guides for Vercel, Netlify, GitHub Pages, and Cloudflare Pages. The process involves adding a CNAME record or A record to your DNS settings."
+          }
+        }
+      ]
+    }
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
