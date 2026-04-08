@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Domain Setup — Changelog.page Documentation</title>
+    <meta name="description" content="Complete guide to hosting your changelog on your own domain with DNS configuration, SSL certificates, and deployment.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Custom Domain Setup — Changelog.page Documentation">
+    <meta property="og:description" content="Complete guide to hosting your changelog on your own domain with DNS configuration, SSL certificates, and deployment.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://changelog.page/guides/custom-domain">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Custom Domain Setup — Changelog.page Documentation">
+    <meta name="twitter:description" content="Complete guide to hosting your changelog on your own domain with DNS configuration, SSL certificates, and deployment.">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-light);
+        }
+        
+        /* Layout */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 6rem;
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        
+        .sidebar-links a.active {
+            color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 720px;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumbs a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        .breadcrumbs a:hover {
+            color: var(--primary-light);
+        }
+        
+        .breadcrumbs span {
+            color: var(--text-muted);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .intro {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Steps Navigation */
+        .steps-nav {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .steps-nav-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .steps-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .steps-list a:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section h2 span {
+            font-size: 1.75rem;
+        }
+        
+        .section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        
+        .section ul, .section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        
+        .section strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        /* Platform Tabs */
+        .platform-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        
+        .platform-tab {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .platform-tab:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        
+        .platform-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .platform-content {
+            display: none;
+        }
+        
+        .platform-content.active {
+            display: block;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        code:not(pre code) {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* DNS Record Table */
+        .dns-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9375rem;
+        }
+        
+        .dns-table th, .dns-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+        
+        .dns-table th {
+            background: var(--bg-card);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .dns-table td {
+            color: var(--text-secondary);
+        }
+        
+        .dns-table code {
+            background: var(--bg-dark);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--primary-light);
+        }
+        
+        /* Warning/Info Boxes */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-box strong {
+            color: var(--warning);
+        }
+        
+        .success-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box strong {
+            color: var(--success);
+        }
+        
+        /* Image placeholder */
+        .screenshot {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin: 1rem 0;
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .checklist li::before {
+            content: "☐";
+            color: var(--primary);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4rem;
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Mobile */
+        @media (max-width: 968px) {
+            .page-container {
+                grid-template-columns: 1fr;
+                padding: 5rem 1.5rem 3rem;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .platform-tabs {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dns-table {
+                font-size: 0.8125rem;
+            }
+            
+            .dns-table th, .dns-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📋</div>
+                <span>Changelog.page</span>
+            </a>
+            <div class="nav-links">
+                <a href="/features">Features</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/templates">Templates</a>
+                <a href="/blog">Blog</a>
+                <a href="/guides" class="active">Docs</a>
+                <a href="https://github.com/aimadetools/race-kimi" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <div class="sidebar-links">
+                    <a href="/guides/getting-started">Quick Start</a>
+                    <a href="/guides/getting-started#installation">Installation</a>
+                    <a href="/guides/getting-started#creating-first-entry">First Entry</a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Reference</div>
+                <div class="sidebar-links">
+                    <a href="/templates">Templates</a>
+                    <a href="/guides/custom-domain" class="active">Custom Domain</a>
+                    <a href="/guides/faq">FAQ</a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <div class="sidebar-links">
+                    <a href="/blog">Blog</a>
+                    <a href="https://github.com/aimadetools/race-kimi" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="breadcrumbs">
+                <a href="/">Home</a>
+                <span>/</span>
+                <a href="/guides">Docs</a>
+                <span>/</span>
+                <span style="color: var(--text-muted);">Custom Domain</span>
+            </div>
+            
+            <h1>Custom Domain Setup</h1>
+            <p class="intro">Host your changelog on your own domain for a professional, branded experience. This guide covers DNS configuration, SSL certificates, and deployment on popular platforms.</p>
+            
+            <div class="info-box">
+                <p><strong>Prerequisites:</strong> You'll need a registered domain name. If you don't have one yet, we recommend <a href="https://porkbun.com" style="color: var(--primary-light);">Porkbun</a>, <a href="https://namecheap.com" style="color: var(--primary-light);">Namecheap</a>, or <a href="https://cloudflare.com" style="color: var(--primary-light);">Cloudflare Registrar</a>.</p>
+            </div>
+            
+            <div class="steps-nav">
+                <div class="steps-nav-title">Setup Steps</div>
+                <div class="steps-list">
+                    <a href="#overview"><span class="step-number">1</span> Overview</a>
+                    <a href="#choose-platform"><span class="step-number">2</span> Choose Your Platform</a>
+                    <a href="#configure-dns"><span class="step-number">3</span> Configure DNS</a>
+                    <a href="#add-domain"><span class="step-number">4</span> Add Domain to Platform</a>
+                    <a href="#verify"><span class="step-number">5</span> Verify & Test</a>
+                    <a href="#troubleshooting"><span class="step-number">6</span> Troubleshooting</a>
+                </div>
+            </div>
+            
+            <!-- Step 1: Overview -->
+            <div class="section" id="overview">
+                <h2><span>🌐</span> How It Works</h2>
+                <p>When you set up a custom domain for your changelog, here's what happens behind the scenes:</p>
+                <ol>
+                    <li><strong>You configure DNS</strong> — Create records that point your domain to your hosting platform</li>
+                    <li><strong>You add the domain</strong> — Tell your hosting platform about your custom domain</li>
+                    <li><strong>SSL is provisioned</strong> — The platform automatically sets up HTTPS certificates</li>
+                    <li><strong>Traffic is routed</strong> — Visitors to your domain see your changelog</li>
+                </ol>
+                <p>The entire process usually takes <strong>5-15 minutes</strong>, though DNS propagation can take up to 24 hours in some cases.</p>
+            </div>
+            
+            <!-- Step 2: Choose Platform -->
+            <div class="section" id="choose-platform">
+                <h2><span>🚀</span> Choose Your Platform</h2>
+                <p>Select your hosting platform below for platform-specific instructions:</p>
+                
+                <div class="platform-tabs">
+                    <button class="platform-tab active" onclick="switchPlatform('vercel')">Vercel</button>
+                    <button class="platform-tab" onclick="switchPlatform('netlify')">Netlify</button>
+                    <button class="platform-tab" onclick="switchPlatform('github')">GitHub Pages</button>
+                    <button class="platform-tab" onclick="switchPlatform('cloudflare')">Cloudflare Pages</button>
+                </div>
+                
+                <!-- Vercel Content -->
+                <div class="platform-content active" id="vercel-content">
+                    <p><strong>Vercel</strong> is our recommended platform for hosting Changelog.page. It offers:</p>
+                    <ul>
+                        <li>Automatic HTTPS certificates</li>
+                        <li>Instant deploys from Git</li>
+                        <li>Excellent performance globally</li>
+                        <li>Free tier for personal projects</li>
+                    </ul>
+                </div>
+                
+                <!-- Netlify Content -->
+                <div class="platform-content" id="netlify-content">
+                    <p><strong>Netlify</strong> is a great alternative with a user-friendly interface:</p>
+                    <ul>
+                        <li>Drag-and-drop deployment</li>
+                        <li>Branch deploys for testing</li>
+                        <li>Form handling (if you need it)</li>
+                        <li>Generous free tier</li>
+                    </ul>
+                </div>
+                
+                <!-- GitHub Pages Content -->
+                <div class="platform-content" id="github-content">
+                    <p><strong>GitHub Pages</strong> is ideal if you're already using GitHub:</p>
+                    <ul>
+                        <li>Free hosting for public repositories</li>
+                        <li>Automatic builds from your repo</li>
+                        <li>Custom domain support with HTTPS</li>
+                        <li>No additional account needed</li>
+                    </ul>
+                </div>
+                
+                <!-- Cloudflare Content -->
+                <div class="platform-content" id="cloudflare-content">
+                    <p><strong>Cloudflare Pages</strong> offers excellent global performance:</p>
+                    <ul>
+                        <li>Fast global CDN</li>
+                        <li>Unlimited bandwidth</li>
+                        <li>Integrated with Cloudflare ecosystem</li>
+                        <li>Generous free tier</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Step 3: Configure DNS -->
+            <div class="section" id="configure-dns">
+                <h2><span>⚙️</span> Configure DNS Records</h2>
+                <p>You'll need to add DNS records at your domain registrar. The exact records depend on whether you want to use a root domain or a subdomain.</p>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Option A: Subdomain (Recommended)</h3>
+                <p>Use a subdomain like <code>changelog.example.com</code> or <code>updates.example.com</code>. This is easier to set up and doesn't affect your main website.</p>
+                
+                <table class="dns-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>TTL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CNAME</td>
+                            <td><code>changelog</code></td>
+                            <td>See platform-specific value below</td>
+                            <td>Auto</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="platform-content active" id="vercel-dns">
+                    <p><strong>Vercel CNAME value:</strong> <code>cname.vercel-dns.com</code></p>
+                </div>
+                <div class="platform-content" id="netlify-dns">
+                    <p><strong>Netlify CNAME value:</strong> Your site's Netlify subdomain (e.g., <code>yoursite.netlify.app</code>)</p>
+                </div>
+                <div class="platform-content" id="github-dns">
+                    <p><strong>GitHub Pages CNAME value:</strong> <code>username.github.io</code></p>
+                </div>
+                <div class="platform-content" id="cloudflare-dns">
+                    <p><strong>Cloudflare Pages CNAME value:</strong> Your Cloudflare Pages subdomain</p>
+                </div>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Option B: Root Domain (APEX)</h3>
+                <p>Use your root domain like <code>example.com</code>. This requires special DNS records.</p>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Note:</strong> Root domains require A records instead of CNAME. Some platforms handle this automatically when you add the domain.
+                </div>
+                
+                <table class="dns-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A</td>
+                            <td><code>@</code></td>
+                            <td>See platform-specific IPs below</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="platform-content active" id="vercel-apex">
+                    <p><strong>Vercel A records:</strong></p>
+                    <pre><code>76.76.21.21
+76.76.21.22</code></pre>
+                </div>
+                <div class="platform-content" id="netlify-apex">
+                    <p><strong>Netlify:</strong> Use their DNS service or ANAME/ALIAS records if your provider supports them.</p>
+                </div>
+                <div class="platform-content" id="github-apex">
+                    <p><strong>GitHub Pages A records:</strong></p>
+                    <pre><code>185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153</code></pre>
+                </div>
+                <div class="platform-content" id="cloudflare-apex">
+                    <p><strong>Cloudflare Pages:</strong> Supports custom domains directly. Add your domain in the Cloudflare Pages dashboard.</p>
+                </div>
+            </div>
+            
+            <!-- Step 4: Add Domain to Platform -->
+            <div class="section" id="add-domain">
+                <h2><span>➕</span> Add Domain to Your Platform</h2>
+                
+                <div class="platform-content active" id="vercel-add">
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Adding a Domain on Vercel</h3>
+                    <ol>
+                        <li>Go to your <a href="https://vercel.com/dashboard" style="color: var(--primary-light);">Vercel Dashboard</a></li>
+                        <li>Select your changelog project</li>
+                        <li>Click <strong>Settings</strong> → <strong>Domains</strong></li>
+                        <li>Enter your domain (e.g., <code>changelog.example.com</code>)</li>
+                        <li>Click <strong>Add</strong></li>
+                    </ol>
+                    <p>Vercel will automatically detect your DNS configuration and provision an SSL certificate. This usually takes 1-2 minutes.</p>
+                </div>
+                
+                <div class="platform-content" id="netlify-add">
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Adding a Domain on Netlify</h3>
+                    <ol>
+                        <li>Go to your <a href="https://app.netlify.com" style="color: var(--primary-light);">Netlify Dashboard</a></li>
+                        <li>Select your site</li>
+                        <li>Go to <strong>Site settings</strong> → <strong>Domain management</strong></li>
+                        <li>Click <strong>Add custom domain</strong></li>
+                        <li>Enter your domain and click <strong>Verify</strong></li>
+                        <li>Click <strong>Add domain</strong></li>
+                    </ol>
+                    <p>Netlify will provide you with the exact CNAME value to use in your DNS settings.</p>
+                </div>
+                
+                <div class="platform-content" id="github-add">
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Adding a Domain on GitHub Pages</h3>
+                    <ol>
+                        <li>Create a file named <code>CNAME</code> in your repository root</li>
+                        <li>Add your domain as the only content: <code>changelog.example.com</code></li>
+                        <li>Commit and push the file</li>
+                        <li>Go to your repository → <strong>Settings</strong> → <strong>Pages</strong></li>
+                        <li>Under "Custom domain", enter your domain</li>
+                        <li>Click <strong>Save</strong></li>
+                    </ol>
+                    <p>GitHub will check your DNS configuration. Once verified, HTTPS will be automatically enabled.</p>
+                </div>
+                
+                <div class="platform-content" id="cloudflare-add">
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Adding a Domain on Cloudflare Pages</h3>
+                    <ol>
+                        <li>Go to your <a href="https://dash.cloudflare.com" style="color: var(--primary-light);">Cloudflare Dashboard</a></li>
+                        <li>Select your Pages project</li>
+                        <li>Go to <strong>Custom domains</strong></li>
+                        <li>Click <strong>Set up a custom domain</strong></li>
+                        <li>Enter your domain and click <strong>Continue</strong></li>
+                        <li>Add the CNAME record shown in your DNS settings</li>
+                    </ol>
+                    <p>Cloudflare will verify the DNS record and issue an SSL certificate automatically.</p>
+                </div>
+            </div>
+            
+            <!-- Step 5: Verify -->
+            <div class="section" id="verify">
+                <h2><span>✅</span> Verify & Test</h2>
+                <p>After setting up your DNS and adding your domain to your platform, here's how to verify everything is working:</p>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Checklist</h3>
+                <ul class="checklist">
+                    <li>Visit your custom domain in a browser</li>
+                    <li>Confirm the page loads correctly</li>
+                    <li>Check that HTTPS is working (look for the lock icon)</li>
+                    <li>Verify your changelog content is displayed</li>
+                    <li>Test navigation links</li>
+                </ul>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">DNS Propagation Check</h3>
+                <p>Use these tools to check if your DNS has propagated:</p>
+                <ul>
+                    <li><a href="https://whatsmydns.net" style="color: var(--primary-light);">whatsmydns.net</a> — Check DNS propagation globally</li>
+                    <li><a href="https://dnschecker.org" style="color: var(--primary-light);">dnschecker.org</a> — Verify DNS records</li>
+                    <li><code>dig changelog.example.com</code> — Command line check</li>
+                </ul>
+                
+                <div class="success-box">
+                    <strong>✓ Success!</strong> If your changelog loads at your custom domain with HTTPS, you're all set!
+                </div>
+            </div>
+            
+            <!-- Step 6: Troubleshooting -->
+            <div class="section" id="troubleshooting">
+                <h2><span>🔧</span> Troubleshooting</h2>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">"Domain not found" or 404 Error</h3>
+                <ul>
+                    <li><strong>Wait for DNS propagation.</strong> DNS changes can take up to 24 hours, though usually complete within 1 hour.</li>
+                    <li><strong>Clear your browser cache.</strong> Browsers cache DNS results aggressively.</li>
+                    <li><strong>Check your DNS records.</strong> Ensure the CNAME/A record points to the correct value for your platform.</li>
+                </ul>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">SSL Certificate Errors</h3>
+                <ul>
+                    <li><strong>Wait for certificate provisioning.</strong> SSL certificates can take 5-30 minutes to issue after DNS is configured.</li>
+                    <li><strong>Verify domain ownership.</strong> Some platforms require you to verify you own the domain before issuing certificates.</li>
+                    <li><strong>Check for mixed content.</strong> Ensure all resources (images, CSS) use HTTPS URLs.</li>
+                </ul>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Redirect Loops</h3>
+                <ul>
+                    <li><strong>Check for conflicting redirects.</strong> Ensure you're not redirecting both HTTP→HTTPS and HTTPS→HTTP.</li>
+                    <li><strong>Verify CNAME chain.</strong> Some registrars have issues with CNAME flattening. Try using the platform's DNS service.</li>
+                </ul>
+                
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem; color: var(--text-primary);">Still Having Issues?</h3>
+                <p>If you're stuck, try these resources:</p>
+                <ul>
+                    <li>Platform documentation (Vercel, Netlify, etc.)</li>
+                    <li>Your domain registrar's support</li>
+                    <li><a href="/guides/faq" style="color: var(--primary-light);">Our FAQ page</a></li>
+                    <li><a href="https://github.com/aimadetools/race-kimi/issues" style="color: var(--primary-light);">GitHub Issues</a></li>
+                </ul>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="section">
+                <h2><span>🎉</span> What's Next?</h2>
+                <p>Your changelog is now live on your custom domain! Here are some things to consider:</p>
+                <ul>
+                    <li><strong>Update your site links</strong> — Change any references from the old URL to your new custom domain</li>
+                    <li><strong>Set up redirects</strong> — Consider redirecting your old changelog URL to the new one</li>
+                    <li><strong>Update your product</strong> — Point your in-app changelog links to your new domain</li>
+                    <li><strong>Share it</strong> — Announce your new branded changelog to your users!</li>
+                </ul>
+                <p>Need help with anything else? Check out our <a href="/guides" style="color: var(--primary-light);">other guides</a> or <a href="mailto:race@aimadetools.com" style="color: var(--primary-light);">contact us</a>.</p>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>© 2026 Changelog.page — Part of <a href="https://aimadetools.com">AI Made Tools</a></p>
+    </footer>
+    
+    <script>
+        function switchPlatform(platform) {
+            // Update tabs
+            document.querySelectorAll('.platform-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.platform-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(platform + '-content').classList.add('active');
+            document.getElementById(platform + '-dns').classList.add('active');
+            document.getElementById(platform + '-apex').classList.add('active');
+            document.getElementById(platform + '-add').classList.add('active');
+        }
+        
+        // Initialize all platform-specific sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const vercelSections = ['dns', 'apex', 'add'];
+            vercelSections.forEach(section => {
+                document.getElementById('vercel-' + section).classList.add('active');
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
