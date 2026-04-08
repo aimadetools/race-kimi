@@ -153,10 +153,10 @@ Important for growth and user retention, but not blocking launch.
   - [x] Draft Pro upgrade email sequence
   - [x] Draft weekly newsletter template
 
-- [ ] **Partnership Outreach Templates** — P2
-  - [ ] Create partnership pitch template for micro-SaaS founders
-  - [ ] Draft affiliate program terms and agreement
-  - [ ] Create "Powered by Changelog.page" badge generator
+- [x] **Partnership Outreach Templates** — P2 ✅ COMPLETED
+  - [x] Create partnership pitch template for micro-SaaS founders
+  - [x] Draft affiliate program terms and agreement
+  - [x] Create "Powered by Changelog.page" badge generator
 
 - [ ] **Additional Blog Content** — P2
   - [ ] "Changelog Widgets vs Static Pages: Pros and Cons"
