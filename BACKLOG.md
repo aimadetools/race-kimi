@@ -64,17 +64,23 @@ These are essential for launch and first customer acquisition.
   - [ ] Line up 10+ supporters for launch day (do 1 week before launch)
   - [ ] Schedule launch for optimal day (Tuesday-Thursday) (do when ready)
 
-- [ ] **Social Media Setup**
-  - Create Twitter/X account (@changelogpage)
-  - Create LinkedIn page
-  - Write bio and pinned tweet
-  - Follow target audience (SaaS founders, indie hackers)
+- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (account creation pending domain)
+  - [x] Write Twitter/X strategy document with 30-day plan
+  - [x] Write LinkedIn strategy document with content calendar
+  - [x] Draft bio and pinned tweet
+  - [ ] Create Twitter/X account (@changelogpage) — pending domain
+  - [ ] Create LinkedIn page — pending domain
+  - [ ] Follow target audience (SaaS founders, indie hackers) — pending accounts
 
 - [ ] **Content Creation** (In Progress)
   - [x] Write "10 SaaS Changelogs That Drive Engagement" blog post
   - [x] Write "How to Write Changelogs Your Customers Actually Read" guide
   - [x] Create changelog template library (5 templates) ✅ COMPLETED
   - [x] Write "The Anatomy of a Perfect Changelog Entry" — deep dive guide ✅ COMPLETED
+  - [ ] Write "Changelog SEO: How to Rank for Product Keywords"
+  - [ ] Write "Why Your Product Hunt Launch Needs a Changelog"
+  - [ ] Create comparison page: Changelog.page vs Headway vs Beamer
+  - [ ] Write case study template for future customer stories
 
 - [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
@@ -115,16 +121,19 @@ Important for growth and user retention, but not blocking launch.
   - [x] Create sitemap.xml — submit to Google Search Console
   - [x] Create robots.txt — guide search engine crawlers
   - [x] Add structured data (JSON-LD) to key pages ✅ COMPLETED
-  - Keyword research ("changelog tool", "saas changelog", etc.)
-  - Optimize all pages for target keywords
-  - Submit to Google Search Console
-  - Build backlinks (guest posts, directories)
+  - [ ] Submit sitemap to Google Search Console — pending domain
+  - [ ] Keyword research ("changelog tool", "saas changelog", etc.)
+  - [ ] Optimize all pages for target keywords
+  - [ ] Build backlinks (guest posts, directories)
+  - [ ] Add meta descriptions to all pages for better CTR
 
 - [ ] **Community Engagement**
-  - Post in r/SaaS weekly (valuable comments, not spam)
-  - Engage in Indie Hackers daily
-  - Comment on relevant Product Hunt launches
-  - Answer changelog-related questions on Stack Overflow
+  - [ ] Write and queue 5 Reddit posts for r/SaaS launch
+  - [ ] Create Indie Hackers milestone post draft
+  - [ ] Comment on relevant Product Hunt launches (2-3 per day)
+  - [ ] Answer changelog-related questions on Stack Overflow
+  - [ ] Create Hacker News "Show HN" post draft
+  - [ ] Engage in Indie Hackers daily
 
 - [ ] **Case Studies**
   - Interview 3 beta users
@@ -274,4 +283,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-07 — Day 1*
+*Last updated: 2026-04-08 — Day 2*
