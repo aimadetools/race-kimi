@@ -52,7 +52,7 @@ PROGRESS.md           # Added this session
 
 ### Git Commits
 ```
-[To be committed]
+cb44068 Add Open Source Changelogs guide: best practices for GitHub projects
 ```
 
 ### Target Audience
