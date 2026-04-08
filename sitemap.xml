@@ -88,6 +88,32 @@
     <priority>0.7</priority>
   </url>
   
+  <!-- Use Cases -->
+  <url>
+    <loc>https://changelog.page/use-cases/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/use-cases/api-products</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/use-cases/mobile-apps</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/use-cases/design-systems</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
   <!-- Templates -->
   <url>
     <loc>https://changelog.page/templates/</loc>
