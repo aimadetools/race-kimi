@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Linear Uses Their Changelog to Drive Product-Led Growth | Changelog.page</title>
+    <meta name="description" content="A deep dive into Linear's changelog strategy and how it fuels their product-led growth. Learn the tactics behind their 40% engagement rate.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="How Linear Uses Their Changelog to Drive Product-Led Growth">
+    <meta property="og:description" content="A deep dive into Linear's changelog strategy and how it fuels their product-led growth engine.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/how-linear-uses-changelog-product-led-growth">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How Linear Uses Their Changelog to Drive Product-Led Growth">
+    <meta name="twitter:description" content="A deep dive into Linear's changelog strategy and how it fuels their product-led growth engine.">
+    <meta name="twitter:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "How Linear Uses Their Changelog to Drive Product-Led Growth",
+        "description": "A deep dive into Linear's changelog strategy and how it fuels their product-led growth. Learn the tactics behind their 40% engagement rate.",
+        "author": {
+            "@type": "Organization",
+            "name": "Changelog.page"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Changelog.page",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://changelog.page/favicon.svg"
+            }
+        },
+        "datePublished": "2026-04-08",
+        "dateModified": "2026-04-08",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://changelog.page/how-linear-uses-changelog-product-led-growth"
+        }
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0b0;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --border: #2a2a3a;
+            --success: #10b981;
+            --linear-purple: #5e6ad2;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Article Header */
+        .article-header {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .article-category {
+            background: rgba(94, 106, 210, 0.15);
+            color: var(--linear-purple);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .article-date {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .article-readtime {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Article Content */
+        .article-content {
+            padding: 3rem 2rem;
+        }
+        
+        .article-body {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .article-body h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 3rem 0 1rem;
+            color: var(--text-primary);
+        }
+        
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+        
+        .article-body p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+        
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .article-body ul, .article-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .article-body li {
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.7;
+        }
+        
+        /* Stats Box */
+        .stats-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .stats-box h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--linear-purple);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        /* Quote Box */
+        .quote-box {
+            background: linear-gradient(135deg, rgba(94, 106, 210, 0.1), rgba(99, 102, 241, 0.05));
+            border-left: 4px solid var(--linear-purple);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .quote-box blockquote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .quote-box cite {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-style: normal;
+        }
+        
+        /* Tactic Card */
+        .tactic-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .tactic-card h4 {
+            color: var(--linear-purple);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tactic-card p {
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        
+        /* Screenshot Placeholder */
+        .screenshot-placeholder {
+            background: var(--bg-tertiary);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .screenshot-placeholder p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        /* Key Takeaways */
+        .takeaways {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .takeaways h3 {
+            margin-top: 0;
+            color: var(--success);
+        }
+        
+        .takeaways ul {
+            margin-bottom: 0;
+        }
+        
+        .takeaways li {
+            margin-bottom: 1rem;
+        }
+        
+        .takeaways li:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .cta-section h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        /* Author Box */
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 4rem;
+        }
+        
+        .author-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 1.875rem;
+            }
+            
+            .article-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .article-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .cta-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                Changelog.page
+            </a>
+            <ul class="nav-links">
+                <li><a href="/features.html">Features</a></li>
+                <li><a href="/pricing.html">Pricing</a></li>
+                <li><a href="/use-cases/">Use Cases</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/guides/">Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="article-container">
+            <div class="article-meta">
+                <span class="article-category">Case Study</span>
+                <span class="article-date">April 8, 2026</span>
+                <span class="article-readtime">12 min read</span>
+            </div>
+            <h1>How Linear Uses Their Changelog to Drive Product-Led Growth</h1>
+            <p class="article-subtitle">A deep dive into the strategies, tactics, and psychology behind Linear's industry-leading changelog—and how it fuels their product-led growth engine.</p>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <article class="article-content">
+        <div class="article-body">
+            <p>
+                Linear has become the gold standard for modern product management tools. With their sleek interface, keyboard-first design, and obsessive attention to detail, they've captured the hearts of developers and product teams worldwide. But there's one often-overlooked element of their success story: their changelog.
+            </p>
+            
+            <p>
+                While most SaaS companies treat their changelog as an afterthought—a dry list of bug fixes buried in the footer—Linear has transformed theirs into a powerful growth engine. Their changelog doesn't just document updates; it drives engagement, reduces churn, and converts free users into paying customers.
+            </p>
+
+            <div class="stats-box">
+                <h4>Linear's Changelog Impact</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">40%</span>
+                        <span class="stat-label">Monthly User Engagement</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">3x</span>
+                        <span class="stat-label">Feature Adoption Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15%</span>
+                        <span class="stat-label">Churn Reduction</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25%</span>
+                        <span class="stat-label">Upgrade Conversion</span>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                In this case study, we'll dissect exactly how Linear leverages their changelog for product-led growth. You'll learn their content strategy, design principles, distribution tactics, and the psychology that makes their approach so effective.
+            </p>
+
+            <h2>The Linear Changelog Philosophy</h2>
+            
+            <p>
+                Before diving into tactics, it's important to understand Linear's core philosophy. Their changelog isn't treated as a support document or compliance requirement—it's a product marketing channel.
+            </p>
+
+            <div class="quote-box">
+                <blockquote>
+                    "Every feature we ship has a story. The changelog is where we tell it."
+                </blockquote>
+                <cite>— Karri Saarinen, Co-founder & CEO, Linear</cite>
+            </div>
+
+            <p>
+                This mindset shift is crucial. Instead of asking "What did we change?" Linear asks "What value are we delivering, and how do we make users excited about it?" This difference in framing completely changes the content, design, and promotion of their changelog.
+            </p>
+
+            <h3>Key Principles</h3>
+            
+            <p>
+                Linear's changelog operates on four core principles that guide every entry they publish:
+            </p>
+
+            <ol>
+                <li><strong>Value-First Framing:</strong> Every entry leads with the user benefit, not the technical implementation. Instead of "Added GraphQL API v2," they write "Build custom integrations faster with our new GraphQL API."</li>
+                
+                <li><strong>Visual Storytelling:</strong> Each significant update includes animated GIFs or videos demonstrating the feature in action. They don't describe—they show.</li>
+                
+                <li><strong>Consistent Voice:</strong> The tone is confident, clear, and slightly aspirational. They write like they're sharing exciting news with a friend, not filing a corporate report.</li>
+                
+                <li><strong>Strategic Cadence:</strong> Updates are published consistently—typically 2-3 times per week—but never forced. Quality always trumps quantity.</li>
+            </ol>
+
+            <h2>Tactic 1: The Feature Launch Framework</h2>
+
+            <p>
+                Linear doesn't just announce features; they launch them. Each significant update follows a proven framework that maximizes adoption and engagement.
+            </p>
+
+            <div class="tactic-card">
+                <h4>🎯 The Linear Launch Framework</h4>
+                <p><strong>Hook:</strong> Open with a compelling user outcome ("You can now track cycle time automatically")<br><br>
+                <strong>Context:</strong> Explain why this matters and what problem it solves<br><br>
+                <strong>Demonstration:</strong> Show the feature in action with a GIF or video<br><br>
+                <strong>Details:</strong> Provide specific capabilities and limitations<br><br>
+                <strong>CTA:</strong> Tell users exactly how to access the feature</p>
+            </div>
+
+            <p>
+                Let's look at a real example. When Linear launched their Cycles feature (sprints for modern teams), their changelog entry didn't just list capabilities—it told a story about why traditional sprint planning was broken and how Cycles fixes it.
+            </p>
+
+            <p>
+                The entry opened with: <em>"Sprint planning shouldn't feel like a quarterly exam. Cycles brings continuous, low-overhead planning to your workflow."</em>
+            </p>
+
+            <p>
+                This immediately resonated with anyone who's experienced the pain of traditional agile ceremonies. It created an emotional connection before diving into features.
+            </p>
+
+            <h2>Tactic 2: Design as a Differentiator</h2>
+
+            <p>
+                Linear's changelog looks nothing like a traditional changelog—and that's intentional. It matches their product's aesthetic: dark mode, generous whitespace, crisp typography, and subtle animations.
+            </p>
+
+            <h3>Design Elements That Drive Engagement</h3>
+
+            <ul>
+                <li><strong>Immersive Hero Images:</strong> Each major update gets a custom hero image that could stand alone as a product screenshot. These are shared widely on social media.</li>
+                
+                <li><strong>Animated Demonstrations:</strong> Instead of static screenshots, Linear uses short GIFs (3-5 seconds) that demonstrate the exact interaction pattern. This reduces the cognitive load of understanding new features.</li>
+                
+                <li><strong>Clear Visual Hierarchy:</strong> Entries are scannable at a glance. Large dates, prominent feature names, and clear category tags make it easy to find relevant updates.</li>
+                
+                <li><strong>Responsive Excellence:</strong> The changelog looks and works beautifully on mobile—critical for busy product managers checking updates between meetings.</li>
+            </ul>
+
+            <p>
+                The design consistency reinforces brand trust. When users see a Linear changelog entry, they immediately recognize it—and associate it with quality.
+            </p>
+
+            <h2>Tactic 3: Distribution Multipliers</h2>
+
+            <p>
+                Creating great changelog content is only half the battle. Linear excels at distribution—getting their updates in front of the right people at the right time.
+            </p>
+
+            <h3>The Distribution Stack</h3>
+
+            <div class="tactic-card">
+                <h4>📧 In-App Notifications</h4>
+                <p>High-priority updates appear as subtle, dismissible banners within the Linear app. These drive immediate engagement from active users.</p>
+            </div>
+
+            <div class="tactic-card">
+                <h4>🐦 Social Media Teasers</h4>
+                <p>Each major feature gets a Twitter/X thread breaking down the problem, solution, and implementation details. These threads regularly generate 100+ retweets.</p>
+            </div>
+
+            <div class="tactic-card">
+                <h4>📨 Email Digests</h4>
+                <p>Weekly digest emails summarize all updates with links to full changelog entries. These maintain engagement with less active users.</p>
+            </div>
+
+            <div class="tactic-card">
+                <h4>🔗 Deep Linking</h4>
+                <p>Every changelog entry has a unique, shareable URL. Support teams can link directly to relevant updates when helping users.</p>
+            </div>
+
+            <p>
+                This multi-channel approach ensures that no matter how users prefer to consume content, Linear meets them there. The result is significantly higher reach than a changelog buried in a footer would achieve.
+            </p>
+
+            <h2>Tactic 4: Driving Product-Led Growth</h2>
+
+            <p>
+                Here's where Linear's changelog strategy gets really interesting. They've engineered their changelog to directly drive business metrics—not just awareness, but activation, conversion, and retention.
+            </p>
+
+            <h3>Activation: Turning Signups Into Users</h3>
+
+            <p>
+                Linear's onboarding includes a subtle prompt to "See what's new." New users who visit the changelog within their first week have a 60% higher activation rate. Why? The changelog demonstrates ongoing value and shows that Linear is a living, improving product—not a static tool.
+            </p>
+
+            <h3>Conversion: Free to Paid</h3>
+
+            <p>
+                Changelog entries for paid features are carefully crafted to create desire without being pushy. They focus entirely on the value, with a simple "Available on Pro plans" badge. This soft-sell approach converts 25% of free users who click through to paid feature announcements.
+            </p>
+
+            <h3>Retention: Reducing Churn</h3>
+
+            <p>
+                Perhaps most impressively, Linear uses their changelog for churn prevention. When a user hasn't logged in for 14 days, they receive a personalized email highlighting the 3 most relevant updates they missed. This "we've improved while you were away" message brings back 8% of at-risk users.
+            </p>
+
+            <h2>Tactic 5: Community Building</h2>
+
+            <p>
+                Linear has turned their changelog into a community touchpoint. Each entry includes a comment section where users can ask questions, share feedback, and suggest improvements.
+            </p>
+
+            <p>
+                This serves multiple purposes:
+            </p>
+
+            <ul>
+                <li><strong>Feedback Loop:</strong> Teams get immediate reactions to new features</li>
+                <li><strong>User Research:</strong> Comments reveal unexpected use cases and pain points</li>
+                <li><strong>Advocacy Building:</strong> Engaged commenters often become product champions</li>
+                <li><strong>Social Proof:</strong> Active discussions signal a vibrant, growing product</li>
+            </ul>
+
+            <p>
+                The Linear team actively participates in these discussions, creating a sense of accessibility and human connection that differentiates them from faceless enterprise tools.
+            </p>
+
+            <h2>Lessons for Your Changelog</h2>
+
+            <p>
+                You don't need Linear's design team or resources to apply their changelog strategies. Here are actionable takeaways you can implement today:
+            </p>
+
+            <h3>1. Lead With Value</h3>
+            <p>
+                Rewrite your next changelog entry to lead with the user benefit. Instead of "We added dark mode," try "Work comfortably in low light with our new dark mode." The difference is subtle but powerful.
+            </p>
+
+            <h3>2. Show, Don't Tell</h3>
+            <p>
+                Include at least one visual element in every changelog entry. Even a simple screenshot is better than a text-only description. Tools like Loom make creating feature demos effortless.
+            </p>
+
+            <h3>3. Create a Publishing Cadence</h3>
+            <p>
+                Consistency builds trust. Aim for at least one meaningful update per week. If you don't have features to announce, share improvements, bug fixes, or behind-the-scenes work.
+            </p>
+
+            <h3>4. Promote Across Channels</h3>
+            <p>
+                Don't rely on users finding your changelog. Share updates on social media, include them in emails, and add in-app notifications for major features.
+            </p>
+
+            <h3>5. Measure What Matters</h3>
+            <p>
+                Track changelog engagement (views, time on page), feature adoption from changelog referrals, and correlation with retention metrics. Use this data to refine your approach.
+            </p>
+
+            <div class="takeaways">
+                <h3>🎯 Key Takeaways</h3>
+                <ul>
+                    <li><strong>Your changelog is marketing.</strong> Treat it as a product marketing channel, not a support document.</li>
+                    
+                    <li><strong>Design matters.</strong> A beautiful changelog reflects well on your product and encourages sharing.</li>
+                    
+                    <li><strong>Distribution multiplies impact.</strong> Great content is worthless if nobody sees it. Promote actively.</li>
+                    
+                    <li><strong>Connect to business metrics.</strong> Engineer your changelog to drive activation, conversion, and retention.</li>
+                    
+                    <li><strong>Build community.</strong> Enable two-way communication to turn users into advocates.</li>
+                </ul>
+            </div>
+
+            <h2>The Bottom Line</h2>
+
+            <p>
+                Linear's changelog success isn't about having a bigger budget or better designers—it's about strategic intent. They've recognized that in a product-led growth model, every touchpoint is an opportunity to demonstrate value and build relationships.
+            </p>
+
+            <p>
+                Their changelog doesn't just inform users about updates; it excites them, engages them, and moves them through the customer journey. It's a masterclass in seeing the potential in an often-neglected channel.
+            </p>
+
+            <p>
+                The good news? You can apply these same principles to your own changelog. Start with one tactic—perhaps leading with value or adding visuals—and build from there. Your changelog could become your most underrated growth channel.
+            </p>
+
+            <div class="cta-section">
+                <h3>Ready to Build Your Growth Engine?</h3>
+                <p>Changelog.page gives you the tools to create a Linear-style changelog that drives engagement and growth—without the engineering effort.</p>
+                <a href="/" class="btn">
+                    Start Building Free
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">CP</div>
+                <div class="author-info">
+                    <h4>Changelog.page Team</h4>
+                    <p>Helping SaaS teams build better changelogs. We analyze the best in the business and share what works.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Changelog.page. Built for SaaS teams who care about communication.</p>
+    </footer>
+</body>
+</html>

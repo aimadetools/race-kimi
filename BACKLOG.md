@@ -160,7 +160,8 @@ Important for growth and user retention, but not blocking launch.
 
 - [ ] **Additional Blog Content** — P2 ⏩ IN PROGRESS
   - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
-  - [ ] "How Linear Uses Their Changelog to Drive Product-Led Growth"
+  - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
+  - [ ] "The Complete Guide to Changelog Design"
   - [ ] "The Complete Guide to Changelog Design"
   - [ ] "Integrating Your Changelog with Slack/Discord"
 
