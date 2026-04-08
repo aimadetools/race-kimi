@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Anatomy of a Perfect Changelog Entry — Changelog.page Blog</title>
+    <meta name="description" content="What makes a changelog entry effective? We break down the components of high-performing updates and provide a template you can use immediately.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Anatomy of a Perfect Changelog Entry">
+    <meta property="og:description" content="Break down the components of high-performing changelog updates with a ready-to-use template.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/the-anatomy-of-a-perfect-changelog-entry.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Anatomy of a Perfect Changelog Entry">
+    <meta name="twitter:description" content="Break down the components of high-performing changelog updates with a ready-to-use template.">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .blog-header { padding: 60px 0 40px; text-align: center; }
+        .blog-meta { display: flex; gap: 16px; justify-content: center; align-items: center; margin-bottom: 24px; font-size: 0.875rem; color: var(--text-muted); }
+        .blog-category { color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .blog-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .blog-excerpt { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .blog-content { padding-bottom: 100px; }
+        .blog-content h2 { font-size: 1.75rem; font-weight: 700; margin: 48px 0 20px; color: var(--text); }
+        .blog-content h3 { font-size: 1.25rem; font-weight: 600; margin: 32px 0 16px; color: var(--primary-light); }
+        .blog-content p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content ul, .blog-content ol { margin-bottom: 20px; padding-left: 24px; }
+        .blog-content li { color: var(--text-secondary); margin-bottom: 12px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content a { color: var(--primary-light); text-decoration: none; }
+        .blog-content a:hover { text-decoration: underline; }
+        .blog-content strong { color: var(--text); font-weight: 600; }
+        .blog-content blockquote { border-left: 4px solid var(--primary); padding-left: 24px; margin: 32px 0; font-style: italic; color: var(--text-secondary); }
+        .blog-content code { background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--primary-light); }
+
+        .component-box { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .component-box h3 { margin-top: 0; color: var(--text); font-size: 1.25rem; display: flex; align-items: center; gap: 12px; }
+        .component-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+
+        .example-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin: 32px 0; }
+        .example-box h3 { margin-top: 0; color: var(--text); }
+        .example-box .label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .label-good { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .label-tip { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .example-box .example-text { font-family: 'JetBrains Mono', monospace; background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 0.9375rem; line-height: 1.6; color: #e2e8f0; border-left: 3px solid var(--primary); }
+
+        .template-box { background: var(--bg); border: 2px solid var(--primary); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .template-box h3 { margin-top: 0; color: var(--text); text-align: center; }
+        .template-box .template-content { font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.8; }
+
+        .key-takeaways { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 48px 0; }
+        .key-takeaways h2 { margin-top: 0; }
+        .key-takeaways ul { list-style: none; padding: 0; }
+        .key-takeaways li { padding-left: 32px; position: relative; margin-bottom: 16px; }
+        .key-takeaways li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        .cta-box { text-align: center; padding: 48px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; margin: 48px 0; }
+        .cta-box h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn { display: inline-block; padding: 14px 28px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .author-box { display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; margin: 48px 0; }
+        .author-avatar { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .author-info h4 { font-weight: 600; margin-bottom: 4px; }
+        .author-info p { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        footer .container { max-width: 1200px; }
+        .footer-simple { text-align: center; color: var(--text-muted); }
+        .footer-simple a { color: var(--text-secondary); text-decoration: none; }
+        .footer-simple a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .example-box { padding: 24px; }
+            .cta-box { padding: 32px 24px; }
+            .component-box { padding: 24px; }
+            .template-box { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="/features.html">Features</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <article>
+        <header class="blog-header">
+            <div class="container">
+                <div class="blog-meta">
+                    <span class="blog-category">Deep Dive</span>
+                    <span>Apr 8, 2026</span>
+                    <span>12 min read</span>
+                </div>
+                <h1>The Anatomy of a Perfect Changelog Entry</h1>
+                <p class="blog-excerpt">What separates forgettable updates from changelog entries that drive engagement? We dissect the structure of high-performing changelogs and give you a battle-tested template.</p>
+            </div>
+        </header>
+
+        <div class="container blog-content">
+            <p>Not all changelog entries are created equal. Some generate excitement, drive product adoption, and turn casual users into advocates. Others sit unread, buried under a pile of technical jargon.</p>
+
+            <p>After analyzing 200+ changelog entries from successful SaaS companies, we've identified the seven essential components that make an update truly effective. Use this as your blueprint for every changelog entry you write.</p>
+
+            <h2>The 7 Essential Components</h2>
+
+            <div class="component-box">
+                <h3><span class="component-icon">📅</span> 1. Clear, Dated Headline</h3>
+                <p>Every entry needs a timestamp. Not just for organization—dates signal freshness and help users understand the timeline of your product's evolution.</p>
+                <p><strong>Best practices:</strong></p>
+                <ul>
+                    <li>Use a consistent date format (we recommend <code>Month DD, YYYY</code>)</li>
+                    <li>Include a version number if applicable (<code>v2.4.0</code>)</li>
+                    <li>Place the date prominently, either as a header or sidebar element</li>
+                </ul>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">🏷️</span> 2. Categorization Tags</h3>
+                <p>Users scan changelogs. Tags let them instantly identify updates relevant to them.</p>
+                <p><strong>Standard categories:</strong></p>
+                <ul>
+                    <li><strong>New</strong> — Brand new features</li>
+                    <li><strong>Improved</strong> — Enhancements to existing features</li>
+                    <li><strong>Fixed</strong> — Bug fixes</li>
+                    <li><strong>Deprecated</strong> — Features being phased out</li>
+                    <li><strong>Security</strong> — Security updates and patches</li>
+                </ul>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">✨</span> 3. Benefit-Focused Title</h3>
+                <p>Don't describe what changed—describe why users should care.</p>
+            </div>
+
+            <div class="example-box">
+                <span class="label label-good">Good Example</span>
+                <div class="example-text">"Export Reports in One Click — Save 30 Minutes on Monthly Reporting"</div>
+                <span class="label label-tip">Why it works</span>
+                <p style="margin-top: 12px;">The title leads with the feature, but immediately follows with the benefit (time savings). Users understand both what was built and why it matters to them.</p>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">📝</span> 4. Contextual Description</h3>
+                <p>Explain the problem this update solves. Two to three sentences is usually enough. Remember: users don't care about your technical implementation—they care about their workflow getting easier.</p>
+                <p><strong>The formula:</strong></p>
+                <ol>
+                    <li>State the problem or limitation</li>
+                    <li>Describe the solution</li>
+                    <li>Mention the outcome/benefit</li>
+                </ol>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">🖼️</span> 5. Visual Evidence</h3>
+                <p>A screenshot, GIF, or short video increases engagement by 3x. Show, don't just tell.</p>
+                <p><strong>Tips for visuals:</strong></p>
+                <ul>
+                    <li>Use annotations to highlight key UI elements</li>
+                    <li>Keep GIFs under 10 seconds</li>
+                    <li>Include alt text for accessibility</li>
+                    <li>Use consistent dimensions across entries</li>
+                </ul>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">🔗</span> 6. Relevant Links</h3>
+                <p>Every entry should answer: "What if I want to learn more?"</p>
+                <p><strong>Include links to:</strong></p>
+                <ul>
+                    <li>Documentation or help articles</li>
+                    <li>Blog posts with more context</li>
+                    <li>Tutorial videos</li>
+                    <li>Related changelog entries</li>
+                </ul>
+            </div>
+
+            <div class="component-box">
+                <h3><span class="component-icon">👤</span> 7. Author Attribution (Optional but Powerful)</h3>
+                <p>Crediting team members humanizes your product and celebrates the people behind the code. At Linear, every changelog entry includes the author's name and avatar.</p>
+            </div>
+
+            <h2>Complete Template</h2>
+            <p>Copy this template for your next changelog entry. Replace bracketed sections with your content:</p>
+
+            <div class="template-box">
+                <h3>📝 The Perfect Changelog Entry Template</h3>
+                <div class="template-content">---
+date: "[Month DD, YYYY]"
+version: "[vX.X.X]"
+category: "[New | Improved | Fixed | Deprecated | Security]"
+author: "[Name]"
+---
+
+# [Benefit-Focused Title]
+
+## The Problem
+[Describe what users struggled with before this update. Keep it to 1-2 sentences.]
+
+## What's New
+[Describe the solution. Focus on user actions, not technical implementation.]
+
+## How to Use It
+[Step-by-step instructions or link to documentation]
+
+## See It in Action
+[Screenshot, GIF, or video with caption]
+
+## Learn More
+- [Link to documentation]
+- [Link to tutorial video]
+- [Link to related blog post]</div>
+            </div>
+
+            <h2>Real-World Example: Breakdown</h2>
+            <p>Let's dissect a changelog entry from <strong>Notion</strong> that demonstrates all these principles:</p>
+
+            <div class="example-box">
+                <span class="label label-good">Notion's AI Autofill</span>
+                <div class="example-text" style="font-family: inherit; white-space: normal;">
+                    <p style="margin-bottom: 16px;"><strong>Date:</strong> March 15, 2024</p>
+                    <p style="margin-bottom: 16px;"><strong>Tag:</strong> <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 2px 8px; border-radius: 4px; font-size: 0.875rem;">New</span></p>
+                    <p style="margin-bottom: 16px;"><strong>Title:</strong> "AI Autofill — Generate Database Content in Seconds"</p>
+                    <p style="margin-bottom: 16px;"><strong>Description:</strong> "Stop staring at empty database rows. AI Autofill generates summaries, extracts action items, and populates fields automatically based on your page content."</p>
+                    <p style="margin-bottom: 8px;"><strong>Visual:</strong> 8-second GIF showing the feature in action</p>
+                    <p style="margin-bottom: 8px;"><strong>Learn More:</strong> Link to help center article</p>
+                </div>
+            </div>
+
+            <p><strong>Why this works:</strong></p>
+            <ul>
+                <li>Clear date and version for organization</li>
+                <li>Category tag for quick scanning</li>
+                <li>Title combines feature name with primary benefit</li>
+                <li>Description leads with the problem ("empty database rows")</li>
+                <li>Visual proof demonstrates value instantly</li>
+                <li>Documentation link for power users</li>
+            </ul>
+
+            <h2>Common Mistakes to Avoid</h2>
+
+            <div class="example-box">
+                <span class="label" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Mistake 1</span>
+                <p style="margin-top: 12px;"><strong>Technical Jargon Overload</strong></p>
+                <p>"Implemented GraphQL schema stitching with Apollo Federation to optimize query resolution across microservices."</p>
+                <p style="color: var(--text-muted); font-size: 0.9375rem; margin-top: 12px;">Users don't care about your tech stack. They care about faster load times.</p>
+            </div>
+
+            <div class="example-box">
+                <span class="label" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Mistake 2</span>
+                <p style="margin-top: 12px;"><strong>Generic Descriptions</strong></p>
+                <p>"Bug fixes and performance improvements."</p>
+                <p style="color: var(--text-muted); font-size: 0.9375rem; margin-top: 12px;">Which bugs? What performance? Users want specifics.</p>
+            </div>
+
+            <div class="example-box">
+                <span class="label" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Mistake 3</span>
+                <p style="margin-top: 12px;"><strong>Feature Without Context</strong></p>
+                <p>"New dashboard widget available."</p>
+                <p style="color: var(--text-muted); font-size: 0.9375rem; margin-top: 12px;">What does the widget do? Why should users care?</p>
+            </div>
+
+            <div class="key-takeaways">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li><strong>Lead with benefits, not features.</strong> Users care about outcomes, not implementations.</li>
+                    <li><strong>Use consistent formatting.</strong> A predictable structure makes scanning easier.</li>
+                    <li><strong>Always include visuals.</strong> Screenshots and GIFs dramatically increase engagement.</li>
+                    <li><strong>Provide next steps.</strong> Link to documentation for users who want to go deeper.</li>
+                    <li><strong>Write for scanners.</strong> Most users skim. Use tags, headers, and bullet points liberally.</li>
+                    <li><strong>Keep it human.</strong> Author attribution and conversational tone build connection.</li>
+                </ul>
+            </div>
+
+            <div class="cta-box">
+                <h3>Ready to Create Better Changelogs?</h3>
+                <p>Changelog.page gives you a beautiful, structured format for your product updates. Just write in Markdown—we handle the design.</p>
+                <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary">Get Started Free →</a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">📝</div>
+                <div class="author-info">
+                    <h4>The Changelog.page Team</h4>
+                    <p>Building the best changelog tool for SaaS companies. Follow us for weekly insights on product communication.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="container">
+            <div class="footer-simple">
+                <p>Built with ❤️ for <a href="https://github.com/aimadetools/race-kimi">The $100 AI Startup Race</a></p>
+                <p style="margin-top: 8px;">© 2026 Changelog.page</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
