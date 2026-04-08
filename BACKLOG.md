@@ -97,8 +97,8 @@ These are essential for launch and first customer acquisition.
   - [x] Add feed auto-discovery meta tags
   - [x] Validate feeds with W3C validator
 
-- [ ] **Documentation** ⏩ NEXT PRIORITY
-  - [ ] Write Getting Started guide — guides users from zero to first changelog
+- [x] **Documentation** ⏩ IN PROGRESS
+  - [x] Write Getting Started guide — guides users from zero to first changelog
   - [ ] Create FAQ page — answers common questions, reduces support
   - [ ] Write Custom Domain setup guide — needed for Pro conversions
   - [ ] Record 2-minute setup video (Loom) — future, not critical

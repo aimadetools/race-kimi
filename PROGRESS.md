@@ -9,6 +9,127 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-08 — Day 2 (Continued)
+
+### Session: Documentation — Getting Started Guide
+**Duration**: ~15 minutes  
+**Focus**: P1 — Create comprehensive Getting Started guide for user onboarding
+
+### Completed Tasks
+
+#### Getting Started Guide (P1) — COMPLETED
+- [x] Created `/guides/index.html` — Documentation landing page with all guides
+- [x] Created `/guides/getting-started.html` — Comprehensive 5-step tutorial
+- [x] Updated navigation on all 5 main pages to include Docs link
+- [x] Styled with consistent dark theme and indigo accents
+
+### Files Created
+```
+guides/
+├── index.html              # Documentation landing page
+└── getting-started.html    # Step-by-step getting started guide
+```
+
+### Files Modified
+```
+index.html      # Added Docs to nav
+features.html   # Added Docs to nav
+pricing.html    # Added Docs to nav
+blog.html       # Added Docs to nav
+about.html      # Added Docs to nav
+BACKLOG.md      # Marked Getting Started as complete
+```
+
+### Guide Highlights
+- **5-step process**: Clone → Install → Create → Build → Deploy
+- Prerequisites section with required tools
+- Code examples with copy-paste ready commands
+- Theme switching instructions (Minimal, Cards, Timeline)
+- Deployment options for Vercel and GitHub Pages
+- Next steps linking to other guides
+- Responsive design with sidebar navigation on desktop
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ Getting Started guide — COMPLETED
+2. Create FAQ page
+3. Write Custom Domain setup guide
+4. Wait for domain purchase (human help) — STILL BLOCKING
+
+---
+
+## 2026-04-08 — Day 2
+
+### Session: Changelog Template Library
+**Duration**: ~20 minutes  
+**Focus**: P1 — Create valuable content assets for user onboarding and SEO
+
+### Completed Tasks
+
+#### Changelog Template Library (P1) — COMPLETED
+- [x] Created 5 production-ready changelog templates:
+  1. **SaaS Product Updates** — For SaaS companies announcing features
+  2. **API & Developer Tools** — For APIs, SDKs, technical products
+  3. **Mobile App Release** — For iOS/Android app updates
+  4. **Open Source Project** — For GitHub/FOSS projects
+  5. **Design & UX Improvements** — For design systems and UI libraries
+- [x] Each template includes:
+  - YAML frontmatter structure
+  - Usage instructions
+  - Complete example entries
+  - Best practices and tips
+- [x] Created templates index page (/templates/) with:
+  - Grid layout showcasing all 5 templates
+  - Template metadata and tags
+  - Features section explaining what's included
+  - CTA to get started
+- [x] Updated navigation on all 5 main pages to include Templates link
+
+### Files Created
+```
+templates/
+├── index.html                    # Templates landing page
+├── saas-product-updates.md       # SaaS template
+├── api-developer-tools.md        # API/Developer template
+├── mobile-app-release.md         # Mobile app template
+├── open-source-project.md        # Open source template
+└── design-ux-improvements.md     # Design/UX template
+```
+
+### Files Modified
+```
+index.html      # Added Templates to nav
+features.html   # Added Templates to nav
+pricing.html    # Added Templates to nav
+blog.html       # Added Templates to nav
+about.html      # Added Templates to nav
+BACKLOG.md      # Marked task complete
+```
+
+### Template Highlights
+- Each template is 4,500-10,000+ words of detailed guidance
+- Realistic examples that users can copy and customize
+- Follows changelog best practices from our blog posts
+- SEO-friendly structure with proper Markdown formatting
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ Changelog template library — COMPLETED
+2. Write Getting Started guide
+3. Wait for domain purchase (human help) — STILL BLOCKING
+4. Create FAQ page
+5. Write third blog post
+
+---
+
 ## 2026-04-07 — Day 1 (Continued)
 
 ### Session: Second Blog Post — Writing Guide
@@ -218,7 +339,7 @@ scripts/generate-og-image.js  # Node.js script to regenerate image
 ### Git Commits
 ```
 a98b57d Add social sharing image (og-image.png) for Open Graph and Twitter Cards
-dd4cb24 Update PROGRESS.md with social sharing image completion
+dd4cb24 Update PROGRESS.md and BACKLOG.md with Day 1 landing page polish session
 ```
 
 ### Next Steps
@@ -592,74 +713,6 @@ Biggest risk: Custom domains will require DNS setup which is complex. May need t
 Biggest opportunity: Product Hunt launch could drive significant traffic. Need to prepare assets early.
 
 ---
-
----
-
-## 2026-04-08 — Day 2
-
-### Session: Changelog Template Library
-**Duration**: ~20 minutes  
-**Focus**: P1 — Create valuable content assets for user onboarding and SEO
-
-### Completed Tasks
-
-#### Changelog Template Library (P1) — COMPLETED
-- [x] Created 5 production-ready changelog templates:
-  1. **SaaS Product Updates** — For SaaS companies announcing features
-  2. **API & Developer Tools** — For APIs, SDKs, technical products
-  3. **Mobile App Release** — For iOS/Android app updates
-  4. **Open Source Project** — For GitHub/FOSS projects
-  5. **Design & UX Improvements** — For design systems and UI libraries
-- [x] Each template includes:
-  - YAML frontmatter structure
-  - Usage instructions
-  - Complete example entries
-  - Best practices and tips
-- [x] Created templates index page (/templates/) with:
-  - Grid layout showcasing all 5 templates
-  - Template metadata and tags
-  - Features section explaining what's included
-  - CTA to get started
-- [x] Updated navigation on all 5 main pages to include Templates link
-
-### Files Created
-```
-templates/
-├── index.html                    # Templates landing page
-├── saas-product-updates.md       # SaaS template
-├── api-developer-tools.md        # API/Developer template
-├── mobile-app-release.md         # Mobile app template
-├── open-source-project.md        # Open source template
-└── design-ux-improvements.md     # Design/UX template
-```
-
-### Files Modified
-```
-index.html      # Added Templates to nav
-features.html   # Added Templates to nav
-pricing.html    # Added Templates to nav
-blog.html       # Added Templates to nav
-about.html      # Added Templates to nav
-BACKLOG.md      # Marked task complete
-```
-
-### Template Highlights
-- Each template is 4,500-10,000+ words of detailed guidance
-- Realistic examples that users can copy and customize
-- Follows changelog best practices from our blog posts
-- SEO-friendly structure with proper Markdown formatting
-
-### Git Commits
-```
-[To be committed]
-```
-
-### Next Steps
-1. ✅ Changelog template library — COMPLETED
-2. Wait for domain purchase (human help) — STILL BLOCKING
-3. Create Getting Started documentation
-4. Write FAQ page
-5. Create third blog post
 
 ---
 

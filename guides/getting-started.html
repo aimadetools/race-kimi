@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — Changelog.page Documentation</title>
+    <meta name="description" content="Learn how to create your first changelog in 5 minutes. Step-by-step guide from installation to deployment.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Getting Started — Changelog.page Documentation">
+    <meta property="og:description" content="Learn how to create your first changelog in 5 minutes. Step-by-step guide from installation to deployment.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/guides/getting-started">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Getting Started — Changelog.page Documentation">
+    <meta name="twitter:description" content="Learn how to create your first changelog in 5 minutes. Step-by-step guide from installation to deployment.">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-code: #0d0d0d;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --success: #22c55e;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-light);
+        }
+        
+        /* Layout */
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 64px;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        
+        .sidebar-links {
+            list-style: none;
+        }
+        
+        .sidebar-links li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-links a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-links a:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        
+        .sidebar-links a.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 3rem 4rem;
+            max-width: 800px;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumbs a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        
+        .breadcrumbs a:hover {
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumbs span {
+            color: var(--text-secondary);
+        }
+        
+        .main-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .main-content > p:first-of-type {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .main-content h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 3rem 0 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .main-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+        }
+        
+        .main-content p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .main-content ul, .main-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .main-content li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .main-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .main-content a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+        
+        .main-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        pre code {
+            color: var(--text-primary);
+        }
+        
+        :not(pre) > code {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.875em;
+        }
+        
+        /* Step Cards */
+        .step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+        
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        
+        .info-box.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: var(--success);
+        }
+        
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .info-box p {
+            margin: 0;
+            font-size: 0.9375rem;
+        }
+        
+        /* File Tree */
+        .file-tree {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            margin: 1.5rem 0;
+        }
+        
+        .file-tree-line {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        
+        .file-tree-indent {
+            color: var(--text-muted);
+        }
+        
+        .file-icon {
+            color: var(--primary-light);
+        }
+        
+        .file-name {
+            color: var(--text-secondary);
+        }
+        
+        /* Next/Prev Navigation */
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .page-nav a {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            min-width: 200px;
+            transition: all 0.2s;
+        }
+        
+        .page-nav a:hover {
+            border-color: var(--primary);
+        }
+        
+        .page-nav a.next {
+            align-items: flex-end;
+            text-align: right;
+        }
+        
+        .page-nav-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .page-nav-title {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 2rem 1.5rem;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .main-content h1 {
+                font-size: 1.75rem;
+            }
+            
+            .page-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .page-nav a {
+                width: 100%;
+            }
+            
+            .page-nav a.next {
+                align-items: flex-start;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📋</div>
+                <span>Changelog.page</span>
+            </a>
+            <div class="nav-links">
+                <a href="/features">Features</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/templates">Templates</a>
+                <a href="/blog">Blog</a>
+                <a href="/guides" class="active">Docs</a>
+                <a href="https://github.com/aimadetools/race-kimi" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="docs-layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-links">
+                    <li><a href="/guides/getting-started" class="active">Quick Start</a></li>
+                    <li><a href="/guides/writing-entries">Writing Entries</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Configuration</div>
+                <ul class="sidebar-links">
+                    <li><a href="/guides/custom-domain">Custom Domain</a></li>
+                    <li><a href="/guides/themes">Theme Customization</a></li>
+                    <li><a href="/guides/github-actions">GitHub Actions</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Reference</div>
+                <ul class="sidebar-links">
+                    <li><a href="/guides/faq">FAQ</a></li>
+                    <li><a href="https://github.com/aimadetools/race-kimi/tree/main/generator">Generator README</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="breadcrumbs">
+                <a href="/guides">Docs</a>
+                <span>/</span>
+                <a href="/guides">Getting Started</a>
+                <span>/</span>
+                <span>Quick Start</span>
+            </div>
+            
+            <h1>Getting Started</h1>
+            <p>Create your first changelog in 5 minutes. This guide will take you from installation to a deployed changelog page.</p>
+            
+            <h2>What You'll Build</h2>
+            <p>By the end of this guide, you'll have:</p>
+            <ul>
+                <li>A working changelog generator on your computer</li>
+                <li>Your first changelog entry written in Markdown</li>
+                <li>A beautiful HTML changelog page</li>
+                <li>Automatic RSS and JSON feeds</li>
+                <li>The knowledge to deploy to Vercel or GitHub Pages</li>
+            </ul>
+            
+            <h2>Prerequisites</h2>
+            <p>Before you begin, make sure you have:</p>
+            <ul>
+                <li><strong>Node.js 18+</strong> — <a href="https://nodejs.org" target="_blank">Download here</a></li>
+                <li><strong>Git</strong> — For version control and deployment</li>
+                <li><strong>A code editor</strong> — VS Code recommended</li>
+                <li><strong>A GitHub account</strong> — For hosting and deployment</li>
+            </ul>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Clone the Repository</div>
+                </div>
+                <p>Start by cloning the changelog generator to your local machine:</p>
+                <pre><code>git clone https://github.com/aimadetools/race-kimi.git
+cd race-kimi/generator</code></pre>
+                <p>This gives you the complete generator with three built-in themes and example content.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Install Dependencies</div>
+                </div>
+                <p>Install the required Node.js packages:</p>
+                <pre><code>npm install</code></pre>
+                <p>This installs the Markdown parser, YAML frontmatter processor, and build tools.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Create Your First Entry</div>
+                </div>
+                <p>Create a new Markdown file in the <code>content/</code> directory. The filename format is <code>YYYY-MM-DD-title.md</code>:</p>
+                <pre><code>touch content/2026-04-08-hello-world.md</code></pre>
+                <p>Open the file in your editor and add this content:</p>
+                <pre><code>---
+title: "Hello World — Our First Changelog Entry"
+date: 2026-04-08
+category: Feature
+tags: [launch, announcement]
+author: Your Name
+---
+
+We're excited to launch our new changelog! This is where we'll share all our product updates, new features, and improvements.
+
+## What's New
+
+- **Beautiful Design** — Clean, readable layout optimized for your users
+- **RSS Feed** — Subscribe to stay updated on every release
+- **Markdown Powered** — Write in the format developers love
+
+Stay tuned for more updates!</code></pre>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Build Your Changelog</div>
+                </div>
+                <p>Run the build command to generate your changelog:</p>
+                <pre><code>npm run build</code></pre>
+                <p>This creates a <code>dist/</code> folder with your generated changelog:</p>
+                <div class="file-tree">
+                    <div class="file-tree-line">
+                        <span class="file-icon">📁</span>
+                        <span class="file-name">dist/</span>
+                    </div>
+                    <div class="file-tree-line">
+                        <span class="file-tree-indent">├──</span>
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">index.html</span>
+                        <span class="file-tree-indent">(main changelog page)</span>
+                    </div>
+                    <div class="file-tree-line">
+                        <span class="file-tree-indent">├──</span>
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">hello-world.html</span>
+                        <span class="file-tree-indent">(individual entry)</span>
+                    </div>
+                    <div class="file-tree-line">
+                        <span class="file-tree-indent">├──</span>
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">rss.xml</span>
+                        <span class="file-tree-indent">(RSS feed)</span>
+                    </div>
+                    <div class="file-tree-line">
+                        <span class="file-tree-indent">├──</span>
+                        <span class="file-icon">📄</span>
+                        <span class="file-name">feed.json</span>
+                        <span class="file-tree-indent">(JSON feed)</span>
+                    </div>
+                    <div class="file-tree-line">
+                        <span class="file-tree-indent">└──</span>
+                        <span class="file-icon">📁</span>
+                        <span class="file-name">css/</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Preview Locally</div>
+                </div>
+                <p>Start a local server to preview your changelog:</p>
+                <pre><code>npm run serve</code></pre>
+                <p>Open <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your browser to see your changelog.</p>
+                <div class="info-box">
+                    <div class="info-box-title">💡 Pro Tip</div>
+                    <p>The server automatically reloads when you make changes. Keep it running while you edit your content!</p>
+                </div>
+            </div>
+            
+            <h2>Choosing a Theme</h2>
+            <p>The generator includes three beautiful themes. Switch between them using the <code>THEME</code> environment variable:</p>
+            
+            <h3>Minimal (Default)</h3>
+            <pre><code>npm run build</code></pre>
+            <p>Clean, typography-focused design. Best for technical audiences.</p>
+            
+            <h3>Cards</h3>
+            <pre><code>THEME=cards npm run build</code></pre>
+            <p>Visual, card-based layout with hover effects. Great for product-focused updates.</p>
+            
+            <h3>Timeline</h3>
+            <pre><code>THEME=timeline npm run build</code></pre>
+            <p>Vertical timeline layout. Perfect for showing product evolution.</p>
+            
+            <h2>Deploying Your Changelog</h2>
+            <p>Once you're happy with your changelog, it's time to deploy. Here are your options:</p>
+            
+            <h3>Option 1: Vercel (Recommended)</h3>
+            <p>Deploy to Vercel for free with automatic updates on every push:</p>
+            <ol>
+                <li>Push your code to GitHub</li>
+                <li>Import your repository in <a href="https://vercel.com" target="_blank">Vercel</a></li>
+                <li>Set the root directory to <code>generator</code></li>
+                <li>Deploy!</li>
+            </ol>
+            
+            <h3>Option 2: GitHub Pages</h3>
+            <p>Use the included GitHub Action for automatic deployment:</p>
+            <ol>
+                <li>Enable GitHub Pages in your repository settings</li>
+                <li>Select "GitHub Actions" as the source</li>
+                <li>The included workflow will deploy on every push to <code>content/</code></li>
+            </ol>
+            
+            <div class="info-box success">
+                <div class="info-box-title">🎉 Success!</div>
+                <p>You now have a working changelog! Next, learn about <a href="/guides/custom-domain">setting up a custom domain</a> or <a href="/guides/writing-entries">writing great entries</a>.</p>
+            </div>
+            
+            <h2>What's Next?</h2>
+            <ul>
+                <li><a href="/guides/writing-entries">Writing Great Entries</a> — Best practices for engaging changelog content</li>
+                <li><a href="/guides/custom-domain">Custom Domain Setup</a> — Host on your own domain</li>
+                <li><a href="/guides/themes">Theme Customization</a> — Make it match your brand</li>
+                <li><a href="/templates">Browse Templates</a> — Start with pre-made templates</li>
+            </ul>
+            
+            <div class="page-nav">
+                <div></div>
+                <a href="/guides/writing-entries" class="next">
+                    <span class="page-nav-label">Next</span>
+                    <span class="page-nav-title">Writing Great Entries →</span>
+                </a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
