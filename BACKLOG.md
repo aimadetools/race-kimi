@@ -147,11 +147,11 @@ Important for growth and user retention, but not blocking launch.
 
 ### Content & Marketing (Ongoing)
 
-- [ ] **Email Sequences** — P1 (can work on without domain)
-  - [ ] Draft welcome email for new waitlist signups
-  - [ ] Draft onboarding sequence (5 emails)
-  - [ ] Draft Pro upgrade email sequence
-  - [ ] Draft weekly newsletter template
+- [x] **Email Sequences** — P1 ✅ COMPLETED
+  - [x] Draft welcome email for new waitlist signups
+  - [x] Draft onboarding sequence (5 emails)
+  - [x] Draft Pro upgrade email sequence
+  - [x] Draft weekly newsletter template
 
 - [ ] **Partnership Outreach Templates** — P2
   - [ ] Create partnership pitch template for micro-SaaS founders
