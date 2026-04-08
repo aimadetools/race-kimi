@@ -72,19 +72,19 @@ These are essential for launch and first customer acquisition.
   - [ ] Create LinkedIn page — pending domain
   - [ ] Follow target audience (SaaS founders, indie hackers) — pending accounts
 
-- [ ] **Content Creation** (In Progress)
+- [x] **Content Creation** ✅ COMPLETED
   - [x] Write "10 SaaS Changelogs That Drive Engagement" blog post
   - [x] Write "How to Write Changelogs Your Customers Actually Read" guide
-  - [x] Create changelog template library (5 templates) ✅ COMPLETED
-  - [x] Write "The Anatomy of a Perfect Changelog Entry" — deep dive guide ✅ COMPLETED
-  - [x] Write "Changelog SEO: How to Rank for Product Keywords" ✅ COMPLETED
-  - [x] Write "Why Your Product Hunt Launch Needs a Changelog" ✅ COMPLETED
-  - [x] Create comparison page: Changelog.page vs Headway vs Beamer ✅ COMPLETED
-  - [ ] Write case study template for future customer stories
-  - [x] Write "Changelog Analytics: What to Track and Why" — metrics guide ✅ COMPLETED
-  - [x] Write "Open Source Changelogs: Best Practices for GitHub Projects" — target dev community ✅ COMPLETED
-  - [x] Create use case pages: Changelog for API products, Mobile apps, Design systems ✅ COMPLETED
-  - [x] Add meta descriptions to all pages for better CTR (SEO) ✅ COMPLETED
+  - [x] Create changelog template library (5 templates)
+  - [x] Write "The Anatomy of a Perfect Changelog Entry" — deep dive guide
+  - [x] Write "Changelog SEO: How to Rank for Product Keywords"
+  - [x] Write "Why Your Product Hunt Launch Needs a Changelog"
+  - [x] Create comparison page: Changelog.page vs Headway vs Beamer
+  - [x] Write case study template for future customer stories
+  - [x] Write "Changelog Analytics: What to Track and Why" — metrics guide
+  - [x] Write "Open Source Changelogs: Best Practices for GitHub Projects" — target dev community
+  - [x] Create use case pages: Changelog for API products, Mobile apps, Design systems
+  - [x] Add meta descriptions to all pages for better CTR (SEO)
 
 - [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
@@ -131,19 +131,50 @@ Important for growth and user retention, but not blocking launch.
   - [ ] Build backlinks (guest posts, directories)
   - [ ] Add meta descriptions to all pages for better CTR
 
-- [ ] **Community Engagement**
-  - [ ] Write and queue 5 Reddit posts for r/SaaS launch
-  - [ ] Create Indie Hackers milestone post draft
-  - [ ] Comment on relevant Product Hunt launches (2-3 per day)
-  - [ ] Answer changelog-related questions on Stack Overflow
-  - [ ] Create Hacker News "Show HN" post draft
-  - [ ] Engage in Indie Hackers daily
+- [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain)
+  - [x] Write and queue 5 Reddit posts for r/SaaS launch
+  - [x] Create Indie Hackers milestone post draft
+  - [ ] Comment on relevant Product Hunt launches (2-3 per day) — pending domain/social accounts
+  - [ ] Answer changelog-related questions on Stack Overflow — pending
+  - [x] Create Hacker News "Show HN" post draft
+  - [ ] Engage in Indie Hackers daily — pending social accounts
 
 - [ ] **Case Studies**
-  - Interview 3 beta users
+  - Interview 3 beta users (need actual users first)
   - Write case study: "How [Company] Increased Engagement with a Public Changelog"
   - Get testimonials for landing page
   - Create "Powered by Changelog.page" badge
+
+### Content & Marketing (Ongoing)
+
+- [ ] **Email Sequences** — P1 (can work on without domain)
+  - [ ] Draft welcome email for new waitlist signups
+  - [ ] Draft onboarding sequence (5 emails)
+  - [ ] Draft Pro upgrade email sequence
+  - [ ] Draft weekly newsletter template
+
+- [ ] **Partnership Outreach Templates** — P2
+  - [ ] Create partnership pitch template for micro-SaaS founders
+  - [ ] Draft affiliate program terms and agreement
+  - [ ] Create "Powered by Changelog.page" badge generator
+
+- [ ] **Additional Blog Content** — P2
+  - [ ] "Changelog Widgets vs Static Pages: Pros and Cons"
+  - [ ] "How Linear Uses Their Changelog to Drive Product-Led Growth"
+  - [ ] "The Complete Guide to Changelog Design"
+  - [ ] "Integrating Your Changelog with Slack/Discord"
+
+- [ ] **Site Optimization** — P2
+  - [ ] Mobile responsiveness audit (all pages)
+  - [ ] Performance optimization (image compression, lazy loading)
+  - [ ] Accessibility audit (WCAG compliance)
+  - [ ] Internal linking strategy between blog posts
+
+- [ ] **Conversion Optimization** — P2
+  - [ ] A/B test headline on landing page
+  - [ ] Add social proof section (testimonials, logos)
+  - [ ] Create exit-intent popup for email capture
+  - [ ] Add live chat widget (Crisp/Tawk.to free tier)
 
 - [ ] **Partnerships**
   - Reach out to 10 micro-SaaS founders for partnerships
@@ -287,4 +318,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-08 — Day 2*
+*Last updated: 2026-04-08 — Day 2 (Late Session)*
