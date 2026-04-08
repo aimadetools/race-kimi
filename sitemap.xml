@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Pages -->
+  <url>
+    <loc>https://changelog.page/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/features</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/pricing</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/about</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/thanks</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
+  <!-- Blog -->
+  <url>
+    <loc>https://changelog.page/blog</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/10-saas-changelogs-that-drive-engagement.html</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/how-to-write-changelogs-customers-read.html</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Templates -->
+  <url>
+    <loc>https://changelog.page/templates/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Guides / Documentation -->
+  <url>
+    <loc>https://changelog.page/guides/</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/guides/getting-started</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/guides/custom-domain</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/guides/faq</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Theme Examples -->
+  <url>
+    <loc>https://changelog.page/examples/minimal-theme/</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/examples/cards-theme/</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/examples/timeline-theme/</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
