@@ -162,7 +162,7 @@ Important for growth and user retention, but not blocking launch.
   - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
   - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
   - [x] "The Complete Guide to Changelog Design"
-  - [ ] "Integrating Your Changelog with Slack/Discord"
+  - [x] "Integrating Your Changelog with Slack/Discord"
 
 - [ ] **Site Optimization** — P2
   - [ ] Mobile responsiveness audit (all pages)

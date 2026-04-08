@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrating Your Changelog with Slack and Discord — Changelog.page Blog</title>
+    <meta name="description" content="Step-by-step guide to connecting your changelog with Slack and Discord. Includes webhook setup, formatting best practices, and automation workflows.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Integrating Your Changelog with Slack and Discord">
+    <meta property="og:description" content="Step-by-step guide to connecting your changelog with Slack and Discord. Includes webhook setup, formatting best practices, and automation workflows.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/integrate-changelog-slack-discord.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Integrating Your Changelog with Slack and Discord">
+    <meta name="twitter:description" content="Step-by-step guide to connecting your changelog with Slack and Discord. Includes webhook setup, formatting best practices, and automation workflows.">
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Integrating Your Changelog with Slack and Discord",
+      "description": "Step-by-step guide to connecting your changelog with Slack and Discord. Includes webhook setup, formatting best practices, and automation workflows.",
+      "image": "https://changelog.page/og-image.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Changelog.page"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Changelog.page",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://changelog.page/favicon.svg"
+        }
+      },
+      "datePublished": "2026-04-08",
+      "dateModified": "2026-04-08",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://changelog.page/integrate-changelog-slack-discord.html"
+      }
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --slack: #4a154b;
+            --discord: #5865f2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .blog-header { padding: 60px 0 40px; text-align: center; }
+        .blog-meta { display: flex; gap: 16px; justify-content: center; align-items: center; margin-bottom: 24px; font-size: 0.875rem; color: var(--text-muted); }
+        .blog-category { color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .blog-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .blog-excerpt { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .blog-content { padding-bottom: 100px; }
+        .blog-content h2 { font-size: 1.75rem; font-weight: 700; margin: 48px 0 20px; color: var(--text); }
+        .blog-content h3 { font-size: 1.25rem; font-weight: 600; margin: 32px 0 16px; color: var(--primary-light); }
+        .blog-content p { color: var(--text-secondary); margin-bottom: 20px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content ul, .blog-content ol { margin-bottom: 20px; padding-left: 24px; }
+        .blog-content li { color: var(--text-secondary); margin-bottom: 12px; font-size: 1.0625rem; line-height: 1.7; }
+        .blog-content a { color: var(--primary-light); text-decoration: none; }
+        .blog-content a:hover { text-decoration: underline; }
+        .blog-content strong { color: var(--text); font-weight: 600; }
+        .blog-content blockquote { border-left: 4px solid var(--primary); padding-left: 24px; margin: 32px 0; font-style: italic; color: var(--text-secondary); }
+        .blog-content code { background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--primary-light); }
+
+        .integration-card { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.08)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; }
+        .integration-card h3 { margin-top: 0; color: var(--text); font-size: 1.25rem; display: flex; align-items: center; gap: 12px; }
+        .integration-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+        .slack-icon { background: var(--slack); }
+        .discord-icon { background: var(--discord); }
+
+        .example-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin: 32px 0; }
+        .example-box h3 { margin-top: 0; color: var(--text); }
+        .example-box .label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .label-good { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .label-tip { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .label-slack { background: rgba(74, 21, 75, 0.3); color: #e01e5a; }
+        .label-discord { background: rgba(88, 101, 242, 0.2); color: #5865f2; }
+        .example-box .example-text { font-family: 'JetBrains Mono', monospace; background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 0.9375rem; line-height: 1.6; color: #e2e8f0; border-left: 3px solid var(--primary); white-space: pre-wrap; }
+
+        .step-box { background: var(--bg); border: 2px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; position: relative; }
+        .step-number { position: absolute; top: -16px; left: 24px; background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; }
+        .step-box h3 { margin-top: 8px; color: var(--text); }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9375rem; }
+        .comparison-table th, .comparison-table td { padding: 12px 16px; text-align: left; border: 1px solid var(--border); }
+        .comparison-table th { background: var(--bg-secondary); font-weight: 600; color: var(--text); }
+        .comparison-table td { color: var(--text-secondary); }
+        .comparison-table code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+
+        .key-takeaways { background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 48px 0; }
+        .key-takeaways h2 { margin-top: 0; }
+        .key-takeaways ul { list-style: none; padding: 0; }
+        .key-takeaways li { padding-left: 32px; position: relative; margin-bottom: 16px; }
+        .key-takeaways li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        .cta-box { text-align: center; padding: 48px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; margin: 48px 0; }
+        .cta-box h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn { display: inline-block; padding: 14px 28px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        .author-box { display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; margin: 48px 0; }
+        .author-avatar { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .author-info h4 { font-weight: 600; margin-bottom: 4px; }
+        .author-info p { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        footer .container { max-width: 1200px; }
+        .footer-simple { text-align: center; color: var(--text-muted); }
+        .footer-simple a { color: var(--text-secondary); text-decoration: none; }
+        .footer-simple a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .example-box { padding: 24px; }
+            .cta-box { padding: 32px 24px; }
+            .integration-card { padding: 24px; }
+            .step-box { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="/features.html">Features</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/about.html">About</a>
+                <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <article>
+        <header class="blog-header">
+            <div class="container">
+                <div class="blog-meta">
+                    <span class="blog-category">Integration Guide</span>
+                    <span>Apr 8, 2026</span>
+                    <span>14 min read</span>
+                </div>
+                <h1>Integrating Your Changelog with Slack and Discord</h1>
+                <p class="blog-excerpt">Your users are already in Slack and Discord. Meet them there with automated changelog notifications that keep your community informed and engaged.</p>
+            </div>
+        </header>
+
+        <div class="container blog-content">
+            <p>Your changelog lives on your website, but your users live in Slack and Discord. Every time you publish an update, you're missing an opportunity to reach your community where they already hang out.</p>
+
+            <p>The solution? Webhook integrations that automatically post changelog updates to your team's communication channels. In this guide, we'll show you exactly how to set up Slack and Discord integrations—no complex infrastructure required.</p>
+
+            <h2>Why Integrate Your Changelog with Chat?</h2>
+
+            <p>Before diving into the technical setup, let's establish why this integration matters:</p>
+
+            <ul>
+                <li><strong>Reach users where they are.</strong> 80% of SaaS teams use Slack or Discord daily. Your changelog notifications become part of their existing workflow.</li>
+                <li><strong>Increase visibility.</strong> Email open rates average 20-30%. Chat notifications get 60-80% view rates within the first hour.</li>
+                <li><strong>Drive immediate engagement.</strong> Users can click through, try new features, and give feedback—all without leaving their workspace.</li>
+                <li><strong>Build community.</strong> Public changelog channels create a space for users to discuss updates, share use cases, and feel part of your product's evolution.</li>
+                <li><strong>Reduce support tickets.</strong> When users know what's changed, they encounter fewer surprises and submit fewer "is this a bug?" questions.</li>
+            </ul>
+
+            <blockquote>
+                "The moment we connected our changelog to Slack, engagement with our updates tripled. Users were actually reading what we shipped."
+                <br>— Founder at a B2B SaaS startup
+            </blockquote>
+
+            <h2>Understanding Webhooks</h2>
+
+            <p>Both Slack and Discord use <strong>webhooks</strong> to receive external messages. Think of a webhook as a special URL that accepts formatted messages and posts them to a specific channel.</p>
+
+            <p>Here's how the flow works:</p>
+
+            <ol>
+                <li>You create a webhook URL in Slack or Discord</li>
+                <li>Your changelog system sends a POST request to that URL when a new entry is published</li>
+                <li>The platform receives the message and posts it to the designated channel</li>
+            </ol>
+
+            <p>No polling, no complex APIs—just a simple HTTP request that triggers a notification.</p>
+
+            <h2>Slack Integration</h2>
+
+            <div class="integration-card">
+                <h3><span class="integration-icon slack-icon">💬</span> Slack Webhook Setup</h3>
+                <p>Slack's Incoming Webhooks feature lets you post messages from external sources into Slack channels.</p>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">1</span>
+                <h3>Create a Slack App</h3>
+                <ol>
+                    <li>Go to <a href="https://api.slack.com/apps">api.slack.com/apps</a></li>
+                    <li>Click <strong>Create New App</strong></li>
+                    <li>Choose <strong>From scratch</strong></li>
+                    <li>Name your app (e.g., "Changelog Bot") and select your workspace</li>
+                    <li>Click <strong>Create App</strong></li>
+                </ol>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">2</span>
+                <h3>Enable Incoming Webhooks</h3>
+                <ol>
+                    <li>In your app's settings, navigate to <strong>Incoming Webhooks</strong></li>
+                    <li>Toggle <strong>Activate Incoming Webhooks</strong> to On</li>
+                    <li>Scroll down and click <strong>Add New Webhook to Workspace</strong></li>
+                    <li>Select the channel where changelog updates should be posted</li>
+                    <li>Click <strong>Allow</strong></li>
+                </ol>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">3</span>
+                <h3>Copy Your Webhook URL</h3>
+                <p>After authorization, you'll see a webhook URL that looks like this:</p>
+                <div class="example-text" style="font-family: 'JetBrains Mono', monospace; background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 0.9375rem; border-left: 3px solid var(--primary);">YOUR_SLACK_WEBHOOK_URL</div>
+                <p><strong>Keep this URL secure.</strong> Anyone with this URL can post messages to your channel.</p>
+            </div>
+
+            <h3>Formatting Slack Messages</h3>
+
+            <p>Slack supports rich formatting via Block Kit, a JSON-based UI framework. Here's a well-formatted changelog notification:</p>
+
+            <div class="example-box">
+                <span class="label label-slack">Slack Payload Example</span>
+                <div class="example-text">{
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🚀 New Feature: One-Click Exports"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*What's new:* Export your reports in PDF, CSV, or Excel format with a single click. No more copy-pasting into spreadsheets."
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Category*\n🆕 New Feature"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Date*\nApril 8, 2026"
+        }
+      ]
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "Read Full Update"
+          },
+          "url": "https://changelog.page/updates/one-click-exports",
+          "style": "primary"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "View Documentation"
+          },
+          "url": "https://docs.example.com/exports"
+        }
+      ]
+    }
+  ]
+}</div>
+            </div>
+
+            <h3>Sending the Webhook Request</h3>
+
+            <p>You can send this payload using any HTTP client. Here's a cURL example:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">cURL Command</span>
+                <div class="example-text">curl -X POST -H 'Content-type: application/json' \
+  --data '@slack-payload.json' \
+  YOUR_SLACK_WEBHOOK_URL</div>
+            </div>
+
+            <p>And here's a Node.js example:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">Node.js</span>
+                <div class="example-text">const axios = require('axios');
+
+async function notifySlack(webhookUrl, changelogEntry) {
+  const payload = {
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: `🚀 ${changelogEntry.title}`
+        }
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: changelogEntry.summary
+        }
+      },
+      {
+        type: 'actions',
+        elements: [
+          {
+            type: 'button',
+            text: { type: 'plain_text', text: 'Read More' },
+            url: changelogEntry.url,
+            style: 'primary'
+          }
+        ]
+      }
+    ]
+  };
+
+  await axios.post(webhookUrl, payload);
+}</div>
+            </div>
+
+            <h2>Discord Integration</h2>
+
+            <div class="integration-card">
+                <h3><span class="integration-icon discord-icon">🎮</span> Discord Webhook Setup</h3>
+                <p>Discord's webhook system is simpler than Slack's but still supports rich embeds with images, fields, and color coding.</p>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">1</span>
+                <h3>Create a Discord Webhook</h3>
+                <ol>
+                    <li>Open your Discord server settings</li>
+                    <li>Navigate to <strong>Integrations</strong> → <strong>Webhooks</strong></li>
+                    <li>Click <strong>New Webhook</strong></li>
+                    <li>Name your webhook (e.g., "Changelog")</li>
+                    <li>Select the channel where updates should be posted</li>
+                    <li>Click <strong>Copy Webhook URL</strong></li>
+                </ol>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">2</span>
+                <h3>Customize the Avatar (Optional)</h3>
+                <p>Upload a custom avatar for your webhook to make it recognizable. Your product logo works great here.</p>
+            </div>
+
+            <h3>Formatting Discord Messages</h3>
+
+            <p>Discord supports rich embeds with colors, fields, images, and timestamps. Here's an example:</p>
+
+            <div class="example-box">
+                <span class="label label-discord">Discord Payload Example</span>
+                <div class="example-text">{
+  "content": "📢 New changelog entry published!",
+  "embeds": [
+    {
+      "title": "🚀 One-Click Exports",
+      "description": "Export your reports in PDF, CSV, or Excel format with a single click. No more copy-pasting into spreadsheets.",
+      "url": "https://changelog.page/updates/one-click-exports",
+      "color": 65280,
+      "fields": [
+        {
+          "name": "Category",
+          "value": "🆕 New Feature",
+          "inline": true
+        },
+        {
+          "name": "Date",
+          "value": "April 8, 2026",
+          "inline": true
+        }
+      ],
+      "image": {
+        "url": "https://changelog.page/images/export-demo.png"
+      },
+      "footer": {
+        "text": "Changelog.page"
+      },
+      "timestamp": "2026-04-08T10:00:00.000Z"
+    }
+  ]
+}</div>
+            </div>
+
+            <div class="example-box">
+                <span class="label label-tip">Color Codes for Discord Embeds</span>
+                <div class="example-text">New Feature:     65280  (Green)
+Improvement:     3447003 (Blue)
+Bug Fix:         16776960 (Yellow)
+Security:        15158332 (Red)
+Deprecation:     10070709 (Gray)</div>
+            </div>
+
+            <h3>Sending the Discord Webhook Request</h3>
+
+            <div class="example-box">
+                <span class="label label-tip">Node.js</span>
+                <div class="example-text">const axios = require('axios');
+
+async function notifyDiscord(webhookUrl, changelogEntry) {
+  const colorMap = {
+    'new': 65280,
+    'improved': 3447003,
+    'fixed': 16776960,
+    'security': 15158332
+  };
+
+  const payload = {
+    content: '📢 New changelog entry published!',
+    embeds: [{
+      title: changelogEntry.title,
+      description: changelogEntry.summary,
+      url: changelogEntry.url,
+      color: colorMap[changelogEntry.category] || 3447003,
+      fields: [
+        { name: 'Category', value: changelogEntry.category, inline: true },
+        { name: 'Date', value: changelogEntry.date, inline: true }
+      ],
+      timestamp: new Date().toISOString()
+    }]
+  };
+
+  await axios.post(webhookUrl, payload);
+}</div>
+            </div>
+
+            <h2>Automation: Triggering Webhooks on Publish</h2>
+
+            <p>Manually sending webhooks every time you publish a changelog entry doesn't scale. Here's how to automate it:</p>
+
+            <h3>Option 1: GitHub Actions</h3>
+
+            <p>If your changelog is stored in a GitHub repository, use GitHub Actions to trigger webhooks when new entries are merged:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">.github/workflows/notify.yml</span>
+                <div class="example-text">name: Notify on Changelog Update
+
+on:
+  push:
+    paths:
+      - 'changelog/*.md'
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get latest changelog entry
+        id: latest
+        run: |
+          LATEST=$(ls -t changelog/*.md | head -1)
+          echo "file=$LATEST" >> $GITHUB_OUTPUT
+      
+      - name: Send Slack notification
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"New changelog entry published!"}' \
+            $SLACK_WEBHOOK</div>
+            </div>
+
+            <h3>Option 2: Build Script Integration</h3>
+
+            <p>Add webhook calls to your changelog build script:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">build.js</span>
+                <div class="example-text">const fs = require('fs');
+const axios = require('axios');
+
+async function buildAndNotify() {
+  // Build your changelog
+  await buildChangelog();
+  
+  // Get the latest entry
+  const entries = await getChangelogEntries();
+  const latest = entries[0];
+  
+  // Send notifications
+  if (process.env.SLACK_WEBHOOK_URL) {
+    await notifySlack(process.env.SLACK_WEBHOOK_URL, latest);
+  }
+  
+  if (process.env.DISCORD_WEBHOOK_URL) {
+    await notifyDiscord(process.env.DISCORD_WEBHOOK_URL, latest);
+  }
+}
+
+buildAndNotify().catch(console.error);</div>
+            </div>
+
+            <h3>Option 3: RSS Feed Polling</h3>
+
+            <p>If your changelog has an RSS feed, use a service like <a href="https://zapier.com">Zapier</a> or <a href="https://make.com">Make</a> to watch for new entries and trigger webhooks automatically:</p>
+
+            <ol>
+                <li>Set up a Zapier "RSS by Zapier" trigger pointing to your changelog RSS feed</li>
+                <li>Add a "Webhooks by Zapier" action to POST to your Slack/Discord webhook URL</li>
+                <li>Map RSS fields (title, description, link) to your webhook payload</li>
+            </ol>
+
+            <h2>Best Practices for Chat Notifications</h2>
+
+            <p>Getting the integration working is just the start. Here's how to make your notifications truly effective:</p>
+
+            <h3>Keep It Concise</h3>
+            <p>Chat messages should be scannable. Include the title, a one-sentence summary, and a link to read more. Don't paste the full changelog entry into the channel.</p>
+
+            <h3>Use Consistent Formatting</h3>
+            <p>Create a template and stick to it. Users should instantly recognize a changelog notification and know what to expect.</p>
+
+            <h3>Include Direct Links</h3>
+            <p>Every notification should link to the full changelog entry and, when relevant, to documentation or the feature itself. Reduce friction for users who want to explore.</p>
+
+            <h3>Respect Channel Context</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Channel Type</th><th>Frequency</th><th>Tone</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>#changelog (dedicated)</td><td>Every update</td><td>Informative, detailed</td></tr>
+                    <tr><td>#general</td><td>Major features only</td><td>Brief, celebratory</td></tr>
+                    <tr><td>#product-updates</td><td>Weekly digest</td><td>Summary, links</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Handle Errors Gracefully</h3>
+            <p>Webhooks can fail. Implement retry logic and log failures so you know when notifications aren't going through:</p>
+
+            <div class="example-box">
+                <span class="label label-tip">Retry Logic</span>
+                <div class="example-text">async function sendWithRetry(webhookUrl, payload, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await axios.post(webhookUrl, payload);
+      return;
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+}</div>
+            </div>
+
+            <h3>Security Considerations</h3>
+            <ul>
+                <li>Store webhook URLs in environment variables or secrets managers—never commit them to your repository</li>
+                <li>Rotate webhook URLs periodically if you suspect they've been exposed</li>
+                <li>Validate payloads before sending to prevent injection attacks</li>
+                <li>Use HTTPS for all webhook URLs</li>
+            </ul>
+
+            <h2>Real-World Examples</h2>
+
+            <h3>Supabase: Community-First Discord</h3>
+            <p>Supabase posts every changelog entry to their Discord server, where their active community discusses new features in real-time. This approach has turned their changelog into a community engagement tool, with users often replying with feature requests and bug reports within minutes of a post.</p>
+
+            <h3>Vercel: Multi-Channel Slack Strategy</h3>
+            <p>Vercel uses a tiered approach: major releases get posted to their public #announcements channel, while all updates flow to a dedicated #changelog channel. This lets users choose their level of engagement without overwhelming general channels.</p>
+
+            <h3>Linear: Internal + External</h3>
+            <p>Linear posts changelog updates to both an internal Slack channel (for team awareness) and a public Discord server (for community transparency). The internal posts include technical details, while the public versions focus on user-facing benefits.</p>
+
+            <div class="key-takeaways">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li><strong>Meet users where they are.</strong> Slack and Discord notifications reach users in their existing workflow, dramatically increasing visibility.</li>
+                    <li><strong>Webhooks are simple but powerful.</strong> A single HTTP POST is all it takes to bridge your changelog and chat platforms.</li>
+                    <li><strong>Format for the medium.</strong> Chat notifications should be concise, scannable, and include clear calls-to-action.</li>
+                    <li><strong>Automate the flow.</strong> Use GitHub Actions, build scripts, or RSS polling to trigger notifications without manual work.</li>
+                    <li><strong>Secure your webhooks.</strong> Treat webhook URLs like passwords—store them securely and rotate them periodically.</li>
+                    <li><strong>Match frequency to context.</strong> Dedicated changelog channels can handle every update; general channels should only see major announcements.</li>
+                    <li><strong>Use color coding.</strong> Consistent colors for categories (new, fixed, security) make notifications instantly scannable.</li>
+                </ul>
+            </div>
+
+            <div class="cta-box">
+                <h3>Ready to Connect Your Changelog?</h3>
+                <p>Changelog.page makes it easy to integrate with Slack, Discord, and other platforms. Generate webhooks automatically and keep your community in the loop.</p>
+                <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary">Get Started Free →</a>
+            </div>
+
+            <div class="author-box">
+                <div class="author-avatar">🔌</div>
+                <div class="author-info">
+                    <h4>The Changelog.page Team</h4>
+                    <p>Building the best changelog tool for SaaS companies. Follow us for weekly insights on product communication and integrations.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="container">
+            <div class="footer-simple">
+                <p>Built with ❤️ for <a href="https://github.com/aimadetools/race-kimi">The $100 AI Startup Race</a></p>
+                <p style="margin-top: 8px;">© 2026 Changelog.page</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -94,6 +94,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://changelog.page/integrate-changelog-slack-discord.html</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://changelog.page/complete-guide-to-changelog-design.html</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
