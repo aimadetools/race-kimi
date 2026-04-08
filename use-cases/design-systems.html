@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog for Design Systems — Keep Teams in Sync</title>
+  <meta name="description" content="The perfect changelog solution for design systems. Announce component updates, track breaking changes, and keep designers and developers aligned.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Changelog for Design Systems — Keep Teams in Sync">
+  <meta property="og:description" content="Announce component updates, track breaking changes, and keep designers and developers aligned with beautiful changelogs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://changelog.page/use-cases/design-systems">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog for Design Systems">
+  <meta name="twitter:description" content="Announce component updates and keep designers and developers aligned.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Plausible Analytics -->
+  <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a25;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-dark: #4f46e5;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --pink: #ec4899;
+      --orange: #f97316;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Navigation */
+    nav {
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(236, 72, 153, 0.1);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: #f472b6;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      position: relative;
+    }
+    
+    .hero h1 span {
+      background: linear-gradient(135deg, #f472b6, var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+    
+    /* Section Styles */
+    .section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: rgba(236, 72, 153, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(236, 72, 153, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    
+    /* Component Preview Section */
+    .preview-section {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .preview-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    
+    .component-showcase {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+    
+    .component-header {
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .component-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .component-tab {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .component-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .component-tab:not(.active) {
+      color: var(--text-secondary);
+    }
+    
+    .component-tab:not(.active):hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+    
+    .component-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 400px;
+    }
+    
+    .component-preview {
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+    
+    .component-details {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .component-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.875rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      width: fit-content;
+    }
+    
+    .component-tag.breaking {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .component-tag.feature {
+      background: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    .component-tag.deprecated {
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .component-details h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    
+    .component-details p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .component-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .component-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Example Button Component */
+    .ds-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .ds-button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+    }
+    
+    .ds-button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    }
+    
+    .ds-button-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .ds-button.secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    
+    .ds-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+    }
+    
+    .ds-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    /* Workflow Section */
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    .workflow-step {
+      text-align: center;
+      position: relative;
+    }
+    
+    .workflow-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -1rem;
+      top: 2rem;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+    }
+    
+    .workflow-number {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 auto 1rem;
+    }
+    
+    .workflow-step h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .workflow-step p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    /* Integration Cards */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    .integration-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .integration-card:hover {
+      border-color: rgba(236, 72, 153, 0.3);
+    }
+    
+    .integration-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.2));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .integration-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .integration-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-top: 1px solid var(--border);
+    }
+    
+    .cta-content {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+    }
+    
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .cta-secondary:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .component-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .component-preview {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .workflow-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .workflow-step:not(:last-child)::after {
+        display: none;
+      }
+      
+      .integration-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <line x1="10" y1="9" x2="8" y2="9"></line>
+          </svg>
+        </div>
+        Changelog.page
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/use-cases">Use Cases</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/guides">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">🎨 For Design System Teams</div>
+    <h1>Changelogs for <span>Design Systems</span></h1>
+    <p>Keep designers and developers aligned. Announce component updates, track breaking changes, and document design decisions with beautiful changelogs built for design system teams.</p>
+  </section>
+
+  <!-- Why Design Systems Need Changelogs -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Why Design Systems Need Dedicated Changelogs</h2>
+      <p>Design systems are living products. Your team needs to know what changed, why it changed, and how to adapt.</p>
+    </div>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Component-Level Updates</h3>
+        <p>Document changes to individual components with visual diffs. Show before/after states for design and code changes.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">⚠️</div>
+        <h3>Breaking Change Alerts</h3>
+        <p>When you change a token name or component API, developers need to know immediately. Flag breaking changes prominently.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Version Alignment</h3>
+        <p>Keep design files, component library, and documentation in sync. Tag entries with version numbers that match your npm package.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Design Token Changes</h3>
+        <p>Document changes to colors, typography, spacing, and other design tokens. Show the impact across the entire system.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Platform-Specific Updates</h3>
+        <p>iOS, Android, Web, React Native — tag entries by platform so teams only see changes relevant to their work.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Searchable History</h3>
+        <p>Find when a component was changed, who changed it, and why. Your changelog becomes your design system archive.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Component Showcase -->
+  <section class="preview-section">
+    <div class="preview-container">
+      <div class="section-header">
+        <h2>Document Component Changes Visually</h2>
+        <p>Show, don't just tell. Add screenshots, code snippets, and migration guides to every component update.</p>
+      </div>
+      
+      <div class="component-showcase">
+        <div class="component-header">
+          <div class="component-tabs">
+            <div class="component-tab active">Button</div>
+            <div class="component-tab">Input</div>
+            <div class="component-tab">Card</div>
+            <div class="component-tab">Modal</div>
+          </div>
+        </div>
+        
+        <div class="component-content">
+          <div class="component-preview">
+            <div class="ds-button-group">
+              <button class="ds-button primary">Primary</button>
+              <button class="ds-button secondary">Secondary</button>
+            </div>
+          </div>
+          
+          <div class="component-details">
+            <span class="component-tag breaking">Breaking Change</span>
+            <h3>Button Component v3.0</h3>
+            <p>We've redesigned the Button component with new size variants and improved accessibility. The <code>size</code> prop now accepts "sm", "md", "lg", and "xl" instead of numeric values.</p>
+            
+            <div class="component-meta">
+              <div class="component-meta-item">
+                <span>📅</span> Jan 15, 2024
+              </div>
+              <div class="component-meta-item">
+                <span>👤</span> @sarah-design
+              </div>
+              <div class="component-meta-item">
+                <span>🏷️</span> v3.0.0
+              </div>
+              <div class="component-meta-item">
+                <span>🌐</span> Web, React
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Your Design System Workflow</h2>
+      <p>From Figma to production, keep every stakeholder informed at every step.</p>
+    </div>
+    
+    <div class="workflow-grid">
+      <div class="workflow-step">
+        <div class="workflow-number">1</div>
+        <h3>Design in Figma</h3>
+        <p>Make changes to components and document decisions in changelog entries.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="workflow-number">2</div>
+        <h3>Review & Approve</h3>
+        <p>Design system team reviews changes and approves for development.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="workflow-number">3</div>
+        <h3>Develop & Test</h3>
+        <p>Engineers implement changes and add migration guides to the changelog.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="workflow-number">4</div>
+        <h3>Publish & Notify</h3>
+        <p>Release the update and notify all teams via RSS, Slack, or email.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrations -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Works With Your Design Stack</h2>
+      <p>Connect with the tools your design system team already uses.</p>
+    </div>
+    
+    <div class="integration-grid">
+      <div class="integration-card">
+        <div class="integration-icon">🎨</div>
+        <h3>Figma</h3>
+        <p>Embed Figma prototypes and component frames directly in changelog entries. Show visual changes side-by-side.</p>
+      </div>
+      
+      <div class="integration-card">
+        <div class="integration-icon">💻</div>
+        <h3>Storybook</h3>
+        <p>Link to Storybook stories for interactive component documentation. Every changelog entry connects to live examples.</p>
+      </div>
+      
+      <div class="integration-card">
+        <div class="integration-icon">📦</div>
+        <h3>npm/GitHub</h3>
+        <p>Tag entries with package versions. Link to GitHub releases, PRs, and commits for full traceability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to Level Up Your Design System?</h2>
+      <p>Create a changelog that keeps your design system team aligned. Free for open source design systems.</p>
+      <a href="/guides/getting-started" class="cta-button">Get Started Free →</a>
+      <a href="/use-cases" class="cta-secondary">View All Use Cases</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Changelog.page — Built for design system teams</p>
+  </footer>
+</body>
+</html>

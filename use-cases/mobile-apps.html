@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog for Mobile Apps — Drive Updates & Engagement</title>
+  <meta name="description" content="The perfect changelog solution for mobile app developers. Announce new features, drive app updates, and keep users engaged with beautiful release notes.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Changelog for Mobile Apps — Drive Updates & Engagement">
+  <meta property="og:description" content="Announce new features, drive app updates, and keep users engaged with beautiful release notes for iOS and Android.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://changelog.page/use-cases/mobile-apps">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog for Mobile Apps">
+  <meta name="twitter:description" content="Announce new features, drive app updates, and keep users engaged.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Plausible Analytics -->
+  <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a25;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-dark: #4f46e5;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --ios: #007AFF;
+      --android: #3DDC84;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Navigation */
+    nav {
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: var(--accent-light);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      position: relative;
+    }
+    
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+    
+    .platform-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .platform-badge.ios {
+      background: rgba(0, 122, 255, 0.1);
+      border: 1px solid rgba(0, 122, 255, 0.3);
+      color: #4da3ff;
+    }
+    
+    .platform-badge.android {
+      background: rgba(61, 220, 132, 0.1);
+      border: 1px solid rgba(61, 220, 132, 0.3);
+      color: #5ee69a;
+    }
+    
+    /* Section Styles */
+    .section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    
+    /* Screenshot Section */
+    .screenshot-section {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .screenshot-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .phone-mockup {
+      background: var(--bg-tertiary);
+      border-radius: 32px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    
+    .phone-screen {
+      background: var(--bg-primary);
+      border-radius: 24px;
+      aspect-ratio: 9/19;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      height: 24px;
+      background: var(--bg-tertiary);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      z-index: 10;
+    }
+    
+    .phone-content {
+      padding: 3rem 1.25rem 1.25rem;
+      height: 100%;
+      overflow-y: auto;
+    }
+    
+    .phone-header {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .phone-entry {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .phone-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .phone-entry-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    
+    .phone-entry-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .phone-entry-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    .phone-entry-tag {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--accent-light);
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+    
+    /* Stats Section */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    /* App Store Features */
+    .appstore-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .appstore-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    
+    .appstore-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+    
+    .appstore-icon.ios {
+      background: linear-gradient(135deg, #007AFF, #5856D6);
+    }
+    
+    .appstore-icon.android {
+      background: linear-gradient(135deg, #3DDC84, #00C853);
+    }
+    
+    .appstore-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .appstore-content p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 1rem;
+    }
+    
+    .appstore-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .appstore-tag {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-top: 1px solid var(--border);
+    }
+    
+    .cta-content {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+    }
+    
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .cta-secondary:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .screenshot-grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .appstore-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <line x1="10" y1="9" x2="8" y2="9"></line>
+          </svg>
+        </div>
+        Changelog.page
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/use-cases">Use Cases</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/guides">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">📱 Mobile-First Design</div>
+    <h1>Changelogs for <span>Mobile Apps</span></h1>
+    <p>Drive app updates, reduce churn, and keep users excited about your latest features. The changelog solution that makes release notes worth reading.</p>
+    <div class="platform-badges">
+      <span class="platform-badge ios">🍎 iOS</span>
+      <span class="platform-badge android">🤖 Android</span>
+    </div>
+  </section>
+
+  <!-- Why Mobile Apps Need Changelogs -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Why Mobile Apps Need Better Release Notes</h2>
+      <p>App Store release notes are limited. A dedicated changelog gives you space to tell your product story.</p>
+    </div>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Drive App Updates</h3>
+        <p>Show users what they're missing. Detailed changelogs with screenshots and feature highlights motivate users to update to the latest version.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Rich Media Support</h3>
+        <p>Go beyond text. Add screenshots, GIFs, and videos that showcase new features in action. Visual changelogs get 3x more engagement.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Push Notification Alternative</h3>
+        <p>Let users subscribe to your changelog RSS instead of sending intrusive push notifications. Respect user attention while staying connected.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Track Feature Adoption</h3>
+        <p>Link changelog entries to in-app feature announcements. See which updates drive the most engagement and refine your release strategy.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Shareable on Social</h3>
+        <p>Link directly to feature announcements on Twitter, LinkedIn, or in your newsletter. Each changelog entry is a marketing opportunity.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>SEO for App Store</h3>
+        <p>Your changelog pages rank on Google, driving organic discovery. Users searching for features find your app through your changelog.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile Preview -->
+  <section class="screenshot-section">
+    <div class="screenshot-container">
+      <div class="section-header">
+        <h2>Beautiful on Every Device</h2>
+        <p>Your changelog looks stunning on phones, tablets, and desktops. Responsive design that puts your content first.</p>
+      </div>
+      
+      <div class="screenshot-grid">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-content">
+              <div class="phone-header">What's New</div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Jan 15, 2024</div>
+                <div class="phone-entry-title">Dark Mode 🌙</div>
+                <div class="phone-entry-desc">Easy on the eyes. Switch automatically based on your system preferences.</div>
+                <span class="phone-entry-tag">Feature</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Jan 10, 2024</div>
+                <div class="phone-entry-title">Offline Sync</div>
+                <div class="phone-entry-desc">Continue working without internet. Changes sync when you're back online.</div>
+                <span class="phone-entry-tag">Improvement</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Jan 5, 2024</div>
+                <div class="phone-entry-title">Bug Fixes</div>
+                <div class="phone-entry-desc">Fixed crash on iPad when rotating device. Improved startup time by 40%.</div>
+                <span class="phone-entry-tag">Fix</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-content">
+              <div class="phone-header">v3.2.0</div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Dec 20, 2023</div>
+                <div class="phone-entry-title">Widgets ✨</div>
+                <div class="phone-entry-desc">Add beautiful home screen widgets. See your data at a glance without opening the app.</div>
+                <span class="phone-entry-tag">Feature</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Dec 18, 2023</div>
+                <div class="phone-entry-title">Siri Shortcuts</div>
+                <div class="phone-entry-desc">Automate common tasks with Siri. "Hey Siri, start my workout in App."</div>
+                <span class="phone-entry-tag">Integration</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Dec 15, 2023</div>
+                <div class="phone-entry-title">Performance Boost</div>
+                <div class="phone-entry-desc">30% faster list loading. Smoother animations throughout the app.</div>
+                <span class="phone-entry-tag">Improvement</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-content">
+              <div class="phone-header">Changelog</div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Dec 1, 2023</div>
+                <div class="phone-entry-title">Share Extension</div>
+                <div class="phone-entry-desc">Share content to our app from any other app. Photos, links, text — all supported.</div>
+                <span class="phone-entry-tag">Feature</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Nov 28, 2023</div>
+                <div class="phone-entry-title">iCloud Backup</div>
+                <div class="phone-entry-desc">Your data automatically backs up to iCloud. Restore on any device.</div>
+                <span class="phone-entry-tag">Feature</span>
+              </div>
+              
+              <div class="phone-entry">
+                <div class="phone-entry-date">Nov 25, 2023</div>
+                <div class="phone-entry-title">Haptic Feedback</div>
+                <div class="phone-entry-desc">Feel the difference. Subtle haptics make interactions more satisfying.</div>
+                <span class="phone-entry-tag">UX</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section">
+    <div class="section-header">
+      <h2>The Impact of Great Release Notes</h2>
+      <p>Data from apps using dedicated changelogs vs. App Store release notes alone.</p>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">+47%</div>
+        <div class="stat-label">Update Rate</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">3.2x</div>
+        <div class="stat-label">Feature Discovery</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">-23%</div>
+        <div class="stat-label">Support Tickets</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">+156%</div>
+        <div class="stat-label">Social Shares</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Features -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Platform-Specific Features</h2>
+      <p>Tailored for iOS and Android development workflows.</p>
+    </div>
+    
+    <div class="appstore-grid">
+      <div class="appstore-card">
+        <div class="appstore-icon ios">🍎</div>
+        <div class="appstore-content">
+          <h3>iOS & App Store</h3>
+          <p>Optimized for Apple's ecosystem. Support for iOS-specific features like widgets, Shortcuts, and Live Activities in your changelog entries.</p>
+          <div class="appstore-features">
+            <span class="appstore-tag">TestFlight Integration</span>
+            <span class="appstore-tag">iOS Widgets</span>
+            <span class="appstore-tag">Shortcuts</span>
+            <span class="appstore-tag">Live Activities</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="appstore-card">
+        <div class="appstore-icon android">🤖</div>
+        <div class="appstore-content">
+          <h3>Android & Play Store</h3>
+          <p>Built for Android's flexibility. Document Material You theming, instant apps, and Play Store feature changes with dedicated templates.</p>
+          <div class="appstore-features">
+            <span class="appstore-tag">Material You</span>
+            <span class="appstore-tag">Instant Apps</span>
+            <span class="appstore-tag">Play Console</span>
+            <span class="appstore-tag">App Bundles</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to Upgrade Your Release Notes?</h2>
+      <p>Create a stunning changelog for your mobile app in minutes. Free for indie developers and small teams.</p>
+      <a href="/guides/getting-started" class="cta-button">Get Started Free →</a>
+      <a href="/use-cases" class="cta-secondary">View All Use Cases</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Changelog.page — Built for mobile developers, by mobile developers</p>
+  </footer>
+</body>
+</html>
