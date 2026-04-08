@@ -114,7 +114,7 @@ Important for growth and user retention, but not blocking launch.
 - [x] **SEO Optimization** (Partially moved to P1) ⏩ IN PROGRESS
   - [x] Create sitemap.xml — submit to Google Search Console
   - [x] Create robots.txt — guide search engine crawlers
-  - [ ] Add structured data (JSON-LD) to key pages
+  - [x] Add structured data (JSON-LD) to key pages ✅ COMPLETED
   - Keyword research ("changelog tool", "saas changelog", etc.)
   - Optimize all pages for target keywords
   - Submit to Google Search Console
