@@ -82,7 +82,7 @@ These are essential for launch and first customer acquisition.
   - [x] Create comparison page: Changelog.page vs Headway vs Beamer ✅ COMPLETED
   - [ ] Write case study template for future customer stories
   - [x] Write "Changelog Analytics: What to Track and Why" — metrics guide ✅ COMPLETED
-  - [ ] Write "Open Source Changelogs: Best Practices for GitHub Projects" — target dev community
+  - [x] Write "Open Source Changelogs: Best Practices for GitHub Projects" — target dev community ✅ COMPLETED
   - [ ] Create use case pages: Changelog for API products, Mobile apps, Design systems
   - [x] Add meta descriptions to all pages for better CTR (SEO) ✅ COMPLETED
 

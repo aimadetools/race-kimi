@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Source Changelogs: Best Practices for GitHub Projects | Changelog.page</title>
+    <meta name="description" content="Learn how to write effective changelogs for open source projects. Best practices, examples from popular GitHub repositories, and templates for your OSS project.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Open Source Changelogs: Best Practices for GitHub Projects">
+    <meta property="og:description" content="Learn how to write effective changelogs for open source projects with real examples from popular GitHub repositories.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/open-source-changelogs-best-practices">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Open Source Changelogs: Best Practices for GitHub Projects">
+    <meta name="twitter:description" content="Learn how to write effective changelogs for open source projects with real examples from popular GitHub repositories.">
+    <meta name="twitter:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Open Source Changelogs: Best Practices for GitHub Projects",
+        "description": "Learn how to write effective changelogs for open source projects with real examples from popular GitHub repositories.",
+        "author": {
+            "@type": "Organization",
+            "name": "Changelog.page"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Changelog.page",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://changelog.page/favicon.svg"
+            }
+        },
+        "datePublished": "2026-04-08",
+        "dateModified": "2026-04-08",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://changelog.page/open-source-changelogs-best-practices"
+        }
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0f;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f8fafc;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #f8fafc;
+        }
+        
+        /* Article Header */
+        .article-header {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+            padding: 4rem 2rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .article-header-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        
+        .article-category {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .article-title {
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .article-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        /* Article Content */
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .article-content h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 3rem 0 1.25rem;
+            color: #f8fafc;
+        }
+        
+        .article-content h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem;
+            color: #f8fafc;
+        }
+        
+        .article-content p {
+            margin-bottom: 1.25rem;
+            color: #cbd5e1;
+        }
+        
+        .article-content ul, .article-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .article-content li {
+            margin-bottom: 0.75rem;
+            color: #cbd5e1;
+        }
+        
+        .article-content strong {
+            color: #f8fafc;
+            font-weight: 600;
+        }
+        
+        .article-content a {
+            color: #818cf8;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(129, 140, 248, 0.3);
+            transition: border-color 0.2s;
+        }
+        
+        .article-content a:hover {
+            border-color: #818cf8;
+        }
+        
+        /* Code blocks */
+        .code-block {
+            background: #0f0f16;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            margin: 0;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            color: #818cf8;
+        }
+        
+        /* Example boxes */
+        .example-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .example-box h4 {
+            color: #818cf8;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .example-box h4::before {
+            content: "→";
+            color: #6366f1;
+        }
+        
+        /* Callout boxes */
+        .callout {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #6366f1;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .callout-tip {
+            border-left-color: #10b981;
+        }
+        
+        .callout-warning {
+            border-left-color: #f59e0b;
+        }
+        
+        .callout h4 {
+            color: #f8fafc;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .comparison-table th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #f8fafc;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+        }
+        
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding-left: 1.75rem;
+            position: relative;
+        }
+        
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        /* Author box */
+        .author-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .author-info h4 {
+            color: #f8fafc;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-info p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .cta-section h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.75rem;
+            margin-top: 0;
+        }
+        
+        .cta-section p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .article-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .article-content h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📋</div>
+                <span>Changelog.page</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/features.html">Features</a></li>
+                <li><a href="/pricing.html">Pricing</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/guides/index.html">Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="article-header-container">
+            <div class="article-meta">
+                <span class="article-category">For Developers</span>
+                <span>•</span>
+                <span>April 8, 2026</span>
+                <span>•</span>
+                <span>14 min read</span>
+            </div>
+            <h1 class="article-title">Open Source Changelogs: Best Practices for GitHub Projects</h1>
+            <p class="article-subtitle">Learn how maintainers of popular open source projects craft changelogs that keep contributors engaged and users informed. Complete with templates and real-world examples.</p>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <article class="article-content">
+        <p>A well-maintained changelog is one of the most valuable yet underappreciated assets in open source software. It's the bridge between maintainers pouring hours into code and users understanding the value of each release. Yet many GitHub projects either skip changelogs entirely or treat them as afterthoughts—a missed opportunity to build trust and community.</p>
+
+        <p>In this guide, we'll examine how successful open source projects handle changelogs, from React to VS Code. You'll learn the conventions that make changelogs useful for contributors, the formats that scale with your project, and how to automate the process without losing the human touch.</p>
+
+        <h2>Why Open Source Changelogs Matter More</h2>
+
+        <p>Open source projects face unique communication challenges. Your users range from casual developers who just want to know if they should upgrade, to power users who need to understand breaking changes before they migrate, to contributors deciding whether to invest their time in your project.</p>
+
+        <p>A good changelog serves all of these audiences:</p>
+
+        <ul>
+            <li><strong>For users:</strong> It answers "Should I upgrade?" and "What will break?"</li>
+            <li><strong>For contributors:</strong> It shows the project is actively maintained and documents what work is valued</li>
+            <li><strong>For maintainers:</strong> It reduces duplicate issues and support questions about changes</li>
+            <li><strong>For decision-makers:</strong> It demonstrates project maturity when evaluating dependencies</li>
+        </ul>
+
+        <div class="example-box">
+            <h4>Real Example: React's Changelog Approach</h4>
+            <p>React maintains separate changelogs for different audiences:</p>
+            <ul>
+                <li><strong>CHANGELOG.md</strong> — Technical details for contributors</li>
+                <li><strong>Blog posts</strong> — User-friendly release announcements with context</li>
+                <li><strong>Release notes</strong> — Summaries on GitHub Releases for quick scanning</li>
+            </ul>
+            <p>This multi-layer approach ensures everyone gets the information they need in the format they prefer.</p>
+        </div>
+
+        <h2>The Keep a Changelog Standard</h2>
+
+        <p>The most widely adopted changelog format in open source is <a href="https://keepachangelog.com/" target="_blank" rel="noopener">Keep a Changelog</a>. It provides a simple, human-readable structure that has become the de facto standard for GitHub projects.</p>
+
+        <h3>Core Principles</h3>
+
+        <ol>
+            <li><strong>Changelogs are for humans, not machines.</strong> Write for your users, not your parser.</li>
+            <li><strong>There should be an entry for every single version.</strong> No gaps, no matter how small the change.</li>
+            <li><strong>Same types of changes should be grouped.</strong> Use categories like Added, Changed, Deprecated, Removed, Fixed, and Security.</li>
+            <li><strong>Versions and sections should be linkable.</strong> Use Markdown headers that generate anchors.</li>
+            <li><strong>The latest version comes first.</strong> Reverse chronological order makes scanning easier.</li>
+            <li><strong>Include release dates.</strong> ISO 8601 format (YYYY-MM-DD) works everywhere.</li>
+        </ol>
+
+        <h3>The Standard Format</h3>
+
+        <div class="code-block">
+<pre># Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- New features that have been added
+
+### Changed
+- Changes in existing functionality
+
+### Deprecated
+- Soon-to-be removed features
+
+### Removed
+- Now removed features
+
+### Fixed
+- Any bug fixes
+
+### Security
+- Security improvements
+
+## [1.0.0] - 2026-04-08
+
+### Added
+- Initial release with core functionality
+- Support for Markdown rendering
+- Three built-in themes
+
+[Unreleased]: https://github.com/user/repo/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/user/repo/releases/tag/v1.0.0</pre>
+        </div>
+
+        <div class="callout callout-tip">
+            <h4>💡 Pro Tip</h4>
+            <p>The "Unreleased" section is your friend. Keep it updated as you merge PRs, then simply rename it when you cut a release. This ensures you never forget what changed.</p>
+        </div>
+
+        <h2>Semantic Versioning: The Companion Standard</h2>
+
+        <p>Changelogs work best when paired with <a href="https://semver.org/" target="_blank" rel="noopener">Semantic Versioning</a> (SemVer). The structure of your version numbers should tell users what to expect:</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Format</th>
+                    <th>What It Means</th>
+                    <th>Changelog Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MAJOR</strong></td>
+                    <td>X.y.z</td>
+                    <td>Breaking changes—users must modify their code</td>
+                    <td>Removed, Changed (breaking)</td>
+                </tr>
+                <tr>
+                    <td><strong>MINOR</strong></td>
+                    <td>x.Y.z</td>
+                    <td>New features—backwards compatible</td>
+                    <td>Added, Changed (non-breaking)</td>
+                </tr>
+                <tr>
+                    <td><strong>PATCH</strong></td>
+                    <td>x.y.Z</td>
+                    <td>Bug fixes—backwards compatible</td>
+                    <td>Fixed, Security</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Learning from Popular Projects</h2>
+
+        <h3>VS Code: Detailed but Scannable</h3>
+
+        <p>VS Code's changelog is a masterclass in organization. Each release is massive, yet easy to navigate because of their consistent structure:</p>
+
+        <ul>
+            <li><strong>Executive summary</strong> at the top for users who just want highlights</li>
+            <li><strong>Theme-organized sections</strong> (Workbench, Editor, Terminal, etc.)</li>
+            <li><strong>Issue/PR references</strong> for every change</li>
+            <li><strong>Contributor acknowledgments</strong> to build community</li>
+        </ul>
+
+        <div class="example-box">
+            <h4>VS Code Release Note Style</h4>
+            <p><em>"Preview: Drag and drop problems, search results, and symbols. This milestone we're enabling new drag and drop features in the editor...</em></p>
+            <p><em>Contributions to drag and drop: @bpasero, @mjbvz (#12345)"</em></p>
+        </div>
+
+        <h3>Node.js: Security-Focused</h3>
+
+        <p>Node.js handles changelogs with the seriousness you'd expect from infrastructure software:</p>
+
+        <ul>
+            <li>Separate changelogs for each release line (LTS strategy)</li>
+            <li>Security releases get dedicated sections with CVE references</li>
+            <li>Breaking changes are explicitly called out with migration guides</li>
+            <li>Deprecation notices include timeline for removal</li>
+        </ul>
+
+        <h3>Vue.js: Community-Centric</h3>
+
+        <p>Vue's changelog reads like a community newsletter:</p>
+
+        <ul>
+            <li>Friendly tone that acknowledges contributor efforts</li>
+            <li>Links to documentation updates alongside code changes</li>
+            <li>Migration guides for breaking changes</li>
+            <li>Explicit thanks to sponsors and significant contributors</li>
+        </ul>
+
+        <h2>Writing Great Changelog Entries</h2>
+
+        <p>The format is just the container. What you write inside matters more. Here's how to craft entries that actually help your users:</p>
+
+        <h3>Start with the User Impact</h3>
+
+        <p>Bad: <em>"Refactored the WidgetManager class"</em></p>
+        <p>Good: <em>"Widget loading is now 3x faster for pages with 50+ widgets"</em></p>
+
+        <h3>Include Migration Instructions</h3>
+
+        <p>For breaking changes, always include before/after examples:</p>
+
+        <div class="code-block">
+<pre>### Changed
+- The `formatDate()` function now requires a locale parameter
+  
+  **Migration:**
+  ```javascript
+  // Before
+  formatDate(date)
+  
+  // After
+  formatDate(date, 'en-US')
+  ```</pre>
+        </div>
+
+        <h3>Reference Issues and PRs</h3>
+
+        <p>Linking to issues and pull requests provides context for users who want to dig deeper:</p>
+
+        <div class="code-block">
+<pre>### Fixed
+- Memory leak in long-running processes (#456, thanks @contributor)</pre>
+        </div>
+
+        <h3>Use Consistent Categories</h3>
+
+        <p>Stick to the standard categories but add project-specific ones as needed:</p>
+
+        <ul class="checklist">
+            <li><strong>Added</strong> — New features</li>
+            <li><strong>Changed</strong> — Changes to existing functionality</li>
+            <li><strong>Deprecated</strong> — Soon-to-be removed features</li>
+            <li><strong>Removed</strong> — Now removed features</li>
+            <li><strong>Fixed</strong> — Bug fixes</li>
+            <li><strong>Security</strong> — Security fixes</li>
+            <li><strong>Performance</strong> — Speed improvements (optional)</li>
+            <li><strong>Documentation</strong> — Docs changes only (optional)</li>
+        </ul>
+
+        <h2>Automation Without Losing Humanity</h2>
+
+        <p>As your project grows, maintaining changelogs manually becomes burdensome. But automation shouldn't mean robotic release notes. Here's how to strike the balance:</p>
+
+        <h3>GitHub Releases API</h3>
+
+        <p>The simplest automation is using GitHub's built-in release notes generator:</p>
+
+        <ol>
+            <li>Go to Releases → Draft a new release</li>
+            <li>Click "Generate release notes"</li>
+            <li>Edit the auto-generated content to add context</li>
+            <li>Publish</li>
+        </ol>
+
+        <p>This pulls in PR titles and contributor information, giving you a starting point that you can humanize.</p>
+
+        <h3>Conventional Commits</h3>
+
+        <p>The <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener">Conventional Commits</a> specification allows tools to automatically categorize changes:</p>
+
+        <div class="code-block">
+<pre>feat: add user authentication
+fix: resolve memory leak in data processing
+docs: update API reference
+BREAKING CHANGE: drop support for Node 14</pre>
+        </div>
+
+        <p>Tools like <code>semantic-release</code> can then automatically generate changelogs and version bumps based on these commit messages.</p>
+
+        <div class="callout callout-warning">
+            <h4>⚠️ Warning</h4>
+            <p>Conventional Commits work best when enforced. Consider using commitlint or pre-commit hooks. Without discipline, you'll end up with uncategorized changes that require manual cleanup.</p>
+        </div>
+
+        <h3>Changelog Generation Tools</h3>
+
+        <p>Several tools can help automate changelog maintenance:</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Best For</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>GitHub Releases</strong></td>
+                    <td>Quick start</td>
+                    <td>Built-in, no setup required</td>
+                </tr>
+                <tr>
+                    <td><strong>semantic-release</strong></td>
+                    <td>Fully automated</td>
+                    <td>Requires Conventional Commits</td>
+                </tr>
+                <tr>
+                    <td><strong>auto-changelog</strong></td>
+                    <td>Customization</td>
+                    <td>Handlebars templates for full control</td>
+                </tr>
+                <tr>
+                    <td><strong>release-it</strong></td>
+                    <td>Interactive releases</td>
+                    <td>Guides you through the process</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Handling Special Cases</h2>
+
+        <h3>Security Releases</h3>
+
+        <p>Security fixes deserve special treatment:</p>
+
+        <ul>
+            <li>Create a dedicated Security section in your changelog</li>
+            <li>Include CVE identifiers when applicable</li>
+            <li>Document affected versions clearly</li>
+            <li>Provide workarounds for users who can't upgrade immediately</li>
+            <li>Credit security researchers who reported the issue</li>
+        </ul>
+
+        <h3>Breaking Changes</h3>
+
+        <p>Breaking changes are the most important entries in your changelog:</p>
+
+        <ul>
+            <li>Lead with the impact: "Applications using X will need to update Y"</li>
+            <li>Provide clear migration steps</li>
+            <li>Link to detailed migration guides for complex changes</li>
+            <li>Indicate the timeline for deprecated features</li>
+        </ul>
+
+        <h3>Deprecation Notices</h3>
+
+        <p>Give users plenty of warning before removing features:</p>
+
+        <div class="code-block">
+<pre>### Deprecated
+- The `legacyAuth()` method is deprecated and will be removed in v3.0.0
+  - Use `newAuth()` instead
+  - See migration guide: https://docs.example.com/migration</pre>
+        </div>
+
+        <h2>Template for Your Project</h2>
+
+        <p>Here's a complete template you can use as your starting point:</p>
+
+        <div class="code-block">
+<pre># Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.0] - 2026-04-08
+
+### Added
+- Initial stable release
+- Core functionality for [describe your project]
+- Documentation site at https://docs.example.com
+
+### Security
+- Implemented rate limiting on API endpoints
+
+[Unreleased]: https://github.com/USERNAME/REPO/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/USERNAME/REPO/releases/tag/v1.0.0</pre>
+        </div>
+
+        <h2>Common Mistakes to Avoid</h2>
+
+        <h3>1. Commit Logs as Changelogs</h3>
+
+        <p>Commit messages are for developers during development. Changelogs are for users after release. They're different audiences with different needs.</p>
+
+        <h3>2. Vague Entries</h3>
+
+        <p>"Fixed bugs" or "Improved performance" tells users nothing. Be specific about what was fixed and how performance improved.</p>
+
+        <h3>3. Missing Migration Guides</h3>
+
+        <p>Every breaking change should include clear migration instructions. Assume your users are busy and frustrated—they need help, not a puzzle.</p>
+
+        <h3>4. Inconsistent Formatting</h3>
+
+        <p>Pick a format and stick to it. Inconsistency makes scanning difficult and suggests the project lacks attention to detail.</p>
+
+        <h3>5. Forgetting the Unreleased Section</h3>
+
+        <p>The gap between releases is where changelogs fall apart. Keep an Unreleased section updated as you merge changes.</p>
+
+        <h2>Measuring Changelog Success</h2>
+
+        <p>How do you know if your changelog is working? Track these indicators:</p>
+
+        <ul>
+            <li><strong>Upgrade velocity:</strong> Are users upgrading promptly after releases?</li>
+            <li><strong>Support questions:</strong> Are you getting fewer "what changed?" questions?</li>
+            <li><strong>Issue quality:</strong> Are bug reports more specific after users read changelogs?</li>
+            <li><strong>Contributor engagement:</strong> Do contributors reference changelogs when proposing changes?</li>
+        </ul>
+
+        <h2>Key Takeaways</h2>
+
+        <p>Maintaining a great changelog for your open source project isn't just documentation—it's community building. Here's what to remember:</p>
+
+        <ol>
+            <li><strong>Adopt Keep a Changelog format</strong> — It's the standard for a reason</li>
+            <li><strong>Use Semantic Versioning</strong> — Communicate compatibility clearly</li>
+            <li><strong>Write for users, not machines</strong> — Focus on impact, not implementation</li>
+            <li><strong>Automate where it helps</strong> — But don't lose the human touch</li>
+            <li><strong>Treat breaking changes with care</strong> — Always provide migration paths</li>
+            <li><strong>Maintain an Unreleased section</strong> — Don't let changes pile up</li>
+            <li><strong>Credit contributors</strong> — Changelogs are community celebration too</li>
+        </ol>
+
+        <p>The best open source projects treat changelogs as first-class artifacts. They're not afterthoughts—they're an essential part of the release process that respects your users' time and attention.</p>
+
+        <div class="cta-section">
+            <h3>Create Beautiful Changelogs for Your Project</h3>
+            <p>Turn your Markdown changelogs into stunning websites with automatic RSS feeds, SEO optimization, and three beautiful themes.</p>
+            <a href="/" class="btn btn-primary">Get Started Free →</a>
+        </div>
+
+        <div class="author-box">
+            <div class="author-avatar">CP</div>
+            <div class="author-info">
+                <h4>Changelog.page Team</h4>
+                <p>Building the changelog tool we wish we had. Follow us for more guides on changelog best practices.</p>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2026 Changelog.page — Built for developers who care about communication</p>
+        </div>
+    </footer>
+</body>
+</html>
