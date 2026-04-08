@@ -74,6 +74,7 @@ These are essential for launch and first customer acquisition.
   - [x] Write "10 SaaS Changelogs That Drive Engagement" blog post
   - [x] Write "How to Write Changelogs Your Customers Actually Read" guide
   - [x] Create changelog template library (5 templates) ✅ COMPLETED
+  - [ ] Write "The Anatomy of a Perfect Changelog Entry" — deep dive guide
 
 - [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
@@ -96,11 +97,11 @@ These are essential for launch and first customer acquisition.
   - [x] Add feed auto-discovery meta tags
   - [x] Validate feeds with W3C validator
 
-- [ ] **Documentation**
-  - Write Getting Started guide
-  - Write Custom Domain setup guide
-  - Create FAQ page
-  - Record 2-minute setup video (Loom)
+- [ ] **Documentation** ⏩ NEXT PRIORITY
+  - [ ] Write Getting Started guide — guides users from zero to first changelog
+  - [ ] Create FAQ page — answers common questions, reduces support
+  - [ ] Write Custom Domain setup guide — needed for Pro conversions
+  - [ ] Record 2-minute setup video (Loom) — future, not critical
 
 ---
 
@@ -110,10 +111,11 @@ Important for growth and user retention, but not blocking launch.
 
 ### Marketing & Growth
 
-- [ ] **SEO Optimization**
+- [ ] **SEO Optimization** (Partially moved to P1)
+  - [P1] Create sitemap.xml — submit to Google Search Console
+  - [P1] Add structured data (JSON-LD) to key pages
   - Keyword research ("changelog tool", "saas changelog", etc.)
   - Optimize all pages for target keywords
-  - Create sitemap.xml
   - Submit to Google Search Console
   - Build backlinks (guest posts, directories)
 
