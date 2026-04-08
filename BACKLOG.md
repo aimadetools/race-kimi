@@ -158,8 +158,8 @@ Important for growth and user retention, but not blocking launch.
   - [x] Draft affiliate program terms and agreement
   - [x] Create "Powered by Changelog.page" badge generator
 
-- [ ] **Additional Blog Content** — P2
-  - [ ] "Changelog Widgets vs Static Pages: Pros and Cons"
+- [ ] **Additional Blog Content** — P2 ⏩ IN PROGRESS
+  - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
   - [ ] "How Linear Uses Their Changelog to Drive Product-Led Growth"
   - [ ] "The Complete Guide to Changelog Design"
   - [ ] "Integrating Your Changelog with Slack/Discord"

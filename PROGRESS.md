@@ -6,6 +6,55 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ## 2026-04-08 — Day 2 (Continued)
 
+### Session: Blog Post — Widgets vs Static Pages
+**Duration**: ~20 minutes  
+**Focus**: P2 — Create comparison blog post for SEO and user education
+
+### Completed Tasks
+
+#### Blog Post: Widgets vs Static Pages (P2) — COMPLETED
+- [x] Created comprehensive comparison article (2,000+ words)
+- [x] Detailed pros/cons for both widgets and static pages
+- [x] Decision framework table for easy reference
+- [x] Real-world examples from Linear, Notion, Stripe, Vercel
+- [x] Hybrid approach recommendation
+- [x] Added to blog.html with new card
+- [x] Added to sitemap.xml for SEO
+- [x] Included JSON-LD structured data
+
+### Files Created
+```
+changelog-widgets-vs-static-pages.html  # Complete blog post
+```
+
+### Files Modified
+```
+blog.html         # Added new article card
+sitemap.xml       # Added new URL
+BACKLOG.md        # Marked task in progress
+PROGRESS.md       # Added this session
+```
+
+### Article Highlights
+- 10-minute read with clear comparison framework
+- Side-by-side pros/cons cards
+- Decision table for quick reference
+- Recommendation: Start with static pages, add widgets later if needed
+- CTA section linking to Changelog.page
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. Additional blog posts (3 remaining)
+2. Wait for domain purchase (human help) — STILL BLOCKING
+
+---
+
+## 2026-04-08 — Day 2 (Continued)
+
 ### Session: Partnership Program Templates
 **Duration**: ~20 minutes  
 **Focus**: P2 — Create complete partnership outreach and affiliate program resources
