@@ -81,6 +81,10 @@ These are essential for launch and first customer acquisition.
   - [x] Write "Why Your Product Hunt Launch Needs a Changelog" ✅ COMPLETED
   - [x] Create comparison page: Changelog.page vs Headway vs Beamer ✅ COMPLETED
   - [ ] Write case study template for future customer stories
+  - [ ] Write "Changelog Analytics: What to Track and Why" — metrics guide
+  - [ ] Write "Open Source Changelogs: Best Practices for GitHub Projects" — target dev community
+  - [ ] Create use case pages: Changelog for API products, Mobile apps, Design systems
+  - [ ] Add meta descriptions to all pages for better CTR (SEO)
 
 - [x] **Email Capture System** ✅ COMPLETED
   - [x] Add waitlist signup form to landing page
