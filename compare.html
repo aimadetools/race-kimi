@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog.page vs Headway vs Beamer (2026 Comparison)</title>
+  <meta name="description" content="Compare Changelog.page vs Headway vs Beamer. See pricing, features, and why developers choose Changelog.page for their SaaS changelogs.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Changelog.page vs Headway vs Beamer (2026 Comparison)">
+  <meta property="og:description" content="Compare the top changelog tools for SaaS. See pricing, features, and which tool is right for your product.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://changelog.page/compare">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog.page vs Headway vs Beamer">
+  <meta name="twitter:description" content="Compare the top changelog tools for SaaS. See pricing, features, and which tool is right for your product.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Plausible Analytics -->
+  <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a25;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-dark: #4f46e5;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Navigation */
+    nav {
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .comparison-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: var(--accent-light);
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Quick Verdict */
+    .quick-verdict {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .quick-verdict h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .verdict-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .verdict-card.recommended {
+      border-color: var(--accent);
+      position: relative;
+    }
+    
+    .verdict-card.recommended::before {
+      content: "Recommended";
+      position: absolute;
+      top: -12px;
+      right: 1rem;
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+    
+    .verdict-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .verdict-card .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 0.75rem;
+    }
+    
+    .verdict-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 1rem;
+    }
+    
+    .best-for {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    
+    .best-for strong {
+      color: var(--text-primary);
+    }
+    
+    /* Comparison Table */
+    .comparison-section {
+      margin-bottom: 3rem;
+    }
+    
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .section-header p {
+      color: var(--text-secondary);
+    }
+    
+    .table-wrapper {
+      overflow-x: auto;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+    
+    thead th {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    thead th:first-child {
+      width: 30%;
+    }
+    
+    thead th.highlight {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--accent-light);
+    }
+    
+    tbody td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tbody td:first-child {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    
+    tbody td.highlight {
+      background: rgba(99, 102, 241, 0.05);
+    }
+    
+    .check {
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    .cross {
+      color: var(--text-muted);
+    }
+    
+    .price-tag {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Feature Cards */
+    .features-section {
+      margin-bottom: 3rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .feature-block {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .feature-block h3 {
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .feature-block ul {
+      list-style: none;
+    }
+    
+    .feature-block li {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .feature-block li::before {
+      content: "→";
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    /* Detailed Breakdown */
+    .breakdown-section {
+      margin-bottom: 3rem;
+    }
+    
+    .breakdown-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .breakdown-card h3 {
+      font-size: 1.375rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .breakdown-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .pros, .cons {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    
+    .pros h4 {
+      color: var(--success);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    
+    .cons h4 {
+      color: #ef4444;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    
+    .pros ul, .cons ul {
+      list-style: none;
+      font-size: 0.9375rem;
+    }
+    
+    .pros li, .cons li {
+      padding: 0.25rem 0;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .pros li::before {
+      content: "+";
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    .cons li::before {
+      content: "−";
+      color: #ef4444;
+      font-weight: 600;
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 3rem;
+    }
+    
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .faq-question {
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    
+    .faq-question:hover {
+      background: var(--bg-tertiary);
+    }
+    
+    .faq-answer {
+      padding: 0 1.25rem 1.25rem;
+      color: var(--text-secondary);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .cta-section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-white {
+      background: white;
+      color: var(--accent-dark);
+    }
+    
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .pros-cons {
+        grid-template-columns: 1fr;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .cta-section {
+        padding: 2rem 1.5rem;
+      }
+      
+      .cta-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        Changelog.page
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/guides">Docs</a></li>
+        <li><a href="/templates">Templates</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="comparison-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      2026 Comparison
+    </div>
+    <h1>Changelog.page vs Headway vs Beamer</h1>
+    <p>The complete comparison of the top three changelog tools for SaaS companies. Find the right tool for your product updates.</p>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Quick Verdict -->
+    <section class="quick-verdict">
+      <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Quick Verdict
+      </h2>
+      <div class="verdict-grid">
+        <div class="verdict-card recommended">
+          <h3>Changelog.page</h3>
+          <div class="price">$0-49/mo</div>
+          <p>Developer-friendly changelog generator with custom domains, beautiful themes, and RSS feeds. Open source and self-hostable.</p>
+          <div class="best-for"><strong>Best for:</strong> Indie hackers, startups, and developers who want control and simplicity.</div>
+        </div>
+        <div class="verdict-card">
+          <h3>Headway</h3>
+          <div class="price">$29-99/mo</div>
+          <p>Established changelog tool with in-app widgets and user segmentation. More expensive but has advanced targeting features.</p>
+          <div class="best-for"><strong>Best for:</strong> Larger SaaS teams needing in-app announcements and user segmentation.</div>
+        </div>
+        <div class="verdict-card">
+          <h3>Beamer</h3>
+          <div class="price">$49-249/mo</div>
+          <p>Comprehensive changelog and notification platform with push notifications and NPS surveys. Premium pricing for enterprise features.</p>
+          <div class="best-for"><strong>Best for:</strong> Enterprise teams wanting an all-in-one user communication platform.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+      <div class="section-header">
+        <h2>Feature Comparison</h2>
+        <p>Side-by-side comparison of key features across all three platforms.</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight">Changelog.page</th>
+              <th>Headway</th>
+              <th>Beamer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Starting Price</td>
+              <td class="highlight"><span class="price-tag">Free</span></td>
+              <td><span class="price-tag">$29/mo</span></td>
+              <td><span class="price-tag">$49/mo</span></td>
+            </tr>
+            <tr>
+              <td>Custom Domain</td>
+              <td class="highlight"><span class="check">✓</span> All plans</td>
+              <td><span class="check">✓</span> Pro+ ($59/mo)</td>
+              <td><span class="check">✓</span> Pro+ ($99/mo)</td>
+            </tr>
+            <tr>
+              <td>Unlimited Changelogs</td>
+              <td class="highlight"><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+              <td>Limited by plan</td>
+            </tr>
+            <tr>
+              <td>RSS Feed</td>
+              <td class="highlight"><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>JSON Feed</td>
+              <td class="highlight"><span class="check">✓</span></td>
+              <td><span class="cross">−</span></td>
+              <td><span class="cross">−</span></td>
+            </tr>
+            <tr>
+              <td>In-App Widget</td>
+              <td class="highlight"><span class="cross">−</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Multiple Themes</td>
+              <td class="highlight"><span class="check">✓</span> 3 themes</td>
+              <td><span class="check">✓</span> Limited</td>
+              <td><span class="check">✓</span> Limited</td>
+            </tr>
+            <tr>
+              <td>Open Source</td>
+              <td class="highlight"><span class="check">✓</span></td>
+              <td><span class="cross">−</span></td>
+              <td><span class="cross">−</span></td>
+            </tr>
+            <tr>
+              <td>Self-Hosted Option</td>
+              <td class="highlight"><span class="check">✓</span> Free</td>
+              <td><span class="cross">−</span></td>
+              <td><span class="cross">−</span></td>
+            </tr>
+            <tr>
+              <td>GitHub Integration</td>
+              <td class="highlight"><span class="check">✓</span> Native</td>
+              <td>Via API</td>
+              <td>Via API</td>
+            </tr>
+            <tr>
+              <td>Markdown Support</td>
+              <td class="highlight"><span class="check">✓</span> Full</td>
+              <td><span class="check">✓</span> Limited</td>
+              <td><span class="check">✓</span> Limited</td>
+            </tr>
+            <tr>
+              <td>User Segmentation</td>
+              <td class="highlight"><span class="cross">−</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Push Notifications</td>
+              <td class="highlight"><span class="cross">−</span></td>
+              <td><span class="cross">−</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Analytics Dashboard</td>
+              <td class="highlight">Basic</td>
+              <td><span class="check">✓</span> Advanced</td>
+              <td><span class="check">✓</span> Advanced</td>
+            </tr>
+            <tr>
+              <td>API Access</td>
+              <td class="highlight">Coming soon</td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Team Members</td>
+              <td class="highlight"><span class="check">✓</span> Unlimited</td>
+              <td>Limited by plan</td>
+              <td>Limited by plan</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Key Differences -->
+    <section class="features-section">
+      <div class="section-header">
+        <h2>Key Differences</h2>
+        <p>What sets each platform apart and why it matters for your use case.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-block">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Why Choose Changelog.page?
+          </h3>
+          <ul>
+            <li>Free tier that doesn't feel limited</li>
+            <li>Custom domains on all paid plans (starting at $15/mo)</li>
+            <li>Open source - self-host forever at no cost</li>
+            <li>Beautiful, customizable themes out of the box</li>
+            <li>Markdown-native workflow for developers</li>
+            <li>GitHub-native integration and deployment</li>
+            <li>No vendor lock-in - own your data</li>
+          </ul>
+        </div>
+        <div class="feature-block">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            Why Choose Headway?
+          </h3>
+          <ul>
+            <li>In-app changelog widget for web apps</li>
+            <li>User segmentation and targeting</li>
+            <li>Detailed analytics on user engagement</li>
+            <li>Established player with enterprise customers</li>
+            <li>Slack integration for team notifications</li>
+            <li>Custom CSS styling options</li>
+          </ul>
+        </div>
+        <div class="feature-block">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            Why Choose Beamer?
+          </h3>
+          <ul>
+            <li>Push notifications to re-engage users</li>
+            <li>NPS surveys and user feedback collection</li>
+            <li>Multi-language support for global products</li>
+            <li>AI-powered writing assistance</li>
+            <li>Advanced user targeting and scheduling</li>
+            <li>Comprehensive user communication suite</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Breakdown -->
+    <section class="breakdown-section">
+      <div class="section-header">
+        <h2>Detailed Breakdown</h2>
+        <p>In-depth analysis of each platform's strengths and weaknesses.</p>
+      </div>
+      
+      <div class="breakdown-card">
+        <h3>
+          <span style="color: #6366f1;">●</span> Changelog.page
+        </h3>
+        <p>Changelog.page is the new kid on the block, built specifically for developers and indie hackers who want a simple, beautiful changelog without the complexity or cost of enterprise tools. It's open source, which means you can self-host it for free or use the hosted version with generous limits.</p>
+        <p>The workflow is designed around Markdown and Git - write your changelog entries as Markdown files with YAML frontmatter, commit to GitHub, and your changelog updates automatically. This fits naturally into developer workflows and means your changelog lives in version control alongside your code.</p>
+        <div class="pros-cons">
+          <div class="pros">
+            <h4>Pros</h4>
+            <ul>
+              <li>Free tier with unlimited changelogs</li>
+              <li>Open source and self-hostable</li>
+              <li>Markdown-native workflow</li>
+              <li>Custom domains from $15/mo</li>
+              <li>Beautiful, modern themes</li>
+              <li>No vendor lock-in</li>
+              <li>GitHub-native integration</li>
+            </ul>
+          </div>
+          <div class="cons">
+            <h4>Cons</h4>
+            <ul>
+              <li>No in-app widget (yet)</li>
+              <li>Basic analytics</li>
+              <li>API still in development</li>
+              <li>Smaller ecosystem</li>
+              <li>Technical setup required for self-hosting</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown-card">
+        <h3>
+          <span style="color: #f59e0b;">●</span> Headway
+        </h3>
+        <p>Headway has been around since 2018 and has built a solid reputation as a reliable changelog tool for SaaS companies. Their standout feature is the in-app widget that lets users see updates without leaving your application.</p>
+        <p>Headway targets mid-market SaaS companies with pricing starting at $29/month. The tool includes user segmentation, allowing you to show different updates to different user groups, which is valuable for products with multiple plans or feature flags.</p>
+        <div class="pros-cons">
+          <div class="pros">
+            <h4>Pros</h4>
+            <ul>
+              <li>In-app widget for web applications</li>
+              <li>User segmentation and targeting</li>
+              <li>Good analytics dashboard</li>
+              <li>Established and reliable</li>
+              <li>Slack and Zapier integrations</li>
+              <li>Custom CSS support</li>
+            </ul>
+          </div>
+          <div class="cons">
+            <h4>Cons</h4>
+            <ul>
+              <li>Expensive for small teams ($29+/mo)</li>
+              <li>Custom domains require Pro plan</li>
+              <li>Limited theme customization</li>
+              <li>No self-hosted option</li>
+              <li>Vendor lock-in risk</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown-card">
+        <h3>
+          <span style="color: #22c55e;">●</span> Beamer
+        </h3>
+        <p>Beamer is the most comprehensive (and expensive) option of the three. It's evolved from a simple changelog tool into a full user communication platform with features like push notifications, NPS surveys, and AI writing assistance.</p>
+        <p>With pricing starting at $49/month and going up to $249/month, Beamer targets larger teams and enterprises that need more than just a changelog. The push notification feature is unique among these three tools and can help re-engage users who haven't visited your app recently.</p>
+        <div class="pros-cons">
+          <div class="pros">
+            <h4>Pros</h4>
+            <ul>
+              <li>Push notifications for user re-engagement</li>
+              <li>NPS surveys and feedback collection</li>
+              <li>Multi-language support</li>
+              <li>AI-powered writing tools</li>
+              <li>Advanced targeting options</li>
+              <li>Comprehensive analytics</li>
+            </ul>
+          </div>
+          <div class="cons">
+            <h4>Cons</h4>
+            <ul>
+              <li>Expensive ($49-249/mo)</li>
+              <li>Overkill for simple use cases</li>
+              <li>Feature bloat - many features you may not need</li>
+              <li>No self-hosted option</li>
+              <li>Custom domains limited to higher tiers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Common questions about choosing between these changelog tools.</p>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          Which tool is best for a bootstrapped startup?
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Changelog.page is the clear winner for bootstrapped startups. The free tier includes everything you need to get started, and the Pro plan at $15/mo includes custom domains - a feature that costs $59+/mo with Headway or Beamer. Plus, being open source means you can self-host for free if you have technical resources.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          Can I switch between tools later?
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          With Changelog.page, you own your data (it's just Markdown files), so switching is easy. Your changelog content is portable and not locked into a proprietary format. With Headway and Beamer, you'll need to export your data and reformat it, which can be time-consuming but is definitely possible.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          Do I need an in-app widget?
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          It depends on your product. In-app widgets are great for increasing visibility of updates, but many successful SaaS companies use standalone changelog pages linked from their navigation. If in-app announcements are critical, Headway or Beamer may be worth the extra cost. For most products, a well-designed standalone changelog page works great.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          Is open source really important for a changelog tool?
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Open source provides several benefits: (1) You can self-host indefinitely, avoiding vendor lock-in and subscription costs. (2) You can customize the code to fit your exact needs. (3) The community can contribute improvements and security fixes. (4) You have transparency into how the tool works. For a tool that hosts your product's public communication, these are significant advantages.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          What's the catch with Changelog.page's free tier?
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          There's no catch. The free tier includes unlimited changelogs, all three themes, RSS and JSON feeds, and GitHub integration. The only limitation is that your changelog is hosted on a subdomain (yourname.changelog.page). Custom domains require the Pro plan at $15/mo. We believe in providing real value for free, and making money from customers who need advanced features like custom domains and team collaboration.
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Ready to create your changelog?</h2>
+      <p>Join thousands of developers using Changelog.page to keep their users informed. Start free, upgrade when you need custom domains.</p>
+      <div class="cta-buttons">
+        <a href="/guides/getting-started" class="btn btn-white">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+          Get Started Free
+        </a>
+        <a href="/examples/minimal-theme/" class="btn btn-outline">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          See Live Demo
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Changelog.page — Part of the <a href="https://github.com/aimadetools/race-kimi" target="_blank">$100 AI Startup Race</a></p>
+  </footer>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Changelog.page vs Headway vs Beamer (2026 Comparison)",
+    "description": "Compare the top changelog tools for SaaS. See pricing, features, and which tool is right for your product updates.",
+    "url": "https://changelog.page/compare",
+    "mainEntity": {
+      "@type": "ComparisonTable",
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Changelog.page",
+          "applicationCategory": "DeveloperApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Headway",
+          "applicationCategory": "BusinessApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "29",
+            "priceCurrency": "USD"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Beamer",
+          "applicationCategory": "BusinessApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "49",
+            "priceCurrency": "USD"
+          }
+        }
+      ]
+    }
+  }
+  </script>
+</body>
+</html>
