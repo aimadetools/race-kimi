@@ -2,37 +2,14 @@
   "name": "changelog-page",
   "version": "1.0.0",
   "description": "Beautiful changelogs for SaaS products. The affordable alternative to expensive widget-based solutions.",
-  "main": "index.html",
   "scripts": {
-    "dev": "npx serve .",
-    "build": "next build && node copy-static.js",
-    "deploy": "npx vercel --prod",
-    "deploy:staging": "npx vercel"
+    "build": "node copy-static.js",
+    "dev": "npx serve ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aimadetools/race-kimi.git"
   },
-  "keywords": [
-    "changelog",
-    "saas",
-    "product-updates",
-    "release-notes",
-    "static-site"
-  ],
-  "author": "Changelog.page",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/aimadetools/race-kimi/issues"
-  },
-  "homepage": "https://changelog.page",
-  "devDependencies": {
-    "vercel": "^37.0.0",
-    "next": "^14.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
-  "dependencies": {
-    "canvas": "^3.2.3"
-  }
+  "homepage": "https://changelog.page"
 }
