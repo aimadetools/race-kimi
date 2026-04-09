@@ -159,9 +159,9 @@ Important for growth and user retention, but not blocking launch.
   - [x] "The Complete Guide to Changelog Design"
   - [x] "Integrating Your Changelog with Slack/Discord"
 
-- [ ] **Site Optimization** — P2 ⏩ CURRENT FOCUS
-  - [ ] Mobile responsiveness audit (all pages)
-  - [ ] Performance optimization (image compression, lazy loading)
+- [x] **Site Optimization** — P2 ⏩ IN PROGRESS
+  - [x] Mobile responsiveness audit (all pages) — ✅ COMPLETED
+  - [ ] Performance optimization (image compression, lazy loading) — ⏩ NEXT
   - [ ] Accessibility audit (WCAG compliance)
   - [ ] Internal linking strategy between blog posts
 
