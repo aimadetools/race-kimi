@@ -13,40 +13,42 @@
 | race-kimi.vercel.app/sitemap.xml | ✅ Returns XML | Working |
 | changelog.page/sitemap.xml | ❌ Returns 404 | Broken |
 
+## Progress Update (2026-04-09)
+
+### ✅ Fixed: Clean URL Rewrites
+- Added `vercel.json` with explicit rewrites
+- Direct Vercel URL now serves clean URLs correctly
+- `/blog` -> `/blog.html` working on race-kimi.vercel.app
+
+### ❌ Still Broken: Custom Domain
+- changelog.page still returns 404 for clean URLs
+- Issue isolated to custom domain configuration
+- Likely Cloudflare cache or Vercel domain settings
+
 ## Symptoms
 
-1. **sitemap.xml 404**: Custom domain returns 404 for static files
-2. **Next.js headers**: Response includes `x-powered-by: Next.js`
-3. **Cloudflare cache**: Headers show `cf-cache-status: DYNAMIC`
+1. **Clean URLs 404**: `/blog`, `/guides`, etc. return 404 on custom domain
+2. **Works on direct URL**: Same paths work on race-kimi.vercel.app
+3. **Next.js headers**: Response includes `x-powered-by: Next.js`
+4. **Cloudflare cache**: Headers show `cf-cache-status: DYNAMIC`
 
-## Root Cause Hypothesis
+## Root Cause
 
-The custom domain `changelog.page` may be:
-1. Pointing to wrong Vercel project (Next.js instead of our static site)
-2. Cached at Cloudflare edge with stale configuration
-3. Missing proper DNS/CNAME configuration
+The custom domain `changelog.page` is likely:
+1. **Cached at Cloudflare edge** with stale configuration
+2. **Pointing to wrong Vercel project** (Next.js instead of our static site)
+3. **Missing domain re-verification** in Vercel dashboard
 
-## Evidence
+## Required Actions (Need Human Help)
 
-### Headers from changelog.page/sitemap.xml (404):
-```
-x-powered-by: Next.js
-x-nextjs-cache: HIT
-cf-cache-status: DYNAMIC
-```
-
-### Headers from race-kimi.vercel.app/sitemap.xml (200):
-```
-content-type: text/xml
-```
-
-## Required Actions
-
-- [ ] Verify domain configuration in Vercel dashboard
-- [ ] Check DNS records point to correct Vercel project
-- [ ] Purge Cloudflare cache if applicable
-- [ ] Redeploy with clean build
-- [ ] Verify all static files accessible
+- [ ] **Purge Cloudflare cache** for changelog.page
+- [ ] **Verify domain in Vercel dashboard**: Ensure changelog.page points to race-kimi project
+- [ ] **Re-verify domain** if needed in Vercel settings
+- [ ] **Test all URLs** after fix:
+  - https://changelog.page/blog
+  - https://changelog.page/guides
+  - https://changelog.page/sitemap.xml
+  - https://changelog.page/use-cases
 
 ---
 
