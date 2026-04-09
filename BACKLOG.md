@@ -166,8 +166,9 @@ Important for growth and user retention, but not blocking launch.
   - [x] Accessibility audit (WCAG compliance) — ✅ COMPLETED
   - [ ] Internal linking strategy between blog posts — ⏩ NEXT
 
-- [ ] **Conversion Optimization** — P2 ⏩ IN PROGRESS
-  - [ ] Add social proof section (testimonials, logos) — ⏩ NEXT
+- [x] **Conversion Optimization** — P2 ✅ PARTIALLY COMPLETED
+  - [x] Add social proof section (testimonials, logos) — ✅ COMPLETED
+  - [ ] Collect and add real customer testimonials — ⏩ NEXT (need users first)
   - [ ] Create exit-intent popup for email capture
   - [ ] Add live chat widget (Crisp/Tawk.to free tier)
   - [ ] A/B test headline on landing page (future)
