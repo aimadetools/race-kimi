@@ -4,6 +4,92 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-09 — Day 3 (Scheduled Posts)
+
+### Session: Scheduled Posts Feature Documentation
+**Duration**: ~20 minutes  
+**Focus**: P2 — Complete scheduled posts documentation and workflow
+
+### Completed Tasks
+
+#### Scheduled Posts (P2) — COMPLETED
+
+**1. Documentation Guide**
+- [x] Created `guides/scheduled-posts.html` — Comprehensive scheduling guide:
+  - How scheduling works (future-dated entry filtering)
+  - Creating scheduled entries with frontmatter and filenames
+  - Setting up automatic publishing with GitHub Actions
+  - Build frequency recommendations (hourly, daily, weekly)
+  - Use cases: product launches, content calendars, multi-timezone teams
+  - Best practices and troubleshooting tips
+
+**2. Integration with Guides Index**
+- [x] Added Scheduled Posts card to `guides/index.html`:
+  - Calendar emoji (📅) icon
+  - Linked to new guide page
+  - Beginner difficulty, 10 min read
+
+**3. Sitemap Update**
+- [x] Added `/guides/scheduled-posts` to `sitemap.xml`:
+  - Priority 0.8
+  - Monthly changefreq
+  - Date: 2026-04-09
+
+**4. Generator README Update**
+- [x] Added Scheduled Posts section to `generator/README.md`:
+  - Creating scheduled entries
+  - How the filtering works at build time
+  - GitHub Actions workflow example
+  - Best practices for scheduling
+
+**5. Sample Content**
+- [x] Created sample scheduled entry (`2026-04-20-upcoming-feature-teaser.md`):
+  - Demonstrates scheduled posts feature
+  - Set for April 20, 2026 publication
+  - Includes teaser content for upcoming analytics dashboard
+
+### Files Created
+```
+guides/scheduled-posts.html                          # Scheduling documentation
+generator/content/2026-04-20-upcoming-feature-teaser.md  # Demo scheduled entry
+```
+
+### Files Modified
+```
+guides/index.html            # Added Scheduled Posts guide card
+generator/README.md          # Added Scheduled Posts documentation
+sitemap.xml                  # Added scheduled-posts URL
+BACKLOG.md                   # Marked scheduled posts as complete
+```
+
+### Technical Implementation
+The build system already supported scheduled posts (filtering in build.js lines 75-77):
+```javascript
+const now = new Date().toISOString().split('T')[0];
+return entries.filter(e => !e.date || e.date <= now);
+```
+
+This session completed the documentation and workflow aspects.
+
+### Business Value
+- **Content Planning**: Teams can batch-write changelog entries
+- **Product Launches**: Schedule announcements for launch day
+- **Consistency**: Maintain regular publishing schedules
+- **Time Zones**: Publish at optimal times for global audiences
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ Scheduled Posts — COMPLETED
+2. Consider: Keyword research and SEO optimization
+3. Consider: API development for Team tier
+4. Consider: More blog content for SEO
+
+---
+
 ## 2026-04-09 — Day 3 (Private Changelogs)
 
 ### Session: Private Changelog Feature

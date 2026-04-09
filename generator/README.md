@@ -161,6 +161,71 @@ This content is password protected...
 - 👁️ Toggle password visibility
 - 📱 Responsive design
 
+## Scheduled Posts
+
+Write changelog entries now, publish them automatically later. Perfect for planning product launches and maintaining a consistent publishing schedule.
+
+### Creating a Scheduled Entry
+
+Set a future date in your entry's frontmatter:
+
+```markdown
+---
+title: "Big Feature Launch"
+date: 2026-04-20
+category: Feature
+tags: [launch, new-feature]
+---
+
+This entry won't appear until April 20, 2026...
+```
+
+Or use a future date in the filename:
+
+```
+content/
+  2026-04-20-big-feature-launch.md
+```
+
+### How It Works
+
+1. **Future dates are filtered** — At build time, entries with dates in the future are excluded from the output
+2. **Automatic publishing** — When your next build runs on or after the scheduled date, the entry appears
+3. **Set up scheduled builds** — Use GitHub Actions or similar to run daily builds for automatic publishing
+
+### Setting Up Automatic Publishing
+
+Add a scheduled workflow to automatically publish entries:
+
+```yaml
+# .github/workflows/scheduled-build.yml
+name: Daily Scheduled Build
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily at 9 AM UTC
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build
+      # Add your deployment step here
+```
+
+### Best Practices
+
+- **Use frontmatter dates** — Explicit dates ensure consistent behavior even if filenames change
+- **Schedule daily builds** — Once per day is sufficient for most changelogs
+- **Buffer time for review** — Schedule entries a few hours after you expect to finish writing
+- **Preview before scheduling** — Run a local build to verify formatting before committing
+
 ## GitHub Integration
 
 ### Sync from GitHub Releases

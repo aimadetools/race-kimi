@@ -201,10 +201,10 @@ Important for growth and user retention, but not blocking launch.
   - [x] Add "Private" badge to entry list and themes
   - [x] Document security considerations
 
-- [ ] **Scheduled Posts**
-  - [ ] Support future-dated entries in Markdown
-  - [ ] Filter future dates at build time
-  - [ ] Document scheduling workflow
+- [x] **Scheduled Posts** ✅ COMPLETED
+  - [x] Support future-dated entries in Markdown
+  - [x] Filter future dates at build time
+  - [x] Document scheduling workflow
 
 ---
 

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Posts — Changelog.page Documentation</title>
+    <meta name="description" content="Learn how to schedule changelog entries for future publication. Write now, publish later with automatic deployment.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Scheduled Posts — Changelog.page Documentation">
+    <meta property="og:description" content="Learn how to schedule changelog entries for future publication. Write now, publish later with automatic deployment.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/guides/scheduled-posts">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Scheduled Posts — Changelog.page Documentation">
+    <meta name="twitter:description" content="Learn how to schedule changelog entries for future publication. Write now, publish later with automatic deployment.">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-code: #0d0d0d;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-light);
+        }
+        
+        /* Layout */
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 64px;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        
+        .sidebar-links {
+            list-style: none;
+        }
+        
+        .sidebar-links li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-links a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-links a:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        
+        .sidebar-links a.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 3rem 4rem;
+            max-width: 800px;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumbs a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        
+        .breadcrumbs a:hover {
+            color: var(--text-primary);
+        }
+        
+        .breadcrumbs span {
+            color: var(--text-secondary);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem;
+            letter-spacing: -0.01em;
+        }
+        
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        p strong {
+            color: var(--text-primary);
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+        
+        :not(pre) > code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--primary-light);
+        }
+        
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+        
+        .info-box h4 {
+            color: var(--primary-light);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        .info-box p:last-child {
+            margin-top: 0.5rem;
+        }
+        
+        /* Warning Box */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+        
+        .warning-box h4 {
+            color: var(--warning);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .warning-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Steps */
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .steps li {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+            counter-increment: step;
+        }
+        
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9375rem;
+        }
+        
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        
+        td {
+            color: var(--text-secondary);
+        }
+        
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* Tip Box */
+        .tip-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+        
+        .tip-box h4 {
+            color: var(--success);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 2rem;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cookie Consent Banner -->
+    <script src="/js/cookie-consent.js"></script>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📋</div>
+                <span>Changelog.page</span>
+            </a>
+            <div class="nav-links">
+                <a href="/features">Features</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/guides" class="active">Docs</a>
+                <a href="/blog">Blog</a>
+                <a href="https://github.com/aimadetools/changelog-generator" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="docs-layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-links">
+                    <li><a href="/guides">Documentation Home</a></li>
+                    <li><a href="/guides/getting-started">Getting Started</a></li>
+                    <li><a href="/guides/faq">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Configuration</div>
+                <ul class="sidebar-links">
+                    <li><a href="/guides/custom-domain">Custom Domain</a></li>
+                    <li><a href="/guides/scheduled-posts" class="active">Scheduled Posts</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-content" id="main-content">
+            <div class="breadcrumbs">
+                <a href="/">Home</a>
+                <span>/</span>
+                <a href="/guides">Docs</a>
+                <span>/</span>
+                <span>Scheduled Posts</span>
+            </div>
+            
+            <h1>Scheduled Posts</h1>
+            <p class="subtitle">Write your changelog entries now, publish them automatically later. Perfect for planning product launches, feature announcements, and maintaining a consistent publishing schedule.</p>
+            
+            <h2>How Scheduling Works</h2>
+            <p>Changelog.page supports <strong>future-dated entries</strong>. When you set a date in the future, the entry will be automatically hidden from your changelog until that date arrives. Once the date passes and your site rebuilds, the entry appears instantly.</p>
+            
+            <div class="info-box">
+                <h4>📅 Automatic Publishing</h4>
+                <p>Future-dated entries are filtered out at build time. Set up a daily scheduled build (via GitHub Actions or similar) to automatically publish entries when their date arrives.</p>
+            </div>
+            
+            <h2>Creating a Scheduled Entry</h2>
+            
+            <ol class="steps">
+                <li>
+                    <strong>Create your entry file</strong> in the <code>content/</code> directory with a future date in the filename:
+                    <pre><code>2026-04-15-new-feature-launch.md</code></pre>
+                </li>
+                <li>
+                    <strong>Add your frontmatter</strong> with the matching future date:
+                    <pre><code>---
+title: "Exciting New Feature Launch"
+date: 2026-04-15
+category: Feature
+tags: [launch, new-feature]
+---
+
+Your announcement content here...</code></pre>
+                </li>
+                <li>
+                    <strong>Commit and push</strong> the file to your repository. The entry will be stored but not visible until the date arrives.
+                </li>
+                <li>
+                    <strong>Automatic publication</strong> happens when your next build runs on or after the scheduled date.
+                </li>
+            </ol>
+            
+            <h2>Date Sources</h2>
+            <p>The build system checks for dates in the following order:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Frontmatter (recommended)</strong></td>
+                        <td><code>YYYY-MM-DD</code></td>
+                        <td><code>date: 2026-04-15</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Filename</strong></td>
+                        <td><code>YYYY-MM-DD-*.md</code></td>
+                        <td><code>2026-04-15-feature.md</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip-box">
+                <h4>💡 Pro Tip</h4>
+                <p>Always include the <code>date</code> in frontmatter for scheduled posts. This ensures the exact publication date is preserved even if the filename changes.</p>
+            </div>
+            
+            <h2>Setting Up Automatic Publishing</h2>
+            <p>To automatically publish scheduled entries, set up a scheduled build workflow:</p>
+            
+            <h3>GitHub Actions (Recommended)</h3>
+            <p>Add this workflow to <code>.github/workflows/scheduled-build.yml</code>:</p>
+            
+            <pre><code>name: Daily Scheduled Build
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build changelog
+        run: npm run build
+        
+      - name: Deploy to hosting
+        # Add your deployment step here</code></pre>
+            
+            <h3>Build Frequency Recommendations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Schedule</th>
+                        <th>Cron</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hourly</td>
+                        <td><code>0 * * * *</code></td>
+                        <td>High-frequency updates, news sites</td>
+                    </tr>
+                    <tr>
+                        <td>Daily (9 AM)</td>
+                        <td><code>0 9 * * *</code></td>
+                        <td>Most SaaS products (recommended)</td>
+                    </tr>
+                    <tr>
+                        <td>Weekly (Monday)</td>
+                        <td><code>0 9 * * 1</code></td>
+                        <td>Low-frequency updates, batch releases</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Use Cases</h2>
+            
+            <h3>🚀 Product Launches</h3>
+            <p>Write your launch announcement in advance, schedule it for launch day, and focus on the launch itself. No last-minute writing required.</p>
+            
+            <h3>📋 Content Calendar</h3>
+            <p>Plan your changelog content weeks ahead. Batch-write entries during quiet periods, schedule them for consistent publishing.</p>
+            
+            <h3>🌍 Multi-Timezone Teams</h3>
+            <p>Schedule announcements to go live at optimal times for your primary audience, regardless of where your team is located.</p>
+            
+            <h3>🔒 Embargoed Updates</h3>
+            <p>Prepare changelog entries for security patches or sensitive updates. They'll only appear once the embargo lifts.</p>
+            
+            <h2>Testing Scheduled Entries</h2>
+            
+            <p>To preview scheduled entries before their publication date:</p>
+            
+            <ol>
+                <li>Run a local build with the current date overridden:</li>
+            </ol>
+            
+            <pre><code># Preview as if it's April 15, 2026
+NODE_ENV=development date -s "2026-04-15" npm run build
+
+# Or modify the date in your local environment
+FAKE_DATE=2026-04-15 npm run build</code></pre>
+            
+            <div class="warning-box">
+                <h4>⚠️ Important Note</h4>
+                <p>Scheduled entries rely on your build system having the correct date/time. If you're using a CI/CD service, ensure its clock is accurate. Entries with future dates will not appear until the build runs on or after that date.</p>
+            </div>
+            
+            <h2>Best Practices</h2>
+            
+            <ul>
+                <li><strong>Use consistent scheduling</strong> — Pick a build frequency and stick to it so readers know when to expect updates.</li>
+                <li><strong>Buffer time for review</strong> — Schedule entries at least a few hours after you expect to finish writing them.</li>
+                <li><strong>Preview before scheduling</strong> — Run a local build to verify formatting and content before committing.</li>
+                <li><strong>Document your schedule</strong> — Let your team know when builds happen so they understand when changes go live.</li>
+                <li><strong>Use descriptive filenames</strong> — <code>2026-04-15-api-v2-launch.md</code> is clearer than <code>2026-04-15-update.md</code>.</li>
+            </ul>
+            
+            <h2>Troubleshooting</h2>
+            
+            <h3>Entry not appearing on scheduled date</h3>
+            <ul>
+                <li>Verify the date format is <code>YYYY-MM-DD</code></li>
+                <li>Check that a build has run on or after the scheduled date</li>
+                <li>Ensure your CI/CD system's timezone matches your expectations</li>
+                <li>Check the build logs for any date-related errors</li>
+            </ul>
+            
+            <h3>Entry appeared too early</h3>
+            <ul>
+                <li>The build system uses UTC dates by default</li>
+                <li>If you specified a local date, it may publish when that date hits UTC</li>
+                <li>Use explicit dates in frontmatter to avoid ambiguity</li>
+            </ul>
+            
+            <div class="info-box">
+                <h4>🚀 Next Steps</h4>
+                <p>Now that you understand scheduling, set up your <a href="/guides/custom-domain">custom domain</a> or learn about <a href="/guides/faq">frequently asked questions</a>.</p>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Crisp Chat Widget -->
+    <script src="/js/crisp-chat.js"></script>
+</body>
+</html>
