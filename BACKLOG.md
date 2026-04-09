@@ -143,7 +143,7 @@ Important for growth and user retention, but not blocking launch.
   - [ ] Create "As seen on" / "Trusted by" logo section
   - [ ] Interview 3 beta users for case studies (need users first)
   - [ ] Write case study: "How [Company] Increased Engagement with a Public Changelog"
-  - [ ] Create "Powered by Changelog.page" badge generator page
+  - [x] Create "Powered by Changelog.page" badge generator page ✅ COMPLETED
 
 ### Content & Marketing (Ongoing)
 

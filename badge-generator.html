@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge Generator — Changelog.page</title>
+    <meta name="description" content="Generate beautiful 'Powered by Changelog.page' badges for your website. 4 styles to choose from, easy copy-paste embed code.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Badge Generator — Changelog.page">
+    <meta property="og:description" content="Generate beautiful 'Powered by Changelog.page' badges for your website. 4 styles to choose from, easy copy-paste embed code.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://changelog.page/badge-generator">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Badge Generator — Changelog.page">
+    <meta name="twitter:description" content="Generate beautiful 'Powered by Changelog.page' badges for your website. 4 styles to choose from, easy copy-paste embed code.">
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Badge Generator",
+      "description": "Generate beautiful 'Powered by Changelog.page' badges for your website",
+      "url": "https://changelog.page/badge-generator"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #334155;
+            --focus-ring: #818cf8;
+        }
+
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 10000;
+            border-radius: 0 0 8px 0;
+            transition: top 0.2s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus Visible Styles */
+        *:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .btn:focus-visible,
+        .nav-cta:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+        .page-header { padding: 80px 0 40px; text-align: center; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+        .page-header p { color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 32px; max-width: 1100px; margin: 0 auto 60px; }
+        .badge-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+        .badge-card h3 { font-size: 1.25rem; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .badge-card .description { color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem; }
+        .badge-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; min-height: 100px; }
+        .badge-preview.dark-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+        .code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; position: relative; }
+        .code-block code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary); display: block; overflow-x: auto; white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
+        .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--border); color: var(--text); }
+        .copy-btn.copied { background: var(--success); color: white; border-color: var(--success); }
+
+        .static-badge-section { padding: 80px 0; border-top: 1px solid var(--border); }
+        .static-badge-section h2 { text-align: center; font-size: 2rem; margin-bottom: 16px; }
+        .static-badge-section > p { text-align: center; color: var(--text-secondary); margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .static-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+        .static-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .static-card h4 { margin-bottom: 12px; font-size: 1rem; }
+
+        .tips-section { padding: 80px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+        .tips-section h2 { text-align: center; font-size: 2rem; margin-bottom: 48px; }
+        .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px; max-width: 1000px; margin: 0 auto; }
+        .tip-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .tip-card h4 { font-size: 1rem; margin-bottom: 8px; color: var(--primary-light); }
+        .tip-card p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .cta-section { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
+        .cta-section h2 { font-size: 2rem; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 32px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3); }
+        .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); margin-left: 12px; }
+        .btn-secondary:hover { background: var(--bg-tertiary); border-color: var(--text-muted); }
+
+        footer { padding: 60px 0 40px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 60px; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 16px; max-width: 300px; }
+        .footer-links h4 { font-size: 0.875rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.05em; }
+        .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.875rem; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .badge-grid { grid-template-columns: 1fr; }
+            .code-block code { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📝</div>
+                Changelog.page
+            </a>
+            <div class="nav-links">
+                <a href="/features">Features</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/blog">Blog</a>
+                <a href="/guides">Docs</a>
+                <a href="/" class="nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">☰</button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1>Badge Generator</h1>
+                <p>Beautiful badges to showcase your changelog. Copy, paste, and customize to match your brand.</p>
+            </div>
+        </section>
+
+        <section class="container" style="padding-bottom: 40px;">
+            <div class="badge-grid">
+                <!-- Minimal Badge -->
+                <div class="badge-card">
+                    <h3>🎯 Minimal</h3>
+                    <p class="description">Clean, text-only badge that fits anywhere. Perfect for subtle branding.</p>
+                    <div class="badge-preview">
+                        <a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+                           style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+                                  background:#1a1a2e;color:#e2e8f0;text-decoration:none;
+                                  border-radius:6px;font-family:system-ui,sans-serif;font-size:13px;
+                                  border:1px solid #2d3748;transition:all 0.2s;"
+                           onmouseover="this.style.background='#252542'"
+                           onmouseout="this.style.background='#1a1a2e'">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                               stroke-width="2" style="color:#6366f1">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                          </svg>
+                          Changelog by Changelog.page
+                        </a>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <code>&lt;a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+   style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+          background:#1a1a2e;color:#e2e8f0;text-decoration:none;
+          border-radius:6px;font-family:system-ui,sans-serif;font-size:13px;
+          border:1px solid #2d3748;transition:all 0.2s;"
+   onmouseover="this.style.background='#252542'"
+   onmouseout="this.style.background='#1a1a2e'"&gt;
+  &lt;svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+       stroke-width="2" style="color:#6366f1"&gt;
+    &lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"&gt;&lt;/path&gt;
+    &lt;polyline points="14 2 14 8 20 8"&gt;&lt;/polyline&gt;
+    &lt;line x1="16" y1="13" x2="8" y2="13"&gt;&lt;/line&gt;
+    &lt;line x1="16" y1="17" x2="8" y2="17"&gt;&lt;/line&gt;
+    &lt;polyline points="10 9 9 9 8 9"&gt;&lt;/polyline&gt;
+  &lt;/svg&gt;
+  Changelog by Changelog.page
+&lt;/a&gt;</code>
+                    </div>
+                </div>
+
+                <!-- Modern Badge -->
+                <div class="badge-card">
+                    <h3>✨ Modern</h3>
+                    <p class="description">With gradient and icon, stands out more. Great for headers and hero sections.</p>
+                    <div class="badge-preview">
+                        <a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+                           style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;
+                                  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+                                  color:#e2e8f0;text-decoration:none;border-radius:8px;
+                                  font-family:system-ui,sans-serif;font-size:14px;font-weight:500;
+                                  box-shadow:0 2px 8px rgba(99,102,241,0.2);
+                                  border:1px solid rgba(99,102,241,0.3);transition:all 0.2s;"
+                           onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(99,102,241,0.3)'"
+                           onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(99,102,241,0.2)'">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                               style="background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);border-radius:4px;padding:2px">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" 
+                                  stroke="white" stroke-width="2" fill="none"/>
+                            <polyline points="14 2 14 8 20 8" stroke="white" stroke-width="2" fill="none"/>
+                            <line x1="16" y1="13" x2="8" y2="13" stroke="white" stroke-width="2"/>
+                            <line x1="16" y1="17" x2="8" y2="17" stroke="white" stroke-width="2"/>
+                          </svg>
+                          Powered by Changelog.page
+                        </a>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <code>&lt;a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+   style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;
+          background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+          color:#e2e8f0;text-decoration:none;border-radius:8px;
+          font-family:system-ui,sans-serif;font-size:14px;font-weight:500;
+          box-shadow:0 2px 8px rgba(99,102,241,0.2);
+          border:1px solid rgba(99,102,241,0.3);transition:all 0.2s;"
+   onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(99,102,241,0.3)'"
+   onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(99,102,241,0.2)'"&gt;
+  &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
+       style="background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);border-radius:4px;padding:2px"&gt;
+    &lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" 
+          stroke="white" stroke-width="2" fill="none"/&gt;
+    &lt;polyline points="14 2 14 8 20 8" stroke="white" stroke-width="2" fill="none"/&gt;
+    &lt;line x1="16" y1="13" x2="8" y2="13" stroke="white" stroke-width="2"/&gt;
+    &lt;line x1="16" y1="17" x2="8" y2="17" stroke="white" stroke-width="2"/&gt;
+  &lt;/svg&gt;
+  Powered by Changelog.page
+&lt;/a&gt;</code>
+                    </div>
+                </div>
+
+                <!-- Compact Badge -->
+                <div class="badge-card">
+                    <h3>📎 Compact</h3>
+                    <p class="description">Small, for footers and tight spaces. Minimal footprint, maximum impact.</p>
+                    <div class="badge-preview">
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px;">
+                            <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.875rem;">&copy; 2026 Your Company</p>
+                            <a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+                               style="display:inline-flex;align-items:center;gap:4px;font-size:12px;
+                                      color:#64748b;text-decoration:none;font-family:system-ui,sans-serif;
+                                      transition:color 0.2s;"
+                               onmouseover="this.style.color='#6366f1'"
+                               onmouseout="this.style.color='#64748b'">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                              </svg>
+                              Changelog.page
+                            </a>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <code>&lt;a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+   style="display:inline-flex;align-items:center;gap:4px;font-size:12px;
+          color:#64748b;text-decoration:none;font-family:system-ui,sans-serif;
+          transition:color 0.2s;"
+   onmouseover="this.style.color='#6366f1'"
+   onmouseout="this.style.color='#64748b'"&gt;
+  &lt;svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;
+    &lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"&gt;&lt;/path&gt;
+    &lt;polyline points="14 2 14 8 20 8"&gt;&lt;/polyline&gt;
+  &lt;/svg&gt;
+  Changelog.page
+&lt;/a&gt;</code>
+                    </div>
+                </div>
+
+                <!-- Dark Mode Badge -->
+                <div class="badge-card">
+                    <h3>🌙 Dark Mode</h3>
+                    <p class="description">Optimized for dark backgrounds. Glass-morphism effect with subtle transparency.</p>
+                    <div class="badge-preview dark-bg">
+                        <a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+                           style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+                                  background:rgba(255,255,255,0.1);color:#f1f5f9;text-decoration:none;
+                                  border-radius:6px;font-family:system-ui,sans-serif;font-size:13px;
+                                  border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);
+                                  transition:all 0.2s;"
+                           onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                          </svg>
+                          Changelog.page
+                        </a>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <code>&lt;a href="https://changelog.page/?ref=badged" target="_blank" rel="noopener" 
+   style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+          background:rgba(255,255,255,0.1);color:#f1f5f9;text-decoration:none;
+          border-radius:6px;font-family:system-ui,sans-serif;font-size:13px;
+          border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);
+          transition:all 0.2s;"
+   onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+   onmouseout="this.style.background='rgba(255,255,255,0.1)'"&gt;
+  &lt;svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"&gt;
+    &lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"&gt;&lt;/path&gt;
+    &lt;polyline points="14 2 14 8 20 8"&gt;&lt;/polyline&gt;
+    &lt;line x1="16" y1="13" x2="8" y2="13"&gt;&lt;/line&gt;
+    &lt;line x1="16" y1="17" x2="8" y2="17"&gt;&lt;/line&gt;
+  &lt;/svg&gt;
+  Changelog.page
+&lt;/a&gt;</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="static-badge-section">
+            <div class="container">
+                <h2>Static Image Badges</h2>
+                <p>For platforms that don't support HTML (GitHub READMEs, email signatures, etc.)</p>
+                <div class="static-grid">
+                    <div class="static-card">
+                        <h4>🔗 Markdown</h4>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <code>[![Changelog](https://changelog.page/badge.svg)](https://changelog.page/?ref=badged)</code>
+                        </div>
+                    </div>
+                    <div class="static-card">
+                        <h4>🌐 HTML Image</h4>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <code>&lt;a href="https://changelog.page/?ref=badged" target="_blank"&gt;
+  &lt;img src="https://changelog.page/badge.svg" alt="Powered by Changelog.page" width="150" height="30"&gt;
+&lt;/a&gt;</code>
+                        </div>
+                    </div>
+                    <div class="static-card">
+                        <h4>📋 Plain URL</h4>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <code>https://changelog.page/badge.svg</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tips-section">
+            <div class="container">
+                <h2>Placement Tips</h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>📄 Changelog Page</h4>
+                        <p>Use the <strong>Modern</strong> badge in your header to show visitors your changelog is professionally hosted.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🦶 Website Footer</h4>
+                        <p>The <strong>Compact</strong> or <strong>Minimal</strong> badge fits perfectly in footers without taking up much space.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>📚 GitHub README</h4>
+                        <p>Use the static image badge in your README to direct users to your public changelog.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🎨 Dark Themes</h4>
+                        <p>The <strong>Dark Mode</strong> badge works beautifully on dark backgrounds with its glass-morphism effect.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to create your changelog?</h2>
+                <p>Join thousands of SaaS founders who use Changelog.page to keep their users informed.</p>
+                <a href="/" class="btn btn-primary">Get Started Free</a>
+                <a href="/guides/getting-started" class="btn btn-secondary">View Documentation</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="logo">
+                        <div class="logo-icon">📝</div>
+                        Changelog.page
+                    </a>
+                    <p>Beautiful changelogs for SaaS products. Built for founders who care about their users.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="/features">Features</a>
+                    <a href="/pricing">Pricing</a>
+                    <a href="/compare">Compare</a>
+                    <a href="/use-cases">Use Cases</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <a href="/guides">Documentation</a>
+                    <a href="/templates">Templates</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/badge-generator">Badge Generator</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="/about">About</a>
+                    <a href="/partnerships">Partnerships</a>
+                    <a href="/privacy">Privacy</a>
+                    <a href="/terms">Terms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Changelog.page. Built with 💜 for SaaS founders.</p>
+                <p>Part of the $100 AI Startup Race</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cookie Consent -->
+    <script src="/js/cookie-consent.js"></script>
+    
+    <script>
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
