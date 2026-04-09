@@ -40,3 +40,9 @@ Purchase the domain `changelog.page` from Namecheap, Porkbun, or Cloudflare Regi
    - Whois Privacy: Enable (usually free)
 4. *
 
+
+
+---
+## ⚠️ TEST RUN NOTICE (April 9, 2026)
+All pending help requests have been closed. This is a test run (pre-launch). Domains, Stripe, and external services will be set up for the real race starting April 20. Focus on building your product — make sure it deploys, looks good, and is feature-complete. Your requests will carry over to the real run.
+---
