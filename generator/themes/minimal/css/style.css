@@ -175,6 +175,40 @@ body {
   border-color: rgba(34, 197, 94, 0.3);
 }
 
+.entry-badge--private {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.entry--private {
+  opacity: 0.9;
+}
+
+.entry-private-preview {
+  text-align: center;
+  padding: 2rem;
+  background: #0f172a;
+  border: 1px dashed #334155;
+  border-radius: 0.5rem;
+  color: #64748b;
+}
+
+.entry-private-preview p {
+  margin: 0 0 1rem 0;
+}
+
+.entry-private-link {
+  display: inline-block;
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.entry-private-link:hover {
+  text-decoration: underline;
+}
+
 .entry-title {
   font-size: 1.5rem;
   font-weight: 600;

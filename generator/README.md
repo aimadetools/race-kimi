@@ -117,6 +117,50 @@ After enabling analytics and deploying, visit `/analytics.html` on your changelo
 - No personal data collected
 - Fully GDPR-compliant
 
+## Private Entries
+
+Password-protect specific changelog entries. Perfect for beta announcements, internal updates, or early access content.
+
+### Create a Private Entry
+
+Add `private: true` and a `password` to your entry's frontmatter:
+
+```markdown
+---
+title: "Beta Feature Preview"
+date: 2026-04-09
+category: Feature
+private: true
+password: beta2026
+---
+
+This content is password protected...
+```
+
+### How It Works
+
+1. **Build time**: Content is encrypted and embedded in the HTML
+2. **Visitor experience**: Sees a password prompt instead of content
+3. **Authentication**: Password decrypts content client-side
+4. **Session**: Remembers authentication for browser session
+
+### Security Notes
+
+⚠️ **Important**: This provides casual privacy, not cryptographic security.
+
+- Content is obfuscated, not truly encrypted
+- Determined users could extract the password
+- Suitable for: beta announcements, early access, casual privacy
+- Not suitable for: confidential data, sensitive information
+
+### Private Entry Features
+
+- 🔒 Password prompt page with custom styling
+- 🏷️ "Private" badge shown in entry list
+- 🔐 Session-based authentication (no repeat passwords)
+- 👁️ Toggle password visibility
+- 📱 Responsive design
+
 ## GitHub Integration
 
 ### Sync from GitHub Releases
