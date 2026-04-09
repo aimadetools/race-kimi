@@ -168,8 +168,8 @@ Important for growth and user retention, but not blocking launch.
 
 - [x] **Conversion Optimization** — P2 ✅ PARTIALLY COMPLETED
   - [x] Add social proof section (testimonials, logos) — ✅ COMPLETED
+  - [x] Create exit-intent popup for email capture — ✅ COMPLETED
   - [ ] Collect and add real customer testimonials — ⏩ NEXT (need users first)
-  - [ ] Create exit-intent popup for email capture
   - [ ] Add live chat widget (Crisp/Tawk.to free tier)
   - [ ] A/B test headline on landing page (future)
 
