@@ -1,0 +1,302 @@
+name: Generate Changelog from Commits
+
+on:
+  push:
+    branches: [main, master]
+    # Don't trigger on tags (those are handled by releases workflow)
+    tags-ignore:
+      - '**'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Number of days to look back for commits'
+        required: false
+        default: '7'
+        type: string
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for commit parsing
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate changelog from commits
+        id: generate
+        env:
+          DAYS_BACK: ${{ github.event.inputs.days_back || '7' }}
+          CONVENTIONAL_COMMITS: ${{ vars.USE_CONVENTIONAL_COMMITS || 'true' }}
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const { execSync } = require('child_process');
+          
+          const daysBack = parseInt(process.env.DAYS_BACK);
+          const useConventional = process.env.CONVENTIONAL_COMMITS === 'true';
+          const sinceDate = new Date();
+          sinceDate.setDate(sinceDate.getDate() - daysBack);
+          const sinceStr = sinceDate.toISOString().split('T')[0];
+          
+          console.log(\`🔍 Analyzing commits since \${sinceStr}...\`);
+          
+          // Get commits since the date
+          let commits;
+          try {
+            const format = '%H|%s|%b|%an|%ad';
+            const output = execSync(\`git log --since=\"\${sinceStr}\" --format=\"\${format}\" --date=short\`, {
+              encoding: 'utf-8'
+            });
+            commits = output.trim().split('\\n').filter(line => line).map(line => {
+              const [hash, subject, body, author, date] = line.split('|');
+              return { hash: hash.slice(0, 7), fullHash: hash, subject, body, author, date };
+            });
+          } catch (err) {
+            console.error('❌ Failed to fetch commits:', err.message);
+            process.exit(1);
+          }
+          
+          console.log(\`   Found \${commits.length} commits\`);
+          
+          if (commits.length === 0) {
+            console.log('   No new commits to process');
+            console.log('::set-output name=has_changes::false');
+            process.exit(0);
+          }
+          
+          // Group commits by date
+          const commitsByDate = {};
+          commits.forEach(commit => {
+            if (!commitsByDate[commit.date]) {
+              commitsByDate[commit.date] = [];
+            }
+            commitsByDate[commit.date].push(commit);
+          });
+          
+          const contentDir = path.resolve('./content');
+          if (!fs.existsSync(contentDir)) {
+            fs.mkdirSync(contentDir, { recursive: true });
+          }
+          
+          // Parse conventional commits
+          function parseConventionalCommit(subject) {
+            const patterns = [
+              { type: 'feat', category: 'Feature', pattern: /^feat(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'fix', category: 'Fix', pattern: /^fix(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'docs', category: 'Documentation', pattern: /^docs(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'style', category: 'Style', pattern: /^style(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'refactor', category: 'Improvement', pattern: /^refactor(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'perf', category: 'Performance', pattern: /^perf(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'test', category: 'Testing', pattern: /^test(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'chore', category: 'Chore', pattern: /^chore(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'build', category: 'Build', pattern: /^build(?:\\(([^)]+)\\))?:\\s*/i },
+              { type: 'ci', category: 'CI/CD', pattern: /^ci(?:\\(([^)]+)\\))?:\\s*/i },
+            ];
+            
+            for (const { type, category, pattern } of patterns) {
+              const match = subject.match(pattern);
+              if (match) {
+                return {
+                  type,
+                  category,
+                  scope: match[1] || '',
+                  title: subject.replace(pattern, '').trim()
+                };
+              }
+            }
+            
+            return null;
+          }
+          
+          // Generate category from commit
+          function categorizeCommit(commit) {
+            if (useConventional) {
+              const parsed = parseConventionalCommit(commit.subject);
+              if (parsed) return parsed;
+            }
+            
+            // Fallback: categorize by keywords
+            const subject = commit.subject.toLowerCase();
+            const body = (commit.body || '').toLowerCase();
+            const fullText = subject + ' ' + body;
+            
+            if (/\\bfix|bug|patch|hotfix|resolve|closes? #\\d+\\b/i.test(fullText)) {
+              return { category: 'Fix', title: commit.subject };
+            }
+            if (/\\bfeat|feature|add|new|implement|introduce\\b/i.test(fullText)) {
+              return { category: 'Feature', title: commit.subject };
+            }
+            if (/\\bdoc|readme|documentation|guide|tutorial\\b/i.test(fullText)) {
+              return { category: 'Documentation', title: commit.subject };
+            }
+            if (/\\bperf|performance|speed|faster|optimize|cache\\b/i.test(fullText)) {
+              return { category: 'Performance', title: commit.subject };
+            }
+            if (/\\brefactor|clean|cleanup|restructure\\b/i.test(fullText)) {
+              return { category: 'Improvement', title: commit.subject };
+            }
+            if (/\\btest|spec|coverage\\b/i.test(fullText)) {
+              return { category: 'Testing', title: commit.subject };
+            }
+            if (/\\bsecurity|vuln|cve|xss|csrf|auth\\b/i.test(fullText)) {
+              return { category: 'Security', title: commit.subject };
+            }
+            if (/\\bdep|bump|upgrade|update.*(package|depend)\\b/i.test(fullText)) {
+              return { category: 'Dependencies', title: commit.subject };
+            }
+            
+            return { category: 'Update', title: commit.subject };
+          }
+          
+          // Track created/updated files
+          const changes = [];
+          
+          // Process each date group
+          Object.entries(commitsByDate).forEach(([date, dateCommits]) => {
+            // Check if we already have an entry for this date
+            const existingFiles = fs.readdirSync(contentDir)
+              .filter(f => f.startsWith(date) && f.endsWith('.md'));
+            
+            // Group commits by category for this date
+            const byCategory = {};
+            dateCommits.forEach(commit => {
+              const parsed = categorizeCommit(commit);
+              const cat = parsed.category;
+              if (!byCategory[cat]) byCategory[cat] = [];
+              byCategory[cat].push({ ...commit, parsed });
+            });
+            
+            // Generate content for each category (or combine if desired)
+            Object.entries(byCategory).forEach(([category, catCommits]) => {
+              // Create a unique filename based on date and category
+              const categorySlug = category.toLowerCase().replace(/\\s+/g, '-');
+              const filename = \`\${date}-\${categorySlug}.md\`;
+              const filepath = path.join(contentDir, filename);
+              
+              // Skip if already exists (avoid overwriting manual entries)
+              if (fs.existsSync(filepath)) {
+                console.log(\`   ⏭️  Skipping existing: \${filename}\`);
+                return;
+              }
+              
+              // Generate title based on commits
+              const titles = catCommits.map(c => c.parsed.title || c.subject);
+              const title = titles.length === 1 
+                ? titles[0].charAt(0).toUpperCase() + titles[0].slice(1)
+                : \`\${category} Updates\`;
+              
+              // Generate tags from scopes and keywords
+              const tags = new Set([category.toLowerCase()]);
+              catCommits.forEach(c => {
+                if (c.parsed?.scope) tags.add(c.parsed.scope);
+              });
+              
+              // Build content
+              let body = '';
+              catCommits.forEach(commit => {
+                body += \`- **\${commit.parsed.title || commit.subject}**\`;
+                if (commit.body?.trim()) {
+                  const cleanedBody = commit.body
+                    .split('\\n')
+                    .map(l => l.trim())
+                    .filter(l => l && !l.startsWith('Signed-off-by'))
+                    .join('\\n  ');
+                  if (cleanedBody) {
+                    body += \"\\n  \" + cleanedBody;
+                  }
+                }
+                body += \"\\n\";
+                
+                // Add commit link
+                const repoUrl = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY;
+                body += \"  \" + \`[\${commit.hash}](\${repoUrl}/commit/\${commit.fullHash}) by @\${commit.author}\`;
+                body += \"\\n\\n\";
+              });
+              
+              // Create frontmatter
+              const frontmatter = {
+                title: title,
+                date: date,
+                category: category,
+                tags: Array.from(tags),
+                author: catCommits[0].author,
+                auto_generated: true,
+                source: 'commits',
+              };
+              
+              // Build YAML
+              const yamlLines = ['---'];
+              Object.entries(frontmatter).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                  yamlLines.push(\`\${key}: [\${value.map(v => \"\"\${v}\"\").join(', ')}]\`);
+                } else if (typeof value === 'boolean') {
+                  yamlLines.push(\`\${key}: \${value}\`);
+                } else if (value) {
+                  yamlLines.push(\`\${key}: \"\${value}\"\`);
+                }
+              });
+              yamlLines.push('---');
+              
+              // Write file
+              const content = yamlLines.join('\\n') + '\\n\\n' + body.trim();
+              fs.writeFileSync(filepath, content);
+              
+              console.log(\`   ✓ Created: \${filename} (\${catCommits.length} commits)\`);
+              changes.push(filename);
+            });
+          });
+          
+          // Summary
+          console.log('\\n📊 Summary:');
+          console.log(\`   Commits analyzed: \${commits.length}\`);
+          console.log(\`   Files created: \${changes.length}\`);
+          
+          console.log(\`::set-output name=has_changes::\${changes.length > 0}\`);
+          console.log(\`::set-output name=files::\${changes.join(',')}\`);
+          "
+      
+      - name: Build changelog
+        if: steps.generate.outputs.has_changes == 'true'
+        env:
+          SITE_NAME: ${{ vars.SITE_NAME || github.event.repository.name }}
+          SITE_URL: ${{ vars.SITE_URL || '' }}
+          THEME: ${{ vars.THEME || 'minimal' }}
+        run: npm run build
+      
+      - name: Commit and push changes
+        if: steps.generate.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add content/
+          git add dist/
+          git commit -m "chore: generate changelog from commits [skip ci]"
+          git push
+      
+      - name: Deploy to GitHub Pages
+        if: steps.generate.outputs.has_changes == 'true' && vars.DEPLOY_TO_PAGES == 'true'
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Deploy to Vercel
+        if: steps.generate.outputs.has_changes == 'true' && vars.VERCEL_DEPLOY == 'true'
+        uses: vercel/action-deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}

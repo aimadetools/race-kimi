@@ -1,0 +1,211 @@
+name: Generate Changelog from Releases
+
+on:
+  release:
+    types: [published, edited, deleted]
+  workflow_dispatch:
+    inputs:
+      sync_all:
+        description: 'Sync all releases (not just latest)'
+        required: false
+        default: 'false'
+        type: boolean
+  schedule:
+    # Run daily at 2 AM UTC to catch any missed releases
+    - cron: '0 2 * * *'
+
+jobs:
+  sync-releases:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      releases: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Fetch releases and generate changelog entries
+        id: generate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYNC_ALL: ${{ github.event.inputs.sync_all || 'false' }}
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const { execSync } = require('child_process');
+          
+          // Get repository info from GitHub context
+          const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+          const syncAll = process.env.SYNC_ALL === 'true';
+          
+          console.log('🔍 Fetching releases for ${owner}/${repo}...');
+          
+          // Fetch releases using GitHub CLI (gh is pre-installed)
+          let releases;
+          try {
+            const output = execSync('gh release list --limit 100 --json tagName,name,publishedAt,body,isPrerelease', {
+              encoding: 'utf-8',
+              env: { ...process.env, GH_TOKEN: process.env.GITHUB_TOKEN }
+            });
+            releases = JSON.parse(output);
+          } catch (err) {
+            console.error('❌ Failed to fetch releases:', err.message);
+            process.exit(1);
+          }
+          
+          console.log(\`   Found \${releases.length} releases\`);
+          
+          const contentDir = path.resolve('./content');
+          if (!fs.existsSync(contentDir)) {
+            fs.mkdirSync(contentDir, { recursive: true });
+          }
+          
+          // Track created/updated files
+          const changes = [];
+          
+          releases.forEach(release => {
+            // Skip drafts (not included in API response anyway)
+            if (!release.publishedAt) return;
+            
+            // Parse date from release
+            const date = new Date(release.publishedAt);
+            const dateStr = date.toISOString().split('T')[0];
+            
+            // Create slug from tag or name
+            const tag = release.tagName;
+            const slug = tag.startsWith('v') ? tag.slice(1) : tag;
+            const filename = \`\${dateStr}-release-\${slug.replace(/\\./g, '-').replace(/[^a-zA-Z0-9-_]/g, '')}.md\`;
+            const filepath = path.join(contentDir, filename);
+            
+            // Skip if file exists and we're not doing full sync
+            if (fs.existsSync(filepath) && !syncAll) {
+              console.log(\`   ⏭️  Skipping existing: \${filename}\`);
+              return;
+            }
+            
+            // Determine category based on tag and content
+            let category = 'Update';
+            if (tag.includes('alpha') || tag.includes('beta') || tag.includes('rc') || release.isPrerelease) {
+              category = 'Prerelease';
+            } else if (tag.startsWith('v0')) {
+              category = 'Release';
+            } else {
+              // Parse version number
+              const versionMatch = tag.match(/v?(\\d+)\\.(\\d+)\\.(\\d+)/);
+              if (versionMatch) {
+                const [, major, minor, patch] = versionMatch;
+                if (patch === '0' && minor === '0') {
+                  category = 'Major Release';
+                } else if (patch === '0') {
+                  category = 'Feature Release';
+                } else {
+                  category = 'Patch Release';
+                }
+              }
+            }
+            
+            // Extract tags from body (#tag format)
+            const bodyTags = [];
+            if (release.body) {
+              const tagMatches = release.body.match(/#(\\\\w+)/g);
+              if (tagMatches) {
+                tagMatches.forEach(t => bodyTags.push(t.slice(1)));
+              }
+            }
+            
+            // Generate frontmatter
+            const frontmatter = {
+              title: release.name || \`Release \${tag}\`,
+              date: dateStr,
+              category: category,
+              tags: bodyTags.length > 0 ? bodyTags : ['release'],
+              author: '',
+              github_release: tag,
+              prerelease: release.isPrerelease,
+            };
+            
+            // Build YAML frontmatter
+            const yamlLines = ['---'];
+            Object.entries(frontmatter).forEach(([key, value]) => {
+              if (Array.isArray(value)) {
+                yamlLines.push(\`\${key}: [\${value.join(', ')}]\`);
+              } else if (typeof value === 'boolean') {
+                yamlLines.push(\`\${key}: \${value}\`);
+              } else if (value) {
+                yamlLines.push(\`\${key}: \"\${value}\"\`);
+              }
+            });
+            yamlLines.push('---');
+            
+            // Clean up release body
+            let body = release.body || '';
+            // Remove tag references (#tag) from body since they're in frontmatter
+            body = body.replace(/#\\w+/g, '').trim();
+            // Add link to GitHub release
+            body += \"\\n\\n---\\n\\n\";
+            body += \"[View on GitHub](https://github.com/\${owner}/\${repo}/releases/tag/\${tag})\";
+            
+            // Write file
+            const content = yamlLines.join('\\n') + '\\n\\n' + body;
+            fs.writeFileSync(filepath, content);
+            
+            const action = fs.existsSync(filepath) ? 'Updated' : 'Created';
+            console.log(\`   ✓ \${action}: \${filename}\`);
+            changes.push(filename);
+          });
+          
+          // Output summary
+          console.log('\\n📊 Summary:');
+          console.log(\`   Total releases processed: \${releases.length}\`);
+          console.log(\`   Files created/updated: \${changes.length}\`);
+          
+          // Set output for subsequent steps
+          const hasChanges = changes.length > 0;
+          console.log(\`::set-output name=has_changes::\${hasChanges}\`);
+          console.log(\`::set-output name=files::\${changes.join(',')}\`);
+          "
+      
+      - name: Build changelog
+        if: steps.generate.outputs.has_changes == 'true'
+        env:
+          SITE_NAME: ${{ vars.SITE_NAME || github.event.repository.name }}
+          SITE_URL: ${{ vars.SITE_URL || '' }}
+          THEME: ${{ vars.THEME || 'minimal' }}
+        run: npm run build
+      
+      - name: Commit and push changes
+        if: steps.generate.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add content/
+          git add dist/
+          git commit -m "chore: sync changelog from GitHub releases [skip ci]"
+          git push
+      
+      - name: Deploy to GitHub Pages
+        if: steps.generate.outputs.has_changes == 'true' && vars.DEPLOY_TO_PAGES == 'true'
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Deploy to Vercel
+        if: steps.generate.outputs.has_changes == 'true' && vars.VERCEL_DEPLOY == 'true'
+        uses: vercel/action-deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}

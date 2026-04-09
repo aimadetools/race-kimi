@@ -47,6 +47,9 @@ Your changelog content here in **Markdown**.
 | `tags` | No | Array of tag strings |
 | `author` | No | Author name |
 | `image` | No | Featured image URL |
+| `github_release` | No | Associated GitHub release tag |
+| `prerelease` | No | Boolean indicating if this is a prerelease |
+| `auto_generated` | No | Boolean indicating auto-generated entry |
 
 ## Themes
 
@@ -73,6 +76,86 @@ Use environment variables to customize:
 | `THEME` | "minimal" | Theme name |
 | `CONTENT_DIR` | "./content" | Path to markdown files |
 | `OUTPUT_DIR` | "./dist" | Build output directory |
+| `GITHUB_REPO` | "" | Fetch releases from GitHub (format: owner/repo) |
+| `GITHUB_INCLUDE_PRERELEASES` | "true" | Include prereleases when using GITHUB_REPO |
+| `GITHUB_RELEASES_LIMIT` | "50" | Max releases to fetch from GitHub |
+
+## GitHub Integration
+
+### Sync from GitHub Releases
+
+Automatically generate changelog entries from your GitHub releases:
+
+```bash
+# Build with GitHub releases integration
+GITHUB_REPO=owner/repo npm run build
+
+# Exclude prereleases
+GITHUB_REPO=owner/repo GITHUB_INCLUDE_PRERELEASES=false npm run build
+
+# Limit to last 20 releases
+GITHUB_REPO=owner/repo GITHUB_RELEASES_LIMIT=20 npm run build
+```
+
+This will:
+- Fetch releases from the GitHub API
+- Convert each release to a changelog entry
+- Auto-categorize based on version number (Major/Feature/Patch/Prerelease)
+- Extract tags from release body (#tag format)
+- Add links back to GitHub releases
+
+### Auto-Generate from GitHub Releases (GitHub Action)
+
+Use the included workflow to automatically sync changelog when you publish releases:
+
+1. Copy `.github/workflows/releases-to-changelog.yml` to your repository
+2. The workflow triggers on every release publish/edit
+3. It creates/updates changelog entries in the `content/` directory
+4. Commits changes and redeploys your site
+
+**Setup:**
+
+```yaml
+# .github/workflows/changelog.yml
+name: Deploy Changelog
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  sync-releases:
+    uses: changelogpage/generator/.github/workflows/releases-to-changelog.yml@main
+```
+
+### Auto-Generate from Commits (GitHub Action)
+
+Automatically create changelog entries from your commit history:
+
+1. Copy `.github/workflows/commits-to-changelog.yml` to your repository
+2. Set `USE_CONVENTIONAL_COMMITS=true` in repository variables (optional, uses conventional commits format)
+3. The workflow runs on every push to main/master
+4. Groups commits by date and category
+
+**Commit Categorization:**
+
+If using conventional commits:
+- `feat:` → Feature
+- `fix:` → Fix
+- `docs:` → Documentation
+- `refactor:` → Improvement
+- `perf:` → Performance
+- `test:` → Testing
+- `chore:` → Chore
+- `ci:` → CI/CD
+- `build:` → Build
+
+Fallback categorization by keywords:
+- "fix", "bug", "patch" → Fix
+- "feat", "add", "new" → Feature
+- "doc", "readme" → Documentation
+- "perf", "speed" → Performance
+- "security", "vuln" → Security
 
 ## GitHub Actions Auto-Deploy
 

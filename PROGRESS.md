@@ -4,6 +4,99 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-09 — Day 3 (GitHub Integration)
+
+### Session: GitHub Integration Feature
+**Duration**: ~45 minutes  
+**Focus**: P2 — Implement GitHub Integration: auto-generate changelog from releases and commits
+
+### Completed Tasks
+
+#### GitHub Integration (P2) — COMPLETED
+
+**1. GitHub Action: Releases to Changelog**
+- [x] Created `releases-to-changelog.yml` workflow:
+  - Triggers on release publish/edit/delete
+  - Fetches releases via GitHub API
+  - Auto-categorizes by version type (Major/Feature/Patch/Prerelease)
+  - Extracts tags from release body (#tag format)
+  - Creates markdown files in `content/` directory
+  - Commits changes and auto-deploys
+  - Supports manual sync with `workflow_dispatch`
+  - Daily scheduled sync as fallback
+
+**2. GitHub Action: Commits to Changelog**
+- [x] Created `commits-to-changelog.yml` workflow:
+  - Triggers on push to main/master
+  - Parses conventional commits (feat:, fix:, docs:, etc.)
+  - Auto-categorizes by keywords fallback
+  - Groups commits by date and category
+  - Creates properly formatted markdown entries
+  - Links back to original commits
+
+**3. Build Script Enhancement**
+- [x] Extended `build.js` with async GitHub API support:
+  - `loadEntriesFromGitHubReleases()` function
+  - Fetches releases at build time via `GITHUB_REPO` env var
+  - Merges with local markdown entries (no duplicates)
+  - Supports prerelease filtering and limit options
+  - Graceful error handling for API failures
+
+**4. Theme Enhancements**
+- [x] Added GitHub release badges to all three themes:
+  - `entry-badge--github` — Shows release tag
+  - `entry-badge--prerelease` — Prerelease indicator
+  - `entry-badge--auto` — Auto-generated indicator
+  - Added to minimal, cards, and timeline themes
+
+**5. Documentation**
+- [x] Updated `generator/README.md` with:
+  - GitHub Releases integration instructions
+  - Environment variable reference
+  - Commit categorization rules
+  - Workflow setup examples
+
+### Files Created
+```
+generator/.github/workflows/releases-to-changelog.yml   # Release sync workflow
+generator/.github/workflows/commits-to-changelog.yml    # Commit sync workflow
+```
+
+### Files Modified
+```
+generator/src/build.js                                  # GitHub API integration
+generator/themes/minimal/css/style.css                  # GitHub badge styles
+generator/themes/cards/css/style.css                    # GitHub badge styles
+generator/themes/timeline/css/style.css                 # GitHub badge styles
+generator/README.md                                     # Documentation update
+```
+
+### Technical Features
+- **Dual Workflow Support**: Releases OR Commits as source
+- **Smart Categorization**: Version-based (releases) + keyword-based (commits)
+- **No Duplicates**: Tracks by release tag to avoid overwriting
+- **Fallback Keywords**: Categorizes even without conventional commits
+- **API Rate Limit Handling**: Graceful errors with helpful messages
+
+### Marketing Impact
+- **Developer Experience**: Zero-config changelog for GitHub users
+- **Workflow Integration**: Fits existing GitHub-centric workflows
+- **Time Savings**: Eliminates manual changelog maintenance
+- **Feature Differentiation**: Built-in GitHub integration vs competitors
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ GitHub Integration — COMPLETED
+2. Consider: Analytics dashboard (P2)
+3. Consider: Private changelogs with password protection (P2)
+4. Continue with product features for race launch
+
+---
+
 ## 2026-04-09 — Day 3 (Continued)
 
 ### Session: Badge Generator Page
