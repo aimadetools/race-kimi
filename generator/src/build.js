@@ -17,6 +17,7 @@ const CONFIG = {
   theme: process.env.THEME || 'minimal',
   siteName: process.env.SITE_NAME || 'Changelog',
   siteUrl: process.env.SITE_URL || '',
+  enableAnalytics: process.env.ENABLE_ANALYTICS === 'true',
 };
 
 // Parse command line args
@@ -238,6 +239,39 @@ function copyThemeAssets(themeName) {
       copyDirectory(source, dest);
     }
   });
+  
+  // Copy shared analytics assets if analytics is enabled
+  if (CONFIG.enableAnalytics) {
+    copyAnalyticsAssets(destDir);
+  }
+}
+
+/**
+ * Copy analytics assets to output directory
+ */
+function copyAnalyticsAssets(destDir) {
+  const sharedDir = path.resolve(__dirname, '../themes/shared');
+  
+  // Copy analytics.js
+  const analyticsSource = path.join(sharedDir, 'js', 'analytics.js');
+  const analyticsDest = path.join(destDir, 'js', 'analytics.js');
+  if (fs.existsSync(analyticsSource)) {
+    if (!fs.existsSync(path.dirname(analyticsDest))) {
+      fs.mkdirSync(path.dirname(analyticsDest), { recursive: true });
+    }
+    fs.copyFileSync(analyticsSource, analyticsDest);
+    console.log('   ✓ Analytics tracking enabled');
+  }
+  
+  // Copy analytics-dashboard.html
+  const dashboardSource = path.join(sharedDir, 'analytics-dashboard.html');
+  const dashboardDest = path.join(destDir, 'analytics.html');
+  if (fs.existsSync(dashboardSource)) {
+    let dashboardTemplate = fs.readFileSync(dashboardSource, 'utf-8');
+    dashboardTemplate = dashboardTemplate.replace(/\{\{site_name\}\}/g, CONFIG.siteName);
+    fs.writeFileSync(dashboardDest, dashboardTemplate);
+    console.log('   ✓ Analytics dashboard created');
+  }
 }
 
 /**
@@ -370,11 +404,16 @@ async function build() {
   copyThemeAssets(CONFIG.theme);
 
   // Generate index page
-  const indexHtml = template
+  let indexHtml = template
     .replace(/{{site_name}}/g, CONFIG.siteName)
     .replace(/{{site_description}}/g, 'Product updates and changelog')
     .replace('{{entries}}', generateEntriesHTML(entries))
     .replace('{{feed_meta}}', generateFeedMeta());
+  
+  // Inject analytics if enabled
+  if (CONFIG.enableAnalytics) {
+    indexHtml = injectAnalytics(indexHtml);
+  }
 
   fs.writeFileSync(path.join(CONFIG.outputDir, 'index.html'), indexHtml);
 
@@ -386,17 +425,47 @@ async function build() {
 
   // Generate individual entry pages (optional, for SEO)
   entries.forEach(entry => {
-    const entryHtml = template
+    let entryHtml = template
       .replace(/{{site_name}}/g, `${entry.title} | ${CONFIG.siteName}`)
       .replace(/{{site_description}}/g, entry.rawContent.substring(0, 160))
       .replace('{{entries}}', generateSingleEntryHTML(entry))
       .replace('{{feed_meta}}', generateFeedMeta());
+    
+    // Inject analytics if enabled
+    if (CONFIG.enableAnalytics) {
+      entryHtml = injectAnalytics(entryHtml);
+    }
     
     fs.writeFileSync(path.join(CONFIG.outputDir, `${entry.slug}.html`), entryHtml);
   });
 
   console.log('✅ Build complete!');
   console.log(`   Output: ${path.resolve(CONFIG.outputDir)}`);
+  
+  if (CONFIG.enableAnalytics) {
+    console.log('📊 Analytics enabled - view dashboard at: /analytics.html');
+  }
+}
+
+/**
+ * Inject analytics tracking code into HTML
+ */
+function injectAnalytics(html) {
+  // Add analytics meta tag before </head>
+  html = html.replace(
+    '</head>',
+    '  <meta name="changelog-analytics" content="true">\n  <script src="js/analytics.js" defer></script>\n</head>'
+  );
+  
+  // Add analytics dashboard link to footer if exists
+  if (html.includes('</footer>')) {
+    html = html.replace(
+      '</footer>',
+      '    <div class="analytics-link" style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #1e293b;">\n      <a href="analytics.html" style="color: #64748b; font-size: 0.875rem; text-decoration: none;">📊 View Analytics</a>\n    </div>\n  </footer>'
+    );
+  }
+  
+  return html;
 }
 
 /**

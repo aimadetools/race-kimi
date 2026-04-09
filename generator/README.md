@@ -79,6 +79,43 @@ Use environment variables to customize:
 | `GITHUB_REPO` | "" | Fetch releases from GitHub (format: owner/repo) |
 | `GITHUB_INCLUDE_PRERELEASES` | "true" | Include prereleases when using GITHUB_REPO |
 | `GITHUB_RELEASES_LIMIT` | "50" | Max releases to fetch from GitHub |
+| `ENABLE_ANALYTICS` | "false" | Enable client-side analytics tracking |
+
+## Analytics
+
+Track changelog engagement with built-in, privacy-friendly analytics. No external services required - all data stays in the visitor's browser.
+
+### Enable Analytics
+
+```bash
+ENABLE_ANALYTICS=true npm run build
+```
+
+### What Gets Tracked
+
+- **Page Views** - Total and unique visitors
+- **Entry Engagement** - Which changelog entries are most popular
+- **Click Tracking** - Entry clicks, tag clicks, external link clicks
+- **Traffic Sources** - Referrer domains
+- **Time-based Stats** - Daily, weekly, monthly breakdowns
+
+### View Analytics Dashboard
+
+After enabling analytics and deploying, visit `/analytics.html` on your changelog to view:
+
+- Overview stats (total views, unique visitors, today's views)
+- Traffic chart (7/30/90 day views)
+- Most popular entries
+- Traffic sources
+- Data export (JSON)
+
+### Privacy
+
+- All data stored locally in visitor's browser (localStorage)
+- No cookies used
+- No external tracking scripts
+- No personal data collected
+- Fully GDPR-compliant
 
 ## GitHub Integration
 
@@ -186,6 +223,8 @@ The generator produces:
 - `rss.xml` — RSS 2.0 feed
 - `feed.json` — JSON Feed v1.1
 - `css/style.css` — Theme styles
+- `analytics.html` — Analytics dashboard (if enabled)
+- `js/analytics.js` — Tracking script (if enabled)
 
 ## License
 

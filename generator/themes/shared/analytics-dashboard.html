@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="changelog-analytics" content="true">
+  <title>Analytics Dashboard | {{site_name}}</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Dashboard-specific styles */
+    .dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .dashboard-header p {
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .dashboard-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #4f46e5;
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: #334155;
+    }
+
+    .stat-card--highlight {
+      border-color: #6366f1;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .stat-change--positive {
+      color: #10b981;
+    }
+
+    .stat-change--negative {
+      color: #ef4444;
+    }
+
+    /* Dashboard Sections */
+    .dashboard-section {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin: 0;
+    }
+
+    /* Charts */
+    .chart-container {
+      height: 200px;
+      position: relative;
+    }
+
+    .simple-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 100%;
+      padding-bottom: 30px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: #6366f1;
+      border-radius: 2px 2px 0 0;
+      min-height: 4px;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+
+    .chart-bar:hover {
+      opacity: 0.8;
+    }
+
+    .chart-bar-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-45deg);
+      font-size: 0.625rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .chart-bar-value {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.625rem;
+      color: #94a3b8;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .chart-bar:hover .chart-bar-value {
+      opacity: 1;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+      text-align: left;
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .data-table th {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+
+    .data-table td {
+      color: #e2e8f0;
+      font-size: 0.875rem;
+    }
+
+    .data-table tr:hover td {
+      background: #1e293b;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Progress bars */
+    .progress-bar {
+      height: 8px;
+      background: #1e293b;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #64748b;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 1.125rem;
+      color: #94a3b8;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+
+    /* Date range selector */
+    .date-range {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .date-range button {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .date-range button:hover,
+    .date-range button.active {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.75rem;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .data-table {
+        font-size: 0.75rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 0.625rem;
+      }
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #1e293b;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <header class="dashboard-header">
+      <h1>📊 Analytics Dashboard</h1>
+      <p>Track engagement and understand your changelog performance</p>
+      <div class="dashboard-actions">
+        <button class="btn btn-secondary" onclick="exportData()">
+          📥 Export Data
+        </button>
+        <button class="btn btn-secondary" onclick="resetData()">
+          🗑️ Reset Data
+        </button>
+        <a href="index.html" class="btn btn-primary">
+          ← Back to Changelog
+        </a>
+      </div>
+    </header>
+
+    <div id="loadingState" class="loading">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div id="dashboardContent" style="display: none;">
+      <!-- Overview Stats -->
+      <div class="stats-grid">
+        <div class="stat-card stat-card--highlight">
+          <p class="stat-label">Total Views</p>
+          <p class="stat-value" id="totalViews">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Unique Visitors</p>
+          <p class="stat-value" id="uniqueVisitors">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Today's Views</p>
+          <p class="stat-value" id="todayViews">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Total Entries</p>
+          <p class="stat-value" id="totalEntries">0</p>
+        </div>
+      </div>
+
+      <!-- Traffic Chart -->
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">📈 Traffic Overview</h2>
+          <div class="date-range">
+            <button onclick="setRange(7)" class="active" data-range="7">7 Days</button>
+            <button onclick="setRange(30)" data-range="30">30 Days</button>
+            <button onclick="setRange(90)" data-range="90">90 Days</button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="simple-chart" id="trafficChart"></div>
+        </div>
+      </div>
+
+      <!-- Popular Entries -->
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">🔥 Most Popular Entries</h2>
+        </div>
+        <div id="popularEntries">
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <h3>No entry data yet</h3>
+            <p>Views will appear here once visitors start reading your changelog entries.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Traffic Sources -->
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">🔗 Traffic Sources</h2>
+        </div>
+        <div id="trafficSources">
+          <div class="empty-state">
+            <div class="empty-state-icon">🌐</div>
+            <h3>No referrer data yet</h3>
+            <p>Referrer information will appear here once visitors arrive from external sources.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Data State -->
+    <div id="noDataState" style="display: none;">
+      <div class="dashboard-section">
+        <div class="empty-state">
+          <div class="empty-state-icon">📊</div>
+          <h3>No analytics data yet</h3>
+          <p>Analytics tracking begins automatically when visitors view your changelog. Come back after your changelog has received some traffic!</p>
+          <br>
+          <p><strong>Note:</strong> Make sure analytics is enabled by adding this meta tag to your pages:</p>
+          <code style="background: #1e293b; padding: 0.5rem 1rem; border-radius: 0.375rem; display: inline-block; margin-top: 1rem;">&lt;meta name="changelog-analytics" content="true"&gt;</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/analytics.js"></script>
+  <script>
+    let currentRange = 7;
+    let stats = null;
+
+    // Initialize dashboard
+    function init() {
+      // Wait for analytics to be ready
+      setTimeout(() => {
+        if (window.ChangelogAnalytics) {
+          stats = window.ChangelogAnalytics.getStats();
+          if (stats && stats.overview.totalViews > 0) {
+            renderDashboard();
+          } else {
+            showNoData();
+          }
+        } else {
+          showNoData();
+        }
+      }, 500);
+    }
+
+    function renderDashboard() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('dashboardContent').style.display = 'block';
+
+      // Update stats
+      document.getElementById('totalViews').textContent = formatNumber(stats.overview.totalViews);
+      document.getElementById('uniqueVisitors').textContent = formatNumber(stats.overview.uniqueVisitors);
+      document.getElementById('todayViews').textContent = formatNumber(stats.today.views);
+      document.getElementById('totalEntries').textContent = formatNumber(stats.overview.totalEntries);
+
+      // Render charts
+      renderTrafficChart();
+      renderPopularEntries();
+      renderTrafficSources();
+    }
+
+    function showNoData() {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('noDataState').style.display = 'block';
+    }
+
+    function renderTrafficChart() {
+      const chart = document.getElementById('trafficChart');
+      const data = window.ChangelogAnalytics.getData();
+      
+      if (!data || !data.dailyStats) return;
+
+      // Get last N days
+      const days = [];
+      const values = [];
+      
+      for (let i = currentRange - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        const dayLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        
+        days.push(dayLabel);
+        values.push(data.dailyStats[dateStr]?.views || 0);
+      }
+
+      // Find max for scaling
+      const max = Math.max(...values, 1);
+
+      // Build chart
+      chart.innerHTML = values.map((val, i) => {
+        const height = (val / max) * 100;
+        return `
+          <div class="chart-bar" style="height: ${height}%;" title="${days[i]}: ${val} views">
+            <span class="chart-bar-value">${val}</span>
+            ${currentRange <= 14 ? `<span class="chart-bar-label">${days[i]}</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPopularEntries() {
+      const container = document.getElementById('popularEntries');
+      
+      if (!stats.popularEntries || stats.popularEntries.length === 0) {
+        return;
+      }
+
+      const maxViews = stats.popularEntries[0]?.views || 1;
+
+      container.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Entry</th>
+              <th>Views</th>
+              <th>Clicks</th>
+              <th>Engagement</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${stats.popularEntries.map(entry => `
+              <tr>
+                <td>
+                  <a href="${entry.slug}.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">
+                    ${entry.title || entry.slug}
+                  </a>
+                </td>
+                <td>${formatNumber(entry.views)}</td>
+                <td>${formatNumber(entry.clicks)}</td>
+                <td style="width: 30%;">
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: ${(entry.views / maxViews) * 100}%"></div>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderTrafficSources() {
+      const container = document.getElementById('trafficSources');
+      
+      if (!stats.referrers || Object.keys(stats.referrers).length === 0) {
+        return;
+      }
+
+      const referrers = Object.entries(stats.referrers);
+      const totalReferrals = referrers.reduce((sum, [, val]) => sum + val, 0);
+
+      container.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Visitors</th>
+              <th>Percentage</th>
+              <th>Distribution</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${referrers.map(([domain, count]) => {
+              const percentage = (count / totalReferrals * 100).toFixed(1);
+              return `
+                <tr>
+                  <td>
+                    <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                      🌐 ${domain}
+                    </span>
+                  </td>
+                  <td>${formatNumber(count)}</td>
+                  <td>${percentage}%</td>
+                  <td style="width: 40%;">
+                    <div class="progress-bar">
+                      <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function setRange(days) {
+      currentRange = days;
+      
+      // Update button states
+      document.querySelectorAll('.date-range button').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.range) === days);
+      });
+
+      renderTrafficChart();
+    }
+
+    function exportData() {
+      if (!window.ChangelogAnalytics) return;
+      
+      const data = window.ChangelogAnalytics.export();
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `changelog-analytics-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function resetData() {
+      if (confirm('Are you sure you want to reset all analytics data? This cannot be undone.')) {
+        if (window.ChangelogAnalytics) {
+          window.ChangelogAnalytics.reset();
+          location.reload();
+        }
+      }
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+      }
+      return num.toString();
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
