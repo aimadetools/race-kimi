@@ -317,6 +317,163 @@
             box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
         }
 
+        /* Exit Intent Popup Styles */
+        .exit-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .exit-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .exit-popup {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .exit-popup-overlay.active .exit-popup {
+            transform: translateY(0) scale(1);
+        }
+
+        .exit-popup-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .exit-popup-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text);
+        }
+
+        .exit-popup-close:focus-visible {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+
+        .exit-popup-gift {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .exit-popup h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .exit-popup p {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .exit-popup .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .exit-popup form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .exit-popup input[type="email"] {
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .exit-popup input[type="email"]:focus {
+            border-color: var(--primary);
+        }
+
+        .exit-popup .btn-primary {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .exit-popup-privacy {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .exit-popup {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+
+            .exit-popup h3 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .exit-popup-overlay,
+            .exit-popup {
+                transition: none;
+            }
+        }
+
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text);
@@ -1194,6 +1351,110 @@
             </div>
         </div>
     </footer>
+
+    <!-- Exit Intent Popup -->
+    <div id="exitPopup" class="exit-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-popup-title">
+        <div class="exit-popup">
+            <button type="button" class="exit-popup-close" onclick="closeExitPopup()" aria-label="Close popup">
+                ✕
+            </button>
+            <div class="exit-popup-gift">🎁</div>
+            <div style="text-align: center;">
+                <span class="bonus-badge">Launch Bonus</span>
+            </div>
+            <h3 id="exit-popup-title">Wait! Don't Miss Launch Week</h3>
+            <p>Join the waitlist today and get <strong>30% off Pro</strong> forever when we launch. Plus, receive our exclusive <strong>Changelog Best Practices Guide</strong> ($29 value) free.</p>
+            
+            <form action="https://formsubmit.co/race@aimadetools.com" method="POST">
+                <label for="exit-popup-email" class="visually-hidden">Email address</label>
+                <input type="email" id="exit-popup-email" name="email" placeholder="Enter your email" required aria-required="true">
+                <input type="hidden" name="_subject" value="Exit Popup - Changelog.page Waitlist Signup">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://changelog.page/thanks.html">
+                <input type="hidden" name="source" value="exit-popup">
+                <button type="submit" class="btn btn-primary">
+                    Get Early Access + 30% Off
+                </button>
+            </form>
+            
+            <p class="exit-popup-privacy">No spam. Unsubscribe anytime. Launching soon.</p>
+        </div>
+    </div>
+
+    <script>
+        // Exit Intent Popup Logic
+        (function() {
+            const popup = document.getElementById('exitPopup');
+            const STORAGE_KEY = 'exitPopupShown';
+            const COOLDOWN_HOURS = 24;
+            
+            // Check if popup was already shown recently
+            function shouldShowPopup() {
+                const lastShown = localStorage.getItem(STORAGE_KEY);
+                if (!lastShown) return true;
+                
+                const hoursSince = (Date.now() - parseInt(lastShown)) / (1000 * 60 * 60);
+                return hoursSince >= COOLDOWN_HOURS;
+            }
+            
+            // Mark popup as shown
+            function markPopupShown() {
+                localStorage.setItem(STORAGE_KEY, Date.now().toString());
+            }
+            
+            // Show popup
+            function showPopup() {
+                if (!shouldShowPopup()) return;
+                popup.classList.add('active');
+                markPopupShown();
+                document.body.style.overflow = 'hidden';
+                
+                // Track with Plausible
+                if (window.plausible) {
+                    plausible('Exit Popup Shown');
+                }
+            }
+            
+            // Close popup function (global for onclick)
+            window.closeExitPopup = function() {
+                popup.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+            
+            // Exit intent detection
+            function handleMouseOut(e) {
+                // Only trigger if mouse leaves from top of viewport
+                if (e.clientY <= 0 && shouldShowPopup()) {
+                    showPopup();
+                    document.removeEventListener('mouseout', handleMouseOut);
+                }
+            }
+            
+            // Listen for mouse leaving viewport
+            document.addEventListener('mouseout', handleMouseOut);
+            
+            // Close on backdrop click
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    closeExitPopup();
+                }
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && popup.classList.contains('active')) {
+                    closeExitPopup();
+                }
+            });
+            
+            // Don't show on mobile (no mouse movement detection)
+            // Mobile users get the sticky footer CTA instead
+            const isMobile = window.matchMedia('(pointer: coarse)').matches;
+            if (isMobile) {
+                document.removeEventListener('mouseout', handleMouseOut);
+            }
+        })();
+    </script>
 </body>
 </html>
 <!-- Deployed: Tue Apr  7 09:39:34 PM UTC 2026 -->
