@@ -4,6 +4,89 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-09 — Day 3 (Final Session)
+
+### Session: GDPR Compliance & Legal Pages
+**Duration**: ~45 minutes  
+**Focus**: P2 — Add cookie consent, privacy policy, and terms of service for legal compliance
+
+### Completed Tasks
+
+#### Cookie Consent Banner (P2) — COMPLETED
+- [x] **Created GDPR-compliant cookie consent system** (`js/cookie-consent.js`):
+  - Granular consent controls (Necessary, Analytics, Marketing)
+  - Three action buttons: Accept All, Reject All, Preferences
+  - Detailed preferences modal with toggle switches
+  - Consent stored in cookie for 365 days
+  - Respects `prefers-reduced-motion` for accessibility
+  - Shows only once per user (tracks consent state)
+- [x] **Consent-aware loading**:
+  - Plausible Analytics only loads with analytics consent
+  - Crisp chat can be disabled if marketing consent declined
+  - Exposes `window.CookieConsent` API for other scripts
+- [x] **Added to all 7 main HTML pages**:
+  - index.html, features.html, pricing.html, blog.html, about.html, compare.html, thanks.html
+  - Also added to new privacy.html and terms.html pages
+
+#### Privacy Policy Page (P2) — COMPLETED
+- [x] **Created comprehensive privacy policy** (`privacy.html`):
+  - 12 sections covering all GDPR requirements
+  - Clear explanation of data collection practices
+  - Third-party services disclosure (Plausible, Crisp, FormSubmit)
+  - User rights section (access, rectification, erasure, portability)
+  - Cookie types and purposes explained
+  - Contact information for data requests
+  - Dark theme matching site design
+
+#### Terms of Service Page (P2) — COMPLETED
+- [x] **Created complete terms of service** (`terms.html`):
+  - 16 sections covering all legal bases
+  - User content ownership and licensing terms
+  - Acceptable use policy
+  - Subscription and payment terms
+  - Termination conditions
+  - Limitation of liability
+  - Governing law (Delaware)
+  - Contact information for legal inquiries
+  - Dark theme matching site design
+
+### Files Created
+```
+js/cookie-consent.js      # GDPR-compliant consent management
+privacy.html              # Privacy policy page
+terms.html                # Terms of service page
+```
+
+### Files Modified
+```
+index.html, features.html, pricing.html, blog.html, about.html, compare.html, thanks.html
+  - Added cookie consent script
+  - Disabled direct Plausible loading (now consent-controlled)
+sitemap.xml               # Added privacy and terms URLs
+```
+
+### Legal Compliance Impact
+- **GDPR Compliance**: ✅ Granular consent for cookies and tracking
+- **Privacy Rights**: ✅ Clear explanation of user data rights
+- **Terms Coverage**: ✅ Complete ToS protecting both parties
+- **Trust Building**: ✅ Professional legal pages increase credibility
+- **Search Engine**: ✅ Legal pages often required for ad platforms
+
+### Git Commits
+```
+1379b4a Add GDPR-compliant cookie consent banner, privacy policy, and terms of service pages
+bc6bf15 Update HELP-STATUS: note test run status, remove DEPLOY-STATUS
+```
+
+### Next Steps
+1. ✅ Cookie consent & legal pages — COMPLETED
+2. Consider: Waitlist tier system (Founder/Early adopter badges)
+3. Consider: Recent activity feed on landing page
+4. Consider: Meta tag optimization for better SEO
+5. Continue building product features for real race launch
+
+---
+
 ## 2026-04-09 — Day 3 (Continued)
 
 ### Session: Domain Routing Fix & Product Hunt Prep
