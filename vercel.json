@@ -1,34 +1,5 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/blog.html", "destination": "/blog" },
-    { "source": "/about.html", "destination": "/about" },
-    { "source": "/pricing.html", "destination": "/pricing" },
-    { "source": "/features.html", "destination": "/features" },
-    { "source": "/compare.html", "destination": "/compare" },
-    { "source": "/thanks.html", "destination": "/thanks" },
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/xml"
-        }
-      ]
-    }
-  ]
+  "cleanUrls": false,
+  "trailingSlash": false
 }
