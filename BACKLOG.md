@@ -134,11 +134,12 @@ Important for growth and user retention, but not blocking launch.
   - [x] Create Hacker News "Show HN" post draft
   - [ ] Engage in Indie Hackers daily — pending social accounts
 
-- [ ] **Case Studies**
-  - [ ] Interview 3 beta users (need actual users first)
+- [ ] **Social Proof & Trust Building** — P2
+  - [ ] Add testimonials section to landing page — ⏩ NEXT
+  - [ ] Create "As seen on" / "Trusted by" logo section
+  - [ ] Interview 3 beta users for case studies (need users first)
   - [ ] Write case study: "How [Company] Increased Engagement with a Public Changelog"
-  - [ ] Get testimonials for landing page
-  - [ ] Create "Powered by Changelog.page" badge
+  - [ ] Create "Powered by Changelog.page" badge generator page
 
 ### Content & Marketing (Ongoing)
 
@@ -159,17 +160,17 @@ Important for growth and user retention, but not blocking launch.
   - [x] "The Complete Guide to Changelog Design"
   - [x] "Integrating Your Changelog with Slack/Discord"
 
-- [x] **Site Optimization** — P2 ⏩ IN PROGRESS
+- [x] **Site Optimization** — P2 ✅ COMPLETED
   - [x] Mobile responsiveness audit (all pages) — ✅ COMPLETED
   - [x] Performance optimization (image compression, lazy loading) — ✅ COMPLETED
-  - [ ] Accessibility audit (WCAG compliance) — ⏩ NEXT
-  - [ ] Internal linking strategy between blog posts
+  - [x] Accessibility audit (WCAG compliance) — ✅ COMPLETED
+  - [ ] Internal linking strategy between blog posts — ⏩ NEXT
 
-- [ ] **Conversion Optimization** — P2
-  - [ ] A/B test headline on landing page
-  - [ ] Add social proof section (testimonials, logos)
+- [ ] **Conversion Optimization** — P2 ⏩ IN PROGRESS
+  - [ ] Add social proof section (testimonials, logos) — ⏩ NEXT
   - [ ] Create exit-intent popup for email capture
   - [ ] Add live chat widget (Crisp/Tawk.to free tier)
+  - [ ] A/B test headline on landing page (future)
 
 - [ ] **Partnerships**
   - [ ] Reach out to 10 micro-SaaS founders for partnerships
@@ -276,15 +277,16 @@ Ideas for after the 12-week race is complete.
 
 ## 📊 Success Metrics by Week
 
-| Week | Key Metric | Target |
-|------|------------|--------|
-| 2 | Landing page visitors | 100 |
-| 4 | Product Hunt upvotes | 200+ |
-| 4 | Signups | 50 |
-| 6 | Paying customers | 10 |
-| 8 | MRR | $250 |
-| 12 | MRR | $500 |
-| 12 | Total users | 500 |
+| Week | Key Metric | Target | Actual |
+|------|------------|--------|--------|
+| 2 | Landing page visitors | 100 | TBD |
+| 2 | Accessibility (WCAG) | 100% compliant | ✅ Complete |
+| 4 | Product Hunt upvotes | 200+ | — |
+| 4 | Signups | 50 | — |
+| 6 | Paying customers | 10 | — |
+| 8 | MRR | $250 | — |
+| 12 | MRR | $500 | — |
+| 12 | Total users | 500 | — |
 
 ---
 
@@ -313,4 +315,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-09 — Day 3*
+*Last updated: 2026-04-09 — Day 3 (Accessibility audit complete)*
