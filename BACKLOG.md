@@ -237,11 +237,11 @@ Nice-to-haves that improve the product but aren't critical.
   - [ ] Write API documentation
   - [ ] Create Postman collection
 
-- [ ] **Integrations**
+- [x] **Integrations** ✅ PARTIALLY COMPLETED
   - [ ] Linear integration (sync issues to changelog)
   - [ ] Notion integration (embed changelog)
-  - [ ] Slack webhook (announce new entries)
-  - [ ] Discord webhook
+  - [x] Slack webhook (announce new entries) ✅ COMPLETED
+  - [x] Discord webhook ✅ COMPLETED
 
 - [ ] **Advanced Themes**
   - [ ] Dark mode toggle
@@ -322,4 +322,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-09 — Day 3 (GDPR compliance & legal pages complete)*
+*Last updated: 2026-04-09 — Day 3 (Slack/Discord webhook integration complete)*
