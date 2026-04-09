@@ -170,7 +170,7 @@ Important for growth and user retention, but not blocking launch.
   - [x] Add social proof section (testimonials, logos) — ✅ COMPLETED
   - [x] Create exit-intent popup for email capture — ✅ COMPLETED
   - [ ] Collect and add real customer testimonials — ⏩ NEXT (need users first)
-  - [ ] Add live chat widget (Crisp/Tawk.to free tier)
+  - [x] Add live chat widget (Crisp/Tawk.to free tier) ✅ COMPLETED
   - [ ] A/B test headline on landing page (future)
 
 - [ ] **Partnerships**
