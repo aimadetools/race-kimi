@@ -57,6 +57,50 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 10000;
+            border-radius: 0 0 8px 0;
+            transition: top 0.2s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus Visible Styles */
+        *:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .btn:focus-visible,
+        .nav-cta:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+        }
+
+        .toggle:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+            border-radius: 14px;
+        }
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
@@ -173,7 +217,8 @@
     </style>
 </head>
 <body>
-    <nav>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav aria-label="Main navigation">
         <div class="container">
             <a href="index.html" class="logo">
                 <div class="logo-icon">📝</div>
@@ -189,10 +234,11 @@
                 <a href="about.html">About</a>
                 <a href="https://github.com/aimadetools/race-kimi" class="nav-cta">Get Started</a>
             </div>
-            <button class="mobile-menu-btn">☰</button>
+            <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">☰</button>
         </div>
     </nav>
 
+    <main id="main-content">
     <header class="page-header">
         <div class="container">
             <h1>Simple, transparent pricing</h1>
@@ -421,5 +467,6 @@
             </div>
         </div>
     </footer>
+    </main>
 </body>
 </html>
