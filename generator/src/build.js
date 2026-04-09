@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 const yamlFront = require('yaml-front-matter');
+const { notifyWebhooks } = require('./webhook');
 
 // Configuration
 const CONFIG = {
@@ -18,6 +19,8 @@ const CONFIG = {
   siteName: process.env.SITE_NAME || 'Changelog',
   siteUrl: process.env.SITE_URL || '',
   enableAnalytics: process.env.ENABLE_ANALYTICS === 'true',
+  slackWebhookUrl: process.env.SLACK_WEBHOOK_URL || '',
+  discordWebhookUrl: process.env.DISCORD_WEBHOOK_URL || '',
 };
 
 // Parse command line args
@@ -452,6 +455,25 @@ async function build() {
   
   if (CONFIG.enableAnalytics) {
     console.log('📊 Analytics enabled - view dashboard at: /analytics.html');
+  }
+  
+  // Send webhook notifications for new entries
+  if (CONFIG.slackWebhookUrl || CONFIG.discordWebhookUrl) {
+    const webhookResult = await notifyWebhooks(entries, {
+      slackWebhookUrl: CONFIG.slackWebhookUrl,
+      discordWebhookUrl: CONFIG.discordWebhookUrl,
+      siteName: CONFIG.siteName,
+      siteUrl: CONFIG.siteUrl,
+      outputDir: CONFIG.outputDir
+    });
+    
+    if (webhookResult.notified > 0) {
+      console.log(`📣 Webhook notifications sent: ${webhookResult.notified} entr${webhookResult.notified === 1 ? 'y' : 'ies'}`);
+    }
+    
+    if (webhookResult.errors.length > 0) {
+      console.error(`   ⚠️ ${webhookResult.errors.length} webhook(s) failed`);
+    }
   }
 }
 

@@ -80,6 +80,8 @@ Use environment variables to customize:
 | `GITHUB_INCLUDE_PRERELEASES` | "true" | Include prereleases when using GITHUB_REPO |
 | `GITHUB_RELEASES_LIMIT` | "50" | Max releases to fetch from GitHub |
 | `ENABLE_ANALYTICS` | "false" | Enable client-side analytics tracking |
+| `SLACK_WEBHOOK_URL` | "" | Slack incoming webhook URL for notifications |
+| `DISCORD_WEBHOOK_URL` | "" | Discord webhook URL for notifications |
 
 ## Analytics
 
@@ -302,6 +304,88 @@ Fallback categorization by keywords:
 - "doc", "readme" → Documentation
 - "perf", "speed" → Performance
 - "security", "vuln" → Security
+
+## Webhook Notifications
+
+Automatically notify Slack or Discord channels when new changelog entries are published. Perfect for keeping your team and community updated.
+
+### Setup
+
+Configure webhook URLs via environment variables:
+
+```bash
+# Slack webhook
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXX/YYY/ZZZ npm run build
+
+# Discord webhook
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/XXX/YYY npm run build
+
+# Both
+SLACK_WEBHOOK_URL=... DISCORD_WEBHOOK_URL=... npm run build
+```
+
+### Getting Webhook URLs
+
+**Slack:**
+1. Go to your Slack workspace settings
+2. Navigate to Apps → Incoming Webhooks
+3. Add to Slack → Choose channel
+4. Copy the webhook URL
+
+**Discord:**
+1. Open channel settings in your Discord server
+2. Integrations → Webhooks
+3. New Webhook → Choose channel
+4. Copy the webhook URL
+
+### Notification Features
+
+**Slack notifications include:**
+- Header with category emoji
+- Site name and entry date
+- Truncated content preview (500 chars)
+- Tags as context elements
+- "View Entry" button linking to the entry
+
+**Discord notifications include:**
+- Rich embed with color-coded category
+- Entry description (600 chars)
+- Timestamp and footer with site name
+- Author and tags fields
+- Direct link to entry
+
+### Category Colors & Emojis
+
+| Category | Emoji | Discord Color |
+|----------|-------|---------------|
+| Feature | ✨ | Indigo |
+| Fix/Bug | 🐛 | Amber |
+| Security | 🔒 | Red |
+| Performance | ⚡ | Cyan |
+| Release | 🚀 | Green |
+| Breaking | 💥 | Dark Red |
+
+### How It Works
+
+1. **Build-time detection**: During each build, the generator compares entries against a state file
+2. **New entry detection**: Only entries not previously notified are sent
+3. **Deduplication**: A `.webhook-state.json` file tracks notified entries
+4. **Rate limiting**: State file keeps last 100 entries to prevent bloat
+
+### GitHub Actions with Webhooks
+
+Add webhook URLs as repository secrets:
+
+```yaml
+# .github/workflows/deploy.yml
+- name: Build changelog
+  run: npm run build
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+    SITE_NAME: "My Product"
+    SITE_URL: "https://changelog.example.com"
+```
 
 ## GitHub Actions Auto-Deploy
 
