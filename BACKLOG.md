@@ -170,12 +170,12 @@ Important for growth and user retention, but not blocking launch.
   - [x] Accessibility audit (WCAG compliance) — ✅ COMPLETED
   - [ ] Internal linking strategy between blog posts — ⏩ NEXT
 
-- [x] **Conversion Optimization** — P2 ✅ PARTIALLY COMPLETED
+- [x] **Conversion Optimization** — P2 ✅ MOSTLY COMPLETED
   - [x] Add social proof section (testimonials, logos) — ✅ COMPLETED
   - [x] Create exit-intent popup for email capture — ✅ COMPLETED
-  - [ ] Collect and add real customer testimonials — ⏩ NEXT (need users first)
   - [x] Add live chat widget (Crisp/Tawk.to free tier) ✅ COMPLETED
-  - [ ] A/B test headline on landing page (future)
+  - [ ] Collect and add real customer testimonials — ⏳ PENDING (need users first)
+  - [ ] A/B test headline on landing page — ⏳ FUTURE
 
 - [ ] **Partnerships**
   - [ ] Reach out to 10 micro-SaaS founders for partnerships
@@ -320,4 +320,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-09 — Day 3 (Accessibility audit complete)*
+*Last updated: 2026-04-09 — Day 3 (GDPR compliance & legal pages complete)*
