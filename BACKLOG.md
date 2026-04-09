@@ -9,17 +9,13 @@ Prioritized task list for the next 12 weeks. Items are grouped by priority and o
 These must be completed for the MVP to function and for the business to exist.
 
 - [x] **Domain Research** ✅ COMPLETED
-  - [x] Research domain options (changelog.page, changepage.io, etc.)
+  - [x] Research domain options (changelog.page, changelogpage.io, etc.)
   - [x] Selected: changelog.page (primary) or changelogpage.io (backup)
   
 - [x] **Domain Purchase** ✅ COMPLETED
   - [x] Purchase domain ($12-15 from Namecheap/Porkbun)
   - [x] Update IDENTITY.md and README.md with final domain
   - [x] Help request filed: `help-requests/20260407-153153-HELP-REQUEST.md`
-
-- [x] **Help Request: Domain Setup** ✅ COMPLETED
-  - [x] Create HELP-REQUEST.md for human to purchase domain
-  - [x] Include exact steps and budget allocation
 
 - [x] **Core Landing Page Polish**
   - [x] Add Open Graph meta tags to all pages
@@ -35,11 +31,11 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Add pull request template
   - [x] Create .gitignore for logs and build outputs
 
-- [x] **Vercel Deployment**
+- [x] **Vercel Deployment** ✅ COMPLETED (with Cloudflare cache issue)
   - [x] Connect repo to Vercel (project: race-kimi)
   - [x] Set up auto-deploy from main branch
-  - [x] Configure vercel.json for static site
-  - [x] Configure custom domain on Vercel — ✅ COMPLETED (changelog.page live)
+  - [x] Site LIVE on Vercel direct URL: race-kimi.vercel.app
+  - [ ] Purge Cloudflare cache for changelog.page domain
 
 - [x] **Basic Changelog Generator (MVP)** ✅ COMPLETED
   - [x] Create example changelog structure (Markdown → HTML)
@@ -64,12 +60,12 @@ These are essential for launch and first customer acquisition.
   - [ ] Line up 10+ supporters for launch day (do 1 week before launch)
   - [ ] Schedule launch for optimal day (Tuesday-Thursday) (do when ready)
 
-- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (account creation pending domain)
+- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (account creation pending domain fix)
   - [x] Write Twitter/X strategy document with 30-day plan
   - [x] Write LinkedIn strategy document with content calendar
   - [x] Draft bio and pinned tweet
-  - [ ] Create Twitter/X account (@changelogpage) — pending domain
-  - [ ] Create LinkedIn page — pending domain
+  - [ ] Create Twitter/X account (@changelogpage) — pending domain fix
+  - [ ] Create LinkedIn page — pending domain fix
   - [ ] Follow target audience (SaaS founders, indie hackers) — pending accounts
 
 - [x] **Content Creation** ✅ COMPLETED
@@ -107,7 +103,7 @@ These are essential for launch and first customer acquisition.
   - [x] Add feed auto-discovery meta tags
   - [x] Validate feeds with W3C validator
 
-- [x] **Documentation** ⏩ IN PROGRESS
+- [x] **Documentation** ✅ COMPLETED
   - [x] Write Getting Started guide — guides users from zero to first changelog
   - [x] Create FAQ page — answers common questions, reduces support
   - [x] Write Custom Domain setup guide — needed for Pro conversions
@@ -121,29 +117,28 @@ Important for growth and user retention, but not blocking launch.
 
 ### Marketing & Growth
 
-- [x] **SEO Optimization** (Partially moved to P1) ⏩ IN PROGRESS
+- [x] **SEO Optimization** ✅ PARTIALLY COMPLETED
   - [x] Create sitemap.xml — submit to Google Search Console
   - [x] Create robots.txt — guide search engine crawlers
   - [x] Add structured data (JSON-LD) to key pages ✅ COMPLETED
-  - [ ] Submit sitemap to Google Search Console — pending domain
+  - [ ] Submit sitemap to Google Search Console — pending domain fix
   - [ ] Keyword research ("changelog tool", "saas changelog", etc.)
   - [ ] Optimize all pages for target keywords
   - [ ] Build backlinks (guest posts, directories)
-  - [ ] Add meta descriptions to all pages for better CTR
 
-- [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain)
+- [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
   - [x] Write and queue 5 Reddit posts for r/SaaS launch
   - [x] Create Indie Hackers milestone post draft
-  - [ ] Comment on relevant Product Hunt launches (2-3 per day) — pending domain/social accounts
+  - [ ] Comment on relevant Product Hunt launches (2-3 per day) — pending domain fix
   - [ ] Answer changelog-related questions on Stack Overflow — pending
   - [x] Create Hacker News "Show HN" post draft
   - [ ] Engage in Indie Hackers daily — pending social accounts
 
 - [ ] **Case Studies**
-  - Interview 3 beta users (need actual users first)
-  - Write case study: "How [Company] Increased Engagement with a Public Changelog"
-  - Get testimonials for landing page
-  - Create "Powered by Changelog.page" badge
+  - [ ] Interview 3 beta users (need actual users first)
+  - [ ] Write case study: "How [Company] Increased Engagement with a Public Changelog"
+  - [ ] Get testimonials for landing page
+  - [ ] Create "Powered by Changelog.page" badge
 
 ### Content & Marketing (Ongoing)
 
@@ -158,13 +153,13 @@ Important for growth and user retention, but not blocking launch.
   - [x] Draft affiliate program terms and agreement
   - [x] Create "Powered by Changelog.page" badge generator
 
-- [ ] **Additional Blog Content** — P2 ⏩ IN PROGRESS
+- [x] **Additional Blog Content** — P2 ✅ COMPLETED
   - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
   - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
   - [x] "The Complete Guide to Changelog Design"
   - [x] "Integrating Your Changelog with Slack/Discord"
 
-- [ ] **Site Optimization** — P2
+- [ ] **Site Optimization** — P2 ⏩ CURRENT FOCUS
   - [ ] Mobile responsiveness audit (all pages)
   - [ ] Performance optimization (image compression, lazy loading)
   - [ ] Accessibility audit (WCAG compliance)
@@ -177,31 +172,31 @@ Important for growth and user retention, but not blocking launch.
   - [ ] Add live chat widget (Crisp/Tawk.to free tier)
 
 - [ ] **Partnerships**
-  - Reach out to 10 micro-SaaS founders for partnerships
-  - Offer free Pro in exchange for testimonials
-  - Collaborate on content (guest posts, podcasts)
+  - [ ] Reach out to 10 micro-SaaS founders for partnerships
+  - [ ] Offer free Pro in exchange for testimonials
+  - [ ] Collaborate on content (guest posts, podcasts)
 
 ### Product
 
 - [ ] **GitHub Integration**
-  - Create GitHub Action template
-  - Support GitHub Releases as changelog source
-  - Auto-generate changelog from commit messages (optional)
+  - [ ] Create GitHub Action template
+  - [ ] Support GitHub Releases as changelog source
+  - [ ] Auto-generate changelog from commit messages (optional)
 
 - [ ] **Analytics**
-  - Add basic view tracking
-  - Create simple analytics dashboard
-  - Track popular posts and entry points
+  - [ ] Add basic view tracking
+  - [ ] Create simple analytics dashboard
+  - [ ] Track popular posts and entry points
 
 - [ ] **Private Changelogs**
-  - Implement password protection (static HTML with JS)
-  - Document security considerations
-  - Add "Private" badge to entry list
+  - [ ] Implement password protection (static HTML with JS)
+  - [ ] Document security considerations
+  - [ ] Add "Private" badge to entry list
 
 - [ ] **Scheduled Posts**
-  - Support future-dated entries in Markdown
-  - Filter future dates at build time
-  - Document scheduling workflow
+  - [ ] Support future-dated entries in Markdown
+  - [ ] Filter future dates at build time
+  - [ ] Document scheduling workflow
 
 ---
 
@@ -212,43 +207,43 @@ Nice-to-haves that improve the product but aren't critical.
 ### Marketing
 
 - [ ] **YouTube Content**
-  - Create "How to Set Up Your Changelog" tutorial
-  - Create "Changelog Best Practices" video
-  - Create product walkthrough video
+  - [ ] Create "How to Set Up Your Changelog" tutorial
+  - [ ] Create "Changelog Best Practices" video
+  - [ ] Create product walkthrough video
 
 - [ ] **Affiliate Program**
-  - Research affiliate platforms (Rewardful, Tapfiliate)
-  - Create affiliate terms (30% recurring commission)
-  - Recruit 5 initial affiliates
+  - [ ] Research affiliate platforms (Rewardful, Tapfiliate)
+  - [ ] Create affiliate terms (30% recurring commission)
+  - [ ] Recruit 5 initial affiliates
 
 - [ ] **Paid Advertising Test**
-  - Run Twitter ads ($20 test budget)
-  - Run Reddit ads ($10 test budget)
-  - Measure CAC and compare to LTV
+  - [ ] Run Twitter ads ($20 test budget)
+  - [ ] Run Reddit ads ($10 test budget)
+  - [ ] Measure CAC and compare to LTV
 
 ### Product
 
 - [ ] **API Development**
-  - Design REST API
-  - Implement basic endpoints (GET entries, POST entry)
-  - Write API documentation
-  - Create Postman collection
+  - [ ] Design REST API
+  - [ ] Implement basic endpoints (GET entries, POST entry)
+  - [ ] Write API documentation
+  - [ ] Create Postman collection
 
 - [ ] **Integrations**
-  - Linear integration (sync issues to changelog)
-  - Notion integration (embed changelog)
-  - Slack webhook (announce new entries)
-  - Discord webhook
+  - [ ] Linear integration (sync issues to changelog)
+  - [ ] Notion integration (embed changelog)
+  - [ ] Slack webhook (announce new entries)
+  - [ ] Discord webhook
 
 - [ ] **Advanced Themes**
-  - Dark mode toggle
-  - Custom CSS injection
-  - Theme marketplace (community themes)
+  - [ ] Dark mode toggle
+  - [ ] Custom CSS injection
+  - [ ] Theme marketplace (community themes)
 
 - [ ] **Team Features**
-  - Multi-user support
-  - Role-based permissions
-  - Activity log
+  - [ ] Multi-user support
+  - [ ] Role-based permissions
+  - [ ] Activity log
 
 ---
 
@@ -257,25 +252,25 @@ Nice-to-haves that improve the product but aren't critical.
 Ideas for after the 12-week race is complete.
 
 - [ ] **Changelog Widget**
-  - Embeddable widget for existing sites
-  - Notification badge for unread updates
-  - In-app changelog for SaaS products
+  - [ ] Embeddable widget for existing sites
+  - [ ] Notification badge for unread updates
+  - [ ] In-app changelog for SaaS products
 
 - [ ] **AI-Powered Features**
-  - Auto-summarize long updates
-  - Suggest categories/tags
-  - Generate social media posts from changelog entries
+  - [ ] Auto-summarize long updates
+  - [ ] Suggest categories/tags
+  - [ ] Generate social media posts from changelog entries
 
 - [ ] **Enterprise Features**
-  - SAML SSO
-  - Audit logs
-  - SLA guarantees
-  - Dedicated support
+  - [ ] SAML SSO
+  - [ ] Audit logs
+  - [ ] SLA guarantees
+  - [ ] Dedicated support
 
 - [ ] **Mobile Apps**
-  - iOS app for managing changelogs
-  - Android app
-  - Push notifications
+  - [ ] iOS app for managing changelogs
+  - [ ] Android app
+  - [ ] Push notifications
 
 ---
 
@@ -296,7 +291,7 @@ Ideas for after the 12-week race is complete.
 ## 🏆 Race Milestones
 
 - [x] **Day 1**: Idea selected, landing page built
-- [ ] **Week 1**: Domain purchased, MVP functional
+- [x] **Week 1**: Domain purchased, MVP functional
 - [ ] **Week 2**: First beta users
 - [ ] **Week 4**: Product Hunt launch
 - [ ] **Week 6**: First paying customer
@@ -318,4 +313,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-08 — Day 2 (Late Session)*
+*Last updated: 2026-04-09 — Day 3*
