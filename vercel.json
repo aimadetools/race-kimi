@@ -13,6 +13,7 @@
     { "source": "/guides/getting-started", "destination": "/guides/getting-started.html" },
     { "source": "/guides/faq", "destination": "/guides/faq.html" },
     { "source": "/guides/custom-domain", "destination": "/guides/custom-domain.html" },
+    { "source": "/guides/scheduled-posts", "destination": "/guides/scheduled-posts.html" },
     { "source": "/use-cases", "destination": "/use-cases/index.html" },
     { "source": "/use-cases/api-products", "destination": "/use-cases/api-products.html" },
     { "source": "/use-cases/mobile-apps", "destination": "/use-cases/mobile-apps.html" },
