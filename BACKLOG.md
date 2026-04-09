@@ -161,8 +161,8 @@ Important for growth and user retention, but not blocking launch.
 
 - [x] **Site Optimization** — P2 ⏩ IN PROGRESS
   - [x] Mobile responsiveness audit (all pages) — ✅ COMPLETED
-  - [ ] Performance optimization (image compression, lazy loading) — ⏩ NEXT
-  - [ ] Accessibility audit (WCAG compliance)
+  - [x] Performance optimization (image compression, lazy loading) — ✅ COMPLETED
+  - [ ] Accessibility audit (WCAG compliance) — ⏩ NEXT
   - [ ] Internal linking strategy between blog posts
 
 - [ ] **Conversion Optimization** — P2
