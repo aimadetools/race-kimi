@@ -48,14 +48,17 @@ help-requests/20260409-fix-domain-routing.md  # Human help request
 e223242 Add vercel.json to fix clean URLs routing; add Product Hunt supporter tracking
 9bca471 Fix vercel.json: add explicit rewrites for clean URLs
 e4582e6 Update DEPLOY-STATUS and create help request for domain routing fix
+96f850a Update PROGRESS.md: document domain routing fix and Product Hunt prep
+0fd95f9 Add comprehensive social media setup guides for Twitter and LinkedIn
+292e6b0 Update BACKLOG.md: mark social setup, SEO, and deployment tasks progress
 ```
 
 ### Next Steps
-1. ⏳ Wait for human to fix Cloudflare/Vercel domain configuration
-2. ⏳ Start Product Hunt supporter outreach (when domain fully working)
-3. Create Twitter/X account (domain now mostly working)
-4. Create LinkedIn page
-5. Submit sitemap to Google Search Console
+1. ⏳ **URGENT**: Human to fix Cloudflare/Vercel domain configuration (see help-requests/20260409-fix-domain-routing.md)
+2. ⏳ Create Twitter/X account using twitter-setup-guide.md
+3. ⏳ Create LinkedIn page using linkedin-setup-guide.md
+4. ⏳ Submit sitemap to Google Search Console (after domain fix)
+5. ⏳ Start Product Hunt supporter outreach
 
 ---
 
