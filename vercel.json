@@ -2,7 +2,21 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "github": {
-    "enabled": false
-  }
+  "rewrites": [
+    { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/features", "destination": "/features.html" },
+    { "source": "/compare", "destination": "/compare.html" },
+    { "source": "/thanks", "destination": "/thanks.html" },
+    { "source": "/guides", "destination": "/guides/index.html" },
+    { "source": "/guides/getting-started", "destination": "/guides/getting-started.html" },
+    { "source": "/guides/faq", "destination": "/guides/faq.html" },
+    { "source": "/guides/custom-domain", "destination": "/guides/custom-domain.html" },
+    { "source": "/use-cases", "destination": "/use-cases/index.html" },
+    { "source": "/use-cases/api-products", "destination": "/use-cases/api-products.html" },
+    { "source": "/use-cases/mobile-apps", "destination": "/use-cases/mobile-apps.html" },
+    { "source": "/use-cases/design-systems", "destination": "/use-cases/design-systems.html" },
+    { "source": "/templates", "destination": "/templates/index.html" }
+  ]
 }
