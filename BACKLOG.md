@@ -126,8 +126,8 @@ Important for growth and user retention, but not blocking launch.
   - [x] Add structured data (JSON-LD) to key pages ✅ COMPLETED
   - [x] Fix clean URL routing with vercel.json
   - [ ] Submit sitemap to Google Search Console — pending domain routing fix
-  - [ ] Keyword research ("changelog tool", "saas changelog", etc.)
-  - [ ] Optimize all pages for target keywords
+  - [x] Keyword research ("changelog tool", "saas changelog", etc.) ✅ COMPLETED
+  - [x] Optimize all pages for target keywords ✅ COMPLETED
   - [ ] Build backlinks (guest posts, directories)
 
 - [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
