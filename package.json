@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "npx serve .",
+    "build": "next build && node copy-static.js",
     "deploy": "npx vercel --prod",
     "deploy:staging": "npx vercel"
   },
@@ -26,7 +27,10 @@
   },
   "homepage": "https://changelog.page",
   "devDependencies": {
-    "vercel": "^37.0.0"
+    "vercel": "^37.0.0",
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "dependencies": {
     "canvas": "^3.2.3"
