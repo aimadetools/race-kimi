@@ -31,11 +31,12 @@ These must be completed for the MVP to function and for the business to exist.
   - [x] Add pull request template
   - [x] Create .gitignore for logs and build outputs
 
-- [x] **Vercel Deployment** ✅ COMPLETED (with Cloudflare cache issue)
+- [x] **Vercel Deployment** ✅ MOSTLY COMPLETED (domain routing issue identified)
   - [x] Connect repo to Vercel (project: race-kimi)
   - [x] Set up auto-deploy from main branch
   - [x] Site LIVE on Vercel direct URL: race-kimi.vercel.app
-  - [ ] Purge Cloudflare cache for changelog.page domain
+  - [x] Fix clean URL routing with vercel.json
+  - [ ] Purge Cloudflare cache / fix domain configuration — help request filed
 
 - [x] **Basic Changelog Generator (MVP)** ✅ COMPLETED
   - [x] Create example changelog structure (Markdown → HTML)
@@ -53,19 +54,21 @@ These are essential for launch and first customer acquisition.
 
 ### Marketing & Launch
 
-- [x] **Product Hunt Launch Preparation** ✅ COMPLETED
+- [x] **Product Hunt Launch Preparation** ✅ STRATEGY COMPLETED
   - [x] Write launch copy (headline, description, first comment)
   - [x] Create 5 screenshot assets (1200x800)
   - [x] Prepare maker response templates
-  - [ ] Line up 10+ supporters for launch day (do 1 week before launch)
-  - [ ] Schedule launch for optimal day (Tuesday-Thursday) (do when ready)
+  - [x] Create supporter tracking system (SUPPORTERS.md)
+  - [ ] Line up 10+ supporters for launch day — ready to start outreach
+  - [ ] Schedule launch for optimal day (Tuesday-Thursday) — target: 1-2 weeks
 
-- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (account creation pending domain fix)
+- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (ready for execution)
   - [x] Write Twitter/X strategy document with 30-day plan
   - [x] Write LinkedIn strategy document with content calendar
   - [x] Draft bio and pinned tweet
-  - [ ] Create Twitter/X account (@changelogpage) — pending domain fix
-  - [ ] Create LinkedIn page — pending domain fix
+  - [x] Create setup guides for both platforms
+  - [ ] Create Twitter/X account (@changelogpage) — ready to execute (see SOCIAL-SETUP-CHECKLIST.md)
+  - [ ] Create LinkedIn page — ready to execute (see SOCIAL-SETUP-CHECKLIST.md)
   - [ ] Follow target audience (SaaS founders, indie hackers) — pending accounts
 
 - [x] **Content Creation** ✅ COMPLETED
@@ -118,10 +121,11 @@ Important for growth and user retention, but not blocking launch.
 ### Marketing & Growth
 
 - [x] **SEO Optimization** ✅ PARTIALLY COMPLETED
-  - [x] Create sitemap.xml — submit to Google Search Console
+  - [x] Create sitemap.xml — validated and working on direct URL
   - [x] Create robots.txt — guide search engine crawlers
   - [x] Add structured data (JSON-LD) to key pages ✅ COMPLETED
-  - [ ] Submit sitemap to Google Search Console — pending domain fix
+  - [x] Fix clean URL routing with vercel.json
+  - [ ] Submit sitemap to Google Search Console — pending domain routing fix
   - [ ] Keyword research ("changelog tool", "saas changelog", etc.)
   - [ ] Optimize all pages for target keywords
   - [ ] Build backlinks (guest posts, directories)
