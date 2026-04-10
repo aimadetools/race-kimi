@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Create a Changelog in Notion (Step-by-Step Guide) | Changelog.page</title>
+    <meta name="description" content="Learn how to create a changelog in Notion with our complete step-by-step guide. Includes templates, examples, and when to consider dedicated changelog tools.">
+    <meta name="keywords" content="notion changelog, changelog in notion, notion changelog template, product updates notion">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="How to Create a Changelog in Notion (Step-by-Step Guide)">
+    <meta property="og:description" content="Complete guide to building a product changelog in Notion. Includes templates, examples, and when to upgrade to a dedicated tool.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://changelog.page/how-to-create-changelog-in-notion.html">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Create a Changelog in Notion">
+    <meta name="twitter:description" content="Step-by-step guide to creating a product changelog in Notion with templates and examples.">
+    <meta name="twitter:image" content="https://changelog.page/og-image.png">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://changelog.page/how-to-create-changelog-in-notion.html">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Plausible Analytics -->
+    <script defer data-domain="changelog.page" src="https://plausible.io/js/script.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-secondary: #818cf8;
+            --accent-muted: rgba(99, 102, 241, 0.1);
+            --border-color: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 4px 0;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Article Header */
+        .article-header {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .article-category {
+            background: var(--accent-muted);
+            color: var(--accent-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .article-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .article-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .author-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .author-info {
+            text-align: left;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .author-role {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Table of Contents */
+        .toc {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+        
+        .toc-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+        }
+        
+        .toc-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toc-list {
+            list-style: none;
+            columns: 2;
+            gap: 2rem;
+        }
+        
+        .toc-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .toc-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .toc-list a:hover {
+            color: var(--accent-secondary);
+        }
+        
+        /* Article Content */
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        
+        .article-content h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .article-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem;
+            color: var(--text-primary);
+        }
+        
+        .article-content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+        }
+        
+        .article-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+        
+        .article-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .article-content ul, .article-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .article-content li {
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+        
+        .article-content a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+        
+        .article-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Code blocks */
+        .article-content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .article-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .article-content pre code {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .article-content p code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--accent-secondary);
+        }
+        
+        /* Info boxes */
+        .info-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-box-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-box p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+        
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* Steps */
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-content p {
+            margin-bottom: 0;
+        }
+        
+        /* Notion Template Preview */
+        .notion-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: #37352f;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notion-preview h3 {
+            color: #37352f;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .notion-preview h4 {
+            color: #37352f;
+            font-size: 1.125rem;
+            margin: 1.5rem 0 0.5rem;
+            font-weight: 600;
+        }
+        
+        .notion-preview p {
+            color: #37352f;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .notion-preview ul {
+            color: #37352f;
+            padding-left: 1.5rem;
+        }
+        
+        .notion-preview li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .notion-tag {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        
+        .tag-feature { background: #dbeafe; color: #1e40af; }
+        .tag-fix { background: #fce7f3; color: #9d174d; }
+        .tag-improvement { background: #d1fae5; color: #065f46; }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 1rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .comparison-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .comparison-table tr:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .check { color: var(--success); }
+        .cross { color: #ef4444; }
+        
+        /* CTA Box */
+        .cta-box {
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .cta-box h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        
+        .cta-box p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--accent-primary);
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+        
+        /* Lead Magnet CTA */
+        .lead-magnet {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .lead-magnet-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .lead-magnet h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+        }
+        
+        .lead-magnet p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .lead-magnet-button {
+            display: inline-block;
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .lead-magnet-button:hover {
+            background: var(--accent-secondary);
+            text-decoration: none;
+        }
+        
+        /* Related Articles */
+        .related-articles {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .related-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .related-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .related-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+        }
+        
+        .related-card-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .related-card-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+        
+        .footer-links h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-secondary);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-social a {
+            color: var(--text-secondary);
+            transition: color 0.2s, transform 0.2s;
+        }
+        
+        .footer-social a:hover {
+            color: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .toc-list {
+                columns: 1;
+            }
+            
+            .step {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.875rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 1.75rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Focus visible styles */
+        :focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">📋</div>
+                Changelog.page
+            </a>
+            <ul class="nav-links">
+                <li><a href="/features.html">Features</a></li>
+                <li><a href="/pricing.html">Pricing</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/guides/index.html">Docs</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+                ☰
+            </button>
+        </div>
+    </nav>
+    
+    <main id="main-content">
+        <!-- Article Header -->
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-category">Tutorial</span>
+                <span>12 min read</span>
+                <span>April 10, 2026</span>
+            </div>
+            <h1 class="article-title">How to Create a Changelog in Notion</h1>
+            <p class="article-subtitle">A complete step-by-step guide to building a product changelog in Notion. Includes templates, examples, and when to consider dedicated changelog tools.</p>
+            
+            <div class="author-box">
+                <div class="author-avatar">CP</div>
+                <div class="author-info">
+                    <div class="author-name">Changelog.page Team</div>
+                    <div class="author-role">Building the best changelog tool for SaaS</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Table of Contents -->
+        <nav class="toc" aria-label="Table of contents">
+            <div class="toc-container">
+                <h2 class="toc-title">📑 Table of Contents</h2>
+                <ol class="toc-list">
+                    <li><a href="#why-notion">Why Use Notion for Changelogs?</a></li>
+                    <li><a href="#setup">Setting Up Your Changelog Database</a></li>
+                    <li><a href="#structure">Structuring Your Entries</a></li>
+                    <li><a href="#template">Free Notion Template</a></li>
+                    <li><a href="#publish">Publishing Your Changelog</a></li>
+                    <li><a href="#limitations">Notion Limitations</a></li>
+                    <li><a href="#alternatives">When to Switch to a Dedicated Tool</a></li>
+                </ol>
+            </div>
+        </nav>
+        
+        <!-- Article Content -->
+        <article class="article-content">
+            <p>Notion has become the go-to workspace for startups and product teams. Its flexibility makes it a popular choice for creating internal documentation, wikis, and yes—even product changelogs.</p>
+            
+            <p>In this guide, we'll walk through exactly how to create a professional changelog in Notion, complete with templates and examples. We'll also discuss when it makes sense to stick with Notion versus upgrading to a dedicated changelog tool.</p>
+            
+            <h2 id="why-notion">Why Use Notion for Changelogs?</h2>
+            
+            <p>Before diving into the setup, let's understand why teams choose Notion for their changelogs:</p>
+            
+            <ul>
+                <li><strong>Familiar workflow:</strong> Your team already lives in Notion</li>
+                <li><strong>Quick to set up:</strong> No new tools to learn or configure</li>
+                <li><strong>Flexible structure:</strong> Databases, views, and properties adapt to your needs</li>
+                <li><strong>Internal focus:</strong> Perfect for team-only changelogs</li>
+                <li><strong>Free to start:</strong> No immediate cost for small teams</li>
+            </ul>
+            
+            <div class="info-box">
+                <div class="info-box-title">💡 Best for:</div>
+                <p>Notion works best for <strong>internal changelogs</strong>—updates meant for your team rather than customers. For public-facing changelogs, you may eventually want a dedicated tool (more on that later).</p>
+            </div>
+            
+            <h2 id="setup">Setting Up Your Changelog Database</h2>
+            
+            <p>The foundation of a good Notion changelog is a well-structured database. Here's how to set it up:</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Create a New Database</h4>
+                    <p>In your Notion workspace, create a new page and select <strong>Table</strong> as the database type. Name it "Product Changelog" or whatever makes sense for your team.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Add Essential Properties</h4>
+                    <p>Set up these properties to organize your entries:</p>
+                    <ul>
+                        <li><strong>Title</strong> (Title) - Name of the update</li>
+                        <li><strong>Date</strong> (Date) - When the change went live</li>
+                        <li><strong>Category</strong> (Select) - Feature, Fix, Improvement, Security</li>
+                        <li><strong>Status</strong> (Select) - Draft, Published, Archived</li>
+                        <li><strong>Author</strong> (Person) - Who made the update</li>
+                        <li><strong>Description</strong> (Text) - Brief summary</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Create Useful Views</h4>
+                    <p>Set up multiple views for different use cases:</p>
+                    <ul>
+                        <li><strong>All Entries</strong> - Complete changelog history</li>
+                        <li><strong>By Category</strong> - Grouped view by type of change</li>
+                        <li><strong>Recent Updates</strong> - Filtered to last 30 days</li>
+                        <li><strong>Drafts</strong> - Unpublished entries only</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2 id="structure">Structuring Your Entries</h2>
+            
+            <p>Each changelog entry should follow a consistent format. Here's what works well:</p>
+            
+            <h3>The Anatomy of a Great Entry</h3>
+            
+            <div class="notion-preview">
+                <h3>🚀 New Dashboard Analytics</h3>
+                <p><span class="notion-tag tag-feature">Feature</span> <span class="notion-tag tag-improvement">Improvement</span></p>
+                <p><strong>Released:</strong> January 15, 2024</p>
+                
+                <h4>What Changed</h4>
+                <p>We've added a comprehensive analytics dashboard that gives you insights into your usage patterns, feature adoption, and team activity.</p>
+                
+                <h4>What's New</h4>
+                <ul>
+                    <li>Track daily and monthly active users</li>
+                    <li>View feature adoption rates over time</li>
+                    <li>Export data to CSV for custom reporting</li>
+                    <li>Real-time metrics that update every 5 minutes</li>
+                </ul>
+                
+                <h4>Why We Built This</h4>
+                <p>Many of you asked for better visibility into how your teams use our product. This dashboard answers those questions and helps you make data-driven decisions.</p>
+                
+                <h4>How to Access</h4>
+                <p>Navigate to Settings → Analytics or click the new chart icon in your sidebar.</p>
+            </div>
+            
+            <h3>Writing Tips for Notion Changelogs</h3>
+            
+            <ol>
+                <li><strong>Lead with the benefit</strong> - "Faster uploads" beats "Optimized upload handler"</li>
+                <li><strong>Use emojis for categories</strong> - 🚀 Feature, 🐛 Fix, ✨ Improvement, 🔒 Security</li>
+                <li><strong>Include screenshots</strong> - Visuals show what changed</li>
+                <li><strong>Link to documentation</strong> - Help users learn more</li>
+                <li><strong>Keep it scannable</strong> - Use headers, bullets, and bold text</li>
+            </ol>
+            
+            <h2 id="template">Free Notion Changelog Template</h2>
+            
+            <p>Want to skip the setup? Use our pre-built template:</p>
+            
+            <div class="cta-box">
+                <h3>📋 Notion Changelog Template</h3>
+                <p>Get our complete Notion changelog template with pre-configured properties, views, and example entries. Duplicate it to your workspace in one click.</p>
+                <a href="#" class="cta-button" onclick="alert('Template link would go here - create in Notion and share the public URL'); return false;">Duplicate Template</a>
+            </div>
+            
+            <h3>What's Included</h3>
+            
+            <ul>
+                <li>Fully configured database with 6 properties</li>
+                <li>4 different views (All, By Category, Recent, Drafts)</li>
+                <li>5 example entries showing different change types</li>
+                <li>Entry templates for common update types</li>
+                <li>Instructions page with best practices</li>
+            </ul>
+            
+            <h2 id="publish">Publishing Your Changelog</h2>
+            
+            <p>Notion allows you to share databases publicly, which is useful for customer-facing changelogs:</p>
+            
+            <h3>How to Make Your Changelog Public</h3>
+            
+            <ol>
+                <li>Click <strong>Share</strong> in the top right of your database</li>
+                <li>Toggle <strong>Share to web</strong> to ON</li>
+                <li>Copy the public URL</li>
+                <li>Link it from your website's footer or navigation</li>
+            </ol>
+            
+            <div class="tip-box">
+                <div class="info-box-title">💡 Pro Tip:</div>
+                <p>Create a dedicated "Public Changelog" view that only shows entries with Status = "Published". This lets you draft updates internally before making them public.</p>
+            </div>
+            
+            <h3>Embedding in Your Website</h3>
+            
+            <p>You can embed your Notion changelog directly into your website using an iframe:</p>
+            
+            <pre><code>&lt;iframe 
+  src="https://your-domain.notion.site/your-changelog-url"
+  width="100%"
+  height="800"
+  frameborder="0"
+  allowfullscreen
+&gt;&lt;/iframe&gt;</code></pre>
+            
+            <p>However, this approach has limitations (see next section).</p>
+            
+            <h2 id="limitations">Notion Limitations for Changelogs</h2>
+            
+            <p>While Notion is great for getting started, it has some significant limitations as your changelog grows:</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Notion</th>
+                        <th>Dedicated Tool</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Custom domain</td>
+                        <td class="cross">❌ Notion URL only</td>
+                        <td class="check">✅ Your domain</td>
+                    </tr>
+                    <tr>
+                        <td>RSS/JSON feeds</td>
+                        <td class="cross">❌ Not available</td>
+                        <td class="check">✅ Built-in</td>
+                    </tr>
+                    <tr>
+                        <td>SEO optimization</td>
+                        <td class="cross">❌ Poor indexing</td>
+                        <td class="check">✅ Optimized</td>
+                    </tr>
+                    <tr>
+                        <td>Analytics</td>
+                        <td class="cross">❌ None</td>
+                        <td class="check">✅ View tracking</td>
+                    </tr>
+                    <tr>
+                        <td>In-app widgets</td>
+                        <td class="cross">❌ Not possible</td>
+                        <td class="check">✅ Embeddable</td>
+                    </tr>
+                    <tr>
+                        <td>GitHub integration</td>
+                        <td class="cross">❌ Manual only</td>
+                        <td class="check">✅ Auto-sync</td>
+                    </tr>
+                    <tr>
+                        <td>Slack/Discord notifications</td>
+                        <td class="cross">❌ Limited</td>
+                        <td class="check">✅ Webhooks</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile optimization</td>
+                        <td class="cross">❌ Clunky</td>
+                        <td class="check">✅ Responsive</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>When Notion Becomes Painful</h3>
+            
+            <p>Watch for these warning signs:</p>
+            
+            <ul>
+                <li>Customers can't find your changelog (buried in a Notion subdomain)</li>
+                <li>You're manually copying updates to email announcements</li>
+                <li>Your team avoids updating it because the workflow is clunky</li>
+                <li>You want to see which updates get the most engagement</li>
+                <li>You need an in-app notification widget</li>
+            </ul>
+            
+            <h2 id="alternatives">When to Switch to a Dedicated Changelog Tool</h2>
+            
+            <p>There's a natural progression most teams follow:</p>
+            
+            <h3>Stage 1: Notion (0-100 customers)</h3>
+            <p>You're validating your product. A simple Notion page works fine for early adopters who don't expect polish.</p>
+            
+            <h3>Stage 2: Simple Website (100-1,000 customers)</h3>
+            <p>You've outgrown Notion's limitations. You want a proper domain, better SEO, and basic analytics.</p>
+            
+            <h3>Stage 3: Dedicated Tool (1,000+ customers)</h3>
+            <p>Changelog is a core part of your product communication. You need feeds, widgets, and integrations.</p>
+            
+            <div class="info-box">
+                <div class="info-box-title">🎯 Our Recommendation</div>
+                <p>Start with Notion if you're already using it. But plan to migrate to a dedicated tool once you have paying customers and want changelog to be a growth channel, not just an afterthought.</p>
+            </div>
+            
+            <h3>Migration Path: Notion → Changelog.page</h3>
+            
+            <p>If you're ready to upgrade, here's how to migrate smoothly:</p>
+            
+            <ol>
+                <li><strong>Export your Notion data</strong> - Use Notion's CSV export feature</li>
+                <li><strong>Convert to Markdown</strong> - Our import tool accepts CSV or you can format manually</li>
+                <li><strong>Set up your custom domain</strong> - changelog.yoursite.com</li>
+                <li><strong>Redirect the old URL</strong> - Forward your Notion link to the new changelog</li>
+                <li><strong>Announce the move</strong> - Let customers know about your improved changelog</li>
+            </ol>
+            
+            <div class="cta-box">
+                <h3>Ready to Upgrade Your Changelog?</h3>
+                <p>Changelog.page gives you a professional changelog in minutes. Custom domain, RSS feeds, in-app widget, and Slack notifications—all for $15/month.</p>
+                <a href="/features.html" class="cta-button">See Features →</a>
+            </div>
+            
+            <!-- Lead Magnet CTA -->
+            <div class="lead-magnet">
+                <div class="lead-magnet-icon">🎁</div>
+                <h3>Get 3 Free Changelog Templates</h3>
+                <p>Download our professionally designed changelog templates for SaaS, API products, and feature releases. Includes Markdown, HTML, and Notion formats.</p>
+                <a href="/free-templates.html" class="lead-magnet-button">Get Free Templates →</a>
+            </div>
+            
+            <h2>Key Takeaways</h2>
+            
+            <ul>
+                <li><strong>Notion is great for starting out</strong> - Low friction, familiar tool</li>
+                <li><strong>Use a database, not just a page</strong> - Properties and views give you organization</li>
+                <li><strong>Write for your audience</strong> - Benefits over technical details</li>
+                <li><strong>Plan for the future</strong> - Know when it's time to upgrade</li>
+                <li><strong>Dedicated tools offer more</strong> - Custom domains, feeds, widgets, and analytics</li>
+            </ul>
+            
+            <p>Whether you stick with Notion or upgrade to a dedicated tool, the most important thing is <strong>consistency</strong>. A changelog that's updated regularly with valuable information will keep your users engaged and informed—regardless of the platform.</p>
+        </article>
+        
+        <!-- Related Articles -->
+        <section class="related-articles">
+            <h2 class="related-title">Related Articles</h2>
+            <div class="related-grid">
+                <a href="/how-to-write-changelogs-customers-read.html" class="related-card">
+                    <div class="related-card-category">Writing</div>
+                    <div class="related-card-title">How to Write Changelogs Your Customers Actually Read</div>
+                </a>
+                <a href="/complete-guide-to-changelog-design.html" class="related-card">
+                    <div class="related-card-category">Design</div>
+                    <div class="related-card-title">The Complete Guide to Changelog Design</div>
+                </a>
+                <a href="/changelog-widgets-vs-static-pages.html" class="related-card">
+                    <div class="related-card-category">Strategy</div>
+                    <div class="related-card-title">Changelog Widgets vs Static Pages</div>
+                </a>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo">
+                    <div class="logo-icon">📋</div>
+                    Changelog.page
+                </a>
+                <p>Beautiful changelogs for SaaS products. Turn your product updates into a powerful marketing tool.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="/features.html">Features</a></li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li><a href="/compare.html">Compare</a></li>
+                    <li><a href="/widget/index.html">Widget</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="/guides/index.html">Documentation</a></li>
+                    <li><a href="/templates/index.html">Templates</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
+                    <li><a href="/guides/faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="https://twitter.com/changelogpage" target="_blank">Twitter/X</a></li>
+                    <li><a href="https://linkedin.com/company/changelogpage" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://github.com/changelogpage" target="_blank">GitHub</a></li>
+                    <li><a href="/affiliates.html">Affiliate Program</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Changelog.page. Built with ❤️ for product teams.</p>
+            <div class="footer-social">
+                <a href="https://twitter.com/changelogpage" target="_blank" aria-label="Twitter" style="width: 20px; height: 20px; display: inline-block;">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://linkedin.com/company/changelogpage" target="_blank" aria-label="LinkedIn" style="width: 20px; height: 20px; display: inline-block;">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://github.com/changelogpage" target="_blank" aria-label="GitHub" style="width: 20px; height: 20px; display: inline-block;">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+            </div>
+            <p style="margin-top: 1rem;">
+                <a href="/privacy.html" style="color: var(--text-secondary);">Privacy</a> • 
+                <a href="/terms.html" style="color: var(--text-secondary);">Terms</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "How to Create a Changelog in Notion (Step-by-Step Guide)",
+        "description": "A complete step-by-step guide to building a product changelog in Notion. Includes templates, examples, and when to consider dedicated changelog tools.",
+        "author": {
+            "@type": "Organization",
+            "name": "Changelog.page Team"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Changelog.page",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://changelog.page/og-image.png"
+            }
+        },
+        "datePublished": "2026-04-10",
+        "dateModified": "2026-04-10",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://changelog.page/how-to-create-changelog-in-notion.html"
+        }
+    }
+    </script>
+</body>
+</html>
