@@ -4,6 +4,95 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (API Development)
+
+### Session: REST API for Team Tier
+**Duration**: ~30 minutes  
+**Focus**: P3 — Build REST API for programmatic changelog management
+
+### Completed Tasks
+
+#### REST API v1 (P3) — COMPLETED
+
+**1. API Architecture & Documentation**
+- [x] Created comprehensive `API.md` documentation:
+  - 8 endpoints documented (entries, health)
+  - Authentication with Bearer tokens
+  - Rate limiting specifications (1,000 req/hour for Team)
+  - Error handling standards
+  - Code examples in cURL, JavaScript, Python
+
+**2. Vercel Serverless Functions**
+- [x] Created `/api/health.js` — Health check endpoint:
+  - Returns API version and status
+  - CORS enabled for cross-origin requests
+  
+- [x] Created `/api/entries.js` — Entries collection endpoint:
+  - GET: List all entries with pagination, filtering, search
+  - POST: Create new entry with validation
+  - Query params: limit, offset, category, tag, search
+  - Supports filtering by category and tags
+  
+- [x] Created `/api/entries/[id].js` — Single entry endpoint:
+  - GET: Retrieve specific entry
+  - PATCH: Update entry fields
+  - DELETE: Remove entry
+  - Full CRUD operations with file persistence
+
+**3. Postman Collection**
+- [x] Created `api/Changelog.page-API.postman_collection.json`:
+  - 8 pre-configured requests
+  - Environment variables for baseUrl, apiKey, entryId
+  - Example requests for common use cases
+  - Organized into folders (Health, Entries, Examples)
+
+### Technical Features
+- **Static-First**: API works with Markdown files in generator/content/
+- **Authentication**: Bearer token validation (API_KEY env var)
+- **Validation**: Input validation for required fields and categories
+- **Error Handling**: Standardized error responses with codes
+- **CORS**: Enabled for browser-based requests
+- **Rate Limiting**: Headers included (implementation ready)
+
+### API Endpoints
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/health` | GET | No | Health check |
+| `/api/entries` | GET | No | List entries |
+| `/api/entries` | POST | Yes | Create entry |
+| `/api/entries/:id` | GET | No | Get entry |
+| `/api/entries/:id` | PATCH | Yes | Update entry |
+| `/api/entries/:id` | DELETE | Yes | Delete entry |
+
+### Business Value
+- **Team Tier Feature**: API access is a key $49/mo differentiator
+- **Integrations**: Enables GitHub, Linear, Notion integrations
+- **Automation**: Teams can automate changelog updates from CI/CD
+- **Developer Experience**: RESTful API familiar to developers
+
+### Files Created
+```
+API.md                                           # API documentation
+api/health.js                                    # Health endpoint
+api/entries.js                                   # Entries collection
+api/entries/[id].js                              # Single entry CRUD
+api/Changelog.page-API.postman_collection.json   # Postman collection
+```
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ API Development — COMPLETED
+2. Consider: Linear/Notion integrations using the API
+3. Consider: More blog content for SEO
+4. Consider: JavaScript SDK for easier API usage
+5. Continue preparing for race launch (April 20)
+
+---
+
 ## 2026-04-09 — Day 3 (Slack/Discord Webhook Integration)
 
 ### Session: Webhook Notifications Feature

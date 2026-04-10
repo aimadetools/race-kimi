@@ -231,11 +231,11 @@ Nice-to-haves that improve the product but aren't critical.
 
 ### Product
 
-- [ ] **API Development**
-  - [ ] Design REST API
-  - [ ] Implement basic endpoints (GET entries, POST entry)
-  - [ ] Write API documentation
-  - [ ] Create Postman collection
+- [x] **API Development** ✅ COMPLETED
+  - [x] Design REST API
+  - [x] Implement basic endpoints (GET entries, POST entry)
+  - [x] Write API documentation
+  - [x] Create Postman collection
 
 - [x] **Integrations** ✅ PARTIALLY COMPLETED
   - [ ] Linear integration (sync issues to changelog)
@@ -322,4 +322,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-09 — Day 3 (Slack/Discord webhook integration complete)*
+*Last updated: 2026-04-10 — Day 4 (API development complete)*

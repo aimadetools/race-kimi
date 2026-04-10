@@ -1,0 +1,245 @@
+{
+  "info": {
+    "_postman_id": "changelog-page-api-v1",
+    "name": "Changelog.page API",
+    "description": "API for programmatically managing changelog entries. Team tier feature.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Check API health status"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Entries",
+      "item": [
+        {
+          "name": "List Entries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entries?limit=20&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of entries to return (1-100)"
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of entries to skip"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category (feature, bugfix, security, improvement, announcement)",
+                  "disabled": true
+                },
+                {
+                  "key": "tag",
+                  "value": "",
+                  "description": "Filter by tag",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search in title and content",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get a list of all changelog entries with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Entry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entries/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries", "{{entryId}}"]
+            },
+            "description": "Get a single entry by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Feature Announcement\",\n  \"date\": \"2026-04-10\",\n  \"category\": \"feature\",\n  \"tags\": [\"ui\", \"enhancement\"],\n  \"content\": \"# New Feature\\n\\nWe are excited to announce a new feature that will help you...\\n\\n## Key Benefits\\n\\n- Benefit 1\\n- Benefit 2\\n- Benefit 3\\n\\n## How to Use\\n\\nSimply navigate to the dashboard and click...\",\n  \"published\": true,\n  \"metadata\": {\n    \"author\": \"Product Team\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries"]
+            },
+            "description": "Create a new changelog entry (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Entry",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"content\": \"# Updated Content\\n\\nThis is the updated content...\",\n  \"tags\": [\"ui\", \"enhancement\", \"beta\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/entries/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries", "{{entryId}}"]
+            },
+            "description": "Update an existing entry (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Entry",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/entries/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries", "{{entryId}}"]
+            },
+            "description": "Delete an entry (requires authentication)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Examples",
+      "item": [
+        {
+          "name": "Create Bug Fix Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fixed Login Issue\",\n  \"date\": \"2026-04-09\",\n  \"category\": \"bugfix\",\n  \"tags\": [\"authentication\", \"bug\"],\n  \"content\": \"# Fixed: Login Timeout Issue\\n\\nWe have resolved an issue where users were experiencing timeouts during login.\\n\\n## What Was Fixed\\n\\n- Increased session timeout from 5 minutes to 30 minutes\\n- Improved error handling for network interruptions\\n- Added automatic retry for failed requests\\n\\n## Who Was Affected\\n\\nUsers on slower connections or those taking longer than 5 minutes to complete 2FA.\",\n  \"published\": true,\n  \"metadata\": {\n    \"author\": \"Engineering Team\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries"]
+            },
+            "description": "Example: Create a bug fix entry"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Security Update",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Security Patch: Dependency Update\",\n  \"date\": \"2026-04-09\",\n  \"category\": \"security\",\n  \"tags\": [\"security\", \"dependencies\"],\n  \"content\": \"# Security Patch Released\\n\\nWe have updated several dependencies to address security vulnerabilities.\\n\\n## Updated Dependencies\\n\\n- lodash: 4.17.20 → 4.17.21\\n- axios: 0.21.0 → 0.21.4\\n\\n## Action Required\\n\\nNo action is required. All updates have been applied automatically.\",\n  \"published\": true,\n  \"metadata\": {\n    \"author\": \"Security Team\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["entries"]
+            },
+            "description": "Example: Create a security update entry"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://changelog.page/api/v1",
+      "type": "string",
+      "description": "API base URL"
+    },
+    {
+      "key": "apiKey",
+      "value": "your-api-key-here",
+      "type": "string",
+      "description": "Your API key from the Team dashboard"
+    },
+    {
+      "key": "entryId",
+      "value": "2026-04-09-api-launch",
+      "type": "string",
+      "description": "Example entry ID"
+    }
+  ]
+}
