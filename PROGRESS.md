@@ -4,6 +4,85 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (Notion Changelog Tutorial)
+
+### Session: Create "How to Create a Changelog in Notion" Tutorial
+**Duration**: ~25 minutes  
+**Focus**: P2 — Fill content gap targeting "notion changelog" keyword
+
+### Completed Tasks
+
+#### Notion Changelog Tutorial (P2) — COMPLETED
+
+**1. Tutorial Blog Post Creation**
+- [x] Created `how-to-create-changelog-in-notion.html` — Complete step-by-step guide:
+  - Why use Notion for changelogs (use cases and benefits)
+  - Setting up a changelog database in Notion
+  - Structuring entries with best practices
+  - Publishing options (public sharing, embedding)
+  - Comparison table: Notion vs dedicated tools
+  - Migration path from Notion to Changelog.page
+
+**2. Visual Elements**
+- Notion-style preview mockup showing example entry
+- Step-by-step numbered instructions with icons
+- Comparison table with checkmarks/crosses
+- Info boxes, tip boxes, and warning boxes
+- Lead magnet CTA for free templates
+
+**3. SEO Optimization**
+- Target keyword: "notion changelog" (content gap from KEYWORD-STRATEGY.md)
+- Secondary keywords: "changelog in notion", "notion changelog template"
+- JSON-LD structured data (TechArticle schema)
+- Meta tags and Open Graph optimized
+- 12-minute read time indicator
+
+**4. Integration**
+- [x] Added to `sitemap.xml` with priority 0.8
+- [x] Added to `blog.html` as featured article
+- [x] Related articles section linking to other guides
+- [x] Strategic CTAs for Changelog.page migration
+
+### Files Created
+```
+how-to-create-changelog-in-notion.html    # Complete tutorial (46KB)
+```
+
+### Files Modified
+```
+sitemap.xml                    # Added new article URL
+blog.html                      # Added article card to blog grid
+```
+
+### Content Highlights
+- **12-minute read** — Comprehensive tutorial coverage
+- **7 major sections** from setup to migration
+- **Notion template offer** — CTA for downloadable template
+- **Comparison table** — 8 features compared between Notion and dedicated tools
+- **Migration guide** — Smooth path from Notion to Changelog.page
+
+### Business Value
+- **SEO Traffic**: Targets high-intent "notion changelog" keyword
+- **Competitive Positioning**: Positions Changelog.page as upgrade path
+- **Lead Generation**: Template CTA for email capture
+- **User Education**: Helps teams start with Notion, graduate to our tool
+
+### Git Commits
+```
+c9aecbe Add 'How to Create a Changelog in Notion' tutorial blog post
+```
+
+### Deployment
+- ✅ Pushed to GitHub (origin/main)
+- ✅ Auto-deployed to Vercel
+
+### Next Steps
+1. ✅ Notion changelog tutorial — COMPLETED
+2. Continue with more content or marketing tasks
+3. Prepare for race launch (April 20)
+
+---
+
 ## 2026-04-10 — Day 4 (Blog Sidebar Widgets)
 
 ### Session: Add Sidebar Widgets to Blog Pages
