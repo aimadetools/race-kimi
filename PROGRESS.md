@@ -4,6 +4,78 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (Educational Content)
+
+### Session: Create "What is a Changelog?" Guide
+**Duration**: ~20 minutes  
+**Focus**: P2 — Fill content gap targeting "what is a changelog" keyword
+
+### Completed Tasks
+
+#### Educational Guide (P2) — COMPLETED
+
+**1. Comprehensive Guide Creation**
+- [x] Created `what-is-a-changelog.html` — Complete beginner's guide:
+  - Definition and importance of changelogs
+  - Why changelogs matter for SaaS products (6 key reasons)
+  - Key elements of effective changelogs
+  - Types of changelogs comparison table
+  - Format and structure best practices
+  - Real-world examples from top companies
+  - Changelog tools comparison
+  - Step-by-step getting started guide
+  - FAQ-style summary
+
+**2. SEO Optimization**
+- Target keyword: "what is a changelog"
+- Comprehensive table of contents
+- Internal linking to related articles
+- JSON-LD structured data (Article schema)
+- Meta tags and Open Graph optimized
+
+**3. Integration**
+- Added to `sitemap.xml` with priority 0.8
+- Added to `blog.html` as featured article
+- Related articles section with contextual links
+- Lead magnet CTA for template downloads
+- Product CTAs naturally integrated
+
+### Files Created
+```
+what-is-a-changelog.html       # Complete educational guide (46KB)
+```
+
+### Files Modified
+```
+sitemap.xml                    # Added new article URL
+blog.html                      # Added article card to blog grid
+```
+
+### Content Highlights
+- **12-minute read** — Comprehensive coverage
+- **9 major sections** covering everything from basics to tools
+- **2 comparison tables** — Types of changelogs and tools
+- **Visual examples** — Changelog format preview
+- **Actionable advice** — Step-by-step getting started section
+
+### Business Value
+- **SEO Traffic**: Targets high-intent informational keyword
+- **Educational Content**: Positions as thought leader
+- **Lead Generation**: Template CTA for email capture
+- **User Acquisition**: Beginners learn about changelogs → try our tool
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ✅ Educational guide — COMPLETED
+2. Continue with more content or marketing tasks
+3. Prepare for race launch (April 20)
+
+---
+
 ## 2026-04-10 — Day 4 (Affiliate Landing Page)
 
 ### Session: Build Affiliate Program Landing Page
