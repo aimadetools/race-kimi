@@ -139,6 +139,12 @@ Important for growth and user retention, but not blocking launch.
   - [x] Add to sitemap.xml
   - [x] Link from templates/index.html
 
+- [ ] **Lead Magnet Promotion** — IN PROGRESS (No domain dependency)
+  - [ ] Add CTA to top 5 blog posts
+  - [ ] Add inline content upgrade CTAs
+  - [ ] Create sidebar widget for blog pages
+  - [ ] Add exit-intent popup on high-traffic pages
+
 - [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
   - [x] Write and queue 5 Reddit posts for r/SaaS launch
   - [x] Create Indie Hackers milestone post draft
