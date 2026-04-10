@@ -4,6 +4,71 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (Blog Sidebar Widgets)
+
+### Session: Add Sidebar Widgets to Blog Pages
+**Duration**: ~20 minutes  
+**Focus**: P2 — Complete "sidebar widget for blog pages" task from Lead Magnet Promotion
+
+### Completed Tasks
+
+#### Sidebar Widgets Implementation (P2) — COMPLETED
+
+**1. Blog Listing Page Sidebar (blog.html)**
+- [x] Converted blog-grid to blog-layout with sidebar
+- [x] Added sticky sidebar with 3 widgets:
+  - **Lead Magnet Widget**: Promotes free templates with checkmarks
+  - **Popular Articles Widget**: Navigation to top 5 blog posts
+  - **Newsletter Widget**: Email signup form with FormSubmit.co
+- [x] Responsive design: sidebar stacks below content on mobile (<1024px)
+- [x] Consistent styling with site design system
+
+**2. Individual Blog Post Sidebar**
+- [x] Updated `how-to-write-changelogs-customers-read.html` with sidebar
+- [x] Added sticky lead magnet widget with template list
+- [x] Added newsletter signup widget
+- [x] Responsive grid layout: content + sidebar on desktop, stacked on mobile
+
+**3. Design Features**
+- Sticky positioning (top: 100px) keeps widgets visible during scroll
+- Lead magnet widget uses indigo gradient border to stand out
+- Template list with checkmarks for visual hierarchy
+- Newsletter form with email validation
+
+### Files Modified
+```
+blog.html                                        # Added sidebar with 3 widgets
+how-to-write-changelogs-customers-read.html      # Added sidebar layout + widgets
+```
+
+### CSS Features
+- Grid layout: `1fr 320px` for blog.html, `1fr 300px` for posts
+- Sticky sidebar: `position: sticky; top: 100px`
+- Mobile responsive: stacks to single column at <1024px
+- Widget cards with rounded corners, borders, gradients
+
+### Business Value
+- **Lead Generation**: Sidebar CTAs capture emails from engaged readers
+- **Content Discovery**: Popular articles widget increases page views
+- **User Retention**: Newsletter signup builds email list
+- **Conversion**: Sticky widgets stay visible as users read
+
+### Git Commits
+```
+64ed332 Add sidebar widgets to blog pages for lead magnet promotion
+```
+
+### Deployment
+- ✅ Pushed to GitHub (origin/main)
+- ✅ Auto-deployed to Vercel
+
+### Next Steps
+1. ✅ Sidebar widgets — COMPLETED
+2. Monitor conversion rates from sidebar CTAs
+3. Move to next high-priority task
+
+---
+
 ## 2026-04-10 — Day 4 (GitHub Integration Guide)
 
 ### Session: Create "Automated Changelog from GitHub Releases" Guide
