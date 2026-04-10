@@ -262,14 +262,18 @@ A curated list of directories to submit Changelog.page for backlinks and referra
 |---|-----------|-----|------|--------|----------------|-----|
 | 1 | Product Hunt | 89 | Launch | 📝 Ready | - | - |
 | 2 | AlternativeTo | 85 | Comparison | ✅ Ready | - | - |
+|   |             |    |            | 📝 Submission package ready | | |
 | 3 | G2 | 90 | Reviews | ⏳ Wait | - | - |
 | 4 | Capterra | 88 | Directory | ⏳ Wait | - | - |
 | 5 | StackShare | 75 | Developer | ✅ Ready | - | - |
+|   |            |    |           | 📝 Submission package ready | | |
 | 6 | SaaSHub | 65 | SaaS | ✅ Ready | - | - |
 | 7 | BetaList | 70 | Startup | ✅ Ready | - | - |
+|   |          |    |         | 📝 Submission package ready | | |
 | 8 | AppSumo | 80 | Deals | ⏳ Consider | - | - |
 | 9 | Launching Next | 55 | Startup | ✅ Ready | - | - |
 | 10 | Indie Hackers | 70 | Community | ✅ Ready | - | - |
+|    |               |    |           | 📝 Submission package ready | | |
 | 11 | Open Source Alt | 50 | Open Source | ✅ Ready | - | - |
 | 12 | SaaSWorthy | 55 | SaaS | ✅ Ready | - | - |
 | 13 | Crozdesk | 60 | Directory | ✅ Ready | - | - |
