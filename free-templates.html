@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Changelog Templates — 3 Ready-to-Use Templates | Changelog.page</title>
+  <meta name="description" content="Download 3 free changelog templates: SaaS Product Updates, API Documentation, and Feature Release formats. Copy-paste ready for Markdown, Notion, or GitHub.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Free Changelog Templates — 3 Ready-to-Use Formats">
+  <meta property="og:description" content="Download free changelog templates for SaaS products, APIs, and feature releases. Copy-paste ready.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://changelog.page/free-templates">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-primary: #6366f1;
+      --color-primary-dark: #4f46e5;
+      --color-primary-light: #818cf8;
+      --color-bg: #0f172a;
+      --color-surface: #1e293b;
+      --color-surface-light: #334155;
+      --color-text: #f8fafc;
+      --color-text-secondary: #94a3b8;
+      --color-border: #334155;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-logo svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-primary);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--color-text);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      color: var(--color-primary-light);
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary-light);
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+    
+    /* Two Column Layout */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+    
+    /* Templates Section */
+    .templates-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .template-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .template-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .template-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .template-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .template-title {
+      font-weight: 600;
+    }
+    
+    .template-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Form Section */
+    .form-section {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: sticky;
+      top: 100px;
+    }
+    
+    .form-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-header h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-header p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .form-input::placeholder {
+      color: var(--color-text-secondary);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+    }
+    
+    .form-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      margin-top: 1rem;
+    }
+    
+    .form-note svg {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+      margin-right: 0.25rem;
+    }
+    
+    /* Preview Section */
+    .preview-section {
+      margin-top: 4rem;
+      padding-top: 4rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .preview-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .preview-header h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .preview-header p {
+      color: var(--color-text-secondary);
+    }
+    
+    .code-preview {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .code-tabs {
+      display: flex;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .code-tab {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .code-tab:hover {
+      color: var(--color-text);
+    }
+    
+    .code-tab.active {
+      color: var(--color-primary-light);
+      background: var(--color-surface);
+      border-bottom: 2px solid var(--color-primary);
+    }
+    
+    .code-content {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--color-text);
+    }
+    
+    .code-keyword { color: #c678dd; }
+    .code-string { color: #98c379; }
+    .code-comment { color: #5c6370; font-style: italic; }
+    
+    /* Features Section */
+    .features-section {
+      margin-top: 4rem;
+      padding-top: 4rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .feature {
+      text-align: center;
+      padding: 1.5rem;
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .feature h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      margin-top: 4rem;
+      padding: 3rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+    
+    .cta-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .cta-section p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .btn-large {
+      padding: 1rem 2rem;
+      font-size: 1.125rem;
+    }
+    
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--color-text);
+    }
+    
+    .footer-copyright {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Success State */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .success-message.active {
+      display: block;
+    }
+    
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+    }
+    
+    .success-message h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-message p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      background: var(--color-success);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .download-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+    }
+    
+    .form-content.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-content">
+      <a href="/" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Changelog.page
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features.html">Features</a></li>
+        <li><a href="/pricing.html">Pricing</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      Free Download — No Credit Card Required
+    </div>
+    <h1>Free Changelog <span>Templates</span></h1>
+    <p class="hero-subtitle">3 battle-tested changelog formats used by top SaaS companies. Copy, customize, and start publishing professional product updates today.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Templates</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Downloads</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Free Forever</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="content-grid">
+      <!-- Templates Section -->
+      <div class="templates-section">
+        <h2>What's Included</h2>
+        
+        <div class="template-card">
+          <div class="template-header">
+            <div class="template-icon">🚀</div>
+            <div>
+              <div class="template-title">SaaS Product Updates</div>
+            </div>
+          </div>
+          <p class="template-desc">Perfect for monthly product updates. Includes feature highlights, improvements, and bug fixes with clear categorization.</p>
+        </div>
+        
+        <div class="template-card">
+          <div class="template-header">
+            <div class="template-icon">⚡</div>
+            <div>
+              <div class="template-title">API Documentation</div>
+            </div>
+          </div>
+          <p class="template-desc">Developer-focused format for API changes. Breaking changes, deprecations, and new endpoints with migration guides.</p>
+        </div>
+        
+        <div class="template-card">
+          <div class="template-header">
+            <div class="template-icon">✨</div>
+            <div>
+              <div class="template-title">Feature Release</div>
+            </div>
+          </div>
+          <p class="template-desc">Single feature announcements with hero images, use cases, and getting started instructions. Great for launches.</p>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--color-surface); border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
+          <h3 style="font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-primary);">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Also Includes
+          </h3>
+          <ul style="list-style: none; font-size: 0.9375rem; color: var(--color-text-secondary);">
+            <li style="margin-bottom: 0.5rem;">✓ Markdown, HTML & Notion formats</li>
+            <li style="margin-bottom: 0.5rem;">✓ Writing best practices guide</li>
+            <li style="margin-bottom: 0.5rem;">✓ Category tagging examples</li>
+            <li>✓ Email announcement template</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Form Section -->
+      <div class="form-section">
+        <div class="form-content" id="formContent">
+          <div class="form-header">
+            <h2>Get Your Free Templates</h2>
+            <p>Enter your email and we'll send you instant access to all 3 templates.</p>
+          </div>
+          
+          <form action="https://formsubmit.co/race@aimadetools.com" method="POST">
+            <input type="hidden" name="_next" value="https://changelog.page/free-templates?submitted=true">
+            <input type="hidden" name="_subject" value="New Template Download Request">
+            <input type="hidden" name="_captcha" value="false">
+            
+            <div class="form-group">
+              <label class="form-label" for="name">First Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="John" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="company">Company (Optional)</label>
+              <input type="text" id="company" name="company" class="form-input" placeholder="Acme Inc.">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download Free Templates
+            </button>
+            
+            <p class="form-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              We respect your privacy. Unsubscribe anytime.
+            </p>
+          </form>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">🎉</div>
+          <h3>Check Your Inbox!</h3>
+          <p>We've sent the templates to your email. If you don't see it in a few minutes, check your spam folder.</p>
+          <a href="/" class="download-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Back to Homepage
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Section -->
+    <section class="preview-section">
+      <div class="preview-header">
+        <h2>Template Preview</h2>
+        <p>Here's a sneak peek of the SaaS Product Updates template</p>
+      </div>
+      
+      <div class="code-preview">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="showTab('markdown')">Markdown</button>
+          <button class="code-tab" onclick="showTab('html')">HTML</button>
+          <button class="code-tab" onclick="showTab('notion')">Notion</button>
+        </div>
+        <div class="code-content" id="markdownContent"><span class="code-comment">---</span>
+<span class="code-keyword">date</span>: 2026-04-10
+<span class="code-keyword">title</span>: <span class="code-string">"April 2026 Product Update"</span>
+<span class="code-keyword">category</span>: feature
+<span class="code-keyword">tags</span>: [<span class="code-string">"dashboard"</span>, <span class="code-string">"api"</span>, <span class="code-string">"performance"</span>]
+<span class="code-comment">---</span>
+
+<span class="code-comment">## 🚀 What's New</span>
+
+<span class="code-comment">### Custom Dashboard Widgets</span>
+Build personalized dashboards with drag-and-drop widgets. 
+Track metrics that matter to your team.
+
+<span class="code-string">![Dashboard Preview](dashboard-widgets.png)</span>
+
+<span class="code-comment">**Getting Started:**</span>
+1. Navigate to Dashboard → Customize
+2. Click "Add Widget"
+3. Select from 15+ pre-built templates
+
+<span class="code-comment">---</span>
+
+<span class="code-comment">## ✨ Improvements</span>
+
+- <span class="code-keyword">**API Response Times**</span>: 40% faster queries with new caching layer
+- <span class="code-keyword">**Mobile App**</span>: Offline mode now supports editing
+- <span class="code-keyword">**Exports**</span>: PDF reports include your company branding
+
+<span class="code-comment">## 🐛 Bug Fixes</span>
+
+- Fixed: Notifications not appearing for team mentions
+- Fixed: CSV import failing on files > 10MB
+- Fixed: Dark mode toggle not persisting across sessions</div>
+        <div class="code-content" id="htmlContent" style="display: none;"><span class="code-comment">&lt;!-- SaaS Product Update Template --&gt;</span>
+<span class="code-keyword">&lt;article</span> <span class="code-string">class</span>=<span class="code-string">"changelog-entry"</span><span class="code-keyword">&gt;</span>
+  <span class="code-keyword">&lt;header</span> <span class="code-string">class</span>=<span class="code-string">"entry-header"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;span</span> <span class="code-string">class</span>=<span class="code-string">"entry-date"</span><span class="code-keyword">&gt;</span>April 2026<span class="code-keyword">&lt;/span&gt;</span>
+    <span class="code-keyword">&lt;h2&gt;</span>Product Update<span class="code-keyword">&lt;/h2&gt;</span>
+    <span class="code-keyword">&lt;span</span> <span class="code-string">class</span>=<span class="code-string">"badge badge-feature"</span><span class="code-keyword">&gt;</span>Feature<span class="code-keyword">&lt;/span&gt;</span>
+  <span class="code-keyword">&lt;/header&gt;</span>
+
+  <span class="code-keyword">&lt;section</span> <span class="code-string">class</span>=<span class="code-string">"whats-new"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;h3&gt;</span>🚀 What's New<span class="code-keyword">&lt;/h3&gt;</span>
+    
+    <span class="code-keyword">&lt;div</span> <span class="code-string">class</span>=<span class="code-string">"feature-spotlight"</span><span class="code-keyword">&gt;</span>
+      <span class="code-keyword">&lt;h4&gt;</span>Custom Dashboard Widgets<span class="code-keyword">&lt;/h4&gt;</span>
+      <span class="code-keyword">&lt;p&gt;</span>Build personalized dashboards with drag-and-drop.<span class="code-keyword">&lt;/p&gt;</span>
+      <span class="code-keyword">&lt;img</span> <span class="code-string">src</span>=<span class="code-string">"dashboard.png"</span> <span class="code-string">alt</span>=<span class="code-string">"Dashboard"</span><span class="code-keyword">&gt;</span>
+      
+      <span class="code-keyword">&lt;ol</span> <span class="code-string">class</span>=<span class="code-string">"steps"</span><span class="code-keyword">&gt;</span>
+        <span class="code-keyword">&lt;li&gt;</span>Navigate to Dashboard → Customize<span class="code-keyword">&lt;/li&gt;</span>
+        <span class="code-keyword">&lt;li&gt;</span>Click "Add Widget"<span class="code-keyword">&lt;/li&gt;</span>
+        <span class="code-keyword">&lt;li&gt;</span>Select from 15+ templates<span class="code-keyword">&lt;/li&gt;</span>
+      <span class="code-keyword">&lt;/ol&gt;</span>
+    <span class="code-keyword">&lt;/div&gt;</span>
+  <span class="code-keyword">&lt;/section&gt;</span>
+<span class="code-keyword">&lt;/article&gt;</span></div>
+        <div class="code-content" id="notionContent" style="display: none;"><span class="code-comment">📅 April 2026 Product Update</span>
+
+<span class="code-keyword">🏷️</span> Category: Feature
+<span class="code-keyword">🏷️</span> Tags: Dashboard, API, Performance
+
+<span class="code-keyword">🚀 What's New</span>
+
+<span class="code-keyword">▶</span> Custom Dashboard Widgets
+Build personalized dashboards with drag-and-drop 
+widgets. Track metrics that matter to your team.
+
+[Image: Dashboard Preview]
+
+<span class="code-keyword">Getting Started:</span>
+☐ Navigate to Dashboard → Customize
+☐ Click "Add Widget"  
+☐ Select from 15+ pre-built templates
+
+<span class="code-keyword">---</span>
+
+<span class="code-keyword">✨ Improvements</span>
+
+→ <span class="code-keyword">API Response Times</span>: 40% faster with new caching
+→ <span class="code-keyword">Mobile App</span>: Offline editing now supported
+→ <span class="code-keyword">Exports</span>: PDF reports with company branding
+
+<span class="code-keyword">🐛 Bug Fixes</span>
+
+□ Fixed: Team mention notifications
+□ Fixed: CSV import for large files
+□ Fixed: Dark mode persistence</div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Download</h3>
+          <p>Get all templates immediately after signing up. No waiting, no verification delays.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎨</div>
+          <h3>Multi-Format</h3>
+          <p>Available in Markdown, HTML, and Notion formats. Use whatever works for your workflow.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📖</div>
+          <h3>Best Practices</h3>
+          <p>Each template includes annotations explaining why certain elements work best.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Ready to Upgrade Your Changelog?</h2>
+      <p>Join 500+ SaaS founders who are publishing professional product updates with our templates.</p>
+      <a href="#formContent" class="btn btn-primary btn-large">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Get Free Templates
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/features.html">Features</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/guides/">Guides</a>
+    </div>
+    <p class="footer-copyright">© 2026 Changelog.page — Built for SaaS founders</p>
+  </footer>
+
+  <script>
+    // Tab switching
+    function showTab(format) {
+      // Hide all content
+      document.getElementById('markdownContent').style.display = 'none';
+      document.getElementById('htmlContent').style.display = 'none';
+      document.getElementById('notionContent').style.display = 'none';
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.code-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected content
+      document.getElementById(format + 'Content').style.display = 'block';
+      event.target.classList.add('active');
+    }
+    
+    // Check for form submission success
+    if (window.location.search.includes('submitted=true')) {
+      document.getElementById('formContent').classList.add('hidden');
+      document.getElementById('successMessage').classList.add('active');
+    }
+  </script>
+</body>
+</html>

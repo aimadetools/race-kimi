@@ -132,6 +132,13 @@ Important for growth and user retention, but not blocking launch.
   - [x] Optimize all pages for target keywords ✅ COMPLETED
   - [x] Build backlinks (guest posts, directories) ✅ Ready to execute (templates in partnerships/)
 
+- [x] **Lead Generation** ✅ COMPLETED
+  - [x] Create free template bundle landing page (/free-templates)
+  - [x] Create 3 downloadable Markdown templates (SaaS, API, Feature Release)
+  - [x] Add email capture form with FormSubmit.co
+  - [x] Add to sitemap.xml
+  - [x] Link from templates/index.html
+
 - [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
   - [x] Write and queue 5 Reddit posts for r/SaaS launch
   - [x] Create Indie Hackers milestone post draft
