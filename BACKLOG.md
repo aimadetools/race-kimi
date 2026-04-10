@@ -138,9 +138,9 @@ Important for growth and user retention, but not blocking launch.
   - [x] Create Hacker News "Show HN" post draft
   - [ ] Engage in Indie Hackers daily — pending social accounts
 
-- [ ] **Social Proof & Trust Building** — P2
-  - [ ] Add testimonials section to landing page — ⏩ NEXT
-  - [ ] Create "As seen on" / "Trusted by" logo section
+- [x] **Social Proof & Trust Building** — P2 ✅ MOSTLY COMPLETED
+  - [x] Add testimonials section to landing page
+  - [x] Create "Works with your stack" integrations section (GitHub, Slack, Discord, Vercel)
   - [ ] Interview 3 beta users for case studies (need users first)
   - [ ] Write case study: "How [Company] Increased Engagement with a Public Changelog"
   - [x] Create "Powered by Changelog.page" badge generator page ✅ COMPLETED
