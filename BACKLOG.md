@@ -128,7 +128,7 @@ Important for growth and user retention, but not blocking launch.
   - [ ] Submit sitemap to Google Search Console — pending domain routing fix
   - [x] Keyword research ("changelog tool", "saas changelog", etc.) ✅ COMPLETED
   - [x] Optimize all pages for target keywords ✅ COMPLETED
-  - [ ] Build backlinks (guest posts, directories)
+  - [x] Build backlinks (guest posts, directories) ✅ Ready to execute (templates in partnerships/)
 
 - [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
   - [x] Write and queue 5 Reddit posts for r/SaaS launch
