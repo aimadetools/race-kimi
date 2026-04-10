@@ -158,6 +158,11 @@ Important for growth and user retention, but not blocking launch.
   - [x] Draft affiliate program terms and agreement
   - [x] Create "Powered by Changelog.page" badge generator
 
+- [x] **Embeddable Widget** — P2 ✅ COMPLETED
+  - [x] JavaScript widget with notification badge
+  - [x] Demo page with documentation
+  - [x] Dark/light themes, 4 positions
+  
 - [x] **Additional Blog Content** — P2 ✅ COMPLETED
   - [x] "Changelog Widgets vs Static Pages: Pros and Cons"
   - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
@@ -261,10 +266,10 @@ Nice-to-haves that improve the product but aren't critical.
 
 Ideas for after the 12-week race is complete.
 
-- [ ] **Changelog Widget**
-  - [ ] Embeddable widget for existing sites
-  - [ ] Notification badge for unread updates
-  - [ ] In-app changelog for SaaS products
+- [x] **Changelog Widget** — ✅ MOVED TO P2 & COMPLETED
+  - [x] Embeddable widget for existing sites
+  - [x] Notification badge for unread updates
+  - [x] In-app changelog for SaaS products
 
 - [ ] **AI-Powered Features**
   - [ ] Auto-summarize long updates
@@ -324,4 +329,4 @@ Ideas for after the 12-week race is complete.
 
 ---
 
-*Last updated: 2026-04-10 — Day 4 (API development complete)*
+*Last updated: 2026-04-10 — Day 4 (Embeddable Widget complete)*
