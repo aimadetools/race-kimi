@@ -4,6 +4,73 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (Affiliate Program Setup)
+
+### Session: Affiliate Program Research & Documentation
+**Duration**: ~20 minutes  
+**Focus**: P3 — Research platforms and create affiliate program documentation
+
+### Completed Tasks
+
+#### Affiliate Program (P3) — RESEARCH COMPLETE
+
+**1. Platform Research**
+- [x] Compared 5 affiliate platforms: Rewardful, Tapfiliate, FirstPromoter, LemonSqueezy, Self-hosted
+- [x] **Recommendation**: Rewardful ($29/mo, best Stripe integration)
+- [x] Documented pricing, features, pros/cons for each platform
+
+**2. Affiliate Terms & Conditions**
+- [x] Complete affiliate terms document created
+- [x] Commission structure: 30% recurring (Standard), 35% (Partner), 40% (VIP)
+- [x] Payment terms: $50 minimum, monthly payout, 30-day hold
+- [x] FTC disclosure requirements included
+- [x] Prohibited activities clearly defined
+
+**3. Affiliate Landing Page**
+- [x] Complete page outline with copy for /affiliates
+- [x] Commission calculator concept
+- [x] FAQ section with 6 common questions
+- [x] Marketing resources list
+
+**4. Implementation Timeline**
+- Phase 1: Set up Stripe billing (Week 6-8)
+- Phase 2: Add Rewardful integration (Week 8)
+- Phase 3: Recruit first 5 affiliates (Week 9)
+
+### Files Created
+```
+partnerships/affiliate-program/
+├── PLATFORM-RESEARCH.md    # Platform comparison and recommendation
+├── AFFILIATE-TERMS.md      # Complete terms and conditions
+└── LANDING-PAGE.md         # /affiliates page outline and copy
+```
+
+### Business Value
+- **Revenue Channel**: Affiliates can drive significant signups
+- **Low Risk**: Pay only for performance
+- **Scalable**: Can grow to 50+ affiliates
+- **Earnings Potential**: At 30% recurring, affiliates incentivized long-term
+
+### Commission Projection
+| Scenario | Monthly Referrals | Monthly Commission |
+|----------|-------------------|-------------------|
+| Conservative | 5 Pro plans | $22.50 |
+| Moderate | 10 mixed plans | $73.50 |
+| Strong | 25 mixed plans | $183.75 |
+
+### Git Commits
+```
+[To be committed]
+```
+
+### Next Steps
+1. ⏳ Set up Stripe billing (required before affiliate program)
+2. ⏳ Sign up for Rewardful
+3. ⏳ Build /affiliates landing page
+4. ⏳ Recruit first affiliates from beta users
+
+---
+
 ## 2026-04-10 — Day 4 (Directory Submissions)
 
 ### Session: SaaS Directory Submission Packages
