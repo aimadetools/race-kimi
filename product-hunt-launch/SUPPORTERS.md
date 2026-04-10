@@ -4,7 +4,32 @@ Track and manage supporters for the Changelog.page Product Hunt launch.
 
 **Target**: 10+ committed supporters  
 **Launch Goal**: 200+ upvotes  
-**Current Status**: 0 committed
+**Current Status**: 0 committed  
+**Launch Date**: April 20, 2026 (10 days away)
+
+---
+
+## Quick Start: Where to Engage Right Now
+
+### 1. Indie Hackers (Highest Priority)
+**URL**: https://indiehackers.com/group/product-launch
+**Post Type**: Milestone + soft ask
+**Status**: 🟡 Ready to post (see templates below)
+
+### 2. Reddit r/SaaS (High Priority)
+**URL**: https://reddit.com/r/SaaS
+**Post Type**: Building in public + launch announcement
+**Status**: 🟡 Ready to post (see templates below)
+
+### 3. Reddit r/webdev (High Priority)
+**URL**: https://reddit.com/r/webdev
+**Post Type**: Showoff Saturday or tool showcase
+**Status**: 🟡 Ready to post
+
+### 4. Twitter/X SaaS Community
+**Hashtags**: #buildinpublic #indiehacker #SaaS
+**Strategy**: Value-first posts, then DM relationships
+**Status**: 🟡 Ready to execute
 
 ---
 
@@ -12,16 +37,16 @@ Track and manage supporters for the Changelog.page Product Hunt launch.
 
 | # | Name/Handle | Source | Contact Method | Status | Commitment | Notes |
 |---|-------------|--------|----------------|--------|------------|-------|
-| 1 | | | | 🔲 Not contacted | | |
-| 2 | | | | 🔲 Not contacted | | |
-| 3 | | | | 🔲 Not contacted | | |
-| 4 | | | | 🔲 Not contacted | | |
-| 5 | | | | 🔲 Not contacted | | |
-| 6 | | | | 🔲 Not contacted | | |
-| 7 | | | | 🔲 Not contacted | | |
-| 8 | | | | 🔲 Not contacted | | |
-| 9 | | | | 🔲 Not contacted | | |
-| 10 | | | | 🔲 Not contacted | | |
+| 1 | Indie Hackers Community | IH Product Launch | Post + comments | 🟡 Ready to post | — | See template below |
+| 2 | r/SaaS Community | Reddit | Post | 🟡 Ready to post | — | Building in public angle |
+| 3 | r/webdev Community | Reddit | Post | 🟡 Ready to post | — | Dev-focused features |
+| 4 | @marc_louvion | Twitter/X | DM | 🟡 Ready to send | — | ShipFast founder |
+| 5 | @damon_chen | Twitter/X | DM | 🟡 Ready to send | — | Testimonial.to founder |
+| 6 | @sama | Twitter/X | DM | 🔲 Not contacted | — | Post-launch reach |
+| 7 | @arvidkahl | Twitter/X | DM | 🔲 Not contacted | — | Feedback Panda founder |
+| 8 | Beta User #1 | Waitlist | Email | 🔲 Not contacted | — | Need beta users first |
+| 9 | Beta User #2 | Waitlist | Email | 🔲 Not contacted | — | Need beta users first |
+| 10 | Product Hunt Community | PH | Comment engagement | 🟡 In progress | — | Comment on 3 launches/day |
 
 **Status Legend**:
 - 🔲 Not contacted
@@ -31,126 +56,379 @@ Track and manage supporters for the Changelog.page Product Hunt launch.
 
 ---
 
-## Where to Find Supporters
+## Ready-to-Post Content
 
-### 1. Indie Hackers Community
-- **URL**: https://indiehackers.com
-- **Strategy**: Post in "Milestones" or "Product Launch" groups
-- **Approach**: Share journey, ask for feedback first, then support
-- **Target**: 3-5 supporters
+### Indie Hackers Post (Post This Week)
 
-### 2. Reddit Communities
-- **r/SaaS** (130K+ members): https://reddit.com/r/SaaS
-- **r/Entrepreneur** (1M+ members): https://reddit.com/r/Entrepreneur
-- **r/webdev** (1.2M+ members): https://reddit.com/r/webdev
-- **r/startups** (1M+ members): https://reddit.com/r/startups
-- **Strategy**: "Building in public" posts 1-2 weeks before launch
-- **Target**: 2-3 supporters
+**Title**: "Launching Changelog.page on Product Hunt in 10 days — here's my journey so far"
 
-### 3. Twitter/X SaaS Community
-- Search hashtags: #buildinpublic #SaaS #indiehacker
-- Engage with founders building similar tools
-- Build relationships before asking
-- **Target**: 2-3 supporters
+```
+Hey Indie Hackers! 👋
 
-### 4. Previous Connections
-- Anyone who's given feedback during development
-- Beta testers (when we have them)
-- Friends in tech who understand Product Hunt
-- **Target**: 2-3 supporters
+I've been building Changelog.page — a simple, beautiful changelog tool for SaaS founders who are tired of GitHub Releases looking... well, like GitHub.
 
-### 5. Product Hunt Community
-- Comment thoughtfully on other launches
-- Build reputation before launching
-- Engage with makers in similar space
-- **Target**: 1-2 supporters
+**The Problem**
+I noticed most indie hackers either:
+- Use GitHub Releases (not customer-friendly)
+- Pay $49+/mo for Headway/Beamer (expensive for pre-revenue)
+- Build custom solutions (time they don't have)
+
+**The Solution**
+Changelog.page generates beautiful, static changelogs that:
+- Load instantly (static HTML, no JS bloat)
+- Rank on Google (SEO-optimized out of the box)
+- Cost $15/mo instead of $50 (indie-friendly pricing)
+- Sync with GitHub Releases (zero manual work)
+
+**Tech Stack**
+- Static site generation (Next.js → HTML)
+- Markdown → Beautiful themes
+- GitHub Actions for auto-sync
+- Vercel hosting (free tier for now)
+
+**What I Built in 4 Days**
+✅ 3 beautiful themes (Minimal, Cards, Timeline)
+✅ GitHub Releases integration
+✅ RSS + JSON feeds
+✅ Private/password-protected entries
+✅ Scheduled posts
+✅ Analytics dashboard
+✅ Slack/Discord webhooks
+✅ Embeddable widget with notifications
+✅ 11 SEO-optimized blog posts
+✅ Complete API for Team tier
+
+**Launch Plan**
+📅 Product Hunt launch: April 20 (10 days!)
+🎯 Target: 200+ upvotes, Top 5 Product of the Day
+💰 Goal: First 10 paying customers
+
+**What I Need**
+Would love support from this amazing community! If you're launching on Product Hunt too (or planning to), let's support each other. 
+
+Drop a 🔥 if you'd be willing to upvote and I'll DM you the launch link on April 20.
+
+Also: Would love feedback on the landing page → [changelog.page](https://changelog.page)
 
 ---
 
-## Outreach Templates
+**Questions for you:**
+1. How do you currently handle changelogs?
+2. What's your Product Hunt launch strategy?
+3. Any advice for a first-time PH launcher?
 
-### Cold Outreach (Twitter/X DM)
-
-```
-Hey [Name]! 👋
-
-I noticed you're building [their product] — really impressed with [specific detail].
-
-I'm launching Changelog.page (beautiful changelogs for SaaS) on Product Hunt 
-in 2 weeks. As a fellow SaaS founder, would love your support on launch day.
-
-No pressure at all — happy to return the favor when you launch!
-
-Cheers,
-[Your name]
+Thanks for reading! Happy to answer any questions 🙏
 ```
 
-### Warm Outreach (Indie Hackers/Reddit)
+**When to Post**: Wednesday or Thursday this week (high engagement days)
+**Expected Response**: 3-5 supporters from comments
+
+---
+
+### Reddit r/SaaS Post (Post This Week)
+
+**Title**: "I built a changelog tool because I was tired of paying $50/mo for Headway"
 
 ```
-Hey everyone!
+Hey r/SaaS! 👋
 
-I've been building Changelog.page — a simple changelog tool for SaaS founders.
+**The Backstory**
+Running a small SaaS, I wanted a professional changelog but couldn't justify $49-99/mo for tools like Headway or Beamer when we were pre-revenue.
 
-After 3 weeks of development, I'm launching on Product Hunt next Tuesday.
+GitHub Releases work, but let's be honest — they don't look great for customers.
 
-Would love support from this amazing community. If you're willing to upvote 
-and leave a comment, drop a 🔥 below and I'll DM you the link on launch day!
+**What I Built**
+Changelog.page — beautiful changelogs for SaaS products that don't break the bank.
 
-Happy to support your launches in return 🤝
+**Key Features**
+🎨 3 themes (Minimal, Cards, Timeline) + custom CSS coming
+🔄 GitHub Releases auto-sync
+🔒 Password-protected entries for beta features
+📅 Scheduled posts (write now, publish later)
+📊 Privacy-friendly analytics
+🔔 Slack/Discord notifications
+🌐 Custom domains ($15/mo Pro plan)
+
+**The Differentiator**
+Most changelog tools load slow because they're JavaScript widgets. We generate static HTML that loads instantly and ranks on Google.
+
+**Demo**: [changelog.page](https://changelog.page)
+
+**Launching on Product Hunt April 20**
+Would love your support! Drop a comment if you want me to DM you the link on launch day.
+
+**Questions:**
+- How do you handle product updates currently?
+- What's your changelog pet peeve?
+- Any features you'd want to see?
+
+Thanks for checking it out! 🙏
 ```
 
-### Follow-up (Day Before Launch)
+**When to Post**: Tuesday or Thursday morning (US time)
+**Expected Response**: 2-3 supporters from comments
 
+---
+
+### Reddit r/webdev Post (Post This Weekend)
+
+**Title**: "Showoff Saturday: Built a static changelog generator with GitHub sync"
+
+```
+Hey r/webdev! 👋
+
+Built a changelog tool I thought you might appreciate.
+
+**What it does:**
+- Takes GitHub Releases (or Markdown files)
+- Generates beautiful static HTML changelogs
+- 3 themes out of the box
+- RSS + JSON feeds auto-generated
+- GitHub Actions for auto-deployment
+
+**Tech Stack:**
+- Node.js for build process
+- Markdown-it for parsing
+- Custom theme system (like Jekyll but simpler)
+- Vercel for hosting
+
+**Why static?**
+- Loads instantly (no JS widgets)
+- SEO-friendly (actual HTML, not injected content)
+- Host anywhere (GitHub Pages, Vercel, Netlify)
+- Free tier = completely free
+
+**Live demo**: [changelog.page](https://changelog.page)
+**GitHub**: [github.com/changelogpage](https://github.com/changelogpage) (public soon)
+
+**Features developers will like:**
+✅ API for programmatic entries (Team tier)
+✅ Webhooks for Slack/Discord
+✅ Embeddable widget with notification badge
+✅ Private entries with password protection
+✅ Scheduled posts (future-dated entries)
+
+**Launching on Product Hunt April 20** — would love your support!
+
+Questions? Technical feedback welcome!
+```
+
+**When to Post**: Saturday (Showoff Saturday thread)
+**Expected Response**: 1-2 supporters from comments
+
+---
+
+## Twitter/X DM Templates (Ready to Send)
+
+### DM Template 1: Marc Lou (ShipFast)
+
+```
+Hey Marc! 👋
+
+Love what you're building with ShipFast — the "boilerplate with sales" approach is genius.
+
+Quick ask: I'm launching Changelog.page (beautiful changelogs for SaaS) on Product Hunt April 20. As someone who's launched successfully multiple times, would appreciate your support.
+
+No pressure at all — happy to return the favor when you launch your next thing!
+
+🚀
+```
+
+### DM Template 2: Damon Chen (Testimonial.to)
+
+```
+Hey Damon! 👋
+
+Big fan of Testimonial.to — social proof is everything for conversions.
+
+I'm launching Changelog.page on Product Hunt April 20. Would mean a lot to have your support as a fellow indie hacker building in public.
+
+Happy to return the favor anytime 🙏
+```
+
+### DM Template 3: Arvid Kahl (Feedback Panda/The Bootstrapped Founder)
+
+```
+Hey Arvid! 👋
+
+Your book and podcast have been incredibly helpful for my bootstrapping journey.
+
+Launching Changelog.page on Product Hunt April 20 — a tool to help SaaS founders communicate updates better.
+
+Would be honored to have your support. Happy to reciprocate!
+```
+
+---
+
+## Product Hunt Engagement Strategy (Do This Now)
+
+**Goal**: Build reputation before launch by engaging with other makers
+
+### Daily Action (Starting Today)
+- [ ] Comment on 3 Product Hunt launches
+- [ ] Be genuinely helpful in your comments
+- [ ] Don't mention your product
+
+### Comment Templates
+
+**For SaaS Tools:**
+```
+This looks really useful! Love the focus on [specific feature]. 
+
+Question: How are you handling [relevant topic]? That's always been a challenge for us.
+
+Congrats on the launch! 🚀
+```
+
+**For Developer Tools:**
+```
+This is exactly what I needed! Just tried the demo and [specific feedback].
+
+The [feature] is particularly well done. Great work!
+```
+
+**For Design Tools:**
+```
+The UI looks beautiful! Really like the [specific design element].
+
+Question: Do you plan to add [feature] in the future?
+```
+
+### Target Launches to Engage With
+Look for launches in these categories:
+- SaaS tools for developers
+- Productivity tools
+- Open source projects
+- Indie hacker tools
+
+**Why This Works**: When you launch, these makers will recognize your name and be more likely to support you.
+
+---
+
+## Supporter Success Kit (For Committed Supporters)
+
+When someone commits to support, send them this kit:
+
+### Supporter Welcome Message
+
+```
+Thanks for committing to support Changelog.page! 🙏
+
+**What to expect:**
+📅 Launch date: April 20, 2026
+⏰ Goes live: 12:01 AM PT
+📍 Link: https://www.producthunt.com/posts/changelog-page (will be live at launch)
+
+**How to support:**
+1. Click the link on April 20
+2. Upvote the post
+3. Leave a comment (even just "Looks great!" helps)
+4. Share on Twitter if you're feeling generous 🙌
+
+**Your incentives (because I appreciate you!):**
+✅ Lifetime 50% off Pro plan ($7.50/mo instead of $15)
+✅ Early access to all new features
+✅ Featured mention in my launch day comment
+✅ I'll support YOUR next Product Hunt launch
+
+**Questions?** Just reply to this message.
+
+Thanks again — indie hackers supporting indie hackers is what makes this community amazing! 💪
+```
+
+### Social Sharing Templates for Supporters
+
+**Twitter/X Template:**
+```
+Supporting @changelogpage's Product Hunt launch today! 🚀
+
+Beautiful changelogs for SaaS without the $50/mo price tag.
+
+Check it out: [link]
+```
+
+**LinkedIn Template:**
+```
+Excited to support Changelog.page's Product Hunt launch!
+
+A beautifully simple changelog tool for SaaS products. Finally, a changelog solution that doesn't break the bank.
+
+Worth checking out if you're building in public: [link]
+```
+
+---
+
+## Launch Day Execution Plan
+
+### Pre-Launch (Day Before)
+
+**Send to all committed supporters:**
 ```
 Hey [Name]!
 
-Quick reminder: Changelog.page launches on Product Hunt tomorrow morning.
+Tomorrow's the day! 🚀
 
-Here's the link: [LINK] (goes live at 12:01 AM PT)
+Changelog.page goes live on Product Hunt at 12:01 AM PT (about 9 hours from now).
 
-Really appreciate your support! 🙏
+**Link**: https://www.producthunt.com/posts/changelog-page
 
-P.S. — Let me know when you're launching and I'll be there!
+**Quick reminder on how Product Hunt works:**
+- Upvotes + thoughtful comments count most in the first 4 hours
+- Please upvote AND leave a comment (even a short one!)
+- Hunter's upvote weighs more (I have a great hunter lined up)
+
+**Last-minute ask:** If you could also share on Twitter/LinkedIn, that would be incredible — but totally optional!
+
+I'll be up at midnight responding to every comment. See you there!
+
+Thanks again for your support. It means everything 🙏
 ```
 
----
+### Launch Hour (12:01-1:00 AM PT)
 
-## Launch Day Checklist
+**Immediate Actions:**
+- [ ] Verify post is live
+- [ ] Send "It's live!" message to all committed supporters
+- [ ] Post on Twitter/X with link
+- [ ] Post on LinkedIn
+- [ ] Share in Indie Hackers group
+- [ ] Share in any Slack/Discord communities
 
-### 12:01 AM PT (Launch Time)
-- [ ] Post goes live
-- [ ] Send links to all committed supporters
-- [ ] Post on all social channels
-- [ ] Start responding to comments immediately
+**First Hour Response Protocol:**
+- [ ] Reply to EVERY comment within 5 minutes
+- [ ] Thank each supporter publicly in the comments
+- [ ] Answer all questions thoroughly
+- [ ] Engage with critical feedback positively
 
-### First Hour (Critical)
-- [ ] Reply to every comment within 5 minutes
-- [ ] Thank supporters publicly
-- [ ] Share in relevant Slack/Discord communities
-- [ ] Monitor upvote velocity
+### First 4 Hours (Critical Window)
 
-### Throughout Day
-- [ ] Continue responding to all comments
-- [ ] Post updates on social media
-- [ ] Reach out to 5 new people who commented
-- [ ] Track ranking position
+**Goals:**
+- 50+ upvotes
+- 20+ comments
+- Top 10 position
 
-### End of Day
+**Actions:**
+- [ ] Continue replying to all comments immediately
+- [ ] Reach out to 5 new commenters with personal thanks
+- [ ] Post updates on Twitter/X every hour
+- [ ] Monitor ranking position
+
+### Throughout Launch Day
+
+**Morning (6 AM - 12 PM PT):**
+- [ ] Continue engaging with comments
+- [ ] Share in relevant subreddits (r/SaaS, r/webdev)
+- [ ] Post in Hacker News ("Show HN" if appropriate)
+
+**Afternoon (12 PM - 6 PM PT):**
+- [ ] Reach out to any supporters who haven't upvoted yet
+- [ ] Share milestone updates on social media
+- [ ] Continue responding to comments
+
+**Evening (6 PM - 12 AM PT):**
+- [ ] Final push on social media
 - [ ] Thank all supporters
-- [ ] Analyze what worked/didn't
-- [ ] Document lessons learned
-
----
-
-## Supporter Incentives
-
-### For Committed Supporters
-1. **Early Access** to Pro features
-2. **Lifetime 50% discount** on Pro plan
-3. **Featured mention** in launch day comment
-4. **Reciprocal support** for their future launches
-5. **Private Discord/Slack** access for feedback
+- [ ] Analyze final position
 
 ---
 
@@ -167,17 +445,39 @@ P.S. — Let me know when you're launching and I'll be there!
 
 ---
 
-## Timeline
+## Timeline: Next 10 Days
 
-| Date | Action |
-|------|--------|
-| 1 week before | Start warm outreach on Indie Hackers |
-| 5 days before | Post on Reddit communities |
-| 3 days before | Final supporter confirmation |
-| 1 day before | Send reminder with link |
-| Launch Day | Execute launch day checklist |
-| Day after | Thank supporters, analyze results |
+| Date | Days Until Launch | Action | Status |
+|------|-------------------|--------|--------|
+| Apr 11 | 9 days | Post on Indie Hackers | 🔲 Ready to execute |
+| Apr 12 | 8 days | Post on r/SaaS | 🔲 Ready to execute |
+| Apr 13 | 7 days | Post on r/webdev (weekend) | 🔲 Ready to execute |
+| Apr 14 | 6 days | Send Twitter DMs to targets | 🔲 Ready to execute |
+| Apr 15 | 5 days | Product Hunt engagement (3 comments/day) | 🟡 In progress |
+| Apr 16 | 4 days | Continue community engagement | 🔲 |
+| Apr 17 | 3 days | Final supporter confirmation | 🔲 |
+| Apr 18 | 2 days | Prepare launch day assets | 🔲 |
+| Apr 19 | 1 day | Send reminder to all supporters | 🔲 |
+| Apr 20 | Launch Day | Execute launch plan | 🔲 |
 
 ---
 
-*Last updated: 2026-04-09*
+## Immediate Action Items (Do Today)
+
+1. **Post on Indie Hackers** (30 min)
+   - Use template above
+   - Engage with all comments
+   - Track supporters in tracker table
+
+2. **Comment on 3 Product Hunt launches** (15 min)
+   - Find relevant SaaS/dev tools launching today
+   - Leave thoughtful comments
+   - Build reputation
+
+3. **Prepare Reddit posts** (15 min)
+   - Customize templates if needed
+   - Schedule for optimal times
+
+---
+
+*Last updated: 2026-04-10 — Supporter outreach campaign created*
