@@ -4,6 +4,76 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-10 — Day 4 (Affiliate Landing Page)
+
+### Session: Build Affiliate Program Landing Page
+**Duration**: ~25 minutes  
+**Focus**: P3 — Create /affiliates landing page with commission calculator
+
+### Completed Tasks
+
+#### Affiliate Landing Page (P3) — COMPLETED
+
+**1. Landing Page Creation**
+- [x] Created `affiliates.html` — Complete affiliate program landing page:
+  - Hero section with 30% recurring commission value prop
+  - Interactive commission calculator with slider
+  - Pro/Team plan toggle for earnings estimation
+  - Commission tier table (Standard/Partner/VIP)
+  - "Why Promote" section with 3 value cards
+  - "Who Should Join" with 4 persona cards
+  - 4-step "How It Works" process
+  - Marketing resources grid
+  - FAQ accordion with 6 questions
+  - Final CTA section
+
+**2. Interactive Calculator**
+- Slider for number of referrals (1-50)
+- Plan selector (Pro $15/mo vs Team $49/mo)
+- Real-time monthly and annual earnings calculation
+- Visual gradient earnings display
+
+**3. SEO & Meta**
+- Complete meta tags and Open Graph
+- JSON-LD structured data
+- Added to sitemap.xml with priority 0.7
+
+### Files Created
+```
+affiliates.html              # Complete affiliate landing page
+```
+
+### Files Modified
+```
+sitemap.xml                  # Added /affiliates URL
+```
+
+### Technical Features
+- **Responsive Design**: Mobile-first, works on all devices
+- **Interactive Calculator**: Vanilla JavaScript, no dependencies
+- **FAQ Accordion**: Smooth expand/collapse animation
+- **Commission Tiers**: Visual tier badges with gradients
+- **Dark Theme**: Consistent with site design
+
+### Business Value
+- **Recruitment Tool**: Professional landing page attracts quality affiliates
+- **Conversion Optimization**: Calculator shows earning potential
+- **Self-Service**: Answers common questions, reduces support
+- **SEO Traffic**: Targets "affiliate program" keywords
+
+### Git Commits
+```
+8dff678 Add affiliate program landing page with interactive commission calculator
+```
+
+### Next Steps
+1. ⏳ Set up Stripe billing (required before affiliate program)
+2. ⏳ Sign up for Rewardful
+3. ⏳ Recruit first affiliates from beta users
+4. ✅ Landing page complete
+
+---
+
 ## 2026-04-10 — Day 4 (Affiliate Program Setup)
 
 ### Session: Affiliate Program Research & Documentation
