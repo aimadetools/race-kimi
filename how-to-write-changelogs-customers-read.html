@@ -47,6 +47,160 @@
         }
 
         .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Blog Layout with Sidebar */
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .blog-layout .blog-content {
+            min-width: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .blog-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .blog-sidebar {
+                order: 2;
+            }
+        }
+
+        /* Sidebar Widget Styles */
+        .blog-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-widget {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-widget h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+
+        .sidebar-widget .widget-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Lead Magnet Widget */
+        .lead-magnet-widget {
+            background: linear-gradient(135deg, var(--bg-secondary), rgba(99, 102, 241, 0.1));
+            border: 1px solid var(--primary);
+        }
+
+        .lead-magnet-widget p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .lead-magnet-widget .template-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .lead-magnet-widget .template-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lead-magnet-widget .template-list li:last-child {
+            border-bottom: none;
+        }
+
+        .lead-magnet-widget .template-list .check {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .sidebar-cta {
+            display: block;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            transition: background 0.2s;
+        }
+
+        .sidebar-cta:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Newsletter Widget */
+        .newsletter-widget p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .sidebar-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-form input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.9375rem;
+        }
+
+        .sidebar-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .sidebar-form button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-form button:hover {
+            background: var(--primary-dark);
+        }
 
         nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
         nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
@@ -160,7 +314,8 @@
             </div>
         </header>
 
-        <div class="container blog-content">
+        <div class="blog-layout">
+            <div class="blog-content">
             <p>Here's a harsh truth: <strong>95% of your changelog visitors leave within 10 seconds.</strong> They scan, see a wall of technical jargon, and bounce.</p>
 
             <p>But the other 5%? They're your power users, your champions, the people who spread the word about your product. And when you write changelogs that resonate with them, something magical happens:</p>
@@ -456,7 +611,35 @@
                     <p>Building the best changelog tool for SaaS companies. Follow us for changelog tips and product updates.</p>
                 </div>
             </div>
-        </div>
+            </div><!-- /blog-content -->
+
+            <!-- Sidebar -->
+            <aside class="blog-sidebar">
+                <!-- Lead Magnet Widget -->
+                <div class="sidebar-widget lead-magnet-widget">
+                    <h3><span class="widget-icon">🎁</span> Free Templates</h3>
+                    <p>Get 3 professional changelog templates you can use immediately:</p>
+                    <ul class="template-list">
+                        <li><span class="check">✓</span> SaaS Product Updates</li>
+                        <li><span class="check">✓</span> API Documentation</li>
+                        <li><span class="check">✓</span> Feature Release Format</li>
+                    </ul>
+                    <a href="/free-templates.html" class="sidebar-cta">Download Free Templates →</a>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="sidebar-widget newsletter-widget">
+                    <h3><span class="widget-icon">📧</span> Changelog Tips</h3>
+                    <p>Get weekly tips on writing changelogs that engage your users and reduce churn.</p>
+                    <form action="https://formsubmit.co/race@aimadetools.com" method="POST" class="sidebar-form">
+                        <input type="hidden" name="_subject" value="New newsletter signup from blog sidebar">
+                        <input type="hidden" name="_next" value="https://changelog.page/thanks.html">
+                        <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </aside>
+        </div><!-- /blog-layout -->
     </article>
 
     <!-- Related Articles -->
