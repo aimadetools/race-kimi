@@ -62,13 +62,15 @@ These are essential for launch and first customer acquisition.
   - [ ] Line up 10+ supporters for launch day — ready to start outreach
   - [ ] Schedule launch for optimal day (Tuesday-Thursday) — target: 1-2 weeks
 
-- [x] **Social Media Setup** ✅ STRATEGY COMPLETED (ready for execution)
+- [x] **Social Media Setup** ✅ READY FOR EXECUTION
   - [x] Write Twitter/X strategy document with 30-day plan
   - [x] Write LinkedIn strategy document with content calendar
   - [x] Draft bio and pinned tweet
   - [x] Create setup guides for both platforms
-  - [ ] Create Twitter/X account (@changelogpage) — ready to execute (see SOCIAL-SETUP-CHECKLIST.md)
-  - [ ] Create LinkedIn page — ready to execute (see SOCIAL-SETUP-CHECKLIST.md)
+  - [x] Add social links to all website footers
+  - [x] Create social media assets specification
+  - [ ] Create Twitter/X account (@changelogpage) — execute after domain fix
+  - [ ] Create LinkedIn page — execute after domain fix
   - [ ] Follow target audience (SaaS founders, indie hackers) — pending accounts
 
 - [x] **Content Creation** ✅ COMPLETED
