@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Changelog from GitHub Releases: Complete 2026 Guide</title>
+  <meta name="description" content="Learn how to automatically generate changelogs from GitHub Releases. Step-by-step guide with GitHub Actions, tools comparison, and best practices.">
+  <meta property="og:title" content="Automated Changelog from GitHub Releases: Complete 2026 Guide">
+  <meta property="og:description" content="Automatically generate beautiful changelogs from your GitHub Releases. Complete guide with GitHub Actions, tools, and best practices.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://changelog.page/automated-changelog-from-github-releases.html">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Automated Changelog from GitHub Releases: Complete Guide">
+  <meta name="twitter:description" content="Learn how to automatically generate changelogs from GitHub Releases with step-by-step instructions.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Automated Changelog from GitHub Releases: Complete 2026 Guide",
+    "description": "Learn how to automatically generate changelogs from GitHub Releases. Step-by-step guide with GitHub Actions, tools comparison, and best practices.",
+    "author": {
+      "@type": "Organization",
+      "name": "Changelog.page"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Changelog.page",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://changelog.page/favicon.svg"
+      }
+    },
+    "datePublished": "2026-04-10",
+    "dateModified": "2026-04-10",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://changelog.page/automated-changelog-from-github-releases.html"
+    }
+  }
+  </script>
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #818cf8;
+      --accent-hover: #6366f1;
+      --border: #334155;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --code-bg: #0d1117;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    
+    /* Navigation */
+    nav {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero */
+    .hero {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      flex-wrap: wrap;
+    }
+    
+    .meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Main Content */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    .content h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin: 3rem 0 1.5rem;
+      color: var(--text-primary);
+    }
+    
+    .content h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem;
+      color: var(--text-primary);
+    }
+    
+    .content h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+      color: var(--text-primary);
+    }
+    
+    .content p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+    }
+    
+    .content ul, .content ol {
+      margin: 1.25rem 0;
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+    
+    .content li {
+      margin-bottom: 0.75rem;
+    }
+    
+    .content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    
+    .content a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    
+    .content a:hover {
+      border-color: var(--accent);
+    }
+    
+    /* Code Blocks */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    
+    .code-header {
+      background: var(--bg-secondary);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .code-lang {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+    
+    .copy-btn {
+      background: var(--bg-tertiary);
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .copy-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+    
+    pre {
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    
+    code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      color: #e6edf3;
+    }
+    
+    .inline-code {
+      background: var(--bg-secondary);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      color: var(--accent);
+    }
+    
+    /* Info Boxes */
+    .info-box {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .info-box-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tip-box {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+      border: 1px solid var(--success);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .tip-box-title {
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .warning-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+      border: 1px solid var(--warning);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .warning-box-title {
+      font-weight: 600;
+      color: var(--warning);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+    
+    th, td {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    th {
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+    }
+    
+    tr:hover {
+      background: var(--bg-secondary);
+    }
+    
+    /* Step Cards */
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+    
+    .step-content p {
+      margin-bottom: 0;
+    }
+    
+    /* CTA Box */
+    .cta-box {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      margin: 3rem 0;
+    }
+    
+    .cta-box h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-box p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
+      padding: 0.875rem 1.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
+      border-bottom: none;
+    }
+    
+    /* Tool Cards */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .tool-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .tool-card h4 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tool-tag {
+      display: inline-block;
+      background: var(--bg-tertiary);
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .tool-card p {
+      font-size: 0.9375rem;
+      margin-bottom: 0;
+    }
+    
+    /* Related Articles */
+    .related-articles {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .related-articles h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .related-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .related-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .related-card:hover h4 {
+      color: var(--accent);
+    }
+    
+    .related-card h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+    
+    .related-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 0;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    
+    .footer-content p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
+        flex-direction: column;
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1.125rem;
+      }
+      
+      .step {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <span class="logo-icon">📝</span>
+        Changelog.page
+      </a>
+      <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/guides">Guides</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Automated Changelog from GitHub Releases</h1>
+      <p>A complete guide to automatically generating beautiful changelogs from your GitHub Releases with GitHub Actions, tools, and best practices.</p>
+      <div class="meta">
+        <span>📅 April 10, 2026</span>
+        <span>⏱️ 12 min read</span>
+        <span>🛠️ Technical Guide</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    <article class="content">
+      <p>Keeping your changelog up-to-date is essential for SaaS products, but manually copying release notes between GitHub and your public changelog is tedious and error-prone. What if you could <strong>automatically generate a beautiful changelog from your GitHub Releases</strong>?</p>
+      
+      <p>In this comprehensive guide, you'll learn how to set up automated changelog generation from GitHub Releases, compare the best tools for the job, and implement best practices used by top open-source projects.</p>
+
+      <h2>What Are GitHub Releases?</h2>
+      
+      <p>GitHub Releases are a way to package and provide software to your users along with release notes and binary files. They're tightly integrated with Git tags and are the standard way to announce new versions of your software.</p>
+      
+      <p>Key features of GitHub Releases:</p>
+      <ul>
+        <li><strong>Version tagging</strong> — Associated with Git tags (e.g., <code class="inline-code">v1.2.0</code>)</li>
+        <li><strong>Release notes</strong> — Markdown descriptions of changes</li>
+        <li><strong>Asset attachments</strong> — Binary files, installers, documentation</li>
+        <li><strong>Pre-release markers</strong> — Distinguish stable from beta releases</li>
+        <li><strong>Automatic changelogs</strong> — GitHub can auto-generate from PRs and commits</li>
+      </ul>
+
+      <div class="info-box">
+        <div class="info-box-title">💡 Why Use GitHub Releases for Changelogs?</div>
+        <p style="margin-bottom: 0;">GitHub Releases are where developers already document changes. By automatically syncing them to a public changelog page, you eliminate duplicate work and ensure your users always see the latest updates without manual copying.</p>
+      </div>
+
+      <h2>Method 1: Changelog.page GitHub Integration (Recommended)</h2>
+      
+      <p>The easiest way to automate your changelog from GitHub Releases is using <a href="/">Changelog.page</a>'s built-in GitHub integration. It automatically syncs your releases to a beautiful, customizable changelog page.</p>
+
+      <h3>How It Works</h3>
+      
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Create Your Changelog Page</h4>
+          <p>Sign up for Changelog.page and create your changelog site. Choose from three beautiful themes and customize your branding.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Connect Your GitHub Repository</h4>
+          <p>Add the <code class="inline-code">GITHUB_REPO</code> environment variable with your repository (e.g., <code class="inline-code">owner/repo-name</code>).</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Enable Auto-Sync</h4>
+          <p>Use the built-in GitHub Action to automatically sync new releases to your changelog. Your public changelog updates within minutes of publishing a release.</p>
+        </div>
+      </div>
+
+      <h3>Features</h3>
+      
+      <ul>
+        <li><strong>Automatic categorization</strong> — Sorts releases by version type (Major/Feature/Patch)</li>
+        <li><strong>Pre-release filtering</strong> — Option to hide beta/alpha releases from public changelog</li>
+        <li><strong>Tag extraction</strong> — Automatically extracts #tags from release notes</li>
+        <li><strong>Multi-theme support</strong> — Choose Minimal, Cards, or Timeline layouts</li>
+        <li><strong>Custom domains</strong> — Host at changelog.yourdomain.com</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">YAML</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code># .github/workflows/releases-to-changelog.yml
+name: Sync Releases to Changelog
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Sync releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          # Fetches releases and generates markdown files
+          # Commits changes and triggers deployment</code></pre>
+      </div>
+
+      <div class="cta-box">
+        <h3>🚀 Get Started in 5 Minutes</h3>
+        <p>Automatically generate your changelog from GitHub Releases with Changelog.page. Free forever plan available.</p>
+        <a href="/" class="btn">Create Your Changelog →</a>
+      </div>
+
+      <h2>Method 2: GitHub Actions + Static Site</h2>
+      
+      <p>If you prefer a DIY approach, you can build your own automated changelog using GitHub Actions to generate a static site.</p>
+
+      <h3>Step-by-Step Setup</h3>
+
+      <h4>1. Create the GitHub Action Workflow</h4>
+      
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">YAML</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code># .github/workflows/generate-changelog.yml
+name: Generate Changelog
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Fetch releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p changelog
+          gh release list --limit 100 --json name,tagName,publishedAt,body \
+            | node scripts/generate-changelog.js
+      
+      - name: Build site
+        run: |
+          # Build your static site here
+          npm run build
+      
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4</code></pre>
+      </div>
+
+      <h4>2. Create the Changelog Generator Script</h4>
+      
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code>// scripts/generate-changelog.js
+const fs = require('fs');
+const path = require('path');
+
+// Read releases from stdin (piped from gh CLI)
+let input = '';
+process.stdin.on('data', chunk => input += chunk);
+process.stdin.on('end', () => {
+  const releases = JSON.parse(input);
+  
+  // Sort by date (newest first)
+  releases.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  
+  // Generate HTML
+  const html = generateChangelogHTML(releases);
+  
+  // Write to file
+  fs.writeFileSync('changelog/index.html', html);
+  console.log(`Generated changelog with ${releases.length} releases`);
+});
+
+function generateChangelogHTML(releases) {
+  const entries = releases.map(r => `
+    <article class="release">
+      <h2><a href="https://github.com/owner/repo/releases/tag/${r.tagName}">${r.name}</a></h2>
+      <time datetime="${r.publishedAt}">${new Date(r.publishedAt).toLocaleDateString()}</time>
+      <div class="body">${markdownToHTML(r.body)}</div>
+    </article>
+  `).join('');
+  
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <title>Changelog</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Changelog</h1>
+    ${entries}
+  </main>
+</body>
+</html>`;
+}</code></pre>
+      </div>
+
+      <h4>3. Style Your Changelog</h4>
+      
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">CSS</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code>/* changelog/style.css */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+.release {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.release h2 {
+  margin-bottom: 0.5rem;
+}
+
+.release h2 a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.release time {
+  color: #586069;
+  font-size: 0.875rem;
+}
+
+.release .body {
+  margin-top: 1rem;
+}</code></pre>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-title">✅ Pro Tip: Use Conventional Commits</div>
+        <p style="margin-bottom: 0;">Combine this approach with <a href="https://www.conventionalcommits.org/">Conventional Commits</a> to automatically categorize your changes. Use prefixes like <code class="inline-code">feat:</code>, <code class="inline-code">fix:</code>, and <code class="inline-code">docs:</code> in your commit messages, then parse them in your generator script.</p>
+      </div>
+
+      <h2>Method 3: Third-Party Tools</h2>
+      
+      <p>Several existing tools can help automate changelog generation from GitHub Releases:</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <span class="tool-tag">Open Source</span>
+          <h4>🔄 GitHub Changelog Generator</h4>
+          <p>Command-line tool that generates changelogs from GitHub issues and PRs. Supports multiple output formats including Markdown and JSON.</p>
+        </div>
+        
+        <div class="tool-card">
+          <span class="tool-tag">GitHub Action</span>
+          <h4>📦 Release Drafter</h4>
+          <p>Automatically drafts release notes by categorizing merged pull requests. Creates release notes before you publish the release.</p>
+        </div>
+        
+        <div class="tool-card">
+          <span class="tool-tag">CLI Tool</span>
+          <h4>📝 Standard Version</h4>
+          <p>Automates versioning and CHANGELOG generation using SemVer and Conventional Commits. Bumps versions and updates CHANGELOG.md automatically.</p>
+        </div>
+        
+        <div class="tool-card">
+          <span class="tool-tag">Managed Service</span>
+          <h4>🚀 Changelog.page</h4>
+          <p>Complete changelog solution with GitHub sync, beautiful themes, custom domains, and analytics. Zero configuration required.</p>
+        </div>
+      </div>
+
+      <h3>Comparison Table</h3>
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Setup Time</th>
+              <th>Customization</th>
+              <th>Hosting</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Changelog.page</strong></td>
+              <td>5 minutes</td>
+              <td>Themes, CSS</td>
+              <td>Included</td>
+              <td>SaaS products</td>
+            </tr>
+            <tr>
+              <td>DIY GitHub Actions</td>
+              <td>2-4 hours</td>
+              <td>Full control</td>
+              <td>GitHub Pages</td>
+              <td>Developers</td>
+            </tr>
+            <tr>
+              <td>Release Drafter</td>
+              <td>30 minutes</td>
+              <td>Templates</td>
+              <td>N/A</td>
+              <td>Release notes</td>
+            </tr>
+            <tr>
+              <td>Standard Version</td>
+              <td>1 hour</td>
+              <td>Templates</td>
+              <td>Self-hosted</td>
+              <td>NPM packages</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Best Practices for GitHub Release Changelogs</h2>
+
+      <h3>1. Write Great Release Notes</h3>
+      
+      <p>Your automated changelog is only as good as your GitHub Release notes. Follow these guidelines:</p>
+      
+      <ul>
+        <li><strong>Use clear titles</strong> — "Fixed login bug on mobile" not "Bug fix"</li>
+        <li><strong>Categorize changes</strong> — Group by Features, Bug Fixes, Improvements</li>
+        <li><strong>Link to issues/PRs</strong> — Reference #123 for traceability</li>
+        <li><strong>Include migration notes</strong> — For breaking changes, explain what users need to do</li>
+        <li><strong>Keep it scannable</strong> — Use bullet points, not paragraphs</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">Markdown</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code>## 🚀 Features
+- Added dark mode support #234
+- New API endpoint for webhooks #245
+
+## 🐛 Bug Fixes
+- Fixed mobile navigation glitch #240
+- Corrected timezone display in exports #238
+
+## 📚 Documentation
+- Updated API reference with examples #241</code></pre>
+      </div>
+
+      <h3>2. Use Semantic Versioning</h3>
+      
+      <p>Follow <a href="https://semver.org/">Semantic Versioning</a> (SemVer) for your release tags:</p>
+      
+      <ul>
+        <li><strong>MAJOR</strong> (<code class="inline-code">X</code>.y.z) — Breaking changes</li>
+        <li><strong>MINOR</strong> (x.<code class="inline-code">Y</code>.z) — New features (backwards compatible)</li>
+        <li><strong>PATCH</strong> (x.y.<code class="inline-code">Z</code>) — Bug fixes (backwards compatible)</li>
+      </ul>
+      
+      <p>This helps your automation categorize releases and helps users understand the impact of updating.</p>
+
+      <h3>3. Handle Pre-releases</h3>
+      
+      <p>Use GitHub's pre-release feature for beta versions:</p>
+      
+      <ul>
+        <li>Mark alpha/beta/RC versions as pre-releases</li>
+        <li>Configure your automation to filter them from the public changelog (or show them in a separate section)</li>
+        <li>Use tags like <code class="inline-code">v2.0.0-beta.1</code> for clarity</li>
+      </ul>
+
+      <div class="warning-box">
+        <div class="warning-box-title">⚠️ Pre-release Considerations</div>
+        <p style="margin-bottom: 0;">Not all users want to see beta releases in your public changelog. Consider your audience—developers may appreciate seeing upcoming features, while end-users might find it confusing. Changelog.page lets you filter pre-releases with a simple configuration option.</p>
+      </div>
+
+      <h3>4. Automate Release Creation</h3>
+      
+      <p>Take automation further by auto-creating releases from your Git workflow:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">YAML</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code># Auto-create release when version tag is pushed
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}</code></pre>
+      </div>
+
+      <h2>Advanced: Multi-Repository Changelogs</h2>
+      
+      <p>For organizations with multiple repositories, you might want a unified changelog:</p>
+
+      <div class="info-box">
+        <div class="info-box-title">🏢 Enterprise Use Case</div>
+        <p style="margin-bottom: 0.75rem;">If you manage multiple services or packages, consider aggregating all releases into a single product changelog:</p>
+        <ul style="margin-bottom: 0;">
+          <li>API service releases</li>
+          <li>Web dashboard updates</li>
+          <li>Mobile app releases</li>
+          <li>Documentation changes</li>
+        </ul>
+      </div>
+
+      <p>To implement this, modify your GitHub Action to fetch releases from multiple repos:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent)">Copy</button>
+        </div>
+        <pre><code>// Fetch releases from multiple repositories
+const repos = ['org/api', 'org/web', 'org/mobile'];
+const allReleases = [];
+
+for (const repo of repos) {
+  const releases = await fetch(`https://api.github.com/repos/${repo}/releases`)
+    .then(r => r.json());
+  
+  allReleases.push(...releases.map(r => ({
+    ...r,
+    repo: repo.split('/')[1], // Tag with repo name
+    sortDate: new Date(r.published_at)
+  })));
+}
+
+// Sort by date across all repos
+allReleases.sort((a, b) => b.sortDate - a.sortDate);
+
+// Group by repo in your template or interleave them</code></pre>
+      </div>
+
+      <h2>Troubleshooting Common Issues</h2>
+
+      <h3>Releases Not Syncing</h3>
+      <ul>
+        <li>Verify your <code class="inline-code">GITHUB_TOKEN</code> has permission to read releases</li>
+        <li>Check that the repository name format is correct (<code class="inline-code">owner/repo</code>)</li>
+        <li>Ensure the workflow is triggered (check Actions tab)</li>
+      </ul>
+
+      <h3>Formatting Issues</h3>
+      <ul>
+        <li>GitHub Flavored Markdown may not render identically in your changelog—test thoroughly</li>
+        <li>Use a Markdown parser that supports GitHub's extensions (tables, task lists, etc.)</li>
+        <li>Sanitize HTML to prevent XSS if displaying user-generated content</li>
+      </ul>
+
+      <h3>Rate Limiting</h3>
+      <ul>
+        <li>Unauthenticated GitHub API requests are limited to 60/hour</li>
+        <li>Use <code class="inline-code">GITHUB_TOKEN</code> for 1,000 requests/hour</li>
+        <li>Cache release data between builds to minimize API calls</li>
+      </ul>
+
+      <h2>Conclusion</h2>
+      
+      <p>Automatically generating your changelog from GitHub Releases saves time, reduces errors, and ensures your users always have up-to-date information about your product. Whether you choose a managed solution like Changelog.page or build your own with GitHub Actions, the key is to make the process seamless so it actually gets done.</p>
+      
+      <p>Remember: the best changelog is one that's consistently maintained. Automation makes that possible.</p>
+
+      <div class="cta-box">
+        <h3>Ready to Automate Your Changelog?</h3>
+        <p>Changelog.page syncs with GitHub Releases automatically, giving you a beautiful public changelog without any manual work.</p>
+        <a href="/" class="btn">Start Free →</a>
+      </div>
+    </article>
+
+    <!-- Related Articles -->
+    <section class="related-articles">
+      <h3>Related Articles</h3>
+      <div class="related-grid">
+        <a href="/open-source-changelogs-best-practices.html" class="related-card">
+          <h4>Open Source Changelogs: Best Practices</h4>
+          <p>Learn how top open-source projects manage their changelogs effectively.</p>
+        </a>
+        <a href="/complete-guide-to-changelog-design.html" class="related-card">
+          <h4>The Complete Guide to Changelog Design</h4>
+          <p>Design principles for creating changelogs your users will actually read.</p>
+        </a>
+        <a href="/integrate-changelog-slack-discord.html" class="related-card">
+          <h4>Integrating Changelog with Slack/Discord</h4>
+          <p>Automatically notify your community when you publish updates.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/blog">Blog</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </div>
+      <p>© 2026 Changelog.page. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

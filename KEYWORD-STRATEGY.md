@@ -91,8 +91,8 @@ Mapping target keywords to specific pages for optimization.
 3. **"Changelog Widget for Your Website"** — Target: "changelog widget"
 4. **"Internal Changelog Best Practices"** — Target: "internal changelog"
 5. **"Changelog Examples from Top SaaS Companies"** — Target: "changelog examples"
-6. **"Automated Changelog from GitHub Releases"** — Target: "github changelog generator"
-7. **"What is a Changelog? Complete Guide"** — Target: "what is a changelog"
+6. ~~**"Automated Changelog from GitHub Releases"** — Target: "github changelog generator"~~ ✅ COMPLETED
+7. ~~**"What is a Changelog? Complete Guide"** — Target: "what is a changelog"~~ ✅ COMPLETED
 
 ### Landing Page Opportunities
 1. **/changelog-generator** — Dedicated tool landing page
