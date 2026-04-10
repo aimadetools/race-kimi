@@ -141,9 +141,8 @@ Important for growth and user retention, but not blocking launch.
 
 - [x] **Lead Magnet Promotion** — COMPLETED
   - [x] Add CTA to top 5 blog posts
+  - [x] Create sidebar widget for blog pages
   - [ ] Add inline content upgrade CTAs (future)
-  - [ ] Create sidebar widget for blog pages (future)
-  - [x] Add exit-intent popup on high-traffic pages (already on index.html)
 
 - [x] **Community Engagement** ✅ DRAFTS COMPLETED (execution pending domain fix)
   - [x] Write and queue 5 Reddit posts for r/SaaS launch
