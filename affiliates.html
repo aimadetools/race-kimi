@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog.page Affiliate Program — Earn 30% Recurring Commission</title>
+  <meta name="description" content="Join the Changelog.page affiliate program. Earn 30% lifetime recurring commissions promoting beautiful changelogs for SaaS. Free to join.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Changelog.page Affiliate Program — Earn 30% Recurring Commission">
+  <meta property="og:description" content="Join our affiliate program and earn lifetime commissions by helping SaaS founders create beautiful changelogs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://changelog.page/affiliates">
+  <meta property="og:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog.page Affiliate Program — Earn 30% Recurring Commission">
+  <meta name="twitter:description" content="Join our affiliate program and earn lifetime commissions by helping SaaS founders create beautiful changelogs.">
+  <meta name="twitter:image" content="https://changelog.page/og-image.png">
+  
+  <!-- Canonical -->
+  <link rel="canonical" href="https://changelog.page/affiliates">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Changelog.page Affiliate Program",
+    "description": "Earn 30% recurring commissions promoting Changelog.page"
+  }
+  </script>
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #818cf8;
+      --accent-hover: #6366f1;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --border: #334155;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 1rem 2rem;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 10rem 2rem 6rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(129, 140, 248, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(129, 140, 248, 0.1);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
+    }
+    
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--bg-secondary);
+      border-color: var(--text-muted);
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    /* Section Styles */
+    section {
+      padding: 5rem 0;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Calculator Section */
+    .calculator {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 3rem;
+      border: 1px solid var(--border);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .calculator-row {
+      margin-bottom: 2rem;
+    }
+    
+    .calculator-row label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-secondary);
+    }
+    
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      height: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+    
+    .slider-value {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+    
+    .plan-selector {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .plan-option {
+      flex: 1;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    
+    .plan-option:hover {
+      border-color: var(--text-muted);
+    }
+    
+    .plan-option.active {
+      border-color: var(--accent);
+      background: rgba(129, 140, 248, 0.1);
+    }
+    
+    .plan-option h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .plan-option p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .earnings-display {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.1) 0%, rgba(192, 132, 252, 0.1) 100%);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .earnings-display h3 {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .earnings-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent) 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .earnings-period {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    /* Grid Layouts */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    
+    .card:hover {
+      border-color: var(--text-muted);
+      transform: translateY(-4px);
+    }
+    
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(129, 140, 248, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    /* Commission Table */
+    .commission-table {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .commission-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .commission-table th {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .commission-table td {
+      padding: 1.25rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .commission-table tr:hover td {
+      background: rgba(129, 140, 248, 0.05);
+    }
+    
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .tier-standard {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-secondary);
+    }
+    
+    .tier-partner {
+      background: rgba(129, 140, 248, 0.1);
+      color: var(--accent);
+    }
+    
+    .tier-vip {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+      color: #c084fc;
+    }
+    
+    /* Steps */
+    .steps {
+      display: flex;
+      gap: 2rem;
+      counter-reset: step;
+    }
+    
+    .step {
+      flex: 1;
+      position: relative;
+      padding-top: 3rem;
+    }
+    
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+    
+    .step::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 50px;
+      right: -20px;
+      height: 2px;
+      background: var(--border);
+    }
+    
+    .step:last-child::after {
+      display: none;
+    }
+    
+    .step h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .step p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    /* FAQ */
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .faq-question {
+      width: 100%;
+      padding: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    
+    .faq-question:hover {
+      background: rgba(129, 140, 248, 0.05);
+    }
+    
+    .faq-question::after {
+      content: '+';
+      font-size: 1.5rem;
+      color: var(--accent);
+      transition: transform 0.2s;
+    }
+    
+    .faq-item.active .faq-question::after {
+      transform: rotate(45deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+    
+    .faq-answer p {
+      padding: 0 1.5rem 1.5rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    
+    /* Resources Grid */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .resource-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    
+    .resource-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    
+    .resource-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .resource-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .resource-item p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.1) 0%, rgba(192, 132, 252, 0.1) 100%);
+      border-top: 1px solid rgba(129, 140, 248, 0.2);
+      border-bottom: 1px solid rgba(129, 140, 248, 0.2);
+      text-align: center;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .contact-email {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .contact-email:hover {
+      text-decoration: underline;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+    
+    footer a:hover {
+      color: var(--accent);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .hero {
+        padding: 8rem 1.5rem 4rem;
+      }
+      
+      .calculator {
+        padding: 1.5rem;
+      }
+      
+      .steps {
+        flex-direction: column;
+      }
+      
+      .step::after {
+        display: none;
+      }
+      
+      .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+      
+      .commission-table {
+        overflow-x: auto;
+      }
+      
+      .commission-table table {
+        min-width: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#818cf8"/>
+          <path d="M8 12h16M8 16h12M8 20h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Changelog.page
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/affiliates" style="color: var(--accent);">Affiliates</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>💰</span>
+      <span>Now Accepting Affiliates</span>
+    </div>
+    <h1>Earn <span>30% Recurring Commission</span> Promoting Changelog.page</h1>
+    <p>Join our affiliate program and earn lifetime commissions by helping SaaS founders create beautiful changelogs that engage their users.</p>
+    <div class="hero-cta">
+      <a href="#apply" class="btn btn-primary">Apply Now — It's Free</a>
+      <a href="#calculator" class="btn btn-secondary">Calculate Earnings</a>
+    </div>
+  </section>
+
+  <!-- Commission Calculator -->
+  <section id="calculator">
+    <div class="container">
+      <div class="section-header">
+        <h2>Commission Calculator</h2>
+        <p>See how much you could earn by promoting Changelog.page</p>
+      </div>
+      <div class="calculator">
+        <div class="calculator-row">
+          <label>Number of referrals per month</label>
+          <div class="slider-container">
+            <input type="range" id="referralSlider" min="1" max="50" value="5">
+            <span class="slider-value" id="referralValue">5</span>
+          </div>
+        </div>
+        <div class="calculator-row">
+          <label>Average plan</label>
+          <div class="plan-selector">
+            <div class="plan-option active" data-plan="pro" data-price="15">
+              <h4>Pro Plan</h4>
+              <p>$15/month</p>
+            </div>
+            <div class="plan-option" data-plan="team" data-price="49">
+              <h4>Team Plan</h4>
+              <p>$49/month</p>
+            </div>
+          </div>
+        </div>
+        <div class="earnings-display">
+          <h3>Your estimated monthly earnings</h3>
+          <div class="earnings-amount" id="monthlyEarnings">$22.50</div>
+          <div class="earnings-period">
+            <span id="annualEarnings">$270/year</span> • 30% recurring commission
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Promote -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Promote Changelog.page?</h2>
+        <p>Three reasons why affiliates love promoting our product</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h3>High Conversion Rate</h3>
+          <p>Our $15/mo price point converts better than $49+ competitors. The free tier lets users try before buying, and our clear value proposition resonates with SaaS founders.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">♾️</div>
+          <h3>Lifetime Commissions</h3>
+          <p>Earn 30% recurring commission for the life of each customer. No minimum activity requirements. Build a passive income stream that grows month after month.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3>Quality Product</h3>
+          <p>We actually solve a real problem that every SaaS has. Our beautiful, professional themes and regular feature updates make it easy to promote with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who Should Join -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <h2>Who Should Join?</h2>
+        <p>Our affiliate program is perfect for these types of creators</p>
+      </div>
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-icon">✍️</div>
+          <h3>SaaS Bloggers</h3>
+          <p>Write about SaaS tools? Your audience needs changelogs. Recommend Changelog.page in your tool roundups and tutorials.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h3>Indie Hackers</h3>
+          <p>Building in public? Share the tools you use. Your journey inspires others, and they'll want the same tools you use.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">👨‍💻</div>
+          <h3>Developer Advocates</h3>
+          <p>Help developers find better tools. If you create content for developers, Changelog.page is a natural fit for your audience.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏢</div>
+          <h3>Agencies</h3>
+          <p>Recommend to clients as part of your SaaS stack recommendations. Earn ongoing commissions on every client you refer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commission Structure -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2>Commission Structure</h2>
+        <p>Earn more as you grow. Unlock higher tiers with more referrals.</p>
+      </div>
+      <div class="commission-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Referrals</th>
+              <th>Commission</th>
+              <th>Cookie Duration</th>
+              <th>Bonuses</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tier-badge tier-standard">🌟 Standard</span></td>
+              <td>0-9</td>
+              <td>30%</td>
+              <td>60 days</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="tier-badge tier-partner">🚀 Partner</span></td>
+              <td>10-49</td>
+              <td>35%</td>
+              <td>90 days</td>
+              <td>Priority support, early access</td>
+            </tr>
+            <tr>
+              <td><span class="tier-badge tier-vip">👑 VIP</span></td>
+              <td>50+</td>
+              <td>40%</td>
+              <td>120 days</td>
+              <td>Custom terms, co-marketing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Four simple steps to start earning</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>Apply</h3>
+          <p>Fill out our simple application. We'll review and approve within 24 hours.</p>
+        </div>
+        <div class="step">
+          <h3>Share</h3>
+          <p>Get your unique affiliate link. Share on your blog, YouTube, Twitter, or newsletter.</p>
+        </div>
+        <div class="step">
+          <h3>Earn</h3>
+          <p>30% commission on every paid signup. Lifetime recurring revenue.</p>
+        </div>
+        <div class="step">
+          <h3>Get Paid</h3>
+          <p>Monthly payouts via PayPal or bank transfer. $50 minimum payout.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marketing Resources -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2>Marketing Resources</h2>
+        <p>Everything you need to promote Changelog.page effectively</p>
+      </div>
+      <div class="resources-grid">
+        <div class="resource-item">
+          <div class="resource-icon">🎨</div>
+          <h4>Brand Assets</h4>
+          <p>Logos, screenshots, product images</p>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon">📧</div>
+          <h4>Email Templates</h4>
+          <p>Pre-written promotional copy</p>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon">📊</div>
+          <h4>Banner Ads</h4>
+          <p>Multiple sizes (300x250, 728x90)</p>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon">⚖️</div>
+          <h4>Comparison Tables</h4>
+          <p>vs Headway, Beamer, etc.</p>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon">🐦</div>
+          <h4>Social Templates</h4>
+          <p>Twitter/X, LinkedIn posts</p>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon">📈</div>
+          <h4>Analytics Dashboard</h4>
+          <p>Track clicks, conversions, earnings</p>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+        All resources available in your affiliate dashboard after approval
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about our affiliate program</p>
+      </div>
+      <div class="faq-container">
+        <div class="faq-item">
+          <button class="faq-question">How much can I earn?</button>
+          <div class="faq-answer">
+            <p>There's no limit to your earnings. Our top affiliates earn $1,000+/month passively. With 30% recurring commissions, your income grows as you refer more customers. A single Team plan referral ($49/mo) earns you $14.70 every month for as long as they remain a customer.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">When and how do I get paid?</button>
+          <div class="faq-answer">
+            <p>We process payments on the 15th of each month, 30 days after the commission is earned (to account for refunds). You can choose to receive payments via PayPal or bank transfer. The minimum payout threshold is $50.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How does the tracking cookie work?</button>
+          <div class="faq-answer">
+            <p>When someone clicks your affiliate link, a cookie is placed in their browser. If they sign up within 60 days (Standard tier), 90 days (Partner tier), or 120 days (VIP tier), you'll receive credit for the referral. Even if they don't sign up immediately, you'll still get credit if they return later within the cookie period.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Can I refer myself or get a discount?</button>
+          <div class="faq-answer">
+            <p>No, self-referrals are not allowed and will result in immediate termination from the program. However, as an affiliate, you'll receive a free Pro account after your first 3 paid referrals as a thank you for promoting us.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Do you provide promotional materials?</button>
+          <div class="faq-answer">
+            <p>Yes! Once approved, you'll get access to our affiliate dashboard with logos, product screenshots, banner ads in various sizes, email templates, social media copy, comparison tables, and more. We're constantly adding new resources to help you succeed.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What countries can participate?</button>
+          <div class="faq-answer">
+            <p>Our affiliate program is open worldwide, as long as you can receive payments via PayPal or international bank transfer. Please note that you are responsible for complying with your local tax laws and reporting your affiliate income.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="cta-section" id="apply">
+    <div class="container">
+      <h2>Start Earning Today</h2>
+      <p>Join hundreds of affiliates earning passive income by promoting a product SaaS founders actually need. Free to join, no minimum commitments.</p>
+      <a href="mailto:affiliates@changelog.page?subject=Affiliate Program Application" class="btn btn-primary" style="font-size: 1.125rem; padding: 1.25rem 2.5rem;">
+        Apply to Affiliate Program
+      </a>
+      <p style="margin-top: 1.5rem;">
+        <a href="mailto:affiliates@changelog.page" class="contact-email">Questions? Contact us at affiliates@changelog.page</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      <a href="/">Home</a>
+      <a href="/features">Features</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/blog">Blog</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </p>
+    <p style="margin-top: 1rem;">© 2026 Changelog.page. All rights reserved.</p>
+  </footer>
+
+  <!-- Calculator Script -->
+  <script>
+    const referralSlider = document.getElementById('referralSlider');
+    const referralValue = document.getElementById('referralValue');
+    const monthlyEarnings = document.getElementById('monthlyEarnings');
+    const annualEarnings = document.getElementById('annualEarnings');
+    const planOptions = document.querySelectorAll('.plan-option');
+    
+    let currentPlanPrice = 15;
+    
+    function calculateEarnings() {
+      const referrals = parseInt(referralSlider.value);
+      const monthly = referrals * currentPlanPrice * 0.30;
+      const annual = monthly * 12;
+      
+      monthlyEarnings.textContent = '$' + monthly.toFixed(2);
+      annualEarnings.textContent = '$' + annual.toLocaleString() + '/year';
+    }
+    
+    referralSlider.addEventListener('input', function() {
+      referralValue.textContent = this.value;
+      calculateEarnings();
+    });
+    
+    planOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        planOptions.forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        currentPlanPrice = parseInt(this.dataset.price);
+        calculateEarnings();
+      });
+    });
+    
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const isActive = item.classList.contains('active');
+        
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(faq => {
+          faq.classList.remove('active');
+        });
+        
+        // Open clicked if wasn't active
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
