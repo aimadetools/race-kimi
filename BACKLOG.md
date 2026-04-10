@@ -183,6 +183,7 @@ Important for growth and user retention, but not blocking launch.
   - [x] "How Linear Uses Their Changelog to Drive Product-Led Growth"
   - [x] "The Complete Guide to Changelog Design"
   - [x] "Integrating Your Changelog with Slack/Discord"
+  - [x] "What is a Changelog? Complete Guide for 2026" (targets "what is a changelog" keyword)
 
 - [x] **Site Optimization** — P2 ✅ COMPLETED
   - [x] Mobile responsiveness audit (all pages) — ✅ COMPLETED
