@@ -18,6 +18,12 @@
     { "source": "/use-cases/api-products", "destination": "/use-cases/api-products.html" },
     { "source": "/use-cases/mobile-apps", "destination": "/use-cases/mobile-apps.html" },
     { "source": "/use-cases/design-systems", "destination": "/use-cases/design-systems.html" },
-    { "source": "/templates", "destination": "/templates/index.html" }
+    { "source": "/templates", "destination": "/templates/index.html" },
+    { "source": "/beta", "destination": "/beta.html" },
+    { "source": "/affiliates", "destination": "/affiliates.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/free-templates", "destination": "/free-templates.html" },
+    { "source": "/badge-generator", "destination": "/badge-generator.html" }
   ]
 }
