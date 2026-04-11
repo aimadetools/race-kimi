@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Integration — Sync Issues to Changelog | Changelog.page</title>
+  <meta name="description" content="Sync completed Linear issues directly to your changelog. Turn shipped features into public updates automatically.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Linear Integration — Changelog.page">
+  <meta property="og:description" content="Turn shipped Linear issues into changelog entries automatically">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://race-kimi.vercel.app/guides/linear-integration.html">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Linear Integration — Changelog.page">
+  <meta name="twitter:description" content="Sync Linear issues to your changelog automatically">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a24;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-dark: #4f46e5;
+      --linear-accent: #5E6AD2;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    
+    .nav {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav a:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Hero */
+    .hero {
+      background: var(--bg-secondary);
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    
+    .integration-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(94, 106, 210, 0.15);
+      border: 1px solid rgba(94, 106, 210, 0.3);
+      color: var(--linear-accent);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    
+    .integration-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    
+    .hero h1 span {
+      color: var(--linear-accent);
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .hero-features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .hero-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .hero-feature svg {
+      width: 18px;
+      height: 18px;
+      color: var(--success);
+    }
+    
+    /* Main Content */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(94, 106, 210, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+      border: 1px solid rgba(94, 106, 210, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .info-box svg {
+      width: 24px;
+      height: 24px;
+      color: var(--linear-accent);
+      flex-shrink: 0;
+    }
+    
+    .info-box h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .info-box p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Sections */
+    .section {
+      margin-bottom: 3rem;
+    }
+    
+    .section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .section h3 {
+      font-size: 1.25rem;
+      margin: 2rem 0 1rem;
+      color: var(--text-primary);
+    }
+    
+    .section p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    
+    /* Steps */
+    .steps {
+      counter-reset: step;
+    }
+    
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--linear-accent) 0%, var(--accent) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    
+    .step-content h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .step-content p {
+      margin-bottom: 1rem;
+    }
+    
+    /* Code Blocks */
+    .code-block {
+      background: #1e1e2e;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    
+    .code-header {
+      background: var(--bg-tertiary);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .code-header button {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .code-header button:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    
+    pre {
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    
+    code {
+      font-family: 'SF Mono', Monaco, monospace;
+      color: var(--text-primary);
+    }
+    
+    .code-comment { color: #6c7086; }
+    .code-keyword { color: #cba6f7; }
+    .code-string { color: #a6e3a1; }
+    .code-variable { color: #f38ba8; }
+    
+    /* Tables */
+    .schema-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    
+    .schema-table th,
+    .schema-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .schema-table th {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .schema-table td {
+      color: var(--text-secondary);
+    }
+    
+    .schema-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .type-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: rgba(94, 106, 210, 0.15);
+      color: var(--linear-accent);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .required-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .optional-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .feature-card svg {
+      width: 40px;
+      height: 40px;
+      color: var(--linear-accent);
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    
+    /* CTA Box */
+    .cta-box {
+      background: linear-gradient(135deg, rgba(94, 106, 210, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
+      border: 1px solid rgba(94, 106, 210, 0.3);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    
+    .cta-box h2 {
+      border: none;
+      margin-bottom: 1rem;
+      padding: 0;
+    }
+    
+    .cta-box p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--linear-accent) 0%, var(--accent) 100%);
+      color: white;
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(94, 106, 210, 0.4);
+    }
+    
+    /* Footer */
+    .footer {
+      background: var(--bg-secondary);
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav {
+        gap: 1rem;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-features {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .step {
+        flex-direction: column;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/" class="logo">
+        <div class="logo-icon">📋</div>
+        <span>Changelog.page</span>
+      </a>
+      <nav class="nav">
+        <a href="/guides">Guides</a>
+        <a href="/templates">Templates</a>
+        <a href="/beta">Beta</a>
+      </nav>
+    </div>
+  </header>
+  
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="integration-badge">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm2 0v14h14V5H5zm4 2h6v2H9V7zm0 4h6v2H9v-2zm0 4h6v2H9v-2z"/></svg>
+        Linear Integration
+      </div>
+      <h1>Turn Shipped Issues Into <span>Changelog Entries</span></h1>
+      <p>Automatically sync completed Linear issues to your public changelog. Keep customers updated on every feature you ship.</p>
+      <div class="hero-features">
+        <div class="hero-feature">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Auto-sync completed issues
+        </div>
+        <div class="hero-feature">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Smart category mapping
+        </div>
+        <div class="hero-feature">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Team & project filters
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Info Box -->
+    <div class="info-box">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <div>
+        <h3>Team Tier Feature</h3>
+        <p>Linear integration is available on the Team plan ($49/month). It syncs issues from your Linear workspace to your changelog automatically, keeping your product updates in sync with your development workflow.</p>
+      </div>
+    </div>
+    
+    <!-- Features -->
+    <section class="section">
+      <h2>What You Get</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <h4>Automatic Sync</h4>
+          <p>Run the sync script to pull completed issues from Linear and convert them to changelog entries automatically.</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          <h4>Smart Categorization</h4>
+          <p>Linear states are automatically mapped to changelog categories (completed → feature, canceled → fix, etc.).</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          <h4>Team Filtering</h4>
+          <p>Filter by team, project, or specific workflow states to control exactly what gets synced to your changelog.</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          <h4>GitHub Actions</h4>
+          <p>Set up automated sync with GitHub Actions to run on a schedule or trigger when issues are completed.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Setup Guide -->
+    <section class="section">
+      <h2>Setup Guide</h2>
+      
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Get Your Linear API Token</h3>
+            <p>First, you need a Linear API token to authenticate with your workspace.</p>
+            <ol style="margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary);">
+              <li>Go to Linear → Settings → API</li>
+              <li>Click "Create new token"</li>
+              <li>Name it "Changelog Sync"</li>
+              <li>Copy the token (starts with <code>lin_api_</code>)</li>
+            </ol>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Environment Variable</span>
+                <button onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="code-comment"># Add to your .env file or GitHub Secrets</span>
+<span class="code-variable">LINEAR_API_TOKEN</span>=<span class="code-string">lin_api_your_token_here</span></code></pre>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Find Your Team or Project ID</h3>
+            <p>Use the CLI to explore your Linear workspace and find the team or project you want to sync.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Explore Workspace</span>
+                <button onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="code-comment"># Navigate to the generator directory</span>
+<span class="code-keyword">cd</span> generator/src
+
+<span class="code-comment"># Run the info command</span>
+<span class="code-keyword">node</span> linear.js --token <span class="code-variable">$LINEAR_API_TOKEN</span> --info</code></pre>
+            </div>
+            <p>This will show all your teams, their states, and available projects.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Configure the Sync</h3>
+            <p>Create a configuration file or use environment variables to set up the sync parameters.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>linear.config.js</span>
+                <button onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="code-variable">module</span>.exports = {
+  <span class="code-comment">// Required: Your Linear API token</span>
+  linearToken: <span class="code-variable">process</span>.env.LINEAR_API_TOKEN,
+  
+  <span class="code-comment">// Optional: Filter by team ID (from --info output)</span>
+  teamId: <span class="code-string">'team-uuid-here'</span>,
+  
+  <span class="code-comment">// Optional: Filter by project ID</span>
+  projectId: <span class="code-string">'project-uuid-here'</span>,
+  
+  <span class="code-comment">// Optional: Only sync specific states</span>
+  stateNames: [<span class="code-string">'Done'</span>, <span class="code-string">'Completed'</span>, <span class="code-string">'Shipped'</span>],
+  
+  <span class="code-comment">// Required: Output directory for markdown files</span>
+  outputDir: <span class="code-string">'./entries'</span>,
+  
+  <span class="code-comment">// Optional: Maximum number of issues</span>
+  limit: <span class="code-keyword">100</span>,
+  
+  <span class="code-comment">// Optional: Custom category mapping</span>
+  customCategoryMap: {
+    <span class="code-string">'Done'</span>: <span class="code-string">'feature'</span>,
+    <span class="code-string">'Bug Fix'</span>: <span class="code-string">'fix'</span>,
+    <span class="code-string">'Improvement'</span>: <span class="code-string">'improvement'</span>
+  }
+};</code></pre>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Run the Sync</h3>
+            <p>Sync issues from Linear to your changelog entries directory.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Manual Sync</span>
+                <button onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="code-comment"># Sync with configuration file</span>
+<span class="code-keyword">node</span> linear.js --token <span class="code-variable">$LINEAR_API_TOKEN</span> \
+  --team team-uuid \
+  --states <span class="code-string">"Done,Completed"</span> \
+  --output ./entries</code></pre>
+            </div>
+            <p>This will create markdown files in your entries directory, ready to be built into your changelog.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- GitHub Actions -->
+    <section class="section">
+      <h2>GitHub Actions Workflow</h2>
+      <p>Set up automated sync to run daily or trigger when issues are completed.</p>
+      
+      <div class="code-block">
+        <div class="code-header">
+          <span>.github/workflows/sync-linear.yml</span>
+          <button onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="code-variable">name</span>: <span class="code-string">Sync Linear to Changelog</span>
+
+<span class="code-variable">on</span>:
+  <span class="code-comment"># Run daily at 9 AM</span>
+  <span class="code-variable">schedule</span>:
+    - <span class="code-variable">cron</span>: <span class="code-string">'0 9 * * *'</span>
+  
+  <span class="code-comment"># Or run manually</span>
+  <span class="code-variable">workflow_dispatch</span>:
+
+<span class="code-variable">jobs</span>:
+  <span class="code-variable">sync</span>:
+    <span class="code-variable">runs-on</span>: <span class="code-string">ubuntu-latest</span>
+    
+    <span class="code-variable">steps</span>:
+      - <span class="code-variable">name</span>: <span class="code-string">Checkout repository</span>
+        <span class="code-variable">uses</span>: <span class="code-string">actions/checkout@v4</span>
+      
+      - <span class="code-variable">name</span>: <span class="code-string">Setup Node.js</span>
+        <span class="code-variable">uses</span>: <span class="code-string">actions/setup-node@v4</span>
+        <span class="code-variable">with</span>:
+          <span class="code-variable">node-version</span>: <span class="code-string">'20'</span>
+      
+      - <span class="code-variable">name</span>: <span class="code-string">Sync Linear issues</span>
+        <span class="code-variable">env</span>:
+          <span class="code-variable">LINEAR_API_TOKEN</span>: <span class="code-variable">${{ secrets.LINEAR_API_TOKEN }}</span>
+        <span class="code-variable">run</span>: |
+          node generator/src/linear.js \
+            --token "$LINEAR_API_TOKEN" \
+            --team "${{ vars.LINEAR_TEAM_ID }}" \
+            --states "Done,Completed" \
+            --output ./entries \
+            --limit 50
+      
+      - <span class="code-variable">name</span>: <span class="code-string">Commit changes</span>
+        <span class="code-variable">run</span>: |
+          git config user.name "Linear Sync"
+          git config user.email "linear@changelog.page"
+          git add entries/
+          git diff --quiet && git diff --staged --quiet || \
+            git commit -m "Sync Linear issues: $(date +%Y-%m-%d)"
+          git push</code></pre>
+      </div>
+    </section>
+    
+    <!-- Mapping Reference -->
+    <section class="section">
+      <h2>Data Mapping Reference</h2>
+      <p>Here's how Linear data maps to changelog fields:</p>
+      
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Linear Field</th>
+            <th>Changelog Field</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>title</code></td>
+            <td><code>title</code></td>
+            <td>Issue title becomes entry title</td>
+          </tr>
+          <tr>
+            <td><code>state.type</code></td>
+            <td><code>category</code></td>
+            <td>completed → feature, canceled → fix, etc.</td>
+          </tr>
+          <tr>
+            <td><code>labels</code></td>
+            <td><code>tags</code></td>
+            <td>Label names become tags</td>
+          </tr>
+          <tr>
+            <td><code>completedAt</code></td>
+            <td><code>date</code></td>
+            <td>Completion date or updatedAt fallback</td>
+          </tr>
+          <tr>
+            <td><code>assignee.name</code></td>
+            <td><code>author</code></td>
+            <td>Who completed the issue</td>
+          </tr>
+          <tr>
+          <td><code>description</code></td>
+            <td><code>content</code></td>
+            <td>Issue description (markdown)</td>
+          </tr>
+          <tr>
+            <td><code>team.name</code></td>
+            <td><code>team</code></td>
+            <td>Linear team name</td>
+          </tr>
+          <tr>
+            <td><code>project.name</code></td>
+            <td><code>project</code></td>
+            <td>Project the issue belongs to</td>
+          </tr>
+          <tr>
+            <td><code>url</code></td>
+            <td>Reference link</td>
+            <td>Link back to original Linear issue</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>Default State to Category Mapping</h3>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Linear State Type</th>
+            <th>Changelog Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="type-badge">completed</span></td>
+            <td>feature</td>
+          </tr>
+          <tr>
+            <td><span class="type-badge">canceled</span></td>
+            <td>fix</td>
+          </tr>
+          <tr>
+            <td><span class="type-badge">started</span></td>
+            <td>improvement</td>
+          </tr>
+          <tr>
+            <td><span class="type-badge">unstarted</span></td>
+            <td>improvement</td>
+          </tr>
+          <tr>
+            <td><span class="type-badge">triage</span></td>
+            <td>improvement</td>
+          </tr>
+          <tr>
+            <td><span class="type-badge">backlog</span></td>
+            <td>improvement</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    
+    <!-- CLI Reference -->
+    <section class="section">
+      <h2>CLI Reference</h2>
+      
+      <h3>Commands</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span>Available Options</span>
+        </div>
+        <pre><code><span class="code-comment"># Show workspace info (teams, projects, states)</span>
+node linear.js --token &lt;token&gt; --info
+
+<span class="code-comment"># Sync with all options</span>
+node linear.js \
+  --token &lt;token&gt; \
+  --team &lt;team-id&gt; \
+  --project &lt;project-id&gt; \
+  --states "Done,Completed" \
+  --output ./entries \
+  --limit 100
+
+<span class="code-comment"># Show help</span>
+node linear.js --help</code></pre>
+      </div>
+      
+      <h3>Options</h3>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--token, -t</code></td>
+            <td><span class="required-badge">Yes</span></td>
+            <td>Linear API token (or LINEAR_API_TOKEN env var)</td>
+          </tr>
+          <tr>
+            <td><code>--team</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Filter by team ID</td>
+          </tr>
+          <tr>
+            <td><code>--project</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Filter by project ID</td>
+          </tr>
+          <tr>
+            <td><code>--states</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Comma-separated state names to include</td>
+          </tr>
+          <tr>
+            <td><code>--output, -o</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Output directory (default: ./entries)</td>
+          </tr>
+          <tr>
+            <td><code>--limit</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Maximum issues to sync (default: 100)</td>
+          </tr>
+          <tr>
+            <td><code>--info</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Show workspace info and exit</td>
+          </tr>
+          <tr>
+            <td><code>--help, -h</code></td>
+            <td><span class="optional-badge">No</span></td>
+            <td>Show help message</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    
+    <!-- Tips -->
+    <section class="section">
+      <h2>Best Practices</h2>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h4>Use Descriptive Issue Titles</h4>
+          <p>Issue titles become changelog entry titles. Make them user-friendly and descriptive.</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          <h4>Label for Categories</h4>
+          <p>Use Linear labels like "feature", "bug", "improvement" for better changelog categorization.</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h4>Sync on a Schedule</h4>
+          <p>Run the sync daily or weekly to keep your changelog current without manual work.</p>
+        </div>
+        <div class="feature-card">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          <h4>Edit After Sync</h4>
+          <p>Review and edit synced entries before publishing. Add polish to make them customer-ready.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA -->
+    <div class="cta-box">
+      <h2>Ready to Sync Linear Issues?</h2>
+      <p>Join the beta to get access to Linear integration and keep your changelog in sync with your development workflow.</p>
+      <a href="/beta" class="btn-primary">Join the Beta →</a>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2026 Changelog.page — Part of the $100 AI Startup Race</p>
+      <div class="footer-links">
+        <a href="/guides">Guides</a>
+        <a href="/templates">Templates</a>
+        <a href="/api">API</a>
+        <a href="/beta">Beta</a>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Copy code functionality
+    function copyCode(button) {
+      const codeBlock = button.closest('.code-block').querySelector('code');
+      const text = codeBlock.innerText;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.innerText;
+        button.innerText = 'Copied!';
+        button.style.background = 'var(--success)';
+        button.style.color = 'white';
+        button.style.borderColor = 'var(--success)';
+        
+        setTimeout(() => {
+          button.innerText = original;
+          button.style.background = '';
+          button.style.color = '';
+          button.style.borderColor = '';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
