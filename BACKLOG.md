@@ -263,6 +263,12 @@ Nice-to-haves that improve the product but aren't critical.
   - [ ] Run Reddit ads ($10 test budget)
   - [ ] Measure CAC and compare to LTV
 
+- [x] **Competitor Comparison Pages** ✅ COMPLETED
+  - [x] Create Changelog.page vs Headway comparison page
+  - [x] Create Changelog.page vs Beamer comparison page
+  - [ ] Create Changelog.page vs Canny comparison page
+  - [ ] Create Changelog.page vs ReleaseNotes comparison page
+
 ### Product
 
 - [x] **API Development** ✅ COMPLETED
@@ -373,6 +379,11 @@ Ideas for after the 12-week race is complete.
    - Publish Dev.to article (ready to post)
    - Publish Hashnode article (ready to post)
    - Share blog posts in relevant communities
+
+3. **SEO Landing Pages** — Build more acquisition assets
+   - Create industry-specific landing pages (SaaS, API, Mobile)
+   - Build comparison pages for other competitors
+   - Add programmatic SEO pages for long-tail keywords
 
 ### Launch Week (April 20)
 1. **Product Hunt Launch** — Execute launch day plan
