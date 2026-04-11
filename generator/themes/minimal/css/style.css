@@ -13,6 +13,16 @@
   --max-width: 720px;
 }
 
+/* Light mode colors */
+[data-theme="light"] {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-text-muted: #737373;
+  --color-accent: #6366f1;
+  --color-border: #e5e5e5;
+}
+
 * {
   margin: 0;
   padding: 0;

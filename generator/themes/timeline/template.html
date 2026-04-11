@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,11 @@
   <meta name="description" content="{{site_description}}">
   {{feed_meta}}
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../shared/theme-toggle.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="../shared/theme-toggle.js" defer></script>
 </head>
 <body>
   <div class="container">
@@ -20,6 +22,8 @@
         <a href="rss.xml" class="feed-link">RSS Feed</a>
         <span class="separator">·</span>
         <a href="feed.json" class="feed-link">JSON Feed</a>
+        <span class="separator">·</span>
+        <span class="theme-toggle-container"></span>
       </nav>
     </header>
     

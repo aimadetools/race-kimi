@@ -17,6 +17,19 @@
   --max-width: 840px;
 }
 
+/* Light mode colors */
+[data-theme="light"] {
+  --color-bg: #f8f8fb;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f0f0f5;
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-accent: #8b5cf6;
+  --color-border: #e4e4e7;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
 * {
   margin: 0;
   padding: 0;
