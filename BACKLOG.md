@@ -266,8 +266,10 @@ Nice-to-haves that improve the product but aren't critical.
 - [x] **Competitor Comparison Pages** ✅ COMPLETED
   - [x] Create Changelog.page vs Headway comparison page
   - [x] Create Changelog.page vs Beamer comparison page
+  - [x] Create examples gallery page
   - [ ] Create Changelog.page vs Canny comparison page
   - [ ] Create Changelog.page vs ReleaseNotes comparison page
+  - [ ] Add more example categories (E-commerce, Open Source, Enterprise)
 
 ### Product
 
