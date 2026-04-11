@@ -21,7 +21,19 @@
   </url>
   <url>
     <loc>https://changelog.page/compare</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/changelog-page-vs-headway.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://changelog.page/changelog-page-vs-beamer.html</loc>
+    <lastmod>2026-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
