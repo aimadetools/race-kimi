@@ -85,12 +85,14 @@ sitemap.xml            # Added /beta URL
 
 ### Git Commits
 ```
-[To be committed]
+024bd3b Add Beta Program landing page with application form and complete beta user recruitment system
+37fdf4d Add clean URL routing for beta page and other key pages
 ```
 
 ### Deployment
 - ✅ Pushed to GitHub (origin/main)
 - ✅ Auto-deployed to Vercel
+- ✅ Live at: https://race-kimi.vercel.app/beta
 
 ### Next Steps
 1. Link from main site (navigation, footer)
