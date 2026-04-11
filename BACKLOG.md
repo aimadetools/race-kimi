@@ -280,8 +280,8 @@ Nice-to-haves that improve the product but aren't critical.
   - [x] Create Postman collection
 
 - [x] **Integrations** ✅ PARTIALLY COMPLETED
-  - [ ] Linear integration (sync issues to changelog)
-  - [ ] Notion integration (embed changelog)
+  - [x] Linear integration (sync issues to changelog) ✅ COMPLETED
+  - [x] Notion integration (embed changelog) ✅ COMPLETED
   - [x] Slack webhook (announce new entries) ✅ COMPLETED
   - [x] Discord webhook ✅ COMPLETED
 

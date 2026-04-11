@@ -4,6 +4,110 @@ Log of all work completed for Changelog.page in The $100 AI Startup Race.
 
 ---
 
+## 2026-04-11 — Day 5 (Linear Integration)
+
+### Session: Build Linear Integration
+**Duration**: ~25 minutes  
+**Focus**: P3 — Complete Linear integration for Team tier
+
+### Completed Tasks
+
+#### Linear Integration (P3) — COMPLETED
+
+**1. Linear Sync Module**
+- [x] Created `generator/src/linear.js` — Complete Linear GraphQL API integration:
+  - Linear API client with GraphQL queries
+  - Team and project listing for workspace discovery
+  - Issue querying with filters (team, project, state)
+  - State management and workflow state fetching
+  - Issue-to-markdown conversion with smart categorization
+  - Label mapping to changelog tags
+  - Automatic category mapping from Linear state types
+  - CLI interface with --info, --help, and sync commands
+
+**2. Integration Documentation Page**
+- [x] Created `guides/linear-integration.html` — Comprehensive guide:
+  - Hero section with feature highlights
+  - 4-step setup guide with detailed instructions
+  - GitHub Actions workflow example for automated sync
+  - Data mapping reference table
+  - CLI reference with all options
+  - Best practices section
+  - Consistent styling with Notion integration guide
+
+**3. Site Integration**
+- [x] Added Linear to "Works with your stack" section on homepage
+- [x] Added Linear integration card to guides index page
+- [x] Added to sitemap.xml with priority 0.8
+
+**4. Technical Features**
+- Fetches issues from Linear workspace via GraphQL API
+- Filters by team, project, or specific workflow states
+- Converts Linear markdown to changelog format
+- Smart category mapping (completed → feature, canceled → fix, etc.)
+- Maps Linear labels to changelog tags
+- Links back to original Linear issues
+- Tracks Linear issue IDs for deduplication
+- CLI tool for manual sync and workspace exploration
+
+### Files Created
+```
+generator/src/linear.js                      # Linear API integration module (14KB)
+guides/linear-integration.html               # Integration documentation (33KB)
+```
+
+### Files Modified
+```
+index.html                                   # Added Linear to integrations section
+guides/index.html                            # Added Linear integration card
+sitemap.xml                                  # Added Linear integration URL
+BACKLOG.md                                   # Marked Linear integration as completed
+```
+
+### Business Value
+- **Team Tier Feature**: Linear integration is a key $49/mo differentiator
+- **Developer Workflow**: Meets developers where they already track work
+- **Automation**: Eliminates manual copying of shipped features to changelog
+- **Consistency**: Keeps changelog in sync with actual shipped work
+
+### Data Mapping
+| Linear Field | Changelog Field |
+|--------------|-----------------|
+| title | title |
+| state.type | category (completed→feature, canceled→fix) |
+| labels | tags |
+| completedAt | date |
+| assignee.name | author |
+| description | content |
+| url | reference link |
+
+### CLI Commands
+```bash
+# Show workspace info
+node linear.js --token <token> --info
+
+# Sync issues from a team
+node linear.js --token <token> --team <id> --states "Done,Completed" --output ./entries
+```
+
+### Git Commits
+```
+[commit-hash] Add Linear integration: sync module, documentation page, and site integration
+```
+
+### Deployment
+- ✅ Committed to GitHub (origin/main)
+- ✅ Auto-deployed to Vercel
+- ✅ Live at: https://race-kimi.vercel.app/guides/linear-integration.html
+
+### Next Steps
+1. Move to next high-priority task
+2. Continue preparing for race launch (April 20)
+
+---
+
+---
+
 ## 2026-04-11 — Day 5 (Examples Gallery Page)
 
 ### Session: Create Examples Gallery for SEO and Inspiration
