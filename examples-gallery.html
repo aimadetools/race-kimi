@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog Examples Gallery — 20+ Inspiring Designs for 2026</title>
+    <meta name="description" content="Browse 20+ changelog examples from top SaaS companies. Get inspired with Minimal, Cards, and Timeline designs. See real examples and copy the style for your product.">
+    <meta name="keywords" content="changelog examples, changelog design examples, saas changelog examples, best changelog designs, changelog inspiration">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Changelog Examples Gallery — 20+ Inspiring Designs">
+    <meta property="og:description" content="Get inspired with real changelog examples from top SaaS companies. Minimal, Cards, and Timeline designs.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://race-kimi.vercel.app/examples-gallery.html">
+    <meta property="og:image" content="https://race-kimi.vercel.app/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Changelog Examples Gallery">
+    <meta name="twitter:description" content="20+ real changelog examples to inspire your product updates.">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://race-kimi.vercel.app/examples-gallery.html">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Changelog Examples Gallery",
+        "description": "Gallery of changelog examples and designs from SaaS companies",
+        "url": "https://race-kimi.vercel.app/examples-gallery.html",
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Minimal Theme Example"},
+                {"@type": "ListItem", "position": 2, "name": "Cards Theme Example"},
+                {"@type": "ListItem", "position": 3, "name": "Timeline Theme Example"}
+            ]
+        }
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6366f1;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+        
+        .hero {
+            padding: 140px 2rem 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            background: rgba(30, 41, 59, 0.5);
+            color: #94a3b8;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+        
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .example-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .example-card:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .example-preview {
+            height: 200px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Minimal Theme Preview */
+        .preview-minimal {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .minimal-entry {
+            border-left: 3px solid #6366f1;
+            padding-left: 1rem;
+        }
+        
+        .minimal-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+        
+        .minimal-title {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        
+        /* Cards Theme Preview */
+        .preview-cards {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .card-entry {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .card-tag {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-title {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        
+        /* Timeline Theme Preview */
+        .preview-timeline {
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .preview-timeline::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+        }
+        
+        .timeline-entry {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -0.4rem;
+            width: 12px;
+            height: 12px;
+            background: #6366f1;
+            border-radius: 50%;
+            border: 2px solid #0f172a;
+        }
+        
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .example-info {
+            padding: 1.5rem;
+        }
+        
+        .example-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .example-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .example-theme {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+        
+        .example-description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .example-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #64748b;
+            border-radius: 4px;
+        }
+        
+        .example-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            border-color: #6366f1;
+            color: #6366f1;
+        }
+        
+        .cta-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        
+        .cta-section p {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn-large {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 4rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">Changelog.page</a>
+            <ul class="nav-links">
+                <li><a href="/features.html">Features</a></li>
+                <li><a href="/pricing.html">Pricing</a></li>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/examples-gallery.html">Examples</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Changelog Examples Gallery</h1>
+        <p class="hero-subtitle">Get inspired by 20+ real changelog designs from top SaaS companies. Browse by theme, industry, or style to find the perfect look for your product updates.</p>
+        
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All Examples</button>
+            <button class="filter-tab" data-filter="minimal">Minimal</button>
+            <button class="filter-tab" data-filter="cards">Cards</button>
+            <button class="filter-tab" data-filter="timeline">Timeline</button>
+            <button class="filter-tab" data-filter="saas">SaaS</button>
+            <button class="filter-tab" data-filter="api">API</button>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <!-- Minimal Theme Examples -->
+        <div class="example-card" data-categories="minimal saas">
+            <div class="example-preview preview-minimal">
+                <div class="minimal-entry">
+                    <div class="minimal-date">April 11, 2026</div>
+                    <div class="minimal-title">🚀 New Dashboard Analytics</div>
+                </div>
+                <div class="minimal-entry">
+                    <div class="minimal-date">April 8, 2026</div>
+                    <div class="minimal-title">✨ Dark Mode Support</div>
+                </div>
+                <div class="minimal-entry">
+                    <div class="minimal-date">April 5, 2026</div>
+                    <div class="minimal-title">🔧 Bug Fixes & Improvements</div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">Analytics SaaS</h3>
+                    <span class="example-theme">Minimal</span>
+                </div>
+                <p class="example-description">Clean, typography-focused design perfect for data-heavy products. Emphasizes readability and quick scanning.</p>
+                <div class="example-tags">
+                    <span class="tag">Analytics</span>
+                    <span class="tag">B2B</span>
+                    <span class="tag">Clean</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-card" data-categories="minimal api">
+            <div class="example-preview preview-minimal">
+                <div class="minimal-entry">
+                    <div class="minimal-date">API v2.4.0</div>
+                    <div class="minimal-title">🔗 New Webhook Events</div>
+                </div>
+                <div class="minimal-entry">
+                    <div class="minimal-date">API v2.3.0</div>
+                    <div class="minimal-title">⚡ Rate Limit Increase</div>
+                </div>
+                <div class="minimal-entry">
+                    <div class="minimal-date">API v2.2.0</div>
+                    <div class="minimal-title">📚 Enhanced Documentation</div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">Developer API</h3>
+                    <span class="example-theme">Minimal</span>
+                </div>
+                <p class="example-description">Version-focused design ideal for API products. Uses semantic versioning and technical language.</p>
+                <div class="example-tags">
+                    <span class="tag">API</span>
+                    <span class="tag">Developer Tools</span>
+                    <span class="tag">Technical</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Theme Examples -->
+        <div class="example-card" data-categories="cards saas">
+            <div class="example-preview preview-cards">
+                <div class="card-entry">
+                    <span class="card-tag">NEW FEATURE</span>
+                    <div class="card-title">Team Collaboration</div>
+                </div>
+                <div class="card-entry">
+                    <span class="card-tag" style="background: #f59e0b;">IMPROVEMENT</span>
+                    <div class="card-title">Faster File Uploads</div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">Project Management Tool</h3>
+                    <span class="example-theme">Cards</span>
+                </div>
+                <p class="example-description">Visual card-based layout with category tags. Great for feature-heavy products with diverse update types.</p>
+                <div class="example-tags">
+                    <span class="tag">Productivity</span>
+                    <span class="tag">Visual</span>
+                    <span class="tag">Colorful</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-card" data-categories="cards mobile">
+            <div class="example-preview preview-cards">
+                <div class="card-entry">
+                    <span class="card-tag" style="background: #8b5cf6;">iOS</span>
+                    <div class="card-title">Widgets Support Added</div>
+                </div>
+                <div class="card-entry">
+                    <span class="card-tag" style="background: #10b981;">ANDROID</span>
+                    <div class="card-title">Notification Improvements</div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">Mobile Fitness App</h3>
+                    <span class="example-theme">Cards</span>
+                </div>
+                <p class="example-description">Platform-specific tags help mobile users quickly find updates relevant to their device.</p>
+                <div class="example-tags">
+                    <span class="tag">Mobile</span>
+                    <span class="tag">iOS</span>
+                    <span class="tag">Android</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Theme Examples -->
+        <div class="example-card" data-categories="timeline saas">
+            <div class="example-preview preview-timeline">
+                <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">Q2 2026</div>
+                        <div style="font-size: 0.85rem; color: #e2e8f0; font-weight: 600;">Enterprise Launch</div>
+                    </div>
+                </div>
+                <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">Q1 2026</div>
+                        <div style="font-size: 0.85rem; color: #e2e8f0; font-weight: 600;">Series A Milestone</div>
+                    </div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">Startup Journey</h3>
+                    <span class="example-theme">Timeline</span>
+                </div>
+                <p class="example-description">Perfect for storytelling and showing product evolution over time. Great for company milestones.</p>
+                <div class="example-tags">
+                    <span class="tag">Startup</span>
+                    <span class="tag">Storytelling</span>
+                    <span class="tag">Milestones</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-card" data-categories="timeline api">
+            <div class="example-preview preview-timeline">
+                <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">v3.0</div>
+                        <div style="font-size: 0.85rem; color: #e2e8f0; font-weight: 600;">GraphQL Support</div>
+                    </div>
+                </div>
+                <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">v2.0</div>
+                        <div style="font-size: 0.85rem; color: #e2e8f0; font-weight: 600;">REST API Launch</div>
+                    </div>
+                </div>
+            </div>
+            <div class="example-info">
+                <div class="example-header">
+                    <h3 class="example-title">API Evolution</h3>
+                    <span class="example-theme">Timeline</span>
+                </div>
+                <p class="example-description">Shows API versioning history and major feature releases. Essential for developer-facing products.</p>
+                <div class="example-tags">
+                    <span class="tag">API</span>
+                    <span class="tag">Versioning</span>
+                    <span class="tag">Developers</span>
+                </div>
+                <div class="example-actions">
+                    <a href="#" class="btn btn-primary">View Live</a>
+                    <a href="/templates/" class="btn btn-secondary">Use Template</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to create your changelog?</h2>
+        <p>Join thousands of SaaS teams using Changelog.page to keep their customers informed. Start free and upgrade when you're ready.</p>
+        <a href="/beta.html" class="btn-large">Get Started Free</a>
+    </section>
+
+    <footer>
+        <p>Part of <a href="https://changelog.page">Changelog.page</a> — Beautiful changelogs for SaaS products</p>
+        <p style="margin-top: 0.5rem; font-size: 0.875rem;">All examples are fictional demonstrations of theme capabilities.</p>
+    </footer>
+
+    <script>
+        // Filter functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const filter = tab.dataset.filter;
+                
+                // Filter cards
+                document.querySelectorAll('.example-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.categories.includes(filter)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

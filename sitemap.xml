@@ -38,6 +38,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://changelog.page/examples-gallery.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://changelog.page/about</loc>
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
