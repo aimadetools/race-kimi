@@ -277,8 +277,8 @@ Nice-to-haves that improve the product but aren't critical.
   - [x] Slack webhook (announce new entries) ✅ COMPLETED
   - [x] Discord webhook ✅ COMPLETED
 
-- [ ] **Advanced Themes**
-  - [ ] Dark mode toggle
+- [ ] **Advanced Themes** — 🟡 IN PROGRESS
+  - [x] Dark mode toggle ✅ COMPLETED
   - [ ] Custom CSS injection
   - [ ] Theme marketplace (community themes)
 
