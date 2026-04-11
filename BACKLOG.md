@@ -269,7 +269,7 @@ Nice-to-haves that improve the product but aren't critical.
   - [x] Create examples gallery page
   - [x] Create Changelog.page vs Canny comparison page
   - [x] Create Changelog.page vs ReleaseNotes comparison page
-  - [ ] Add more example categories (E-commerce, Open Source, Enterprise)
+  - [x] Add more example categories (E-commerce, Open Source, Enterprise)
 
 ### Product
 
