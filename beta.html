@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beta Program | Join the Changelog.page Founding Member Program</title>
+    <meta name="description" content="Join the Changelog.page beta program. Get free Pro access for 6 months, 50% lifetime discount, and help shape the future of changelog tools for SaaS.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Beta Program | Join the Changelog.page Founding Member Program">
+    <meta property="og:description" content="Join the Changelog.page beta program. Get free Pro access for 6 months, 50% lifetime discount, and help shape the future of changelog tools for SaaS.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://changelog.page/beta">
+    <meta property="og:image" content="https://changelog.page/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beta Program | Join the Changelog.page Founding Member Program">
+    <meta name="twitter:description" content="Join the Changelog.page beta program. Get free Pro access for 6 months, 50% lifetime discount, and help shape the future of changelog tools.">
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Changelog.page Beta Program",
+      "description": "Join our beta program and get early access to Changelog.page with exclusive benefits for founding members.",
+      "url": "https://changelog.page/beta",
+      "offers": {
+        "@type": "Offer",
+        "name": "Beta Program",
+        "description": "Free Pro access for 6 months + 50% lifetime discount",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --border: #334155;
+            --focus-ring: #818cf8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo span {
+            color: var(--primary-light);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .nav-cta {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-secondary) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .beta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .beta-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary-light), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .benefit-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .benefit-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .benefit-value {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Value Comparison */
+        .value-section {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .value-card.featured {
+            border-color: var(--primary);
+            position: relative;
+        }
+
+        .value-card.featured::before {
+            content: 'BETA OFFER';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .value-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .value-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .value-card.featured .value-price {
+            color: var(--success);
+        }
+
+        .value-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .value-list {
+            list-style: none;
+            space-y: 0.75rem;
+        }
+
+        .value-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .value-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .value-list li.excluded::before {
+            content: '×';
+            color: var(--text-muted);
+        }
+
+        .value-list li.highlight {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Application Form */
+        .application {
+            padding: 6rem 2rem;
+        }
+
+        .application-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .application-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .form-label span {
+            color: var(--primary-light);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-label:hover {
+            color: var(--text);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .form-submit:active {
+            transform: translateY(0);
+        }
+
+        .form-note {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 60px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-marker {
+            width: 42px;
+            height: 42px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-item.active .timeline-marker {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .timeline-item.completed .timeline-marker {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 6rem 2rem;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg) 100%);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.375rem 0;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero-description {
+                font-size: 1.125rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.875rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .application-form {
+                padding: 1.5rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="#6366f1"/>
+                    <path d="M8 12h16M8 16h12M8 20h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Changelog<span>.</span>page
+            </a>
+            <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+            <div class="nav-links">
+                <a href="/features.html" class="nav-link">Features</a>
+                <a href="/pricing.html" class="nav-link">Pricing</a>
+                <a href="/blog.html" class="nav-link">Blog</a>
+                <a href="#apply" class="nav-cta">Apply Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="beta-badge">Now Accepting Beta Applications</div>
+            <h1>Become a <span>Founding Member</span></h1>
+            <p class="hero-description">
+                Join our exclusive beta program and help shape the future of changelog tools. 
+                Get free Pro access, lifetime discounts, and direct input on product development.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">5-10</span>
+                    <span class="hero-stat-label">Beta Spots</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">6mo</span>
+                    <span class="hero-stat-label">Free Pro</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">50%</span>
+                    <span class="hero-stat-label">Lifetime Off</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Beta Members Get</h2>
+                <p>Exclusive benefits available only to our founding beta members</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎁</div>
+                    <h3>6 Months Free Pro</h3>
+                    <p>Get full access to all Pro features including custom domains, password protection, and analytics for 6 months — a $90 value, completely free.</p>
+                    <span class="benefit-value">$90 Value</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💎</div>
+                    <h3>50% Lifetime Discount</h3>
+                    <p>After your free period, lock in a 50% discount forever. Pay just $7.50/month instead of $15 for as long as you're a customer.</p>
+                    <span class="benefit-value">Save $90/year</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏆</div>
+                    <h3>Founding Member Badge</h3>
+                    <p>Display an exclusive "Founding Member" badge on your changelog. Show your users you were part of building something special.</p>
+                    <span class="benefit-value">Exclusive</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📢</div>
+                    <h3>Featured Case Study</h3>
+                    <p>We'll create a detailed case study featuring your product and how you use Changelog.page. Great exposure for your brand.</p>
+                    <span class="benefit-value">Marketing Value</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💬</div>
+                    <h3>Direct Founder Access</h3>
+                    <p>Get my personal email and priority support. Have feature requests? They go straight to the top of the list.</p>
+                    <span class="benefit-value">White-glove</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <h3>Shape the Product</h3>
+                    <p>Your feedback directly influences our roadmap. Help us build the changelog tool you actually want to use.</p>
+                    <span class="benefit-value">High Impact</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Comparison -->
+    <section class="value-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Beta Advantage</h2>
+                <p>Compare what regular users pay vs. what you get as a beta member</p>
+            </div>
+            <div class="value-grid">
+                <div class="value-card">
+                    <h3>Regular Pro Plan</h3>
+                    <div class="value-price">$15<span>/month</span></div>
+                    <ul class="value-list">
+                        <li>Custom domain</li>
+                        <li>Password protection</li>
+                        <li>Analytics dashboard</li>
+                        <li>Priority support</li>
+                        <li class="excluded">No founding badge</li>
+                        <li class="excluded">No featured case study</li>
+                        <li class="excluded">Standard pricing</li>
+                    </ul>
+                </div>
+                <div class="value-card featured">
+                    <h3>Beta Member</h3>
+                    <div class="value-price">$0<span>for 6 months</span></div>
+                    <ul class="value-list">
+                        <li class="highlight">Everything in Pro, plus:</li>
+                        <li>Founding Member badge</li>
+                        <li>Featured case study</li>
+                        <li>Direct founder access</li>
+                        <li>Shape product roadmap</li>
+                        <li>Then 50% off forever ($7.50/mo)</li>
+                        <li>Lock in early-adopter pricing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section class="application" id="apply">
+        <div class="application-container">
+            <div class="section-header">
+                <h2>Apply for the Beta Program</h2>
+                <p>Tell us about your product and why you'd be a great fit</p>
+            </div>
+            <form class="application-form" action="https://formsubmit.co/race@aimadetools.com" method="POST">
+                <input type="hidden" name="_subject" value="New Beta Program Application - Changelog.page">
+                <input type="hidden" name="_next" value="https://changelog.page/thanks.html">
+                <input type="hidden" name="_template" value="table">
+                <input type="text" name="_honey" style="display:none">
+
+                <div class="form-group">
+                    <label class="form-label">Your Name <span>*</span></label>
+                    <input type="text" name="name" class="form-input" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address <span>*</span></label>
+                    <input type="email" name="email" class="form-input" required placeholder="you@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Product Name <span>*</span></label>
+                    <input type="text" name="product_name" class="form-input" required placeholder="MyAwesomeSaaS">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Product URL <span>*</span></label>
+                    <input type="url" name="product_url" class="form-input" required placeholder="https://myawesomeproduct.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Current Stage <span>*</span></label>
+                    <select name="stage" class="form-select" required>
+                        <option value="">Select your stage...</option>
+                        <option value="idea">Idea / Planning</option>
+                        <option value="mvp">MVP / Early Development</option>
+                        <option value="launched">Launched</option>
+                        <option value="revenue">Revenue-generating</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Current Changelog Solution <span>*</span></label>
+                    <select name="current_solution" class="form-select" required>
+                        <option value="">Select your current solution...</option>
+                        <option value="github-releases">GitHub Releases</option>
+                        <option value="headway-beamer">Headway / Beamer / Canny</option>
+                        <option value="custom-built">Custom-built</option>
+                        <option value="notion">Notion / Docs</option>
+                        <option value="none">None (need to set one up)</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Why do you want to join the beta? <span>*</span></label>
+                    <textarea name="why_join" class="form-textarea" required placeholder="Tell us about your product and why a changelog is important to you. What are you hoping to achieve?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Biggest pain point with current solution?</label>
+                    <textarea name="pain_point" class="form-textarea" placeholder="What frustrates you about how you currently handle product updates?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">I commit to: <span>*</span></label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="commit_setup" required>
+                            <span>Set up a changelog within 1 week of acceptance</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="commit_feedback" required>
+                            <span>Provide weekly feedback (15 min check-in) for 2 weeks</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="commit_test" required>
+                            <span>Test new features as they're released</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="commit_launch" required>
+                            <span>Support our Product Hunt launch on April 20</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    Apply for Beta Access
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4.167 10h11.666m0 0L10 4.167M15.833 10L10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                <p class="form-note">
+                    Applications are reviewed within 24 hours. We accept 5-10 beta members total.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="timeline">
+        <div class="timeline-container">
+            <div class="section-header">
+                <h2>Beta Program Timeline</h2>
+                <p>What to expect after you apply</p>
+            </div>
+            <div class="timeline-list">
+                <div class="timeline-item active">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h3>Apply</h3>
+                        <p>Fill out the application form above. Tell us about your product and why you'd be a great fit.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h3>Review (24 hours)</h3>
+                        <p>We review applications and select 5-10 beta members based on product fit and willingness to provide feedback.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h3>Acceptance & Onboarding</h3>
+                        <p>Get your welcome email with setup instructions, Pro coupon code, and scheduling link for Week 1 check-in.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h3>Week 1 Check-in</h3>
+                        <p>15-minute call to discuss setup experience, initial impressions, and any blockers you've encountered.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">5</div>
+                    <div class="timeline-content">
+                        <h3>Product Hunt Launch (April 20)</h3>
+                        <p>Support our launch day! Your testimonials and upvotes make a huge difference.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">6</div>
+                    <div class="timeline-content">
+                        <h3>Week 2 Check-in</h3>
+                        <p>Final feedback session. Discuss feature requests, share insights from your users, and plan case study.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">7</div>
+                    <div class="timeline-content">
+                        <h3>Continue with Benefits</h3>
+                        <p>Enjoy your free Pro access through October, then 50% off forever. Stay involved as we build the future together.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Common questions about the beta program</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">Who is eligible for the beta program?</button>
+                    <div class="faq-answer">
+                        <p>We're looking for SaaS founders, indie hackers, and open source maintainers who are actively building products and need a changelog solution. Ideal candidates are those using GitHub Releases, paying too much for existing tools, or haven't set up a changelog yet. You should be willing to provide feedback and have a genuine need for the product.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What happens after the 6-month free period?</button>
+                    <div class="faq-answer">
+                        <p>After your 6 months of free Pro access, you'll be automatically moved to the discounted rate of $7.50/month (50% off the regular $15/month). This discount is locked in for as long as you remain a customer — even as we add new features and raise prices for new users.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How much time do I need to commit?</button>
+                    <div class="faq-answer">
+                        <p>The time commitment is minimal: set up your changelog within a week (typically 30-60 minutes), then two 15-minute check-in calls over the following weeks. Beyond that, we just ask that you use the product for your actual changelog and share feedback as it comes up. No long meetings or complex requirements.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I leave the beta program early?</button>
+                    <div class="faq-answer">
+                        <p>Absolutely. There's no commitment to stay. If Changelog.page isn't the right fit for your product, you can export your content and leave at any time. However, if you leave during the beta period, you'll forfeit the lifetime discount.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What kind of feedback are you looking for?</button>
+                    <div class="faq-answer">
+                        <p>We want honest feedback about what's working and what isn't. This includes: setup experience (was it easy?), feature gaps (what's missing?), bugs you encounter, and your overall impression. Negative feedback is just as valuable as positive — we need to know what to fix before our public launch.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">When will you notify selected beta members?</button>
+                    <div class="faq-answer">
+                        <p>We review applications within 24 hours and send acceptance emails immediately to selected candidates. If you're not selected for this round, we'll keep your application on file for future beta rounds and notify you when spots open up.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Join?</h2>
+        <p>Spots are limited. Apply now to secure your place as a founding member.</p>
+        <a href="#apply" class="cta-button">
+            Apply for Beta Access
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4.167 10h11.666m0 0L10 4.167M15.833 10L10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="/" class="nav-logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#6366f1"/>
+                        <path d="M8 12h16M8 16h12M8 20h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Changelog<span>.</span>page
+                </a>
+                <p>Beautiful changelogs for SaaS products. Generate static HTML changelogs that load instantly and rank on Google.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="/features.html">Features</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/compare.html">Compare</a>
+                <a href="/widget/">Widget</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="/blog.html">Blog</a>
+                <a href="/guides/">Guides</a>
+                <a href="/templates/">Templates</a>
+                <a href="/affiliates.html">Affiliates</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="/about.html">About</a>
+                <a href="/privacy.html">Privacy</a>
+                <a href="/terms.html">Terms</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Changelog.page. All rights reserved.</p>
+            <p>Made with ❤️ for SaaS founders</p>
+        </div>
+    </footer>
+
+    <!-- Cookie Consent -->
+    <script src="/js/cookie-consent.js"></script>
+
+    <!-- FAQ Accordion -->
+    <script>
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all other items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Toggle current item
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
