@@ -1,0 +1,33 @@
+# SchemaLens — Schema Diff in Merge Requests
+# Add this file to your repository root and adjust the schema paths as needed.
+
+stages:
+  - validate
+
+schema-diff:
+  stage: validate
+  image: node:20-alpine
+  variables:
+    SCHEMA_PATH: "db/schema.sql"
+    DIALECT: "postgres"
+  before_script:
+    - apk add --no-cache git
+  script:
+    # Fetch base branch schema
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    - git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql || echo "-- No base schema found" > /tmp/schema_base.sql
+    # Run diff
+    - node ci/schemalens-diff.js /tmp/schema_base.sql $SCHEMA_PATH --dialect=$DIALECT --format=markdown --output=/tmp/schema_diff_report.md
+    - cat /tmp/schema_diff_report.md
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - db/schema.sql
+        - migrations/*.sql
+        - "**/*.sql"
+  artifacts:
+    reports:
+      dotenv: schema-diff.env
+    paths:
+      - /tmp/schema_diff_report.md
+    expire_in: 1 week

@@ -226,10 +226,10 @@
 ## WEEK 8 (June 8–14) — CI/CD Integration
 
 ### Code & Product
-- [ ] **P0** Create GitHub Actions template for schema diff in PRs
-- [ ] **P0** Create GitLab CI template for schema diff
-- [ ] **P0** Write documentation for CI integration
-- [ ] **P1** Add CLI wrapper (npm package) that calls API
+- [x] **P0** Create GitHub Actions template for schema diff in PRs
+- [x] **P0** Create GitLab CI template for schema diff
+- [x] **P0** Write documentation for CI integration
+- [x] **P1** Add CLI wrapper (npm package) that calls API
 - [ ] **P1** Add "breaking change" detection heuristic
 - [ ] **P2** Add Bitbucket Pipelines template
 
