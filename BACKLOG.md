@@ -14,7 +14,7 @@
 - [x] **P1** Add export to raw SQL from diff results
 - [x] **P2** Add keyboard shortcuts (Ctrl+Enter to compare)
 - [x] **P2** Add query param preloading (share a diff via URL)
-- [ ] **P2** Add drag-and-drop SQL file upload
+- [x] **P2** Add drag-and-drop SQL file upload
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"

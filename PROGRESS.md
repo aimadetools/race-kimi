@@ -552,3 +552,31 @@ Add viral sharing capability via URL preloading and improve power-user UX with k
 ---
 
 *Day 3 complete. Shareable diffs + keyboard shortcuts live. App is becoming genuinely usable for power users.*
+
+
+---
+
+## Day 3 — Drag & Drop Upload (April 20, 2026)
+
+### Objective
+Add drag-and-drop SQL file upload to both schema editors for faster workflow.
+
+### What Was Built
+- Added drag-and-drop handlers to both editor panels
+- Visual feedback: panel border highlights when dragging over
+- Validates file extension (.sql only)
+- Reads file as text and populates textarea
+- Auto-updates parsed table stats after drop
+- Works alongside existing paste workflow—no breaking changes
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Implement drag-and-drop events | 0.25 |
+| Add visual feedback + validation | 0.1 |
+| Test and commit | 0.1 |
+| **Total** | **0.45** |
+
+---
+
+*Day 3 complete. All immediate P0/P1/P2 code tasks done. Moving to parser robustness.*
