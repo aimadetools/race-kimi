@@ -309,6 +309,65 @@
       font-size: 0.95rem;
     }
 
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .modal h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+    .modal p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .modal input {
+      width: 100%;
+      background: #0e0e12;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .modal input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .license-status {
+      font-size: 0.85rem;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .license-status.locked {
+      color: var(--text-muted);
+    }
+
     @media (max-width: 768px) {
       .editor-grid { grid-template-columns: 1fr; }
     }
@@ -349,6 +408,7 @@
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
+      <span id="licenseStatus" class="license-status locked" style="margin-left:auto;cursor:pointer;" onclick="openLicenseModal()">🔒 Unlock Pro</span>
     </div>
 
     <div class="editor-grid">
@@ -407,6 +467,19 @@ CREATE TABLE users (
       </div>
     </div>
   </main>
+
+  <div class="modal-overlay" id="licenseModal">
+    <div class="modal">
+      <h3>🔓 Unlock SchemaLens Pro</h3>
+      <p>Enter your license key to unlock unlimited tables and full migration generation.</p>
+      <input type="text" id="licenseInput" placeholder="SL-XXXX-XXXX-XXXX-XXXX">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeLicenseModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="applyLicense()">Activate</button>
+      </div>
+      <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="pricing.html">Get Pro for $12/mo</a></p>
+    </div>
+  </div>
 
   <footer class="footer" style="margin-top:60px">
     <div class="container">
@@ -1142,7 +1215,8 @@ function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, con
 function renderMigration(sql, diff) {
   const container = document.getElementById('migrationContainer');
   const totalTables = diff.totalTablesNew;
-  const isLimited = totalTables > 10;
+  const hasLicense = checkLicense();
+  const isLimited = totalTables > 10 && !hasLicense;
 
   let html = '';
   if (isLimited) {
@@ -1150,12 +1224,15 @@ function renderMigration(sql, diff) {
       <div class="upgrade-banner">
         <h3>📈 Large schema detected (${totalTables} tables)</h3>
         <p>Migration generation is limited to schemas with 10 tables or fewer on the Free plan.<br>Upgrade to Pro for unlimited tables and full migration scripts.</p>
-        <a href="pricing.html" class="btn btn-primary">Upgrade to Pro — $12/mo</a>
+        <button class="btn btn-primary" onclick="openLicenseModal()">Unlock with License Key</button>
+        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="pricing.html">buy on Gumroad</a></p>
       </div>
     `;
   }
 
-  html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button>${highlightSQL(sql)}</div>`;
+  if (!isLimited) {
+    html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button>${highlightSQL(sql)}</div>`;
+  }
   container.innerHTML = html;
 }
 
@@ -1320,6 +1397,79 @@ function renderMarkdown() {
 
 let lastMigrationSQL = '';
 let lastDiff = null;
+const LICENSE_SALT = 'SchemaLensPro2026';
+
+function validateLicenseKey(key) {
+  if (!/^SL-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)) return false;
+  const parts = key.replace(/^SL-/, '').split('-');
+  const payload = parts.slice(0, 3).join('');
+  const check = parts[3];
+  let hash = 0;
+  const data = payload + LICENSE_SALT;
+  for (let i = 0; i < data.length; i++) {
+    hash = ((hash << 5) - hash + data.charCodeAt(i)) | 0;
+  }
+  hash = Math.abs(hash) % 46656;
+  const expected = hash.toString(36).toUpperCase().padStart(4, '0');
+  return check === expected;
+}
+
+function checkLicense() {
+  const key = localStorage.getItem('schemalens_license');
+  const statusEl = document.getElementById('licenseStatus');
+  if (key && validateLicenseKey(key)) {
+    if (statusEl) {
+      statusEl.textContent = '✓ Pro';
+      statusEl.classList.remove('locked');
+    }
+    return true;
+  }
+  if (statusEl) {
+    statusEl.textContent = '🔒 Unlock Pro';
+    statusEl.classList.add('locked');
+  }
+  return false;
+}
+
+function openLicenseModal() {
+  document.getElementById('licenseModal').classList.add('active');
+  document.getElementById('licenseInput').value = localStorage.getItem('schemalens_license') || '';
+  document.getElementById('licenseInput').focus();
+}
+
+function closeLicenseModal() {
+  document.getElementById('licenseModal').classList.remove('active');
+}
+
+function applyLicense() {
+  const input = document.getElementById('licenseInput');
+  const key = input.value.trim().toUpperCase();
+  if (!key) {
+    localStorage.removeItem('schemalens_license');
+    checkLicense();
+    closeLicenseModal();
+    // Re-render migration if results are showing
+    if (lastDiff) renderMigration(lastMigrationSQL, lastDiff);
+    return;
+  }
+  if (validateLicenseKey(key)) {
+    localStorage.setItem('schemalens_license', key);
+    checkLicense();
+    closeLicenseModal();
+    if (lastDiff) renderMigration(lastMigrationSQL, lastDiff);
+  } else {
+    input.style.borderColor = 'var(--danger)';
+    setTimeout(() => input.style.borderColor = '', 2000);
+  }
+}
+
+document.getElementById('licenseModal').addEventListener('click', (e) => {
+  if (e.target.id === 'licenseModal') closeLicenseModal();
+});
+document.getElementById('licenseInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') applyLicense();
+  if (e.key === 'Escape') closeLicenseModal();
+});
 
 function highlightSQL(sql) {
   return esc(sql)
@@ -1530,6 +1680,8 @@ document.querySelectorAll('.results-tab').forEach(tab => {
 
 // Auto-load last diff or URL-shared diff
 (function init() {
+  checkLicense();
+
   const hashMatch = location.hash.match(/#diff=([A-Za-z0-9+/=_-]+)/);
   if (hashMatch) {
     const data = decodeState(hashMatch[1]);
