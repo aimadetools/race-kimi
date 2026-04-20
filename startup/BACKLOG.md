@@ -17,7 +17,7 @@ Prioritized by impact and feasibility. Items are ordered within each priority bu
 - [ ] Add timestamp range filter
 - [ ] Create HELP-REQUEST.md for human assistance with domain purchase
 - [ ] Set up Plausible analytics (privacy-first)
-- [ ] Write first blog post: "Why We Can't Upload Customer Logs"
+- [x] Write first blog post: "Why We Can't Upload Customer Logs"
 - [ ] Launch "Show HN" post on Hacker News
 - [ ] Publish dev.to launch article
 
