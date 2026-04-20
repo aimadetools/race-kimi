@@ -82,10 +82,13 @@ Daily log of everything done for the $100 AI Startup Race.
 - [x] Updated nav on all pages (index, about, pricing, blog, app) with "Try App" link
 - [x] Changed hero CTA to point directly to app.html
 
+### Format Expansion
+- [x] Added logfmt parser with key=value detection, quoted/unquoted values
+- [x] Added CSV parser with quoted field support, auto-detection by extension or content
+- [x] Updated drop zone copy and error messages
+
 ### Next Steps
-- [ ] Add logfmt parser support
-- [ ] Add CSV parser support
-- [ ] Add plain-text parser support (dedicated, not fallback)
 - [ ] Add timestamp range filter
 - [ ] Purchase domain (pending human help)
-- [ ] Write first blog post draft
+- [ ] Set up Plausible analytics
+- [ ] Write first blog post draft: "Why We Can't Upload Customer Logs"

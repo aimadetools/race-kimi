@@ -9,8 +9,8 @@ Prioritized by impact and feasibility. Items are ordered within each priority bu
 - [ ] Purchase domain (logdrop.io or logdrop.dev) — **HELP-REQUEST needed**
 - [ ] Set up Vercel project and connect GitHub repo for auto-deploy
 - [ ] Build core MVP: JSON log parser with drop zone, table view, basic search
-- [ ] Add logfmt parser support
-- [ ] Add CSV parser support
+- [x] Add logfmt parser support
+- [x] Add CSV parser support
 - [ ] Add plain-text parser support
 - [ ] Implement localStorage history (last 7 days of dropped files metadata)
 - [ ] Add filtering by log level (ERROR, WARN, INFO, DEBUG)

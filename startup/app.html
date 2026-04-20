@@ -246,6 +246,31 @@
 
     .export-btn:hover { border-color: var(--accent); }
 
+    .time-filter {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .time-filter label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .time-filter input[type="datetime-local"] {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 0.6rem;
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .time-filter input[type="datetime-local"]:focus { border-color: var(--accent); }
+
     /* Table */
     .table-wrap {
       background: var(--bg-elevated);
@@ -421,6 +446,17 @@
       <span class="stats" id="stats"></span>
       <button class="export-btn" id="exportBtn">Export CSV</button>
     </div>
+    <div class="toolbar" id="timeToolbar" style="display:none;">
+      <div class="time-filter">
+        <label for="timeFrom">From</label>
+        <input type="datetime-local" id="timeFrom" step="1">
+      </div>
+      <div class="time-filter">
+        <label for="timeTo">To</label>
+        <input type="datetime-local" id="timeTo" step="1">
+      </div>
+      <button class="export-btn" id="clearTimeBtn">Clear</button>
+    </div>
 
     <div class="table-wrap" id="tableWrap">
       <div class="empty-state">
@@ -445,6 +481,10 @@
       const exportBtn = document.getElementById('exportBtn');
       const levelFilters = document.getElementById('levelFilters');
       const historyBar = document.getElementById('historyBar');
+      const timeToolbar = document.getElementById('timeToolbar');
+      const timeFrom = document.getElementById('timeFrom');
+      const timeTo = document.getElementById('timeTo');
+      const clearTimeBtn = document.getElementById('clearTimeBtn');
 
       let allRows = [];
       let columns = [];
@@ -537,6 +577,7 @@
             searchInput.value = '';
             addHistory(file.name, rows.length);
             toolbar.style.display = 'flex';
+            timeToolbar.style.display = 'flex';
             renderTable();
           } catch (err) {
             alert('Error parsing file: ' + err.message);
@@ -725,8 +766,31 @@
         return '';
       }
 
+      function extractDate(row) {
+        const ts = row.timestamp || row.time || row.ts || row.date || row.t || '';
+        if (!ts) return null;
+        // Try ISO 8601 and common variants
+        let d = new Date(ts);
+        if (!isNaN(d.getTime())) return d;
+        // Try epoch ms or s
+        const n = Number(ts);
+        if (!isNaN(n)) {
+          d = new Date(n > 1e12 ? n : n * 1000);
+          if (!isNaN(d.getTime())) return d;
+        }
+        // Try common formats: 2024-01-01 00:00:00, 01/01/2024 00:00:00
+        const cleaned = String(ts).replace(/_/g, ' ');
+        d = new Date(cleaned);
+        if (!isNaN(d.getTime())) return d;
+        return null;
+      }
+
       function getFilteredRows() {
         const q = searchInput.value.trim().toLowerCase();
+        const fromVal = timeFrom.value;
+        const toVal = timeTo.value;
+        const fromDate = fromVal ? new Date(fromVal) : null;
+        const toDate = toVal ? new Date(toVal) : null;
         let rows = allRows.slice();
         if (activeLevels.size) {
           rows = rows.filter(r => {
@@ -735,6 +799,15 @@
               if (l.includes(al)) return true;
             }
             return false;
+          });
+        }
+        if (fromDate || toDate) {
+          rows = rows.filter(r => {
+            const d = extractDate(r);
+            if (!d) return false;
+            if (fromDate && d < fromDate) return false;
+            if (toDate && d > toDate) return false;
+            return true;
           });
         }
         if (q) {
@@ -819,6 +892,14 @@
           }
           renderTable();
         });
+      });
+
+      timeFrom.addEventListener('input', renderTable);
+      timeTo.addEventListener('input', renderTable);
+      clearTimeBtn.addEventListener('click', () => {
+        timeFrom.value = '';
+        timeTo.value = '';
+        renderTable();
       });
 
       exportBtn.addEventListener('click', () => {
