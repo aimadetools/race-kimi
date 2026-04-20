@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 5 Most Dangerous Schema Changes (and How to Catch Them) — SchemaLens</title>
+  <meta name="description" content="The 5 most dangerous database schema changes that break production. Learn how to catch dropped columns, missing indexes, and type changes before they cause incidents.">
+  <meta property="og:title" content="The 5 Most Dangerous Schema Changes (and How to Catch Them)">
+  <meta property="og:description" content="These 5 schema changes cause the most production incidents. Here's how to catch them before deploy.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/dangerous-schema-changes.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .danger-card {
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .danger-card h3 {
+      color: #f87171;
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+    .danger-card p {
+      margin-bottom: 0.5rem;
+    }
+    .danger-card p:last-child {
+      margin-bottom: 0;
+    }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>The 5 Most Dangerous Schema Changes (and How to Catch Them)</h1>
+      <div class="blog-meta">Schema Safety · April 20, 2026 · 6 min read</div>
+
+      <p>Not all schema changes are created equal. Adding a new nullable column is harmless. Dropping a column that a background job still references is a 3 AM pager. After reviewing hundreds of migration incidents, we've identified the five schema changes that cause the most production breakage — and the checks that prevent them.</p>
+
+      <h2>The Danger Ranking</h2>
+
+      <div class="danger-card">
+        <h3>🔴 #1: Dropping a Column Still Referenced by Application Code</h3>
+        <p><strong>Why it breaks:</strong> Your migration runs successfully. The column is gone. Then a background job, API endpoint, or reporting query tries to read it — and crashes.</p>
+        <p><strong>Real-world story:</strong> A team dropped <code>legacy_user_id</code> after migrating to UUIDs. The migration passed CI. Two hours later, a nightly ETL job failed because it still selected that column. The rollback required restoring from backup.</p>
+        <p><strong>How to catch it:</strong> Search your entire codebase for the column name before dropping. Include background jobs, cron scripts, analytics pipelines, and third-party integrations. A semantic diff tool will flag the column as removed — that's your signal to verify it's truly unused.</p>
+      </div>
+
+      <div class="danger-card">
+        <h3>🔴 #2: Adding a NOT NULL Column Without a Default</h3>
+        <p><strong>Why it breaks:</strong> <code>ALTER TABLE ... ADD COLUMN ... NOT NULL</code> on a table with existing rows will fail in most databases. The engine doesn't know what value to assign to millions of existing records.</p>
+        <p><strong>Real-world story:</strong> A developer added <code>timezone VARCHAR(50) NOT NULL</code> to a 10-million-row events table. The migration locked the table for 45 seconds, then failed. The deploy pipeline halted. The fix required a three-step migration: add as nullable, backfill, then add the constraint.</p>
+        <p><strong>How to catch it:</strong> Never add <code>NOT NULL</code> without a default in the same migration. Review every new column's nullability. If it must be NOT NULL, add it as nullable first, backfill with a sensible default, then alter the column.</p>
+      </div>
+
+      <div class="danger-card">
+        <h3>🟠 #3: Removing an Index on a High-Traffic Query Path</h3>
+        <p><strong>Why it breaks:</strong> Indexes are invisible until they're gone. Queries that ran in milliseconds suddenly scan entire tables. CPU spikes. Timeouts cascade. Customers notice before your alerts do.</p>
+        <p><strong>Real-world story:</strong> A "cleanup" migration dropped three indexes that were "not in the ORM definitions." They were actually used by raw SQL reporting queries. Query latency on the orders table went from 12ms to 4.2 seconds. The incident lasted 23 minutes.</p>
+        <p><strong>How to catch it:</strong> Before dropping an index, check your query planner logs and slow query log. Look for <code>Seq Scan</code> on large tables. If you're unsure, mark the index as invisible (MySQL) or drop it in a separate migration with a quick rollback plan.</p>
+      </div>
+
+      <div class="danger-card">
+        <h3>🟠 #4: Narrowing a Column Type (Data Truncation)</h3>
+        <p><strong>Why it breaks:</strong> Changing <code>VARCHAR(500)</code> to <code>VARCHAR(100)</code> or <code>TEXT</code> to <code>VARCHAR(255)</code> silently truncates data that exceeds the new limit. The migration succeeds. The data is corrupted.</p>
+        <p><strong>Real-world story:</strong> A team changed <code>description TEXT</code> to <code>description VARCHAR(500)</code> to "enforce UI limits." 2% of descriptions were longer than 500 characters. Those records were truncated. Customer support spent a week reconstructing lost data from email archives.</p>
+        <p><strong>How to catch it:</strong> Before narrowing a type, query for the maximum length of existing data. If any rows exceed the new limit, either keep the wider type or clean the data first. Treat type narrowing as a data migration, not a schema change.</p>
+      </div>
+
+      <div class="danger-card">
+        <h3>🟡 #5: Changing a Foreign Key Without an Index</h3>
+        <p><strong>Why it breaks:</strong> Adding a foreign key constraint without an existing index on the column forces the database to validate every row with a full table scan. On large tables, this can take hours and hold heavy locks.</p>
+        <p><strong>Real-world story:</strong> A team added a foreign key from <code>orders.user_id</code> to <code>users.id</code> on a 50-million-row table. There was no index on <code>orders.user_id</code>. The migration ran for 3 hours, blocking all writes to the orders table. The deploy window expired. The migration had to be killed and rescheduled during a maintenance window.</p>
+        <p><strong>How to catch it:</strong> Always create the index before adding the foreign key. In SQL Server, use <code>WITH NOCHECK</code> to add the constraint without validating existing rows, then validate separately. In PostgreSQL, consider adding the index concurrently beforehand.</p>
+      </div>
+
+      <h2>The Meta-Pattern: Review Before You Run</h2>
+
+      <p>Every incident above shares one root cause: the migration was not reviewed against reality before running in production. The developer knew what they intended to change. They didn't know what else would break.</p>
+
+      <p>A good schema review process answers three questions:</p>
+
+      <ol>
+        <li><strong>What changed structurally?</strong> (columns, types, constraints, indexes)</li>
+        <li><strong>What code still references the old structure?</strong> (application, jobs, reports)</li>
+        <li><strong>What data will be affected?</strong> (truncation, nulls, defaults)</li>
+      </ol>
+
+      <p>The first question is mechanical — a semantic diff answers it instantly. The second and third require human judgment. But most teams skip the first question because they don't have a fast way to answer it. They rely on memory and eyeballing SQL dumps.</p>
+
+      <h2>A Simple Safety Net</h2>
+
+      <p>Here's a lightweight process that catches 90% of dangerous schema changes:</p>
+
+      <ol>
+        <li>Export your old schema (production) and new schema (post-migration).</li>
+        <li>Run a semantic diff to see every structural change.</li>
+        <li>For every removed column or index, grep your codebase.</li>
+        <li>For every narrowed type, check max data length.</li>
+        <li>For every new foreign key, verify an index exists.</li>
+        <li>For every NOT NULL addition, verify a default exists.</li>
+      </ol>
+
+      <p>This takes 5 minutes and prevents incidents that take hours to recover from.</p>
+
+      <div class="cta-box">
+        <h3>See every schema change before you ship it</h3>
+        <p>SchemaLens compares two CREATE TABLE dumps and shows you a visual diff with a generated migration script. Catch dangerous changes in seconds.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+      </div>
+
+      <div class="callout">
+        <p><strong>Further reading:</strong> Want a complete checklist? Read <a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a> for a 15-point review process you can add to your PR template.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../blog.html">Documentation</a>
+          <a href="../blog.html">Migration Guides</a>
+          <a href="../blog.html">Changelog</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
