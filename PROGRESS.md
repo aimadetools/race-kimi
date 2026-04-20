@@ -651,3 +651,73 @@ Improve the SQL parser to handle real-world edge cases: composite primary keys, 
 ---
 
 *Day 3 complete. Parser now handles composite PKs, FKs, CHECK constraints, and enums. Migration generation is substantially more complete.*
+
+
+---
+
+## Day 3 — Pro License Key System (April 20, 2026)
+
+### Objective
+Implement client-side license key validation to gate Pro features, enabling monetization without a backend.
+
+### What Was Built
+
+#### License Key Validation
+- Format: `SL-XXXX-XXXX-XXXX-XXXX` (4 groups of 4 alphanumeric chars)
+- Validation algorithm:
+  - First 3 groups form a random payload
+  - 4th group is a base36 checksum of `payload + salt`
+  - Salt: `SchemaLensPro2026` (hardcoded client-side)
+  - Not cryptographically secure, but sufficient for client-side gating
+- `validateLicenseKey(key)` — returns true/false
+- `checkLicense()` — reads localStorage, updates UI badge
+- Keys stored in `localStorage` under `schemalens_license`
+
+#### License UI
+- "🔒 Unlock Pro" badge in app toolbar (right-aligned)
+- Clicking opens a modal dialog:
+  - Input field for license key
+  - Activate button validates and stores key
+  - Cancel button closes modal
+  - Link to pricing page for purchasing
+  - Support for Enter key to submit, Escape to close
+- When valid key is active:
+  - Badge shows "✓ Pro" in green
+  - 10-table limit removed from migration generation
+  - Full migration SQL is shown regardless of table count
+
+#### License Key Generator
+- `generate-license-keys.js` — Node.js script to generate valid keys
+- Usage: `node generate-license-keys.js [count]`
+- Generates 20 keys by default
+- Saved 20 pre-generated keys to `license-keys.txt` (gitignored)
+
+#### Integration with Migration Gating
+- `renderMigration()` now calls `checkLicense()` before deciding whether to show the upgrade banner
+- If licensed, full migration SQL is rendered even for large schemas
+- If unlicensed, the banner now includes "Unlock with License Key" button alongside Gumroad link
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design license key format + algorithm | 0.25 |
+| Implement validation + modal UI | 0.5 |
+| Integrate with migration gating | 0.25 |
+| Build key generator script | 0.25 |
+| Generate and store initial key batch | 0.1 |
+| Commit and deploy | 0.25 |
+| **Total** | **1.6** |
+
+### Key Insights
+1. **Client-side licensing is "good enough" for a static tool** — The goal is to make paying easier than cracking, not to build DRM. Most developers will pay if the tool saves them time.
+2. **Modal UX > redirect** — Keeping the user in the app to enter a key reduces friction vs sending them to a separate page.
+
+### Next Steps
+1. Add favicon and logo assets
+2. Add PDF export functionality (Week 4 P0)
+3. Polish UI: loading states, empty states, error messages
+4. Set up Gumroad product page when possible
+
+---
+
+*Day 3 complete. SchemaLens now has a working Pro tier with license key validation. Monetization path is real.*

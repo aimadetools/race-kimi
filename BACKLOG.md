@@ -119,8 +119,8 @@
 - [ ] **P2** Answer 3 Stack Overflow questions about schema comparison
 
 ### Business & Ops
-- [ ] **P1** Set up Gumroad license key generation
-- [ ] **P1** Implement client-side license key validation
+- [x] **P1** Set up Gumroad license key generation — client-side validator + key generator script ready
+- [x] **P1** Implement client-side license key validation
 - [ ] **P2** Create pricing page A/B test (no backend needed, just variant files)
 
 ---
