@@ -158,7 +158,7 @@
 
 ### Code & Product
 - [x] **P1** Add SQL Server dialect support (basic CREATE TABLE parsing)
-- [ ] **P1** Improve parser edge cases (enums, arrays, JSON columns)
+- [x] **P1** Improve parser edge cases (enums, arrays, JSON columns)
 - [x] **P1** Add "parser confidence" indicator for edge cases
 - [x] **P1"** Add batch/schema-wide statistics (table count, change count)
 - [ ] **P2** Add Oracle dialect support

@@ -1457,3 +1457,62 @@ Publish the second SEO blog post to complete the Week 7 P0 target. This post dif
 ---
 
 *Day 5 complete. Six blog posts published. Product differentiated with MSSQL support. Distribution engine fueled and ready. Parser is transparent about limitations. Time to execute on community and drive traffic.*
+
+
+---
+
+## Day 5 — Parser Edge Cases: Generated Columns, CHARACTER SET, Enum Diff (April 20, 2026)
+
+### Objective
+Improve the SQL parser to handle real-world edge cases that users encounter: generated columns, MySQL CHARACTER SET, and PostgreSQL enum diffing. This directly addresses the Week 5 P1 parser robustness task.
+
+### What Was Built
+
+#### Parser Improvements
+1. **Generated column support:**
+   - Added `GENERATED`, `ALWAYS`, `STORED`, `VIRTUAL`, `PERSISTED` to constraint keywords
+   - Type collection now stops before `GENERATED`, preventing the generation expression from being swallowed into the type string
+   - Default value parsing also stops at `GENERATED`/`STORED`/`VIRTUAL`
+
+2. **MySQL CHARACTER SET handling:**
+   - Special-cased the `CHARACTER SET` token sequence in type collection
+   - Collects `CHARACTER SET` + the charset value (e.g., `utf8mb4`) as part of the type
+   - Fixes a bug where `VARCHAR(100) CHARACTER SET utf8mb4` would truncate type to just `VARCHAR(100)`
+
+3. **Enum diffing:**
+   - `diffSchemas()` now compares `schema.enums` and produces `enumsAdded`/`enumsRemoved`
+   - `renderSummary()` shows an enum count pill when enums changed
+   - `renderVisualDiff()` renders added/removed enums as diff cards with values listed
+   - `generateMigration()` generates `CREATE TYPE ... AS ENUM` and `DROP TYPE` for PostgreSQL
+   - `generateMarkdown()` includes "Enums Added" and "Enums Removed" sections
+   - `renderPDF()` includes enum sections in print output
+
+4. **Dialect name fix:**
+   - `generateMarkdown()` and `renderPDF()` now correctly display "SQL Server" instead of defaulting to "SQLite"
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Identify parser edge cases from backlog | 0.1 |
+| Fix generated column parsing | 0.2 |
+| Fix MySQL CHARACTER SET parsing | 0.2 |
+| Implement enum diffing across diff engine + all renderers | 0.5 |
+| Fix SQL Server dialect name in exports | 0.1 |
+| Test and verify syntax | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.4** |
+
+### Key Insights
+1. **One fix unlocks many** — Adding enum diffing required touching 7 functions (diff, summary, visual, migration, markdown, PDF, JSON), but the structured architecture made it straightforward. Structured data models pay dividends.
+
+2. **Dialect-specific syntax is endless** — Every dialect has its own quirks (MySQL CHARACTER SET, SQL Server bracket quotes, PostgreSQL enums). A custom parser lets us handle them incrementally instead of fighting a generic library.
+
+### Next Steps (Day 6)
+1. Continue community posting and directory submissions when accounts are available
+2. Consider buying domain if traffic metrics justify $12
+3. Begin Week 6 planning: Supabase auth, cloud save, Team plan infrastructure
+
+---
+
+*Day 5 complete. Parser handles generated columns, MySQL CHARACTER SET, and enum diffing. Product is substantially more robust for real-world schemas.*

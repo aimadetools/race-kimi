@@ -780,9 +780,20 @@ function parseColumn(tokens, dialect) {
   let i = 1;
   // Collect type tokens
   const typeTokens = [];
-  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED'];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED'];
   while (i < tokens.length) {
     const t = tokens[i].toUpperCase();
+    // Handle CHARACTER SET sequence in MySQL
+    if (t === 'CHARACTER' && tokens[i+1] && tokens[i+1].toUpperCase() === 'SET') {
+      typeTokens.push(tokens[i], tokens[i+1]);
+      i += 2;
+      // Also collect the character set value (e.g., utf8mb4)
+      if (i < tokens.length && !constraintKeywords.includes(tokens[i].toUpperCase())) {
+        typeTokens.push(tokens[i]);
+        i++;
+      }
+      continue;
+    }
     if (constraintKeywords.includes(t)) break;
     typeTokens.push(tokens[i]);
     i++;
@@ -809,7 +820,7 @@ function parseColumn(tokens, dialect) {
     } else if (t === 'DEFAULT') {
       i++;
       const defaultTokens = [];
-      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL'];
       while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
         defaultTokens.push(tokens[i]);
         i++;
@@ -952,6 +963,8 @@ function diffSchemas(oldSchema, newSchema) {
     tablesAdded: [],
     tablesRemoved: [],
     tablesModified: [],
+    enumsAdded: [],
+    enumsRemoved: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -973,6 +986,19 @@ function diffSchemas(oldSchema, newSchema) {
         diff.tablesModified.push(tableDiff);
       }
     }
+  }
+
+  // Enum diff
+  const oldEnums = oldSchema.enums || {};
+  const newEnums = newSchema.enums || {};
+  const oldEnumNames = new Set(Object.keys(oldEnums));
+  const newEnumNames = new Set(Object.keys(newEnums));
+
+  for (const name of newEnumNames) {
+    if (!oldEnumNames.has(name)) diff.enumsAdded.push(newEnums[name]);
+  }
+  for (const name of oldEnumNames) {
+    if (!newEnumNames.has(name)) diff.enumsRemoved.push(oldEnums[name]);
   }
 
   return diff;
@@ -1197,6 +1223,28 @@ function generateMigration(diff, dialect) {
     }
   }
 
+  if (diff.enumsAdded && diff.enumsAdded.length) {
+    for (const en of diff.enumsAdded) {
+      if (dialect === 'postgres') {
+        lines.push(`CREATE TYPE ${quoteId(en.name, dialect)} AS ENUM (${en.values.map(v => `'${v}'`).join(', ')});`);
+      } else {
+        lines.push(`-- CREATE TYPE for enum ${en.name} (PostgreSQL-specific);`);
+      }
+    }
+    if (diff.enumsAdded.length) lines.push('');
+  }
+
+  if (diff.enumsRemoved && diff.enumsRemoved.length) {
+    for (const en of diff.enumsRemoved) {
+      if (dialect === 'postgres') {
+        lines.push(`DROP TYPE ${quoteId(en.name, dialect)};`);
+      } else {
+        lines.push(`-- DROP TYPE for enum ${en.name} (PostgreSQL-specific);`);
+      }
+    }
+    if (diff.enumsRemoved.length) lines.push('');
+  }
+
   return lines.join('\n');
 }
 
@@ -1254,6 +1302,7 @@ function renderSummary(diff, confidenceA, confidenceB) {
     <div class="summary-pill added"><span class="num">+${diff.tablesAdded.length}</span> added</div>
     <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
+    ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
     ${confidenceHTML}
     <div style="flex:1"></div>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
@@ -1279,7 +1328,7 @@ function renderVisualDiff(diff) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
-  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length) {
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length) {
     html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
     container.innerHTML = html;
     return;
@@ -1293,6 +1342,33 @@ function renderVisualDiff(diff) {
   }
   for (const td of diff.tablesModified) {
     html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified, td.constraintsAdded, td.constraintsRemoved);
+  }
+
+  if (diff.enumsAdded.length) {
+    for (const en of diff.enumsAdded) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(en.name)} <span class="badge badge-added">Enum Added</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody><tr class="row-added"><td colspan="4"><strong>Values:</strong> ${esc(en.values.join(', '))}</td></tr></tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.enumsRemoved.length) {
+    for (const en of diff.enumsRemoved) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(en.name)} <span class="badge badge-removed">Enum Removed</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody><tr class="row-removed"><td colspan="4"><strong>Values:</strong> ${esc(en.values.join(', '))}</td></tr></tbody></table>
+          </div>
+        </div>`;
+    }
   }
 
   container.innerHTML = html;
@@ -1399,7 +1475,7 @@ function generateMarkdown(diff, migrationSQL, dialect) {
   const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
   let md = `# Schema Diff Report\n\n`;
   md += `**Generated:** ${now}  \n`;
-  md += `**Dialect:** ${dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : 'SQLite'}  \n\n`;
+  md += `**Dialect:** ${dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : dialect === 'mssql' ? 'SQL Server' : 'SQLite'}  \n\n`;
 
   md += `## Summary\n\n`;
   md += `- Tables in old schema: ${diff.totalTablesOld}\n`;
@@ -1504,6 +1580,22 @@ function generateMarkdown(diff, migrationSQL, dialect) {
     }
   }
 
+  if (diff.enumsAdded && diff.enumsAdded.length) {
+    md += `## Enums Added\n\n`;
+    for (const en of diff.enumsAdded) {
+      md += `- **${en.name}:** ${en.values.join(', ')}\n`;
+    }
+    md += `\n`;
+  }
+
+  if (diff.enumsRemoved && diff.enumsRemoved.length) {
+    md += `## Enums Removed\n\n`;
+    for (const en of diff.enumsRemoved) {
+      md += `- **${en.name}:** ${en.values.join(', ')}\n`;
+    }
+    md += `\n`;
+  }
+
   if (migrationSQL && migrationSQL.trim()) {
     md += `## Migration SQL\n\n`;
     md += `\`\`\`sql\n`;
@@ -1539,7 +1631,7 @@ function renderPDF() {
   }
   const diff = lastDiff;
   const dialect = document.getElementById('dialect').value;
-  const dialectName = dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : 'SQLite';
+  const dialectName = dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : dialect === 'mssql' ? 'SQL Server' : 'SQLite';
   const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   let html = `<div style="font-family:system-ui,-apple-system,sans-serif;line-height:1.5;color:#111;">`;
@@ -1635,6 +1727,24 @@ function renderPDF() {
         html += `</ul>`;
       }
     }
+  }
+
+  if (diff.enumsAdded && diff.enumsAdded.length) {
+    html += `<h3>Enums Added</h3>`;
+    html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+    for (const en of diff.enumsAdded) {
+      html += `<li><strong>${esc(en.name)}:</strong> ${esc(en.values.join(', '))}</li>`;
+    }
+    html += `</ul>`;
+  }
+
+  if (diff.enumsRemoved && diff.enumsRemoved.length) {
+    html += `<h3>Enums Removed</h3>`;
+    html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+    for (const en of diff.enumsRemoved) {
+      html += `<li><strong>${esc(en.name)}:</strong> ${esc(en.values.join(', '))}</li>`;
+    }
+    html += `</ul>`;
   }
 
   if (lastMigrationSQL && lastMigrationSQL.trim()) {
