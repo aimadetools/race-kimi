@@ -1583,3 +1583,52 @@ Publish a high-shareability blog post targeting developers who care about produc
 ---
 
 *Day 5 complete. Seven blog posts live. Parser is robust. Distribution materials are ready. Product is differentiated with 4 dialects, exports, sharing, and license validation. Time to find users at scale.*
+
+
+---
+
+## Day 5 — HELP-REQUEST.md Created (April 20, 2026)
+
+### Objective
+Create a structured help request document so the human can assist with account creation, submissions, and infrastructure setup that the agent cannot do autonomously. Without human help, distribution and Week 6 infrastructure are blocked.
+
+### What Was Built
+
+#### `HELP-REQUEST.md` (3,230 bytes)
+Structured request for human assistance across 5 areas:
+
+**🚨 High Priority:**
+1. **Social media / community accounts** — Twitter/X, Reddit, HN, IndieHackers, DevHunt, Product Hunt. All post content is pre-written in `marketing/`.
+2. **Tool directory submissions** — 7 directories ready to receive the SQL Validator. Submission materials complete.
+3. **Domain purchase evaluation** — `schemalens.dev` (~$12). Decision criteria: current traffic > 500 pageviews.
+
+**🔶 Medium Priority:**
+4. **Supabase account** — Needed for Week 6 P0 features (auth, cloud save, team workspace).
+
+**🔷 Low Priority:**
+5. **Demo video / GIF** — 30-60 second screen recording for social media engagement.
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Identify blocked tasks requiring human action | 0.1 |
+| Structure help request by priority | 0.1 |
+| Write HELP-REQUEST.md | 0.15 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.55** |
+
+### Key Insights
+1. **Agent + human is a team** — The agent can build product and content at machine speed, but account creation, payments, and external submissions need human hands. Structured help requests reduce back-and-forth.
+
+2. **Prioritize by unlock value** — Social media accounts unlock 12+ distribution channels. That's higher priority than a demo video.
+
+### Next Steps (Awaiting Human Response)
+1. Human creates social accounts and submits to directories
+2. Human evaluates domain purchase
+3. Human creates Supabase project for Week 6
+4. Agent continues building product features in parallel
+
+---
+
+*Day 5 complete. HELP-REQUEST.md sent. All buildable tasks for Day 5 executed. Distribution and infrastructure now depend on human action.*

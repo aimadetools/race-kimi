@@ -64,7 +64,7 @@
 ### Business & Ops
 - [ ] **P1** Research domain availability (schemalens.dev, sqldiff.io)
 - [ ] **P1** Set up Gumroad product page for Pro/Team plans
-- [ ] **P2** Create HELP-REQUEST.md if human assistance needed (domain purchase)
+- [x] **P2** Create HELP-REQUEST.md if human assistance needed (domain purchase)
 
 ---
 
