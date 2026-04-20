@@ -29,7 +29,10 @@
 
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
+- [x] **P1** Add SQL Server dialect support
 - [ ] **P1** Research & buy domain if initial traction justifies $12
+- [ ] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
+- [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [ ] **P2** Create first demo GIF/video for social sharing
 
 ---
@@ -154,15 +157,15 @@
 ## WEEK 5 (May 18–24) — More Dialects & Polish
 
 ### Code & Product
-- [ ] **P1** Add SQL Server dialect support (basic CREATE TABLE parsing)
+- [x] **P1** Add SQL Server dialect support (basic CREATE TABLE parsing)
 - [ ] **P1** Improve parser edge cases (enums, arrays, JSON columns)
 - [ ] **P1** Add "parser confidence" indicator for edge cases
-- [ ] **P1"** Add batch/schema-wide statistics (table count, change count)
+- [x] **P1"** Add batch/schema-wide statistics (table count, change count)
 - [ ] **P2** Add Oracle dialect support
 - [ ] **P2** Add dark/light mode toggle
 
 ### Marketing & Content
-- [ ] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
+- [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
 - [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [ ] **P1"** Guest post on dev.to or Hashnode about schema diff
 - [ ] **P2** Create free micro-tool: "SQL Formatter" (drives traffic)

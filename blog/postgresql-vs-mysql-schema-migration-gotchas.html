@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostgreSQL vs MySQL: Schema Migration Gotchas — SchemaLens</title>
+  <meta name="description" content="Switching between PostgreSQL and MySQL? Watch out for these 8 schema migration gotchas that trip up even experienced developers.">
+  <meta property="og:title" content="PostgreSQL vs MySQL: Schema Migration Gotchas">
+  <meta property="og:description" content="8 schema differences that break migrations when moving between PostgreSQL and MySQL. Save yourself the 3 AM pager.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/postgresql-vs-mysql-schema-migration-gotchas.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+    .diff-table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+    .diff-table th, .diff-table td { border: 1px solid #333; padding: 0.6rem 0.8rem; text-align: left; }
+    .diff-table th { background: #1a1a1a; color: #fff; }
+    .diff-table td { color: #ccc; }
+    .diff-table code { background: none; padding: 0; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="btn btn-primary">Try Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← All articles</a>
+      <h1>PostgreSQL vs MySQL: Schema Migration Gotchas</h1>
+      <div class="blog-meta">April 20, 2026 · 8 min read · Database Engineering</div>
+
+      <p>If you have ever moved a schema from PostgreSQL to MySQL—or vice versa—you have probably stared at an error message that made absolutely no sense. <em>"Syntax error near 'AUTO_INCREMENT'"</em>. <em>"Type 'serial' does not exist"</em>. The databases look similar on the surface, but their DDL dialects diverge in subtle, maddening ways.</p>
+
+      <p>Here are eight gotchas that break migrations when you switch between PostgreSQL and MySQL, and how to avoid them.</p>
+
+      <h2>1. Auto-increment syntax is completely different</h2>
+      <p>PostgreSQL uses <code>SERIAL</code> or <code>GENERATED ALWAYS AS IDENTITY</code>. MySQL uses <code>AUTO_INCREMENT</code>. SQLite uses <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>. These are not interchangeable.</p>
+
+      <table class="diff-table">
+        <tr><th>PostgreSQL</th><th>MySQL</th></tr>
+        <tr><td><code>id SERIAL PRIMARY KEY</code></td><td><code>id INT AUTO_INCREMENT PRIMARY KEY</code></td></tr>
+        <tr><td><code>id INT GENERATED ALWAYS AS IDENTITY</code></td><td><code>id INT AUTO_INCREMENT PRIMARY KEY</code></td></tr>
+      </table>
+
+      <div class="callout">
+        <p><strong>Gotcha:</strong> <code>SERIAL</code> is not a real type in PostgreSQL—it is shorthand for <code>INTEGER</code> with a sequence and a default. If you dump a PostgreSQL schema and feed it to MySQL, MySQL will choke on <code>SERIAL</code>.</p>
+      </div>
+
+      <h2>2. Boolean vs TINYINT(1)</h2>
+      <p>PostgreSQL has a native <code>BOOLEAN</code> type. MySQL accepts <code>BOOLEAN</code> in <code>CREATE TABLE</code>, but silently rewrites it to <code>TINYINT(1)</code>. This is not just cosmetic—ORMs and drivers behave differently depending on which type they see.</p>
+
+      <pre><code><span class="comment">-- PostgreSQL</span>
+<span class="keyword">CREATE TABLE</span> posts (
+  published <span class="keyword">BOOLEAN</span> <span class="keyword">DEFAULT</span> <span class="keyword">false</span>
+);
+
+<span class="comment">-- MySQL (what you actually get)</span>
+<span class="keyword">CREATE TABLE</span> posts (
+  published <span class="keyword">TINYINT</span>(<span class="string">1</span>) <span class="keyword">DEFAULT</span> <span class="string">0</span>
+);</code></pre>
+
+      <p>If you diff a PostgreSQL schema against a MySQL schema that was originally created from the same logical design, SchemaLens will flag this as a type change even though semantically they are identical. This is exactly why semantic diffing matters: you need to know whether a change is meaningful or just dialect noise.</p>
+
+      <h2>3. VARCHAR length enforcement</h2>
+      <p>MySQL requires a length on <code>VARCHAR</code> (e.g., <code>VARCHAR(255)</code>). PostgreSQL also supports length limits, but you can use <code>TEXT</code> everywhere without performance penalty. MySQL historically stored <code>TEXT</code> off-row, which had performance implications, though InnoDB has improved this.</p>
+
+      <p>When migrating from PostgreSQL to MySQL, you have to decide: convert every <code>TEXT</code> to <code>VARCHAR(65535)</code>? Or keep <code>TEXT</code> and accept the storage differences? SchemaLens flags these mismatches so you can review them one by one.</p>
+
+      <h2>4. Quoted identifiers: backticks vs double quotes</h2>
+      <p>MySQL uses backticks for identifiers: <code>`user name`</code>. PostgreSQL uses double quotes: <code>"user name"</code>. SQL Server uses square brackets: <code>[user name]</code>. SQLite accepts double quotes (or backticks in some modes).</p>
+
+      <p>If you copy-paste a MySQL schema into a PostgreSQL console without converting quotes, you will get cryptic errors. A good schema diff tool normalizes identifiers before comparing them, so <code>`users`</code> and <code>"users"</code> are treated as the same table.</p>
+
+      <h2>5. ALTER TABLE capabilities diverge wildly</h2>
+      <p>Not all <code>ALTER TABLE</code> operations are created equal. Here is a quick compatibility matrix:</p>
+
+      <table class="diff-table">
+        <tr><th>Operation</th><th>PostgreSQL</th><th>MySQL</th><th>SQLite</th></tr>
+        <tr><td>Add column</td><td>✅</td><td>✅</td><td>✅ (limited)</td></tr>
+        <tr><td>Drop column</td><td>✅</td><td>✅ (8.0+)</td><td>❌ (recreate table)</td></tr>
+        <tr><td>Rename column</td><td>✅</td><td>✅ (8.0+)</td><td>❌ (recreate table)</td></tr>
+        <tr><td>Change column type</td><td>✅</td><td>✅</td><td>❌ (recreate table)</td></tr>
+        <tr><td>Add FK</td><td>✅</td><td>✅</td><td>❌ (in CREATE TABLE only)</td></tr>
+        <tr><td>Drop FK</td><td>✅</td><td>✅</td><td>❌</td></tr>
+      </table>
+
+      <p>SQLite is the most restrictive: dropping a column, renaming a column, or changing a type all require recreating the entire table with the new structure and copying data over. SchemaLens handles this by generating the full table-recreation script for SQLite instead of a naive <code>ALTER TABLE</code> that would fail.</p>
+
+      <h2>6. Default values and function expressions</h2>
+      <p>PostgreSQL allows rich expressions in defaults: <code>DEFAULT NOW()</code>, <code>DEFAULT GEN_RANDOM_UUID()</code>, <code>DEFAULT CURRENT_TIMESTAMP</code>. MySQL supports <code>CURRENT_TIMESTAMP</code> and a few others, but not arbitrary expressions in <code>DEFAULT</code> clauses (this changed slightly in MySQL 8.0.13, but it is still limited).</p>
+
+      <pre><code><span class="comment">-- PostgreSQL (works)</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">UUID</span> <span class="keyword">DEFAULT</span> gen_random_uuid() <span class="keyword">PRIMARY KEY</span>,
+  created_at <span class="keyword">TIMESTAMPTZ</span> <span class="keyword">DEFAULT</span> <span class="keyword">NOW</span>()
+);
+
+<span class="comment">-- MySQL (fails without workaround)</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">CHAR</span>(<span class="string">36</span>) <span class="keyword">DEFAULT</span> (UUID()) <span class="keyword">PRIMARY KEY</span>,
+  created_at <span class="keyword">DATETIME</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>
+);</code></pre>
+
+      <div class="callout">
+        <p><strong>Gotcha:</strong> MySQL 8.0.13+ supports parentheses for expression defaults, but only for <code>INSERT</code> and <code>UPDATE</code>-time evaluation, not for all expression types. Always test your defaults in both engines before assuming parity.</p>
+      </div>
+
+      <h2>7. Foreign key constraint naming</h2>
+      <p>In MySQL, foreign key constraints must be uniquely named <em>per database</em>, not per table. In PostgreSQL, constraint names only need to be unique per table. If you dump two PostgreSQL schemas with the same FK constraint name on different tables and import them into MySQL, the second import will fail.</p>
+
+      <p>SchemaLens detects constraint name collisions during diffing and warns you before you generate a migration that MySQL will reject.</p>
+
+      <h2>8. Case sensitivity: tables, columns, and data</h2>
+      <p>PostgreSQL folds unquoted identifiers to lowercase. MySQL preserves case on Windows but folds to lowercase on Linux (unless configured with <code>lower_case_table_names=0</code>). This means a table named <code>Users</code> in MySQL might become <code>users</code> on a Linux production server, but stay <code>Users</code> on your MacBook.</p>
+
+      <p>The safest approach: use lowercase, snake_case identifiers everywhere, and quote nothing unless you absolutely have to. SchemaLens normalizes unquoted identifiers to lowercase before diffing, so case differences do not create false positives.</p>
+
+      <h2>How to catch these before they break production</h2>
+      <ol>
+        <li><strong>Dump both schemas</strong> with the same tool (<code>pg_dump --schema-only</code> or <code>mysqldump --no-data</code>).</li>
+        <li><strong>Run a semantic diff</strong>, not a line-by-line text diff. Line diffs drown you in syntax noise.</li>
+        <li><strong>Review type changes</strong> manually—some are dialect equivalents (BOOLEAN vs TINYINT), others are real semantic shifts (INT → BIGINT).</li>
+        <li><strong>Generate the migration</strong> in your target dialect, review it in staging, and run it.</li>
+        <li><strong>Verify</strong> by diffing the post-migration schema against your expected schema.</li>
+      </ol>
+
+      <div class="cta-box">
+        <h3>Compare schemas across dialects</h3>
+        <p>SchemaLens diffs PostgreSQL, MySQL, SQLite, and SQL Server schemas in your browser. Paste your dumps, spot the differences, and get a dialect-correct migration script.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #333; margin: 3rem 0;">
+      <p style="font-size: 0.9rem; color: #888;">
+        Written by the SchemaLens team. We build tools that make database migrations less terrifying.
+        <a href="../blog.html" style="color: #888;">Read more articles →</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong><br>
+        Compare SQL schemas. Spot changes instantly. Generate migrations.
+      </div>
+      <div class="footer-links">
+        <a href="../app.html">App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../about.html">About</a>
+        <a href="../blog.html">Blog</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var key = 'sl_pageviews';
+      var n = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+      localStorage.setItem(key, String(n));
+    })();
+  </script>
+
+</body>
+</html>

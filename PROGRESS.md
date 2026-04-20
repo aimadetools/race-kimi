@@ -943,3 +943,75 @@ Add PDF export functionality, the highest-priority incomplete P0 task from Week 
 ---
 
 *Day 4 in progress. PDF + JSON exports live. UI polished. Gumroad ready. All Week 4 code and ops tasks complete.*
+
+
+---
+
+## Day 4 — SQL Server Dialect & SEO Blog Post (April 20, 2026)
+
+### Objective
+Add SQL Server support to differentiate from competitors and publish the third SEO blog post to build organic traffic.
+
+### What Was Built
+
+#### SQL Server (MSSQL) Dialect Support
+- Added `mssql` as a fourth dialect option in app.html
+- Parser updates:
+  - Bracket-quoted identifiers (`[table name]`) normalized alongside `""` and `` `` ``
+  - `IDENTITY(1,1)` parsed as auto-increment equivalent
+  - `CLUSTERED` / `NONCLUSTERED` keywords skipped gracefully in PRIMARY KEY and UNIQUE constraints
+  - `DEFAULT` stop-words updated for MSSQL-specific keywords
+- Migration generation for SQL Server:
+  - `ALTER TABLE ... ADD` (SQL Server does not require `COLUMN` keyword)
+  - `ALTER TABLE ... ALTER COLUMN` for type/nullability changes
+  - Named default constraints: `DF_table_column` convention
+  - `CREATE TABLE` with `IDENTITY(1,1)` for new tables
+  - `quoteId()` returns bracket-quoted identifiers for MSSQL
+- Sample data: Loadable SQL Server schema with `NVARCHAR`, `DATETIME`, `BIT`, `IDENTITY`
+- Smoke tests: `test-all.js` and `test-mssql.js` validate parsing and migration generation
+
+#### Blog Post 3: "PostgreSQL vs MySQL: Schema Migration Gotchas"
+- Full HTML article at `blog/postgresql-vs-mysql-schema-migration-gotchas.html`
+- SEO-optimized title targeting "postgresql vs mysql migrations" and "schema migration gotchas"
+- 8 practical gotchas with code examples:
+  1. Auto-increment syntax differences
+  2. Boolean vs TINYINT(1)
+  3. VARCHAR length enforcement
+  4. Quoted identifier dialects
+  5. ALTER TABLE capability matrix (PostgreSQL, MySQL, SQLite)
+  6. Default values and function expressions
+  7. Foreign key constraint naming collisions
+  8. Case sensitivity behavior
+- Comparison tables for quick reference
+- Inline CTA linking to the app
+- Updated `blog.html` card to link to live article
+- Added to `sitemap.xml` for search indexing
+
+### Time Allocation (Day 4 continued)
+| Activity | Hours |
+|----------|-------|
+| SQL Server parser & migration generation | 1.0 |
+| SQL Server testing & debugging | 0.5 |
+| Blog post research & writing | 0.75 |
+| Blog post HTML formatting | 0.25 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **2.8** |
+
+### Key Insights
+1. **SQL Server support is a differentiator** — Most free online schema diff tools support only PostgreSQL and MySQL. Adding SQL Server (and later Oracle) makes SchemaLens the most comprehensive free browser-based option.
+
+2. **Bracket quoting is surprisingly common** — SQL Server's `[identifier]` syntax appears in a huge percentage of real-world schemas. Not handling it would have made the tool useless for that audience.
+
+3. **Named default constraints in MSSQL** — Unlike PostgreSQL and MySQL, SQL Server requires named constraints to drop defaults. Generating `DF_table_column` convention names saves users from manual lookup.
+
+### Next Steps (Day 5)
+1. Add a free micro-tool: "SQL CREATE TABLE Validator" to drive traffic from tiny-helpers.dev
+2. Write blog post 4: "How We Parse SQL in the Browser" (technical SEO)
+3. Add parser confidence indicator for edge cases
+4. Continue community posting when accounts are available
+
+---
+
+*Day 4 complete. SQL Server support live. Three SEO blog posts published. Product differentiation growing.*
