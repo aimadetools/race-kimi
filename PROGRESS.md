@@ -385,3 +385,57 @@ Both posts are now live and can be:
 ---
 
 *Day 3 in progress. Two SEO blog posts published. Product distribution engine starting to spin up.*
+
+
+---
+
+## Day 3 — Product Exports (April 20, 2026)
+
+### Objective
+Add export functionality to the schema diff tool so users can download their results as Markdown reports and raw SQL files.
+
+### What Was Built
+
+#### Export to Markdown
+- New "Export Markdown" tab in app.html results area
+- Generates a comprehensive Markdown diff report including:
+  - Summary stats (tables old/new, added/removed/modified counts)
+  - Tables added with full column definitions in markdown tables
+  - Tables removed with full column definitions
+  - Tables modified with added/removed/modified columns broken out
+  - Migration SQL in a fenced code block
+  - Timestamp and dialect metadata
+- One-click download as `schemalens_diff.md`
+
+#### Export to Raw SQL
+- Added "Download .sql" button next to the existing "Copy" button in the Migration SQL tab
+- Downloads the full generated migration script as `schemalens_migration.sql`
+- Works for all three dialects (PostgreSQL, MySQL, SQLite)
+
+#### Technical Details
+- Added module-level `lastMigrationSQL` and `lastDiff` variables to persist comparison results across tab switches
+- Created `generateMarkdown()`, `downloadFile()`, `downloadSQL()`, `downloadMarkdown()` utilities
+- Tab switching already worked generically via `data-tab` attributes—no changes needed
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Read app.html structure | 0.25 |
+| Implement Markdown export generation | 0.5 |
+| Implement SQL download + UI updates | 0.25 |
+| Test and verify | 0.25 |
+| Commit and deploy | 0.25 |
+| **Total** | **1.5** |
+
+### Key Insights
+1. **Persistence matters** — Storing `lastDiff` and `lastMigrationSQL` at module level lets tabs render independently without re-parsing.
+2. **Markdown is universal** — A markdown diff report can be pasted into GitHub PRs, Slack, Notion, or Confluence without formatting loss.
+
+### Next Steps
+1. Draft marketing content for SaaS directories and social channels
+2. Add keyboard shortcuts (Ctrl+Enter to compare)
+3. Add query param preloading for shareable diffs
+
+---
+
+*Day 3 complete. Product now has Markdown and SQL export. Time to draft distribution content.*

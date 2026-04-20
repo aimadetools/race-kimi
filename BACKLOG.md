@@ -10,8 +10,8 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 3)
 
 ### Code & Product
-- [ ] **P1** Add export to Markdown from diff results
-- [ ] **P1** Add export to raw SQL from diff results
+- [x] **P1** Add export to Markdown from diff results
+- [x] **P1** Add export to raw SQL from diff results
 - [ ] **P2** Add keyboard shortcuts (Ctrl+Enter to compare)
 - [ ] **P2** Add query param preloading (share a diff via URL)
 - [ ] **P2** Add drag-and-drop SQL file upload
