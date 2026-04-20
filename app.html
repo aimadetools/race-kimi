@@ -385,6 +385,7 @@ CREATE TABLE users (
       <div class="results-tabs">
         <button class="results-tab active" data-tab="visual">Visual Diff</button>
         <button class="results-tab" data-tab="migration">Migration SQL</button>
+        <button class="results-tab" data-tab="markdown">Export Markdown</button>
       </div>
 
       <div class="results-panel active" id="panel-visual">
@@ -394,6 +395,10 @@ CREATE TABLE users (
 
       <div class="results-panel" id="panel-migration">
         <div id="migrationContainer"></div>
+      </div>
+
+      <div class="results-panel" id="panel-markdown">
+        <div id="markdownContainer"></div>
       </div>
     </div>
   </main>
@@ -993,9 +998,143 @@ function renderMigration(sql, diff) {
     `;
   }
 
-  html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button>${highlightSQL(sql)}</div>`;
+  html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button>${highlightSQL(sql)}</div>`;
   container.innerHTML = html;
 }
+
+function downloadSQL() {
+  if (!lastMigrationSQL) return;
+  downloadFile(lastMigrationSQL, 'schemalens_migration.sql', 'text/plain');
+}
+
+function downloadMarkdown() {
+  if (!lastDiff) return;
+  const md = generateMarkdown(lastDiff, lastMigrationSQL, document.getElementById('dialect').value);
+  downloadFile(md, 'schemalens_diff.md', 'text/markdown');
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function generateMarkdown(diff, migrationSQL, dialect) {
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  let md = `# Schema Diff Report\n\n`;
+  md += `**Generated:** ${now}  \n`;
+  md += `**Dialect:** ${dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : 'SQLite'}  \n\n`;
+
+  md += `## Summary\n\n`;
+  md += `- Tables in old schema: ${diff.totalTablesOld}\n`;
+  md += `- Tables in new schema: ${diff.totalTablesNew}\n`;
+  md += `- Tables added: ${diff.tablesAdded.length}\n`;
+  md += `- Tables removed: ${diff.tablesRemoved.length}\n`;
+  md += `- Tables modified: ${diff.tablesModified.length}\n\n`;
+
+  if (diff.tablesAdded.length) {
+    md += `## Tables Added\n\n`;
+    for (const table of diff.tablesAdded) {
+      md += `### ${table.name}\n\n`;
+      md += `| Column | Type | Null | Default |\n`;
+      md += `|--------|------|------|---------|\n`;
+      for (const col of table.columns) {
+        md += `| ${col.name} | ${col.type} | ${col.nullable ? 'NULL' : 'NOT NULL'} | ${col.defaultValue || '—'} |\n`;
+      }
+      md += `\n`;
+    }
+  }
+
+  if (diff.tablesRemoved.length) {
+    md += `## Tables Removed\n\n`;
+    for (const table of diff.tablesRemoved) {
+      md += `### ${table.name}\n\n`;
+      md += `| Column | Type | Null | Default |\n`;
+      md += `|--------|------|------|---------|\n`;
+      for (const col of table.columns) {
+        md += `| ${col.name} | ${col.type} | ${col.nullable ? 'NULL' : 'NOT NULL'} | ${col.defaultValue || '—'} |\n`;
+      }
+      md += `\n`;
+    }
+  }
+
+  if (diff.tablesModified.length) {
+    md += `## Tables Modified\n\n`;
+    for (const td of diff.tablesModified) {
+      md += `### ${td.name}\n\n`;
+
+      if (td.columnsAdded.length) {
+        md += `**Columns added:**\n\n`;
+        md += `| Column | Type | Null | Default |\n`;
+        md += `|--------|------|------|---------|\n`;
+        for (const col of td.columnsAdded) {
+          md += `| ${col.name} | ${col.type} | ${col.nullable ? 'NULL' : 'NOT NULL'} | ${col.defaultValue || '—'} |\n`;
+        }
+        md += `\n`;
+      }
+
+      if (td.columnsRemoved.length) {
+        md += `**Columns removed:**\n\n`;
+        md += `| Column | Type | Null | Default |\n`;
+        md += `|--------|------|------|---------|\n`;
+        for (const col of td.columnsRemoved) {
+          md += `| ${col.name} | ${col.type} | ${col.nullable ? 'NULL' : 'NOT NULL'} | ${col.defaultValue || '—'} |\n`;
+        }
+        md += `\n`;
+      }
+
+      if (td.columnsModified.length) {
+        md += `**Columns modified:**\n\n`;
+        md += `| Column | Changes |\n`;
+        md += `|--------|---------|\n`;
+        for (const mod of td.columnsModified) {
+          const changes = mod.changes.map(c => `${c.field}: ${c.old} → ${c.new}`).join('; ');
+          md += `| ${mod.column.name} | ${changes} |\n`;
+        }
+        md += `\n`;
+      }
+
+      if (td.constraintsChanged) {
+        md += `**Constraints changed.** Please review manually.\n\n`;
+      }
+    }
+  }
+
+  if (migrationSQL && migrationSQL.trim()) {
+    md += `## Migration SQL\n\n`;
+    md += `\`\`\`sql\n`;
+    md += migrationSQL;
+    md += `\n\`\`\`\n\n`;
+  }
+
+  md += `---\n\n`;
+  md += `*Generated by [SchemaLens](https://schemalens.vercel.app)*`;
+  return md;
+}
+
+function renderMarkdown() {
+  const container = document.getElementById('markdownContainer');
+  if (!lastDiff) {
+    container.innerHTML = '<div class="empty-state"><h3>No diff to export</h3><p>Run a comparison first.</p></div>';
+    return;
+  }
+  const md = generateMarkdown(lastDiff, lastMigrationSQL, document.getElementById('dialect').value);
+  container.innerHTML = `
+    <div style="margin-bottom:16px;">
+      <button class="btn btn-primary" onclick="downloadMarkdown()">Download .md</button>
+    </div>
+    <div class="sql-output" style="white-space:pre-wrap;">${esc(md)}</div>
+  `;
+}
+
+let lastMigrationSQL = '';
+let lastDiff = null;
 
 function highlightSQL(sql) {
   return esc(sql)
@@ -1134,6 +1273,8 @@ document.getElementById('compareBtn').addEventListener('click', () => {
 
   diff = diffSchemas(schemaA, schemaB);
   const migrationSQL = generateMigration(diff, dialect);
+  lastMigrationSQL = migrationSQL;
+  lastDiff = diff;
 
   // Save to localStorage
   localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));
@@ -1141,6 +1282,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderSummary(diff);
   renderVisualDiff(diff);
   renderMigration(migrationSQL, diff);
+  renderMarkdown();
 
   document.getElementById('results').classList.add('active');
 
