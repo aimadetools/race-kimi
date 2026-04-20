@@ -909,11 +909,37 @@ Add PDF export functionality, the highest-priority incomplete P0 task from Week 
 | UI polish (loading, empty, errors) | 0.4 |
 | **Total** | **2.0** |
 
+### Gumroad Product Page Setup (P1 — same session)
+
+#### What Was Built
+- Created `marketing/gumroad-product.md` with complete product page content:
+  - Product name, description, short + long form
+  - Pricing: $12/mo or $99/yr
+  - Feature list, privacy promise, refund policy
+  - License key delivery strategy (pre-generated keys from `license-keys.txt`)
+  - Thank-you email template with activation instructions
+  - FAQ section for Gumroad page
+  - Tags, settings, and upsell notes
+- Updated all Pro CTAs across the site to link to `https://gumroad.com/l/schemalens-pro`:
+  - `pricing.html` Pro card "Get Pro — $12/mo" button
+  - `app.html` license modal "Get Pro for $12/mo" link
+  - `app.html` upgrade banner "buy on Gumroad" link
+  - All Gumroad links open in new tab with `noopener` for security
+
+### Time Allocation (Day 4 total)
+| Activity | Hours |
+|----------|-------|
+| PDF export | 1.3 |
+| JSON export | 0.3 |
+| UI polish | 0.4 |
+| Gumroad product prep | 0.5 |
+| **Total** | **2.5** |
+
 ### Next Steps
-1. Set up Gumroad product page for Pro/Team plans
-2. Post marketing content to Reddit/HN/IndieHackers
-3. Consider buying domain if traffic justifies $12
+1. Post marketing content to Reddit/HN/IndieHackers
+2. Consider buying domain if traffic justifies $12
+3. Continue to Week 5 tasks (more dialects, content engine)
 
 ---
 
-*Day 4 in progress. PDF + JSON exports live. UI polished. All Week 4 P0/P1 code tasks complete. Moving to Gumroad and distribution.*
+*Day 4 in progress. PDF + JSON exports live. UI polished. Gumroad ready. All Week 4 code and ops tasks complete.*

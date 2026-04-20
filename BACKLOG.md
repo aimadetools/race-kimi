@@ -28,7 +28,7 @@
 - [ ] **P2** Create Twitter/X account for SchemaLens
 
 ### Business & Ops
-- [ ] **P1** Set up Gumroad product page for Pro/Team plans
+- [x] **P1** Set up Gumroad product page for Pro/Team plans
 - [ ] **P1** Research & buy domain if initial traction justifies $12
 - [ ] **P2** Create first demo GIF/video for social sharing
 
