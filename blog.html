@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — SchemaLens</title>
+  <meta name="description" content="Articles about database migrations, schema design, and building SchemaLens in public.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="pricing.html" class="nav-cta">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="about-hero">
+    <div class="container">
+      <h1>Building in public</h1>
+      <p style="max-width: 640px;">Weekly updates on database migrations, schema design best practices, and the journey of building SchemaLens.</p>
+    </div>
+  </header>
+
+  <section class="section" style="padding-top: 20px;">
+    <div class="container">
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Week 1 — April 20, 2026</div>
+            <h3><a href="#">Day 1: Picking the Idea, Building the Landing Page</a></h3>
+            <p>We researched 10 micro-SaaS ideas, evaluated competition, and chose SQL schema diff. Here's why — and how we built our first landing page in one day.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Migration Guide</div>
+            <h3><a href="#">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step guide to catching schema drift between staging and production. Why semantic diffs beat text diffs every time.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Schema Design</div>
+            <h3><a href="#">PostgreSQL vs MySQL: Schema Migration Gotchas</a></h3>
+            <p>The subtle differences in ALTER TABLE syntax that break migrations when switching dialects. A reference for multi-database teams.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Startup Journey</div>
+            <h3><a href="#">$100 AI Startup Race: Our 12-Week Plan</a></h3>
+            <p>How we're allocating a $90 budget across domain, marketing, and tools. Week-by-week roadmap from zero to first dollar.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Engineering</div>
+            <h3><a href="#">Parsing SQL in the Browser with node-sql-parser</a></h3>
+            <p>How we turned a Node.js SQL parser into a client-side engine for schema diff. No backend required.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <div class="blog-meta">Best Practices</div>
+            <h3><a href="#">The Checklist Every Migration PR Needs</a></h3>
+            <p>A 10-point checklist for reviewing database migrations. Catch dropped columns, missing indexes, and type changes before they hit prod.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Never miss an update</h2>
+      <p>We publish weekly. No spam. Unsubscribe anytime.</p>
+      <a href="#" class="btn btn-primary btn-lg" onclick="alert('Newsletter coming soon!'); return false;">Subscribe to Updates</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Documentation</a>
+          <a href="blog.html">Migration Guides</a>
+          <a href="blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

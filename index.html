@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens — Compare SQL Schemas & Generate Migrations</title>
+  <meta name="description" content="SchemaLens compares two SQL database schemas in your browser and instantly generates migration scripts. No CLI, no connection, no data leaves your machine.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="pricing.html" class="nav-cta">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Now in public beta — free to use
+      </div>
+      <h1>Compare SQL schemas.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>CREATE TABLE</code> dumps. Spot every difference instantly. Get ready-to-run <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, or SQLite — all in your browser.</p>
+      <div class="hero-actions">
+        <a href="#early-access" class="btn btn-primary btn-lg">Start Comparing Free</a>
+        <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+
+      <div class="demo-card">
+        <div class="demo-header">
+          <span class="demo-dot red"></span>
+          <span class="demo-dot yellow"></span>
+          <span class="demo-dot green"></span>
+        </div>
+        <div class="demo-body">
+          <div class="demo-pane">
+<span class="comment">-- Schema A (Old)</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">SERIAL PRIMARY KEY</span>,
+  name <span class="keyword">VARCHAR</span>(100),
+  email <span class="keyword">VARCHAR</span>(100)
+);
+          </div>
+          <div class="demo-arrow">→</div>
+          <div class="demo-pane">
+<span class="comment">-- Schema B (New)</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">SERIAL PRIMARY KEY</span>,
+  name <span class="keyword">VARCHAR</span>(100),
+  email <span class="keyword">VARCHAR</span>(255),
+  <span class="added">created_at TIMESTAMP</span>
+);
+
+<span class="comment">-- Generated Migration</span>
+<span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">ALTER COLUMN</span> email <span class="keyword">TYPE VARCHAR</span>(255);
+<span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">ADD COLUMN</span> created_at <span class="keyword">TIMESTAMP</span>;
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Why developers love SchemaLens</h2>
+      <p class="section-subtitle">Stop squinting at text diffs. Get a semantic, visual comparison that understands your schema.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Semantic Diff</h3>
+          <p>Not a line-by-line text comparison. We understand tables, columns, types, defaults, indexes, and constraints.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Migrations</h3>
+          <p>Generate <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, or SQLite dialects. Copy, paste, deploy.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>100% Private</h3>
+          <p>All processing happens in your browser. Your schemas never touch our servers. Perfect for sensitive data.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multi-Dialect</h3>
+          <p>PostgreSQL, MySQL, MariaDB, SQLite support out of the box. More dialects coming based on demand.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📤</div>
+          <h3>Export & Share</h3>
+          <p>Download diffs as Markdown, PDF, or raw SQL. Share a link with your team for async review.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛠️</div>
+          <h3>Zero Install</h3>
+          <p>No CLI to learn. No dependencies to install. No Docker image to pull. Open your browser and go.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-subtitle">From schema dumps to migration scripts in three simple steps.</p>
+      <div class="steps">
+        <div class="step">
+          <h3>Paste Schema A</h3>
+          <p>Copy your old schema dump — from <code>pg_dump</code>, <code>mysqldump</code>, or your ORM — and paste it into the left pane.</p>
+        </div>
+        <div class="step">
+          <h3>Paste Schema B</h3>
+          <p>Paste the new schema into the right pane. SchemaLens parses both instantly, understanding structure — not just text.</p>
+        </div>
+        <div class="step">
+          <h3>Review & Export</h3>
+          <p>See every change highlighted. Generate migration SQL in your dialect. Export, share, or copy into your migration tool.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-subtitle">Start free. Upgrade when you need more power.</p>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For side projects & quick checks</p>
+          <div class="price">$0<span>/mo</span></div>
+          <ul>
+            <li>Diff up to 10 tables</li>
+            <li>Visual diff viewer</li>
+            <li>PostgreSQL, MySQL, SQLite</li>
+            <li>Local history (browser)</li>
+            <li class="disabled">Migration generation</li>
+            <li class="disabled">Export & share</li>
+          </ul>
+          <a href="#early-access" class="btn btn-secondary" style="width:100%">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Most Popular</span>
+          <h3>Pro</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For professional developers</p>
+          <div class="price">$12<span>/mo</span></div>
+          <ul>
+            <li>Unlimited tables</li>
+            <li>Full migration generation</li>
+            <li>Export Markdown, PDF, SQL</li>
+            <li>Save & share diff links</li>
+            <li>Priority support</li>
+            <li class="disabled">Team workspace</li>
+          </ul>
+          <a href="pricing.html" class="btn btn-primary" style="width:100%">Start Free Trial</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Team</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For engineering teams</p>
+          <div class="price">$29<span>/mo</span></div>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Shared team workspace</li>
+            <li>Slack notifications</li>
+            <li>Admin & user management</li>
+            <li>API access</li>
+            <li>SSO (coming soon)</li>
+          </ul>
+          <a href="pricing.html" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="early-access">
+    <div class="container">
+      <h2>Stop writing migrations by hand.</h2>
+      <p>Join 200+ developers who use SchemaLens to catch schema drift before it hits production.</p>
+      <a href="#" class="btn btn-primary btn-lg" onclick="alert('The app is launching soon! Join the waitlist below.'); return false;">Try SchemaLens Free</a>
+      <p class="hero-note mt-16">Built for the $100 AI Startup Race. Follow our public journey.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Documentation</a>
+          <a href="blog.html">Migration Guides</a>
+          <a href="blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

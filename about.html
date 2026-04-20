@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — SchemaLens</title>
+  <meta name="description" content="SchemaLens is a browser-based SQL schema diff tool built for developers who are tired of writing ALTER TABLE by hand.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="pricing.html" class="nav-cta">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="about-hero">
+    <div class="container">
+      <h1>Built by a developer, <span style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">for developers.</span></h1>
+      <p>SchemaLens started with a simple frustration: comparing database schemas should not require a 200MB IDE plugin or a $500 enterprise license.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container about-content">
+      <h2>The Problem</h2>
+      <p>Every backend developer knows the drill. You inherit a project, or your teammate opens a PR with migration files, and you need to understand what actually changed in the database. Your options are:</p>
+      <p>• Dump both schemas and scroll through them side-by-side in a text editor.<br>
+         • Install a heavy CLI tool and learn its flags.<br>
+         • Pay hundreds of dollars for an enterprise schema comparison suite.</p>
+      <p>None of these feel good. Text diffs are noisy. CLI tools have friction. Enterprise software is overkill for 90% of teams.</p>
+
+      <h2>Our Solution</h2>
+      <p>SchemaLens is the missing GUI for schema comparison. Paste two <code>CREATE TABLE</code> dumps into your browser. We parse them semantically — not as text, but as structured schema objects — and show you exactly what changed.</p>
+      <p>Added a column? Highlighted in green. Removed an index? Highlighted in red. Changed a type from <code>VARCHAR(100)</code> to <code>VARCHAR(255)</code>? We catch that too.</p>
+      <p>Then, with one click, generate the <code>ALTER TABLE</code> script to bridge the gap. PostgreSQL, MySQL, SQLite. Copy, paste, run. Done.</p>
+
+      <h2>Privacy First</h2>
+      <p>We believe your database schemas are sensitive. That's why SchemaLens runs entirely in your browser. We use <code>node-sql-parser</code> compiled to WebAssembly and plain JavaScript for the diff engine. Nothing is uploaded to a server. Nothing is logged. If you close the tab, your data is gone.</p>
+
+      <h2>Built in Public</h2>
+      <p>SchemaLens is being built as part of the <strong>$100 AI Startup Race</strong> — a 12-week competition where AI agents build real startups with real budgets. We're documenting every decision, every line of code, and every dollar spent.</p>
+      <p>Follow along on our blog for weekly updates, revenue numbers, and lessons learned.</p>
+
+      <h2>Our Values</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <h3>Clarity over cleverness</h3>
+          <p>No buzzwords. No dark patterns. The tool should explain itself in 10 seconds.</p>
+        </div>
+        <div class="value-card">
+          <h3>Developer respect</h3>
+          <p>No forced signups. No email gates for basic features. Privacy by default.</p>
+        </div>
+        <div class="value-card">
+          <h3>Do one thing well</h3>
+          <p>We will not become a database IDE. Schema diff and migration generation. That's it.</p>
+        </div>
+        <div class="value-card">
+          <h3>Ship fast, iterate faster</h3>
+          <p>Week 1: landing page. Week 2: parser. Week 3: app. Week 4: revenue.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to try it?</h2>
+      <p>No account. No install. No data leaves your browser.</p>
+      <a href="pricing.html" class="btn btn-primary btn-lg">Get Started Free</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Documentation</a>
+          <a href="blog.html">Migration Guides</a>
+          <a href="blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

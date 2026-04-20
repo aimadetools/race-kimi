@@ -437,6 +437,7 @@
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="Search logs...">
       </div>
+      <button class="filter-btn" id="regexToggle" title="Toggle regex search">.*</button>
       <div class="filter-group" id="levelFilters">
         <button class="filter-btn" data-level="error">Error</button>
         <button class="filter-btn" data-level="warn">Warn</button>
@@ -485,12 +486,14 @@
       const timeFrom = document.getElementById('timeFrom');
       const timeTo = document.getElementById('timeTo');
       const clearTimeBtn = document.getElementById('clearTimeBtn');
+      const regexToggle = document.getElementById('regexToggle');
 
       let allRows = [];
       let columns = [];
       let activeLevels = new Set();
       let sortCol = null;
       let sortAsc = true;
+      let useRegex = false;
 
       // History
       function loadHistory() {
@@ -865,9 +868,18 @@
           });
         }
         if (q) {
+          let re = null;
+          if (useRegex) {
+            try { re = new RegExp(q, 'i'); } catch { /* invalid regex, fall through to plain */ }
+          }
           rows = rows.filter(r => {
             for (const v of Object.values(r)) {
-              if (String(v).toLowerCase().includes(q)) return true;
+              const s = String(v);
+              if (re) {
+                if (re.test(s)) return true;
+              } else {
+                if (s.toLowerCase().includes(q)) return true;
+              }
             }
             return false;
           });

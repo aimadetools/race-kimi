@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — SchemaLens</title>
+  <meta name="description" content="Start free. Upgrade when you need unlimited schema diffs and migration generation.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="pricing.html" class="nav-cta">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="about-hero">
+    <div class="container">
+      <h1>Simple, transparent pricing</h1>
+      <p style="max-width: 520px;">Start free and upgrade when you need more power. No credit card required to try.</p>
+    </div>
+  </header>
+
+  <section class="section" style="padding-top: 20px;">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For side projects & quick checks</p>
+          <div class="price">$0<span>/mo</span></div>
+          <ul>
+            <li>Diff up to 10 tables</li>
+            <li>Visual diff viewer</li>
+            <li>PostgreSQL, MySQL, SQLite</li>
+            <li>Local history (browser only)</li>
+            <li>Community support</li>
+            <li class="disabled">Migration generation</li>
+            <li class="disabled">Export formats</li>
+            <li class="disabled">Share links</li>
+          </ul>
+          <a href="#" class="btn btn-secondary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Most Popular</span>
+          <h3>Pro</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For professional developers</p>
+          <div class="price">$12<span>/mo</span></div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">or $99/year (2 months free)</p>
+          <ul>
+            <li>Unlimited tables per diff</li>
+            <li>Full migration generation</li>
+            <li>Export Markdown, PDF, SQL</li>
+            <li>Save & share diff links</li>
+            <li>Diff history & favorites</li>
+            <li>Priority email support</li>
+            <li class="disabled">Team workspace</li>
+            <li class="disabled">API access</li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Start Free Trial</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Team</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For engineering teams</p>
+          <div class="price">$29<span>/mo</span></div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">or $290/year (2 months free)</p>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Shared team workspace</li>
+            <li>Unlimited team members</li>
+            <li>Slack notifications</li>
+            <li>Admin & user management</li>
+            <li>API access</li>
+            <li>SSO (coming soon)</li>
+            <li>Dedicated support</li>
+          </ul>
+          <a href="#" class="btn btn-secondary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Contact Sales</a>
+        </div>
+      </div>
+
+      <div class="text-center mt-32">
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="about-content" style="margin-top: 32px;">
+        <h2>Is my data safe?</h2>
+        <p>Yes. SchemaLens runs entirely in your browser. We use client-side parsing (node-sql-parser compiled for the browser) and never upload your schemas to any server. If you close the tab, your data is gone.</p>
+
+        <h2>What SQL dialects do you support?</h2>
+        <p>Currently PostgreSQL, MySQL, MariaDB, and SQLite. We plan to add SQL Server and Oracle based on demand. Pro users get all dialects automatically.</p>
+
+        <h2>Can I cancel anytime?</h2>
+        <p>Yes. Pro and Team plans are billed monthly or annually. Cancel anytime from your account dashboard. Annual plans are refunded pro-rata within 14 days.</p>
+
+        <h2>Do you offer refunds?</h2>
+        <p>We offer a 14-day money-back guarantee on all paid plans. If SchemaLens doesn't save you time, email us and we'll refund you — no questions asked.</p>
+
+        <h2>What's included in the free trial?</h2>
+        <p>You get full Pro features for 7 days. No credit card required. At the end of the trial, you can upgrade or continue with the Free plan.</p>
+
+        <h2>Can I use this at work?</h2>
+        <p>Absolutely. Many of our Pro users are engineering leads who use SchemaLens for code review and staging-to-production checks. The Team plan adds shared workspaces and admin controls for organizations.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Still have questions?</h2>
+      <p>Email us at hello@schemalens.dev or reach out on Twitter. We read every message.</p>
+      <a href="mailto:hello@schemalens.dev" class="btn btn-primary btn-lg">Contact Support</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Documentation</a>
+          <a href="blog.html">Migration Guides</a>
+          <a href="blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
