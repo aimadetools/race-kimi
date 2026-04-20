@@ -518,6 +518,7 @@ CREATE TABLE users (
 
       <div class="results-panel active" id="panel-visual">
         <div class="summary-bar" id="summaryBar"></div>
+        <div id="warningContainer"></div>
         <div id="visualDiff"></div>
       </div>
 
@@ -1224,18 +1225,54 @@ function columnDefSQL(col, dialect) {
 // -----------------------------
 // UI Rendering
 // -----------------------------
-function renderSummary(diff) {
+function renderSummary(diff, confidenceA, confidenceB) {
   const bar = document.getElementById('summaryBar');
   const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length;
+
+  const allWarnings = [];
+  if (confidenceA && confidenceA.warnings) allWarnings.push(...confidenceA.warnings.map(w => 'Schema A: ' + w));
+  if (confidenceB && confidenceB.warnings) allWarnings.push(...confidenceB.warnings.map(w => 'Schema B: ' + w));
+
+  const uniqueWarnings = [...new Set(allWarnings)];
+  const score = (confidenceA && confidenceA.score === 'low') || (confidenceB && confidenceB.score === 'low') ? 'low' :
+                (confidenceA && confidenceA.score === 'medium') || (confidenceB && confidenceB.score === 'medium') ? 'medium' : 'high';
+
+  const scoreColor = score === 'high' ? 'var(--success)' : score === 'medium' ? 'var(--warning)' : 'var(--danger)';
+  const scoreLabel = score === 'high' ? 'High confidence' : score === 'medium' ? 'Medium confidence' : 'Low confidence';
+  const scoreIcon = score === 'high' ? '✓' : score === 'medium' ? '◐' : '⚠';
+
+  let confidenceHTML = '';
+  if (uniqueWarnings.length > 0) {
+    confidenceHTML = `<div class="summary-pill" style="border-color:${scoreColor};color:${scoreColor}"><span class="num">${scoreIcon}</span> ${scoreLabel} (${uniqueWarnings.length})</div>`;
+  } else {
+    confidenceHTML = `<div class="summary-pill" style="border-color:var(--success);color:var(--success)"><span class="num">✓</span> High confidence</div>`;
+  }
+
   bar.innerHTML = `
     <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
     <div class="summary-pill added"><span class="num">+${diff.tablesAdded.length}</span> added</div>
     <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
+    ${confidenceHTML}
     <div style="flex:1"></div>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
   `;
+
+  // Render warning banner if needed
+  const warnContainer = document.getElementById('warningContainer');
+  if (uniqueWarnings.length > 0) {
+    warnContainer.innerHTML = `
+      <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;color:#fde68a;font-size:0.9rem;">
+        <strong style="display:block;margin-bottom:6px;color:var(--warning);">⚠ Parser Warnings</strong>
+        <ul style="margin:0;padding-left:18px;line-height:1.7;">
+          ${uniqueWarnings.map(w => `<li>${esc(w)}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  } else {
+    warnContainer.innerHTML = '';
+  }
 }
 
 function renderVisualDiff(diff) {
@@ -1921,10 +1958,13 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   lastMigrationSQL = migrationSQL;
   lastDiff = diff;
 
+  const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
+  const confidenceB = calculateConfidence(sqlB, dialect, schemaB);
+
   // Save to localStorage
   localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));
 
-  renderSummary(diff);
+  renderSummary(diff, confidenceA, confidenceB);
   renderVisualDiff(diff);
   renderMigration(migrationSQL, diff);
   renderMarkdown();

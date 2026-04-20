@@ -1126,3 +1126,70 @@ A fully client-side SQL validator with zero dependencies:
 ---
 
 *Day 5 in progress. Free micro-tool live. SEO/distribution engine expanded.*
+
+
+---
+
+## Day 5 — Parser Confidence Indicator (April 20, 2026)
+
+### Objective
+Add a parser confidence indicator to app.html so users know when their schemas contain edge cases that the parser may not fully handle. This builds trust and reduces silent failures.
+
+### What Was Built
+
+#### Parser Confidence System
+- **`calculateConfidence(sql, dialect, schema)`** function inspects raw SQL and parsed schema to detect:
+  - Unparsed CREATE TABLE statements
+  - Array column types (`INTEGER[]`, `TEXT[]`)
+  - JSON / JSONB columns
+  - Generated / virtual / stored columns
+  - CREATE TRIGGER statements
+  - CREATE VIEW statements
+  - CREATE FUNCTION / PROCEDURE statements
+  - Partitioning clauses
+  - Non-ENUM CREATE TYPE statements
+  - FULLTEXT / SPATIAL indexes
+- **Confidence scoring:**
+  - `high` — no warnings detected
+  - `medium` — minor warnings (arrays, JSON, generated columns, etc.)
+  - `low` — major issues (unparsed statements, unsupported object types like triggers/views/functions)
+- **Visual indicator in summary bar:**
+  - Color-coded pill (green / yellow / red) with icon and label
+  - Warning count badge
+- **Warning banner below summary bar:**
+  - Lists all specific warnings per schema (Schema A / Schema B)
+  - Styled with brand yellow tint for visibility without panic
+
+#### Integration
+- `parseSQL()` now tracks parsing errors in `schema.errors`
+- `renderSummary()` accepts optional `confidenceA` and `confidenceB` parameters
+- Compare button handler calculates confidence for both schemas and passes them to renderSummary
+- Added `#warningContainer` div in the Visual Diff results panel
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Design confidence scoring algorithm | 0.25 |
+| Implement calculateConfidence() | 0.25 |
+| Update parseSQL() to track errors | 0.1 |
+| Update renderSummary() with confidence UI | 0.25 |
+| Add warning banner and styling | 0.15 |
+| Test edge cases | 0.15 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.35** |
+
+### Key Insights
+1. **Transparency beats perfection** — Users would rather know the parser missed something than discover it later in production. A confidence indicator turns a potential weakness into a trust signal.
+
+2. **Structured error tracking enables future improvements** — By storing parse errors in `schema.errors`, we now have a data model for eventually surfacing per-statement error details.
+
+### Next Steps (Day 5 continued / Day 6)
+1. Submit SQL Validator to tiny-helpers.dev and similar tool directories
+2. Continue community posting when accounts are available
+3. Consider buying domain if traffic metrics justify $12
+4. Add more parser edge cases (enums, arrays, JSON columns) as needed based on user feedback
+
+---
+
+*Day 5 in progress. Parser confidence indicator live. Users now have full transparency into parser limitations.*
