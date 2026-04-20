@@ -455,6 +455,7 @@
         <option value="postgres">PostgreSQL</option>
         <option value="mysql">MySQL / MariaDB</option>
         <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
       </select>
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
@@ -476,6 +477,7 @@ CREATE TABLE users (
         <div class="sample-links">
           <button onclick="loadSample('postgres')">Load sample (PostgreSQL)</button>
           <button onclick="loadSample('mysql')">Load sample (MySQL)</button>
+          <button onclick="loadSample('mssql')">Load sample (SQL Server)</button>
         </div>
       </div>
       <div class="editor-panel" id="panelB">
@@ -700,7 +702,7 @@ function parseCreateTable(stmt, dialect) {
   const match = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`]+(?:\.[\w"`]+)?)\s*\((.*)\)\s*[^)]*$/is);
   if (!match) return null;
 
-  let tableName = match[1].replace(/["`]/g, '');
+  let tableName = match[1].replace(/["`\[\]]/g, '');
   const rawBody = match[2];
 
   const table = {
@@ -764,7 +766,7 @@ function splitBody(body) {
 
 function parseColumn(tokens, dialect) {
   const col = {
-    name: tokens[0].replace(/["`]/g, ''),
+    name: tokens[0].replace(/["`\[\]]/g, ''),
     type: '',
     nullable: true,
     defaultValue: null,
@@ -777,7 +779,7 @@ function parseColumn(tokens, dialect) {
   let i = 1;
   // Collect type tokens
   const typeTokens = [];
-  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY'];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED'];
   while (i < tokens.length) {
     const t = tokens[i].toUpperCase();
     if (constraintKeywords.includes(t)) break;
@@ -799,13 +801,14 @@ function parseColumn(tokens, dialect) {
       col.primaryKey = true;
       col.nullable = false;
       i += 2;
+      if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
     } else if (t === 'UNIQUE') {
       col.unique = true;
       i++;
     } else if (t === 'DEFAULT') {
       i++;
       const defaultTokens = [];
-      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','ON'];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
       while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
         defaultTokens.push(tokens[i]);
         i++;
@@ -814,6 +817,10 @@ function parseColumn(tokens, dialect) {
     } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
       col.autoIncrement = true;
       i++;
+    } else if (t === 'IDENTITY') {
+      col.autoIncrement = true;
+      i++;
+      if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; }
     } else if (t === 'REFERENCES') {
       i++;
       col.foreignKey = { table: '', columns: [] };
@@ -850,7 +857,7 @@ function parseConstraint(tokens, dialect) {
   let i = 0;
   if (tokens[i].toUpperCase() === 'CONSTRAINT') {
     i++;
-    con.name = tokens[i] ? tokens[i].replace(/["`]/g, '') : null;
+    con.name = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : null;
     i++;
   }
   const t = tokens[i] ? tokens[i].toUpperCase() : '';
@@ -860,17 +867,18 @@ function parseConstraint(tokens, dialect) {
     if (tokens[i] === '(') {
       i++;
       while (i < tokens.length && tokens[i] !== ')') {
-        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
         i++;
       }
     }
+    if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
   } else if (t === 'UNIQUE') {
     con.type = 'UNIQUE';
     i++;
     if (tokens[i] === '(') {
       i++;
       while (i < tokens.length && tokens[i] !== ')') {
-        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
         i++;
       }
     }
@@ -880,20 +888,20 @@ function parseConstraint(tokens, dialect) {
     if (tokens[i] === '(') {
       i++;
       while (i < tokens.length && tokens[i] !== ')') {
-        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
         i++;
       }
       i++; // skip )
     }
     if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
       i++;
-      con.refTable = tokens[i] ? tokens[i].replace(/["`]/g, '') : '';
+      con.refTable = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
       i++;
       if (tokens[i] === '(') {
         i++;
         con.refColumns = [];
         while (i < tokens.length && tokens[i] !== ')') {
-          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`]/g, ''));
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`\[\]]/g, ''));
           i++;
         }
       }
@@ -1074,8 +1082,6 @@ function generateMigration(diff, dialect) {
         lines.push(`-- SQLite does not support DROP COLUMN directly.`);
         lines.push(`-- You must recreate the table. See: https://sqlite.org/lang_altertable.html`);
         lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)}; -- NOT SUPPORTED`);
-      } else if (dialect === 'mysql') {
-        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
       } else {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
       }
@@ -1085,10 +1091,8 @@ function generateMigration(diff, dialect) {
     for (const col of td.columnsAdded) {
       if (dialect === 'sqlite') {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
-      } else if (dialect === 'mysql') {
-        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
       } else {
-        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD ${columnDefSQL(col, dialect)};`);
       }
     }
     if (td.columnsAdded.length) lines.push('');
@@ -1101,6 +1105,8 @@ function generateMigration(diff, dialect) {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} TYPE ${col.type};`);
           } else if (dialect === 'mysql') {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
+          } else if (dialect === 'mssql') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} ${col.type}${col.nullable ? '' : ' NOT NULL'};`);
           } else {
             lines.push(`-- SQLite: type changes require table recreation`);
             lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} ... -- NOT SUPPORTED`);
@@ -1114,6 +1120,8 @@ function generateMigration(diff, dialect) {
             }
           } else if (dialect === 'mysql') {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
+          } else if (dialect === 'mssql') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} ${col.type}${col.nullable ? '' : ' NOT NULL'};`);
           } else {
             lines.push(`-- SQLite: nullability changes require table recreation`);
           }
@@ -1130,6 +1138,12 @@ function generateMigration(diff, dialect) {
             } else {
               lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} DROP DEFAULT;`);
             }
+          } else if (dialect === 'mssql') {
+            if (col.defaultValue) {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId('DF_' + td.name + '_' + col.name, dialect)} DEFAULT ${col.defaultValue} FOR ${quoteId(col.name, dialect)};`);
+            } else {
+              lines.push(`-- MSSQL: drop existing default constraint for ${col.name} before adding a new one`);
+            }
           } else {
             lines.push(`-- SQLite: default changes require table recreation`);
           }
@@ -1138,6 +1152,8 @@ function generateMigration(diff, dialect) {
           if (dialect === 'mysql') {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
           } else if (dialect === 'postgres') {
+            lines.push(`-- Review change: ${change.field} on ${col.name}`);
+          } else if (dialect === 'mssql') {
             lines.push(`-- Review change: ${change.field} on ${col.name}`);
           } else {
             lines.push(`-- SQLite: column changes require table recreation`);
@@ -1186,6 +1202,7 @@ function generateMigration(diff, dialect) {
 function quoteId(name, dialect) {
   if (dialect === 'mysql') return '`' + name + '`';
   if (dialect === 'postgres') return '"' + name + '"';
+  if (dialect === 'mssql') return '[' + name + ']';
   return `"${name}"`;
 }
 
@@ -1198,6 +1215,7 @@ function columnDefSQL(col, dialect) {
   if (col.autoIncrement) {
     if (dialect === 'mysql') sql += ' AUTO_INCREMENT';
     else if (dialect === 'sqlite') sql += ' AUTOINCREMENT';
+    else if (dialect === 'mssql') sql += ' IDENTITY(1,1)';
     else sql += ' GENERATED ALWAYS AS IDENTITY';
   }
   return sql;
@@ -1759,6 +1777,31 @@ CREATE TABLE comments (
   body TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`,
+
+  mssql: `CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name NVARCHAR(100) NOT NULL,
+  email NVARCHAR(100) UNIQUE,
+  role_id INT DEFAULT 1,
+  created_at DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE posts (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  user_id INT NOT NULL,
+  title NVARCHAR(255),
+  body NVARCHAR(MAX),
+  published BIT DEFAULT 0,
+  created_at DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE comments (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body NVARCHAR(MAX) NOT NULL,
+  created_at DATETIME DEFAULT GETDATE()
+);`,
 };
 
 function encodeState(a, b, dialect) {
@@ -1807,6 +1850,8 @@ function loadSampleB() {
     .replace(/VARCHAR\(100\)/g, "VARCHAR(255)")
     .replace(/role_id INT DEFAULT 1/, "role_id INT NOT NULL DEFAULT 1\n  , avatar_url VARCHAR(500)")
     .replace(/published BOOLEAN DEFAULT false/, "published BOOLEAN DEFAULT false\n  , slug VARCHAR(300) UNIQUE")
+    .replace(/published TINYINT\(1\) DEFAULT 0/, "published TINYINT(1) DEFAULT 0\n  , slug VARCHAR(300) UNIQUE")
+    .replace(/published BIT DEFAULT 0/, "published BIT DEFAULT 0\n  , slug NVARCHAR(300) UNIQUE")
     + "\n\nCREATE TABLE tags (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(50) NOT NULL\n);";
   document.getElementById('schemaB').value = b;
   updateStats();
