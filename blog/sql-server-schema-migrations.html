@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Server Schema Migrations: A Practical Guide — SchemaLens</title>
+  <meta name="description" content="A practical guide to SQL Server schema migrations. Learn ALTER TABLE syntax, identity columns, bracket quoting, and how to diff MSSQL schemas safely.">
+  <meta property="og:title" content="SQL Server Schema Migrations: A Practical Guide">
+  <meta property="og:description" content="Master SQL Server schema migrations with real examples. ALTER TABLE syntax, IDENTITY columns, named constraints, and schema diff strategies.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/sql-server-schema-migrations.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>SQL Server Schema Migrations: A Practical Guide</h1>
+      <div class="blog-meta">Migration Guide · April 20, 2026 · 7 min read</div>
+
+      <p>SQL Server is the quiet workhorse of enterprise databases. It powers everything from small business apps to Fortune 500 data warehouses. Yet when it comes to schema migration tooling, SQL Server often feels like an afterthought. Most open-source diff tools support PostgreSQL and MySQL, then stop.</p>
+
+      <p>This guide covers the SQL Server-specific syntax, pitfalls, and strategies you need to manage schema migrations safely. Whether you're migrating from another dialect or just trying to keep your SQL Server schemas in sync, these patterns will save you hours of trial and error.</p>
+
+      <h2>How SQL Server ALTER TABLE Differs</h2>
+
+      <p>SQL Server's <code>ALTER TABLE</code> syntax has quirks that surprise developers coming from PostgreSQL or MySQL. Here are the ones that matter most.</p>
+
+      <h3>1. No COLUMN Keyword Required for ADD</h3>
+
+      <p>In PostgreSQL and MySQL, you write <code>ADD COLUMN</code>. In SQL Server, <code>COLUMN</code> is optional:</p>
+
+<pre><code><span class="comment">-- PostgreSQL / MySQL</span>
+<span class="keyword">ALTER TABLE</span> users <span class="keyword">ADD COLUMN</span> avatar_url <span class="keyword">NVARCHAR</span>(500);
+
+<span class="comment">-- SQL Server (both work, but this is idiomatic)</span>
+<span class="keyword">ALTER TABLE</span> users <span class="keyword">ADD</span> avatar_url <span class="keyword">NVARCHAR</span>(500);</code></pre>
+
+      <p>SchemaLens generates the SQL Server idiomatic form automatically.</p>
+
+      <h3>2. IDENTITY Instead of AUTO_INCREMENT</h3>
+
+      <p>SQL Server uses <code>IDENTITY(seed, increment)</code> for auto-incrementing columns:</p>
+
+<pre><code><span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">INT IDENTITY</span>(1,1) <span class="keyword">PRIMARY KEY</span>,
+  name <span class="keyword">NVARCHAR</span>(100) <span class="keyword">NOT NULL</span>
+);</code></pre>
+
+      <p>Unlike MySQL's <code>AUTO_INCREMENT</code> or PostgreSQL's <code>SERIAL</code>, SQL Server's <code>IDENTITY</code> is a column property, not a pseudo-type. You can't add <code>IDENTITY</code> to an existing column — you must recreate the table.</p>
+
+      <h3>3. Bracket-Quoted Identifiers</h3>
+
+      <p>SQL Server uses square brackets for quoted identifiers:</p>
+
+<pre><code><span class="keyword">CREATE TABLE</span> [Order Details] (
+  [Order ID] <span class="keyword">INT</span> <span class="keyword">NOT NULL</span>,
+  [Product Name] <span class="keyword">NVARCHAR</span>(255)
+);</code></pre>
+
+      <p>This matters for diff tools because <code>[Order ID]</code> and <code>Order ID</code> are the same column. A naive parser that doesn't strip brackets will flag them as different. SchemaLens normalizes bracket quotes internally.</p>
+
+      <h3>4. Named Default Constraints</h3>
+
+      <p>SQL Server requires named constraints to drop defaults. If you add a default without naming it, SQL Server generates a cryptic name like <code>DF__users__role_id__12345678</code>. Good luck dropping that later.</p>
+
+      <p>Best practice: always name your defaults explicitly:</p>
+
+<pre><code><span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">ADD CONSTRAINT</span> DF_users_role_id <span class="keyword">DEFAULT</span> 1 <span class="keyword">FOR</span> role_id;</code></pre>
+
+      <p>SchemaLens generates <code>DF_table_column</code> convention names so you don't have to look up system-generated names.</p>
+
+      <h3>5. CLUSTERED vs NONCLUSTERED</h3>
+
+      <p>SQL Server distinguishes between clustered and non-clustered primary keys:</p>
+
+<pre><code><span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">INT IDENTITY</span>(1,1),
+  name <span class="keyword">NVARCHAR</span>(100),
+  <span class="keyword">CONSTRAINT</span> PK_users <span class="keyword">PRIMARY KEY CLUSTERED</span> (id)
+);</code></pre>
+
+      <p>Most diff tools ignore this distinction. SchemaLens parses both keywords and preserves them in output.</p>
+
+      <h2>The SQL Server Migration Workflow</h2>
+
+      <h3>Step 1: Export Your Schema</h3>
+
+      <p>Use SQL Server Management Studio (SSMS) or <code>sqlcmd</code>:</p>
+
+<pre><code><span class="comment">-- SSMS: Right-click database → Tasks → Generate Scripts → Schema only</span>
+
+<span class="comment">-- sqlcmd (command line)</span>
+sqlcmd -S server_name -d database_name -E -Q "EXEC sp_helptext 'sp_helpdb'" <span class="comment">-- for objects</span>
+
+<span class="comment">-- Or use mssql-scripter</span>
+mssql-scripter -S server_name -d database_name --schema-and-data false > schema.sql</code></pre>
+
+      <p>Clean the export to keep only <code>CREATE TABLE</code>, <code>CREATE INDEX</code>, and <code>ALTER TABLE</code> statements.</p>
+
+      <h3>Step 2: Diff Your Schemas</h3>
+
+      <p>Paste your old and new schemas into a diff tool that understands SQL Server syntax. Look for:</p>
+
+      <ul>
+        <li>Columns added or removed</li>
+        <li>Type changes (especially <code>NVARCHAR</code> length changes)</li>
+        <li>Nullability changes</li>
+        <li>Default value additions or removals</li>
+        <li>Constraint changes (PK, FK, UNIQUE, CHECK)</li>
+        <li>Index additions or removals</li>
+      </ul>
+
+      <h3>Step 3: Review Generated Migration</h3>
+
+      <p>SQL Server migration scripts should be reviewed for these specific risks:</p>
+
+      <ul>
+        <li><strong>Table locks:</strong> <code>ALTER TABLE</code> on large tables can acquire schema modification locks. Consider using <code>ONLINE = ON</code> for Enterprise Edition.</li>
+        <li><strong>Data loss:</strong> <code>ALTER COLUMN</code> that narrows a type (e.g., <code>NVARCHAR(500) → NVARCHAR(100)</code>) will truncate data.</li>
+        <li><strong>Identity gaps:</strong> Adding an <code>IDENTITY</code> column to an existing table requires table recreation.</li>
+        <li><strong>Foreign key blocking:</strong> Adding a FK to a large table validates all existing rows, which can be slow.</li>
+      </ul>
+
+      <h2>Common SQL Server Migration Patterns</h2>
+
+      <h3>Adding a Column with a Default</h3>
+
+<pre><code><span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">ADD</span> is_active <span class="keyword">BIT</span> <span class="keyword">NOT NULL</span> <span class="keyword">CONSTRAINT</span> DF_users_is_active <span class="keyword">DEFAULT</span> 1;</code></pre>
+
+      <p>In SQL Server 2012+, this is an online operation for non-nullable columns with defaults. The existing rows are backfilled efficiently without a full table rewrite.</p>
+
+      <h3>Changing a Column Type</h3>
+
+<pre><code><span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">ALTER COLUMN</span> name <span class="keyword">NVARCHAR</span>(255);</code></pre>
+
+      <p>Note: <code>ALTER COLUMN</code> in SQL Server does not support changing nullability and type in the same statement if the column contains data. You may need multiple steps.</p>
+
+      <h3>Dropping a Default Constraint</h3>
+
+<pre><code><span class="keyword">ALTER TABLE</span> users
+  <span class="keyword">DROP CONSTRAINT</span> DF_users_is_active;</code></pre>
+
+      <p>This is why naming your defaults explicitly is critical. Without a name, you have to query system tables to find the generated constraint name.</p>
+
+      <h3>Adding a Foreign Key</h3>
+
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+  <span class="keyword">ADD CONSTRAINT</span> FK_orders_users
+  <span class="keyword">FOREIGN KEY</span> (user_id) <span class="keyword">REFERENCES</span> users(id);</code></pre>
+
+      <p>For large tables, consider creating the FK with <code>NOCHECK</code> first, then enabling it:</p>
+
+<pre><code><span class="keyword">ALTER TABLE</span> orders <span class="keyword">WITH NOCHECK ADD CONSTRAINT</span> FK_orders_users
+  <span class="keyword">FOREIGN KEY</span> (user_id) <span class="keyword">REFERENCES</span> users(id);
+
+<span class="keyword">ALTER TABLE</span> orders <span class="keyword">WITH CHECK CHECK CONSTRAINT</span> FK_orders_users;</code></pre>
+
+      <p>This avoids blocking the table during the initial validation.</p>
+
+      <h2>SQL Server vs. PostgreSQL vs. MySQL</h2>
+
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;margin:1.5rem 0;">
+        <thead>
+          <tr style="background:#1a1a1a;">
+            <th style="border:1px solid #333;padding:8px 12px;text-align:left;">Feature</th>
+            <th style="border:1px solid #333;padding:8px 12px;text-align:left;">SQL Server</th>
+            <th style="border:1px solid #333;padding:8px 12px;text-align:left;">PostgreSQL</th>
+            <th style="border:1px solid #333;padding:8px 12px;text-align:left;">MySQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Auto-increment</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>IDENTITY(1,1)</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>SERIAL</code> / <code>GENERATED</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>AUTO_INCREMENT</code></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Add column</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ADD col type</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ADD COLUMN col type</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ADD COLUMN col type</code></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Change type</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ALTER COLUMN</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ALTER COLUMN ... TYPE</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>MODIFY COLUMN</code></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Default constraints</td>
+            <td style="border:1px solid #333;padding:8px 12px;">Named, required for drop</td>
+            <td style="border:1px solid #333;padding:8px 12px;">Inline, no name needed</td>
+            <td style="border:1px solid #333;padding:8px 12px;">Inline, no name needed</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Quoted identifiers</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>[identifier]</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>"identifier"</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>`identifier`</code></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #333;padding:8px 12px;">Online ALTER</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>WITH (ONLINE = ON)</code></td>
+            <td style="border:1px solid #333;padding:8px 12px;">Limited support</td>
+            <td style="border:1px solid #333;padding:8px 12px;"><code>ALGORITHM = INPLACE</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Diffing SQL Server Schemas with SchemaLens</h2>
+
+      <p>SchemaLens now supports SQL Server as a first-class dialect. Here's how to use it:</p>
+
+      <ol>
+        <li>Select <strong>SQL Server</strong> from the dialect dropdown.</li>
+        <li>Paste your old schema in Schema A and your new schema in Schema B.</li>
+        <li>Click <strong>Compare Schemas</strong>.</li>
+        <li>Review the visual diff and generated migration SQL.</li>
+      </ol>
+
+      <p>SchemaLens handles SQL Server-specific syntax:</p>
+
+      <ul>
+        <li>Bracket-quoted identifiers (<code>[table name]</code>)</li>
+        <li><code>IDENTITY(1,1)</code> columns</li>
+        <li><code>CLUSTERED</code> / <code>NONCLUSTERED</code> keywords</li>
+        <li>Named default constraints (<code>DF_table_column</code>)</li>
+        <li><code>NVARCHAR</code>, <code>DATETIME</code>, <code>BIT</code> types</li>
+      </ul>
+
+      <div class="cta-box">
+        <h3>Diff SQL Server schemas in your browser</h3>
+        <p>Paste two CREATE TABLE dumps, get an instant visual diff and migration script. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+      </div>
+
+      <div class="callout">
+        <p><strong>Tip for SQL Server teams:</strong> If you're migrating from another dialect, start by validating your existing schemas with our free <a href="../tools/sql-validator.html">SQL CREATE TABLE Validator</a>. It parses SQL Server syntax and shows you a structured breakdown of tables, columns, and constraints.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../blog.html">Documentation</a>
+          <a href="../blog.html">Migration Guides</a>
+          <a href="../blog.html">Changelog</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
