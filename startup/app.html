@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogDrop — Analyze Logs</title>
+  <meta name="description" content="Drop a log file and analyze it entirely in your browser. Zero uploads. Zero data leakage.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --bg-elevated: #111827;
+      --bg-card: #1f2937;
+      --border: #374151;
+      --text: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --accent: #06b6d4;
+      --accent-hover: #22d3ee;
+      --accent-glow: rgba(6,182,212,0.25);
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11,15,25,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      color: var(--bg);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-links .pill {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .nav-links .pill:hover { background: var(--accent-hover); color: var(--bg); }
+
+    /* Main */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: var(--bg-elevated);
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(6,182,212,0.05);
+    }
+
+    .drop-zone h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .drop-zone p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--success);
+      background: rgba(16,185,129,0.1);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus { border-color: var(--accent); }
+
+    .search-box::before {
+      content: "🔎";
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .stats {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .export-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .export-btn:hover { border-color: var(--accent); }
+
+    /* Table */
+    .table-wrap {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: var(--bg-card);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.7rem 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover { color: var(--text); }
+
+    th .sort-indicator {
+      margin-left: 0.3rem;
+      opacity: 0.5;
+      font-size: 0.7rem;
+    }
+
+    td {
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid rgba(55,65,81,0.4);
+      color: var(--text);
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    td:hover { white-space: normal; word-break: break-word; }
+
+    tr:hover { background: rgba(255,255,255,0.03); }
+
+    .level-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .level-error { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .level-warn  { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .level-info  { background: rgba(59,130,246,0.15); color: var(--info); }
+    .level-debug { background: rgba(107,114,128,0.15); color: var(--text-secondary); }
+    .level-trace { background: rgba(107,114,128,0.1); color: #6b7280; }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state h3 {
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* History sidebar */
+    .history-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .history-chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .history-chip:hover { border-color: var(--accent); color: var(--text); }
+
+    .history-chip .remove {
+      opacity: 0.5;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    .history-chip .remove:hover { opacity: 1; color: var(--danger); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .search-box { min-width: 100%; }
+      td { max-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">L</div>
+        LogDrop
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="app.html" class="pill">App</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="drop-zone" id="dropZone">
+      <h2>Drop a log file here</h2>
+      <p>JSON (array or newline-delimited), logfmt, CSV, or plain text — up to 5MB on Free</p>
+      <div class="privacy-badge">🔒 Zero uploads — everything stays in your browser</div>
+      <input type="file" id="fileInput" accept=".json,.log,.txt,.csv">
+    </div>
+
+    <div class="history-bar" id="historyBar"></div>
+
+    <div class="toolbar" id="toolbar" style="display:none;">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search logs...">
+      </div>
+      <div class="filter-group" id="levelFilters">
+        <button class="filter-btn" data-level="error">Error</button>
+        <button class="filter-btn" data-level="warn">Warn</button>
+        <button class="filter-btn" data-level="info">Info</button>
+        <button class="filter-btn" data-level="debug">Debug</button>
+      </div>
+      <span class="stats" id="stats"></span>
+      <button class="export-btn" id="exportBtn">Export CSV</button>
+    </div>
+
+    <div class="table-wrap" id="tableWrap">
+      <div class="empty-state">
+        <h3>No logs loaded yet</h3>
+        <p>Drop a file above or pick one from your history to start analyzing.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    LogDrop — 100% client-side. No data leaves your machine.
+  </footer>
+
+  <script>
+    (function() {
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const tableWrap = document.getElementById('tableWrap');
+      const toolbar = document.getElementById('toolbar');
+      const searchInput = document.getElementById('searchInput');
+      const stats = document.getElementById('stats');
+      const exportBtn = document.getElementById('exportBtn');
+      const levelFilters = document.getElementById('levelFilters');
+      const historyBar = document.getElementById('historyBar');
+
+      let allRows = [];
+      let columns = [];
+      let activeLevels = new Set();
+      let sortCol = null;
+      let sortAsc = true;
+
+      // History
+      function loadHistory() {
+        try {
+          return JSON.parse(localStorage.getItem('logdrop_history') || '[]');
+        } catch { return []; }
+      }
+
+      function saveHistory(h) {
+        localStorage.setItem('logdrop_history', JSON.stringify(h.slice(0, 20)));
+      }
+
+      function addHistory(fileName, rowCount) {
+        let h = loadHistory().filter(x => x.name !== fileName);
+        h.unshift({ name: fileName, rows: rowCount, time: Date.now() });
+        saveHistory(h);
+        renderHistory();
+      }
+
+      function removeHistory(fileName, ev) {
+        ev.stopPropagation();
+        let h = loadHistory().filter(x => x.name !== fileName);
+        saveHistory(h);
+        renderHistory();
+      }
+
+      function renderHistory() {
+        const h = loadHistory();
+        if (!h.length) { historyBar.innerHTML = ''; return; }
+        historyBar.innerHTML = '<span style="font-size:0.78rem;color:var(--text-secondary);">Recent:</span> ' +
+          h.map(x => `<button class="history-chip" data-name="${escapeHtml(x.name)}">${escapeHtml(x.name)} <span class="remove" title="Remove">×</span></button>`).join('');
+        historyBar.querySelectorAll('.history-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            // Re-parse isn't stored; history is just metadata for now
+          });
+          btn.querySelector('.remove').addEventListener('click', (ev) => removeHistory(btn.dataset.name, ev));
+        });
+      }
+
+      renderHistory();
+
+      // Drag & drop
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) handleFile(file);
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+      });
+
+      function handleFile(file) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Free tier limit: 5MB. Upgrade to Pro for unlimited size.');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const text = e.target.result;
+            const rows = parseLogs(text);
+            if (!rows.length) {
+              alert('No recognizable log entries found. Try a JSON array or newline-delimited JSON file.');
+              return;
+            }
+            allRows = rows;
+            columns = detectColumns(rows);
+            sortCol = null;
+            sortAsc = true;
+            activeLevels = new Set();
+            levelFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            searchInput.value = '';
+            addHistory(file.name, rows.length);
+            toolbar.style.display = 'flex';
+            renderTable();
+          } catch (err) {
+            alert('Error parsing file: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function parseLogs(text) {
+        const trimmed = text.trim();
+        // JSON array
+        if (trimmed.startsWith('[')) {
+          const arr = JSON.parse(trimmed);
+          if (Array.isArray(arr)) return arr.filter(r => r && typeof r === 'object').map(normalizeRow);
+        }
+        // NDJSON
+        const lines = trimmed.split(/\r?\n/).filter(l => l.trim());
+        const rows = [];
+        for (const line of lines) {
+          try {
+            const obj = JSON.parse(line);
+            if (obj && typeof obj === 'object') rows.push(normalizeRow(obj));
+          } catch {
+            // Plain text line
+            rows.push({ message: line, level: inferLevel(line), timestamp: '' });
+          }
+        }
+        return rows;
+      }
+
+      function normalizeRow(obj) {
+        const row = {};
+        for (const key of Object.keys(obj)) {
+          row[key] = obj[key];
+        }
+        // Normalize level
+        const lvl = String(row.level || row.severity || row.lvl || '').toLowerCase();
+        if (lvl) row.level = lvl;
+        // Normalize timestamp
+        const ts = row.timestamp || row.time || row.ts || row.date || row.t || '';
+        if (ts && !row.timestamp) row.timestamp = ts;
+        // Normalize message
+        const msg = row.message || row.msg || row.text || row.log || '';
+        if (msg && !row.message) row.message = msg;
+        return row;
+      }
+
+      function inferLevel(line) {
+        const l = line.toLowerCase();
+        if (/\berror\b/.test(l)) return 'error';
+        if (/\bwarn(ing)?\b/.test(l)) return 'warn';
+        if (/\bdebug\b/.test(l)) return 'debug';
+        if (/\binfo\b/.test(l)) return 'info';
+        return '';
+      }
+
+      function detectColumns(rows) {
+        const keys = new Set();
+        for (const r of rows.slice(0, 100)) Object.keys(r).forEach(k => keys.add(k));
+        const preferred = ['timestamp','time','ts','date','level','severity','lvl','message','msg','text','log'];
+        const ordered = preferred.filter(k => keys.has(k));
+        const rest = [...keys].filter(k => !ordered.includes(k));
+        return [...ordered, ...rest];
+      }
+
+      function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function getLevelClass(lvl) {
+        const l = String(lvl).toLowerCase();
+        if (l.includes('err')) return 'level-error';
+        if (l.includes('warn')) return 'level-warn';
+        if (l.includes('info')) return 'level-info';
+        if (l.includes('debug')) return 'level-debug';
+        if (l.includes('trace')) return 'level-trace';
+        return '';
+      }
+
+      function getFilteredRows() {
+        const q = searchInput.value.trim().toLowerCase();
+        let rows = allRows.slice();
+        if (activeLevels.size) {
+          rows = rows.filter(r => {
+            const l = String(r.level || '').toLowerCase();
+            for (const al of activeLevels) {
+              if (l.includes(al)) return true;
+            }
+            return false;
+          });
+        }
+        if (q) {
+          rows = rows.filter(r => {
+            for (const v of Object.values(r)) {
+              if (String(v).toLowerCase().includes(q)) return true;
+            }
+            return false;
+          });
+        }
+        if (sortCol) {
+          rows.sort((a, b) => {
+            const av = a[sortCol] ?? '';
+            const bv = b[sortCol] ?? '';
+            const an = Number(av), bn = Number(bv);
+            if (!isNaN(an) && !isNaN(bn)) {
+              return sortAsc ? an - bn : bn - an;
+            }
+            const as = String(av).toLowerCase();
+            const bs = String(bv).toLowerCase();
+            if (as < bs) return sortAsc ? -1 : 1;
+            if (as > bs) return sortAsc ? 1 : -1;
+            return 0;
+          });
+        }
+        return rows;
+      }
+
+      function renderTable() {
+        const rows = getFilteredRows();
+        stats.textContent = `${rows.length.toLocaleString()} / ${allRows.length.toLocaleString()} rows`;
+
+        if (!rows.length) {
+          tableWrap.innerHTML = '<div class="empty-state"><h3>No matching rows</h3><p>Try adjusting your search or filters.</p></div>';
+          return;
+        }
+
+        let html = '<table><thead><tr>';
+        for (const col of columns) {
+          const sortInd = sortCol === col ? (sortAsc ? ' ▲' : ' ▼') : '';
+          html += `<th data-col="${escapeHtml(col)}">${escapeHtml(col)}<span class="sort-indicator">${sortInd}</span></th>`;
+        }
+        html += '</tr></thead><tbody>';
+        for (const row of rows) {
+          html += '<tr>';
+          for (const col of columns) {
+            const val = row[col];
+            let cell = escapeHtml(val);
+            if (col === 'level' || col === 'severity' || col === 'lvl') {
+              const cls = getLevelClass(val);
+              cell = cls ? `<span class="level-badge ${cls}">${escapeHtml(val)}</span>` : escapeHtml(val);
+            }
+            html += `<td>${cell}</td>`;
+          }
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+        tableWrap.innerHTML = html;
+
+        // Sort handlers
+        tableWrap.querySelectorAll('th').forEach(th => {
+          th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (sortCol === col) sortAsc = !sortAsc;
+            else { sortCol = col; sortAsc = true; }
+            renderTable();
+          });
+        });
+      }
+
+      searchInput.addEventListener('input', renderTable);
+
+      levelFilters.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lvl = btn.dataset.level;
+          if (activeLevels.has(lvl)) {
+            activeLevels.delete(lvl);
+            btn.classList.remove('active');
+          } else {
+            activeLevels.add(lvl);
+            btn.classList.add('active');
+          }
+          renderTable();
+        });
+      });
+
+      exportBtn.addEventListener('click', () => {
+        const rows = getFilteredRows();
+        const csv = [columns.join(',')].concat(rows.map(r =>
+          columns.map(c => {
+            let v = String(r[c] ?? '');
+            if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+              v = '"' + v.replace(/"/g, '""') + '"';
+            }
+            return v;
+          }).join(',')
+        )).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'logdrop-export.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    })();
+  </script>
+</body>
+</html>
