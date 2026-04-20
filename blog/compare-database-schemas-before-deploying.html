@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Compare Database Schemas Before Deploying — SchemaLens</title>
+  <meta name="description" content="A step-by-step guide to catching schema drift between staging and production. Learn why semantic diffs beat text diffs and how to generate safe ALTER TABLE scripts.">
+  <meta property="og:title" content="How to Compare Database Schemas Before Deploying">
+  <meta property="og:description" content="Catch schema drift before it breaks production. A practical guide to semantic schema comparison for PostgreSQL, MySQL, and SQLite.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/compare-database-schemas-before-deploying.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>How to Compare Database Schemas Before Deploying</h1>
+      <div class="blog-meta">Migration Guide · April 20, 2026 · 6 min read</div>
+
+      <p>Deploying a migration script without reviewing it is like merging a pull request without reading the code. It works—until it doesn't. One missing <code>NOT NULL</code> constraint, one dropped column still referenced by a background job, one index missing from a hot query path—and your on-call rotation starts at 2 AM.</p>
+
+      <p>The problem is that most teams don't have a clean way to <em>see</em> what changed. They rely on<code>git diff</code> against SQL dump files, which is noisy, error-prone, and misses semantic meaning. This post shows a better way: semantic schema comparison that tells you exactly what changed and generates the migration script for you.</p>
+
+      <h2>Why Text Diffs Fail for Schema Comparison</h2>
+
+      <p>Let's say you rename a column from <code>user_name</code> to <code>username</code> and add a <code>UNIQUE</code> constraint. A text diff of two SQL dumps might look like this:</p>
+
+<pre><code><span class="comment">-- Old dump</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">SERIAL PRIMARY KEY</span>,
+  user_name <span class="keyword">VARCHAR</span>(255) <span class="keyword">NOT NULL</span>
+);
+
+<span class="comment">-- New dump</span>
+<span class="keyword">CREATE TABLE</span> users (
+  id <span class="keyword">SERIAL PRIMARY KEY</span>,
+  username <span class="keyword">VARCHAR</span>(255) <span class="keyword">NOT NULL UNIQUE</span>
+);</code></pre>
+
+      <p>A line-by-line diff flags the entire <code>CREATE TABLE</code> block as changed. It doesn't tell you that a column was renamed, a unique constraint was added, or that the old column was dropped. You have to reconstruct the intent manually.</p>
+
+      <p>Semantic diff, on the other hand, understands SQL. It sees:</p>
+
+      <ul>
+        <li><strong>Column dropped:</strong> <code>user_name</code></li>
+        <li><strong>Column added:</strong> <code>username</code> with <code>UNIQUE</code></li>
+        <li><strong>Table altered:</strong> constraint change</li>
+      </ul>
+
+      <p>That semantic understanding is what lets you generate a precise, safe <code>ALTER TABLE</code> script instead of guessing.</p>
+
+      <h2>The Step-by-Step Workflow</h2>
+
+      <h3>Step 1: Export Your Schemas</h3>
+
+      <p>Before you can compare, you need two schema snapshots: your current production schema and your proposed new schema.</p>
+
+      <p><strong>PostgreSQL:</strong></p>
+<pre><code>pg_dump --schema-only --no-owner --no-privileges \
+  postgres://user:pass@host/dbname > schema_old.sql</code></pre>
+
+      <p><strong>MySQL / MariaDB:</strong></p>
+<pre><code>mysqldump --no-data --skip-comments \
+  -h host -u user -p dbname > schema_old.sql</code></pre>
+
+      <p><strong>SQLite:</strong></p>
+<pre><code>sqlite3 database.db ".schema" > schema_old.sql</code></pre>
+
+      <p>Do the same for your target schema—whether that's your local development database after running migrations, or a staging environment.</p>
+
+      <h3>Step 2: Normalize and Clean</h3>
+
+      <p>Dump files often contain noise that isn't schema structure:</p>
+
+      <ul>
+        <li><code>SET</code> statements and session configuration</li>
+        <li>Comments with timestamps or version info</li>
+        <li>Ownership and privilege grants</li>
+        <li>Auto-generated names for constraints</li>
+      </ul>
+
+      <p>Strip these out or your diff will be flooded with false positives. The cleanest approach is to dump with flags that exclude them (<code>--no-owner --no-privileges --no-comments</code> in PostgreSQL) and then keep only <code>CREATE TABLE</code> and <code>CREATE INDEX</code> statements.</p>
+
+      <h3>Step 3: Run a Semantic Diff</h3>
+
+      <p>Paste both schemas into a semantic diff tool. Here's what you should expect to see:</p>
+
+      <ol>
+        <li><strong>Summary stats:</strong> tables added, removed, modified</li>
+        <li><strong>Per-table breakdown:</strong> columns added/removed/modified, constraints changed, indexes added/dropped</li>
+        <li><strong>Column-level detail:</strong> type changes, nullability flips, default value changes</li>
+        <li><strong>Migration script:</strong> dialect-aware <code>ALTER TABLE</code> statements</li>
+      </ol>
+
+      <div class="callout">
+        <p><strong>Privacy tip:</strong> Your schema structure can reveal a lot about your data model. Use a tool that runs entirely in your browser so your schema never leaves your machine.</p>
+      </div>
+
+      <h3>Step 4: Review the Migration Script</h3>
+
+      <p>Never run a generated migration blindly. Look for these common gotchas:</p>
+
+      <ul>
+        <li><strong>Dropped columns with data:</strong> If a column is removed, does production data need to be migrated first?</li>
+        <li><strong>Type narrowing:</strong> Changing <code>VARCHAR(255)</code> to <code>VARCHAR(50)</code> will truncate existing data.</li>
+        <li><strong>NOT NULL without a default:</strong> Adding <code>NOT NULL</code> to a column with existing NULLs will fail.</li>
+        <li><strong>Missing indexes:</strong> New foreign keys or frequently queried columns need backing indexes.</li>
+        <li><strong>Constraint renames:</strong> Dropping and re-adding a constraint with a different name can break existing queries or ORM mappings.</li>
+      </ul>
+
+      <h3>Step 5: Run in Staging First</h3>
+
+      <p>Even a perfect-looking migration can fail in practice due to locks, disk space, or existing data edge cases. Run the generated script against a staging database with production-like data volume before touching production.</p>
+
+      <h2>PostgreSQL vs MySQL: What Changes in the Diff</h2>
+
+      <p>Not all databases speak the same <code>ALTER TABLE</code> dialect. A semantic diff tool should generate the right syntax for your target database.</p>
+
+      <table style="width:100%; border-collapse: collapse; margin-bottom: 1.5rem;">
+        <thead>
+          <tr style="border-bottom: 1px solid #333;">
+            <th style="text-align:left; padding: 0.5rem; color: #fff;">Change</th>
+            <th style="text-align:left; padding: 0.5rem; color: #fff;">PostgreSQL</th>
+            <th style="text-align:left; padding: 0.5rem; color: #fff;">MySQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 0.5rem; color: #ccc;">Change column type</td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>ALTER COLUMN ... TYPE</code></td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>MODIFY COLUMN</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 0.5rem; color: #ccc;">Add constraint</td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>ADD CONSTRAINT</code></td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>ADD CONSTRAINT</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 0.5rem; color: #ccc;">Drop default</td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>ALTER COLUMN ... DROP DEFAULT</code></td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>ALTER COLUMN ... DROP DEFAULT</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.5rem; color: #ccc;">Rename column</td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>RENAME COLUMN</code></td>
+            <td style="padding: 0.5rem; color: #ccc;"><code>CHANGE COLUMN</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>SQLite is the most limited: it doesn't support dropping columns or altering column types directly. A semantic diff tool should warn you when a change requires recreating the table.</p>
+
+      <h2>When to Automate This</h2>
+
+      <p>If you're doing this manually more than once a week, automate it. The best places to hook in schema comparison are:</p>
+
+      <ul>
+        <li><strong>Pull request CI:</strong> Compare the schema after migrations against production. Fail the build on unexpected drops or dangerous type changes.</li>
+        <li><strong>Pre-deploy checklist:</strong> Generate the migration diff as an artifact in your deployment pipeline.</li>
+        <li><strong>Weekly drift detection:</strong> Snapshot production schema weekly and diff against the expected schema from version control.</li>
+      </ul>
+
+      <h2>Try It Now</h2>
+
+      <p>You don't need to install anything. Paste two schema dumps below and see the semantic diff in seconds.</p>
+
+      <div class="cta-box">
+        <h3>Compare schemas instantly</h3>
+        <p>Paste your old and new CREATE TABLE statements. Get a color-coded diff and a ready-to-run migration script.</p>
+        <a href="../app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+      </div>
+
+      <h2>Summary</h2>
+
+      <ul>
+        <li>Text diffs of SQL dumps are noisy and miss semantic meaning.</li>
+        <li>Semantic diffs show exactly which tables, columns, and constraints changed.</li>
+        <li>Always review generated migrations for dropped columns, type narrowing, and missing defaults.</li>
+        <li>Run migrations in staging with production-like data before deploying.</li>
+        <li>Use a browser-based tool to keep your schema private.</li>
+      </ul>
+
+      <p><em>SchemaLens is a browser-based SQL schema diff tool. No signup, no upload, no backend. Your schema never leaves your machine.</em> <a href="../app.html">Try it free →</a></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../blog.html">Documentation</a>
+          <a href="../blog.html">Migration Guides</a>
+          <a href="../blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
