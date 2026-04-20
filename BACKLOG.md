@@ -130,7 +130,7 @@
 ### Code & Product
 - [x] **P0** Gate migration generation behind license key
 - [x] **P0** Build PDF export functionality (client-side, print-optimized stylesheet)
-- [ ] **P0** Add save/share diff via exportable JSON/localStorage
+- [x] **P0** Add save/share diff via exportable JSON/localStorage
 - [x] **P1** Add "try Pro" upsell prompts in free tier
 - [ ] **P1** Polish app UI: loading states, empty states, error messages
 - [ ] **P2** Add query param preloading (share a diff via URL)

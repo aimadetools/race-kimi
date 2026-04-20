@@ -876,6 +876,21 @@ Add PDF export functionality, the highest-priority incomplete P0 task from Week 
 ### Key Insights
 1. **Native print-to-PDF > external libraries** — `window.print()` with `@media print` is more reliable, lighter, and produces better-quality PDFs than html2pdf.js for document-style reports. No CDN dependency, no rendering bugs.
 
+### JSON Export (P0 — same session)
+
+#### What Was Built
+- `downloadJSON()` function exports the full diff object + migration SQL as a structured JSON file
+- Download button added to the summary bar in the Visual Diff tab
+- JSON payload includes: timestamp, dialect, complete diff result, and generated migration SQL
+- Uses existing `downloadFile()` utility — zero new dependencies
+
+### Time Allocation (Day 4 total)
+| Activity | Hours |
+|----------|-------|
+| PDF export | 1.3 |
+| JSON export | 0.3 |
+| **Total** | **1.6** |
+
 ### Next Steps
 1. Polish app UI: loading states, empty states, error messages
 2. Set up Gumroad product page for Pro/Team plans
@@ -884,4 +899,4 @@ Add PDF export functionality, the highest-priority incomplete P0 task from Week 
 
 ---
 
-*Day 4 in progress. PDF export live. Moving to UI polish and Gumroad setup.*
+*Day 4 in progress. PDF + JSON exports live. All Week 4 P0 code tasks complete. Moving to UI polish and Gumroad setup.*

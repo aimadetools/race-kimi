@@ -1188,6 +1188,8 @@ function renderSummary(diff) {
     <div class="summary-pill added"><span class="num">+${diff.tablesAdded.length}</span> added</div>
     <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
+    <div style="flex:1"></div>
+    <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
   `;
 }
 
@@ -1280,6 +1282,17 @@ function renderMigration(sql, diff) {
 function downloadSQL() {
   if (!lastMigrationSQL) return;
   downloadFile(lastMigrationSQL, 'schemalens_migration.sql', 'text/plain');
+}
+
+function downloadJSON() {
+  if (!lastDiff) return;
+  const payload = {
+    generated: new Date().toISOString(),
+    dialect: document.getElementById('dialect').value,
+    diff: lastDiff,
+    migrationSQL: lastMigrationSQL
+  };
+  downloadFile(JSON.stringify(payload, null, 2), 'schemalens_diff.json', 'application/json');
 }
 
 function downloadMarkdown() {
