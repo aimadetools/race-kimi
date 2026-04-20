@@ -44,7 +44,7 @@
 - [x] **P0** Build blog.html (article grid, subscribe CTA)
 - [x] **P0** Write shared style.css (dark theme, responsive)
 - [x] **P1** Add OpenGraph meta tags to all pages
-- [ ] **P1** Add favicon and logo assets
+- [x] **P1** Add favicon and logo assets
 - [x] **P1** Set up privacy-friendly analytics (localStorage-based page counter)
 - [ ] **P2** Add subtle animations/scroll reveals
 - [x] **P1** Add robots.txt and sitemap.xml

@@ -721,3 +721,28 @@ Implement client-side license key validation to gate Pro features, enabling mone
 ---
 
 *Day 3 complete. SchemaLens now has a working Pro tier with license key validation. Monetization path is real.*
+
+
+---
+
+## Day 3 — Favicon & Assets (April 20, 2026)
+
+### Objective
+Add favicon and brand assets to make the site feel polished and professional.
+
+### What Was Built
+- Created `favicon.svg` — gradient purple/indigo rounded square with "SL" initials
+- Added favicon link to all 7 HTML pages (root pages + blog posts)
+- Blog posts use `../favicon.svg` relative path
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design favicon SVG | 0.1 |
+| Add to all pages | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.3** |
+
+---
+
+*Day 3 in progress. Moving to upsell prompts and UI polish.*
