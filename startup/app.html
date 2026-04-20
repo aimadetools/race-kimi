@@ -622,10 +622,64 @@
             const obj = JSON.parse(line);
             if (obj && typeof obj === 'object') rows.push(normalizeRow(obj));
           } catch {
-            rows.push({ message: line, level: inferLevel(line), timestamp: '' });
+            const parsed = parsePlainTextLine(line);
+            rows.push(parsed ? normalizeRow(parsed) : { message: line, level: inferLevel(line), timestamp: '' });
           }
         }
         return rows;
+      }
+
+      function parsePlainTextLine(line) {
+        // Syslog: Apr 20 03:18:23 myhost process[1234]: message
+        const syslogMatch = line.match(/^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+(\S+)\s+(\S+?)(?:\[(\d+)\])?:\s*(.*)$/);
+        if (syslogMatch) {
+          return {
+            timestamp: syslogMatch[1],
+            host: syslogMatch[2],
+            process: syslogMatch[3],
+            pid: syslogMatch[4] || '',
+            message: syslogMatch[5],
+            level: inferLevel(syslogMatch[5])
+          };
+        }
+
+        // Apache/Nginx combined log format
+        // 127.0.0.1 - - [20/Apr/2026:03:18:23 +0000] "GET /path HTTP/1.1" 200 1234 "referer" "user-agent"
+        const apacheMatch = line.match(/^(\S+)\s+(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+"([^"]*)"\s+(\d{3})\s+(\S+)(?:\s+"([^"]*)"\s+"([^"]*)")?/);
+        if (apacheMatch) {
+          const parts = apacheMatch[5].split(' ');
+          return {
+            timestamp: apacheMatch[4],
+            ip: apacheMatch[1],
+            ident: apacheMatch[2],
+            auth: apacheMatch[3],
+            method: parts[0] || '',
+            path: parts[1] || '',
+            protocol: parts[2] || '',
+            status: apacheMatch[6],
+            size: apacheMatch[7],
+            referer: apacheMatch[8] || '',
+            user_agent: apacheMatch[9] || '',
+            message: apacheMatch[5] + ' ' + apacheMatch[6]
+          };
+        }
+
+        // Generic timestamp prefix: 2024-01-01T00:00:00Z ... or [2024-01-01 00:00:00] ...
+        const tsPrefixMatch = line.match(/^([\d\-T:\.\+Z\s\/]+)\s+(.+)$/);
+        if (tsPrefixMatch) {
+          const ts = tsPrefixMatch[1].replace(/[\[\]]/g, '').trim();
+          const rest = tsPrefixMatch[2];
+          const d = new Date(ts);
+          if (!isNaN(d.getTime())) {
+            return {
+              timestamp: ts,
+              message: rest,
+              level: inferLevel(rest)
+            };
+          }
+        }
+
+        return null;
       }
 
       function looksLikeCSV(text) {
