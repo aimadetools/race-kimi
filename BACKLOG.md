@@ -206,7 +206,7 @@
 ### Marketing & Content
 - [ ] **P0** Publish 2 technical blog posts (SEO-focused)
 - [x] **P0** Build free micro-tool: "SQL CREATE TABLE Validator"
-- [ ] **P0** Submit micro-tool to tiny-helpers.dev and similar lists
+- [ ] **P0** Submit micro-tool to tiny-helpers.dev and similar lists (materials ready in marketing/tool-directory-submissions.md)
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion
 - [ ] **P1"** Optimize existing pages for target keywords (meta titles, descriptions, h1s)
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)

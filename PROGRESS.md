@@ -1193,3 +1193,66 @@ Add a parser confidence indicator to app.html so users know when their schemas c
 ---
 
 *Day 5 in progress. Parser confidence indicator live. Users now have full transparency into parser limitations.*
+
+
+---
+
+## Day 5 — Tool Directory Submission Materials (April 20, 2026)
+
+### Objective
+Prepare complete submission content for listing the SQL CREATE TABLE Validator micro-tool on developer tool directories and communities. Without distribution, even the best tool is invisible.
+
+### What Was Built
+
+#### `marketing/tool-directory-submissions.md` (7,904 bytes)
+Complete ready-to-copy submission content for 12 distribution channels:
+
+**Tool Directories:**
+- tiny-helpers.dev — name, description, tags, link
+- SaaSHub — product name, tagline, description, category
+- AlternativeTo — description, features list, category
+- DevHunt — tool name, tagline, description, maker info
+- LibHunt — project name, description, category
+- Awesome Self-Hosted — GitHub PR entry format
+- StackShare — tool name, description, category
+- Product Hunt (Tool post) — tagline, description, topics, gallery plan
+
+**Community Posts:**
+- Reddit r/webdev — casual, feature-focused post
+- Reddit r/SQL — technical, use-case-focused post
+- Hacker News "Show HN" — technical depth, feedback request
+- IndieHackers — strategy-focused post explaining the micro-tool funnel
+
+All submissions include:
+- Platform-native tone (HN = technical, Reddit = casual, IH = metrics/strategy)
+- Direct link to `tools/sql-validator.html`
+- Consistent value proposition with audience-specific angles
+- Submission checklist with checkboxes for tracking
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Research submission requirements per platform | 0.25 |
+| Write tiny-helpers.dev + SaaSHub + AlternativeTo submissions | 0.25 |
+| Write DevHunt + LibHunt + StackShare submissions | 0.2 |
+| Write Reddit + HN + IndieHackers community posts | 0.25 |
+| Create submission checklist and cross-check consistency | 0.15 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.3** |
+
+### Key Insights
+1. **One core message, many angles** — "Browser-based, privacy-first SQL validator" is the consistent hook, but the framing changes per platform. HN wants parser details. Reddit wants use cases. IndieHackers wants strategy.
+
+2. **Submission content decays** — Having pre-written drafts means we can submit immediately when accounts are ready, without losing momentum to copywriting.
+
+### Next Steps (Day 6)
+1. Create social media accounts (Reddit, HN, IndieHackers, Twitter/X) when possible
+2. Actually submit to directories using the prepared materials
+3. Post community content
+4. Consider buying domain if traffic metrics justify $12
+5. Add more parser edge cases based on feedback
+
+---
+
+*Day 5 complete. SQL Validator micro-tool built, parser confidence added, distribution materials ready. All P0 and P1 tasks for Day 5 executed.*
