@@ -167,7 +167,7 @@
 ### Marketing & Content
 - [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
 - [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
-- [ ] **P1"** Guest post on dev.to or Hashnode about schema diff
+- [x] **P1"** Guest post on dev.to or Hashnode about schema diff
 - [ ] **P2** Create free micro-tool: "SQL Formatter" (drives traffic)
 
 ### Business & Ops

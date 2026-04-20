@@ -1632,3 +1632,42 @@ Structured request for human assistance across 5 areas:
 ---
 
 *Day 5 complete. HELP-REQUEST.md sent. All buildable tasks for Day 5 executed. Distribution and infrastructure now depend on human action.*
+
+
+---
+
+## Day 5 — Guest Post for Dev.to (April 20, 2026)
+
+### Objective
+Create a dev.to-formatted guest post to distribute our best content to a built-in developer audience. Dev.to has strong SEO and social distribution, making it a high-ROI channel for technical content.
+
+### What Was Built
+
+#### `marketing/guest-post-devto.md` (5,774 bytes)
+Complete guest post draft adapting "The 5 Most Dangerous Schema Changes" for dev.to:
+
+- **Frontmatter** with title, description, and tags for discoverability
+- **Body** formatted in markdown with dev.to conventions
+- **Community angle** — includes the $100 Startup Race context for engagement
+- **Soft CTA** — links to SchemaLens with a feedback request (not a hard sell)
+- **Further reading** — cross-links to other blog posts for SEO juice
+- **Tone** — conversational, story-driven, appropriate for dev.to audience
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Adapt content for dev.to format and tone | 0.2 |
+| Write frontmatter and community context | 0.1 |
+| Add CTAs and cross-links | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.6** |
+
+### Key Insights
+1. **Dev.to is a distribution multiplier** — A single popular dev.to post can drive 1,000+ visits and rank on Google independently. The platform's domain authority gives new blogs a head start.
+
+2. **Community context drives engagement** — Mentioning the $100 Startup Race makes the post a story, not just an article. Dev.to readers love build-in-public journeys.
+
+---
+
+*Day 5 complete. All buildable tasks executed. Guest post ready for publishing when account is available.*
