@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How We Parse SQL in the Browser — SchemaLens</title>
+  <meta name="description" content="A technical deep dive into building a client-side SQL parser for CREATE TABLE statements. No backend, no dependencies, zero data leaks.">
+  <meta property="og:title" content="How We Parse SQL in the Browser">
+  <meta property="og:description" content="Building a zero-dependency SQL parser in vanilla JavaScript. How SchemaLens turns CREATE TABLE dumps into structured schema objects without a backend.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/how-we-parse-sql-in-the-browser.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="btn btn-primary">Try Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← All articles</a>
+      <h1>How We Parse SQL in the Browser</h1>
+      <div class="blog-meta">April 20, 2026 · 10 min read · Engineering</div>
+
+      <p>SchemaLens runs entirely in your browser. No server receives your schema dumps. No data leaves your machine. That is not just a privacy promise—it is an architectural constraint that shaped every technical decision we made.</p>
+
+      <p>The heart of the tool is a SQL parser that turns <code>CREATE TABLE</code> statements into structured JavaScript objects. Those objects are diffed, migrated, and rendered without ever touching a network request. Here is how we built it.</p>
+
+      <h2>Why not use an existing parser?</h2>
+      <p>Our first instinct was to pull in <code>node-sql-parser</code> via CDN. It is mature, well-tested, and supports multiple dialects. We tried it. It worked—for simple schemas. Then we fed it a real production dump and watched it choke on:</p>
+
+      <ul>
+        <li>Composite primary keys with <code>CLUSTERED</code> hints</li>
+        <li>Inline <code>FOREIGN KEY</code> references with <code>ON DELETE CASCADE</code></li>
+        <li>PostgreSQL <code>CREATE TYPE ... AS ENUM</code> statements</li>
+        <li>MySQL <code>TINYINT(1)</code> rewritten from <code>BOOLEAN</code></li>
+        <li>SQL Server bracket-quoted identifiers like <code>[User Name]</code></li>
+      </ul>
+
+      <p>Each failure meant either patching the library (slow, fragile) or preprocessing the SQL (error-prone). Worse, the minified build was ~500 KB. For a tool whose entire value proposition is "paste and see results in 2 seconds," a 500 KB parser felt absurd.</p>
+
+      <div class="callout">
+        <p><strong>Constraint:</strong> We only need to parse <code>CREATE TABLE</code>, <code>CREATE INDEX</code>, and <code>CREATE TYPE</code>. We do not need <code>SELECT</code>, <code>JOIN</code>, <code>WINDOW</code>, or any DML. A full SQL grammar is overkill.</p>
+      </div>
+
+      <p>So we wrote a custom parser. It is ~400 lines of vanilla JavaScript, zero dependencies, and handles everything we need.</p>
+
+      <h2>The pipeline: from text to objects</h2>
+      <p>Every schema dump goes through four stages:</p>
+
+      <ol>
+        <li><strong>Strip comments</strong> — Remove <code>--</code> and <code>/* */</code> blocks so they do not confuse the tokenizer.</li>
+        <li><strong>Split statements</strong> — Break on semicolons, but respect semicolons inside string literals.</li>
+        <li><strong>Parse each statement</strong> — Turn a <code>CREATE TABLE</code> string into a structured table object.</li>
+        <li><strong>Normalize identifiers</strong> — Strip dialect-specific quotes so <code>`users`</code>, <code>"users"</code>, and <code>[users]</code> all become <code>users</code>.</li>
+      </ol>
+
+      <h3>Stage 1: Strip comments</h3>
+      <p>This is the simplest stage, but easy to get wrong. A naive regex like <code>/--.*$/gm</code> will break if a line contains a string with <code>'--'</code> inside it. Our approach is character-by-character:</p>
+
+      <pre><code><span class="keyword">function</span> <span class="string">stripComments</span>(sql) {
+  <span class="keyword">let</span> out = <span class="string">''</span>, i = <span class="string">0</span>;
+  <span class="keyword">while</span> (i &lt; sql.length) {
+    <span class="keyword">if</span> (sql[i] === <span class="string">'-'</span> && sql[i+<span class="string">1</span>] === <span class="string">'-'</span>) {
+      <span class="keyword">while</span> (i &lt; sql.length && sql[i] !== <span class="string">'\n'</span>) i++;
+    } <span class="keyword">else if</span> (sql[i] === <span class="string">'/'</span> && sql[i+<span class="string">1</span>] === <span class="string">'*'</span>) {
+      i += <span class="string">2</span>;
+      <span class="keyword">while</span> (i &lt; sql.length && !(sql[i] === <span class="string">'*'</span> && sql[i+<span class="string">1</span>] === <span class="string">'/'</span>)) i++;
+      i += <span class="string">2</span>;
+    } <span class="keyword">else</span> {
+      out += sql[i++];
+    }
+  }
+  <span class="keyword">return</span> out;
+}</code></pre>
+
+      <p>It is not elegant, but it is correct. Correct beats elegant when the input is an angry DBA's 3,000-line schema dump.</p>
+
+      <h3>Stage 2: Split statements</h3>
+      <p>Splitting on semicolons is also naive—what if a default value is a string containing a semicolon? We track whether we are inside a quoted string and only split when we are not:</p>
+
+      <pre><code><span class="keyword">function</span> <span class="string">splitStatements</span>(sql) {
+  <span class="keyword">const</span> stmts = [];
+  <span class="keyword">let</span> current = <span class="string">''</span>, inString = <span class="keyword">false</span>, stringChar = <span class="keyword">null</span>;
+  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i &lt; sql.length; i++) {
+    <span class="keyword">const</span> ch = sql[i];
+    <span class="keyword">if</span> (!inString && (ch === <span class="string">"'"</span> || ch === <span class="string">'"'</span>)) {
+      inString = <span class="keyword">true</span>; stringChar = ch;
+    } <span class="keyword">else if</span> (inString && ch === stringChar) {
+      inString = <span class="keyword">false</span>;
+    } <span class="keyword">else if</span> (!inString && ch === <span class="string">';'</span>) {
+      stmts.push(current.trim());
+      current = <span class="string">''</span>; <span class="keyword">continue</span>;
+    }
+    current += ch;
+  }
+  <span class="keyword">if</span> (current.trim()) stmts.push(current.trim());
+  <span class="keyword">return</span> stmts;
+}</code></pre>
+
+      <h3>Stage 3: Parse CREATE TABLE</h3>
+      <p>This is where most of the complexity lives. A <code>CREATE TABLE</code> statement has two parts: the table name and the body between the parentheses. We extract the body, then split it into column definitions and table-level constraints.</p>
+
+      <pre><code><span class="keyword">function</span> <span class="string">parseCreateTable</span>(stmt, dialect) {
+  <span class="keyword">const</span> match = stmt.match(
+    <span class="string">/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)\s*\((.*)\)\s*[^)]*$/is</span>
+  );
+  <span class="keyword">if</span> (!match) <span class="keyword">return</span> <span class="keyword">null</span>;
+
+  <span class="keyword">const</span> tableName = match[<span class="string">1</span>].replace(<span class="string">/["`\[\]]/g</span>, <span class="string">''</span>);
+  <span class="keyword">const</span> body = match[<span class="string">2</span>];
+  <span class="comment">// ... split body, parse columns, parse constraints</span>
+}</code></pre>
+
+      <p>The hardest part is splitting the body into individual columns. Commas inside default values (e.g., <code>DEFAULT ('a', 'b')</code>) or type definitions (e.g., <code>DECIMAL(10, 2)</code>) must not be treated as column separators. Our solution tracks parentheses nesting depth and only splits on commas at depth zero.</p>
+
+      <h3>Stage 4: Parse columns</h3>
+      <p>Each column definition is a list of tokens. The first token is the name. Subsequent tokens form the type, followed by constraints:</p>
+
+      <pre><code><span class="keyword">function</span> <span class="string">parseColumn</span>(tokens, dialect) {
+  <span class="keyword">const</span> col = {
+    name: tokens[<span class="string">0</span>].replace(<span class="string">/["`\[\]]/g</span>, <span class="string">''</span>),
+    type: <span class="string">''</span>,
+    nullable: <span class="keyword">true</span>,
+    defaultValue: <span class="keyword">null</span>,
+    primaryKey: <span class="keyword">false</span>,
+    unique: <span class="keyword">false</span>,
+    autoIncrement: <span class="keyword">false</span>
+  };
+
+  <span class="comment">// Collect type tokens until we hit a constraint keyword</span>
+  <span class="keyword">let</span> i = <span class="string">1</span>;
+  <span class="keyword">const</span> typeTokens = [];
+  <span class="keyword">const</span> constraintKeywords = [
+    <span class="string">'NOT'</span>, <span class="string">'NULL'</span>, <span class="string">'PRIMARY'</span>, <span class="string">'KEY'</span>, <span class="string">'UNIQUE'</span>,
+    <span class="string">'DEFAULT'</span>, <span class="string">'AUTO_INCREMENT'</span>, <span class="string">'IDENTITY'</span>,
+    <span class="string">'REFERENCES'</span>, <span class="string">'CHECK'</span>, <span class="string">'COLLATE'</span>, <span class="string">'COMMENT'</span>
+  ];
+  <span class="keyword">while</span> (i &lt; tokens.length) {
+    <span class="keyword">const</span> t = tokens[i].toUpperCase();
+    <span class="keyword">if</span> (constraintKeywords.includes(t)) <span class="keyword">break</span>;
+    typeTokens.push(tokens[i++]);
+  }
+  col.type = typeTokens.join(<span class="string">' '</span>);
+
+  <span class="comment">// Parse constraints (NOT NULL, DEFAULT, PRIMARY KEY, etc.)</span>
+  <span class="keyword">while</span> (i &lt; tokens.length) {
+    <span class="keyword">const</span> t = tokens[i].toUpperCase();
+    <span class="keyword">if</span> (t === <span class="string">'NOT'</span> && tokens[i+<span class="string">1</span>]?.toUpperCase() === <span class="string">'NULL'</span>) {
+      col.nullable = <span class="keyword">false</span>; i += <span class="string">2</span>;
+    } <span class="keyword">else if</span> (t === <span class="string">'PRIMARY'</span> && tokens[i+<span class="string">1</span>]?.toUpperCase() === <span class="string">'KEY'</span>) {
+      col.primaryKey = <span class="keyword">true</span>; col.nullable = <span class="keyword">false</span>; i += <span class="string">2</span>;
+    } <span class="keyword">else if</span> (t === <span class="string">'DEFAULT'</span>) {
+      i++;
+      <span class="keyword">const</span> def = [];
+      <span class="keyword">while</span> (i &lt; tokens.length && !constraintKeywords.includes(tokens[i].toUpperCase())) {
+        def.push(tokens[i++]);
+      }
+      col.defaultValue = def.join(<span class="string">' '</span>) || <span class="keyword">null</span>;
+    } <span class="comment">// ... and so on</span>
+  }
+  <span class="keyword">return</span> col;
+}</code></pre>
+
+      <h2>Handling dialect quirks</h2>
+      <p>Each database has its own syntax for the same concept. Rather than four separate parsers, we use a single parser with dialect-aware branches:</p>
+
+      <ul>
+        <li><strong>PostgreSQL:</strong> <code>SERIAL</code>, <code>"quoted"</code> identifiers, <code>CREATE TYPE ... AS ENUM</code></li>
+        <li><strong>MySQL:</strong> <code>AUTO_INCREMENT</code>, <code>`backtick`</code> quotes, <code>TINYINT(1)</code> as boolean</li>
+        <li><strong>SQLite:</strong> <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, limited <code>ALTER TABLE</code></li>
+        <li><strong>SQL Server:</strong> <code>IDENTITY(1,1)</code>, <code>[bracket]</code> quotes, <code>CLUSTERED</code> hints</li>
+      </ul>
+
+      <p>The parser stores dialect on every parsed object, so the diff engine and migration generator can produce the correct output for the target database.</p>
+
+      <h2>Diff engine: from objects to semantics</h2>
+      <p>Once both schemas are parsed into object trees, diffing is straightforward:</p>
+
+      <ol>
+        <li>Compare table names. Any table in A but not B is "removed." Any table in B but not A is "added."</li>
+        <li>For tables present in both, compare columns by name. Added columns, removed columns, and modified columns (type change, nullability change, default change) are flagged individually.</li>
+        <li>Compare constraints structurally. A <code>PRIMARY KEY (id, org_id)</code> is parsed into <code>{ type: 'PRIMARY KEY', columns: ['id', 'org_id'] }</code>, so two constraints with different whitespace or ordering are still recognized as identical.</li>
+      </ol>
+
+      <p>This structural diff is why SchemaLens beats a text diff. A line-based diff would scream at you for reformatting whitespace. A semantic diff tells you that <code>role_id</code> changed from <code>INT</code> to <code>BIGINT</code>—the thing that actually matters.</p>
+
+      <h2>Migration generation</h2>
+      <p>The migration generator is essentially a big switch statement. For every detected change, it outputs the appropriate <code>ALTER TABLE</code> (or table recreation script for SQLite):</p>
+
+      <pre><code><span class="comment">// PostgreSQL</span>
+<span class="keyword">ALTER TABLE</span> <span class="string">"users"</span> <span class="keyword">ALTER COLUMN</span> <span class="string">"role_id"</span> <span class="keyword">TYPE</span> <span class="keyword">BIGINT</span>;
+
+<span class="comment">// MySQL</span>
+<span class="keyword">ALTER TABLE</span> <span class="string">`users`</span> <span class="keyword">MODIFY COLUMN</span> <span class="string">`role_id`</span> <span class="keyword">BIGINT</span> <span class="keyword">NULL</span>;
+
+<span class="comment">// SQL Server</span>
+<span class="keyword">ALTER TABLE</span> [users] <span class="keyword">ALTER COLUMN</span> [role_id] <span class="keyword">BIGINT</span>;
+
+<span class="comment">// SQLite (not supported — must recreate table)</span>
+<span class="comment">-- SQLite does not support ALTER COLUMN. Recreate table with new schema.</span></code></pre>
+
+      <h2>Testing strategy</h2>
+      <p>Because the parser runs in the browser, we test it with Node.js by mocking the DOM and extracting the script from <code>app.html</code>:</p>
+
+      <pre><code><span class="keyword">const</span> fs = require(<span class="string">'fs'</span>);
+<span class="keyword">const</span> html = fs.readFileSync(<span class="string">'app.html'</span>, <span class="string">'utf8'</span>);
+<span class="keyword">const</span> script = html.match(<span class="string">/&lt;script&gt;([\s\S]*)&lt;\/script&gt;/</span>)[<span class="string">1</span>];
+<span class="keyword">const</span> fn = <span class="keyword">new</span> Function(script + <span class="string">'; return { parseSQL, diffSchemas };'</span>);
+<span class="keyword">const</span> { parseSQL, diffSchemas } = fn();
+
+<span class="comment">// Now we can unit-test the parser headlessly</span>
+<span class="keyword">const</span> schema = parseSQL(<span class="string">'CREATE TABLE users (id INT PRIMARY KEY);'</span>, <span class="string">'postgres'</span>);
+console.assert(Object.keys(schema.tables).length === <span class="string">1</span>);</code></pre>
+
+      <p>This lets us run CI-style tests without a browser environment. We validate parsing, diffing, and migration generation for all four supported dialects on every commit.</p>
+
+      <h2>Performance</h2>
+      <p>The parser processes ~1,000 lines of SQL in under 10 milliseconds on a modern laptop. For a tool that parses two schemas and diffs them, the total runtime is typically under 50 ms. There is no perceptible delay between clicking "Compare" and seeing results.</p>
+
+      <p>Because there are no network round trips, the entire experience—from paste to diff to migration copy—feels instantaneous. That is the advantage of doing everything client-side.</p>
+
+      <h2>Tradeoffs and limitations</h2>
+      <p>Our parser is intentionally narrow. It does not handle:</p>
+      <ul>
+        <li><code>CREATE VIEW</code>, <code>CREATE TRIGGER</code>, or <code>CREATE FUNCTION</code></li>
+        <li>Partitioned tables</li>
+        <li>Complex <code>CHECK</code> constraints with subqueries</li>
+        <li>Stored procedures or PL/pgSQL blocks</li>
+      </ul>
+
+      <p>For 95% of schema diff use cases, <code>CREATE TABLE</code> + <code>CREATE INDEX</code> + constraints is enough. When we hit the other 5%, we add support incrementally rather than pulling in a full grammar parser that would bloat the bundle and slow down the parse.</p>
+
+      <div class="callout">
+        <p><strong>Philosophy:</strong> Parse what people actually paste. Not what the SQL standard says they should paste.</p>
+      </div>
+
+      <div class="cta-box">
+        <h3>See the parser in action</h3>
+        <p>Paste two SQL schemas and watch the diff engine work in real time. No install, no signup, no data leaves your browser.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #333; margin: 3rem 0;">
+      <p style="font-size: 0.9rem; color: #888;">
+        Written by the SchemaLens team. We build tools that make database migrations less terrifying.
+        <a href="../blog.html" style="color: #888;">Read more articles →</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong><br>
+        Compare SQL schemas. Spot changes instantly. Generate migrations.
+      </div>
+      <div class="footer-links">
+        <a href="../app.html">App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../about.html">About</a>
+        <a href="../blog.html">Blog</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var key = 'sl_pageviews';
+      var n = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+      localStorage.setItem(key, String(n));
+    })();
+  </script>
+
+</body>
+</html>

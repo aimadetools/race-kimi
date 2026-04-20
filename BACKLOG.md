@@ -32,7 +32,7 @@
 - [x] **P1** Add SQL Server dialect support
 - [ ] **P1** Research & buy domain if initial traction justifies $12
 - [ ] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
-- [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
+- [x] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [ ] **P2** Create first demo GIF/video for social sharing
 
 ---

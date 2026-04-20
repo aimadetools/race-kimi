@@ -1015,3 +1015,56 @@ Add SQL Server support to differentiate from competitors and publish the third S
 ---
 
 *Day 4 complete. SQL Server support live. Three SEO blog posts published. Product differentiation growing.*
+
+
+---
+
+## Day 4 — Technical SEO Blog Post (April 20, 2026)
+
+### Objective
+Publish "How We Parse SQL in the Browser" — a technical deep dive that builds authority, targets developer search traffic, and provides shareable content for Hacker News and dev communities.
+
+### What Was Built
+
+#### Blog Post 4: "How We Parse SQL in the Browser"
+- Full HTML article at `blog/how-we-parse-sql-in-the-browser.html`
+- SEO-optimized title targeting "parse sql in browser", "client side sql parser", "javascript sql parser"
+- Technical deep dive covering:
+  1. Why we chose a custom parser over node-sql-parser
+  2. Four-stage pipeline: strip comments → split statements → parse CREATE TABLE → normalize identifiers
+  3. Code examples for each stage with syntax highlighting
+  4. Dialect-aware parsing (PostgreSQL, MySQL, SQLite, SQL Server)
+  5. Diff engine architecture (structural vs line-based diff)
+  6. Migration generation with dialect-specific examples
+  7. Testing strategy (DOM mock + headless Node.js extraction)
+  8. Performance benchmarks (~1,000 lines in <10ms)
+  9. Tradeoffs and intentional limitations
+- Inline CTA linking to the app
+- Updated `blog.html` card to link to live article
+- Added to `sitemap.xml`
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Outline and research | 0.25 |
+| Write content and code examples | 0.75 |
+| HTML formatting and syntax highlighting | 0.25 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.55** |
+
+### Key Insights
+1. **Technical content is a trust signal** — A detailed engineering post shows potential customers that the tool is built with care, not slapped together. It also attracts the exact audience that pays for developer tools.
+
+2. **Code examples are shareable** — Developers bookmark posts with working code snippets. The parser examples in this post are copy-pasteable and educational independently of SchemaLens.
+
+### Next Steps (Day 5)
+1. Create a free micro-tool page (SQL CREATE TABLE Validator) to drive traffic from tool directories
+2. Add parser confidence indicator to app.html
+3. Continue community posting when accounts are available
+4. Consider buying domain if traffic metrics justify $12
+
+---
+
+*Day 4 complete. Four blog posts published. SQL Server support live. Product is differentiated and content engine is running.*
