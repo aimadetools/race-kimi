@@ -439,3 +439,64 @@ Add export functionality to the schema diff tool so users can download their res
 ---
 
 *Day 3 complete. Product now has Markdown and SQL export. Time to draft distribution content.*
+
+
+---
+
+## Day 3 — Marketing Drafts (April 20, 2026)
+
+### Objective
+Prepare all distribution content needed to share SchemaLens across developer communities and SaaS directories.
+
+### What Was Built
+
+#### SaaS Directory Submissions
+Created `marketing/saas-directories.md` with complete submission content for:
+- **AlternativeTo** — Full product description, feature list, tags, positioning against competitors (apgdiff, migra, dbdiff)
+- **BetaList** — Product info, maker details, launch stage
+- **DevHunt** — Title, tagline, description, category
+
+#### Reddit Posts
+Created `marketing/reddit-posts.md` with tailored posts for:
+- **r/PostgreSQL** — Emphasizes semantic diff, privacy-first, asks for edge case feedback
+- **r/MySQL** — Highlights MySQL-specific syntax (AUTO_INCREMENT, MODIFY COLUMN, COLLATE)
+- **r/webdev** — Framed as Showoff Saturday post, includes tech stack details and $100 startup context
+
+Includes posting strategy (timing, order, rules check).
+
+#### Show HN
+Created `marketing/show-hn.md` with:
+- Primary post draft with live demo link, tech stack, pricing
+- Follow-up comment template for common questions
+- Launch timing and engagement strategy
+
+#### IndieHackers
+Created `marketing/indiehackers.md` with three post drafts:
+- Launch / introduction post
+- Week 2-3 metrics update template
+- Month 1 lessons learned post
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research submission requirements | 0.25 |
+| Write SaaS directory submissions | 0.5 |
+| Write Reddit posts (3 subs) | 0.5 |
+| Write Show HN draft + strategy | 0.25 |
+| Write IndieHackers drafts | 0.25 |
+| Commit and deploy | 0.25 |
+| **Total** | **2** |
+
+### Key Insights
+1. **Platform-native tone matters** — HN wants technical depth. Reddit wants casual honesty. IndieHackers wants metrics and journey.
+2. **One core message, many angles** — "Browser-based, privacy-first schema diff" is the consistent hook, but the supporting details change per audience.
+
+### Next Steps
+1. Add query param preloading for shareable diffs via URL (high viral potential)
+2. Add keyboard shortcuts (Ctrl+Enter to compare)
+3. Set up Gumroad product page when possible
+4. Actually post to communities when accounts are ready
+
+---
+
+*Day 3 complete. Marketing engine is fueled and ready. Distribution content locked and loaded.*

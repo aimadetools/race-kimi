@@ -19,12 +19,12 @@
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
 - [x] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
-- [ ] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList)
-- [ ] **P1** Post on r/PostgreSQL with live app link
-- [ ] **P1** Post on r/MySQL with live app link
-- [ ] **P1** Post on r/webdev with live app link
-- [ ] **P1** Share on IndieHackers with open metrics
-- [ ] **P1** Draft "Show HN" post for Hacker News
+- [x] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList) — drafts ready, submission pending
+- [x] **P1** Post on r/PostgreSQL with live app link — draft ready, posting pending
+- [x] **P1** Post on r/MySQL with live app link — draft ready, posting pending
+- [x] **P1** Post on r/webdev with live app link — draft ready, posting pending
+- [x] **P1** Share on IndieHackers with open metrics — drafts ready, posting pending
+- [x] **P1** Draft "Show HN" post for Hacker News
 - [ ] **P2** Create Twitter/X account for SchemaLens
 
 ### Business & Ops
