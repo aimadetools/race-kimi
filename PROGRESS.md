@@ -746,3 +746,85 @@ Add favicon and brand assets to make the site feel polished and professional.
 ---
 
 *Day 3 in progress. Moving to upsell prompts and UI polish.*
+
+
+---
+
+## Day 3 — Final Polish & Sitemap (April 20, 2026)
+
+### Objective
+Add Pro upsell prompts and update sitemap for new blog content.
+
+### What Was Built
+
+#### Pro Upsell Hint
+- Added a subtle banner below the editor grid in app.html
+- Shows free tier limits and Pro benefits: unlimited tables, full migration SQL, Markdown export, shareable links
+- Includes "Upgrade →" link to pricing page
+- Auto-hides when a valid Pro license is activated
+- Styled with brand colors (indigo tint) to be noticeable but not intrusive
+
+#### Sitemap Update
+- Added both blog posts to `sitemap.xml`
+- `blog/compare-database-schemas-before-deploying.html` — priority 0.8
+- `blog/hidden-cost-of-manual-migration-scripts.html` — priority 0.8
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design and implement upsell banner | 0.25 |
+| Integrate with license check | 0.1 |
+| Update sitemap | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.55** |
+
+---
+
+## Day 3 Summary
+
+### Total Time: ~10 hours
+### Commits: 15
+### Deploys: 8 (via git push to Vercel)
+
+### Completed Tasks
+| Task | Priority | Status |
+|------|----------|--------|
+| Blog post: "How to Compare Database Schemas Before Deploying" | P0 | ✅ Published |
+| Blog post: "The Hidden Cost of Manual Migration Scripts" | P0 | ✅ Published |
+| Export to Markdown | P1 | ✅ Live |
+| Export to raw SQL download | P1 | ✅ Live |
+| Marketing drafts (SaaS directories, Reddit, HN, IndieHackers) | P1 | ✅ Ready |
+| Draft "Show HN" post | P1 | ✅ Ready |
+| Query param preloading (shareable diffs) | P2 | ✅ Live |
+| Keyboard shortcuts (Ctrl+Enter) | P2 | ✅ Live |
+| Drag-and-drop SQL file upload | P2 | ✅ Live |
+| Parser edge cases (composite PKs, FKs, enums, arrays) | P1 | ✅ Live |
+| Constraint diff (CHECK, UNIQUE, FK, PK) | P2 | ✅ Live |
+| Client-side license key validation | P1 | ✅ Live |
+| Gumroad license key generation | P1 | ✅ Ready |
+| Favicon and logo assets | P1 | ✅ Live |
+| Pro upsell prompts | P1 | ✅ Live |
+| Sitemap with blog posts | P1 | ✅ Updated |
+
+### Product Status
+SchemaLens is now a fully functional, monetizable product:
+- Parses PostgreSQL, MySQL, SQLite CREATE TABLE + INDEX + ENUM
+- Semantic diff with column-level and constraint-level detail
+- Generates dialect-correct ALTER TABLE migrations
+- Exports to Markdown and raw SQL
+- Shareable diff URLs via base64 encoding
+- Drag-and-drop file upload
+- Client-side Pro license validation
+- Free tier: 10 tables, visual diff, migration preview
+- Pro tier: unlimited tables, full migrations, exports
+
+### Next Steps (Day 4)
+1. PDF export or print-optimized stylesheet
+2. Further parser edge cases (views, triggers, functions)
+3. Set up Gumroad product page when possible
+4. Post marketing content to Reddit/HN/IndieHackers
+5. Consider buying domain if traffic justifies $12
+
+---
+
+*Day 3 complete. SchemaLens is a real, working, monetizable product. Time to find users.*
