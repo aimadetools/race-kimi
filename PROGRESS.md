@@ -580,3 +580,74 @@ Add drag-and-drop SQL file upload to both schema editors for faster workflow.
 ---
 
 *Day 3 complete. All immediate P0/P1/P2 code tasks done. Moving to parser robustness.*
+
+
+---
+
+## Day 3 — Parser Robustness (April 20, 2026)
+
+### Objective
+Improve the SQL parser to handle real-world edge cases: composite primary keys, foreign keys, PostgreSQL enums, and semantic constraint diffing.
+
+### What Was Built
+
+#### Semantic Constraint Parsing
+- Added `parseConstraint()` function that parses table-level constraints into structured objects:
+  - `PRIMARY KEY (col1, col2)` → `{ type: 'PRIMARY KEY', columns: ['col1', 'col2'] }`
+  - `UNIQUE (col)` → `{ type: 'UNIQUE', columns: ['col'] }`
+  - `FOREIGN KEY (col) REFERENCES other(id)` → `{ type: 'FOREIGN KEY', columns: ['col'], refTable: 'other', refColumns: ['id'] }`
+  - `CHECK (expr)` → `{ type: 'CHECK', expression: 'expr' }`
+- Named constraints (`CONSTRAINT foo ...`) are preserved
+
+#### Inline Foreign Key Parsing
+- `parseColumn()` now extracts inline `REFERENCES` into `col.foreignKey` object
+- Handles `ON DELETE`, `ON UPDATE`, `DEFERRABLE` clauses by skipping them gracefully
+
+#### Enum Support
+- Added `parseCreateEnum()` for PostgreSQL `CREATE TYPE ... AS ENUM (...)`
+- Enums stored in `schema.enums` map for future diff expansion
+
+#### Semantic Constraint Diff
+- `diffTable()` now compares constraints structurally instead of by raw string
+- Detects added/removed constraints individually
+- `constraintsAdded` and `constraintsRemoved` arrays in diff result
+
+#### Constraint Migration Generation
+- `generateMigration()` now generates real DDL for constraint changes:
+  - `ALTER TABLE ... ADD PRIMARY KEY (...)`
+  - `ALTER TABLE ... ADD CONSTRAINT ... UNIQUE (...)`
+  - `ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY ... REFERENCES ...`
+  - `ALTER TABLE ... ADD CONSTRAINT ... CHECK (...)`
+  - `ALTER TABLE ... DROP CONSTRAINT ...`
+
+#### Visual Diff Updates
+- `renderTableDiff()` shows added/removed constraints as colored rows
+- Constraints displayed with type, name, and details (FK target, check expression)
+
+#### Markdown Export Updates
+- `generateMarkdown()` includes constraint added/removed sections
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design constraint data model | 0.25 |
+| Implement parseConstraint() | 0.5 |
+| Update diffTable for semantic constraint diff | 0.25 |
+| Update generateMigration for constraint DDL | 0.5 |
+| Update renderTableDiff and Markdown export | 0.25 |
+| Test and verify | 0.25 |
+| Commit and deploy | 0.25 |
+| **Total** | **2.25** |
+
+### Key Insights
+1. **Structured constraints > raw strings** — Once constraints are parsed into objects, diffing and migration generation become trivial.
+2. **PostgreSQL enums are weird** — They're separate CREATE TYPE statements, not column attributes. Supporting them properly requires schema-level enum diffing, which is future work.
+
+### Next Steps
+1. Implement client-side license key validation for Pro tier
+2. Add favicon and logo assets
+3. Post marketing content to communities
+
+---
+
+*Day 3 complete. Parser now handles composite PKs, FKs, CHECK constraints, and enums. Migration generation is substantially more complete.*

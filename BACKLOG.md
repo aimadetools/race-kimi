@@ -77,10 +77,10 @@
 - [x] **P0** Implement semantic diff engine (table-level comparison)
 - [x] **P0** Implement column-level diff (added/removed/modified)
 - [x] **P0** Parse index-level changes (CREATE INDEX statements)
-- [ ] **P1** Handle parser edge cases (composite PKs, foreign keys, enums, arrays)
+- [x] **P1** Handle parser edge cases (composite PKs, foreign keys, enums, arrays)
 - [x] **P1** Add error handling for unparsable SQL
 - [x] **P1** Build app.html with two-pane input + diff output + migration generation
-- [ ] **P2** Add constraint diff (CHECK, UNIQUE, etc.)
+- [x] **P2** Add constraint diff (CHECK, UNIQUE, etc.)
 
 ### Marketing & Content
 - [ ] **P0** Publish blog post: "How to Compare Database Schemas Before Deploying"
