@@ -401,7 +401,7 @@
   <main>
     <div class="drop-zone" id="dropZone">
       <h2>Drop a log file here</h2>
-      <p>JSON (array or newline-delimited), logfmt, CSV, or plain text — up to 5MB on Free</p>
+      <p>JSON (array or NDJSON), logfmt, CSV, or plain text — up to 5MB on Free</p>
       <div class="privacy-badge">🔒 Zero uploads — everything stays in your browser</div>
       <input type="file" id="fileInput" accept=".json,.log,.txt,.csv">
     </div>
@@ -523,9 +523,9 @@
         reader.onload = (e) => {
           try {
             const text = e.target.result;
-            const rows = parseLogs(text);
+            const rows = parseLogs(text, file.name);
             if (!rows.length) {
-              alert('No recognizable log entries found. Try a JSON array or newline-delimited JSON file.');
+              alert('No recognizable log entries found. Try JSON, logfmt, CSV, or plain-text logs.');
               return;
             }
             allRows = rows;
@@ -545,26 +545,130 @@
         reader.readAsText(file);
       }
 
-      function parseLogs(text) {
+      function parseLogs(text, fileName) {
         const trimmed = text.trim();
+        const lowerName = (fileName || '').toLowerCase();
+
+        // CSV
+        if (lowerName.endsWith('.csv') || looksLikeCSV(trimmed)) {
+          return parseCSV(trimmed).map(normalizeRow);
+        }
+
         // JSON array
         if (trimmed.startsWith('[')) {
           const arr = JSON.parse(trimmed);
           if (Array.isArray(arr)) return arr.filter(r => r && typeof r === 'object').map(normalizeRow);
         }
-        // NDJSON
+
         const lines = trimmed.split(/\r?\n/).filter(l => l.trim());
         const rows = [];
+
+        // Detect logfmt by checking first non-empty line
+        const firstLine = lines[0] || '';
+        const isLogfmt = /^[a-zA-Z0-9_-]+=/.test(firstLine) && firstLine.includes('=') && !firstLine.startsWith('{');
+
+        if (isLogfmt || lowerName.endsWith('.logfmt')) {
+          for (const line of lines) {
+            const obj = parseLogfmtLine(line);
+            if (obj && Object.keys(obj).length) rows.push(normalizeRow(obj));
+          }
+          return rows;
+        }
+
+        // NDJSON or plain text
         for (const line of lines) {
           try {
             const obj = JSON.parse(line);
             if (obj && typeof obj === 'object') rows.push(normalizeRow(obj));
           } catch {
-            // Plain text line
             rows.push({ message: line, level: inferLevel(line), timestamp: '' });
           }
         }
         return rows;
+      }
+
+      function looksLikeCSV(text) {
+        const first = text.split(/\r?\n/)[0] || '';
+        return first.includes(',') && !first.includes('{') && !first.includes('[');
+      }
+
+      function parseCSV(text) {
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        if (!lines.length) return [];
+        const headers = splitCSVLine(lines[0]);
+        const rows = [];
+        for (let i = 1; i < lines.length; i++) {
+          const values = splitCSVLine(lines[i]);
+          const obj = {};
+          headers.forEach((h, idx) => { obj[h] = values[idx] !== undefined ? values[idx] : ''; });
+          rows.push(obj);
+        }
+        return rows;
+      }
+
+      function splitCSVLine(line) {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (ch === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += ch;
+          }
+        }
+        values.push(current.trim());
+        return values;
+      }
+
+      function parseLogfmtLine(line) {
+        const obj = {};
+        let i = 0;
+        while (i < line.length) {
+          // Skip leading spaces
+          while (i < line.length && line[i] === ' ') i++;
+          if (i >= line.length) break;
+          // Read key
+          let key = '';
+          while (i < line.length && line[i] !== '=' && line[i] !== ' ') {
+            key += line[i];
+            i++;
+          }
+          if (i >= line.length || line[i] !== '=') {
+            // Key without value — treat rest as message if key looks like a log message
+            if (key && !obj.message) obj.message = line.slice(line.indexOf(key)).trim();
+            break;
+          }
+          i++; // skip '='
+          let value = '';
+          if (line[i] === '"') {
+            i++; // skip opening quote
+            while (i < line.length) {
+              if (line[i] === '"' && line[i - 1] !== '\\') {
+                i++; // skip closing quote
+                break;
+              }
+              value += line[i];
+              i++;
+            }
+          } else {
+            while (i < line.length && line[i] !== ' ') {
+              value += line[i];
+              i++;
+            }
+          }
+          obj[key] = value;
+        }
+        return obj;
       }
 
       function normalizeRow(obj) {
