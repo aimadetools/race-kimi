@@ -307,6 +307,29 @@
       margin-bottom: 24px;
       color: #fecaca;
       font-size: 0.95rem;
+      position: relative;
+    }
+    .error-banner .close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #fecaca;
+      font-size: 1.2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .welcome-hint {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .welcome-hint.hidden { display: none; }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .modal-overlay {
@@ -478,6 +501,10 @@ CREATE TABLE users (
     </div>
 
     <div id="errorContainer"></div>
+
+    <div class="welcome-hint" id="welcomeHint">
+      <p>💡 <strong>Tip:</strong> Paste your old schema in <strong>Schema A</strong> and your new schema in <strong>Schema B</strong>, then click <strong>Compare Schemas</strong>.<br>You can also drag and drop <code>.sql</code> files directly onto either panel.</p>
+    </div>
 
     <div class="results" id="results">
       <div class="results-tabs">
@@ -1804,25 +1831,43 @@ function updateStats() {
 // -----------------------------
 // Main
 // -----------------------------
+function setCompareLoading(loading) {
+  const btn = document.getElementById('compareBtn');
+  btn.disabled = loading;
+  btn.textContent = loading ? 'Comparing…' : 'Compare Schemas';
+}
+
+function showError(msg) {
+  const container = document.getElementById('errorContainer');
+  const id = 'err-' + Date.now();
+  container.innerHTML = `<div class="error-banner" id="${id}">${esc(msg)}<button class="close" onclick="this.parentElement.remove()">×</button></div>`;
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }, 8000);
+}
+
 document.getElementById('compareBtn').addEventListener('click', () => {
   const sqlA = document.getElementById('schemaA').value;
   const sqlB = document.getElementById('schemaB').value;
   const dialect = document.getElementById('dialect').value;
-  const errorContainer = document.getElementById('errorContainer');
 
-  errorContainer.innerHTML = '';
+  document.getElementById('errorContainer').innerHTML = '';
 
   if (!sqlA.trim() || !sqlB.trim()) {
-    errorContainer.innerHTML = '<div class="error-banner">Please paste both schemas to compare.</div>';
+    showError('Please paste both schemas to compare.');
     return;
   }
+
+  setCompareLoading(true);
 
   let schemaA, schemaB, diff;
   try {
     schemaA = parseSQL(sqlA, dialect);
     schemaB = parseSQL(sqlB, dialect);
   } catch (e) {
-    errorContainer.innerHTML = `<div class="error-banner"><strong>Parse error:</strong> ${esc(e.message)}</div>`;
+    showError('Parse error: ' + e.message);
+    setCompareLoading(false);
     return;
   }
 
@@ -1841,6 +1886,8 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderPDF();
 
   document.getElementById('results').classList.add('active');
+  document.getElementById('welcomeHint').classList.add('hidden');
+  setCompareLoading(false);
 
   // Scroll to results
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1853,6 +1900,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('errorContainer').innerHTML = '';
   document.getElementById('schemaAStats').textContent = '';
   document.getElementById('schemaBStats').textContent = '';
+  document.getElementById('welcomeHint').classList.remove('hidden');
   history.replaceState(null, '', location.pathname);
 });
 

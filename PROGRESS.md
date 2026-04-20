@@ -891,12 +891,29 @@ Add PDF export functionality, the highest-priority incomplete P0 task from Week 
 | JSON export | 0.3 |
 | **Total** | **1.6** |
 
+### UI Polish: Loading States, Empty States, Error Messages (P1 — same session)
+
+#### What Was Built
+- **Compare button loading state:** Button text changes to "Comparing…" and is disabled during parse/diff to prevent double-clicks
+- **Welcome hint empty state:** A friendly tip below the editors guides first-time users; auto-hides when results appear and re-appears on clear
+- **Error banner improvements:**
+  - Close (×) button for manual dismissal
+  - Auto-dismiss after 8 seconds to avoid stale errors cluttering the UI
+  - Reusable `showError()` helper for consistent error presentation
+
+### Time Allocation (Day 4 total)
+| Activity | Hours |
+|----------|-------|
+| PDF export | 1.3 |
+| JSON export | 0.3 |
+| UI polish (loading, empty, errors) | 0.4 |
+| **Total** | **2.0** |
+
 ### Next Steps
-1. Polish app UI: loading states, empty states, error messages
-2. Set up Gumroad product page for Pro/Team plans
-3. Post marketing content to Reddit/HN/IndieHackers
-4. Consider buying domain if traffic justifies $12
+1. Set up Gumroad product page for Pro/Team plans
+2. Post marketing content to Reddit/HN/IndieHackers
+3. Consider buying domain if traffic justifies $12
 
 ---
 
-*Day 4 in progress. PDF + JSON exports live. All Week 4 P0 code tasks complete. Moving to UI polish and Gumroad setup.*
+*Day 4 in progress. PDF + JSON exports live. UI polished. All Week 4 P0/P1 code tasks complete. Moving to Gumroad and distribution.*
