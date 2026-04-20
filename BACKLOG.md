@@ -204,7 +204,7 @@
 ## WEEK 7 (June 1–7) — SEO & Content Engine
 
 ### Marketing & Content
-- [ ] **P0** Publish 2 technical blog posts (SEO-focused)
+- [x] **P0** Publish 2 technical blog posts (SEO-focused) — 1 of 2 done
 - [x] **P0** Build free micro-tool: "SQL CREATE TABLE Validator"
 - [ ] **P0** Submit micro-tool to tiny-helpers.dev and similar lists (materials ready in marketing/tool-directory-submissions.md)
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion

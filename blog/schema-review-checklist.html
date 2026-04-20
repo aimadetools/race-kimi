@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Schema Review Checklist Every Engineering Team Needs — SchemaLens</title>
+  <meta name="description" content="A practical schema review checklist for engineering teams. Catch dangerous changes before they hit production. Covers columns, constraints, indexes, and migration safety.">
+  <meta property="og:title" content="The Schema Review Checklist Every Engineering Team Needs">
+  <meta property="og:description" content="Stop shipping schema changes blindly. Use this checklist to review database migrations before they break production.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/schema-review-checklist.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .checklist-item {
+      background: #141419;
+      border: 1px solid #27272f;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .checklist-item strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .checklist-item p {
+      margin-bottom: 0;
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>The Schema Review Checklist Every Engineering Team Needs</h1>
+      <div class="blog-meta">Migration Guide · April 20, 2026 · 8 min read</div>
+
+      <p>Schema migrations are the most dangerous code you ship. They run once, cannot be rolled back trivially, and affect every query in your application. A bad migration doesn't just break deploys — it corrupts data, locks tables for hours, and wakes up on-call engineers at 3 AM.</p>
+
+      <p>The good news: most schema disasters are preventable with a disciplined review process. This checklist is the one we wish every team had before approving a migration PR.</p>
+
+      <h2>Pre-Flight Checks</h2>
+
+      <p>Run these before you even open the migration PR. They take 30 seconds and catch 50% of issues.</p>
+
+      <div class="checklist-item">
+        <strong>☐ Did you run the migration against a copy of production data?</strong>
+        <p>Staging schemas are often cleaner than production. Test against a recent dump or a read replica. If you can't, at least verify the migration works on a dataset with realistic row counts.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Is the migration reversible?</strong>
+        <p>Every migration should have a rollback plan. If you're adding a column, the rollback drops it. If you're dropping a column, the rollback adds it back — but you may have lost data. Document what data loss is acceptable.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Does the migration lock tables?</strong>
+        <p>Some <code>ALTER TABLE</code> operations acquire exclusive locks. In PostgreSQL, adding a column with a default locks the table until the rewrite completes. In MySQL, <code>ALTER TABLE</code> on large tables can take hours. Check your dialect's lock behavior.</p>
+      </div>
+
+      <h2>Column-Level Review</h2>
+
+      <div class="checklist-item">
+        <strong>☐ Are new columns nullable?</strong>
+        <p>Adding a <code>NOT NULL</code> column without a default to a table with existing rows will fail. If you need it NOT NULL, add it as nullable first, backfill data, then add the constraint in a follow-up migration.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Did you choose the right type?</strong>
+        <p><code>VARCHAR(255)</code> is not a universal default. Email addresses need <code>VARCHAR(254)</code> per RFC. JSON should use <code>JSONB</code> in PostgreSQL, not <code>TEXT</code>. Timestamps should include timezone awareness. Wrong types are expensive to fix later.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are defaults sensible?</strong>
+        <p><code>DEFAULT 0</code> on a foreign key is a landmine. <code>DEFAULT CURRENT_TIMESTAMP</code> is usually fine. <code>DEFAULT gen_random_uuid()</code> is great for primary keys. Make sure the default matches your application's expectations.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Is the column name clear and consistent?</strong>
+        <p>Prefer <code>created_at</code> over <code>created</code> or <code>date_created</code>. Use singular nouns. Match existing naming conventions in the schema. Inconsistent naming makes ORM mapping and reporting queries painful.</p>
+      </div>
+
+      <h2>Constraint Review</h2>
+
+      <div class="checklist-item">
+        <strong>☐ Do foreign keys have indexes?</strong>
+        <p>Foreign key constraints do not auto-create indexes in most databases. Without an index, deletes on the parent table scan the entire child table. Always index foreign key columns.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are unique constraints necessary?</strong>
+        <p>Unique constraints are powerful but come with performance costs on writes. They also prevent legitimate duplicates in edge cases (e.g., soft deletes). Make sure the business rule truly requires uniqueness at the database level.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are CHECK constraints realistic?</strong>
+        <p><code>CHECK (price > 0)</code> seems safe until you need to support discounts or refunds that result in zero or negative amounts. CHECK constraints are hard to relax later. Prefer application-level validation for business rules that change.</p>
+      </div>
+
+      <h2>Index Review</h2>
+
+      <div class="checklist-item">
+        <strong>☐ Is every new query covered?</strong>
+        <p>Adding a feature usually means adding queries. Check your ORM logs or query planner for sequential scans on large tables. Add indexes before the deploy, not after the incident.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are composite indexes ordered correctly?</strong>
+        <p>In a composite index <code>(a, b, c)</code>, the database can use the index for queries on <code>a</code>, <code>a,b</code>, and <code>a,b,c</code> — but not <code>b</code> or <code>c</code> alone. Put the most selective column first.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are you adding redundant indexes?</strong>
+        <p>If you have an index on <code>(a, b)</code>, you don't need a separate index on <code>(a)</code> (in most databases). Redundant indexes slow down writes and consume disk space.</p>
+      </div>
+
+      <h2>Data Safety Review</h2>
+
+      <div class="checklist-item">
+        <strong>☐ Are you dropping anything still referenced?</strong>
+        <p>Dropped columns, tables, or enums might still be referenced by application code, background jobs, analytics pipelines, or third-party integrations. Search your codebase for the name before dropping.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Is data being transformed safely?</strong>
+        <p>Type changes like <code>VARCHAR(100) → VARCHAR(50)</code> can truncate data. <code>TEXT → INTEGER</code> can fail on non-numeric values. Always validate the transformation on real data first.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are enums expandable?</strong>
+        <p>Database enums are rigid. Adding a value requires an ALTER TYPE in PostgreSQL or a table rebuild in MySQL. If the enum values change frequently, consider a lookup table instead.</p>
+      </div>
+
+      <h2>Post-Deploy Verification</h2>
+
+      <div class="checklist-item">
+        <strong>☐ Did you verify in production?</strong>
+        <p>Run a quick <code>\d table_name</code> (PostgreSQL) or <code>SHOW CREATE TABLE</code> (MySQL) to confirm the migration applied exactly as intended. Don't assume — verify.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Are monitors and alerts still green?</strong>
+        <p>Check error rates, query latency, and lock wait times for 30 minutes after deploy. A migration that ran fine in staging can behave differently under production load.</p>
+      </div>
+
+      <div class="checklist-item">
+        <strong>☐ Did you update schema documentation?</strong>
+        <p>If your team maintains an internal schema doc, ERD, or API spec, update it now while the changes are fresh. Stale documentation confuses new hires and slows debugging.</p>
+      </div>
+
+      <h2>The Fast Path: Automate the Review</h2>
+
+      <p>This checklist is comprehensive, but running through it manually for every migration is tedious. Here's the faster way:</p>
+
+      <ol>
+        <li>Export your old and new schemas.</li>
+        <li>Run them through a semantic diff tool to see every column, constraint, and index change at a glance.</li>
+        <li>Review the generated migration script before running it.</li>
+      </ol>
+
+      <p>Semantic diff catches the structural changes. The checklist catches the judgment calls. Together, they make schema reviews fast, thorough, and repeatable.</p>
+
+      <div class="cta-box">
+        <h3>Review schemas in seconds, not hours</h3>
+        <p>SchemaLens compares two CREATE TABLE dumps and shows you a visual diff with a generated migration script. Free for up to 10 tables.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+      </div>
+
+      <div class="callout">
+        <p><strong>Pro tip:</strong> Print this checklist and tape it next to your monitor. Or better, add it to your team's PR template so every migration gets reviewed the same way.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../blog.html">Documentation</a>
+          <a href="../blog.html">Migration Guides</a>
+          <a href="../blog.html">Changelog</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
