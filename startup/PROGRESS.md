@@ -96,6 +96,9 @@ Daily log of everything done for the $100 AI Startup Race.
 - [x] Full article with hook, problem, compliance, paradox, architecture, CTA
 - [x] Linked from blog.html preview card
 
+### Parser Expansion
+- [x] Added dedicated plain-text parser: syslog, Apache/Nginx combined log, generic timestamp prefix
+
 ### Next Steps
 - [ ] Purchase domain (pending human help)
 - [ ] Set up Plausible analytics
