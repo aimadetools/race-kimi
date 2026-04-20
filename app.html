@@ -528,7 +528,7 @@ function tokenize(text) {
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [] };
+  const schema = { tables: {}, indexes: [], enums: {} };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -538,6 +538,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE INDEX') || upper.includes('CREATE UNIQUE INDEX')) {
       const idx = parseCreateIndex(stmt, dialect);
       if (idx) schema.indexes.push(idx);
+    } else if (upper.includes('CREATE TYPE') && upper.includes('ENUM')) {
+      const em = parseCreateEnum(stmt, dialect);
+      if (em) schema.enums[em.name] = em;
     }
   }
 
@@ -576,7 +579,7 @@ function parseCreateTable(stmt, dialect) {
     // Detect if it's a table-level constraint
     const firstUpper = tokens[0].toUpperCase();
     if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK') {
-      table.constraints.push({ raw: part, tokens: tokens });
+      table.constraints.push(parseConstraint(tokens, dialect));
       continue;
     }
 
@@ -671,15 +674,113 @@ function parseColumn(tokens, dialect) {
       col.autoIncrement = true;
       i++;
     } else if (t === 'REFERENCES') {
-      // Skip foreign key inline
       i++;
-      while (i < tokens.length) i++;
+      col.foreignKey = { table: '', columns: [] };
+      if (tokens[i]) {
+        col.foreignKey.table = tokens[i].replace(/["`]/g, '');
+        i++;
+      }
+      if (tokens[i] === '(') {
+        i++;
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+        i++;
+      }
+      // skip ON DELETE / ON UPDATE
+      while (i < tokens.length) {
+        const next = tokens[i].toUpperCase();
+        if (next === 'ON' || next === 'DEFERRABLE' || next === 'INITIALLY') {
+          i++;
+          while (i < tokens.length && !['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CONSTRAINT'].includes(tokens[i].toUpperCase())) i++;
+        } else break;
+      }
     } else {
       i++;
     }
   }
 
   return col;
+}
+
+function parseConstraint(tokens, dialect) {
+  const con = { raw: tokens.join(' '), type: '', name: null, columns: [] };
+  let i = 0;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    i++;
+    con.name = tokens[i] ? tokens[i].replace(/["`]/g, '') : null;
+    i++;
+  }
+  const t = tokens[i] ? tokens[i].toUpperCase() : '';
+  if (t === 'PRIMARY') {
+    con.type = 'PRIMARY KEY';
+    i += 2; // skip PRIMARY KEY
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'UNIQUE') {
+    con.type = 'UNIQUE';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'FOREIGN') {
+    con.type = 'FOREIGN KEY';
+    i += 2; // skip FOREIGN KEY
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`]/g, ''));
+        i++;
+      }
+      i++; // skip )
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
+      i++;
+      con.refTable = tokens[i] ? tokens[i].replace(/["`]/g, '') : '';
+      i++;
+      if (tokens[i] === '(') {
+        i++;
+        con.refColumns = [];
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+      }
+    }
+  } else if (t === 'CHECK') {
+    con.type = 'CHECK';
+    i++;
+    if (tokens[i] === '(') {
+      const start = i;
+      let depth = 0;
+      while (i < tokens.length) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') { depth--; if (depth === 0) break; }
+        i++;
+      }
+      con.expression = tokens.slice(start + 1, i).join(' ');
+    }
+  }
+  return con;
+}
+
+function parseCreateEnum(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+TYPE\s+([\w"`]+)\s+AS\s+ENUM\s*\(([^)]+)\)/i);
+  if (!match) return null;
+  return {
+    name: match[1].replace(/["`]/g, ''),
+    values: match[2].split(',').map(v => v.trim().replace(/^['"]|['"]$/g, ''))
+  };
 }
 
 function parseCreateIndex(stmt, dialect) {
@@ -768,10 +869,27 @@ function diffTable(oldTable, newTable) {
     }
   }
 
-  // Simple constraint comparison (raw string)
-  const oldCons = oldTable.constraints.map(c => c.raw).sort().join(';');
-  const newCons = newTable.constraints.map(c => c.raw).sort().join(';');
-  if (oldCons !== newCons) {
+  // Semantic constraint diff
+  const oldCons = oldTable.constraints;
+  const newCons = newTable.constraints;
+  result.constraintsAdded = [];
+  result.constraintsRemoved = [];
+
+  function conKey(c) {
+    return (c.type || '') + '|' + (c.name || '') + '|' + (c.columns ? c.columns.join(',') : '') + '|' + (c.refTable || '') + '|' + (c.refColumns ? c.refColumns.join(',') : '') + '|' + (c.expression || '');
+  }
+
+  const oldMap = new Map(oldCons.map(c => [conKey(c), c]));
+  const newMap = new Map(newCons.map(c => [conKey(c), c]));
+
+  for (const c of newCons) {
+    if (!oldMap.has(conKey(c))) result.constraintsAdded.push(c);
+  }
+  for (const c of oldCons) {
+    if (!newMap.has(conKey(c))) result.constraintsRemoved.push(c);
+  }
+
+  if (result.constraintsAdded.length || result.constraintsRemoved.length) {
     result.constraintsChanged = true;
     result.hasChanges = true;
   }
@@ -888,7 +1006,33 @@ function generateMigration(diff, dialect) {
     }
     if (td.columnsModified.length) lines.push('');
 
-    if (td.constraintsChanged) {
+    for (const con of td.constraintsRemoved) {
+      if (con.type === 'PRIMARY KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_pkey'), dialect)};`);
+      } else if (con.type === 'UNIQUE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_key'), dialect)};`);
+      } else if (con.type === 'FOREIGN KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)};`);
+      } else if (con.type === 'CHECK') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)};`);
+      }
+    }
+    if (td.constraintsRemoved.length) lines.push('');
+
+    for (const con of td.constraintsAdded) {
+      if (con.type === 'PRIMARY KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD PRIMARY KEY (${con.columns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'UNIQUE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_key'), dialect)} UNIQUE (${con.columns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'FOREIGN KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)} FOREIGN KEY (${con.columns.map(c => quoteId(c, dialect)).join(', ')}) REFERENCES ${quoteId(con.refTable, dialect)}(${con.refColumns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'CHECK') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)} CHECK (${con.expression});`);
+      }
+    }
+    if (td.constraintsAdded.length) lines.push('');
+
+    if (td.constraintsChanged && !td.constraintsAdded.length && !td.constraintsRemoved.length) {
       lines.push(`-- Table-level constraints changed in ${td.name}`);
       lines.push(`-- Please review and update constraints manually.`);
       lines.push('');
@@ -950,13 +1094,13 @@ function renderVisualDiff(diff) {
     html += renderTableDiff(table.name, 'removed', [], table.columns, []);
   }
   for (const td of diff.tablesModified) {
-    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified);
+    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified, td.constraintsAdded, td.constraintsRemoved);
   }
 
   container.innerHTML = html;
 }
 
-function renderTableDiff(name, status, addedCols, removedCols, modifiedCols) {
+function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, constraintsAdded, constraintsRemoved) {
   const badgeClass = status === 'added' ? 'badge-added' : status === 'removed' ? 'badge-removed' : 'badge-modified';
   const badgeText = status === 'added' ? 'Added' : status === 'removed' ? 'Removed' : 'Modified';
 
@@ -970,6 +1114,14 @@ function renderTableDiff(name, status, addedCols, removedCols, modifiedCols) {
   for (const mod of modifiedCols) {
     const changes = mod.changes.map(c => `<span class="cell-old">${esc(c.old)}</span><span class="cell-arrow">→</span><span class="cell-new">${esc(c.new)}</span> (${esc(c.field)})`).join('<br>');
     rows += `<tr class="row-modified"><td>${esc(mod.column.name)}</td><td>${esc(mod.column.type)}</td><td>${mod.column.nullable?'NULL':'NOT NULL'}</td><td>${changes}</td></tr>`;
+  }
+  for (const con of constraintsAdded || []) {
+    const details = con.type === 'FOREIGN KEY' ? `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})` : esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
+    rows += `<tr class="row-added"><td colspan="4"><strong>+ Constraint:</strong> ${esc(con.name || 'unnamed')} — ${details}</td></tr>`;
+  }
+  for (const con of constraintsRemoved || []) {
+    const details = con.type === 'FOREIGN KEY' ? `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})` : esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
+    rows += `<tr class="row-removed"><td colspan="4"><strong>− Constraint:</strong> ${esc(con.name || 'unnamed')} — ${details}</td></tr>`;
   }
 
   return `
@@ -1105,7 +1257,35 @@ function generateMarkdown(diff, migrationSQL, dialect) {
         md += `\n`;
       }
 
-      if (td.constraintsChanged) {
+      if (td.constraintsAdded && td.constraintsAdded.length) {
+        md += `**Constraints added:**\n\n`;
+        for (const con of td.constraintsAdded) {
+          if (con.type === 'FOREIGN KEY') {
+            md += `- ${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})\n`;
+          } else if (con.type === 'CHECK') {
+            md += `- ${con.name || 'unnamed'}: CHECK (${con.expression})\n`;
+          } else {
+            md += `- ${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})\n`;
+          }
+        }
+        md += `\n`;
+      }
+
+      if (td.constraintsRemoved && td.constraintsRemoved.length) {
+        md += `**Constraints removed:**\n\n`;
+        for (const con of td.constraintsRemoved) {
+          if (con.type === 'FOREIGN KEY') {
+            md += `- ${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})\n`;
+          } else if (con.type === 'CHECK') {
+            md += `- ${con.name || 'unnamed'}: CHECK (${con.expression})\n`;
+          } else {
+            md += `- ${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})\n`;
+          }
+        }
+        md += `\n`;
+      }
+
+      if (td.constraintsChanged && !td.constraintsAdded.length && !td.constraintsRemoved.length) {
         md += `**Constraints changed.** Please review manually.\n\n`;
       }
     }
