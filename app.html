@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens — Schema Diff Tool</title>
+  <meta name="description" content="Compare two SQL schemas in your browser. Generate migration scripts instantly. No data leaves your device.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* App-specific styles */
+    .app-header {
+      padding: 32px 0 16px;
+      text-align: center;
+    }
+    .app-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .app-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+    .app-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .app-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .app-toolbar select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .editor-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .editor-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #0e0e12;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .editor-panel-header span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .editor-panel-header .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .editor-panel-header .dot.old { background: var(--danger); }
+    .editor-panel-header .dot.new { background: var(--success); }
+    .editor-panel textarea {
+      flex: 1;
+      min-height: 320px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+    .editor-panel textarea::placeholder {
+      color: #475569;
+    }
+    .sample-links {
+      display: flex;
+      gap: 12px;
+      padding: 8px 16px;
+      background: #0e0e12;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .sample-links button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0;
+    }
+    .sample-links button:hover {
+      text-decoration: underline;
+    }
+    .results {
+      display: none;
+    }
+    .results.active {
+      display: block;
+    }
+    .results-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .results-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .results-tab:hover { color: var(--text); }
+    .results-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .results-panel { display: none; }
+    .results-panel.active { display: block; }
+
+    .summary-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .summary-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-pill .num {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .summary-pill.added .num { color: var(--success); }
+    .summary-pill.removed .num { color: var(--danger); }
+    .summary-pill.modified .num { color: var(--warning); }
+
+    .diff-table {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .diff-table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #0e0e12;
+      border-bottom: 1px solid var(--border);
+    }
+    .diff-table-header h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .diff-table-header .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .badge-added { background: rgba(52,211,153,0.15); color: var(--success); }
+    .badge-removed { background: rgba(248,113,113,0.15); color: var(--danger); }
+    .badge-modified { background: rgba(251,191,36,0.15); color: var(--warning); }
+    .diff-table-body { padding: 0; }
+    .diff-table-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .diff-table-body th {
+      text-align: left;
+      padding: 10px 18px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      background: #0e0e12;
+    }
+    .diff-table-body td {
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+    .diff-table-body tr:last-child td { border-bottom: none; }
+    .diff-table-body .row-added { background: rgba(52,211,153,0.08); }
+    .diff-table-body .row-removed { background: rgba(248,113,113,0.08); }
+    .diff-table-body .row-modified { background: rgba(251,191,36,0.06); }
+    .diff-table-body .cell-old { color: var(--danger); text-decoration: line-through; opacity: 0.7; }
+    .diff-table-body .cell-new { color: var(--success); }
+    .diff-table-body .cell-arrow { color: var(--text-muted); padding: 0 4px; }
+
+    .sql-output {
+      background: #0e0e12;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      position: relative;
+    }
+    .sql-output .comment { color: #64748b; }
+    .sql-output .keyword { color: var(--secondary); }
+    .sql-output .string { color: var(--success); }
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .upgrade-banner {
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .upgrade-banner h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .upgrade-banner p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state h3 {
+      color: var(--text);
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .error-banner {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      color: #fecaca;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .editor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="app.html" class="nav-cta">App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="app-header">
+      <h1>Schema Diff</h1>
+      <p>Paste two CREATE TABLE dumps. Compare. Migrate.</p>
+    </div>
+
+    <div class="app-toolbar">
+      <label for="dialect">SQL Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+      </select>
+      <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
+      <button class="btn btn-secondary" id="clearBtn">Clear</button>
+    </div>
+
+    <div class="editor-grid">
+      <div class="editor-panel">
+        <div class="editor-panel-header">
+          <span><span class="dot old"></span> Schema A (Old)</span>
+          <span id="schemaAStats" style="font-weight:400;color:var(--text-muted)"></span>
+        </div>
+        <textarea id="schemaA" placeholder="-- Paste your old schema here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100)
+);"></textarea>
+        <div class="sample-links">
+          <button onclick="loadSample('postgres')">Load sample (PostgreSQL)</button>
+          <button onclick="loadSample('mysql')">Load sample (MySQL)</button>
+        </div>
+      </div>
+      <div class="editor-panel">
+        <div class="editor-panel-header">
+          <span><span class="dot new"></span> Schema B (New)</span>
+          <span id="schemaBStats" style="font-weight:400;color:var(--text-muted)"></span>
+        </div>
+        <textarea id="schemaB" placeholder="-- Paste your new schema here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(255)
+);"></textarea>
+        <div class="sample-links">
+          <button onclick="loadSampleB()">Copy from A &amp; modify</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="errorContainer"></div>
+
+    <div class="results" id="results">
+      <div class="results-tabs">
+        <button class="results-tab active" data-tab="visual">Visual Diff</button>
+        <button class="results-tab" data-tab="migration">Migration SQL</button>
+      </div>
+
+      <div class="results-panel active" id="panel-visual">
+        <div class="summary-bar" id="summaryBar"></div>
+        <div id="visualDiff"></div>
+      </div>
+
+      <div class="results-panel" id="panel-migration">
+        <div id="migrationContainer"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:60px">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Documentation</a>
+          <a href="blog.html">Migration Guides</a>
+          <a href="blog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+/* ================================================================
+   SchemaLens — Core Engine (Parser, Diff, Migration Generator)
+   ================================================================ */
+
+// -----------------------------
+// Utilities
+// -----------------------------
+function stripComments(sql) {
+  // Remove /* */ comments
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Remove -- comments
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts.filter(s => s.length > 0);
+}
+
+function tokenize(text) {
+  const tokens = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch;
+      inString = true;
+      stringChar = ch;
+      continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') {
+        inString = false;
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current.trim()) tokens.push(current.trim());
+      current = '';
+    } else if (ch === '(' || ch === ')' || ch === ',') {
+      if (current.trim()) tokens.push(current.trim());
+      tokens.push(ch);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+
+// -----------------------------
+// Parser
+// -----------------------------
+function parseSQL(sql, dialect) {
+  sql = stripComments(sql);
+  const statements = splitStatements(sql);
+  const schema = { tables: {}, indexes: [] };
+
+  for (const stmt of statements) {
+    const upper = stmt.toUpperCase();
+    if (upper.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) schema.tables[table.name] = table;
+    } else if (upper.includes('CREATE INDEX') || upper.includes('CREATE UNIQUE INDEX')) {
+      const idx = parseCreateIndex(stmt, dialect);
+      if (idx) schema.indexes.push(idx);
+    }
+  }
+
+  // Attach indexes to tables
+  for (const idx of schema.indexes) {
+    if (schema.tables[idx.table]) {
+      if (!schema.tables[idx.table].indexes) schema.tables[idx.table].indexes = [];
+      schema.tables[idx.table].indexes.push(idx);
+    }
+  }
+
+  return schema;
+}
+
+function parseCreateTable(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`]+(?:\.[\w"`]+)?)\s*\((.*)\)\s*[^)]*$/is);
+  if (!match) return null;
+
+  let tableName = match[1].replace(/["`]/g, '');
+  const rawBody = match[2];
+
+  const table = {
+    name: tableName,
+    columns: [],
+    constraints: [],
+    indexes: []
+  };
+
+  // Split body into column/constraint definitions
+  const parts = splitBody(rawBody);
+
+  for (const part of parts) {
+    const tokens = tokenize(part);
+    if (tokens.length < 2) continue;
+
+    // Detect if it's a table-level constraint
+    const firstUpper = tokens[0].toUpperCase();
+    if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK') {
+      table.constraints.push({ raw: part, tokens: tokens });
+      continue;
+    }
+
+    // It's a column definition
+    const col = parseColumn(tokens, dialect);
+    if (col) table.columns.push(col);
+  }
+
+  return table;
+}
+
+function splitBody(body) {
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    const prev = body[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        continue;
+      }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function parseColumn(tokens, dialect) {
+  const col = {
+    name: tokens[0].replace(/["`]/g, ''),
+    type: '',
+    nullable: true,
+    defaultValue: null,
+    primaryKey: false,
+    unique: false,
+    autoIncrement: false,
+    raw: tokens.join(' ')
+  };
+
+  let i = 1;
+  // Collect type tokens
+  const typeTokens = [];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY'];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (constraintKeywords.includes(t)) break;
+    typeTokens.push(tokens[i]);
+    i++;
+  }
+  col.type = typeTokens.join(' ') || 'UNKNOWN';
+
+  // Parse constraints
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'NULL') {
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'NULL') {
+      col.nullable = true;
+      i++;
+    } else if (t === 'PRIMARY' && tokens[i+1] && tokens[i+1].toUpperCase() === 'KEY') {
+      col.primaryKey = true;
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'UNIQUE') {
+      col.unique = true;
+      i++;
+    } else if (t === 'DEFAULT') {
+      i++;
+      const defaultTokens = [];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','ON'];
+      while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
+        defaultTokens.push(tokens[i]);
+        i++;
+      }
+      col.defaultValue = defaultTokens.join(' ') || null;
+    } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
+      col.autoIncrement = true;
+      i++;
+    } else if (t === 'REFERENCES') {
+      // Skip foreign key inline
+      i++;
+      while (i < tokens.length) i++;
+    } else {
+      i++;
+    }
+  }
+
+  return col;
+}
+
+function parseCreateIndex(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+(UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`]+)\s+ON\s+([\w"`]+)\s*\(([^)]+)\)/i);
+  if (!match) return null;
+  return {
+    name: match[2].replace(/["`]/g, ''),
+    table: match[3].replace(/["`]/g, ''),
+    unique: !!match[1],
+    columns: match[4].split(',').map(c => c.trim().split(/\s+/)[0].replace(/["`]/g, ''))
+  };
+}
+
+// -----------------------------
+// Diff Engine
+// -----------------------------
+function diffSchemas(oldSchema, newSchema) {
+  const diff = {
+    tablesAdded: [],
+    tablesRemoved: [],
+    tablesModified: [],
+    totalTablesOld: Object.keys(oldSchema.tables).length,
+    totalTablesNew: Object.keys(newSchema.tables).length
+  };
+
+  const oldNames = new Set(Object.keys(oldSchema.tables));
+  const newNames = new Set(Object.keys(newSchema.tables));
+
+  for (const name of newNames) {
+    if (!oldNames.has(name)) diff.tablesAdded.push(newSchema.tables[name]);
+  }
+  for (const name of oldNames) {
+    if (!newNames.has(name)) diff.tablesRemoved.push(oldSchema.tables[name]);
+  }
+
+  for (const name of oldNames) {
+    if (newNames.has(name)) {
+      const tableDiff = diffTable(oldSchema.tables[name], newSchema.tables[name]);
+      if (tableDiff.hasChanges) {
+        diff.tablesModified.push(tableDiff);
+      }
+    }
+  }
+
+  return diff;
+}
+
+function diffTable(oldTable, newTable) {
+  const result = {
+    name: oldTable.name,
+    hasChanges: false,
+    columnsAdded: [],
+    columnsRemoved: [],
+    columnsModified: [],
+    constraintsChanged: false
+  };
+
+  const oldCols = Object.fromEntries(oldTable.columns.map(c => [c.name, c]));
+  const newCols = Object.fromEntries(newTable.columns.map(c => [c.name, c]));
+
+  for (const col of newTable.columns) {
+    if (!oldCols[col.name]) {
+      result.columnsAdded.push(col);
+      result.hasChanges = true;
+    }
+  }
+  for (const col of oldTable.columns) {
+    if (!newCols[col.name]) {
+      result.columnsRemoved.push(col);
+      result.hasChanges = true;
+    }
+  }
+  for (const col of newTable.columns) {
+    const oldCol = oldCols[col.name];
+    if (oldCol) {
+      const changes = [];
+      if (oldCol.type.toUpperCase() !== col.type.toUpperCase()) changes.push({ field: 'type', old: oldCol.type, new: col.type });
+      if (oldCol.nullable !== col.nullable) changes.push({ field: 'nullable', old: oldCol.nullable ? 'NULL' : 'NOT NULL', new: col.nullable ? 'NULL' : 'NOT NULL' });
+      if ((oldCol.defaultValue || null) !== (col.defaultValue || null)) changes.push({ field: 'default', old: oldCol.defaultValue || 'none', new: col.defaultValue || 'none' });
+      if (oldCol.primaryKey !== col.primaryKey) changes.push({ field: 'primary key', old: oldCol.primaryKey ? 'YES' : 'NO', new: col.primaryKey ? 'YES' : 'NO' });
+      if (oldCol.unique !== col.unique) changes.push({ field: 'unique', old: oldCol.unique ? 'YES' : 'NO', new: col.unique ? 'YES' : 'NO' });
+      if (changes.length > 0) {
+        result.columnsModified.push({ column: col, changes });
+        result.hasChanges = true;
+      }
+    }
+  }
+
+  // Simple constraint comparison (raw string)
+  const oldCons = oldTable.constraints.map(c => c.raw).sort().join(';');
+  const newCons = newTable.constraints.map(c => c.raw).sort().join(';');
+  if (oldCons !== newCons) {
+    result.constraintsChanged = true;
+    result.hasChanges = true;
+  }
+
+  return result;
+}
+
+// -----------------------------
+// Migration Generator
+// -----------------------------
+function generateMigration(diff, dialect) {
+  const lines = [];
+
+  for (const table of diff.tablesRemoved) {
+    if (dialect === 'sqlite') {
+      lines.push(`-- SQLite: DROP TABLE is destructive. Back up your data first.`);
+    }
+    lines.push(`DROP TABLE ${quoteId(table.name, dialect)};`);
+    lines.push('');
+  }
+
+  for (const table of diff.tablesAdded) {
+    lines.push(`-- New table: ${table.name}`);
+    lines.push(`CREATE TABLE ${quoteId(table.name, dialect)} (`);
+    const colLines = table.columns.map(c => '  ' + columnDefSQL(c, dialect));
+    if (table.constraints.length) {
+      for (const con of table.constraints) {
+        colLines.push('  ' + con.raw);
+      }
+    }
+    lines.push(colLines.join(',\n'));
+    lines.push(`);`);
+    lines.push('');
+  }
+
+  for (const td of diff.tablesModified) {
+    lines.push(`-- Changes in table: ${td.name}`);
+
+    for (const col of td.columnsRemoved) {
+      if (dialect === 'sqlite') {
+        lines.push(`-- SQLite does not support DROP COLUMN directly.`);
+        lines.push(`-- You must recreate the table. See: https://sqlite.org/lang_altertable.html`);
+        lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)}; -- NOT SUPPORTED`);
+      } else if (dialect === 'mysql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
+      } else {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
+      }
+    }
+    if (td.columnsRemoved.length) lines.push('');
+
+    for (const col of td.columnsAdded) {
+      if (dialect === 'sqlite') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+      } else if (dialect === 'mysql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+      } else {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+      }
+    }
+    if (td.columnsAdded.length) lines.push('');
+
+    for (const mod of td.columnsModified) {
+      const col = mod.column;
+      for (const change of mod.changes) {
+        if (change.field === 'type') {
+          if (dialect === 'postgres') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} TYPE ${col.type};`);
+          } else if (dialect === 'mysql') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
+          } else {
+            lines.push(`-- SQLite: type changes require table recreation`);
+            lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} ... -- NOT SUPPORTED`);
+          }
+        } else if (change.field === 'nullable') {
+          if (dialect === 'postgres') {
+            if (col.nullable) {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} DROP NOT NULL;`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} SET NOT NULL;`);
+            }
+          } else if (dialect === 'mysql') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
+          } else {
+            lines.push(`-- SQLite: nullability changes require table recreation`);
+          }
+        } else if (change.field === 'default') {
+          if (dialect === 'postgres') {
+            if (col.defaultValue) {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} SET DEFAULT ${col.defaultValue};`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} DROP DEFAULT;`);
+            }
+          } else if (dialect === 'mysql') {
+            if (col.defaultValue) {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} SET DEFAULT ${col.defaultValue};`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} DROP DEFAULT;`);
+            }
+          } else {
+            lines.push(`-- SQLite: default changes require table recreation`);
+          }
+        } else {
+          // Fallback: full column modify for MySQL, multiple alters for Postgres
+          if (dialect === 'mysql') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
+          } else if (dialect === 'postgres') {
+            lines.push(`-- Review change: ${change.field} on ${col.name}`);
+          } else {
+            lines.push(`-- SQLite: column changes require table recreation`);
+          }
+        }
+      }
+    }
+    if (td.columnsModified.length) lines.push('');
+
+    if (td.constraintsChanged) {
+      lines.push(`-- Table-level constraints changed in ${td.name}`);
+      lines.push(`-- Please review and update constraints manually.`);
+      lines.push('');
+    }
+  }
+
+  return lines.join('\n');
+}
+
+function quoteId(name, dialect) {
+  if (dialect === 'mysql') return '`' + name + '`';
+  if (dialect === 'postgres') return '"' + name + '"';
+  return `"${name}"`;
+}
+
+function columnDefSQL(col, dialect) {
+  let sql = quoteId(col.name, dialect) + ' ' + col.type;
+  if (!col.nullable) sql += ' NOT NULL';
+  if (col.primaryKey) sql += ' PRIMARY KEY';
+  if (col.unique) sql += ' UNIQUE';
+  if (col.defaultValue) sql += ' DEFAULT ' + col.defaultValue;
+  if (col.autoIncrement) {
+    if (dialect === 'mysql') sql += ' AUTO_INCREMENT';
+    else if (dialect === 'sqlite') sql += ' AUTOINCREMENT';
+    else sql += ' GENERATED ALWAYS AS IDENTITY';
+  }
+  return sql;
+}
+
+// -----------------------------
+// UI Rendering
+// -----------------------------
+function renderSummary(diff) {
+  const bar = document.getElementById('summaryBar');
+  const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length;
+  bar.innerHTML = `
+    <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
+    <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
+    <div class="summary-pill added"><span class="num">+${diff.tablesAdded.length}</span> added</div>
+    <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
+    <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
+  `;
+}
+
+function renderVisualDiff(diff) {
+  const container = document.getElementById('visualDiff');
+  let html = '';
+
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length) {
+    html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
+    container.innerHTML = html;
+    return;
+  }
+
+  for (const table of diff.tablesAdded) {
+    html += renderTableDiff(table.name, 'added', table.columns, [], []);
+  }
+  for (const table of diff.tablesRemoved) {
+    html += renderTableDiff(table.name, 'removed', [], table.columns, []);
+  }
+  for (const td of diff.tablesModified) {
+    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified);
+  }
+
+  container.innerHTML = html;
+}
+
+function renderTableDiff(name, status, addedCols, removedCols, modifiedCols) {
+  const badgeClass = status === 'added' ? 'badge-added' : status === 'removed' ? 'badge-removed' : 'badge-modified';
+  const badgeText = status === 'added' ? 'Added' : status === 'removed' ? 'Removed' : 'Modified';
+
+  let rows = '';
+  for (const col of removedCols) {
+    rows += `<tr class="row-removed"><td>${esc(col.name)}</td><td>${esc(col.type)}</td><td>${col.nullable?'NULL':'NOT NULL'}</td><td>${esc(col.defaultValue||'—')}</td></tr>`;
+  }
+  for (const col of addedCols) {
+    rows += `<tr class="row-added"><td>${esc(col.name)}</td><td>${esc(col.type)}</td><td>${col.nullable?'NULL':'NOT NULL'}</td><td>${esc(col.defaultValue||'—')}</td></tr>`;
+  }
+  for (const mod of modifiedCols) {
+    const changes = mod.changes.map(c => `<span class="cell-old">${esc(c.old)}</span><span class="cell-arrow">→</span><span class="cell-new">${esc(c.new)}</span> (${esc(c.field)})`).join('<br>');
+    rows += `<tr class="row-modified"><td>${esc(mod.column.name)}</td><td>${esc(mod.column.type)}</td><td>${mod.column.nullable?'NULL':'NOT NULL'}</td><td>${changes}</td></tr>`;
+  }
+
+  return `
+    <div class="diff-table">
+      <div class="diff-table-header">
+        <h4>${esc(name)} <span class="badge ${badgeClass}">${badgeText}</span></h4>
+      </div>
+      <div class="diff-table-body">
+        <table>
+          <thead><tr><th>Column</th><th>Type</th><th>Null</th><th>Details</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderMigration(sql, diff) {
+  const container = document.getElementById('migrationContainer');
+  const totalTables = diff.totalTablesNew;
+  const isLimited = totalTables > 10;
+
+  let html = '';
+  if (isLimited) {
+    html += `
+      <div class="upgrade-banner">
+        <h3>📈 Large schema detected (${totalTables} tables)</h3>
+        <p>Migration generation is limited to schemas with 10 tables or fewer on the Free plan.<br>Upgrade to Pro for unlimited tables and full migration scripts.</p>
+        <a href="pricing.html" class="btn btn-primary">Upgrade to Pro — $12/mo</a>
+      </div>
+    `;
+  }
+
+  html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button>${highlightSQL(sql)}</div>`;
+  container.innerHTML = html;
+}
+
+function highlightSQL(sql) {
+  return esc(sql)
+    .replace(/(--.*$)/gm, '<span class="comment">$1</span>')
+    .replace(/\b(CREATE|TABLE|ALTER|DROP|ADD|COLUMN|PRIMARY|KEY|NOT|NULL|UNIQUE|DEFAULT|TYPE|SET|IF|EXISTS|INDEX|ON|FOREIGN|REFERENCES|CHECK|COLLATE|AUTO_INCREMENT|GENERATED|ALWAYS|AS|IDENTITY)\b/g, '<span class="keyword">$1</span>')
+    .replace(/('[^']*')/g, '<span class="string">$1</span>');
+}
+
+function esc(s) {
+  if (!s) return '';
+  return s.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copySQL(btn) {
+  const code = btn.parentElement.innerText.replace('Copy', '').trim();
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+// -----------------------------
+// Samples
+// -----------------------------
+const SAMPLES = {
+  postgres: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  role_id INT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255),
+  body TEXT,
+  published BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);`,
+
+  mysql: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  role_id INT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255),
+  body TEXT,
+  published TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,
+};
+
+function loadSample(dialect) {
+  document.getElementById('schemaA').value = SAMPLES[dialect] || SAMPLES.postgres;
+  document.getElementById('dialect').value = dialect;
+  updateStats();
+}
+
+function loadSampleB() {
+  const a = document.getElementById('schemaA').value;
+  if (!a) return;
+  // Make some modifications
+  let b = a
+    .replace(/VARCHAR\(100\)/g, "VARCHAR(255)")
+    .replace(/role_id INT DEFAULT 1/, "role_id INT NOT NULL DEFAULT 1\n  , avatar_url VARCHAR(500)")
+    .replace(/published BOOLEAN DEFAULT false/, "published BOOLEAN DEFAULT false\n  , slug VARCHAR(300) UNIQUE")
+    + "\n\nCREATE TABLE tags (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(50) NOT NULL\n);";
+  document.getElementById('schemaB').value = b;
+  updateStats();
+}
+
+// -----------------------------
+// Stats
+// -----------------------------
+function updateStats() {
+  const a = document.getElementById('schemaA').value;
+  const b = document.getElementById('schemaB').value;
+  try {
+    const sa = parseSQL(a, document.getElementById('dialect').value);
+    const sb = parseSQL(b, document.getElementById('dialect').value);
+    document.getElementById('schemaAStats').textContent = `${Object.keys(sa.tables).length} tables parsed`;
+    document.getElementById('schemaBStats').textContent = `${Object.keys(sb.tables).length} tables parsed`;
+  } catch(e) {
+    // ignore
+  }
+}
+
+// -----------------------------
+// Main
+// -----------------------------
+document.getElementById('compareBtn').addEventListener('click', () => {
+  const sqlA = document.getElementById('schemaA').value;
+  const sqlB = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+  const errorContainer = document.getElementById('errorContainer');
+
+  errorContainer.innerHTML = '';
+
+  if (!sqlA.trim() || !sqlB.trim()) {
+    errorContainer.innerHTML = '<div class="error-banner">Please paste both schemas to compare.</div>';
+    return;
+  }
+
+  let schemaA, schemaB, diff;
+  try {
+    schemaA = parseSQL(sqlA, dialect);
+    schemaB = parseSQL(sqlB, dialect);
+  } catch (e) {
+    errorContainer.innerHTML = `<div class="error-banner"><strong>Parse error:</strong> ${esc(e.message)}</div>`;
+    return;
+  }
+
+  diff = diffSchemas(schemaA, schemaB);
+  const migrationSQL = generateMigration(diff, dialect);
+
+  // Save to localStorage
+  localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));
+
+  renderSummary(diff);
+  renderVisualDiff(diff);
+  renderMigration(migrationSQL, diff);
+
+  document.getElementById('results').classList.add('active');
+
+  // Scroll to results
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('schemaA').value = '';
+  document.getElementById('schemaB').value = '';
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('errorContainer').innerHTML = '';
+  document.getElementById('schemaAStats').textContent = '';
+  document.getElementById('schemaBStats').textContent = '';
+});
+
+document.querySelectorAll('.results-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.results-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.results-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Auto-load last diff
+(function init() {
+  const last = localStorage.getItem('schemalens_last');
+  if (last) {
+    try {
+      const data = JSON.parse(last);
+      if (data.a) document.getElementById('schemaA').value = data.a;
+      if (data.b) document.getElementById('schemaB').value = data.b;
+      if (data.dialect) document.getElementById('dialect').value = data.dialect;
+      updateStats();
+    } catch(e) {}
+  }
+})();
+
+// Update stats on input
+document.getElementById('schemaA').addEventListener('input', updateStats);
+document.getElementById('schemaB').addEventListener('input', updateStats);
+</script>
+</body>
+</html>

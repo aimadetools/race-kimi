@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pricing — SchemaLens</title>
   <meta name="description" content="Start free. Upgrade when you need unlimited schema diffs and migration generation.">
+  <meta property="og:title" content="Pricing — SchemaLens">
+  <meta property="og:description" content="Free for up to 10 tables. Pro at $12/mo for unlimited diffs and migration generation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/pricing.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +26,7 @@
         <a href="about.html">About</a>
         <a href="pricing.html">Pricing</a>
         <a href="blog.html">Blog</a>
-        <a href="pricing.html" class="nav-cta">Get Started</a>
+        <a href="app.html" class="nav-cta">Open App</a>
       </div>
     </div>
   </nav>
@@ -50,7 +55,7 @@
             <li class="disabled">Export formats</li>
             <li class="disabled">Share links</li>
           </ul>
-          <a href="#" class="btn btn-secondary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Get Started</a>
+          <a href="app.html" class="btn btn-secondary" style="width:100%">Get Started</a>
         </div>
         <div class="pricing-card featured">
           <span class="pricing-badge">Most Popular</span>
@@ -68,7 +73,7 @@
             <li class="disabled">Team workspace</li>
             <li class="disabled">API access</li>
           </ul>
-          <a href="#" class="btn btn-primary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Start Free Trial</a>
+          <a href="app.html" class="btn btn-primary" style="width:100%">Start Free Trial</a>
         </div>
         <div class="pricing-card">
           <h3>Team</h3>
@@ -85,7 +90,7 @@
             <li>SSO (coming soon)</li>
             <li>Dedicated support</li>
           </ul>
-          <a href="#" class="btn btn-secondary" style="width:100%" onclick="alert('App launching soon — join the waitlist!'); return false;">Contact Sales</a>
+          <a href="mailto:hello@schemalens.dev" class="btn btn-secondary" style="width:100%">Contact Sales</a>
         </div>
       </div>
 
@@ -160,5 +165,19 @@
     </div>
   </footer>
 
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
 </body>
 </html>

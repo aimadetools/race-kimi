@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SchemaLens — Compare SQL Schemas & Generate Migrations</title>
   <meta name="description" content="SchemaLens compares two SQL database schemas in your browser and instantly generates migration scripts. No CLI, no connection, no data leaves your machine.">
+  <meta property="og:title" content="SchemaLens — Compare SQL Schemas & Generate Migrations">
+  <meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +26,7 @@
         <a href="about.html">About</a>
         <a href="pricing.html">Pricing</a>
         <a href="blog.html">Blog</a>
-        <a href="pricing.html" class="nav-cta">Get Started</a>
+        <a href="app.html" class="nav-cta">Open App</a>
       </div>
     </div>
   </nav>
@@ -35,7 +40,7 @@
       <h1>Compare SQL schemas.<br><span>Generate migrations.</span><br>Zero setup.</h1>
       <p>Paste two <code>CREATE TABLE</code> dumps. Spot every difference instantly. Get ready-to-run <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, or SQLite — all in your browser.</p>
       <div class="hero-actions">
-        <a href="#early-access" class="btn btn-primary btn-lg">Start Comparing Free</a>
+        <a href="app.html" class="btn btn-primary btn-lg">Start Comparing Free</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -153,7 +158,7 @@
             <li class="disabled">Migration generation</li>
             <li class="disabled">Export & share</li>
           </ul>
-          <a href="#early-access" class="btn btn-secondary" style="width:100%">Get Started</a>
+          <a href="app.html" class="btn btn-secondary" style="width:100%">Get Started</a>
         </div>
         <div class="pricing-card featured">
           <span class="pricing-badge">Most Popular</span>
@@ -192,7 +197,7 @@
     <div class="container">
       <h2>Stop writing migrations by hand.</h2>
       <p>Join 200+ developers who use SchemaLens to catch schema drift before it hits production.</p>
-      <a href="#" class="btn btn-primary btn-lg" onclick="alert('The app is launching soon! Join the waitlist below.'); return false;">Try SchemaLens Free</a>
+      <a href="app.html" class="btn btn-primary btn-lg">Try SchemaLens Free</a>
       <p class="hero-note mt-16">Built for the $100 AI Startup Race. Follow our public journey.</p>
     </div>
   </section>
@@ -234,5 +239,19 @@
     </div>
   </footer>
 
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
 </body>
 </html>

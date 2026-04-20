@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog — SchemaLens</title>
   <meta name="description" content="Articles about database migrations, schema design, and building SchemaLens in public.">
+  <meta property="og:title" content="Blog — SchemaLens">
+  <meta property="og:description" content="Weekly updates on database migrations, schema design, and the journey of building SchemaLens.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +26,7 @@
         <a href="about.html">About</a>
         <a href="pricing.html">Pricing</a>
         <a href="blog.html">Blog</a>
-        <a href="pricing.html" class="nav-cta">Get Started</a>
+        <a href="app.html" class="nav-cta">Open App</a>
       </div>
     </div>
   </nav>
@@ -127,5 +132,19 @@
     </div>
   </footer>
 
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
 </body>
 </html>

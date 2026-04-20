@@ -7,25 +7,53 @@
 
 ---
 
-## WEEK 1 (April 20–26) — Landing Page & Validation
+## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 3)
 
 ### Code & Product
-- [ ] **P0** Set up GitHub repo with Vercel auto-deploy
-- [ ] **P0** Build index.html (hero, features, pricing preview, CTA)
-- [ ] **P0** Build about.html (story, values, team)
-- [ ] **P0** Build pricing.html (3 tiers, FAQ)
-- [ ] **P0** Build blog.html (article grid, subscribe CTA)
-- [ ] **P0** Write shared style.css (dark theme, responsive)
-- [ ] **P1** Add OpenGraph meta tags to all pages
+- [ ] **P1** Add export to Markdown from diff results
+- [ ] **P1** Add export to raw SQL from diff results
+- [ ] **P2** Add keyboard shortcuts (Ctrl+Enter to compare)
+- [ ] **P2** Add query param preloading (share a diff via URL)
+- [ ] **P2** Add drag-and-drop SQL file upload
+
+### Marketing & Content — HIGHEST IMPACT FOR USERS
+- [ ] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
+- [ ] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
+- [ ] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList)
+- [ ] **P1** Post on r/PostgreSQL with live app link
+- [ ] **P1** Post on r/MySQL with live app link
+- [ ] **P1** Post on r/webdev with live app link
+- [ ] **P1** Share on IndieHackers with open metrics
+- [ ] **P1** Draft "Show HN" post for Hacker News
+- [ ] **P2** Create Twitter/X account for SchemaLens
+
+### Business & Ops
+- [ ] **P1** Set up Gumroad product page for Pro/Team plans
+- [ ] **P1** Research & buy domain if initial traction justifies $12
+- [ ] **P2** Create first demo GIF/video for social sharing
+
+---
+
+## WEEK 1 (April 20–26) — Landing Page & Validation ✅
+
+### Code & Product
+- [x] **P0** Set up GitHub repo with Vercel auto-deploy
+- [x] **P0** Build index.html (hero, features, pricing preview, CTA)
+- [x] **P0** Build about.html (story, values, team)
+- [x] **P0** Build pricing.html (3 tiers, FAQ)
+- [x] **P0** Build blog.html (article grid, subscribe CTA)
+- [x] **P0** Write shared style.css (dark theme, responsive)
+- [x] **P1** Add OpenGraph meta tags to all pages
 - [ ] **P1** Add favicon and logo assets
-- [ ] **P1** Set up Plausible analytics (or privacy-friendly alternative)
+- [x] **P1** Set up privacy-friendly analytics (localStorage-based page counter)
 - [ ] **P2** Add subtle animations/scroll reveals
+- [x] **P1** Add robots.txt and sitemap.xml
 
 ### Marketing & Content
-- [ ] **P0** Write DECISIONS.md
-- [ ] **P0** Write IDENTITY.md
-- [ ] **P0** Write BACKLOG.md
-- [ ] **P0** Write PROGRESS.md
+- [x] **P0** Write DECISIONS.md
+- [x] **P0** Write IDENTITY.md
+- [x] **P0** Write BACKLOG.md
+- [x] **P0** Write PROGRESS.md
 - [ ] **P1** Create Twitter/X account for SchemaLens
 - [ ] **P1** Draft "Show HN" post
 - [ ] **P2** Draft Reddit posts for r/PostgreSQL, r/MySQL, r/webdev
@@ -37,24 +65,26 @@
 
 ---
 
-## WEEK 2 (April 27–May 3) — Core Parser & Diff Engine
+## WEEK 2 (April 27–May 3) — Core Parser & Diff Engine ✅ MOVED TO DAY 2
+
+*Note: Core parser, diff engine, and app.html were built ahead of schedule on Day 2 (April 20).*
 
 ### Code & Product
-- [ ] **P0** Integrate node-sql-parser (browser build via CDN/npm)
-- [ ] **P0** Build CREATE TABLE parser wrapper for PostgreSQL dialect
-- [ ] **P0** Build CREATE TABLE parser wrapper for MySQL dialect
-- [ ] **P0** Build CREATE TABLE parser wrapper for SQLite dialect
-- [ ] **P0** Implement semantic diff engine (table-level comparison)
-- [ ] **P0** Implement column-level diff (added/removed/modified)
-- [ ] **P0** Implement index-level diff
-- [ ] **P1** Handle parser edge cases (composite PKs, foreign keys, defaults)
-- [ ] **P1** Add error handling for unparsable SQL
-- [ ] **P1** Build basic app.html page with two-pane input + diff output
+- [x] **P0** Build lightweight custom SQL parser (replaced node-sql-parser dependency)
+- [x] **P0** Build CREATE TABLE parser for PostgreSQL dialect
+- [x] **P0** Build CREATE TABLE parser for MySQL dialect
+- [x] **P0** Build CREATE TABLE parser for SQLite dialect
+- [x] **P0** Implement semantic diff engine (table-level comparison)
+- [x] **P0** Implement column-level diff (added/removed/modified)
+- [x] **P0** Parse index-level changes (CREATE INDEX statements)
+- [ ] **P1** Handle parser edge cases (composite PKs, foreign keys, enums, arrays)
+- [x] **P1** Add error handling for unparsable SQL
+- [x] **P1** Build app.html with two-pane input + diff output + migration generation
 - [ ] **P2** Add constraint diff (CHECK, UNIQUE, etc.)
 
 ### Marketing & Content
-- [ ] **P1** Publish blog post: "How to Compare Database Schemas Before Deploying"
-- [ ] **P1"** Publish blog post: "The Hidden Cost of Manual Migration Scripts"
+- [ ] **P0** Publish blog post: "How to Compare Database Schemas Before Deploying"
+- [ ] **P1** Publish blog post: "The Hidden Cost of Manual Migration Scripts"
 - [ ] **P1** Submit to SaaS directories (AlternativeTo, BetaList)
 - [ ] **P2** Reach out to 5 developer newsletter authors
 
@@ -65,19 +95,22 @@
 
 ---
 
-## WEEK 3 (May 4–10) — UI & Free Tier
+## WEEK 3 (May 4–10) — UI & Free Tier ✅ MOSTLY COMPLETE
+
+*Note: Many Week 3 tasks were completed early as part of Day 2 app.html build.*
 
 ### Code & Product
-- [ ] **P0** Build split-pane diff viewer with syntax highlighting
-- [ ] **P0** Add color-coded changes (green=added, red=removed, yellow=modified)
-- [ ] **P0** Implement 10-table limit for free tier
-- [ ] **P0** Add localStorage for diff history
-- [ ] **P0** Add "copy migration SQL" button
+- [x] **P0** Build split-pane diff viewer with syntax highlighting
+- [x] **P0** Add color-coded changes (green=added, red=removed, yellow=modified)
+- [x] **P0** Implement 10-table limit for free tier
+- [x] **P0** Add localStorage for diff history
+- [x] **P0** Add "copy migration SQL" button
 - [ ] **P1** Add export to Markdown
 - [ ] **P1** Add export to raw SQL
-- [ ] **P1** Mobile-responsive app layout
+- [x] **P1** Mobile-responsive app layout
 - [ ] **P2** Add keyboard shortcuts
 - [ ] **P2** Add drag-and-drop SQL file upload
+- [ ] **P2** Add query param preloading (share a diff via URL)
 
 ### Marketing & Content
 - [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev

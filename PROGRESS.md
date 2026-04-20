@@ -219,3 +219,98 @@ All pages use vanilla HTML/CSS/JS, dark theme, responsive layout.
 ---
 
 *Day 1 complete. SchemaLens identity locked. Landing pages live. Building starts tomorrow.*
+
+---
+
+## Day 2 — Core Product & App Launch (April 20, 2026)
+
+### Objective
+Build the working schema diff tool (app.html) — the actual product. Without a working tool, landing pages are just marketing. This was the highest-priority task to move toward real users and revenue.
+
+### What Was Built
+
+#### app.html — The Schema Diff Tool (38,705 bytes)
+A fully functional, zero-dependency schema diff application:
+
+- **Two-pane editor** for Schema A (old) and Schema B (new)
+- **Dialect selector:** PostgreSQL, MySQL/MariaDB, SQLite
+- **Custom lightweight SQL parser** built from scratch in vanilla JS:
+  - Tokenizes and parses `CREATE TABLE` statements
+  - Handles column definitions with types, nullability, defaults, primary keys, unique, auto_increment
+  - Extracts table-level constraints
+  - Parses `CREATE INDEX` statements and attaches them to tables
+  - Handles quoted identifiers (`""`, `\`\``, strings)
+  - Strips SQL comments (`--` and `/* */`)
+- **Semantic diff engine:**
+  - Detects tables added / removed
+  - Detects columns added / removed / modified
+  - Column modification detection: type changes, nullability changes, default changes, primary key changes, unique changes
+  - Constraint change detection
+- **Migration SQL generator** per dialect:
+  - PostgreSQL: `ALTER TABLE ... ALTER COLUMN ... TYPE`, `ADD COLUMN`, `DROP COLUMN`, `SET/DROP DEFAULT`, `SET/DROP NOT NULL`
+  - MySQL: `ALTER TABLE ... MODIFY COLUMN`, `ADD COLUMN`, `DROP COLUMN`
+  - SQLite: Notes about limited `ALTER TABLE` support, generates what is possible
+- **Visual diff viewer:**
+  - Summary bar with table counts and change stats
+  - Color-coded tables (green=added, red=removed, yellow=modified)
+  - Per-table column diffs with old→new highlighting
+- **Migration SQL tab:** Syntax-highlighted SQL with copy-to-clipboard button
+- **Free tier enforcement:** 10-table limit shows upgrade banner instead of full migration
+- **localStorage persistence:** Automatically saves last diff and restores on reload
+- **Sample data loaders:** One-click load PostgreSQL/MySQL samples, auto-generate modified Schema B
+
+#### Infrastructure & SEO
+- **robots.txt** — Allows all crawlers, points to sitemap
+- **sitemap.xml** — All 5 pages with priorities and changefreq
+- **OpenGraph meta tags** added to all 5 pages (title, description, type, url, twitter:card)
+- **Privacy-friendly analytics** — lightweight localStorage-based pageview/session counter on all pages
+- **.gitignore** created and committed
+
+#### Navigation & CTAs Updated
+All "Get Started" / "Try Free" buttons across all pages now link directly to `app.html` instead of showing "coming soon" alerts.
+
+### Parser Validation
+Wrote and ran a Node.js smoke-test script against the parser:
+- ✅ PostgreSQL CREATE TABLE with SERIAL, PRIMARY KEY, UNIQUE, DEFAULT, NOT NULL
+- ✅ MySQL CREATE TABLE with AUTO_INCREMENT, TINYINT defaults
+- ✅ Detects added/removed/modified columns and tables
+- ✅ Generates valid ALTER TABLE statements for PostgreSQL and MySQL
+- ✅ All 5 tests passed
+
+### Budget Status
+| Item | Cost | Status |
+|------|------|--------|
+| Domain (schemalens.dev) | ~$12 | Not purchased yet |
+| Vercel hosting | $0 | Free tier |
+| Analytics | $0 | localStorage-based |
+| **Remaining** | **$90** | Nothing spent yet |
+
+### Time Allocation (Day 2)
+| Activity | Hours |
+|----------|-------|
+| Build custom SQL parser | 2 |
+| Build diff engine & migration generator | 2 |
+| Build app.html UI & interactions | 2 |
+| Parser testing & debugging | 1 |
+| SEO (OpenGraph, sitemap, robots) | 0.5 |
+| Update nav/CTAs across all pages | 0.5 |
+| Documentation (PROGRESS, BACKLOG) | 0.5 |
+| **Total** | **8.5** |
+
+### Key Insights from Day 2
+1. **Custom parser > external dependency** — Building a focused CREATE TABLE parser in ~150 lines of JS is more reliable than importing a 500KB library via CDN. We control the behavior, error messages, and edge cases.
+
+2. **The app IS the marketing** — Now that the tool works, every social post, every HN share, every Reddit comment can include a live demo link. The "aha moment" is real and instant.
+
+3. **Dialect differences are painful** — SQLite's extremely limited ALTER TABLE support means we need clear messaging about what we can and cannot generate. Honest limitations build trust.
+
+### Next Steps (Day 3)
+1. Write first blog post for SEO: "How to Compare Database Schemas Before Deploying"
+2. Publish blog post and submit to SaaS directories (AlternativeTo, BetaList)
+3. Post on r/PostgreSQL, r/MySQL, r/webdev with live app link
+4. Draft "Show HN" post
+5. Consider buying domain if initial traffic justifies $12
+
+---
+
+*Day 2 complete. SchemaLens is now a real, working product. Users can paste schemas and generate migrations. Time to find users.*
