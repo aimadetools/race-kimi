@@ -110,7 +110,7 @@
 - [x] **P1** Mobile-responsive app layout
 - [ ] **P2** Add keyboard shortcuts
 - [ ] **P2** Add drag-and-drop SQL file upload
-- [ ] **P2** Add query param preloading (share a diff via URL)
+- [x] **P2** Add query param preloading (share a diff via URL)
 
 ### Marketing & Content
 - [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev
@@ -128,8 +128,8 @@
 ## WEEK 4 (May 11–17) — Pro Tier & Product Hunt Launch
 
 ### Code & Product
-- [ ] **P0** Gate migration generation behind license key
-- [ ] **P0** Build PDF export functionality (client-side, html2pdf or similar)
+- [x] **P0** Gate migration generation behind license key
+- [x] **P0** Build PDF export functionality (client-side, print-optimized stylesheet)
 - [ ] **P0** Add save/share diff via exportable JSON/localStorage
 - [x] **P1** Add "try Pro" upsell prompts in free tier
 - [ ] **P1** Polish app UI: loading states, empty states, error messages

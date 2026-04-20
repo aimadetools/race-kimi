@@ -828,3 +828,60 @@ SchemaLens is now a fully functional, monetizable product:
 ---
 
 *Day 3 complete. SchemaLens is a real, working, monetizable product. Time to find users.*
+
+
+---
+
+## Day 4 — PDF Export & Week 4 Kickoff (April 20, 2026)
+
+### Objective
+Add PDF export functionality, the highest-priority incomplete P0 task from Week 4. This enables users to save diff reports as PDFs for documentation, compliance, and team sharing.
+
+### What Was Built
+
+#### PDF Export Tab
+- New "Export PDF" tab in the results area alongside Visual Diff, Migration SQL, and Export Markdown
+- Clean, print-optimized HTML report preview including:
+  - Title and metadata (timestamp, dialect)
+  - Summary table with table counts and change stats
+  - Tables added with full column definitions
+  - Tables removed with full column definitions
+  - Tables modified with added/removed/modified columns and constraints
+  - Migration SQL in a preformatted code block
+  - SchemaLens branding footer
+- "Save as PDF" button triggers the browser's native print-to-PDF dialog
+- Zero external dependencies — uses `@media print` CSS and `window.print()`
+
+#### Print Styles
+- `@media print` stylesheet hides all non-essential UI:
+  - Navigation, header, editor panes, toolbar, pro hint, results tabs, footer, modal
+  - Forces white background and dark text for clean PDF output
+  - Ensures only the PDF report content is printed regardless of which tab is active
+
+#### Integration
+- `renderPDF()` called automatically after every successful comparison
+- Pro hint banner updated to mention "Markdown & PDF export"
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design print report layout | 0.25 |
+| Implement renderPDF() and print styles | 0.5 |
+| Add tab UI and wire into comparison flow | 0.25 |
+| Test and verify | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.3** |
+
+### Key Insights
+1. **Native print-to-PDF > external libraries** — `window.print()` with `@media print` is more reliable, lighter, and produces better-quality PDFs than html2pdf.js for document-style reports. No CDN dependency, no rendering bugs.
+
+### Next Steps
+1. Polish app UI: loading states, empty states, error messages
+2. Set up Gumroad product page for Pro/Team plans
+3. Post marketing content to Reddit/HN/IndieHackers
+4. Consider buying domain if traffic justifies $12
+
+---
+
+*Day 4 in progress. PDF export live. Moving to UI polish and Gumroad setup.*

@@ -388,6 +388,16 @@
     @media (max-width: 768px) {
       .editor-grid { grid-template-columns: 1fr; }
     }
+    @media print {
+      nav, .app-header, .app-toolbar, .editor-grid, .pro-hint,
+      .results-tabs, footer, .modal-overlay, .pdf-actions { display: none !important; }
+      body { background: #fff; color: #111; }
+      .container { max-width: 100%; padding: 0; }
+      .results { margin-top: 0; border: none; }
+      .results-panel { border: none; }
+      #panel-pdf { display: block !important; }
+      a { text-decoration: none; color: #111; }
+    }
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -463,7 +473,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 10 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown export, and shareable diff links.</span>
+      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 10 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links.</span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -474,6 +484,7 @@ CREATE TABLE users (
         <button class="results-tab active" data-tab="visual">Visual Diff</button>
         <button class="results-tab" data-tab="migration">Migration SQL</button>
         <button class="results-tab" data-tab="markdown">Export Markdown</button>
+        <button class="results-tab" data-tab="pdf">Export PDF</button>
       </div>
 
       <div class="results-panel active" id="panel-visual">
@@ -487,6 +498,13 @@ CREATE TABLE users (
 
       <div class="results-panel" id="panel-markdown">
         <div id="markdownContainer"></div>
+      </div>
+
+      <div class="results-panel" id="panel-pdf">
+        <div class="pdf-actions" style="margin-bottom:16px;">
+          <button class="btn btn-primary" onclick="printPDF()">Save as PDF</button>
+        </div>
+        <div id="pdfContainer"></div>
       </div>
     </div>
   </main>
@@ -1418,6 +1436,136 @@ function renderMarkdown() {
   `;
 }
 
+function renderPDF() {
+  const container = document.getElementById('pdfContainer');
+  if (!lastDiff) {
+    container.innerHTML = '<div class="empty-state"><h3>No diff to export</h3><p>Run a comparison first.</p></div>';
+    return;
+  }
+  const diff = lastDiff;
+  const dialect = document.getElementById('dialect').value;
+  const dialectName = dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : 'SQLite';
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+  let html = `<div style="font-family:system-ui,-apple-system,sans-serif;line-height:1.5;color:#111;">`;
+  html += `<h2 style="margin-top:0;border-bottom:2px solid #111;padding-bottom:8px;">Schema Diff Report</h2>`;
+  html += `<p style="color:#555;font-size:0.9rem;"><strong>Generated:</strong> ${esc(now)}<br><strong>Dialect:</strong> ${esc(dialectName)}</p>`;
+
+  html += `<h3>Summary</h3>`;
+  html += `<table style="width:100%;border-collapse:collapse;font-size:0.9rem;margin-bottom:16px;">`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables in old schema</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.totalTablesOld}</td></tr>`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables in new schema</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.totalTablesNew}</td></tr>`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables added</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesAdded.length}</td></tr>`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables removed</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesRemoved.length}</td></tr>`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables modified</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesModified.length}</td></tr>`;
+  html += `</table>`;
+
+  if (diff.tablesAdded.length) {
+    html += `<h3>Tables Added</h3>`;
+    for (const table of diff.tablesAdded) {
+      html += `<h4 style="margin-bottom:4px;">${esc(table.name)}</h4>`;
+      html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:16px;">`;
+      html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Null</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Default</th></tr></thead><tbody>`;
+      for (const col of table.columns) {
+        html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.type)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${col.nullable ? 'NULL' : 'NOT NULL'}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.defaultValue || '—')}</td></tr>`;
+      }
+      html += `</tbody></table>`;
+    }
+  }
+
+  if (diff.tablesRemoved.length) {
+    html += `<h3>Tables Removed</h3>`;
+    for (const table of diff.tablesRemoved) {
+      html += `<h4 style="margin-bottom:4px;">${esc(table.name)}</h4>`;
+      html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:16px;">`;
+      html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Null</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Default</th></tr></thead><tbody>`;
+      for (const col of table.columns) {
+        html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.type)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${col.nullable ? 'NULL' : 'NOT NULL'}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.defaultValue || '—')}</td></tr>`;
+      }
+      html += `</tbody></table>`;
+    }
+  }
+
+  if (diff.tablesModified.length) {
+    html += `<h3>Tables Modified</h3>`;
+    for (const td of diff.tablesModified) {
+      html += `<h4 style="margin-bottom:4px;">${esc(td.name)}</h4>`;
+
+      if (td.columnsAdded.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Columns added</p>`;
+        html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:12px;">`;
+        html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Null</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Default</th></tr></thead><tbody>`;
+        for (const col of td.columnsAdded) {
+          html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.type)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${col.nullable ? 'NULL' : 'NOT NULL'}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.defaultValue || '—')}</td></tr>`;
+        }
+        html += `</tbody></table>`;
+      }
+
+      if (td.columnsRemoved.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Columns removed</p>`;
+        html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:12px;">`;
+        html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Null</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Default</th></tr></thead><tbody>`;
+        for (const col of td.columnsRemoved) {
+          html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.type)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${col.nullable ? 'NULL' : 'NOT NULL'}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.defaultValue || '—')}</td></tr>`;
+        }
+        html += `</tbody></table>`;
+      }
+
+      if (td.columnsModified.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Columns modified</p>`;
+        html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:12px;">`;
+        html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Changes</th></tr></thead><tbody>`;
+        for (const mod of td.columnsModified) {
+          const changes = mod.changes.map(c => `${esc(c.field)}: ${esc(c.old)} → ${esc(c.new)}`).join('; ');
+          html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(mod.column.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${changes}</td></tr>`;
+        }
+        html += `</tbody></table>`;
+      }
+
+      if (td.constraintsAdded && td.constraintsAdded.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Constraints added</p>`;
+        html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+        for (const con of td.constraintsAdded) {
+          html += `<li>${esc(constraintText(con))}</li>`;
+        }
+        html += `</ul>`;
+      }
+
+      if (td.constraintsRemoved && td.constraintsRemoved.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Constraints removed</p>`;
+        html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+        for (const con of td.constraintsRemoved) {
+          html += `<li>${esc(constraintText(con))}</li>`;
+        }
+        html += `</ul>`;
+      }
+    }
+  }
+
+  if (lastMigrationSQL && lastMigrationSQL.trim()) {
+    html += `<h3>Migration SQL</h3>`;
+    html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(lastMigrationSQL)}</pre>`;
+  }
+
+  html += `<p style="margin-top:24px;font-size:0.8rem;color:#777;">Generated by SchemaLens — https://schemalens.vercel.app</p>`;
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function constraintText(con) {
+  if (con.type === 'FOREIGN KEY') {
+    return `${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})`;
+  } else if (con.type === 'CHECK') {
+    return `${con.name || 'unnamed'}: CHECK (${con.expression})`;
+  } else {
+    return `${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})`;
+  }
+}
+
+function printPDF() {
+  window.print();
+}
+
 let lastMigrationSQL = '';
 let lastDiff = null;
 const LICENSE_SALT = 'SchemaLensPro2026';
@@ -1677,6 +1825,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderVisualDiff(diff);
   renderMigration(migrationSQL, diff);
   renderMarkdown();
+  renderPDF();
 
   document.getElementById('results').classList.add('active');
 
