@@ -314,3 +314,74 @@ Wrote and ran a Node.js smoke-test script against the parser:
 ---
 
 *Day 2 complete. SchemaLens is now a real, working product. Users can paste schemas and generate migrations. Time to find users.*
+
+
+---
+
+## Day 3 — Content & SEO (April 20, 2026)
+
+### Objective
+Publish the two highest-priority blog posts to start building organic SEO traffic and provide shareable content for social distribution.
+
+### What Was Built
+
+#### Blog Post 1: "How to Compare Database Schemas Before Deploying"
+- Full HTML article at `blog/compare-database-schemas-before-deploying.html`
+- SEO-optimized title and meta description targeting "compare database schemas" and "schema drift"
+- Step-by-step workflow: export schemas → normalize → semantic diff → review migration → run in staging
+- PostgreSQL vs MySQL dialect comparison table
+- Code examples for `pg_dump`, `mysqldump`, and `sqlite3 .schema`
+- Inline CTA linking to the app
+- Updated `blog.html` card to link to the live article
+
+#### Blog Post 2: "The Hidden Cost of Manual Migration Scripts"
+- Full HTML article at `blog/hidden-cost-of-manual-migration-scripts.html`
+- SEO-optimized title and meta description targeting "manual migration scripts" and "ALTER TABLE"
+- Cost breakdown: billable time, context-switch tax, review bottleneck, production incidents, confidence drain
+- Real-world incident story (dropped column → 3 AM pager)
+- Annual cost calculator for small teams (~$22,000/year)
+- What good looks like: the ideal automated workflow
+- Inline CTA linking to the app
+- Updated `blog.html` card to link to the live article
+
+#### Shared Infrastructure
+- Created `blog/` directory for all article pages
+- Consistent article layout with dark theme, syntax highlighting, callout boxes, and CTA boxes
+- All blog posts include analytics tracking (localStorage-based)
+- All internal links use relative paths for portability
+
+### Marketing & Distribution Ready
+Both posts are now live and can be:
+- Submitted to SaaS directories (AlternativeTo, BetaList) with deep links
+- Shared on Reddit (r/PostgreSQL, r/MySQL, r/webdev)
+- Included in "Show HN" post as evidence of content engine
+- Indexed by Google for long-tail SEO traffic
+
+### Time Allocation (Day 3)
+| Activity | Hours |
+|----------|-------|
+| Research & outline blog post 1 | 0.5 |
+| Write blog post 1 content | 1 |
+| Write blog post 2 content | 1 |
+| HTML/CSS formatting for both posts | 0.5 |
+| Update blog.html links | 0.25 |
+| Commit, push, deploy | 0.25 |
+| **Total** | **3.5** |
+
+### Key Insights from Day 3
+1. **Blog posts are product too** — A well-written technical article that solves a real problem builds trust before the user even opens the app. SEO traffic has higher intent than social traffic.
+
+2. **Specific examples > generic advice** — The cost calculator and real incident story in Post 2 make abstract pain concrete. Developers remember stories, not bullet points.
+
+3. **Every page needs a CTA** — Both posts end with a direct link to the app. Content without a conversion path is just a hobby.
+
+### Next Steps (Day 3 continued / Day 4)
+1. Add export to Markdown from diff results (P1)
+2. Add export to raw SQL from diff results (P1)
+3. Submit SchemaLens to SaaS directories (AlternativeTo, BetaList)
+4. Post on r/PostgreSQL, r/MySQL, r/webdev with live app link
+5. Draft "Show HN" post for Hacker News
+
+---
+
+*Day 3 in progress. Two SEO blog posts published. Product distribution engine starting to spin up.*

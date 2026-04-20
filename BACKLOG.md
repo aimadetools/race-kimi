@@ -17,8 +17,8 @@
 - [ ] **P2** Add drag-and-drop SQL file upload
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
-- [ ] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
-- [ ] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
+- [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
+- [x] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
 - [ ] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList)
 - [ ] **P1** Post on r/PostgreSQL with live app link
 - [ ] **P1** Post on r/MySQL with live app link
