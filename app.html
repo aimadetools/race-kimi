@@ -344,6 +344,7 @@
       </select>
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
     </div>
 
     <div class="editor-grid">
@@ -1211,6 +1212,38 @@ CREATE TABLE comments (
 );`,
 };
 
+function encodeState(a, b, dialect) {
+  const payload = JSON.stringify({ a, b, d: dialect });
+  return btoa(encodeURIComponent(payload));
+}
+
+function decodeState(hash) {
+  try {
+    const payload = decodeURIComponent(atob(hash));
+    return JSON.parse(payload);
+  } catch (e) {
+    return null;
+  }
+}
+
+function shareDiff() {
+  const a = document.getElementById('schemaA').value;
+  const b = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+  if (!a.trim() && !b.trim()) {
+    alert('Paste schemas to share first.');
+    return;
+  }
+  const hash = encodeState(a, b, dialect);
+  const url = location.origin + location.pathname + '#diff=' + hash;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('shareBtn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+}
+
 function loadSample(dialect) {
   document.getElementById('schemaA').value = SAMPLES[dialect] || SAMPLES.postgres;
   document.getElementById('dialect').value = dialect;
@@ -1297,7 +1330,10 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('errorContainer').innerHTML = '';
   document.getElementById('schemaAStats').textContent = '';
   document.getElementById('schemaBStats').textContent = '';
+  history.replaceState(null, '', location.pathname);
 });
+
+document.getElementById('shareBtn').addEventListener('click', shareDiff);
 
 document.querySelectorAll('.results-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1308,8 +1344,22 @@ document.querySelectorAll('.results-tab').forEach(tab => {
   });
 });
 
-// Auto-load last diff
+// Auto-load last diff or URL-shared diff
 (function init() {
+  const hashMatch = location.hash.match(/#diff=([A-Za-z0-9+/=_-]+)/);
+  if (hashMatch) {
+    const data = decodeState(hashMatch[1]);
+    if (data) {
+      if (data.a !== undefined) document.getElementById('schemaA').value = data.a;
+      if (data.b !== undefined) document.getElementById('schemaB').value = data.b;
+      if (data.d) document.getElementById('dialect').value = data.d;
+      updateStats();
+      // Auto-run comparison after a short delay to let UI settle
+      setTimeout(() => document.getElementById('compareBtn').click(), 300);
+      return;
+    }
+  }
+
   const last = localStorage.getItem('schemalens_last');
   if (last) {
     try {
@@ -1325,6 +1375,14 @@ document.querySelectorAll('.results-tab').forEach(tab => {
 // Update stats on input
 document.getElementById('schemaA').addEventListener('input', updateStats);
 document.getElementById('schemaB').addEventListener('input', updateStats);
+
+// Keyboard shortcut: Ctrl+Enter to compare
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('compareBtn').click();
+  }
+});
 </script>
 </body>
 </html>
