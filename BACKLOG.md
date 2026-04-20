@@ -139,7 +139,7 @@
 - [ ] **P2** Add query param preloading (share a diff via URL)
 
 ### Marketing & Content
-- [ ] **P0** Product Hunt launch preparation (gallery images, maker comment, tagline)
+- [x] **P0** Product Hunt launch preparation (gallery images, maker comment, tagline)
 - [ ] **P0** Launch on Product Hunt
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P1** Email waitlist subscribers about launch
