@@ -1068,3 +1068,61 @@ Publish "How We Parse SQL in the Browser" — a technical deep dive that builds 
 ---
 
 *Day 4 complete. Four blog posts published. SQL Server support live. Product is differentiated and content engine is running.*
+
+
+---
+
+## Day 5 — Free Micro-Tool: SQL CREATE TABLE Validator (April 20, 2026)
+
+### Objective
+Build and ship a standalone free micro-tool that validates SQL CREATE TABLE syntax. This drives organic traffic from tool directories (tiny-helpers.dev, etc.), builds backlinks for SEO, and acts as a top-of-funnel entry point to SchemaLens.
+
+### What Was Built
+
+#### `tools/sql-validator.html` (27,581 bytes)
+A fully client-side SQL validator with zero dependencies:
+
+- **Dialect support:** PostgreSQL, MySQL/MariaDB, SQLite, SQL Server
+- **Reuses SchemaLens parser:** Full CREATE TABLE, CREATE INDEX, and CREATE TYPE (ENUM) parsing
+- **Structured validation output:**
+  - Summary bar with table/column/constraint/index counts
+  - Per-table cards showing all columns with type, nullability, defaults, PK, FK, UNIQUE, AUTO_INCREMENT tags
+  - Constraint breakdown (PRIMARY KEY, UNIQUE, FOREIGN KEY, CHECK) with names and details
+  - Index listing with column coverage
+  - Enum type listing
+- **Error reporting:** Detects CREATE TABLE statements that fail to parse and shows the problematic snippet
+- **"Open in SchemaLens" CTA:** One-click transfer of validated SQL into the diff app via base64 URL hash
+- **Keyboard shortcut:** Ctrl+Enter triggers validation
+- **SEO optimized:** Unique title, meta description, OpenGraph tags
+- **Analytics:** localStorage-based pageview tracking (consistent with rest of site)
+
+#### Integration
+- Added to `sitemap.xml` for search indexing
+- Added link in `index.html` footer under Resources
+
+### Time Allocation (Day 5)
+| Activity | Hours |
+|----------|-------|
+| Design validator UX and data model | 0.25 |
+| Extract and adapt parser from app.html | 0.5 |
+| Build HTML/CSS/JS for validator page | 0.5 |
+| Add error reporting and edge cases | 0.25 |
+| Add Open in SchemaLens CTA + URL encoding | 0.25 |
+| Update sitemap, footer links, PROGRESS, BACKLOG | 0.25 |
+| Commit and deploy | 0.1 |
+| **Total** | **2.1** |
+
+### Key Insights
+1. **Micro-tools are traffic engines** — A single-purpose free tool ranks for "sql validator" and related keywords, bringing in users who may never have searched for "schema diff" directly.
+
+2. **Parser reuse is a moat** — Because we built our own parser, spinning up new tools that use it is trivial. Every micro-tool reinforces the core product's credibility.
+
+### Next Steps (Day 5 continued / Day 6)
+1. Submit SQL Validator to tiny-helpers.dev and similar tool directories
+2. Add parser confidence indicator to app.html for edge-case transparency
+3. Continue community posting when accounts are available
+4. Consider buying domain if traffic metrics justify $12
+
+---
+
+*Day 5 in progress. Free micro-tool live. SEO/distribution engine expanded.*
