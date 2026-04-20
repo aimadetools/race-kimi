@@ -500,3 +500,55 @@ Created `marketing/indiehackers.md` with three post drafts:
 ---
 
 *Day 3 complete. Marketing engine is fueled and ready. Distribution content locked and loaded.*
+
+
+---
+
+## Day 3 — Shareable Diffs & Keyboard Shortcuts (April 20, 2026)
+
+### Objective
+Add viral sharing capability via URL preloading and improve power-user UX with keyboard shortcuts.
+
+### What Was Built
+
+#### Query Param Preloading (Shareable Diffs)
+- Added **Share** button to app toolbar
+- Clicking Share copies a URL with base64-encoded schema data to clipboard
+- URL format: `app.html#diff=<base64payload>`
+- When someone opens a shared URL:
+  - Schemas auto-populate in both panes
+  - Dialect selector updates to match
+  - Comparison runs automatically after 300ms UI settle
+  - Results scroll into view
+- Existing localStorage auto-restore still works as fallback when no URL hash present
+- Clear button now also clears the URL hash
+
+#### Keyboard Shortcuts
+- **Ctrl+Enter** triggers Compare Schemas from anywhere on the page
+- Works while focus is in either textarea or anywhere else
+- Prevents default behavior (form submission) to avoid page reload
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design URL encoding strategy | 0.25 |
+| Implement encode/decode + Share button | 0.5 |
+| Implement auto-run on URL load | 0.25 |
+| Add Ctrl+Enter shortcut | 0.1 |
+| Test and verify | 0.25 |
+| Commit and deploy | 0.25 |
+| **Total** | **1.6** |
+
+### Key Insights
+1. **URL sharing is free viral growth** — Every time a developer shares a diff with a teammate, that's a new user who sees the product instantly.
+2. **Base64 + URL hash keeps it simple** — No backend needed, works with static hosting, survives copy-paste into Slack/Discord/Email.
+
+### Next Steps
+1. Add drag-and-drop SQL file upload
+2. Set up Gumroad product page when possible
+3. Buy domain if traffic justifies $12 spend
+4. Post marketing content to communities
+
+---
+
+*Day 3 complete. Shareable diffs + keyboard shortcuts live. App is becoming genuinely usable for power users.*
