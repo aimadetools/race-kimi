@@ -96,6 +96,10 @@
     .editor-panel textarea::placeholder {
       color: #475569;
     }
+    .editor-panel.drag-over {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    }
     .sample-links {
       display: flex;
       gap: 12px;
@@ -348,7 +352,7 @@
     </div>
 
     <div class="editor-grid">
-      <div class="editor-panel">
+      <div class="editor-panel" id="panelA">
         <div class="editor-panel-header">
           <span><span class="dot old"></span> Schema A (Old)</span>
           <span id="schemaAStats" style="font-weight:400;color:var(--text-muted)"></span>
@@ -363,7 +367,7 @@ CREATE TABLE users (
           <button onclick="loadSample('mysql')">Load sample (MySQL)</button>
         </div>
       </div>
-      <div class="editor-panel">
+      <div class="editor-panel" id="panelB">
         <div class="editor-panel-header">
           <span><span class="dot new"></span> Schema B (New)</span>
           <span id="schemaBStats" style="font-weight:400;color:var(--text-muted)"></span>
@@ -1371,6 +1375,43 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     } catch(e) {}
   }
 })();
+
+// Drag and drop file upload
+function setupDrop(panelId, textareaId) {
+  const panel = document.getElementById(panelId);
+  const textarea = document.getElementById(textareaId);
+  if (!panel || !textarea) return;
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    panel.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, false);
+  });
+
+  panel.addEventListener('dragenter', () => panel.classList.add('drag-over'));
+  panel.addEventListener('dragover', () => panel.classList.add('drag-over'));
+  panel.addEventListener('dragleave', () => panel.classList.remove('drag-over'));
+  panel.addEventListener('drop', (e) => {
+    panel.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (!files.length) return;
+    const file = files[0];
+    if (!file.name.toLowerCase().endsWith('.sql')) {
+      alert('Please drop a .sql file');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      textarea.value = ev.target.result;
+      updateStats();
+    };
+    reader.readAsText(file);
+  });
+}
+
+setupDrop('panelA', 'schemaA');
+setupDrop('panelB', 'schemaB');
 
 // Update stats on input
 document.getElementById('schemaA').addEventListener('input', updateStats);
