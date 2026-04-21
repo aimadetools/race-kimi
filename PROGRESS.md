@@ -1853,3 +1853,59 @@ Also built `sqlite-schema-diff.html` and `sql-server-schema-diff.html` using the
 ---
 
 *Day 6 complete. Four dialect-specific SEO landing pages live. Site now has dedicated entry points for PostgreSQL, MySQL, SQLite, and SQL Server search traffic.*
+
+
+---
+
+## Day 6 — Blog Post 8: How to Generate ALTER TABLE Scripts Automatically (April 21, 2026)
+
+### Objective
+Publish the P1 blog post "How to Generate ALTER TABLE Scripts Automatically" to capture high-intent search traffic from developers looking for migration automation. This was the highest-priority incomplete task in the immediate backlog.
+
+### What Was Built
+
+#### Blog Post 8: "How to Generate ALTER TABLE Scripts Automatically"
+- Full HTML article at `blog/how-to-generate-alter-table-scripts-automatically.html`
+- SEO-optimized title targeting:
+  - "generate alter table scripts automatically"
+  - "automatic alter table generator"
+  - "create alter table script from schema diff"
+  - "postgres alter table generator"
+  - "mysql alter table script generator"
+- Comprehensive technical content:
+  1. Why manual ALTER TABLE scripts fail (dialect confusion, constraint names, missing dependencies, silent omissions)
+  2. Three-stage automatic generation pipeline (parse → diff → emit DDL)
+  3. PostgreSQL examples: ADD COLUMN, ALTER COLUMN TYPE, SET/DROP DEFAULT, ADD CONSTRAINT
+  4. MySQL examples: MODIFY COLUMN, ADD COLUMN AFTER, DROP FOREIGN KEY
+  5. SQL Server examples: ADD (no COLUMN keyword), named default constraints
+  6. SQLite limitations and honest multi-step workaround generation
+  7. Common pitfalls even automation can't fix (data loss, NOT NULL conflicts, renames vs drops)
+  8. CI/CD integration points: PR gates, pre-deploy artifacts, drift detection
+- Inline CTA linking to app.html
+- Updated `blog.html` with new card at top of grid
+- Added to `sitemap.xml` for search indexing
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research keyword targets and outline | 0.25 |
+| Write article content and code examples | 0.75 |
+| HTML formatting and syntax highlighting | 0.25 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | 1.55 |
+
+### Key Insights
+1. **ALTER TABLE is a high-intent keyword** — Developers searching for automatic migration generation are often in pain right now. They have a deployment pending and need a script. This converts better than educational content.
+
+2. **Dialect-specific examples rank** — A post with real PostgreSQL, MySQL, and SQL Server syntax outperforms generic SQL advice. Search engines reward specificity.
+
+### Next Steps (Day 6 continued / Day 7)
+1. Write blog post: "SchemaLens in Your CI/CD Pipeline"
+2. Continue community posting when accounts are available
+3. Evaluate domain purchase based on analytics trends
+
+---
+
+*Day 6 in progress. Eight blog posts live. Highest-priority incomplete P1 task executed.*
