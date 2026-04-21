@@ -49,6 +49,7 @@
 - [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
 - [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
 - [x] **P2** Write blog post: "How to Document Your Database Schema in 30 Seconds"
+- [x] **P2** Write blog post: "Convert JSON to SQL Schema in Seconds"
 
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans

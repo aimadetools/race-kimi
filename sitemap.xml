@@ -145,6 +145,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/blog/convert-json-to-sql-schema-in-seconds.html</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/postgres-schema-diff.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
