@@ -30,7 +30,7 @@
 - [x] **P1** Create SQLite schema diff landing page (SEO)
 - [x] **P1** Create SQL Server schema diff landing page (SEO)
 - [x] **P1** Write blog post: "How to Generate ALTER TABLE Scripts Automatically"
-- [ ] **P1** Write blog post: "SchemaLens in Your CI/CD Pipeline"
+- [x] **P1** Write blog post: "SchemaLens in Your CI/CD Pipeline"
 - [x] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList) — drafts ready, submission pending
 - [x] **P1** Post on r/PostgreSQL with live app link — draft ready, posting pending
 - [x] **P1** Post on r/MySQL with live app link — draft ready, posting pending
