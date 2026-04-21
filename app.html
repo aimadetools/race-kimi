@@ -1071,6 +1071,8 @@ function diffSchemas(oldSchema, newSchema) {
 function diffTable(oldTable, newTable) {
   const result = {
     name: oldTable.name,
+    oldTable: oldTable,
+    newTable: newTable,
     hasChanges: false,
     columnsAdded: [],
     columnsRemoved: [],
@@ -1135,6 +1137,128 @@ function diffTable(oldTable, newTable) {
   }
 
   return result;
+}
+
+function detectBreakingChanges(diff) {
+  const breaking = [];
+
+  // 1. Dropped tables
+  for (const table of diff.tablesRemoved) {
+    breaking.push({
+      type: 'DROP_TABLE',
+      severity: 'critical',
+      table: table.name,
+      details: `Table "${table.name}" was removed`
+    });
+  }
+
+  // 2. Dropped columns
+  for (const td of diff.tablesModified) {
+    for (const col of td.columnsRemoved) {
+      breaking.push({
+        type: 'DROP_COLUMN',
+        severity: 'critical',
+        table: td.name,
+        column: col.name,
+        details: `Column "${col.name}" was removed from "${td.name}"`
+      });
+    }
+  }
+
+  // 3. Added NOT NULL without default
+  for (const td of diff.tablesModified) {
+    for (const col of td.columnsAdded) {
+      if (!col.nullable && !col.defaultValue) {
+        breaking.push({
+          type: 'ADD_NOT_NULL_NO_DEFAULT',
+          severity: 'critical',
+          table: td.name,
+          column: col.name,
+          details: `Column "${col.name}" in "${td.name}" is NOT NULL with no default — migration will fail on existing rows`
+        });
+      }
+    }
+  }
+
+  // 4. Narrowed types
+  for (const td of diff.tablesModified) {
+    for (const mod of td.columnsModified) {
+      const typeChange = mod.changes.find(c => c.field === 'type');
+      if (!typeChange) continue;
+      const oldT = typeChange.old.toUpperCase();
+      const newT = typeChange.new.toUpperCase();
+      let narrowed = false;
+
+      // VARCHAR/CHAR/NVARCHAR length decrease
+      const oldVar = oldT.match(/^(?:N?VAR)?CHAR\s*\(\s*(\d+)\s*\)/);
+      const newVar = newT.match(/^(?:N?VAR)?CHAR\s*\(\s*(\d+)\s*\)/);
+      if (oldVar && newVar && parseInt(newVar[1]) < parseInt(oldVar[1])) narrowed = true;
+
+      // INTEGER narrowing
+      if (oldT.includes('BIGINT') && (newT.includes('INT') || newT.includes('SMALLINT') || newT.includes('TINYINT'))) narrowed = true;
+      if (oldT.includes('INT') && !oldT.includes('BIGINT') && (newT.includes('SMALLINT') || newT.includes('TINYINT'))) narrowed = true;
+      if (oldT.includes('SMALLINT') && newT.includes('TINYINT')) narrowed = true;
+
+      // TEXT -> VARCHAR/CHAR
+      if ((oldT.includes('TEXT') || oldT.includes('CLOB')) && (newT.includes('VARCHAR') || newT.includes('CHAR'))) narrowed = true;
+
+      // DECIMAL precision/scale decrease
+      const oldDec = oldT.match(/DECIMAL\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      const newDec = newT.match(/DECIMAL\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      if (oldDec && newDec) {
+        if (parseInt(newDec[1]) < parseInt(oldDec[1]) || parseInt(newDec[2]) < parseInt(oldDec[2])) narrowed = true;
+      }
+
+      if (narrowed) {
+        breaking.push({
+          type: 'NARROW_TYPE',
+          severity: 'warning',
+          table: td.name,
+          column: mod.column.name,
+          details: `Column "${mod.column.name}" in "${td.name}" narrowed from ${typeChange.old} to ${typeChange.new} — risk of data truncation`
+        });
+      }
+    }
+  }
+
+  // 5. Dropped constraints (PK, UNIQUE, CHECK)
+  for (const td of diff.tablesModified) {
+    for (const con of td.constraintsRemoved) {
+      const type = (con.type || '').toUpperCase();
+      if (type.includes('PRIMARY') || type.includes('UNIQUE') || type.includes('CHECK')) {
+        breaking.push({
+          type: 'DROP_CONSTRAINT',
+          severity: 'critical',
+          table: td.name,
+          details: `Dropped ${con.type}${con.name ? ' "' + con.name + '"' : ''} from "${td.name}"`
+        });
+      }
+    }
+  }
+
+  // 6. Added FK without index
+  for (const td of diff.tablesModified) {
+    const tableName = td.name;
+    for (const con of td.constraintsAdded) {
+      const type = (con.type || '').toUpperCase();
+      if (type.includes('FOREIGN')) {
+        const fkCols = con.columns || [];
+        const hasIndex = (td.newTable && td.newTable.indexes || []).some(idx =>
+          idx.columns.length >= fkCols.length && fkCols.every((c, i) => idx.columns[i] === c)
+        );
+        if (!hasIndex) {
+          breaking.push({
+            type: 'ADD_FK_NO_INDEX',
+            severity: 'warning',
+            table: tableName,
+            details: `Foreign key on "${tableName}"(${fkCols.join(', ')}) has no supporting index — can cause table locks`
+          });
+        }
+      }
+    }
+  }
+
+  return breaking;
 }
 
 // -----------------------------
@@ -1337,7 +1461,7 @@ function columnDefSQL(col, dialect) {
 // -----------------------------
 // UI Rendering
 // -----------------------------
-function renderSummary(diff, confidenceA, confidenceB) {
+function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
   const bar = document.getElementById('summaryBar');
   const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length;
 
@@ -1360,6 +1484,15 @@ function renderSummary(diff, confidenceA, confidenceB) {
     confidenceHTML = `<div class="summary-pill" style="border-color:var(--success);color:var(--success)"><span class="num">✓</span> High confidence</div>`;
   }
 
+  const criticalCount = breakingChanges.filter(b => b.severity === 'critical').length;
+  const warningCount = breakingChanges.filter(b => b.severity === 'warning').length;
+  let breakingHTML = '';
+  if (breakingChanges.length > 0) {
+    const bcColor = criticalCount > 0 ? 'var(--danger)' : 'var(--warning)';
+    const bcIcon = criticalCount > 0 ? '🔴' : '⚠';
+    breakingHTML = `<div class="summary-pill" style="border-color:${bcColor};color:${bcColor}"><span class="num">${bcIcon}</span> ${breakingChanges.length} breaking (${criticalCount} critical)</div>`;
+  }
+
   bar.innerHTML = `
     <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
@@ -1368,14 +1501,16 @@ function renderSummary(diff, confidenceA, confidenceB) {
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
     ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
     ${confidenceHTML}
+    ${breakingHTML}
     <div style="flex:1"></div>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
   `;
 
   // Render warning banner if needed
   const warnContainer = document.getElementById('warningContainer');
+  let warnHTML = '';
   if (uniqueWarnings.length > 0) {
-    warnContainer.innerHTML = `
+    warnHTML += `
       <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;color:var(--warning);font-size:0.9rem;">
         <strong style="display:block;margin-bottom:6px;color:var(--warning);">⚠ Parser Warnings</strong>
         <ul style="margin:0;padding-left:18px;line-height:1.7;">
@@ -1383,12 +1518,24 @@ function renderSummary(diff, confidenceA, confidenceB) {
         </ul>
       </div>
     `;
-  } else {
-    warnContainer.innerHTML = '';
   }
+  if (breakingChanges.length > 0) {
+    const bcColor = criticalCount > 0 ? 'var(--danger)' : 'var(--warning)';
+    const bcBg = criticalCount > 0 ? 'rgba(248,113,113,0.08)' : 'rgba(251,191,36,0.08)';
+    const bcBorder = criticalCount > 0 ? 'rgba(248,113,113,0.3)' : 'rgba(251,191,36,0.3)';
+    warnHTML += `
+      <div style="background:${bcBg};border:1px solid ${bcBorder};border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;color:${bcColor};font-size:0.9rem;">
+        <strong style="display:block;margin-bottom:6px;color:${bcColor};">${criticalCount > 0 ? '🔴' : '⚠'} Breaking Changes Detected</strong>
+        <ul style="margin:0;padding-left:18px;line-height:1.7;">
+          ${breakingChanges.map(b => `<li><strong>${b.severity.toUpperCase()}:</strong> ${esc(b.details)}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+  warnContainer.innerHTML = warnHTML;
 }
 
-function renderVisualDiff(diff) {
+function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
@@ -1398,14 +1545,20 @@ function renderVisualDiff(diff) {
     return;
   }
 
+  const tableBreaking = new Map();
+  for (const b of breakingChanges) {
+    if (!tableBreaking.has(b.table)) tableBreaking.set(b.table, []);
+    tableBreaking.get(b.table).push(b);
+  }
+
   for (const table of diff.tablesAdded) {
-    html += renderTableDiff(table.name, 'added', table.columns, [], []);
+    html += renderTableDiff(table.name, 'added', table.columns, [], [], [], [], tableBreaking.get(table.name) || []);
   }
   for (const table of diff.tablesRemoved) {
-    html += renderTableDiff(table.name, 'removed', [], table.columns, []);
+    html += renderTableDiff(table.name, 'removed', [], table.columns, [], [], [], tableBreaking.get(table.name) || []);
   }
   for (const td of diff.tablesModified) {
-    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified, td.constraintsAdded, td.constraintsRemoved);
+    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified, td.constraintsAdded, td.constraintsRemoved, tableBreaking.get(td.name) || []);
   }
 
   if (diff.enumsAdded.length) {
@@ -1438,9 +1591,18 @@ function renderVisualDiff(diff) {
   container.innerHTML = html;
 }
 
-function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, constraintsAdded, constraintsRemoved) {
+function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, constraintsAdded, constraintsRemoved, breakingChanges) {
   const badgeClass = status === 'added' ? 'badge-added' : status === 'removed' ? 'badge-removed' : 'badge-modified';
   const badgeText = status === 'added' ? 'Added' : status === 'removed' ? 'Removed' : 'Modified';
+
+  const criticalCount = breakingChanges.filter(b => b.severity === 'critical').length;
+  const warningCount = breakingChanges.filter(b => b.severity === 'warning').length;
+  let breakingBadge = '';
+  if (criticalCount > 0) {
+    breakingBadge = ` <span class="badge" style="background:var(--danger);color:#fff;">🔴 ${criticalCount} breaking</span>`;
+  } else if (warningCount > 0) {
+    breakingBadge = ` <span class="badge" style="background:var(--warning);color:#111;">⚠ ${warningCount} warning</span>`;
+  }
 
   let rows = '';
   for (const col of removedCols) {
@@ -1465,7 +1627,7 @@ function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, con
   return `
     <div class="diff-table">
       <div class="diff-table-header">
-        <h4>${esc(name)} <span class="badge ${badgeClass}">${badgeText}</span></h4>
+        <h4>${esc(name)} <span class="badge ${badgeClass}">${badgeText}</span>${breakingBadge}</h4>
       </div>
       <div class="diff-table-body">
         <table>
@@ -2134,12 +2296,13 @@ document.getElementById('compareBtn').addEventListener('click', () => {
 
   const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
   const confidenceB = calculateConfidence(sqlB, dialect, schemaB);
+  const breakingChanges = detectBreakingChanges(diff);
 
   // Save to localStorage
   localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));
 
-  renderSummary(diff, confidenceA, confidenceB);
-  renderVisualDiff(diff);
+  renderSummary(diff, confidenceA, confidenceB, breakingChanges);
+  renderVisualDiff(diff, breakingChanges);
   renderMigration(migrationSQL, diff);
   renderMarkdown();
   renderPDF();

@@ -425,6 +425,8 @@ function diffSchemas(oldSchema, newSchema) {
 function diffTable(oldTable, newTable) {
   const result = {
     name: oldTable.name,
+    oldTable: oldTable,
+    newTable: newTable,
     hasChanges: false,
     columnsAdded: [],
     columnsRemoved: [],
@@ -490,6 +492,64 @@ function diffTable(oldTable, newTable) {
   return result;
 }
 
+function detectBreakingChanges(diff) {
+  const breaking = [];
+  for (const table of diff.tablesRemoved) {
+    breaking.push({ type: 'DROP_TABLE', severity: 'critical', table: table.name, details: `Table "${table.name}" was removed` });
+  }
+  for (const td of diff.tablesModified) {
+    for (const col of td.columnsRemoved) {
+      breaking.push({ type: 'DROP_COLUMN', severity: 'critical', table: td.name, column: col.name, details: `Column "${col.name}" was removed from "${td.name}"` });
+    }
+    for (const col of td.columnsAdded) {
+      if (!col.nullable && !col.defaultValue) {
+        breaking.push({ type: 'ADD_NOT_NULL_NO_DEFAULT', severity: 'critical', table: td.name, column: col.name, details: `Column "${col.name}" in "${td.name}" is NOT NULL with no default` });
+      }
+    }
+    for (const mod of td.columnsModified) {
+      const typeChange = mod.changes.find(c => c.field === 'type');
+      if (!typeChange) continue;
+      const oldT = typeChange.old.toUpperCase();
+      const newT = typeChange.new.toUpperCase();
+      let narrowed = false;
+      const oldVar = oldT.match(/^(?:N?VAR)?CHAR\s*\(\s*(\d+)\s*\)/);
+      const newVar = newT.match(/^(?:N?VAR)?CHAR\s*\(\s*(\d+)\s*\)/);
+      if (oldVar && newVar && parseInt(newVar[1]) < parseInt(oldVar[1])) narrowed = true;
+      if (oldT.includes('BIGINT') && (newT.includes('INT') || newT.includes('SMALLINT') || newT.includes('TINYINT'))) narrowed = true;
+      if (oldT.includes('INT') && !oldT.includes('BIGINT') && (newT.includes('SMALLINT') || newT.includes('TINYINT'))) narrowed = true;
+      if (oldT.includes('SMALLINT') && newT.includes('TINYINT')) narrowed = true;
+      if ((oldT.includes('TEXT') || oldT.includes('CLOB')) && (newT.includes('VARCHAR') || newT.includes('CHAR'))) narrowed = true;
+      const oldDec = oldT.match(/DECIMAL\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      const newDec = newT.match(/DECIMAL\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      if (oldDec && newDec) {
+        if (parseInt(newDec[1]) < parseInt(oldDec[1]) || parseInt(newDec[2]) < parseInt(oldDec[2])) narrowed = true;
+      }
+      if (narrowed) {
+        breaking.push({ type: 'NARROW_TYPE', severity: 'warning', table: td.name, column: mod.column.name, details: `Column "${mod.column.name}" in "${td.name}" narrowed from ${typeChange.old} to ${typeChange.new}` });
+      }
+    }
+    for (const con of td.constraintsRemoved) {
+      const type = (con.type || '').toUpperCase();
+      if (type.includes('PRIMARY') || type.includes('UNIQUE') || type.includes('CHECK')) {
+        breaking.push({ type: 'DROP_CONSTRAINT', severity: 'critical', table: td.name, details: `Dropped ${con.type}${con.name ? ' "' + con.name + '"' : ''} from "${td.name}"` });
+      }
+    }
+    for (const con of td.constraintsAdded) {
+      const type = (con.type || '').toUpperCase();
+      if (type.includes('FOREIGN')) {
+        const fkCols = con.columns || [];
+        const hasIndex = (td.newTable && td.newTable.indexes || []).some(idx =>
+          idx.columns.length >= fkCols.length && fkCols.every((c, i) => idx.columns[i] === c)
+        );
+        if (!hasIndex) {
+          breaking.push({ type: 'ADD_FK_NO_INDEX', severity: 'warning', table: td.name, details: `Foreign key on "${td.name}"(${fkCols.join(', ')}) has no supporting index` });
+        }
+      }
+    }
+  }
+  return breaking;
+}
+
 // -----------------------------
 // CLI
 // -----------------------------
@@ -500,12 +560,14 @@ Options:
   --dialect=postgres|mysql|sqlite|mssql   SQL dialect (default: postgres)
   --format=json|markdown                  Output format (default: json)
   --output=<file>                         Write output to file (default: stdout)
+  --fail-on-breaking                      Exit with code 3 if breaking changes detected
   --help                                  Show this help message
 
 Exit codes:
   0 - no differences
-  1 - differences found
+  1 - differences found (non-breaking)
   2 - error
+  3 - breaking changes detected (with --fail-on-breaking)
 `);
 }
 
@@ -522,6 +584,7 @@ function main() {
   let dialect = 'postgres';
   let format = 'json';
   let outputFile = null;
+  let failOnBreaking = false;
 
   for (const arg of args) {
     if (arg.startsWith('--dialect=')) {
@@ -530,6 +593,8 @@ function main() {
       format = arg.split('=')[1];
     } else if (arg.startsWith('--output=')) {
       outputFile = arg.split('=')[1];
+    } else if (arg === '--fail-on-breaking') {
+      failOnBreaking = true;
     } else if (!fileA) {
       fileA = arg;
     } else if (!fileB) {
@@ -572,6 +637,9 @@ function main() {
     process.exit(2);
   }
 
+  const breakingChanges = detectBreakingChanges(diff);
+  diff.breakingChanges = breakingChanges;
+
   let output;
   if (format === 'json') {
     output = JSON.stringify(diff, null, 2);
@@ -592,6 +660,9 @@ function main() {
   }
 
   const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0;
+  if (failOnBreaking && breakingChanges.length > 0) {
+    process.exit(3);
+  }
   process.exit(hasDiff ? 1 : 0);
 }
 
