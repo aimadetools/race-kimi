@@ -1068,6 +1068,39 @@ function diffSchemas(oldSchema, newSchema) {
   return diff;
 }
 
+function levenshteinDistance(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      matrix[i][j] = b.charAt(i - 1) === a.charAt(j - 1)
+        ? matrix[i - 1][j - 1]
+        : Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function normalizeName(name) {
+  return name.toLowerCase().replace(/[_\-]/g, '');
+}
+
+function isRenameCandidate(oldCol, newCol) {
+  // Same type (case-insensitive)
+  if (oldCol.type.toUpperCase() !== newCol.type.toUpperCase()) return false;
+  // Name similarity
+  const dist = levenshteinDistance(oldCol.name.toLowerCase(), newCol.name.toLowerCase());
+  if (dist <= 2) return true;
+  // Snake_case / camelCase equivalence
+  if (normalizeName(oldCol.name) === normalizeName(newCol.name)) return true;
+  // Substring match (e.g., "name" → "full_name")
+  const o = oldCol.name.toLowerCase();
+  const n = newCol.name.toLowerCase();
+  if (o.includes(n) || n.includes(o)) return true;
+  return false;
+}
+
 function diffTable(oldTable, newTable) {
   const result = {
     name: oldTable.name,
@@ -1076,6 +1109,7 @@ function diffTable(oldTable, newTable) {
     hasChanges: false,
     columnsAdded: [],
     columnsRemoved: [],
+    columnsRenamed: [],
     columnsModified: [],
     constraintsChanged: false
   };
@@ -1083,18 +1117,51 @@ function diffTable(oldTable, newTable) {
   const oldCols = Object.fromEntries(oldTable.columns.map(c => [c.name, c]));
   const newCols = Object.fromEntries(newTable.columns.map(c => [c.name, c]));
 
+  const added = [];
+  const removed = [];
+
   for (const col of newTable.columns) {
     if (!oldCols[col.name]) {
-      result.columnsAdded.push(col);
-      result.hasChanges = true;
+      added.push(col);
     }
   }
   for (const col of oldTable.columns) {
     if (!newCols[col.name]) {
-      result.columnsRemoved.push(col);
+      removed.push(col);
+    }
+  }
+
+  // Detect renames
+  const renameMatches = new Set();
+  for (const oldCol of removed) {
+    let bestMatch = null;
+    let bestScore = Infinity;
+    for (const newCol of added) {
+      if (renameMatches.has(newCol.name)) continue;
+      if (isRenameCandidate(oldCol, newCol)) {
+        const score = levenshteinDistance(oldCol.name.toLowerCase(), newCol.name.toLowerCase());
+        if (score < bestScore) {
+          bestScore = score;
+          bestMatch = newCol;
+        }
+      }
+    }
+    if (bestMatch) {
+      result.columnsRenamed.push({ oldColumn: oldCol, newColumn: bestMatch });
+      renameMatches.add(bestMatch.name);
+      result.hasChanges = true;
+    } else {
+      result.columnsRemoved.push(oldCol);
       result.hasChanges = true;
     }
   }
+  for (const newCol of added) {
+    if (!renameMatches.has(newCol.name)) {
+      result.columnsAdded.push(newCol);
+      result.hasChanges = true;
+    }
+  }
+
   for (const col of newTable.columns) {
     const oldCol = oldCols[col.name];
     if (oldCol) {
@@ -1302,6 +1369,17 @@ function generateMigration(diff, dialect) {
       }
     }
     if (td.columnsRemoved.length) lines.push('');
+
+    for (const ren of td.columnsRenamed) {
+      if (dialect === 'postgres' || dialect === 'sqlite') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} RENAME COLUMN ${quoteId(ren.oldColumn.name, dialect)} TO ${quoteId(ren.newColumn.name, dialect)};`);
+      } else if (dialect === 'mysql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} CHANGE COLUMN ${quoteId(ren.oldColumn.name, dialect)} ${columnDefSQL(ren.newColumn, dialect)};`);
+      } else if (dialect === 'mssql') {
+        lines.push(`EXEC sp_rename '${quoteId(td.name, dialect).replace(/[[\]]/g, '')}.${quoteId(ren.oldColumn.name, dialect).replace(/[[\]]/g, '')}', '${ren.newColumn.name}', 'COLUMN';`);
+      }
+    }
+    if (td.columnsRenamed.length) lines.push('');
 
     for (const col of td.columnsAdded) {
       if (dialect === 'sqlite') {
@@ -1558,7 +1636,7 @@ function renderVisualDiff(diff, breakingChanges) {
     html += renderTableDiff(table.name, 'removed', [], table.columns, [], [], [], tableBreaking.get(table.name) || []);
   }
   for (const td of diff.tablesModified) {
-    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsModified, td.constraintsAdded, td.constraintsRemoved, tableBreaking.get(td.name) || []);
+    html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsRenamed, td.columnsModified, td.constraintsAdded, td.constraintsRemoved, tableBreaking.get(td.name) || []);
   }
 
   if (diff.enumsAdded.length) {
@@ -1591,7 +1669,7 @@ function renderVisualDiff(diff, breakingChanges) {
   container.innerHTML = html;
 }
 
-function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, constraintsAdded, constraintsRemoved, breakingChanges) {
+function renderTableDiff(name, status, addedCols, removedCols, renamedCols, modifiedCols, constraintsAdded, constraintsRemoved, breakingChanges) {
   const badgeClass = status === 'added' ? 'badge-added' : status === 'removed' ? 'badge-removed' : 'badge-modified';
   const badgeText = status === 'added' ? 'Added' : status === 'removed' ? 'Removed' : 'Modified';
 
@@ -1607,6 +1685,9 @@ function renderTableDiff(name, status, addedCols, removedCols, modifiedCols, con
   let rows = '';
   for (const col of removedCols) {
     rows += `<tr class="row-removed"><td>${esc(col.name)}</td><td>${esc(col.type)}</td><td>${col.nullable?'NULL':'NOT NULL'}</td><td>${esc(col.defaultValue||'—')}</td></tr>`;
+  }
+  for (const ren of renamedCols) {
+    rows += `<tr class="row-modified"><td>${esc(ren.oldColumn.name)} → ${esc(ren.newColumn.name)}</td><td>${esc(ren.newColumn.type)}</td><td>${ren.newColumn.nullable?'NULL':'NOT NULL'}</td><td><span class="cell-arrow">↳</span> Renamed</td></tr>`;
   }
   for (const col of addedCols) {
     rows += `<tr class="row-added"><td>${esc(col.name)}</td><td>${esc(col.type)}</td><td>${col.nullable?'NULL':'NOT NULL'}</td><td>${esc(col.defaultValue||'—')}</td></tr>`;
@@ -1757,6 +1838,16 @@ function generateMarkdown(diff, migrationSQL, dialect) {
         md += `|--------|------|------|---------|\n`;
         for (const col of td.columnsRemoved) {
           md += `| ${col.name} | ${col.type} | ${col.nullable ? 'NULL' : 'NOT NULL'} | ${col.defaultValue || '—'} |\n`;
+        }
+        md += `\n`;
+      }
+
+      if (td.columnsRenamed && td.columnsRenamed.length) {
+        md += `**Columns renamed:**\n\n`;
+        md += `| Old Name | New Name | Type |\n`;
+        md += `|----------|----------|------|\n`;
+        for (const ren of td.columnsRenamed) {
+          md += `| ${ren.oldColumn.name} | ${ren.newColumn.name} | ${ren.newColumn.type} |\n`;
         }
         md += `\n`;
       }
@@ -1920,6 +2011,16 @@ function renderPDF() {
         html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Column</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Null</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Default</th></tr></thead><tbody>`;
         for (const col of td.columnsRemoved) {
           html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.type)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${col.nullable ? 'NULL' : 'NOT NULL'}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(col.defaultValue || '—')}</td></tr>`;
+        }
+        html += `</tbody></table>`;
+      }
+
+      if (td.columnsRenamed && td.columnsRenamed.length) {
+        html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Columns renamed</p>`;
+        html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:12px;">`;
+        html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Old Name</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">New Name</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Type</th></tr></thead><tbody>`;
+        for (const ren of td.columnsRenamed) {
+          html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(ren.oldColumn.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(ren.newColumn.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(ren.newColumn.type)}</td></tr>`;
         }
         html += `</tbody></table>`;
       }
