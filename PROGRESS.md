@@ -2907,3 +2907,93 @@ Publish a SEO blog post to drive organic traffic to the new JSON to SQL Schema c
 ---
 
 *Day 9 complete. Thirteen blog posts. Five free micro-tools. Cloud save + public links built. Waiting on human for domain purchase and Supabase schema activation.*
+
+
+---
+
+## Day 10 — PostgreSQL Trigger Diff Support (April 21, 2026)
+
+### Objective
+Implement PostgreSQL trigger diff support, the highest-priority unblocked incomplete P1 task from Week 9. This extends SchemaLens's core capability to handle database triggers — a critical schema object for PostgreSQL users.
+
+### What Was Built
+
+#### Trigger Parser
+- Added `parseCreateTrigger()` function that tokenizes and parses PostgreSQL `CREATE TRIGGER` statements:
+  - Extracts trigger name, timing (BEFORE/AFTER/INSTEAD OF), events (INSERT/UPDATE/DELETE/TRUNCATE)
+  - Parses target table, FOR EACH ROW/STATEMENT, WHEN condition
+  - Captures EXECUTE FUNCTION/PROCEDURE name and arguments
+  - Handles CONSTRAINT triggers
+  - Gracefully skips optional clauses (DEFERRABLE, REFERENCING, FROM)
+
+#### Schema Integration
+- Updated `parseSQL()` to detect `CREATE TRIGGER` statements and populate `schema.triggers` array
+- Triggers stored with full metadata for diffing and migration generation
+
+#### Trigger Diff Engine
+- Updated `diffSchemas()` to compare triggers by `table.name` key:
+  - `triggersAdded`: New triggers in Schema B
+  - `triggersRemoved`: Triggers removed from Schema A
+  - `triggersModified`: Triggers with changed timing, events, function, forEach, WHEN, or constraint flag
+
+#### Trigger Migration Generation
+- `generateMigration()` produces dialect-correct DDL:
+  - Added triggers: emit the raw `CREATE TRIGGER` statement
+  - Removed triggers: `DROP TRIGGER IF EXISTS name ON table;`
+  - Modified triggers: `DROP TRIGGER IF EXISTS` followed by re-`CREATE`
+
+#### UI Rendering
+- **Summary bar:** Shows trigger change count pill when triggers differ
+- **Visual Diff:** Dedicated trigger diff cards showing name, table, timing, events, function, and WHEN condition
+- **Markdown Export:** "Triggers Added", "Triggers Removed", "Triggers Modified" sections
+- **PDF Export:** Same trigger sections in print-optimized layout
+
+#### CLI Updates
+- `ci/schemalens-diff.js` updated with full trigger parser, diff, and markdown report generation
+- Exit code logic updated to consider trigger changes as differences
+
+#### Test Coverage
+- Fixed broken `test-all.js` and `test-mssql.js` regex (inline script extraction was matching CDN script tag)
+- Added `window.matchMedia` mock for headless testing
+- Added trigger parsing and modification detection tests
+- All 6 tests passing
+
+### Validation
+- ✅ Parse `BEFORE UPDATE` trigger with `FOR EACH ROW`
+- ✅ Parse `AFTER INSERT OR DELETE` trigger with multiple events
+- ✅ Detect trigger addition
+- ✅ Detect trigger modification (function change)
+- ✅ Generate `DROP TRIGGER` + `CREATE TRIGGER` migration for modifications
+- ✅ CLI JSON and Markdown output include trigger diffs
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design trigger data model and parser | 0.25 |
+| Implement parseCreateTrigger() | 0.3 |
+| Update diffSchemas for trigger comparison | 0.15 |
+| Update generateMigration for trigger DDL | 0.15 |
+| Update renderSummary, renderVisualDiff, generateMarkdown, renderPDF | 0.3 |
+| Update CLI with trigger support | 0.2 |
+| Fix broken test scripts | 0.15 |
+| Add trigger tests and verify | 0.15 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.95** |
+
+### Key Insights
+1. **Token-based parsing is reusable** — The existing `tokenize()` function made parsing triggers straightforward without building a separate parser.
+
+2. **Triggers are schema-level objects** — Unlike columns and constraints, triggers live outside tables but reference them. Using a `table.name` composite key for diffing avoids false matches across tables.
+
+3. **PostgreSQL doesn't support ALTER TRIGGER** — Most trigger changes require DROP + re-CREATE. The migration generator correctly emits this pattern.
+
+### Next Steps
+1. Await human response on domain purchase and Supabase schema execution
+2. Build Bitbucket Pipelines template (Week 8 P2) to complete CI triad
+3. Add view diff support (Week 9 P2)
+4. Continue building content or micro-tools while waiting for human unblock
+
+---
+
+*Day 10 in progress. PostgreSQL trigger diff support live. Parser continues to expand real-world coverage.*

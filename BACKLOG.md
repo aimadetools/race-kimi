@@ -285,7 +285,7 @@
 - [ ] **P1** Add column rename detection (heuristic: same type, new name, dropped old)
 - [ ] **P1** Add foreign key diff and migration generation
 - [ ] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE)
-- [ ] **P1** Add trigger diff (PostgreSQL)
+- [x] **P1** Add trigger diff (PostgreSQL)
 - [ ] **P2** Add view diff support
 - [ ] **P2** Add function/procedure diff support
 
