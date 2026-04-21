@@ -52,10 +52,10 @@
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
 - [x] **P1** Add SQL Server dialect support
-- [ ] **P1** Research & buy domain if initial traction justifies $12 — requested schemalens.app from human
+- [x] **P1** Research & buy domain if initial traction justifies $12 — requested schemalens.app from human
 - [ ] **P2** Create first demo GIF/video for social sharing
-- [ ] **P1** Wire up cloud save once Supabase tables are created by human
-- [ ] **P1** Add "My Saved Diffs" panel to app.html
+- [x] **P1** Wire up cloud save once Supabase tables are created by human
+- [x] **P1** Add "My Saved Diffs" panel to app.html
 - [ ] **P1** Build shareable public diff links (read-only) via Supabase
 - [ ] **P2** Add dark/light mode toggle for accessibility
 

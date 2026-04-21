@@ -405,6 +405,70 @@
     .auth-status:hover {
       color: var(--text);
     }
+    .save-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: none;
+    }
+    .save-btn.visible { display: inline-block; }
+    .save-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .saved-diffs-panel {
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+    .saved-diffs-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .saved-diffs-header h3 {
+      font-size: 1rem;
+      margin: 0;
+    }
+    .saved-diffs-list {
+      display: grid;
+      gap: 10px;
+    }
+    .saved-diff-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .saved-diff-item:hover { border-color: var(--primary); }
+    .saved-diff-info { flex: 1; min-width: 200px; }
+    .saved-diff-name { font-weight: 600; font-size: 0.95rem; }
+    .saved-diff-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .saved-diff-actions { display: flex; gap: 8px; }
+    .saved-diff-actions button {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .saved-diff-actions button:hover { border-color: var(--primary); color: var(--primary); }
+    .saved-diff-actions .delete-btn:hover { border-color: var(--danger); color: var(--danger); }
+    .saved-diffs-empty {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 12px 0;
+    }
     .pro-hint {
       background: rgba(99,102,241,0.08);
       border: 1px solid rgba(99,102,241,0.2);
@@ -491,6 +555,7 @@
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
+      <button class="save-btn" id="saveBtn" title="Save diff to cloud" onclick="openSaveModal()">💾 Save</button>
       <span id="licenseStatus" class="license-status locked" style="margin-left:auto;cursor:pointer;" onclick="openLicenseModal()">🔒 Unlock Pro</span>
       <span id="authStatus" class="auth-status" onclick="toggleAuthModal()">👤 Sign In</span>
     </div>
@@ -569,6 +634,16 @@ CREATE TABLE users (
         <div id="pdfContainer"></div>
       </div>
     </div>
+
+    <div class="saved-diffs-panel" id="savedDiffsPanel" style="display:none;">
+      <div class="saved-diffs-header">
+        <h3>☁️ My Saved Diffs</h3>
+        <button class="btn btn-secondary" onclick="loadSavedDiffs()" style="font-size:0.8rem;padding:6px 10px;">Refresh</button>
+      </div>
+      <div class="saved-diffs-list" id="savedDiffsList">
+        <p class="saved-diffs-empty">Sign in to save and access your diffs from any device.</p>
+      </div>
+    </div>
   </main>
 
   <div class="modal-overlay" id="licenseModal">
@@ -581,6 +656,18 @@ CREATE TABLE users (
         <button class="btn btn-primary" onclick="applyLicense()">Activate</button>
       </div>
       <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">Get Pro for $12/mo</a></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="saveModal">
+    <div class="modal">
+      <h3>💾 Save Diff</h3>
+      <p>Give your diff a name so you can find it later.</p>
+      <input type="text" id="saveDiffName" placeholder="e.g. Users table migration v2">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeSaveModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveDiffToCloud()">Save to Cloud</button>
+      </div>
     </div>
   </div>
 
@@ -2525,6 +2612,160 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+/* ---------- Cloud Save ---------- */
+let savedDiffsCache = [];
+
+function openSaveModal() {
+  if (!currentUser) {
+    toggleAuthModal();
+    return;
+  }
+  const modal = document.getElementById('saveModal');
+  if (!modal) return;
+  document.getElementById('saveDiffName').value = '';
+  modal.classList.add('active');
+  document.getElementById('saveDiffName').focus();
+}
+
+function closeSaveModal() {
+  const modal = document.getElementById('saveModal');
+  if (modal) modal.classList.remove('active');
+}
+
+document.getElementById('saveModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'saveModal') closeSaveModal();
+});
+
+async function saveDiffToCloud() {
+  const name = document.getElementById('saveDiffName').value.trim();
+  if (!name) {
+    showError('Please enter a name for this diff.');
+    return;
+  }
+  if (!supabaseClient || !currentUser) {
+    showError('You must be signed in to save diffs.');
+    return;
+  }
+  const sqlA = document.getElementById('schemaA').value;
+  const sqlB = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+  if (!sqlA.trim() && !sqlB.trim()) {
+    showError('Paste at least one schema to save.');
+    return;
+  }
+
+  const btn = document.querySelector('#saveModal .btn-primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  try {
+    const { error } = await supabaseClient
+      .from('saved_diffs')
+      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB }]);
+    if (error) throw error;
+    closeSaveModal();
+    showError('✓ Diff saved to cloud!');
+    loadSavedDiffs();
+  } catch (err) {
+    showError('Failed to save diff: ' + err.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+async function loadSavedDiffs() {
+  const panel = document.getElementById('savedDiffsPanel');
+  const list = document.getElementById('savedDiffsList');
+  if (!panel || !list) return;
+
+  if (!currentUser) {
+    panel.style.display = 'none';
+    list.innerHTML = '<p class="saved-diffs-empty">Sign in to save and access your diffs from any device.</p>';
+    return;
+  }
+
+  panel.style.display = 'block';
+  list.innerHTML = '<p class="saved-diffs-empty">Loading…</p>';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('saved_diffs')
+      .select('id, name, dialect, created_at')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    savedDiffsCache = data || [];
+    renderSavedDiffsList();
+  } catch (err) {
+    list.innerHTML = '<p class="saved-diffs-empty">Failed to load saved diffs. Please try again.</p>';
+    console.error('loadSavedDiffs error:', err);
+  }
+}
+
+function renderSavedDiffsList() {
+  const list = document.getElementById('savedDiffsList');
+  if (!savedDiffsCache.length) {
+    list.innerHTML = '<p class="saved-diffs-empty">No saved diffs yet. Click 💾 Save to store your first diff.</p>';
+    return;
+  }
+  list.innerHTML = savedDiffsCache.map(d => {
+    const date = new Date(d.created_at).toLocaleDateString();
+    return `<div class="saved-diff-item">
+      <div class="saved-diff-info">
+        <div class="saved-diff-name">${esc(d.name)}</div>
+        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}</div>
+      </div>
+      <div class="saved-diff-actions">
+        <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
+        <button class="delete-btn" onclick="deleteSavedDiff('${d.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadDiffIntoEditors(id) {
+  const diff = savedDiffsCache.find(d => d.id === id);
+  if (!diff) return;
+  try {
+    const { data, error } = await supabaseClient
+      .from('saved_diffs')
+      .select('schema_a, schema_b, dialect')
+      .eq('id', id)
+      .single();
+    if (error) throw error;
+    if (!data) return;
+    document.getElementById('schemaA').value = data.schema_a || '';
+    document.getElementById('schemaB').value = data.schema_b || '';
+    if (data.dialect && ['postgres','mysql','sqlite','mssql'].includes(data.dialect)) {
+      document.getElementById('dialect').value = data.dialect;
+    }
+    updateStats();
+    document.getElementById('results').classList.remove('active');
+    document.getElementById('welcomeHint').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    showError('Failed to load diff: ' + err.message);
+  }
+}
+
+async function deleteSavedDiff(id) {
+  if (!confirm('Delete this saved diff?')) return;
+  try {
+    const { error } = await supabaseClient
+      .from('saved_diffs')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+    savedDiffsCache = savedDiffsCache.filter(d => d.id !== id);
+    renderSavedDiffsList();
+  } catch (err) {
+    showError('Failed to delete diff: ' + err.message);
+  }
+}
+
 /* ---------- Supabase Auth ---------- */
 const SUPABASE_URL = 'https://fmfwdwwvvcdtreduncev.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw';
@@ -2555,14 +2796,20 @@ function initSupabase() {
 
 function updateAuthUI() {
   const el = document.getElementById('authStatus');
-  if (!el) return;
-  if (currentUser) {
-    el.textContent = '👤 ' + (currentUser.email || 'Account');
-    el.classList.add('signed-in');
-  } else {
-    el.textContent = '👤 Sign In';
-    el.classList.remove('signed-in');
+  const saveBtn = document.getElementById('saveBtn');
+  if (el) {
+    if (currentUser) {
+      el.textContent = '👤 ' + (currentUser.email || 'Account');
+      el.classList.add('signed-in');
+    } else {
+      el.textContent = '👤 Sign In';
+      el.classList.remove('signed-in');
+    }
   }
+  if (saveBtn) {
+    saveBtn.classList.toggle('visible', !!currentUser);
+  }
+  loadSavedDiffs();
 }
 
 function toggleAuthModal() {

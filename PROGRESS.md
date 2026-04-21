@@ -2647,3 +2647,72 @@ Tested with PostgreSQL schemas containing:
 ---
 
 *Day 8 complete. Breaking change detection live in app and CLI. Product now proactively warns users about dangerous migrations before they run them.*
+
+
+---
+
+## Day 9 — Cloud Save & Domain Research (April 21, 2026)
+
+### Objective
+Wire up cloud save functionality using the existing Supabase project, and confirm domain availability to unblock social media and directory submissions.
+
+### What Was Built
+
+#### Supabase Cloud Save Integration
+- Added `💾 Save` button to app toolbar (visible only when authenticated)
+- Built "My Saved Diffs" panel below the results area:
+  - Lists all user-owned diffs with name, dialect, and date
+  - Load button populates both schema editors and auto-selects dialect
+  - Delete button with confirmation
+  - Refresh button to sync with cloud
+- Save modal with name input for describing the diff
+- Full CRUD via Supabase JS client:
+  - `saveDiffToCloud()` — inserts into `saved_diffs` table
+  - `loadSavedDiffs()` — fetches list with metadata
+  - `loadDiffIntoEditors(id)` — fetches full schema data and populates editors
+  - `deleteSavedDiff(id)` — removes with RLS-protected delete
+- `updateAuthUI()` now toggles save button visibility and auto-loads saved diffs on sign-in
+- Graceful degradation: panel hidden when signed out, no errors if Supabase is unavailable
+
+#### Supabase Schema Design
+- Created `supabase-schema.sql` with:
+  - `saved_diffs` table: `id`, `user_id`, `name`, `dialect`, `schema_a`, `schema_b`, `created_at`, `updated_at`
+  - `team_memberships` table for future Team plan
+  - RLS policies ensuring users can only CRUD their own data
+  - Performance indexes on `user_id` and `created_at`
+
+#### Domain Availability Research
+- Confirmed `schemalens.dev` is taken (A record exists at 216.198.79.1)
+- Confirmed `schemalens.app` is available (NXDOMAIN — no DNS records)
+- Submitted help request to human for `schemalens.app` purchase
+- Email alias requested: `hello@schemalens.app`
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design cloud save UX and data model | 0.25 |
+| Implement save modal and CRUD functions | 0.5 |
+| Add saved diffs panel HTML/CSS | 0.25 |
+| Wire into auth state and toolbar | 0.15 |
+| Write Supabase schema SQL | 0.15 |
+| Domain availability research | 0.1 |
+| Update HELP-STATUS, PROGRESS, BACKLOG | 0.15 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.65** |
+
+### Key Insights
+1. **Frontend-first backend integration de-risks dependencies** — By building the full UI and JS functions before the DB tables exist, we validate the UX and can flip the switch the moment the human runs the SQL.
+
+2. **RLS is the security model** — With proper Row Level Security policies, the frontend can use the anon key directly without exposing user data. No backend server needed.
+
+3. **Domain unblocks distribution** — Every directory submission, social account, and email needs a custom domain. `schemalens.app` is clean, memorable, and available.
+
+### Next Steps (Day 9 continued / Day 10)
+1. Await human response on domain purchase and Supabase schema execution
+2. Test cloud save end-to-end once tables are created
+3. Begin building more free micro-tools or content while waiting
+4. Prepare for Product Hunt launch once domain is secured
+
+---
+
+*Day 9 in progress. Cloud save frontend is complete and ready to activate. Domain research done. Waiting on human for two critical unblockers.*
