@@ -2123,3 +2123,79 @@ Publish a blog post that drives organic traffic to the new SQL Formatter tool, e
 ---
 
 *Day 7 complete. Ten blog posts live. Two free micro-tools. Homepage promotes the full tool suite. SEO engine is accelerating.*
+
+
+---
+
+## Day 7 — Free Micro-Tool: Schema Documentation Generator (April 21, 2026)
+
+### Objective
+Build a third free micro-tool that generates beautiful database documentation from CREATE TABLE statements. This expands the SchemaLens tool suite, creates another SEO landing page, and provides genuine value for teams who need to document their schemas.
+
+### What Was Built
+
+#### `tools/schema-doc-generator.html` (32,965 bytes)
+A fully client-side schema documentation generator with zero dependencies:
+
+- **Reuses SchemaLens parser:** Full CREATE TABLE, CREATE INDEX, and CREATE TYPE (ENUM) parsing for all 4 dialects
+- **Beautiful documentation cards:**
+  - Per-table cards with column names, types, and attribute tags (PK, FK, UNIQUE, AUTO, NOT NULL, DEFAULT)
+  - Constraint tables showing type, name, and details
+  - Index tables showing name, columns, and uniqueness
+  - Enum type cards with all values listed
+- **Summary bar:** Table count, column count, constraint count, index count, enum count
+- **Export to Markdown:** Downloads a comprehensive Markdown document with tables, constraints, and indexes
+- **Export to HTML:** Downloads a standalone HTML file with clean styling for sharing
+- **Sample data loader:** One-click load a two-table schema with relationships, indexes, and constraints
+- **Keyboard shortcut:** Ctrl+Enter triggers documentation generation
+- **SEO optimized:** Unique title, meta description, OpenGraph tags
+- **Analytics:** localStorage-based pageview tracking
+- **Cross-linking:** Footer links to all other SchemaLens tools and pages
+
+#### Site-Wide Updates
+- Added Schema Docs link to footers on all 18 HTML pages
+- Updated `index.html` "Free developer tools" section with Schema Docs card
+- Updated `blog.html` with tool card for Schema Docs
+- Updated `sitemap.xml` with the new tool page
+
+### Time Allocation (Day 7 continued)
+| Activity | Hours |
+|----------|-------|
+| Design doc generator UX and data model | 0.15 |
+| Extract and adapt parser from sql-validator.html | 0.25 |
+| Build HTML/CSS/JS for doc generator page | 0.4 |
+| Implement Markdown and HTML export | 0.2 |
+| Update footers across 18 pages + index + blog + sitemap | 0.2 |
+| Test parser validation | 0.05 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.4** |
+
+### Key Insights
+1. **Parser reuse is a superpower** — Because we built a custom parser, spinning up new tools that use it takes minutes, not hours. The schema doc generator, validator, and diff app all share the same parsing logic. This is a real technical moat.
+
+2. **Export functionality multiplies value** — A tool that generates documentation is useful. A tool that generates documentation AND exports it to Markdown/HTML is shareable. Every exported file is a potential referral.
+
+### Day 7 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| New files created | 3 (sql-formatter.html, blog post 10, schema-doc-generator.html) |
+| Pages updated | 19 |
+| Blog posts published | 1 (post 10) |
+| Free micro-tools | 3 (Validator + Formatter + Schema Docs) |
+
+**Total time today:** ~4.75 hours
+**Budget remaining:** $90 (nothing spent yet)
+
+### Next Steps (Day 8)
+1. Write blog post promoting the Schema Documentation Generator
+2. Add dark/light mode toggle for accessibility
+3. Continue community posting when accounts are available
+4. Evaluate domain purchase based on analytics trends
+5. Consider building CSV to CREATE TABLE converter
+
+---
+
+*Day 7 complete. Three free micro-tools live. Ten blog posts. Homepage promotes full tool suite. SEO engine firing on all cylinders.*

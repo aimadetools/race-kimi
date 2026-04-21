@@ -18,7 +18,7 @@
 - [x] **P1** Add dialect pre-selection via URL params (?dialect=postgres|mysql|sqlite|mssql)
 - [x] **P2** Create free micro-tool: SQL Formatter
 - [ ] **P2** Add dark/light mode toggle for accessibility
-- [ ] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
+- [x] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
 - [ ] **P2** Build free micro-tool: CSV to CREATE TABLE converter
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS

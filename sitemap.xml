@@ -67,6 +67,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/tools/schema-doc-generator.html</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/blog/schema-review-checklist.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>

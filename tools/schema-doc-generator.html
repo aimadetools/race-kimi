@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Database Schema Documentation Generator — SchemaLens</title>
+  <meta name="description" content="Generate beautiful HTML documentation from your SQL CREATE TABLE statements. Supports PostgreSQL, MySQL, SQLite, and SQL Server. Export to Markdown. No signup.">
+  <meta property="og:title" content="Free Database Schema Documentation Generator — SchemaLens">
+  <meta property="og:description" content="Paste your CREATE TABLE statements and get instant database documentation. Export to Markdown or HTML.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/tools/schema-doc-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .doc-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0 16px;
+    }
+    .doc-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .doc-toolbar select, .doc-toolbar button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .doc-toolbar button {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    .doc-toolbar button:hover {
+      background: var(--primary-light);
+    }
+
+    .editor-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .editor-wrap textarea {
+      width: 100%;
+      min-height: 260px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+    .editor-wrap textarea::placeholder {
+      color: #475569;
+    }
+
+    .results { display: none; }
+    .results.active { display: block; }
+
+    .summary-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .summary-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-pill .num { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    .doc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .doc-card-header {
+      padding: 14px 18px;
+      background: #0e0e12;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .doc-card-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+    .doc-card-header .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: rgba(52,211,153,0.15);
+      color: var(--success);
+    }
+    .doc-card-body {
+      padding: 0;
+    }
+    .doc-card-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .doc-card-body th {
+      text-align: left;
+      padding: 10px 18px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      background: #0e0e12;
+    }
+    .doc-card-body td {
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+    .doc-card-body tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+    .tag-pk { background: rgba(99,102,241,0.2); color: var(--primary); }
+    .tag-fk { background: rgba(34,211,238,0.15); color: var(--secondary); }
+    .tag-unique { background: rgba(251,191,36,0.15); color: var(--warning); }
+    .tag-null { background: rgba(248,113,113,0.15); color: var(--danger); }
+    .tag-ai { background: rgba(52,211,153,0.15); color: var(--success); }
+    .tag-default { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state h3 {
+      color: var(--text);
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 24px 0;
+    }
+    .cta-box h3 { margin-bottom: 8px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+
+    .export-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .export-bar button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .export-bar button:hover {
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Schema Documentation Generator</h1>
+      <p>Paste your <code>CREATE TABLE</code> statements and generate beautiful documentation. Export to Markdown or HTML. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="doc-toolbar">
+      <label for="dialect">Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+      </select>
+      <button id="generateBtn">Generate Docs</button>
+      <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
+    </div>
+
+    <div class="editor-wrap">
+      <textarea id="sqlInput" placeholder="-- Paste your CREATE TABLE statements here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"></textarea>
+    </div>
+
+    <div class="results" id="results">
+      <div class="summary-bar" id="summaryBar"></div>
+      <div class="export-bar">
+        <button id="exportMarkdown">Export Markdown</button>
+        <button id="exportHTML">Export HTML</button>
+      </div>
+      <div class="doc-grid" id="docGrid"></div>
+
+      <div class="cta-box">
+        <h3>Need to see what changed?</h3>
+        <p>SchemaLens compares two database schemas and generates migration scripts instantly.</p>
+        <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <h3>Ready to generate docs</h3>
+      <p>Paste your SQL above and click "Generate Docs" to see your schema documentation.</p>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="sql-validator.html">SQL Validator</a>
+          <a href="sql-formatter.html">SQL Formatter</a>
+          <a href="schema-doc-generator.html">Schema Docs</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+
+<script>
+/* ===== Parser (from sql-validator.html) ===== */
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts.filter(s => s.length > 0);
+}
+function tokenize(text) {
+  const tokens = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch;
+      inString = true;
+      stringChar = ch;
+      continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') {
+        inString = false;
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current.trim()) tokens.push(current.trim());
+      current = '';
+    } else if (ch === '(' || ch === ')' || ch === ',') {
+      if (current.trim()) tokens.push(current.trim());
+      tokens.push(ch);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+function splitBody(body) {
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    const prev = body[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        continue;
+      }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+function parseColumn(tokens, dialect) {
+  const col = {
+    name: tokens[0].replace(/["`\[\]]/g, ''),
+    type: '',
+    nullable: true,
+    defaultValue: null,
+    primaryKey: false,
+    unique: false,
+    autoIncrement: false,
+    raw: tokens.join(' ')
+  };
+  let i = 1;
+  const typeTokens = [];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED'];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (constraintKeywords.includes(t)) break;
+    typeTokens.push(tokens[i]);
+    i++;
+  }
+  col.type = typeTokens.join(' ') || 'UNKNOWN';
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'NULL') {
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'NULL') {
+      col.nullable = true;
+      i++;
+    } else if (t === 'PRIMARY' && tokens[i+1] && tokens[i+1].toUpperCase() === 'KEY') {
+      col.primaryKey = true;
+      col.nullable = false;
+      i += 2;
+      if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+    } else if (t === 'UNIQUE') {
+      col.unique = true;
+      i++;
+    } else if (t === 'DEFAULT') {
+      i++;
+      const defaultTokens = [];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+      while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
+        defaultTokens.push(tokens[i]);
+        i++;
+      }
+      col.defaultValue = defaultTokens.join(' ') || null;
+    } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
+      col.autoIncrement = true;
+      i++;
+    } else if (t === 'IDENTITY') {
+      col.autoIncrement = true;
+      i++;
+      if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; }
+    } else if (t === 'REFERENCES') {
+      i++;
+      col.foreignKey = { table: '', columns: [] };
+      if (tokens[i]) {
+        col.foreignKey.table = tokens[i].replace(/["`]/g, '');
+        i++;
+      }
+      if (tokens[i] === '(') {
+        i++;
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+        i++;
+      }
+      while (i < tokens.length) {
+        const next = tokens[i].toUpperCase();
+        if (next === 'ON' || next === 'DEFERRABLE' || next === 'INITIALLY') {
+          i++;
+          while (i < tokens.length && !['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CONSTRAINT'].includes(tokens[i].toUpperCase())) i++;
+        } else break;
+      }
+    } else {
+      i++;
+    }
+  }
+  return col;
+}
+function parseConstraint(tokens, dialect) {
+  const con = { raw: tokens.join(' '), type: '', name: null, columns: [] };
+  let i = 0;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    i++;
+    con.name = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : null;
+    i++;
+  }
+  const t = tokens[i] ? tokens[i].toUpperCase() : '';
+  if (t === 'PRIMARY') {
+    con.type = 'PRIMARY KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+    if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+  } else if (t === 'UNIQUE') {
+    con.type = 'UNIQUE';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'FOREIGN') {
+    con.type = 'FOREIGN KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+      i++;
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
+      i++;
+      con.refTable = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+      i++;
+      if (tokens[i] === '(') {
+        i++;
+        con.refColumns = [];
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`\[\]]/g, ''));
+          i++;
+        }
+      }
+    }
+  } else if (t === 'CHECK') {
+    con.type = 'CHECK';
+    i++;
+    if (tokens[i] === '(') {
+      const start = i;
+      let depth = 0;
+      while (i < tokens.length) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') { depth--; if (depth === 0) break; }
+        i++;
+      }
+      con.expression = tokens.slice(start + 1, i).join(' ');
+    }
+  }
+  return con;
+}
+function parseCreateTable(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)\s*\((.*)\)\s*[^)]*$/is);
+  if (!match) return null;
+  let tableName = match[1].replace(/["`\[\]]/g, '');
+  const rawBody = match[2];
+  const table = { name: tableName, columns: [], constraints: [], indexes: [] };
+  const parts = splitBody(rawBody);
+  for (const part of parts) {
+    const tokens = tokenize(part);
+    if (tokens.length < 2) continue;
+    const firstUpper = tokens[0].toUpperCase();
+    if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK') {
+      table.constraints.push(parseConstraint(tokens, dialect));
+      continue;
+    }
+    const col = parseColumn(tokens, dialect);
+    if (col) table.columns.push(col);
+  }
+  return table;
+}
+function parseCreateIndex(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+(UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+)\s+ON\s+([\w"`\[\]]+)\s*\(([^)]+)\)/i);
+  if (!match) return null;
+  return {
+    name: match[2].replace(/["`\[\]]/g, ''),
+    table: match[3].replace(/["`\[\]]/g, ''),
+    unique: !!match[1],
+    columns: match[4].split(',').map(c => c.trim().split(/\s+/)[0].replace(/["`\[\]]/g, ''))
+  };
+}
+function parseCreateEnum(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+TYPE\s+([\w"`]+)\s+AS\s+ENUM\s*\(([^)]+)\)/i);
+  if (!match) return null;
+  return {
+    name: match[1].replace(/["`]/g, ''),
+    values: match[2].split(',').map(v => v.trim().replace(/^['"]|['"]$/g, ''))
+  };
+}
+function parseSQL(sql, dialect) {
+  sql = stripComments(sql);
+  const statements = splitStatements(sql);
+  const schema = { tables: {}, indexes: [], enums: {}, errors: [] };
+  for (const stmt of statements) {
+    const upper = stmt.toUpperCase();
+    if (upper.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) {
+        schema.tables[table.name] = table;
+      } else {
+        schema.errors.push({ type: 'parse', stmt: stmt.substring(0, 120) + (stmt.length > 120 ? '...' : ''), msg: 'Could not parse CREATE TABLE statement' });
+      }
+    } else if (upper.includes('CREATE INDEX') || upper.includes('CREATE UNIQUE INDEX')) {
+      const idx = parseCreateIndex(stmt, dialect);
+      if (idx) schema.indexes.push(idx);
+    } else if (upper.includes('CREATE TYPE') && upper.includes('ENUM')) {
+      const em = parseCreateEnum(stmt, dialect);
+      if (em) schema.enums[em.name] = em;
+    }
+  }
+  for (const idx of schema.indexes) {
+    if (schema.tables[idx.table]) {
+      if (!schema.tables[idx.table].indexes) schema.tables[idx.table].indexes = [];
+      schema.tables[idx.table].indexes.push(idx);
+    }
+  }
+  return schema;
+}
+
+/* ===== UI ===== */
+const sqlInput = document.getElementById('sqlInput');
+const dialectSel = document.getElementById('dialect');
+const generateBtn = document.getElementById('generateBtn');
+const sampleBtn = document.getElementById('sampleBtn');
+const clearBtn = document.getElementById('clearBtn');
+const results = document.getElementById('results');
+const emptyState = document.getElementById('emptyState');
+const summaryBar = document.getElementById('summaryBar');
+const docGrid = document.getElementById('docGrid');
+let lastSchema = null;
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderDocs() {
+  const sql = sqlInput.value;
+  const dialect = dialectSel.value;
+  const schema = parseSQL(sql, dialect);
+  lastSchema = schema;
+
+  const tableNames = Object.keys(schema.tables);
+  const totalColumns = tableNames.reduce((sum, t) => sum + schema.tables[t].columns.length, 0);
+  const totalConstraints = tableNames.reduce((sum, t) => sum + schema.tables[t].constraints.length, 0);
+  const totalIndexes = schema.indexes.length;
+
+  let summaryHTML = '';
+  summaryHTML += `<div class="summary-pill"><span class="num">${tableNames.length}</span> table${tableNames.length !== 1 ? 's' : ''}</div>`;
+  summaryHTML += `<div class="summary-pill"><span class="num">${totalColumns}</span> column${totalColumns !== 1 ? 's' : ''}</div>`;
+  summaryHTML += `<div class="summary-pill"><span class="num">${totalConstraints}</span> constraint${totalConstraints !== 1 ? 's' : ''}</div>`;
+  summaryHTML += `<div class="summary-pill"><span class="num">${totalIndexes}</span> index${totalIndexes !== 1 ? 'es' : ''}</div>`;
+  if (Object.keys(schema.enums).length) {
+    summaryHTML += `<div class="summary-pill"><span class="num">${Object.keys(schema.enums).length}</span> enum${Object.keys(schema.enums).length !== 1 ? 's' : ''}</div>`;
+  }
+  summaryBar.innerHTML = summaryHTML;
+
+  let html = '';
+  for (const name of tableNames.sort()) {
+    const t = schema.tables[name];
+    html += `<div class="doc-card">
+      <div class="doc-card-header">
+        <h3><span style="color:var(--primary)">⊞</span> ${escapeHtml(t.name)} <span class="badge">${t.columns.length} cols</span></h3>
+      </div>
+      <div class="doc-card-body">
+        <table>
+          <thead><tr><th>Column</th><th>Type</th><th>Attributes</th></tr></thead>
+          <tbody>`;
+    for (const col of t.columns) {
+      let attrs = '';
+      if (col.primaryKey) attrs += '<span class="tag tag-pk">PK</span>';
+      if (col.unique && !col.primaryKey) attrs += '<span class="tag tag-unique">UNIQUE</span>';
+      if (col.autoIncrement) attrs += '<span class="tag tag-ai">AUTO</span>';
+      if (!col.nullable) attrs += '<span class="tag tag-null">NOT NULL</span>';
+      if (col.foreignKey) attrs += `<span class="tag tag-fk" title="${escapeHtml(col.foreignKey.table)}(${col.foreignKey.columns.join(',')})">FK</span>`;
+      if (col.defaultValue !== null) attrs += `<span class="tag tag-default">DEFAULT ${escapeHtml(col.defaultValue)}</span>`;
+      html += `<tr><td>${escapeHtml(col.name)}</td><td>${escapeHtml(col.type)}</td><td>${attrs || '<span style="color:var(--text-muted)">—</span>'}</td></tr>`;
+    }
+    html += `</tbody></table>`;
+
+    if (t.constraints.length) {
+      html += `<table style="border-top:1px solid var(--border)"><thead><tr><th>Constraint</th><th>Type</th><th>Details</th></tr></thead><tbody>`;
+      for (const con of t.constraints) {
+        let details = '';
+        if (con.columns.length) details += `Columns: ${con.columns.map(escapeHtml).join(', ')}`;
+        if (con.refTable) details += ` → ${escapeHtml(con.refTable)}(${con.refColumns.map(escapeHtml).join(', ')})`;
+        if (con.expression) details += escapeHtml(con.expression);
+        html += `<tr><td>${con.name ? escapeHtml(con.name) : '<span style="color:var(--text-muted)">—</span>'}</td><td>${escapeHtml(con.type)}</td><td>${details || '<span style="color:var(--text-muted)">—</span>'}</td></tr>`;
+      }
+      html += `</tbody></table>`;
+    }
+
+    if (t.indexes && t.indexes.length) {
+      html += `<table style="border-top:1px solid var(--border)"><thead><tr><th>Index</th><th>Columns</th><th>Type</th></tr></thead><tbody>`;
+      for (const idx of t.indexes) {
+        html += `<tr><td>${escapeHtml(idx.name)}</td><td>${idx.columns.map(escapeHtml).join(', ')}</td><td>${idx.unique ? 'UNIQUE' : 'INDEX'}</td></tr>`;
+      }
+      html += `</tbody></table>`;
+    }
+
+    html += `</div></div>`;
+  }
+
+  if (Object.keys(schema.enums).length) {
+    html += `<div class="doc-card">
+      <div class="doc-card-header">
+        <h3><span style="color:var(--secondary)">◈</span> Enum Types</h3>
+      </div>
+      <div class="doc-card-body">
+        <table><thead><tr><th>Name</th><th>Values</th></tr></thead><tbody>`;
+    for (const [ename, eobj] of Object.entries(schema.enums)) {
+      html += `<tr><td>${escapeHtml(ename)}</td><td>${eobj.values.map(v => escapeHtml(v)).join(', ')}</td></tr>`;
+    }
+    html += `</tbody></table></div></div>`;
+  }
+
+  docGrid.innerHTML = html;
+  results.classList.add('active');
+  emptyState.classList.add('hidden');
+}
+
+function generateMarkdown() {
+  if (!lastSchema) return;
+  const schema = lastSchema;
+  const tableNames = Object.keys(schema.tables).sort();
+  let md = `# Database Schema Documentation\n\n`;
+  md += `Generated by [SchemaLens](https://schemalens.vercel.app)\n\n`;
+  md += `## Summary\n\n`;
+  md += `- **Tables:** ${tableNames.length}\n`;
+  const totalCols = tableNames.reduce((s, t) => s + schema.tables[t].columns.length, 0);
+  md += `- **Columns:** ${totalCols}\n`;
+  md += `- **Indexes:** ${schema.indexes.length}\n\n`;
+
+  for (const name of tableNames) {
+    const t = schema.tables[name];
+    md += `## ${t.name}\n\n`;
+    md += `| Column | Type | Nullable | Default | Constraints |\n`;
+    md += `|--------|------|----------|---------|-------------|\n`;
+    for (const col of t.columns) {
+      const constraints = [];
+      if (col.primaryKey) constraints.push('PK');
+      if (col.unique && !col.primaryKey) constraints.push('UNIQUE');
+      if (col.autoIncrement) constraints.push('AUTO');
+      if (col.foreignKey) constraints.push(`FK(${col.foreignKey.table})`);
+      md += `| ${col.name} | ${col.type} | ${col.nullable ? 'YES' : 'NO'} | ${col.defaultValue || '-'} | ${constraints.join(', ') || '-'} |\n`;
+    }
+    md += `\n`;
+
+    if (t.constraints.length) {
+      md += `**Constraints:**\n\n`;
+      for (const con of t.constraints) {
+        let detail = con.type;
+        if (con.columns.length) detail += ` (${con.columns.join(', ')})`;
+        if (con.refTable) detail += ` → ${con.refTable}(${con.refColumns.join(', ')})`;
+        if (con.expression) detail += `: ${con.expression}`;
+        md += `- ${con.name ? `\`${con.name}\` — ` : ''}${detail}\n`;
+      }
+      md += `\n`;
+    }
+
+    if (t.indexes && t.indexes.length) {
+      md += `**Indexes:**\n\n`;
+      for (const idx of t.indexes) {
+        md += `- \`${idx.name}\` (${idx.columns.join(', ')})${idx.unique ? ' — UNIQUE' : ''}\n`;
+      }
+      md += `\n`;
+    }
+  }
+
+  if (Object.keys(schema.enums).length) {
+    md += `## Enum Types\n\n`;
+    for (const [ename, eobj] of Object.entries(schema.enums)) {
+      md += `- **${ename}:** ${eobj.values.join(', ')}\n`;
+    }
+    md += `\n`;
+  }
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'schema-docs.md';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function generateHTML() {
+  if (!lastSchema) return;
+  const schema = lastSchema;
+  const tableNames = Object.keys(schema.tables).sort();
+  let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Database Schema Documentation</title>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; }
+h1, h2 { color: #111; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95rem; }
+th, td { text-align: left; padding: 10px 12px; border: 1px solid #ddd; }
+th { background: #f5f5f5; font-weight: 600; }
+tr:nth-child(even) { background: #fafafa; }
+.tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #e0e7ff; color: #4338ca; margin-left: 4px; }
+</style>
+</head>
+<body>
+<h1>Database Schema Documentation</h1>
+<p>Generated by <a href="https://schemalens.vercel.app">SchemaLens</a></p>
+`;
+  for (const name of tableNames) {
+    const t = schema.tables[name];
+    html += `<h2>${escapeHtml(t.name)}</h2>\n<table>\n<thead><tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th>Constraints</th></tr></thead><tbody>\n`;
+    for (const col of t.columns) {
+      const constraints = [];
+      if (col.primaryKey) constraints.push('PK');
+      if (col.unique && !col.primaryKey) constraints.push('UNIQUE');
+      if (col.autoIncrement) constraints.push('AUTO');
+      if (col.foreignKey) constraints.push(`FK(${escapeHtml(col.foreignKey.table)})`);
+      html += `<tr><td>${escapeHtml(col.name)}</td><td>${escapeHtml(col.type)}</td><td>${col.nullable ? 'YES' : 'NO'}</td><td>${escapeHtml(col.defaultValue || '-')}</td><td>${constraints.join(', ') || '-'}</td></tr>\n`;
+    }
+    html += `</tbody></table>\n`;
+    if (t.constraints.length) {
+      html += `<ul>\n`;
+      for (const con of t.constraints) {
+        let detail = escapeHtml(con.type);
+        if (con.columns.length) detail += ` (${con.columns.map(escapeHtml).join(', ')})`;
+        if (con.refTable) detail += ` → ${escapeHtml(con.refTable)}(${con.refColumns.map(escapeHtml).join(', ')})`;
+        html += `<li>${con.name ? `<strong>${escapeHtml(con.name)}</strong> — ` : ''}${detail}</li>\n`;
+      }
+      html += `</ul>\n`;
+    }
+  }
+  html += `</body>\n</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'schema-docs.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+generateBtn.addEventListener('click', renderDocs);
+sampleBtn.addEventListener('click', () => {
+  sqlInput.value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE,
+  role VARCHAR(50) DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE,
+  body TEXT,
+  published BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE INDEX idx_posts_user ON posts(user_id);
+CREATE UNIQUE INDEX idx_posts_slug ON posts(slug);`;
+  renderDocs();
+});
+clearBtn.addEventListener('click', () => {
+  sqlInput.value = '';
+  results.classList.remove('active');
+  emptyState.classList.remove('hidden');
+  lastSchema = null;
+});
+document.getElementById('exportMarkdown').addEventListener('click', generateMarkdown);
+document.getElementById('exportHTML').addEventListener('click', generateHTML);
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    e.preventDefault();
+    renderDocs();
+  }
+});
+</script>
+</body>
+</html>
