@@ -16,10 +16,12 @@ global.location = { hash: '', pathname: '/', origin: 'http://test' };
 global.navigator = { clipboard: { writeText: () => Promise.resolve() } };
 global.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
 global.history = { replaceState: () => {} };
+global.window = { matchMedia: () => ({ matches: false }) };
 
 const fs = require('fs');
 const html = fs.readFileSync('app.html', 'utf8');
-const script = html.match(/<script>([\s\S]*)<\/script>/)[1];
+const scripts = [...html.matchAll(/<script>(?!.*src)([\s\S]*?)<\/script>/g)].map(m => m[1]);
+const script = scripts.find(s => s.includes('function parseSQL')) || scripts[scripts.length - 1];
 const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, quoteId };');
 const { parseSQL, diffSchemas, generateMigration, quoteId } = fn();
 
