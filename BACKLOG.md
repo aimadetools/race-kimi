@@ -7,7 +7,7 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 7-8)
+## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 8)
 
 ### Code & Product
 - [x] **P1** Add export to Markdown from diff results
@@ -20,6 +20,7 @@
 - [ ] **P2** Add dark/light mode toggle for accessibility
 - [x] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
 - [ ] **P2** Build free micro-tool: CSV to CREATE TABLE converter
+- [x] **P2** Build tools landing page (tools.html)
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
@@ -46,6 +47,7 @@
 - [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
 - [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
 - [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
+- [ ] **P2** Write blog post: "How to Document Your Database Schema in 30 Seconds"
 
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
