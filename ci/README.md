@@ -8,13 +8,65 @@ Copy the `ci/schemalens-diff.js` script into your repository and add the appropr
 
 ## GitHub Actions
 
-Add `.github/workflows/schema-diff.yml` to your repository (see example in this repo).
+Add `.github/workflows/schema-diff.yml` to your repository with the following content:
+
+```yaml
+name: Schema Diff
+
+on:
+  pull_request:
+    paths:
+      - 'db/schema.sql'
+      - 'migrations/*.sql'
+      - '**/*.sql'
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run SchemaLens Diff
+        id: diff
+        run: |
+          git show origin/${{ github.base_ref }}:db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema found" > /tmp/schema_base.sql
+          node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=/tmp/schema_diff_report.md
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/schema_diff_report.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = `${{ steps.diff.outputs.report }}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## SchemaLens Diff Report\n\n${report}`
+            });
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-diff-report
+          path: /tmp/schema_diff_report.md
+```
 
 The workflow will:
 1. Trigger on PRs that modify `.sql` files
 2. Compare the base branch schema against the PR schema
 3. Post a markdown diff report as a PR comment
-4. Optionally fail the build if unexpected changes are detected
+4. Upload the report as an artifact
 
 ### Configuration
 
