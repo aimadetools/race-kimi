@@ -45,7 +45,7 @@
 - [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories
 - [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
 - [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
-- [ ] **P2** Write blog post: "3 Free Tools for Database Schema Management"
+- [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
 
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans

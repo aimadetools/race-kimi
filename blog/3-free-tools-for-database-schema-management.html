@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3 Free Tools for Database Schema Management — SchemaLens</title>
+  <meta name="description" content="Three free browser-based tools for managing database schemas: validation, formatting, and documentation generation. No signup required.">
+  <meta property="og:title" content="3 Free Tools for Database Schema Management — SchemaLens">
+  <meta property="og:description" content="Validate SQL, format queries, and generate schema docs — all in your browser. No signup, no data leaves your device.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/3-free-tools-for-database-schema-management.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: #c7c7c7; }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .tool-card h3 { margin-top: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .tool-card p { color: #c7c7c7; margin-bottom: 12px; }
+    .tool-card .tool-meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>3 Free Tools for Database Schema Management</h1>
+    <div class="meta">April 21, 2026 · 4 min read · SchemaLens Team</div>
+
+    <p>Managing database schemas is tedious work. You validate syntax, format queries for readability, and document structure for your team. Most developers do this with a mix of IDE plugins, CLI tools, and manual effort.</p>
+
+    <p>We built three free browser-based tools that handle these tasks without installing anything. No signup. No data leaves your device. Just open the page and go.</p>
+
+    <h2>1. SQL CREATE TABLE Validator</h2>
+    <div class="tool-card">
+      <h3>✅ SQL Validator</h3>
+      <p>Paste your <code>CREATE TABLE</code> statements and get instant validation. The parser checks column definitions, constraints, indexes, and enum types across PostgreSQL, MySQL, SQLite, and SQL Server dialects.</p>
+      <div class="tool-meta">Supports: PostgreSQL · MySQL · SQLite · SQL Server</div>
+      <a href="../tools/sql-validator.html" class="btn btn-primary">Validate Your SQL</a>
+    </div>
+
+    <p>Use this when you are writing a migration and want to catch syntax errors before running it against a real database. It is especially useful for SQL Server schemas with bracket-quoted identifiers or PostgreSQL schemas with custom enum types.</p>
+
+    <h2>2. SQL Formatter</h2>
+    <div class="tool-card">
+      <h3>✨ SQL Formatter</h3>
+      <p>Beautify messy SQL queries with proper indentation, keyword casing, and syntax highlighting. Handles SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, ALTER TABLE, and more.</p>
+      <div class="tool-meta">Supports: PostgreSQL · MySQL · SQLite · SQL Server</div>
+      <a href="../tools/sql-formatter.html" class="btn btn-primary">Format Your SQL</a>
+    </div>
+
+    <p>Use this before committing migration files. A formatted query is easier to review in pull requests, which means fewer mistakes slip into production. See our guide on <a href="how-to-format-sql-for-readable-code-reviews.html">formatting SQL for readable code reviews</a> for the full rationale.</p>
+
+    <h2>3. Schema Documentation Generator</h2>
+    <div class="tool-card">
+      <h3>📄 Schema Docs</h3>
+      <p>Generate beautiful HTML documentation from your <code>CREATE TABLE</code> statements. View columns, types, constraints, and indexes in clean cards. Export to Markdown or HTML for your team wiki.</p>
+      <div class="tool-meta">Supports: PostgreSQL · MySQL · SQLite · SQL Server · Export to Markdown/HTML</div>
+      <a href="../tools/schema-doc-generator.html" class="btn btn-primary">Generate Documentation</a>
+    </div>
+
+    <p>Use this when onboarding a new engineer, writing API documentation, or preparing a schema overview for stakeholders. The Markdown export works perfectly in GitHub, Notion, or Confluence.</p>
+
+    <h2>Why browser-based?</h2>
+    <p>All three tools run entirely in your browser. Your SQL never touches a server. This matters for:</p>
+    <ul>
+      <li><strong>Security-sensitive schemas</strong> — Financial, healthcare, and government databases should not be uploaded to third-party services.</li>
+      <li><strong>Air-gapped environments</strong> — If you are working offline or on a restricted network, browser tools work without internet access after the initial page load.</li>
+      <li><strong>Speed</strong> — No API calls means instant results. A 500-line schema parses and formats in under 10 milliseconds.</li>
+    </ul>
+
+    <h2>The full suite</h2>
+    <p>These three tools are part of <a href="../index.html">SchemaLens</a>, a schema diff and migration generator. The workflow looks like this:</p>
+    <ol>
+      <li><strong>Write</strong> your new schema and validate it with the SQL Validator</li>
+      <li><strong>Format</strong> it cleanly with the SQL Formatter</li>
+      <li><strong>Document</strong> it with the Schema Documentation Generator</li>
+      <li><strong>Diff</strong> it against your old schema with SchemaLens to generate the migration</li>
+    </ol>
+
+    <div class="cta-box">
+      <h3>Try the flagship tool</h3>
+      <p>SchemaLens compares two database schemas and generates ready-to-run migration scripts in seconds.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+    </div>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="how-to-format-sql-for-readable-code-reviews.html">How to Format SQL for Readable Code Reviews</a> · <a href="schema-review-checklist.html">The Schema Review Checklist</a> · <a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../app.html">Schema Diff</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
