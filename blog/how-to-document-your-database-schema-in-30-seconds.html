@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Document Your Database Schema in 30 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate beautiful database documentation from your CREATE TABLE statements in seconds. No signup required. Export to Markdown or HTML. Supports PostgreSQL, MySQL, SQLite, and SQL Server.">
+  <meta property="og:title" content="How to Document Your Database Schema in 30 Seconds — SchemaLens">
+  <meta property="og:description" content="Paste your CREATE TABLE statements and get beautiful documentation instantly. Export to Markdown or HTML. Runs entirely in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/how-to-document-your-database-schema-in-30-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: #c7c7c7; }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .steps { counter-reset: step; }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+    .step-number {
+      background: var(--primary);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step-content { flex: 1; }
+    .step-content h3 { margin-top: 0; margin-bottom: 6px; }
+    .step-content p { margin-bottom: 0; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>How to Document Your Database Schema in 30 Seconds</h1>
+    <div class="meta">April 21, 2026 · 4 min read · SchemaLens Team</div>
+
+    <p>Database documentation is the chore every team postpones. By the time someone asks "what columns does the <code>orders</code> table have?" the answer is buried in a migration file from 2019. But it does not have to be this way.</p>
+
+    <div class="cta-box">
+      <h3>Try the Schema Documentation Generator</h3>
+      <p>Paste your CREATE TABLE statements and get beautiful documentation instantly. Export to Markdown or HTML.</p>
+      <a href="../tools/schema-doc-generator.html" class="btn btn-primary">Generate Documentation</a>
+    </div>
+
+    <h2>The documentation debt trap</h2>
+    <p>Most engineering teams fall into the same pattern:</p>
+    <ol>
+      <li>Ship a feature with a new table or column</li>
+      <li>Promise to "document it later"</li>
+      <li>Never document it</li>
+      <li>Spend 20 minutes in Slack asking what a column means six months later</li>
+    </ol>
+    <p>The result is a knowledge gap that slows onboarding, blocks non-engineers from understanding the data, and makes every schema change a guessing game.</p>
+
+    <h2>Why manual documentation fails</h2>
+    <p>Writing schema documentation by hand is tedious because:</p>
+    <ul>
+      <li><strong>It duplicates information.</strong> The CREATE TABLE statement already contains column names, types, constraints, and defaults. Rewriting that in a wiki or README is pure overhead.</li>
+      <li><strong>It goes stale instantly.</strong> The moment someone runs an ALTER TABLE, the documentation is out of date. Manual docs have no mechanism to stay synchronized.</li>
+      <li><strong>It lacks structure.</strong> Every developer formats their docs differently. One uses a bulleted list, another uses a table, a third writes paragraphs. Consistency is impossible.</li>
+    </ul>
+
+    <h2>A better approach: generate from the source</h2>
+    <p>The only source of truth for your schema is the SQL itself. If you generate documentation directly from your CREATE TABLE statements, you get:</p>
+    <ul>
+      <li><strong>Zero duplication.</strong> The docs reflect exactly what is in the schema.</li>
+      <li><strong>Instant updates.</strong> Re-run the generator after any migration and your docs are current.</li>
+      <li><strong>Consistent formatting.</strong> Every table, column, and constraint is presented the same way.</li>
+      <li><strong>Shareable exports.</strong> Markdown for GitHub. HTML for Confluence or Notion. Raw text for anything else.</li>
+    </ul>
+
+    <h2>How it works in 30 seconds</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Export your schema</h3>
+          <p>Run <code>pg_dump --schema-only</code>, <code>mysqldump --no-data</code>, or <code>sqlite3 .schema</code> to get your CREATE TABLE statements.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Paste into the generator</h3>
+          <p>Copy your SQL and paste it into the Schema Documentation Generator. No signup, no upload, no data leaves your browser.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Review the output</h3>
+          <p>The generator parses every table, column, constraint, index, and enum type into clean cards. Primary keys, foreign keys, defaults, and nullability are all visible at a glance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Export and share</h3>
+          <p>Download as Markdown for your README or GitHub wiki. Download as HTML for Confluence, Notion, or email. Or just copy-paste the formatted output.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>What you get</h2>
+    <p>A complete schema documentation page includes:</p>
+    <ul>
+      <li><strong>Summary bar</strong> — table count, column count, constraint count, index count, enum count</li>
+      <li><strong>Per-table cards</strong> — every column with its type, nullability, default value, and attribute tags (PK, FK, UNIQUE, AUTO_INCREMENT, NOT NULL)</li>
+      <li><strong>Constraint tables</strong> — PRIMARY KEY, UNIQUE, FOREIGN KEY, and CHECK constraints with names and details</li>
+      <li><strong>Index listings</strong> — index names, column coverage, and uniqueness flags</li>
+      <li><strong>Enum type cards</strong> — all values for PostgreSQL enum types</li>
+    </ul>
+
+    <h2>Privacy-first documentation</h2>
+    <p>Because the generator runs entirely in your browser, your schema never touches a server. This matters for:</p>
+    <ul>
+      <li>Healthcare data (HIPAA compliance)</li>
+      <li>Financial services (SOX, PCI-DSS)</li>
+      <li>Government and defense (air-gapped environments)</li>
+      <li>Any team that treats schema design as sensitive intellectual property</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Document your schema now</h3>
+      <p>Our free Schema Documentation Generator works with PostgreSQL, MySQL, SQLite, and SQL Server. Paste, generate, export. No signup required.</p>
+      <a href="../tools/schema-doc-generator.html" class="btn btn-primary">Generate Documentation</a>
+    </div>
+
+    <h2>Making it a habit</h2>
+    <p>One-time documentation is better than none, but the real value comes from making it part of your workflow. Here are three ways to keep docs current:</p>
+    <ol>
+      <li><strong>Generate docs in CI.</strong> Add a step to your build pipeline that exports schema docs after every migration. Store the Markdown output in your repo.</li>
+      <li><strong>Link docs in pull requests.</strong> When a migration PR is opened, include a link to the generated schema docs so reviewers can see the full picture.</li>
+      <li><strong>Onboard with docs.</strong> Give every new engineer the generated schema documentation on day one. They will understand your data model in minutes, not weeks.</li>
+    </ol>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="3-free-tools-for-database-schema-management.html">3 Free Tools for Database Schema Management</a> · <a href="schema-review-checklist.html">The Schema Review Checklist</a> · <a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
