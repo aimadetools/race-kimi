@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MySQL Schema Diff Online — Compare & Migrate MySQL/MariaDB Schemas</title>
-  <meta name="description" content="Compare two MySQL or MariaDB schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
-  <meta property="og:title" content="MySQL Schema Diff Online — Compare & Migrate MySQL/MariaDB Schemas">
-  <meta property="og:description" content="Compare two MySQL schemas side by side. Generate ALTER TABLE migration scripts instantly.">
+  <title>SQLite Schema Diff Online — Compare & Migrate SQLite Databases</title>
+  <meta name="description" content="Compare two SQLite schemas side by side. Generate migration scripts instantly. No install, no upload, 100% browser-based.">
+  <meta property="og:title" content="SQLite Schema Diff Online — Compare & Migrate SQLite Databases">
+  <meta property="og:description" content="Compare two SQLite schemas side by side. Generate migration scripts instantly.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/mysql-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.vercel.app/sqlite-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -36,12 +36,12 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        MySQL &amp; MariaDB schema diff — free to use
+        SQLite schema diff — free to use
       </div>
-      <h1>MySQL Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two <code>mysqldump --no-data</code> outputs. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for MySQL and MariaDB — all in your browser.</p>
+      <h1>SQLite Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>sqlite3 .schema</code> outputs. Spot every table, column, index, and constraint change instantly. Get ready-to-run migration notes for SQLite — all in your browser.</p>
       <div class="hero-actions">
-        <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Diff MySQL Schemas</a>
+        <a href="app.html?dialect=sqlite" class="btn btn-primary btn-lg">Diff SQLite Schemas</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -50,38 +50,38 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Built for MySQL &amp; MariaDB workflows</h2>
-      <p class="section-subtitle text-center">SchemaLens understands MySQL-specific syntax that generic diff tools miss.</p>
+      <h2 class="section-title text-center">Built for SQLite workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands SQLite's unique limitations and generates honest migration guidance.</p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🐬</div>
-          <h3>AUTO_INCREMENT Handling</h3>
-          <p>Correctly detects <code>AUTO_INCREMENT</code> additions, removals, and starting value changes across schema versions.</p>
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🗄️</div>
+          <h3>Limited ALTER TABLE Support</h3>
+          <p>SQLite can't drop columns or alter types natively. SchemaLens generates clear workarounds: rename → create → copy → drop.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🔤</div>
-          <h3>CHARACTER SET &amp; COLLATE</h3>
-          <p>Preserves <code>CHARACTER SET utf8mb4</code> and <code>COLLATE</code> clauses in column definitions so your migrations stay exact.</p>
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📦</div>
+          <h3>Type Affinity Awareness</h3>
+          <p>Understands SQLite's flexible type system (<code>INTEGER</code>, <code>REAL</code>, <code>TEXT</code>, <code>BLOB</code>, <code>NUMERIC</code>) and warns about meaningful type changes.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
           <h3>Constraints &amp; Indexes</h3>
-          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and FULLTEXT indexes — all compared semantically, not by raw text.</p>
+          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and indexes — all compared semantically, not by raw text.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
-          <h3>Backtick Identifiers</h3>
-          <p>Handles backtick-quoted identifiers (<code>`order`</code>) and reserved-word table names exactly like MySQL does.</p>
+          <h3>Backtick &amp; Bracket Identifiers</h3>
+          <p>Handles backtick-quoted identifiers and double-quoted names exactly like SQLite does.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
-          <h3>Generated Columns</h3>
-          <p>Recognizes <code>GENERATED ALWAYS AS</code> virtual and stored columns. Warns when these computed columns appear in your schema.</p>
+          <h3>Auto-Increment Detection</h3>
+          <p>Recognizes <code>INTEGER PRIMARY KEY</code> auto-increment behavior and warns when rowid semantics change.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
           <h3>Privacy First</h3>
-          <p>Your schema never leaves the browser. Compare production schemas safely without uploading sensitive table structures to a third-party server.</p>
+          <p>Your schema never leaves the browser. Compare local SQLite schemas safely without uploading to any server.</p>
         </div>
       </div>
     </div>
@@ -94,12 +94,12 @@
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
           <h3>Export your schemas</h3>
-          <p>Run <code>mysqldump --no-data -u user -p old_db > old.sql</code> on both databases.</p>
+          <p>Run <code>sqlite3 db.sqlite ".schema" > schema.sql</code> on both databases.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
           <h3>Paste into SchemaLens</h3>
-          <p>Copy the SQL into the two editor panes. Dialect is automatically set to MySQL.</p>
+          <p>Copy the SQL into the two editor panes. Dialect is automatically set to SQLite.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
@@ -109,7 +109,7 @@
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
           <h3>Copy the migration</h3>
-          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Run in staging, then production.</p>
+          <p>Export migration notes, save as Markdown, PDF, or raw SQL. SQLite workarounds included where native ALTER isn't possible.</p>
         </div>
       </div>
     </div>
@@ -117,29 +117,30 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">MySQL migration examples</h2>
-      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
+      <h2 class="section-title text-center">SQLite migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates honest guidance for SQLite's limited ALTER TABLE support.</p>
       <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
         <div class="feature-card">
-          <h3>Column type change</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `users`
-  MODIFY COLUMN `bio` VARCHAR(500);</code></pre>
+          <h3>Add a new column</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE users
+  ADD COLUMN bio TEXT;</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Add a new column</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `orders`
-  ADD COLUMN `shipped_at` DATETIME;</code></pre>
+          <h3>Drop column (workaround)</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>-- SQLite does not support DROP COLUMN directly.
+-- Workaround: create new table without column,
+-- migrate data, drop old table, rename new table.</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Rename a table</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE old_users
+  RENAME TO users;</code></pre>
         </div>
         <div class="feature-card">
           <h3>Add a foreign key</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `comments`
-  ADD CONSTRAINT `fk_comments_post`
-  FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`);</code></pre>
-        </div>
-        <div class="feature-card">
-          <h3>Set a default value</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `tasks`
-  ALTER COLUMN `status` SET DEFAULT 'pending';</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>-- SQLite does not support ADD CONSTRAINT on existing tables.
+-- Workaround: create new table with FK, migrate data,
+-- drop old table, rename new table.</code></pre>
         </div>
       </div>
     </div>
@@ -151,7 +152,7 @@
       <div class="blog-grid">
         <article class="blog-card">
           <div class="blog-content">
-            <span class="blog-meta">MySQL</span>
+            <span class="blog-meta">SQLite</span>
             <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
             <p>A step-by-step workflow for catching schema drift between staging and production.</p>
           </div>
@@ -160,7 +161,7 @@
           <div class="blog-content">
             <span class="blog-meta">Migration</span>
             <h3><a href="blog/postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></h3>
-            <p>8 practical differences that trip up developers switching between the two databases.</p>
+            <p>8 practical differences that trip up developers switching between databases.</p>
           </div>
         </article>
         <article class="blog-card">
@@ -176,9 +177,9 @@
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Ready to diff your MySQL schemas?</h2>
+      <h2>Ready to diff your SQLite schemas?</h2>
       <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
-      <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <a href="app.html?dialect=sqlite" class="btn btn-primary btn-lg">Start Comparing Free</a>
       <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
     </div>
   </section>
@@ -205,7 +206,6 @@
           <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
           <a href="mysql-schema-diff.html">MySQL Diff</a>
           <a href="sqlite-schema-diff.html">SQLite Diff</a>
-          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
           <a href="tools/sql-validator.html">SQL Validator</a>
         </div>
         <div class="footer-col">
