@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens API — Programmatic Schema Diff</title>
+  <meta name="description" content="SchemaLens REST API for programmatic SQL schema diffing. Generate migration scripts, detect breaking changes, and export markdown reports via HTTP.">
+  <meta property="og:title" content="SchemaLens API — Programmatic Schema Diff">
+  <meta property="og:description" content="Diff SQL schemas programmatically. Supports PostgreSQL, MySQL, SQLite, and SQL Server.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/api.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .api-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .api-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .api-section p, .api-section li {
+      color: #c7c7c7;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .api-section ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    .api-section li {
+      margin-bottom: 6px;
+    }
+    .endpoint {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+    .endpoint .method {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .endpoint .url {
+      color: var(--primary);
+    }
+    pre.code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 14px 0;
+    }
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.9rem;
+    }
+    .param-table th, .param-table td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .param-table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .param-table code {
+      background: var(--bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .badge-green { background: rgba(16,185,129,0.15); color: #34d399; }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SchemaLens API</h1>
+      <p>Programmatic schema diffing for CI/CD pipelines, automation scripts, and integrations. No API key required.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="api-section">
+      <h2>🚀 Quick Start</h2>
+      <p>Send two SQL schemas to the endpoint and get back a full diff, migration SQL, and breaking change analysis.</p>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="url">/api/diff</span>
+      </div>
+      <pre class="code-block">curl -X POST https://schemalens.vercel.app/api/diff \
+  -H "Content-Type: application/json" \
+  -d '{
+    "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
+    "schemaB": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));",
+    "dialect": "postgres",
+    "format": "json"
+  }'</pre>
+    </div>
+
+    <div class="api-section">
+      <h2>📋 Parameters</h2>
+      <table class="param-table">
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>schemaA</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The old (base) schema SQL.</td></tr>
+          <tr><td><code>schemaB</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The new (target) schema SQL.</td></tr>
+          <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>postgres</code> (default), <code>mysql</code>, <code>sqlite</code>, <code>mssql</code></td></tr>
+          <tr><td><code>format</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>json</code> (default) or <code>markdown</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="api-section">
+      <h2>📤 Response (JSON)</h2>
+      <pre class="code-block">{
+  "diff": { /* full diff object */ },
+  "migration": "ALTER TABLE \"users\" ADD \"email\" VARCHAR ( 255 );",
+  "breakingChanges": [],
+  "summary": {
+    "tablesAdded": 0,
+    "tablesRemoved": 0,
+    "tablesModified": 1,
+    "enumsAdded": 0,
+    "enumsRemoved": 0,
+    "triggersAdded": 0,
+    "triggersRemoved": 0,
+    "triggersModified": 0,
+    "viewsAdded": 0,
+    "viewsRemoved": 0,
+    "viewsModified": 0,
+    "breakingChangeCount": 0
+  }
+}</pre>
+    </div>
+
+    <div class="api-section">
+      <h2>📝 Response (Markdown)</h2>
+      <p>Set <code>format: "markdown"</code> to receive a full markdown diff report suitable for PR comments, Slack messages, or documentation.</p>
+      <pre class="code-block">curl -X POST https://schemalens.vercel.app/api/diff \
+  -H "Content-Type: application/json" \
+  -d '{
+    "schemaA": "...",
+    "schemaB": "...",
+    "dialect": "postgres",
+    "format": "markdown"
+  }'</pre>
+      <p>Response:</p>
+      <pre class="code-block">{
+  "markdown": "# Schema Diff Report\n\n**Dialect:** PostgreSQL..."
+}</pre>
+    </div>
+
+    <div class="api-section">
+      <h2>🔥 Breaking Change Detection</h2>
+      <p>The API automatically detects dangerous schema changes and returns them in the <code>breakingChanges</code> array:</p>
+      <ul>
+        <li><span class="badge badge-red">critical</span> <strong>DROP_TABLE</strong> — Table removal</li>
+        <li><span class="badge badge-red">critical</span> <strong>DROP_COLUMN</strong> — Column removal</li>
+        <li><span class="badge badge-red">critical</span> <strong>ADD_NOT_NULL_NO_DEFAULT</strong> — NOT NULL column added without default</li>
+        <li><span class="badge badge-red">critical</span> <strong>DROP_CONSTRAINT</strong> — PRIMARY KEY, UNIQUE, or CHECK constraint dropped</li>
+        <li><span class="badge badge-yellow">warning</span> <strong>NARROW_TYPE</strong> — Column type narrowed (e.g., VARCHAR(255) → VARCHAR(100))</li>
+        <li><span class="badge badge-yellow">warning</span> <strong>ADD_FK_NO_INDEX</strong> — Foreign key added without supporting index</li>
+      </ul>
+    </div>
+
+    <div class="api-section">
+      <h2>🛠️ Supported Objects</h2>
+      <ul>
+        <li>CREATE TABLE (columns, constraints, indexes)</li>
+        <li>CREATE INDEX / UNIQUE INDEX</li>
+        <li>CREATE TYPE ... AS ENUM (PostgreSQL)</li>
+        <li>CREATE TRIGGER (PostgreSQL)</li>
+        <li>CREATE VIEW</li>
+      </ul>
+    </div>
+
+    <div class="api-section">
+      <h2>🔒 Privacy</h2>
+      <p>The API is stateless. Schema data is processed in-memory and never stored. No API key is required for the free tier. Rate limits are enforced at the edge by Vercel.</p>
+    </div>
+
+    <div class="api-section">
+      <h2>💻 CLI Alternative</h2>
+      <p>For local use or CI/CD pipelines, use the <a href="ci/schemalens-diff.js">SchemaLens CLI</a> — a zero-dependency Node.js script that runs offline.</p>
+      <pre class="code-block">node ci/schemalens-diff.js schemaA.sql schemaB.sql --dialect=postgres --format=json</pre>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="app.html">Schema Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
