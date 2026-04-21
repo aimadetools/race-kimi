@@ -1,0 +1,39 @@
+# SchemaLens — Schema Diff in Pull Requests
+# Copy this file to your repository root as bitbucket-pipelines.yml
+# and adjust the schema paths and dialect as needed.
+
+image: node:20-alpine
+
+definitions:
+  pipelines:
+    pull-requests:
+      '**':
+        - step:
+            name: Schema Diff
+            image: node:20-alpine
+            script:
+              - apk add --no-cache git curl
+              # Fetch base branch schema (assumes schema is tracked at db/schema.sql)
+              - git fetch origin $BITBUCKET_PR_DESTINATION_BRANCH
+              - git show origin/$BITBUCKET_PR_DESTINATION_BRANCH:db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema found" > /tmp/schema_base.sql
+              # Run SchemaLens diff
+              - node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=/tmp/schema_diff_report.md
+              - cat /tmp/schema_diff_report.md
+              # Optional: Post PR comment (requires BITBUCKET_APP_PASSWORD and BITBUCKET_USERNAME repository variables)
+              - >
+                if [ -n "$BITBUCKET_APP_PASSWORD" ] && [ -n "$BITBUCKET_USERNAME" ]; then
+                  REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+                  curl -s -X POST \
+                    -u "$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD" \
+                    "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pullrequests/$BITBUCKET_PR_ID/comments" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"content\": {\"raw\": \"**SchemaLens Diff Report**\\n\\n${REPORT}\"}}" || true
+                fi
+            artifacts:
+              - /tmp/schema_diff_report.md
+            condition:
+              changesets:
+                includePaths:
+                  - "db/schema.sql"
+                  - "migrations/*.sql"
+                  - "**/*.sql"

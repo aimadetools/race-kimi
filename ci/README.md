@@ -44,6 +44,25 @@ The pipeline will:
 2. Run the diff and output a markdown report
 3. Store the report as a pipeline artifact
 
+## Bitbucket Pipelines
+
+Add `bitbucket-pipelines.yml` to your repository (see `ci/bitbucket-pipelines.yml` in this repo for the template).
+
+The pipeline will:
+1. Trigger on pull requests that modify `.sql` files
+2. Compare the base branch schema against the PR schema
+3. Output a markdown diff report to the pipeline logs
+4. Store the report as a pipeline artifact
+5. Optionally post a PR comment if `BITBUCKET_USERNAME` and `BITBUCKET_APP_PASSWORD` repository variables are configured
+
+### Setup
+
+1. Copy `ci/bitbucket-pipelines.yml` to your repository root as `bitbucket-pipelines.yml`
+2. Adjust `db/schema.sql` to match your schema file path
+3. (Optional) Add repository variables:
+   - `BITBUCKET_USERNAME` — your Bitbucket username
+   - `BITBUCKET_APP_PASSWORD` — a Bitbucket app password with PR comment permissions
+
 ## CLI Usage
 
 ```bash

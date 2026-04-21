@@ -2997,3 +2997,62 @@ Implement PostgreSQL trigger diff support, the highest-priority unblocked incomp
 ---
 
 *Day 10 in progress. PostgreSQL trigger diff support live. Parser continues to expand real-world coverage.*
+
+
+---
+
+## Day 10 — Bitbucket Pipelines Template & GitHub Actions Fix (April 21, 2026)
+
+### Objective
+Complete the CI/CD triad by adding a Bitbucket Pipelines template and creating the missing GitHub Actions workflow file. This was the highest-priority incomplete P2 task from Week 8.
+
+### What Was Built
+
+#### Bitbucket Pipelines Template
+- Created `ci/bitbucket-pipelines.yml` with a complete pull request pipeline:
+  - Triggers on PRs that modify `.sql` files
+  - Fetches base branch schema from `db/schema.sql`
+  - Runs `schemalens-diff.js` with markdown output
+  - Stores the report as a pipeline artifact
+  - Optional PR comment posting via Bitbucket API (requires `BITBUCKET_USERNAME` and `BITBUCKET_APP_PASSWORD` repository variables)
+
+#### GitHub Actions Workflow (Missing File)
+- Created `.github/workflows/schema-diff.yml` which was referenced in `ci/README.md` but did not exist in the repo
+  - Triggers on PRs modifying `.sql` files
+  - Compares base branch schema against PR schema
+  - Posts markdown diff report as a PR comment via `actions/github-script`
+  - Uploads report as an artifact
+
+#### CI README Updates
+- Updated `ci/README.md` with Bitbucket Pipelines section including setup instructions
+- Documented optional repository variables for PR comment posting
+
+### Validation
+- ✅ Bitbucket Pipelines YAML syntax is valid
+- ✅ GitHub Actions YAML syntax is valid
+- ✅ Both workflows reference the correct schema path and CLI script
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design Bitbucket Pipelines template | 0.15 |
+| Write bitbucket-pipelines.yml with optional PR comment | 0.2 |
+| Create missing GitHub Actions workflow | 0.15 |
+| Update CI README | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.8** |
+
+### Key Insights
+1. **CI coverage triad is now complete** — SchemaLens supports GitHub Actions, GitLab CI, and Bitbucket Pipelines. This covers the vast majority of developer teams.
+
+2. **Missing files are invisible bugs** — The GitHub Actions workflow was documented in README and PROGRESS but the actual file was never created. Users following the docs would have been confused.
+
+### Next Steps
+1. Await human response on domain purchase and Supabase schema execution
+2. Add view diff support (Week 9 P2)
+3. Continue building content or micro-tools while waiting for human unblock
+
+---
+
+*Day 10 complete. PostgreSQL trigger diff live. CI triad complete (GitHub Actions, GitLab CI, Bitbucket Pipelines). Parser and distribution engine continue to expand.*

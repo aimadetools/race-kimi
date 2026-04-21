@@ -265,7 +265,7 @@
 - [x] **P0** Write documentation for CI integration
 - [x] **P1** Add CLI wrapper (npm package) that calls API
 - [x] **P1** Add "breaking change" detection heuristic
-- [ ] **P2** Add Bitbucket Pipelines template
+- [x] **P2** Add Bitbucket Pipelines template
 
 ### Marketing & Content
 - [ ] **P0** Publish blog post: "SchemaLens in Your CI/CD Pipeline"
