@@ -824,7 +824,7 @@ function tokenize(text) {
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [], enums: {}, triggers: [] };
+  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], views: {} };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -840,6 +840,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE TRIGGER')) {
       const tr = parseCreateTrigger(stmt, dialect);
       if (tr) schema.triggers.push(tr);
+    } else if (upper.includes('CREATE VIEW') || upper.includes('CREATE OR REPLACE VIEW')) {
+      const vw = parseCreateView(stmt, dialect);
+      if (vw) schema.views[vw.name] = vw;
     }
   }
 
@@ -1110,6 +1113,17 @@ function parseCreateIndex(stmt, dialect) {
   };
 }
 
+function parseCreateView(stmt, dialect) {
+  const normalized = stmt.replace(/\s+/g, ' ').trim();
+  const match = normalized.match(/CREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMP\s+|TEMPORARY\s+)?VIEW\s+([\w"`\[\]]+)(?:\s*\([^)]+\))?\s+AS\s+(.+)/i);
+  if (!match) return null;
+  return {
+    name: match[1].replace(/["`\[\]]/g, ''),
+    query: match[2].trim(),
+    raw: stmt.trim()
+  };
+}
+
 function parseCreateTrigger(stmt, dialect) {
   const upper = stmt.toUpperCase();
   if (!upper.includes('CREATE TRIGGER') && !upper.includes('CREATE CONSTRAINT TRIGGER')) return null;
@@ -1267,6 +1281,9 @@ function diffSchemas(oldSchema, newSchema) {
     triggersAdded: [],
     triggersRemoved: [],
     triggersModified: [],
+    viewsAdded: [],
+    viewsRemoved: [],
+    viewsModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -1328,6 +1345,22 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const [key, tr] of oldTriggerKeys) {
     if (!newTriggerKeys.has(key)) diff.triggersRemoved.push(tr);
+  }
+
+  // View diff
+  const oldViews = oldSchema.views || {};
+  const newViews = newSchema.views || {};
+  const oldViewNames = new Set(Object.keys(oldViews));
+  const newViewNames = new Set(Object.keys(newViews));
+
+  for (const name of newViewNames) {
+    if (!oldViewNames.has(name)) diff.viewsAdded.push(newViews[name]);
+    else if (oldViews[name].query !== newViews[name].query) {
+      diff.viewsModified.push({ oldView: oldViews[name], newView: newViews[name] });
+    }
+  }
+  for (const name of oldViewNames) {
+    if (!newViewNames.has(name)) diff.viewsRemoved.push(oldViews[name]);
   }
 
   return diff;
@@ -1799,6 +1832,29 @@ function generateMigration(diff, dialect) {
     if (diff.triggersAdded.length) lines.push('');
   }
 
+  // View migrations
+  if (diff.viewsRemoved && diff.viewsRemoved.length) {
+    for (const vw of diff.viewsRemoved) {
+      lines.push(`DROP VIEW IF EXISTS ${quoteId(vw.name, dialect)};`);
+    }
+    if (diff.viewsRemoved.length) lines.push('');
+  }
+
+  if (diff.viewsModified && diff.viewsModified.length) {
+    for (const vm of diff.viewsModified) {
+      lines.push(`DROP VIEW IF EXISTS ${quoteId(vm.oldView.name, dialect)};`);
+      lines.push(`CREATE OR REPLACE VIEW ${quoteId(vm.newView.name, dialect)} AS ${vm.newView.query};`);
+    }
+    if (diff.viewsModified.length) lines.push('');
+  }
+
+  if (diff.viewsAdded && diff.viewsAdded.length) {
+    for (const vw of diff.viewsAdded) {
+      lines.push(`CREATE OR REPLACE VIEW ${quoteId(vw.name, dialect)} AS ${vw.query};`);
+    }
+    if (diff.viewsAdded.length) lines.push('');
+  }
+
   return lines.join('\n');
 }
 
@@ -1867,6 +1923,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
     ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
     ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
+    ${(diff.viewsAdded.length || diff.viewsRemoved.length || diff.viewsModified.length) ? `<div class="summary-pill modified"><span class="num">👁${diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length}</span> views</div>` : ''}
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
@@ -1906,7 +1963,7 @@ function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
-  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length) {
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length && !diff.viewsAdded.length && !diff.viewsRemoved.length && !diff.viewsModified.length) {
     html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
     container.innerHTML = html;
     return;
@@ -2002,6 +2059,54 @@ function renderVisualDiff(diff, breakingChanges) {
             <table><tbody>
               <tr class="row-modified"><td colspan="4"><strong>Table:</strong> ${esc(tr.table)} &nbsp;|&nbsp; <strong>Timing:</strong> ${esc(tm.oldTrigger.timing)} → ${esc(tr.timing)} &nbsp;|&nbsp; <strong>Events:</strong> ${esc(tm.oldTrigger.events.join(', '))} → ${esc(tr.events.join(', '))} &nbsp;|&nbsp; <strong>For Each:</strong> ${esc(tm.oldTrigger.forEach)} → ${esc(tr.forEach)}</td></tr>
               <tr class="row-modified"><td colspan="4"><strong>Function:</strong> ${esc(tm.oldTrigger.function)} → ${esc(tr.function)}(${esc(tr.functionArgs)})</td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+
+  // View diffs
+  if (diff.viewsAdded.length) {
+    for (const vw of diff.viewsAdded) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(vw.name)} <span class="badge badge-added">View Added</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-added"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vw.query)}</pre></td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.viewsRemoved.length) {
+    for (const vw of diff.viewsRemoved) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(vw.name)} <span class="badge badge-removed">View Removed</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-removed"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vw.query)}</pre></td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.viewsModified.length) {
+    for (const vm of diff.viewsModified) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(vm.newView.name)} <span class="badge badge-modified">View Modified</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-removed"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vm.oldView.query)}</pre></td></tr>
+              <tr class="row-added"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vm.newView.query)}</pre></td></tr>
             </tbody></table>
           </div>
         </div>`;
@@ -2293,6 +2398,31 @@ function generateMarkdown(diff, migrationSQL, dialect) {
     }
   }
 
+  if (diff.viewsAdded && diff.viewsAdded.length) {
+    md += `## Views Added\n\n`;
+    for (const vw of diff.viewsAdded) {
+      md += `### ${vw.name}\n\n`;
+      md += `\`\`\`sql\n${vw.query}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.viewsRemoved && diff.viewsRemoved.length) {
+    md += `## Views Removed\n\n`;
+    for (const vw of diff.viewsRemoved) {
+      md += `### ${vw.name}\n\n`;
+      md += `\`\`\`sql\n${vw.query}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.viewsModified && diff.viewsModified.length) {
+    md += `## Views Modified\n\n`;
+    for (const vm of diff.viewsModified) {
+      md += `### ${vm.newView.name}\n\n`;
+      md += `**Old query:**\n\`\`\`sql\n${vm.oldView.query}\n\`\`\`\n\n`;
+      md += `**New query:**\n\`\`\`sql\n${vm.newView.query}\n\`\`\`\n\n`;
+    }
+  }
+
   if (migrationSQL && migrationSQL.trim()) {
     md += `## Migration SQL\n\n`;
     md += `\`\`\`sql\n`;
@@ -2492,6 +2622,33 @@ function renderPDF() {
       html += `<li><strong>For Each:</strong> ${esc(tm.oldTrigger.forEach)} → ${esc(tm.newTrigger.forEach)}</li>`;
       html += `<li><strong>Function:</strong> ${esc(tm.oldTrigger.function)} → ${esc(tm.newTrigger.function)}(${esc(tm.newTrigger.functionArgs)})</li>`;
       html += `</ul>`;
+    }
+  }
+
+  if (diff.viewsAdded && diff.viewsAdded.length) {
+    html += `<h3>Views Added</h3>`;
+    for (const vw of diff.viewsAdded) {
+      html += `<h4 style="margin-bottom:4px;">${esc(vw.name)}</h4>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vw.query)}</pre>`;
+    }
+  }
+
+  if (diff.viewsRemoved && diff.viewsRemoved.length) {
+    html += `<h3>Views Removed</h3>`;
+    for (const vw of diff.viewsRemoved) {
+      html += `<h4 style="margin-bottom:4px;">${esc(vw.name)}</h4>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vw.query)}</pre>`;
+    }
+  }
+
+  if (diff.viewsModified && diff.viewsModified.length) {
+    html += `<h3>Views Modified</h3>`;
+    for (const vm of diff.viewsModified) {
+      html += `<h4 style="margin-bottom:4px;">${esc(vm.newView.name)}</h4>`;
+      html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Old query</p>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vm.oldView.query)}</pre>`;
+      html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">New query</p>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vm.newView.query)}</pre>`;
     }
   }
 

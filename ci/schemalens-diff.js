@@ -341,6 +341,13 @@ function parseCreateEnum(stmt, dialect) {
   };
 }
 
+function parseCreateView(stmt, dialect) {
+  const normalized = stmt.replace(/\s+/g, ' ').trim();
+  const match = normalized.match(/CREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMP\s+|TEMPORARY\s+)?VIEW\s+([\w"`\[\]]+)(?:\s*\([^)]+\))?\s+AS\s+(.+)/i);
+  if (!match) return null;
+  return { name: match[1].replace(/["`\[\]]/g, ''), query: match[2].trim(), raw: stmt.trim() };
+}
+
 function parseCreateTrigger(stmt, dialect) {
   const upper = stmt.toUpperCase();
   if (!upper.includes('CREATE TRIGGER') && !upper.includes('CREATE CONSTRAINT TRIGGER')) return null;
@@ -443,7 +450,7 @@ function parseCreateTrigger(stmt, dialect) {
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], errors: [] };
+  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], views: {}, errors: [] };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -463,6 +470,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE TRIGGER')) {
       const tr = parseCreateTrigger(stmt, dialect);
       if (tr) schema.triggers.push(tr);
+    } else if (upper.includes('CREATE VIEW') || upper.includes('CREATE OR REPLACE VIEW')) {
+      const vw = parseCreateView(stmt, dialect);
+      if (vw) schema.views[vw.name] = vw;
     }
   }
 
@@ -489,6 +499,9 @@ function diffSchemas(oldSchema, newSchema) {
     triggersAdded: [],
     triggersRemoved: [],
     triggersModified: [],
+    viewsAdded: [],
+    viewsRemoved: [],
+    viewsModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -546,6 +559,21 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const [key, tr] of oldTriggerKeys) {
     if (!newTriggerKeys.has(key)) diff.triggersRemoved.push(tr);
+  }
+
+  const oldViews = oldSchema.views || {};
+  const newViews = newSchema.views || {};
+  const oldViewNames = new Set(Object.keys(oldViews));
+  const newViewNames = new Set(Object.keys(newViews));
+
+  for (const name of newViewNames) {
+    if (!oldViewNames.has(name)) diff.viewsAdded.push(newViews[name]);
+    else if (oldViews[name].query !== newViews[name].query) {
+      diff.viewsModified.push({ oldView: oldViews[name], newView: newViews[name] });
+    }
+  }
+  for (const name of oldViewNames) {
+    if (!newViewNames.has(name)) diff.viewsRemoved.push(oldViews[name]);
   }
 
   return diff;
@@ -788,7 +816,7 @@ function main() {
     console.log(output);
   }
 
-  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0 || diff.triggersAdded.length > 0 || diff.triggersRemoved.length > 0 || diff.triggersModified.length > 0;
+  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0 || diff.triggersAdded.length > 0 || diff.triggersRemoved.length > 0 || diff.triggersModified.length > 0 || diff.viewsAdded.length > 0 || diff.viewsRemoved.length > 0 || diff.viewsModified.length > 0;
   if (failOnBreaking && breakingChanges.length > 0) {
     process.exit(3);
   }
@@ -952,6 +980,31 @@ function generateMarkdown(diff, dialect) {
       md += `- **For Each:** ${tm.oldTrigger.forEach} → ${tm.newTrigger.forEach}\n`;
       md += `- **Function:** ${tm.oldTrigger.function} → ${tm.newTrigger.function}(${tm.newTrigger.functionArgs})\n`;
       md += `\n`;
+    }
+  }
+
+  if (diff.viewsAdded && diff.viewsAdded.length) {
+    md += `## Views Added\n\n`;
+    for (const vw of diff.viewsAdded) {
+      md += `### ${vw.name}\n\n`;
+      md += `\`\`\`sql\n${vw.query}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.viewsRemoved && diff.viewsRemoved.length) {
+    md += `## Views Removed\n\n`;
+    for (const vw of diff.viewsRemoved) {
+      md += `### ${vw.name}\n\n`;
+      md += `\`\`\`sql\n${vw.query}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.viewsModified && diff.viewsModified.length) {
+    md += `## Views Modified\n\n`;
+    for (const vm of diff.viewsModified) {
+      md += `### ${vm.newView.name}\n\n`;
+      md += `**Old query:**\n\`\`\`sql\n${vm.oldView.query}\n\`\`\`\n\n`;
+      md += `**New query:**\n\`\`\`sql\n${vm.newView.query}\n\`\`\`\n\n`;
     }
   }
 

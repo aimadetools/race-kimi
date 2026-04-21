@@ -84,5 +84,26 @@ if (triggerModDiff.triggersModified.length === 1) {
   console.log('trigger-mod: FAIL — expected 1 trigger modified, got', triggerModDiff.triggersModified.length);
 }
 
-console.log('\n' + ok + '/6 tests passed');
-process.exit(ok === 6 ? 0 : 1);
+// View parsing and diff test
+const viewSQLA = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE VIEW active_users AS SELECT * FROM users WHERE status = 'active';
+`;
+
+const viewSQLB = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE VIEW active_users AS SELECT id, name FROM users WHERE status = 'active' AND deleted_at IS NULL;
+CREATE VIEW user_count AS SELECT COUNT(*) FROM users;
+`;
+
+const schemaViewA = parseSQL(viewSQLA, 'postgres');
+const schemaViewB = parseSQL(viewSQLB, 'postgres');
+const viewDiff = diffSchemas(schemaViewA, schemaViewB);
+
+if (schemaViewA.views && schemaViewA.views.active_users && viewDiff.viewsAdded.length === 1 && viewDiff.viewsModified.length === 1) {
+  console.log('view: OK — 1 view added, 1 view modified detected');
+  ok++;
+} else {
+  console.log('view: FAIL — expected 1 added + 1 modified, got added:', viewDiff.viewsAdded.length, 'modified:', viewDiff.viewsModified.length);
+}
+
+console.log('\n' + ok + '/7 tests passed');
+process.exit(ok === 7 ? 0 : 1);
