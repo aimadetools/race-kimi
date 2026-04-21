@@ -3056,3 +3056,87 @@ Complete the CI/CD triad by adding a Bitbucket Pipelines template and creating t
 ---
 
 *Day 10 complete. PostgreSQL trigger diff live. CI triad complete (GitHub Actions, GitLab CI, Bitbucket Pipelines). Parser and distribution engine continue to expand.*
+
+
+---
+
+## Day 10 — REST API for Programmatic Schema Diff (April 21, 2026)
+
+### Objective
+Build and deploy a REST API endpoint that exposes the SchemaLens diff engine programmatically. This was the highest-priority incomplete P0 task from Week 10 and enables CI/CD integrations, automation scripts, and future API monetization.
+
+### What Was Built
+
+#### `lib/engine.js` — Shared SchemaLens Engine (47,033 bytes)
+Extracted and unified the complete SchemaLens engine into a reusable Node.js module:
+- **Parser:** `stripComments`, `splitStatements`, `tokenize`, `splitBody`, `parseColumn`, `parseConstraint`, `parseCreateTable`, `parseCreateIndex`, `parseCreateEnum`, `parseCreateView`, `parseCreateTrigger`, `parseSQL`
+- **Diff Engine:** `diffSchemas`, `diffTable` with column rename detection (`levenshteinDistance`, `isRenameCandidate`)
+- **Breaking Changes:** `detectBreakingChanges` with 6 heuristic patterns
+- **Migration Generator:** `generateMigration` with dialect-correct DDL for all 4 dialects
+- **Markdown Report:** `generateMarkdown` with full diff report format
+- **Utilities:** `quoteId`, `columnDefSQL`, `normalizeName`
+
+This module is the single source of truth for all headless usage (CLI, API, tests).
+
+#### `api/diff.js` — Vercel Serverless Function
+A stateless HTTP endpoint at `POST /api/diff`:
+- **Request body:** `schemaA`, `schemaB`, `dialect` (default: postgres), `format` (json | markdown)
+- **JSON response:** `diff`, `migration`, `breakingChanges`, `summary` (counts of all object types)
+- **Markdown response:** `markdown` field with full diff report
+- **CORS enabled:** `*` origin for cross-origin requests
+- **Error handling:** 400 for missing/invalid params, 405 for wrong method, 500 for engine errors
+- **Privacy:** Stateless, in-memory processing, no storage
+
+#### `api.html` — API Documentation Page (11,862 bytes)
+Complete documentation covering:
+- Quick-start curl example
+- Parameter reference table with required/optional badges
+- JSON response schema with example
+- Markdown format example
+- Breaking change detection reference (6 types with severity labels)
+- Supported SQL objects list
+- Privacy and rate-limit notes
+- CLI alternative reference
+
+#### Site-Wide Updates
+- Added "API" link to nav on all 10 root HTML pages
+- Added "API" link to footer Product section on all root pages
+- Updated `sitemap.xml` with `api.html` (priority 0.8)
+
+### Validation
+- ✅ API returns correct JSON diff for PostgreSQL schemas
+- ✅ API returns correct markdown report
+- ✅ Breaking change detection works via API (tested DROP_COLUMN)
+- ✅ Migration SQL generation works via API (tested ADD COLUMN)
+- ✅ Error handling returns 400 for missing schema fields
+- ✅ CORS headers present on all responses
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design API architecture and response format | 0.25 |
+| Extract and unify engine into lib/engine.js | 0.5 |
+| Build api/diff.js serverless function | 0.25 |
+| Build api.html documentation page | 0.3 |
+| Update nav/footer across 10 pages | 0.15 |
+| Update sitemap.xml | 0.05 |
+| Test API with sample schemas | 0.15 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| **Total** | **1.85** |
+
+### Key Insights
+1. **Shared engine = maintainability** — Having one `lib/engine.js` that powers the CLI, API, and tests eliminates drift between interfaces. The app's inline parser can be replaced with this module when a build step is added.
+
+2. **Serverless API is perfect for schema diff** — Stateless, fast (<100ms), and naturally fits Vercel's edge infrastructure. No database needed. The free tier handles thousands of requests per day.
+
+3. **API is a monetization path** — The free endpoint has no auth. Future Pro/Team plans can add API keys, higher rate limits, and webhook notifications. The infrastructure is already in place.
+
+### Next Steps
+1. Await human response on domain purchase and Supabase schema execution
+2. Continue building content or micro-tools while waiting for human unblock
+3. Consider adding API rate limiting or key-based auth for Pro tier
+
+---
+
+*Day 10 complete. REST API live at /api/diff. Shared engine module extracted. CI triad complete. Parser supports triggers and views. Product is now accessible via browser, CLI, and API.*

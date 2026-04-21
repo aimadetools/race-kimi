@@ -246,7 +246,7 @@
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 
 ### Code & Product
-- [ ] **P1"** Add schema diff API endpoint (Vercel serverless function)
+- [x] **P1"** Add schema diff API endpoint (Vercel serverless function)
 - [ ] **P2** Add sitemap.xml and robots.txt
 - [ ] **P2** Improve Core Web Vitals (lazy loading, font optimization)
 
@@ -303,7 +303,7 @@
 ## WEEK 10 (June 22–28) — API & Integrations
 
 ### Code & Product
-- [ ] **P0** Launch REST API for programmatic schema diff
+- [x] **P0** Launch REST API for programmatic schema diff
 - [ ] **P0** Add API key management for Team plan
 - [ ] **P0** Add Slack webhook for schema drift alerts
 - [ ] **P1** Add Zapier integration (if feasible on free tier)
