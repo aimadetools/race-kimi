@@ -567,10 +567,10 @@ CREATE TABLE users (
           <a href="blog.html">Blog</a>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
-          <a href="blog.html">Documentation</a>
-          <a href="blog.html">Migration Guides</a>
-          <a href="blog.html">Changelog</a>
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
@@ -2113,6 +2113,14 @@ document.querySelectorAll('.results-tab').forEach(tab => {
 // Auto-load last diff or URL-shared diff
 (function init() {
   checkLicense();
+
+  // Simple dialect pre-selection via ?dialect=postgres|mysql|sqlite|mssql
+  const params = new URLSearchParams(location.search);
+  const paramDialect = params.get('dialect');
+  if (paramDialect && ['postgres','mysql','sqlite','mssql'].includes(paramDialect)) {
+    document.getElementById('dialect').value = paramDialect;
+    updateStats();
+  }
 
   const hashMatch = location.hash.match(/#diff=([A-Za-z0-9+/=_-]+)/);
   if (hashMatch) {
