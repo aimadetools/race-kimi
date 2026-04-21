@@ -14,15 +14,15 @@
   <style>
     .blog-post { max-width: 720px; margin: 0 auto; }
     .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
-    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
-    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
-    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
-    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: var(--text); }
     .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
-    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
     .blog-post pre {
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1rem;
       overflow-x: auto;
@@ -31,18 +31,18 @@
       margin-bottom: 1.25rem;
     }
     .blog-post code {
-      background: #1a1a1a;
+      background: var(--code-bg);
       padding: 0.15rem 0.4rem;
       border-radius: 4px;
       font-size: 0.9em;
       color: #7ee787;
     }
-    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post pre code { background: none; padding: 0; color: var(--text); }
     .blog-post .keyword { color: #ff7b72; }
     .blog-post .string { color: #a5d6ff; }
     .blog-post .comment { color: #8b949e; }
     .blog-post .callout {
-      background: #1a1a1a;
+      background: var(--code-bg);
       border-left: 4px solid #6366f1;
       padding: 1rem 1.25rem;
       border-radius: 0 8px 8px 0;
@@ -50,14 +50,14 @@
     }
     .blog-post .callout p { margin-bottom: 0; }
     .blog-post .cta-box {
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
       text-align: center;
       margin: 2.5rem 0;
     }
-    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box h3 { margin-top: 0; color: var(--text); }
     .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
     .danger-card {
       background: rgba(248,113,113,0.08);
@@ -77,10 +77,24 @@
     .danger-card p:last-child {
       margin-bottom: 0;
     }
-    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
-    .back-link:hover { color: #fff; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
   </style>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
 </head>
 <body>
 
@@ -96,6 +110,7 @@
         <a href="../about.html">About</a>
         <a href="../pricing.html">Pricing</a>
         <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
         <a href="../app.html" class="nav-cta">Open App</a>
       </div>
     </div>

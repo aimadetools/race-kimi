@@ -120,7 +120,7 @@
       white-space: pre;
     }
     .editor-wrap textarea::placeholder {
-      color: #475569;
+      color: var(--text-muted);
     }
 
     .results { display: none; }
@@ -137,6 +137,20 @@
     .cta-box h3 { margin-bottom: 8px; }
     .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
   </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
 </head>
 <body>
 
@@ -152,6 +166,7 @@
         <a href="../about.html">About</a>
         <a href="../pricing.html">Pricing</a>
         <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
         <a href="../app.html" class="nav-cta">Open App</a>
       </div>
     </div>
