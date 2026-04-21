@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Generate ALTER TABLE Scripts Automatically — SchemaLens</title>
+  <meta name="description" content="Stop writing ALTER TABLE scripts by hand. Learn how to automatically generate migration SQL from schema diffs for PostgreSQL, MySQL, SQL Server, and SQLite.">
+  <meta property="og:title" content="How to Generate ALTER TABLE Scripts Automatically">
+  <meta property="og:description" content="Automatically generate safe ALTER TABLE migrations from schema diffs. Works for PostgreSQL, MySQL, SQL Server, and SQLite.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/how-to-generate-alter-table-scripts-automatically.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>How to Generate ALTER TABLE Scripts Automatically</h1>
+      <div class="blog-meta">Migration Guide · April 21, 2026 · 7 min read</div>
+
+      <p>Writing <code>ALTER TABLE</code> scripts by hand is tedious, error-prone, and slow. You open two SQL dumps side by side, scan for differences, mentally map column changes to the correct dialect syntax, and hope you didn't miss a <code>NOT NULL</code> flip or a dropped constraint. Then you copy the script into a migration file, run it in staging, and discover you forgot to quote an identifier.</p>
+
+      <p>There is a better way. This post shows how to automatically generate <code>ALTER TABLE</code> migrations from two schema snapshots — and why the generated scripts are often safer than the ones you write by hand.</p>
+
+      <h2>Why Manual Scripts Break</h2>
+
+      <p>Most teams write migration scripts in one of three ways:</p>
+
+      <ol>
+        <li><strong>Hand-rolled SQL:</strong> A developer inspects the schema diff and writes <code>ALTER TABLE</code> statements manually. This is flexible but relies entirely on human attention.</li>
+        <li><strong>ORM migrations:</strong> Rails, Django, or Prisma generate migrations from model changes. This works until you need to modify a table the ORM doesn't own, or you work across multiple languages.</li>
+        <li><strong>Schema diff tools:</strong> Dedicated tools compare two schema dumps and output the migration script. This is the fastest and most accurate approach — when the tool understands your dialect.</li>
+      </ol>
+
+      <p>Manual scripts fail for predictable reasons:</p>
+
+      <ul>
+        <li><strong>Dialect confusion:</strong> PostgreSQL uses <code>ALTER COLUMN ... TYPE</code>. MySQL uses <code>MODIFY COLUMN</code>. SQL Server uses <code>ALTER COLUMN</code> with no <code>TYPE</code> keyword. Mix them up and the migration fails.</li>
+        <li><strong>Constraint names:</strong> SQL Server requires named constraints to drop defaults. If you generate <code>DROP DEFAULT</code> without the constraint name, it errors out.</li>
+        <li><strong>Missing dependencies:</strong> Adding a foreign key before creating the index that backs it can lock a table for hours on large datasets.</li>
+        <li><strong>Silent omissions:</strong> It's easy to spot a new column. It's hard to notice that a default value changed from <code>0</code> to <code>1</code>.</li>
+      </ul>
+
+      <h2>How Automatic Generation Works</h2>
+
+      <p>An automatic migration generator follows a three-stage pipeline:</p>
+
+      <h3>Stage 1: Parse Both Schemas</h3>
+
+      <p>The tool reads both SQL dumps and builds a structured representation of every table, column, index, constraint, and enum. This isn't a text comparison — it's a semantic parse. The parser understands that <code>VARCHAR(255)</code> is a type, <code>NOT NULL</code> is nullability, and <code>DEFAULT 'active'</code> is a default value.</p>
+
+      <h3>Stage 2: Compute the Diff</h3>
+
+      <p>The diff engine compares the two structured schemas table by table:</p>
+
+      <ul>
+        <li>Tables present in the new schema but not the old → <code>CREATE TABLE</code></li>
+        <li>Tables present in the old but not the new → <code>DROP TABLE</code></li>
+        <li>Columns added → <code>ADD COLUMN</code></li>
+        <li>Columns removed → <code>DROP COLUMN</code></li>
+        <li>Columns modified → <code>ALTER COLUMN</code> or <code>MODIFY COLUMN</code></li>
+        <li>Constraints added or removed → <code>ADD CONSTRAINT</code> / <code>DROP CONSTRAINT</code></li>
+        <li>Indexes added or removed → <code>CREATE INDEX</code> / <code>DROP INDEX</code></li>
+      </ul>
+
+      <h3>Stage 3: Emit Dialect-Specific DDL</h3>
+
+      <p>The generator translates each detected change into the correct <code>ALTER TABLE</code> syntax for your database. The same semantic change produces different SQL depending on the target dialect.</p>
+
+      <h2>PostgreSQL: ALTER TABLE Examples</h2>
+
+      <p>PostgreSQL has the most capable <code>ALTER TABLE</code> syntax of the major open-source databases. Here's what automatic generation looks like for common changes:</p>
+
+      <h3>Add a column with a default</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ADD COLUMN</span> status <span class="keyword">VARCHAR</span>(50) <span class="keyword">NOT NULL DEFAULT</span> <span class="string">'pending'</span>;</code></pre>
+
+      <h3>Change a column type</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ALTER COLUMN</span> total <span class="keyword">TYPE NUMERIC</span>(12, 2);</code></pre>
+
+      <h3>Set or drop a default</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ALTER COLUMN</span> status <span class="keyword">SET DEFAULT</span> <span class="string">'confirmed'</span>;
+
+<span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ALTER COLUMN</span> status <span class="keyword">DROP DEFAULT</span>;</code></pre>
+
+      <h3>Add a named constraint</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ADD CONSTRAINT</span> fk_orders_user_id
+<span class="keyword">FOREIGN KEY</span> (user_id) <span class="keyword">REFERENCES</span> users(id);</code></pre>
+
+      <div class="callout">
+        <p><strong>Note:</strong> PostgreSQL supports transactional DDL. If your migration generator wraps the script in a transaction, a failed statement rolls everything back — no partial schema changes.</p>
+      </div>
+
+      <h2>MySQL: ALTER TABLE Examples</h2>
+
+      <p>MySQL syntax differs in subtle but critical ways. Automatic generation handles these so you don't have to memorize them:</p>
+
+      <h3>Modify an existing column</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">MODIFY COLUMN</span> total <span class="keyword">DECIMAL</span>(12, 2) <span class="keyword">NOT NULL</span>;</code></pre>
+
+      <h3>Add a column after a specific column</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ADD COLUMN</span> notes <span class="keyword">TEXT</span> <span class="keyword">AFTER</span> status;</code></pre>
+
+      <h3>Drop a foreign key</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">DROP FOREIGN KEY</span> fk_orders_user_id;</code></pre>
+
+      <p>MySQL's <code>ALTER TABLE</code> can be expensive on large tables because it often rewrites the entire table. A good generator warns you when a change triggers a full table rebuild — such as changing the column order or modifying a <code>VARCHAR</code> length in older MySQL versions.</p>
+
+      <h2>SQL Server: ALTER TABLE Examples</h2>
+
+      <p>SQL Server has its own quirks, especially around named constraints and identity columns:</p>
+
+      <h3>Add a column (no COLUMN keyword)</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ADD</span> status <span class="keyword">NVARCHAR</span>(50) <span class="keyword">NOT NULL DEFAULT</span> <span class="string">N'pending'</span>;</code></pre>
+
+      <h3>Alter a column type</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">ALTER COLUMN</span> total <span class="keyword">DECIMAL</span>(12, 2);</code></pre>
+
+      <h3>Drop a named default constraint</h3>
+<pre><code><span class="keyword">ALTER TABLE</span> orders
+<span class="keyword">DROP CONSTRAINT</span> DF_orders_status;</code></pre>
+
+      <p>SQL Server requires named constraints for many operations. An automatic generator creates predictable names like <code>DF_table_column</code> so you don't have to query <code>sys.default_constraints</code> manually.</p>
+
+      <h2>SQLite: The Honest Limitations</h2>
+
+      <p>SQLite's <code>ALTER TABLE</code> is intentionally limited. It supports <code>RENAME TABLE</code>, <code>ADD COLUMN</code>, and <code>RENAME COLUMN</code> — but not <code>DROP COLUMN</code> or <code>ALTER COLUMN TYPE</code> in older versions.</p>
+
+      <p>An honest automatic generator tells you when a change requires recreating the table:</p>
+
+<pre><code><span class="comment">-- SQLite: Dropping a column requires table recreation</span>
+<span class="comment">-- 1. Create new table without the column</span>
+<span class="comment">-- 2. Copy data</span>
+<span class="comment">-- 3. Drop old table</span>
+<span class="comment">-- 4. Rename new table</span></code></pre>
+
+      <p>This is one place where automation shines: it writes the multi-step workaround for you instead of leaving you to figure it out.</p>
+
+      <h2>Common Pitfalls Even Automation Can't Fix</h2>
+
+      <p>Automatic generation is powerful, but it isn't magic. You still need to review the output for these edge cases:</p>
+
+      <ul>
+        <li><strong>Data loss:</strong> Narrowing <code>VARCHAR(255)</code> to <code>VARCHAR(50)</code> will truncate data. The generator emits the SQL, but it can't warn you about existing values.</li>
+        <li><strong>NOT NULL on existing data:</strong> Adding <code>NOT NULL</code> without a default fails if the column has NULLs. Some generators add a default automatically; others don't. Check the output.</li>
+        <li><strong>Column renames vs drops:</strong> A semantic diff sees a dropped column and a new column. It can't tell if you renamed it. You may need to manually swap <code>DROP + ADD</code> for <code>RENAME COLUMN</code> to preserve data.</li>
+        <li><strong>Index rebuilds:</strong> Some generators drop and re-create indexes that haven't changed. Review index operations to avoid unnecessary locks.</li>
+        <li><strong>Foreign key order:</strong> If you add a foreign key to a table that doesn't exist yet, the script fails. A good generator orders dependencies correctly, but circular references still require human judgment.</li>
+      </ul>
+
+      <h2>Integration: Where to Hook Automatic Generation</h2>
+
+      <p>The real power of automatic migration generation isn't one-off convenience — it's workflow integration:</p>
+
+      <h3>Pull Request Gates</h3>
+
+      <p>Run a schema diff in CI whenever a pull request touches <code>.sql</code> files. Post the generated migration as a comment so reviewers see exactly what will change in production.</p>
+
+      <h3>Pre-Deploy Artifacts</h3>
+
+      <p>Generate the migration script as a deployment artifact. Your runbook becomes: download artifact, review, run in staging, run in production.</p>
+
+      <h3>Weekly Drift Detection</h3>
+
+      <p>Snapshot production schema weekly, diff against the expected schema from version control, and alert if anything drifted. This catches hotfixes and manual changes that bypassed the migration process.</p>
+
+      <h2>Try It Now</h2>
+
+      <p>SchemaLens generates dialect-correct <code>ALTER TABLE</code> scripts for PostgreSQL, MySQL, SQL Server, and SQLite — entirely in your browser. Paste two schema dumps and get a ready-to-run migration in seconds.</p>
+
+      <div class="cta-box">
+        <h3>Generate migrations automatically</h3>
+        <p>Paste your old and new CREATE TABLE statements. Get a complete ALTER TABLE script for your database.</p>
+        <a href="../app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+      </div>
+
+      <h2>Summary</h2>
+
+      <ul>
+        <li>Manual <code>ALTER TABLE</code> scripts are error-prone due to dialect differences, constraint naming, and missed edge cases.</li>
+        <li>Automatic generation parses both schemas, computes a semantic diff, and emits dialect-specific DDL.</li>
+        <li>PostgreSQL, MySQL, and SQL Server each have unique syntax that a generator must handle correctly.</li>
+        <li>SQLite's limited <code>ALTER TABLE</code> support requires table recreation — a generator can write the full workaround.</li>
+        <li>Always review generated scripts for data loss, NOT NULL conflicts, and column renames before running in production.</li>
+        <li>Integrate automatic generation into CI/CD for consistent, reviewable schema changes.</li>
+      </ul>
+
+      <p><em>SchemaLens is a browser-based SQL schema diff tool. No signup, no upload, no backend. Your schema never leaves your machine.</em> <a href="../app.html">Try it free →</a></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
