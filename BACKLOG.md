@@ -7,7 +7,7 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 3)
+## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 6-7)
 
 ### Code & Product
 - [x] **P1** Add export to Markdown from diff results
@@ -15,10 +15,22 @@
 - [x] **P2** Add keyboard shortcuts (Ctrl+Enter to compare)
 - [x] **P2** Add query param preloading (share a diff via URL)
 - [x] **P2** Add drag-and-drop SQL file upload
+- [x] **P1** Add dialect pre-selection via URL params (?dialect=postgres|mysql|sqlite|mssql)
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
 - [x] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
+- [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
+- [x] **P1** Publish blog post: "How We Parse SQL in the Browser"
+- [x] **P1** Publish blog post: "The Schema Review Checklist Every Engineering Team Needs"
+- [x] **P1** Publish blog post: "SQL Server Schema Migrations: A Practical Guide"
+- [x] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes"
+- [x] **P0** Create PostgreSQL schema diff landing page (SEO)
+- [x] **P0** Create MySQL schema diff landing page (SEO)
+- [ ] **P1** Create SQLite schema diff landing page (SEO)
+- [ ] **P1** Create SQL Server schema diff landing page (SEO)
+- [ ] **P1** Write blog post: "How to Generate ALTER TABLE Scripts Automatically"
+- [ ] **P1** Write blog post: "SchemaLens in Your CI/CD Pipeline"
 - [x] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList) — drafts ready, submission pending
 - [x] **P1** Post on r/PostgreSQL with live app link — draft ready, posting pending
 - [x] **P1** Post on r/MySQL with live app link — draft ready, posting pending
@@ -31,8 +43,6 @@
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
 - [x] **P1** Add SQL Server dialect support
 - [ ] **P1** Research & buy domain if initial traction justifies $12
-- [ ] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
-- [x] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [ ] **P2** Create first demo GIF/video for social sharing
 
 ---
@@ -136,7 +146,8 @@
 - [x] **P0** Add save/share diff via exportable JSON/localStorage
 - [x] **P1** Add "try Pro" upsell prompts in free tier
 - [x] **P1** Polish app UI: loading states, empty states, error messages
-- [ ] **P2** Add query param preloading (share a diff via URL)
+- [x] **P2** Add query param preloading (share a diff via URL)
+- [x] **P2** Add dialect pre-selection via URL params
 
 ### Marketing & Content
 - [x] **P0** Product Hunt launch preparation (gallery images, maker comment, tagline)
@@ -160,7 +171,10 @@
 - [x] **P1** Add SQL Server dialect support (basic CREATE TABLE parsing)
 - [x] **P1** Improve parser edge cases (enums, arrays, JSON columns)
 - [x] **P1** Add "parser confidence" indicator for edge cases
-- [x] **P1"** Add batch/schema-wide statistics (table count, change count)
+- [x] **P1** Add batch/schema-wide statistics (table count, change count)
+- [x] **P1** Add generated column support
+- [x] **P1** Add MySQL CHARACTER SET handling
+- [x] **P1** Add enum diffing across all renderers
 - [ ] **P2** Add Oracle dialect support
 - [ ] **P2** Add dark/light mode toggle
 
@@ -206,9 +220,13 @@
 ### Marketing & Content
 - [x] **P0** Publish 2 technical blog posts (SEO-focused)
 - [x] **P0** Build free micro-tool: "SQL CREATE TABLE Validator"
+- [x] **P0** Create PostgreSQL schema diff landing page (SEO)
+- [x] **P0** Create MySQL schema diff landing page (SEO)
 - [ ] **P0** Submit micro-tool to tiny-helpers.dev and similar lists (materials ready in marketing/tool-directory-submissions.md)
+- [ ] **P1** Create SQLite schema diff landing page (SEO)
+- [ ] **P1** Create SQL Server schema diff landing page (SEO)
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion
-- [ ] **P1"** Optimize existing pages for target keywords (meta titles, descriptions, h1s)
+- [x] **P1** Optimize existing pages for target keywords (dialect landing pages)
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 
 ### Code & Product

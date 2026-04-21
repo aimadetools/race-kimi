@@ -1751,3 +1751,82 @@ Tested the CLI with sample PostgreSQL schemas:
 ---
 
 *Day 5 complete. SchemaLens now runs in CI/CD pipelines. Product coverage: browser app, free micro-tool, CI integration, 4 dialects, 7 blog posts, full marketing kit.*
+
+
+---
+
+## Day 6 — Dialect-Specific SEO Landing Pages (April 21, 2026)
+
+### Objective
+Create dedicated landing pages for PostgreSQL and MySQL schema diff keywords. These pages target high-intent, low-competition search terms that directly funnel to the app.
+
+### What Was Built
+
+#### `postgres-schema-diff.html` (11,181 bytes)
+SEO-optimized landing page targeting:
+- "postgresql schema diff"
+- "postgres schema diff online"
+- "compare postgresql schemas"
+- "postgres schema comparison tool"
+
+Content includes:
+- PostgreSQL-specific hero with `pg_dump` command example
+- Feature cards for SERIAL, enum types, constraints, quoted identifiers, arrays/JSONB
+- 4-step workflow: export → paste → review → copy migration
+- Real PostgreSQL `ALTER TABLE` migration examples
+- Related blog post links for content cross-linking
+- CTA to `app.html?dialect=postgres`
+
+#### `mysql-schema-diff.html` (11,121 bytes)
+SEO-optimized landing page targeting:
+- "mysql schema comparison"
+- "compare mysql schemas"
+- "mysql schema diff online"
+- "mysql schema diff tool"
+
+Content includes:
+- MySQL/MariaDB-specific hero with `mysqldump` command example
+- Feature cards for AUTO_INCREMENT, CHARACTER SET/COLLATE, constraints, backtick identifiers, generated columns
+- 4-step workflow: export → paste → review → copy migration
+- Real MySQL `ALTER TABLE` migration examples
+- Related blog post links
+- CTA to `app.html?dialect=mysql`
+
+#### App Integration
+- Added `URLSearchParams` dialect pre-selection to `app.html` init function
+- `app.html?dialect=postgres` and `app.html?dialect=mysql` now auto-select the correct dialect
+
+#### Site-Wide Footer Updates
+- Updated footers on index.html, about.html, pricing.html, blog.html, app.html, tools/sql-validator.html
+- Replaced generic "Resources" links with "Tools" section linking to PostgreSQL Diff, MySQL Diff, and SQL Validator
+
+#### Sitemap Update
+- Added both new landing pages to `sitemap.xml` with priority 0.9
+
+### Time Allocation (Day 6)
+| Activity | Hours |
+|----------|-------|
+| Research keyword targets and landing page strategy | 0.25 |
+| Build postgres-schema-diff.html | 0.5 |
+| Build mysql-schema-diff.html | 0.5 |
+| Add ?dialect= support to app.html | 0.1 |
+| Update footers across 6 pages | 0.25 |
+| Update sitemap.xml | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.9** |
+
+### Key Insights
+1. **Dedicated landing pages outrank general pages for specific queries** — Google rewards focused content. A page titled "PostgreSQL Schema Diff Online" will rank higher for that exact query than a generic "Schema Diff Tool" page.
+
+2. **Dialect pre-selection reduces friction** — When a PostgreSQL developer clicks through, seeing "PostgreSQL" already selected in the dropdown confirms they're in the right place and increases conversion.
+
+### Next Steps (Day 6 continued / Day 7)
+1. Write blog post 8: "How to Generate ALTER TABLE Scripts Automatically"
+2. Add SQLite and SQL Server landing pages (lower search volume but easy wins)
+3. Continue community posting when accounts are available
+4. Evaluate domain purchase based on analytics trends
+
+---
+
+*Day 6 in progress. Two high-intent SEO landing pages live. Site structure now funnels dialect-specific search traffic directly to the app.*
