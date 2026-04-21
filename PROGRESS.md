@@ -2504,3 +2504,71 @@ Add Supabase magic-link authentication to app.html to enable cloud save and team
 ---
 
 *Day 8 complete. Supabase auth foundation laid. Twelfth blog post published. Domain and cloud save infrastructure requested from human. Product is moving toward Team plan monetization.*
+
+---
+
+## Day 8 — Dark/Light Mode Toggle (April 21, 2026)
+
+### Objective
+Add a dark/light mode toggle for accessibility and user preference. This was the highest-priority unblocked incomplete task from the immediate backlog.
+
+### What Was Built
+
+#### CSS Custom Property Theming
+- Extended `:root` in `style.css` with new theme variables:
+  - `--nav-bg`, `--code-bg`, `--code-text`, `--comment`, `--hover-border`
+- Added `html[data-theme="light"]` block with full light theme palette:
+  - Background: `#f8fafc`, Surface: `#ffffff`, Border: `#e2e8f0`
+  - Text: `#0f172a`, Text-muted: `#64748b`
+  - Adjusted primary, success, warning, danger colors for light contrast
+  - Code background: `#f1f5f9`, Code text: `#334155`
+
+#### Theme Toggle UI
+- Added 🌓 toggle button to nav bar on all 27 HTML pages
+- Button placed inside `.nav-links` for both desktop and mobile visibility
+- Smooth hover state with `surface-hover` background
+- `aria-label` and `title` for accessibility
+
+#### Theme Persistence
+- Inline script on every page reads `localStorage.getItem('schemalens-theme')`
+- Falls back to `prefers-color-scheme: light` if no saved preference
+- `toggleTheme()` function switches `data-theme` attribute and persists choice
+- No flash of unstyled content — script runs in `<head>` before render
+
+#### Inline Style Updates
+Replaced hardcoded dark colors with CSS variables across:
+- **style.css**: nav background, hero note, demo pane, feature/blog hover borders, footer links, about text
+- **app.html**: editor panel headers, sample links, diff table headers, SQL output, modals, error banners, warning banners
+- **tools/*.html**: validator alerts, formatter placeholder, doc generator code blocks, CSV converter placeholder
+- **blog/*.html**: article text, headings, code blocks, syntax highlighting comments
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design light theme palette | 0.1 |
+| Update style.css with CSS variables + light overrides | 0.25 |
+| Build and run script to add toggle + script to all 27 pages | 0.25 |
+| Update hardcoded inline styles in app.html | 0.2 |
+| Update hardcoded inline styles in tools/*.html | 0.15 |
+| Update hardcoded inline styles in blog/*.html | 0.15 |
+| Test syntax validation and verify no broken pages | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| **Total** | **1.4** |
+
+### Key Insights
+1. **CSS custom properties make theming trivial** — Once colors are variable-ized, adding a light mode is just one extra CSS block. The real work was chasing down all the hardcoded inline styles across 27 files.
+
+2. **Inline styles are a maintenance burden** — Every hardcoded `#0e0e12` or `#cbd5e1` in inline styles broke theming. Future micro-tools should use classes from style.css instead of inline colors.
+
+3. **prefers-color-scheme respects user OS settings** — Defaulting to the system preference means most users never need to click the toggle. The button is for explicit override.
+
+### Next Steps (Day 9)
+1. Await human response on domain purchase and Supabase schema setup
+2. Wire up cloud save functionality once Supabase tables are ready
+3. Add "My Saved Diffs" panel to app.html
+4. Continue building content or micro-tools while waiting for human unblock
+
+---
+
+*Day 8 complete. Dark/light mode toggle live across all 27 pages. Site is now accessible to users who prefer light themes. All unblocked immediate backlog tasks executed.*
