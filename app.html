@@ -824,7 +824,7 @@ function tokenize(text) {
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [], enums: {} };
+  const schema = { tables: {}, indexes: [], enums: {}, triggers: [] };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -837,6 +837,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE TYPE') && upper.includes('ENUM')) {
       const em = parseCreateEnum(stmt, dialect);
       if (em) schema.enums[em.name] = em;
+    } else if (upper.includes('CREATE TRIGGER')) {
+      const tr = parseCreateTrigger(stmt, dialect);
+      if (tr) schema.triggers.push(tr);
     }
   }
 
@@ -1107,6 +1110,150 @@ function parseCreateIndex(stmt, dialect) {
   };
 }
 
+function parseCreateTrigger(stmt, dialect) {
+  const upper = stmt.toUpperCase();
+  if (!upper.includes('CREATE TRIGGER') && !upper.includes('CREATE CONSTRAINT TRIGGER')) return null;
+
+  const tokens = tokenize(stmt);
+  let i = 0;
+
+  // CREATE
+  if (tokens[i].toUpperCase() !== 'CREATE') return null;
+  i++;
+
+  // [ CONSTRAINT ]
+  let constraint = false;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    constraint = true;
+    i++;
+  }
+
+  // TRIGGER
+  if (tokens[i].toUpperCase() !== 'TRIGGER') return null;
+  i++;
+
+  // name
+  const name = tokens[i].replace(/["`\[\]]/g, '');
+  i++;
+
+  // timing: BEFORE | AFTER | INSTEAD OF
+  let timing = '';
+  if (tokens[i].toUpperCase() === 'BEFORE') {
+    timing = 'BEFORE';
+    i++;
+  } else if (tokens[i].toUpperCase() === 'AFTER') {
+    timing = 'AFTER';
+    i++;
+  } else if (tokens[i].toUpperCase() === 'INSTEAD' && tokens[i+1] && tokens[i+1].toUpperCase() === 'OF') {
+    timing = 'INSTEAD OF';
+    i += 2;
+  } else {
+    return null;
+  }
+
+  // events: INSERT | UPDATE | DELETE | TRUNCATE [ OR ... ]
+  const events = [];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (['INSERT','UPDATE','DELETE','TRUNCATE'].includes(t)) {
+      events.push(t);
+      i++;
+    } else if (t === 'OR') {
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  // ON table_name
+  if (tokens[i].toUpperCase() !== 'ON') return null;
+  i++;
+  const table = tokens[i].replace(/["`\[\]]/g, '');
+  i++;
+
+  // Skip optional clauses: FROM, NOT DEFERRABLE, DEFERRABLE, INITIALLY, REFERENCING
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'FROM') { i += 2; continue; }
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'DEFERRABLE') { i += 2; continue; }
+    if (t === 'DEFERRABLE') { i++; if (tokens[i] && tokens[i].toUpperCase() === 'INITIALLY') i += 2; continue; }
+    if (t === 'INITIALLY') { i += 2; continue; }
+    if (t === 'REFERENCING') {
+      i++;
+      while (i < tokens.length && tokens[i].toUpperCase() !== 'FOR' && tokens[i].toUpperCase() !== 'WHEN' && tokens[i].toUpperCase() !== 'EXECUTE') {
+        i++;
+      }
+      continue;
+    }
+    break;
+  }
+
+  // [ FOR [ EACH ] { ROW | STATEMENT } ]
+  let forEach = 'STATEMENT';
+  if (tokens[i] && tokens[i].toUpperCase() === 'FOR') {
+    i++;
+    if (tokens[i] && tokens[i].toUpperCase() === 'EACH') i++;
+    if (tokens[i] && tokens[i].toUpperCase() === 'ROW') {
+      forEach = 'ROW';
+      i++;
+    } else if (tokens[i] && tokens[i].toUpperCase() === 'STATEMENT') {
+      forEach = 'STATEMENT';
+      i++;
+    }
+  }
+
+  // [ WHEN ( condition ) ]
+  let when = null;
+  if (tokens[i] && tokens[i].toUpperCase() === 'WHEN') {
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      const start = i;
+      let depth = 1;
+      while (i < tokens.length && depth > 0) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') depth--;
+        i++;
+      }
+      when = tokens.slice(start, i - 1).join(' ');
+    }
+  }
+
+  // EXECUTE { FUNCTION | PROCEDURE } function_name ( arguments )
+  if (!tokens[i] || tokens[i].toUpperCase() !== 'EXECUTE') return null;
+  i++;
+  if (tokens[i] && (tokens[i].toUpperCase() === 'FUNCTION' || tokens[i].toUpperCase() === 'PROCEDURE')) i++;
+
+  const funcName = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+  i++;
+
+  let functionArgs = '';
+  if (tokens[i] === '(') {
+    i++;
+    const start = i;
+    let depth = 1;
+    while (i < tokens.length && depth > 0) {
+      if (tokens[i] === '(') depth++;
+      else if (tokens[i] === ')') depth--;
+      i++;
+    }
+    functionArgs = tokens.slice(start, i - 1).join(' ');
+  }
+
+  return {
+    name,
+    timing,
+    events,
+    table,
+    forEach,
+    when,
+    function: funcName,
+    functionArgs,
+    constraint,
+    raw: stmt.trim()
+  };
+}
+
 // -----------------------------
 // Diff Engine
 // -----------------------------
@@ -1117,6 +1264,9 @@ function diffSchemas(oldSchema, newSchema) {
     tablesModified: [],
     enumsAdded: [],
     enumsRemoved: [],
+    triggersAdded: [],
+    triggersRemoved: [],
+    triggersModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -1151,6 +1301,33 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const name of oldEnumNames) {
     if (!newEnumNames.has(name)) diff.enumsRemoved.push(oldEnums[name]);
+  }
+
+  // Trigger diff
+  const oldTriggers = oldSchema.triggers || [];
+  const newTriggers = newSchema.triggers || [];
+  const oldTriggerKeys = new Map(oldTriggers.map(t => [`${t.table}.${t.name}`, t]));
+  const newTriggerKeys = new Map(newTriggers.map(t => [`${t.table}.${t.name}`, t]));
+
+  for (const [key, tr] of newTriggerKeys) {
+    if (!oldTriggerKeys.has(key)) {
+      diff.triggersAdded.push(tr);
+    } else {
+      const oldTr = oldTriggerKeys.get(key);
+      const changed = oldTr.timing !== tr.timing ||
+        oldTr.events.join(',') !== tr.events.join(',') ||
+        oldTr.forEach !== tr.forEach ||
+        oldTr.function !== tr.function ||
+        oldTr.functionArgs !== tr.functionArgs ||
+        oldTr.when !== tr.when ||
+        oldTr.constraint !== tr.constraint;
+      if (changed) {
+        diff.triggersModified.push({ oldTrigger: oldTr, newTrigger: tr });
+      }
+    }
+  }
+  for (const [key, tr] of oldTriggerKeys) {
+    if (!newTriggerKeys.has(key)) diff.triggersRemoved.push(tr);
   }
 
   return diff;
@@ -1599,6 +1776,29 @@ function generateMigration(diff, dialect) {
     if (diff.enumsRemoved.length) lines.push('');
   }
 
+  // Trigger migrations
+  if (diff.triggersRemoved && diff.triggersRemoved.length) {
+    for (const tr of diff.triggersRemoved) {
+      lines.push(`DROP TRIGGER IF EXISTS ${quoteId(tr.name, dialect)} ON ${quoteId(tr.table, dialect)};`);
+    }
+    if (diff.triggersRemoved.length) lines.push('');
+  }
+
+  if (diff.triggersModified && diff.triggersModified.length) {
+    for (const tm of diff.triggersModified) {
+      lines.push(`DROP TRIGGER IF EXISTS ${quoteId(tm.oldTrigger.name, dialect)} ON ${quoteId(tm.oldTrigger.table, dialect)};`);
+      lines.push(tm.newTrigger.raw + ';');
+    }
+    if (diff.triggersModified.length) lines.push('');
+  }
+
+  if (diff.triggersAdded && diff.triggersAdded.length) {
+    for (const tr of diff.triggersAdded) {
+      lines.push(tr.raw + ';');
+    }
+    if (diff.triggersAdded.length) lines.push('');
+  }
+
   return lines.join('\n');
 }
 
@@ -1666,6 +1866,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
     ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
+    ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
@@ -1705,7 +1906,7 @@ function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
-  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length) {
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length) {
     html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
     container.innerHTML = html;
     return;
@@ -1749,6 +1950,59 @@ function renderVisualDiff(diff, breakingChanges) {
           </div>
           <div class="diff-table-body">
             <table><tbody><tr class="row-removed"><td colspan="4"><strong>Values:</strong> ${esc(en.values.join(', '))}</td></tr></tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Trigger diffs
+  if (diff.triggersAdded.length) {
+    for (const tr of diff.triggersAdded) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(tr.name)} <span class="badge badge-added">Trigger Added</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-added"><td colspan="4"><strong>Table:</strong> ${esc(tr.table)} &nbsp;|&nbsp; <strong>Timing:</strong> ${esc(tr.timing)} &nbsp;|&nbsp; <strong>Events:</strong> ${esc(tr.events.join(', '))} &nbsp;|&nbsp; <strong>For Each:</strong> ${esc(tr.forEach)}</td></tr>
+              <tr class="row-added"><td colspan="4"><strong>Function:</strong> ${esc(tr.function)}(${esc(tr.functionArgs)})</td></tr>
+              ${tr.when ? `<tr class="row-added"><td colspan="4"><strong>WHEN:</strong> ${esc(tr.when)}</td></tr>` : ''}
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.triggersRemoved.length) {
+    for (const tr of diff.triggersRemoved) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(tr.name)} <span class="badge badge-removed">Trigger Removed</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-removed"><td colspan="4"><strong>Table:</strong> ${esc(tr.table)} &nbsp;|&nbsp; <strong>Timing:</strong> ${esc(tr.timing)} &nbsp;|&nbsp; <strong>Events:</strong> ${esc(tr.events.join(', '))} &nbsp;|&nbsp; <strong>For Each:</strong> ${esc(tr.forEach)}</td></tr>
+              <tr class="row-removed"><td colspan="4"><strong>Function:</strong> ${esc(tr.function)}(${esc(tr.functionArgs)})</td></tr>
+              ${tr.when ? `<tr class="row-removed"><td colspan="4"><strong>WHEN:</strong> ${esc(tr.when)}</td></tr>` : ''}
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.triggersModified.length) {
+    for (const tm of diff.triggersModified) {
+      const tr = tm.newTrigger;
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(tr.name)} <span class="badge badge-modified">Trigger Modified</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-modified"><td colspan="4"><strong>Table:</strong> ${esc(tr.table)} &nbsp;|&nbsp; <strong>Timing:</strong> ${esc(tm.oldTrigger.timing)} → ${esc(tr.timing)} &nbsp;|&nbsp; <strong>Events:</strong> ${esc(tm.oldTrigger.events.join(', '))} → ${esc(tr.events.join(', '))} &nbsp;|&nbsp; <strong>For Each:</strong> ${esc(tm.oldTrigger.forEach)} → ${esc(tr.forEach)}</td></tr>
+              <tr class="row-modified"><td colspan="4"><strong>Function:</strong> ${esc(tm.oldTrigger.function)} → ${esc(tr.function)}(${esc(tr.functionArgs)})</td></tr>
+            </tbody></table>
           </div>
         </div>`;
     }
@@ -2001,6 +2255,44 @@ function generateMarkdown(diff, migrationSQL, dialect) {
     md += `\n`;
   }
 
+  if (diff.triggersAdded && diff.triggersAdded.length) {
+    md += `## Triggers Added\n\n`;
+    for (const tr of diff.triggersAdded) {
+      md += `### ${tr.name} (on ${tr.table})\n\n`;
+      md += `- **Timing:** ${tr.timing}\n`;
+      md += `- **Events:** ${tr.events.join(', ')}\n`;
+      md += `- **For Each:** ${tr.forEach}\n`;
+      md += `- **Function:** ${tr.function}(${tr.functionArgs})\n`;
+      if (tr.when) md += `- **WHEN:** ${tr.when}\n`;
+      md += `\n`;
+    }
+  }
+
+  if (diff.triggersRemoved && diff.triggersRemoved.length) {
+    md += `## Triggers Removed\n\n`;
+    for (const tr of diff.triggersRemoved) {
+      md += `### ${tr.name} (on ${tr.table})\n\n`;
+      md += `- **Timing:** ${tr.timing}\n`;
+      md += `- **Events:** ${tr.events.join(', ')}\n`;
+      md += `- **For Each:** ${tr.forEach}\n`;
+      md += `- **Function:** ${tr.function}(${tr.functionArgs})\n`;
+      if (tr.when) md += `- **WHEN:** ${tr.when}\n`;
+      md += `\n`;
+    }
+  }
+
+  if (diff.triggersModified && diff.triggersModified.length) {
+    md += `## Triggers Modified\n\n`;
+    for (const tm of diff.triggersModified) {
+      md += `### ${tm.newTrigger.name} (on ${tm.newTrigger.table})\n\n`;
+      md += `- **Timing:** ${tm.oldTrigger.timing} → ${tm.newTrigger.timing}\n`;
+      md += `- **Events:** ${tm.oldTrigger.events.join(', ')} → ${tm.newTrigger.events.join(', ')}\n`;
+      md += `- **For Each:** ${tm.oldTrigger.forEach} → ${tm.newTrigger.forEach}\n`;
+      md += `- **Function:** ${tm.oldTrigger.function} → ${tm.newTrigger.function}(${tm.newTrigger.functionArgs})\n`;
+      md += `\n`;
+    }
+  }
+
   if (migrationSQL && migrationSQL.trim()) {
     md += `## Migration SQL\n\n`;
     md += `\`\`\`sql\n`;
@@ -2160,6 +2452,47 @@ function renderPDF() {
       html += `<li><strong>${esc(en.name)}:</strong> ${esc(en.values.join(', '))}</li>`;
     }
     html += `</ul>`;
+  }
+
+  if (diff.triggersAdded && diff.triggersAdded.length) {
+    html += `<h3>Triggers Added</h3>`;
+    for (const tr of diff.triggersAdded) {
+      html += `<h4 style="margin-bottom:4px;">${esc(tr.name)} (on ${esc(tr.table)})</h4>`;
+      html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+      html += `<li><strong>Timing:</strong> ${esc(tr.timing)}</li>`;
+      html += `<li><strong>Events:</strong> ${esc(tr.events.join(', '))}</li>`;
+      html += `<li><strong>For Each:</strong> ${esc(tr.forEach)}</li>`;
+      html += `<li><strong>Function:</strong> ${esc(tr.function)}(${esc(tr.functionArgs)})</li>`;
+      if (tr.when) html += `<li><strong>WHEN:</strong> ${esc(tr.when)}</li>`;
+      html += `</ul>`;
+    }
+  }
+
+  if (diff.triggersRemoved && diff.triggersRemoved.length) {
+    html += `<h3>Triggers Removed</h3>`;
+    for (const tr of diff.triggersRemoved) {
+      html += `<h4 style="margin-bottom:4px;">${esc(tr.name)} (on ${esc(tr.table)})</h4>`;
+      html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+      html += `<li><strong>Timing:</strong> ${esc(tr.timing)}</li>`;
+      html += `<li><strong>Events:</strong> ${esc(tr.events.join(', '))}</li>`;
+      html += `<li><strong>For Each:</strong> ${esc(tr.forEach)}</li>`;
+      html += `<li><strong>Function:</strong> ${esc(tr.function)}(${esc(tr.functionArgs)})</li>`;
+      if (tr.when) html += `<li><strong>WHEN:</strong> ${esc(tr.when)}</li>`;
+      html += `</ul>`;
+    }
+  }
+
+  if (diff.triggersModified && diff.triggersModified.length) {
+    html += `<h3>Triggers Modified</h3>`;
+    for (const tm of diff.triggersModified) {
+      html += `<h4 style="margin-bottom:4px;">${esc(tm.newTrigger.name)} (on ${esc(tm.newTrigger.table)})</h4>`;
+      html += `<ul style="font-size:0.85rem;margin-bottom:12px;">`;
+      html += `<li><strong>Timing:</strong> ${esc(tm.oldTrigger.timing)} → ${esc(tm.newTrigger.timing)}</li>`;
+      html += `<li><strong>Events:</strong> ${esc(tm.oldTrigger.events.join(', '))} → ${esc(tm.newTrigger.events.join(', '))}</li>`;
+      html += `<li><strong>For Each:</strong> ${esc(tm.oldTrigger.forEach)} → ${esc(tm.newTrigger.forEach)}</li>`;
+      html += `<li><strong>Function:</strong> ${esc(tm.oldTrigger.function)} → ${esc(tm.newTrigger.function)}(${esc(tm.newTrigger.functionArgs)})</li>`;
+      html += `</ul>`;
+    }
   }
 
   if (lastMigrationSQL && lastMigrationSQL.trim()) {

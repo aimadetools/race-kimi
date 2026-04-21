@@ -341,10 +341,109 @@ function parseCreateEnum(stmt, dialect) {
   };
 }
 
+function parseCreateTrigger(stmt, dialect) {
+  const upper = stmt.toUpperCase();
+  if (!upper.includes('CREATE TRIGGER') && !upper.includes('CREATE CONSTRAINT TRIGGER')) return null;
+
+  const tokens = tokenize(stmt);
+  let i = 0;
+
+  if (tokens[i].toUpperCase() !== 'CREATE') return null;
+  i++;
+
+  let constraint = false;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') { constraint = true; i++; }
+
+  if (tokens[i].toUpperCase() !== 'TRIGGER') return null;
+  i++;
+
+  const name = tokens[i].replace(/["`\[\]]/g, '');
+  i++;
+
+  let timing = '';
+  if (tokens[i].toUpperCase() === 'BEFORE') { timing = 'BEFORE'; i++; }
+  else if (tokens[i].toUpperCase() === 'AFTER') { timing = 'AFTER'; i++; }
+  else if (tokens[i].toUpperCase() === 'INSTEAD' && tokens[i+1] && tokens[i+1].toUpperCase() === 'OF') { timing = 'INSTEAD OF'; i += 2; }
+  else return null;
+
+  const events = [];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (['INSERT','UPDATE','DELETE','TRUNCATE'].includes(t)) { events.push(t); i++; }
+    else if (t === 'OR') i++;
+    else break;
+  }
+
+  if (tokens[i].toUpperCase() !== 'ON') return null;
+  i++;
+  const table = tokens[i].replace(/["`\[\]]/g, '');
+  i++;
+
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'FROM') { i += 2; continue; }
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'DEFERRABLE') { i += 2; continue; }
+    if (t === 'DEFERRABLE') { i++; if (tokens[i] && tokens[i].toUpperCase() === 'INITIALLY') i += 2; continue; }
+    if (t === 'INITIALLY') { i += 2; continue; }
+    if (t === 'REFERENCING') {
+      i++;
+      while (i < tokens.length && tokens[i].toUpperCase() !== 'FOR' && tokens[i].toUpperCase() !== 'WHEN' && tokens[i].toUpperCase() !== 'EXECUTE') i++;
+      continue;
+    }
+    break;
+  }
+
+  let forEach = 'STATEMENT';
+  if (tokens[i] && tokens[i].toUpperCase() === 'FOR') {
+    i++;
+    if (tokens[i] && tokens[i].toUpperCase() === 'EACH') i++;
+    if (tokens[i] && tokens[i].toUpperCase() === 'ROW') { forEach = 'ROW'; i++; }
+    else if (tokens[i] && tokens[i].toUpperCase() === 'STATEMENT') { forEach = 'STATEMENT'; i++; }
+  }
+
+  let when = null;
+  if (tokens[i] && tokens[i].toUpperCase() === 'WHEN') {
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      const start = i;
+      let depth = 1;
+      while (i < tokens.length && depth > 0) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') depth--;
+        i++;
+      }
+      when = tokens.slice(start, i - 1).join(' ');
+    }
+  }
+
+  if (!tokens[i] || tokens[i].toUpperCase() !== 'EXECUTE') return null;
+  i++;
+  if (tokens[i] && (tokens[i].toUpperCase() === 'FUNCTION' || tokens[i].toUpperCase() === 'PROCEDURE')) i++;
+
+  const funcName = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+  i++;
+
+  let functionArgs = '';
+  if (tokens[i] === '(') {
+    i++;
+    const start = i;
+    let depth = 1;
+    while (i < tokens.length && depth > 0) {
+      if (tokens[i] === '(') depth++;
+      else if (tokens[i] === ')') depth--;
+      i++;
+    }
+    functionArgs = tokens.slice(start, i - 1).join(' ');
+  }
+
+  return { name, timing, events, table, forEach, when, function: funcName, functionArgs, constraint, raw: stmt.trim() };
+}
+
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [], enums: {}, errors: [] };
+  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], errors: [] };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -361,6 +460,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE TYPE') && upper.includes('ENUM')) {
       const em = parseCreateEnum(stmt, dialect);
       if (em) schema.enums[em.name] = em;
+    } else if (upper.includes('CREATE TRIGGER')) {
+      const tr = parseCreateTrigger(stmt, dialect);
+      if (tr) schema.triggers.push(tr);
     }
   }
 
@@ -384,6 +486,9 @@ function diffSchemas(oldSchema, newSchema) {
     tablesModified: [],
     enumsAdded: [],
     enumsRemoved: [],
+    triggersAdded: [],
+    triggersRemoved: [],
+    triggersModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -417,6 +522,30 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const name of oldEnumNames) {
     if (!newEnumNames.has(name)) diff.enumsRemoved.push(oldEnums[name]);
+  }
+
+  const oldTriggers = oldSchema.triggers || [];
+  const newTriggers = newSchema.triggers || [];
+  const oldTriggerKeys = new Map(oldTriggers.map(t => [`${t.table}.${t.name}`, t]));
+  const newTriggerKeys = new Map(newTriggers.map(t => [`${t.table}.${t.name}`, t]));
+
+  for (const [key, tr] of newTriggerKeys) {
+    if (!oldTriggerKeys.has(key)) {
+      diff.triggersAdded.push(tr);
+    } else {
+      const oldTr = oldTriggerKeys.get(key);
+      const changed = oldTr.timing !== tr.timing ||
+        oldTr.events.join(',') !== tr.events.join(',') ||
+        oldTr.forEach !== tr.forEach ||
+        oldTr.function !== tr.function ||
+        oldTr.functionArgs !== tr.functionArgs ||
+        oldTr.when !== tr.when ||
+        oldTr.constraint !== tr.constraint;
+      if (changed) diff.triggersModified.push({ oldTrigger: oldTr, newTrigger: tr });
+    }
+  }
+  for (const [key, tr] of oldTriggerKeys) {
+    if (!newTriggerKeys.has(key)) diff.triggersRemoved.push(tr);
   }
 
   return diff;
@@ -659,7 +788,7 @@ function main() {
     console.log(output);
   }
 
-  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0;
+  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0 || diff.triggersAdded.length > 0 || diff.triggersRemoved.length > 0 || diff.triggersModified.length > 0;
   if (failOnBreaking && breakingChanges.length > 0) {
     process.exit(3);
   }
@@ -786,6 +915,44 @@ function generateMarkdown(diff, dialect) {
       md += `- **${en.name}:** ${en.values.join(', ')}\n`;
     }
     md += `\n`;
+  }
+
+  if (diff.triggersAdded && diff.triggersAdded.length) {
+    md += `## Triggers Added\n\n`;
+    for (const tr of diff.triggersAdded) {
+      md += `### ${tr.name} (on ${tr.table})\n\n`;
+      md += `- **Timing:** ${tr.timing}\n`;
+      md += `- **Events:** ${tr.events.join(', ')}\n`;
+      md += `- **For Each:** ${tr.forEach}\n`;
+      md += `- **Function:** ${tr.function}(${tr.functionArgs})\n`;
+      if (tr.when) md += `- **WHEN:** ${tr.when}\n`;
+      md += `\n`;
+    }
+  }
+
+  if (diff.triggersRemoved && diff.triggersRemoved.length) {
+    md += `## Triggers Removed\n\n`;
+    for (const tr of diff.triggersRemoved) {
+      md += `### ${tr.name} (on ${tr.table})\n\n`;
+      md += `- **Timing:** ${tr.timing}\n`;
+      md += `- **Events:** ${tr.events.join(', ')}\n`;
+      md += `- **For Each:** ${tr.forEach}\n`;
+      md += `- **Function:** ${tr.function}(${tr.functionArgs})\n`;
+      if (tr.when) md += `- **WHEN:** ${tr.when}\n`;
+      md += `\n`;
+    }
+  }
+
+  if (diff.triggersModified && diff.triggersModified.length) {
+    md += `## Triggers Modified\n\n`;
+    for (const tm of diff.triggersModified) {
+      md += `### ${tm.newTrigger.name} (on ${tm.newTrigger.table})\n\n`;
+      md += `- **Timing:** ${tm.oldTrigger.timing} → ${tm.newTrigger.timing}\n`;
+      md += `- **Events:** ${tm.oldTrigger.events.join(', ')} → ${tm.newTrigger.events.join(', ')}\n`;
+      md += `- **For Each:** ${tm.oldTrigger.forEach} → ${tm.newTrigger.forEach}\n`;
+      md += `- **Function:** ${tm.oldTrigger.function} → ${tm.newTrigger.function}(${tm.newTrigger.functionArgs})\n`;
+      md += `\n`;
+    }
   }
 
   md += `---\n\n`;

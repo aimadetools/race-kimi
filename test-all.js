@@ -48,5 +48,41 @@ if (testDialect('mysql', my)) ok++;
 if (testDialect('sqlite', sq)) ok++;
 if (testDialect('mssql', ms)) ok++;
 
-console.log('\n' + ok + '/4 dialects passed');
-process.exit(ok === 4 ? 0 : 1);
+// Trigger parsing test
+const triggerSQL = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+`;
+
+const triggerSQLB = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER audit_log AFTER INSERT OR DELETE ON users FOR EACH ROW EXECUTE FUNCTION audit_trigger();
+`;
+
+const schemaTrigA = parseSQL(triggerSQL, 'postgres');
+const schemaTrigB = parseSQL(triggerSQLB, 'postgres');
+const triggerDiff = diffSchemas(schemaTrigA, schemaTrigB);
+
+if (schemaTrigA.triggers.length === 1 && schemaTrigB.triggers.length === 2 && triggerDiff.triggersAdded.length === 1) {
+  console.log('trigger: OK — 1 trigger added detected');
+  ok++;
+} else {
+  console.log('trigger: FAIL — expected 1 trigger added, got', triggerDiff.triggersAdded.length);
+}
+
+// Trigger modification test
+const triggerSQLC = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE TRIGGER update_timestamp AFTER UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_v2();
+`;
+
+const schemaTrigC = parseSQL(triggerSQLC, 'postgres');
+const triggerModDiff = diffSchemas(schemaTrigA, schemaTrigC);
+
+if (triggerModDiff.triggersModified.length === 1) {
+  console.log('trigger-mod: OK — 1 trigger modification detected');
+  ok++;
+} else {
+  console.log('trigger-mod: FAIL — expected 1 trigger modified, got', triggerModDiff.triggersModified.length);
+}
+
+console.log('\n' + ok + '/6 tests passed');
+process.exit(ok === 6 ? 0 : 1);
