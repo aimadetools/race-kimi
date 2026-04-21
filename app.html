@@ -2537,6 +2537,15 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     updateStats();
   }
 
+  // Public share link via ?share=publicId
+  const shareParams = new URLSearchParams(location.search);
+  const shareId = shareParams.get('share');
+  if (shareId) {
+    // Wait for Supabase to init then load public diff
+    setTimeout(() => loadPublicDiff(shareId), 800);
+    return;
+  }
+
   const hashMatch = location.hash.match(/#diff=([A-Za-z0-9+/=_-]+)/);
   if (hashMatch) {
     const data = decodeState(hashMatch[1]);
@@ -2692,7 +2701,7 @@ async function loadSavedDiffs() {
   try {
     const { data, error } = await supabaseClient
       .from('saved_diffs')
-      .select('id, name, dialect, created_at')
+      .select('id, name, dialect, created_at, public_id, is_public')
       .eq('user_id', currentUser.id)
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -2712,17 +2721,96 @@ function renderSavedDiffsList() {
   }
   list.innerHTML = savedDiffsCache.map(d => {
     const date = new Date(d.created_at).toLocaleDateString();
+    const linkBtn = d.public_id
+      ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
+      : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
     return `<div class="saved-diff-item">
       <div class="saved-diff-info">
         <div class="saved-diff-name">${esc(d.name)}</div>
-        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}</div>
+        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
       </div>
       <div class="saved-diff-actions">
         <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
+        ${linkBtn}
         <button class="delete-btn" onclick="deleteSavedDiff('${d.id}')">Delete</button>
       </div>
     </div>`;
   }).join('');
+}
+
+function generatePublicId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < 10; i++) id += chars.charAt(Math.floor(Math.random() * chars.length));
+  return id;
+}
+
+async function createPublicLink(id) {
+  if (!supabaseClient || !currentUser) return;
+  const publicId = generatePublicId();
+  try {
+    const { error } = await supabaseClient
+      .from('saved_diffs')
+      .update({ public_id: publicId, is_public: true })
+      .eq('id', id)
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+    copyPublicLink(publicId);
+    // Update cache
+    const item = savedDiffsCache.find(d => d.id === id);
+    if (item) { item.public_id = publicId; item.is_public = true; }
+    renderSavedDiffsList();
+  } catch (err) {
+    showError('Failed to create public link: ' + err.message);
+  }
+}
+
+function copyPublicLink(publicId) {
+  const url = location.origin + location.pathname + '?share=' + publicId;
+  navigator.clipboard.writeText(url).then(() => {
+    showError('✓ Public link copied to clipboard!');
+  });
+}
+
+async function loadPublicDiff(publicId) {
+  if (!supabaseClient) {
+    showError('Unable to load shared diff. Please try again later.');
+    return;
+  }
+  try {
+    const { data, error } = await supabaseClient
+      .from('saved_diffs')
+      .select('schema_a, schema_b, dialect, name')
+      .eq('public_id', publicId)
+      .eq('is_public', true)
+      .single();
+    if (error) throw error;
+    if (!data) {
+      showError('Shared diff not found or no longer public.');
+      return;
+    }
+    document.getElementById('schemaA').value = data.schema_a || '';
+    document.getElementById('schemaB').value = data.schema_b || '';
+    if (data.dialect && ['postgres','mysql','sqlite','mssql'].includes(data.dialect)) {
+      document.getElementById('dialect').value = data.dialect;
+    }
+    updateStats();
+    // Auto-run comparison
+    setTimeout(() => document.getElementById('compareBtn').click(), 300);
+    // Show read-only banner
+    showReadOnlyBanner(data.name);
+  } catch (err) {
+    showError('Failed to load shared diff: ' + err.message);
+  }
+}
+
+function showReadOnlyBanner(name) {
+  const container = document.getElementById('errorContainer');
+  container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3);color:var(--text);">
+    <strong>🔗 Viewing shared diff${name ? ': ' + esc(name) : ''}</strong> — 
+    <a href="app.html" style="color:var(--primary);">Open in SchemaLens</a> to edit and generate migrations.
+    <button class="close" onclick="this.parentElement.remove()">×</button>
+  </div>`;
 }
 
 async function loadDiffIntoEditors(id) {

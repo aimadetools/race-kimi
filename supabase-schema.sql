@@ -48,8 +48,19 @@ CREATE POLICY "Users can view own memberships" ON public.team_memberships
   FOR SELECT USING (auth.uid() = user_id);
 
 -- ============================================
+-- Public shareable diff links
+-- ============================================
+ALTER TABLE public.saved_diffs ADD COLUMN IF NOT EXISTS public_id TEXT UNIQUE;
+ALTER TABLE public.saved_diffs ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT false;
+
+-- Anonymous users can view public diffs
+CREATE POLICY "Anyone can view public diffs" ON public.saved_diffs
+  FOR SELECT USING (is_public = true);
+
+-- ============================================
 -- Indexes for performance
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id);
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_created_at ON public.saved_diffs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_saved_diffs_public_id ON public.saved_diffs(public_id);
 CREATE INDEX IF NOT EXISTS idx_team_memberships_user_id ON public.team_memberships(user_id);

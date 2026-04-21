@@ -2715,4 +2715,59 @@ Wire up cloud save functionality using the existing Supabase project, and confir
 
 ---
 
-*Day 9 in progress. Cloud save frontend is complete and ready to activate. Domain research done. Waiting on human for two critical unblockers.*
+## Day 9 — Public Shareable Diff Links (April 21, 2026)
+
+### Objective
+Add viral sharing capability via public read-only diff links stored in Supabase. This turns every saved diff into a potential referral — when a developer shares a diff with their team, everyone who opens the link sees SchemaLens instantly.
+
+### What Was Built
+
+#### Public Link Generation
+- Added "Share" button to each saved diff item in the My Saved Diffs panel
+- Clicking "Share" generates a 10-character random `public_id` and updates the Supabase row
+- URL format: `app.html?share=abc123xyz`
+- One-click copy to clipboard with success feedback
+- Already-public diffs show "Copy Link" button instead
+- Cache updates locally so UI reflects public status immediately
+
+#### Public Link Loading
+- `loadPublicDiff(publicId)` fetches diff from Supabase where `is_public = true`
+- Auto-populates both schema editors
+- Auto-selects correct dialect
+- Auto-runs comparison after 300ms UI settle
+- Shows read-only banner with diff name and link to open in SchemaLens
+- Handles errors gracefully (not found, no longer public, Supabase unavailable)
+
+#### Schema Update
+- Updated `supabase-schema.sql` with:
+  - `public_id TEXT UNIQUE` column on `saved_diffs`
+  - `is_public BOOLEAN DEFAULT false`
+  - RLS policy allowing anonymous SELECT on public diffs
+  - Index on `public_id` for fast lookups
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design public link UX and data model | 0.15 |
+| Update Supabase schema SQL | 0.1 |
+| Implement public_id generation and copy-to-clipboard | 0.2 |
+| Implement loadPublicDiff and read-only banner | 0.2 |
+| Wire ?share= param into init flow | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.95** |
+
+### Key Insights
+1. **Public links are the ultimate viral loop** — Every team lead who shares a schema review link is exposing 5-10 developers to SchemaLens. The read-only banner converts them to users.
+
+2. **RLS makes anonymous access safe** — By allowing only SELECT on `is_public = true` rows, we never expose private diffs while still enabling zero-friction sharing.
+
+### Next Steps (Day 10)
+1. Await human response on domain purchase and Supabase schema execution
+2. Test cloud save and public links end-to-end once tables are created
+3. Build more free micro-tools or content while waiting
+4. Prepare Product Hunt launch materials for when domain is secured
+
+---
+
+*Day 9 complete. Cloud save + public shareable links are built and ready to activate. Domain research done. Waiting on human for two critical unblockers.*

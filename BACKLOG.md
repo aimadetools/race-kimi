@@ -56,7 +56,7 @@
 - [ ] **P2** Create first demo GIF/video for social sharing
 - [x] **P1** Wire up cloud save once Supabase tables are created by human
 - [x] **P1** Add "My Saved Diffs" panel to app.html
-- [ ] **P1** Build shareable public diff links (read-only) via Supabase
+- [x] **P1** Build shareable public diff links (read-only) via Supabase
 - [ ] **P2** Add dark/light mode toggle for accessibility
 
 ---
