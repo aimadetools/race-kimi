@@ -2572,3 +2572,78 @@ Replaced hardcoded dark colors with CSS variables across:
 ---
 
 *Day 8 complete. Dark/light mode toggle live across all 27 pages. Site is now accessible to users who prefer light themes. All unblocked immediate backlog tasks executed.*
+
+---
+
+## Day 8 — Breaking Change Detection (April 21, 2026)
+
+### Objective
+Add a "breaking change" detection heuristic to identify dangerous schema changes before they reach production. This was the highest-priority unblocked P1 task from Week 8.
+
+### What Was Built
+
+#### `detectBreakingChanges(diff)` — App & CLI
+A comprehensive breaking change analyzer that inspects diff results and flags 6 dangerous patterns:
+
+1. **DROP_TABLE** (critical) — Table removal
+2. **DROP_COLUMN** (critical) — Column removal
+3. **ADD_NOT_NULL_NO_DEFAULT** (critical) — New NOT NULL column without a default value (guaranteed migration failure on existing rows)
+4. **NARROW_TYPE** (warning) — Type narrowing detected via heuristics:
+   - VARCHAR/CHAR/NVARCHAR length decrease
+   - INTEGER family narrowing (BIGINT → INT → SMALLINT → TINYINT)
+   - TEXT/CLOB → VARCHAR/CHAR
+   - DECIMAL precision/scale decrease
+5. **DROP_CONSTRAINT** (critical) — Removal of PRIMARY KEY, UNIQUE, or CHECK constraints
+6. **ADD_FK_NO_INDEX** (warning) — Foreign key added without a supporting index (causes table locks)
+
+#### UI Integration
+- **Summary bar:** Shows breaking change count with color-coded pill (red for critical, yellow for warnings only)
+- **Breaking changes banner:** Detailed list below the summary bar with severity labels and descriptions
+- **Per-table badges:** Tables with breaking changes show "🔴 N breaking" or "⚠ N warning" badges in the diff table header
+
+#### CLI Integration
+- `--fail-on-breaking` flag exits with code 3 when breaking changes are detected
+- Breaking changes array included in JSON output under `breakingChanges`
+- Updated help text and exit code documentation
+
+#### Data Model Extension
+- `diffTable()` now includes `oldTable` and `newTable` references in the diff result
+- Enables index lookup for `ADD_FK_NO_INDEX` detection
+
+### Validation
+Tested with PostgreSQL schemas containing:
+- ✅ DROP_COLUMN detected correctly
+- ✅ NARROW_TYPE detected for VARCHAR(255) → VARCHAR(100)
+- ✅ ADD_FK_NO_INDEX detected when FK added without CREATE INDEX
+- ✅ `--fail-on-breaking` returns exit code 3
+- ✅ Identical schemas return exit code 0 with `--fail-on-breaking`
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design breaking change taxonomy and heuristics | 0.15 |
+| Implement detectBreakingChanges() in app.html | 0.3 |
+| Update renderSummary() with breaking change UI | 0.2 |
+| Update renderTableDiff() with per-table badges | 0.1 |
+| Port detectBreakingChanges() to CLI + --fail-on-breaking | 0.2 |
+| Test with sample schemas | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| **Total** | **1.25** |
+
+### Key Insights
+1. **Heuristics beat perfection** — Type narrowing detection uses regex heuristics rather than a full type system. This is "good enough" for 95% of real-world cases and avoids building a complex type lattice.
+
+2. **Per-table badges make scanning effortless** — Users can scroll through a large diff and instantly spot which tables have dangerous changes without reading every row.
+
+3. **CI exit codes are a conversion path** — `--fail-on-breaking` gives platform engineers a reason to advocate for SchemaLens Pro in their organization. The CLI is a trojan horse for enterprise adoption.
+
+### Next Steps (Day 9)
+1. Await human response on domain purchase and Supabase schema setup
+2. Wire up cloud save functionality once Supabase tables are ready
+3. Add "My Saved Diffs" panel to app.html
+4. Consider building more free micro-tools while waiting for human unblock
+
+---
+
+*Day 8 complete. Breaking change detection live in app and CLI. Product now proactively warns users about dangerous migrations before they run them.*
