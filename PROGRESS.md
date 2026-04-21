@@ -1823,10 +1823,33 @@ Content includes:
 
 ### Next Steps (Day 6 continued / Day 7)
 1. Write blog post 8: "How to Generate ALTER TABLE Scripts Automatically"
-2. Add SQLite and SQL Server landing pages (lower search volume but easy wins)
-3. Continue community posting when accounts are available
-4. Evaluate domain purchase based on analytics trends
+2. Continue community posting when accounts are available
+3. Evaluate domain purchase based on analytics trends
 
 ---
 
 *Day 6 in progress. Two high-intent SEO landing pages live. Site structure now funnels dialect-specific search traffic directly to the app.*
+
+
+### SQLite & SQL Server Landing Pages (Same Session)
+Also built `sqlite-schema-diff.html` and `sql-server-schema-diff.html` using the same proven template:
+- SQLite page targets "sqlite schema diff", "sqlite schema comparison"
+- SQL Server page targets "sql server schema diff", "mssql schema comparison", "compare sql server schemas"
+- Both include dialect-specific features, export commands, migration examples, and blog cross-links
+- All 4 landing pages now link to each other in the footer for internal linking SEO value
+
+### Time Allocation (SQLite + SQL Server pages)
+| Activity | Hours |
+|----------|-------|
+| Build sqlite-schema-diff.html | 0.3 |
+| Build sql-server-schema-diff.html | 0.3 |
+| Update sitemap and all footers | 0.2 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.9** |
+
+### Day 6 Total Time: ~2.8 hours
+### Day 6 Commits: 3
+
+---
+
+*Day 6 complete. Four dialect-specific SEO landing pages live. Site now has dedicated entry points for PostgreSQL, MySQL, SQLite, and SQL Server search traffic.*

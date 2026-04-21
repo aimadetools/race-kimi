@@ -27,8 +27,8 @@
 - [x] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes"
 - [x] **P0** Create PostgreSQL schema diff landing page (SEO)
 - [x] **P0** Create MySQL schema diff landing page (SEO)
-- [ ] **P1** Create SQLite schema diff landing page (SEO)
-- [ ] **P1** Create SQL Server schema diff landing page (SEO)
+- [x] **P1** Create SQLite schema diff landing page (SEO)
+- [x] **P1** Create SQL Server schema diff landing page (SEO)
 - [ ] **P1** Write blog post: "How to Generate ALTER TABLE Scripts Automatically"
 - [ ] **P1** Write blog post: "SchemaLens in Your CI/CD Pipeline"
 - [x] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList) — drafts ready, submission pending
