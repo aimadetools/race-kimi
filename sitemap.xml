@@ -73,6 +73,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/blog/schemalens-in-your-ci-cd-pipeline.html</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/blog/how-to-generate-alter-table-scripts-automatically.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>

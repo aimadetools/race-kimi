@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens in Your CI/CD Pipeline — SchemaLens</title>
+  <meta name="description" content="Add automated schema diffing to your CI/CD pipeline. Catch dangerous database changes in pull requests before they reach production.">
+  <meta property="og:title" content="SchemaLens in Your CI/CD Pipeline">
+  <meta property="og:description" content="Automated schema diffing for GitHub Actions and GitLab CI. Catch dangerous database changes before they merge.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/schemalens-in-your-ci-cd-pipeline.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: #888; margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: #ddd; }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: #ccc; }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: #ccc; }
+    .blog-post pre {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: #1a1a1a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: #ccc; }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: #1a1a1a;
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: #fff; }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #888; text-decoration: none; }
+    .back-link:hover { color: #fff; }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>SchemaLens in Your CI/CD Pipeline</h1>
+      <div class="blog-meta">DevOps · April 21, 2026 · 8 min read</div>
+
+      <p>Database migrations are the only code changes that can lock tables, truncate data, and break production with a single missing keyword. Yet most teams review migrations the same way they review JavaScript: a quick glance at the diff and an approval. That works until someone drops a column that a background worker still references, or adds <code>NOT NULL</code> to a column with ten million NULL rows.</p>
+
+      <p>The fix isn't more manual review. It's automated schema diffing in your CI/CD pipeline — running on every pull request that touches a <code>.sql</code> file, posting a clear report of what changed, and optionally failing the build when a dangerous change slips through.</p>
+
+      <p>This post shows exactly how to set it up with SchemaLens, GitHub Actions, and GitLab CI.</p>
+
+      <h2>What You'll Build</h2>
+
+      <p>By the end of this guide, your pipeline will:</p>
+
+      <ol>
+        <li>Detect when a pull request modifies schema files</li>
+        <li>Extract the old schema from the base branch and the new schema from the PR</li>
+        <li>Run a semantic diff that understands tables, columns, constraints, and indexes</li>
+        <li>Post a formatted markdown report as a PR comment or pipeline artifact</li>
+        <li>Fail the build if the diff contains breaking changes (optional)</li>
+      </ol>
+
+      <h2>The SchemaLens CLI</h2>
+
+      <p>SchemaLens includes a zero-dependency Node.js CLI at <code>ci/schemalens-diff.js</code>. It embeds the full parser and diff engine — no <code>npm install</code> required. This means it runs anywhere Node.js is available: GitHub Actions, GitLab CI, Docker containers, and local machines.</p>
+
+      <h3>Basic usage</h3>
+
+<pre><code>node ci/schemalens-diff.js \
+  schema_old.sql schema_new.sql \
+  --dialect postgres \
+  --format markdown \
+  --output diff-report.md</code></pre>
+
+      <p>Supported flags:</p>
+
+      <ul>
+        <li><code>--dialect</code>: <code>postgres</code>, <code>mysql</code>, <code>sqlite</code>, or <code>mssql</code></li>
+        <li><code>--format</code>: <code>json</code> or <code>markdown</code></li>
+        <li><code>--output</code>: write to a file instead of stdout</li>
+      </ul>
+
+      <p>Exit codes:</p>
+
+      <ul>
+        <li><code>0</code> — no differences found</li>
+        <li><code>1</code> — differences found</li>
+        <li><code>2</code> — parsing error</li>
+      </ul>
+
+      <h2>GitHub Actions Setup</h2>
+
+      <p>Create <code>.github/workflows/schema-diff.yml</code> with the following workflow:</p>
+
+<pre><code><span class="keyword">name</span>: Schema Diff
+
+<span class="keyword">on</span>:
+  <span class="keyword">pull_request</span>:
+    <span class="keyword">paths</span>:
+      - <span class="string">'**/*.sql'</span>
+      - <span class="string">'db/migrations/**'</span>
+
+<span class="keyword">jobs</span>:
+  <span class="keyword">diff</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">fetch-depth</span>: 0
+
+      - <span class="keyword">name</span>: Get base branch schema
+        <span class="keyword">run</span>: |
+          git show origin/${{ github.base_ref }}:schema.sql > schema_base.sql || true
+
+      - <span class="name">name</span>: Run SchemaLens diff
+        <span class="keyword">run</span>: |
+          node ci/schemalens-diff.js schema_base.sql schema.sql \
+            --dialect postgres --format markdown --output report.md
+        <span class="keyword">continue-on-error</span>: true
+
+      - <span class="keyword">name</span>: Comment PR with diff report
+        <span class="keyword">uses</span>: actions/github-script@v7
+        <span class="keyword">with</span>:
+          <span class="keyword">script</span>: |
+            const fs = require('fs');
+            const report = fs.readFileSync('report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Schema Diff Report\n\n' + report
+            });</code></pre>
+
+      <p>This workflow triggers only when <code>.sql</code> files change, checks out both branches, extracts the base schema, runs the diff, and posts the report as a PR comment.</p>
+
+      <h3>Failing on breaking changes</h3>
+
+      <p>To make the build fail when specific changes are detected, parse the JSON output and inspect the diff structure:</p>
+
+<pre><code><span class="keyword">- name</span>: Check for breaking changes
+  <span class="keyword">run</span>: |
+    node ci/schemalens-diff.js schema_base.sql schema.sql \
+      --dialect postgres --format json --output diff.json
+
+    node -e "
+      const diff = require('./diff.json');
+      const breaking = diff.tablesRemoved.length > 0 ||
+        diff.tablesModified.some(t =>
+          t.columnsRemoved.length > 0 ||
+          t.constraintsRemoved.some(c => c.type === 'FOREIGN KEY')
+        );
+      if (breaking) {
+        console.error('Breaking schema changes detected');
+        process.exit(1);
+      }
+    "</code></pre>
+
+      <p>Customize the breaking-change heuristic to match your team's risk tolerance. Some teams treat any column drop as breaking; others only care about foreign key removals.</p>
+
+      <h2>GitLab CI Setup</h2>
+
+      <p>For GitLab, add this job to your <code>.gitlab-ci.yml</code>:</p>
+
+<pre><code><span class="keyword">schema_diff</span>:
+  <span class="keyword">image</span>: node:20-alpine
+  <span class="keyword">stage</span>: test
+  <span class="keyword">rules</span>:
+    - <span class="keyword">if</span>: $CI_PIPELINE_SOURCE == "merge_request_event"
+      <span class="keyword">changes</span>:
+        - <span class="string">"**/*.sql"</span>
+  <span class="keyword">script</span>:
+    - |
+      git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:schema.sql \
+        > schema_base.sql || true
+    - |
+      node ci/schemalens-diff.js schema_base.sql schema.sql \
+        --dialect postgres --format markdown --output diff-report.md
+  <span class="keyword">artifacts</span>:
+    <span class="keyword">paths</span>:
+      - diff-report.md
+    <span class="keyword">expire_in</span>: 1 week</code></pre>
+
+      <p>The report is attached to the pipeline as an artifact. Team members can download it from the merge request page or integrate it with GitLab's code quality report format.</p>
+
+      <h2>Multi-Dialect Repositories</h2>
+
+      <p>If your project supports multiple databases (for example, PostgreSQL in production and SQLite for local testing), run the diff for each dialect:</p>
+
+<pre><code><span class="keyword">strategy</span>:
+  <span class="keyword">matrix</span>:
+    <span class="keyword">dialect</span>: [postgres, mysql, sqlite]
+
+<span class="keyword">steps</span>:
+  - <span class="keyword">name</span>: Diff ${{ matrix.dialect }}
+    <span class="keyword">run</span>: |
+      node ci/schemalens-diff.js schema_base.sql schema.sql \
+        --dialect ${{ matrix.dialect }} \
+        --format markdown \
+        --output report-${{ matrix.dialect }}.md</code></pre>
+
+      <p>This catches dialect-specific issues early — like using <code>ALTER COLUMN ... TYPE</code> in a file that gets run against MySQL in some environments.</p>
+
+      <h2>Where to Store Your Schema Snapshot</h2>
+
+      <p>The pipeline needs two schema files: the base (from the target branch) and the new (from the PR). There are three common patterns for this:</p>
+
+      <h3>Pattern 1: Schema dump in version control</h3>
+
+      <p>Commit a <code>schema.sql</code> file to the repo. The CI diffs the PR's version against the base branch's version. This is the simplest approach and guarantees the diff is always available.</p>
+
+      <h3>Pattern 2: Generate from migrations</h3>
+
+      <p>Run your migration tool (Flyway, Liquibase, Prisma Migrate) against an empty database in CI to produce the schema, then diff the result. This is more accurate but slower.</p>
+
+      <h3>Pattern 3: Snapshot from staging</h3>
+
+      <p>Download the latest staging schema from a known URL or S3 bucket at the start of the pipeline. This diffs against the real expected production schema, not just the last committed version.</p>
+
+      <div class="callout">
+        <p><strong>Recommendation:</strong> Start with Pattern 1. A committed <code>schema.sql</code> is fast, deterministic, and easy to review. Upgrade to Pattern 2 or 3 when you need higher fidelity.</p>
+      </div>
+
+      <h2>What the Report Looks Like</h2>
+
+      <p>A typical markdown report from the CLI includes:</p>
+
+      <ul>
+        <li><strong>Summary:</strong> tables added, removed, modified; column counts; enum changes</li>
+        <li><strong>Tables added:</strong> full <code>CREATE TABLE</code> with columns and constraints</li>
+        <li><strong>Tables removed:</strong> list of dropped tables (flagged as breaking)</li>
+        <li><strong>Tables modified:</strong> per-table breakdown of added/removed/modified columns and constraints</li>
+        <li><strong>Migration SQL:</strong> dialect-correct <code>ALTER TABLE</code> statements ready to run</li>
+      </ul>
+
+      <p>Here's an example of what gets posted to a pull request:</p>
+
+<pre><code>## Schema Diff Report
+
+**Summary:** 1 table modified, 2 columns added, 1 constraint added
+
+### Modified: users
+| Change | Detail |
+|--------|--------|
+| Column added | `email_verified_at TIMESTAMP` |
+| Column added | `login_count INT DEFAULT 0` |
+| Constraint added | `UNIQUE (email)` |
+
+### Migration SQL
+```sql
+ALTER TABLE users ADD COLUMN email_verified_at TIMESTAMP;
+ALTER TABLE users ADD COLUMN login_count INT DEFAULT 0;
+ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);
+```</code></pre>
+
+      <h2>Security and Privacy</h2>
+
+      <p>Because the SchemaLens CLI is zero-dependency and runs entirely in your CI environment, your schema never leaves your infrastructure. There's no API key, no cloud service, no data upload. The diff happens inside your runner.</p>
+
+      <p>For teams in regulated industries (healthcare, finance), this is often a requirement. You get automated schema review without adding a new vendor to your security questionnaire.</p>
+
+      <h2>Scaling Beyond One Repository</h2>
+
+      <p>Once schema diffing works in one repo, you can scale it:</p>
+
+      <ul>
+        <li><strong>Reusable workflow:</strong> Extract the GitHub Actions job into a reusable workflow and call it from every service repository.</li>
+        <li><strong>Centralized schema registry:</strong> Maintain a single <code>schema.sql</code> per service in a central repo. The registry diffs all services nightly and alerts on drift.</li>
+        <li><strong>Slack notifications:</strong> Post a summary to Slack when breaking changes are detected, tagging the on-call engineer.</li>
+      </ul>
+
+      <h2>Try It Now</h2>
+
+      <p>The CLI is already in your repository if you're using SchemaLens. Copy the workflow files above, adjust the dialect and schema path, and open your next pull request. You'll have automated schema review in under ten minutes.</p>
+
+      <div class="cta-box">
+        <h3>Start diffing in CI today</h3>
+        <p>Download the SchemaLens CLI or open the browser app to validate your schemas before adding them to CI.</p>
+        <a href="../app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+      </div>
+
+      <h2>Summary</h2>
+
+      <ul>
+        <li>Manual migration review is too slow and error-prone for modern teams.</li>
+        <li>Automated schema diffing in CI catches breaking changes at the PR stage.</li>
+        <li>The SchemaLens CLI is zero-dependency and runs in GitHub Actions, GitLab CI, and Docker.</li>
+        <li>Post markdown reports as PR comments or pipeline artifacts for easy review.</li>
+        <li>Customize breaking-change heuristics to match your team's risk tolerance.</li>
+        <li>Start with a committed <code>schema.sql</code> file; upgrade to generated snapshots when needed.</li>
+      </ul>
+
+      <p><em>SchemaLens is a browser-based SQL schema diff tool with a zero-dependency CLI for CI/CD. No signup, no upload, no backend. Your schema never leaves your machine.</em> <a href="../app.html">Try it free →</a></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
