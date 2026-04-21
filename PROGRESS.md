@@ -2404,3 +2404,103 @@ A fully client-side CSV to SQL converter with zero dependencies:
 ---
 
 *Day 7 complete. Four free micro-tools. Eleven blog posts. Dedicated tools landing page. Comprehensive internal linking across 23 pages. SEO engine is firing on all cylinders.*
+---
+
+## Day 8 — Supabase Auth & Blog Post 12 (April 21, 2026)
+
+### Objective
+Add Supabase magic-link authentication to app.html to enable cloud save and team workspace features (Week 6 infrastructure). Publish the twelfth SEO blog post to promote the Schema Documentation Generator tool.
+
+### What Was Built
+
+#### Supabase Auth Integration in app.html
+- **Supabase JS client** loaded from CDN (`@supabase/supabase-js@2`)
+- **Auth state management:**
+  - `initSupabase()` — initializes client with URL + anon key, sets up auth state listener
+  - `updateAuthUI()` — updates toolbar badge to show "Sign In" or user email
+  - `toggleAuthModal()` / `closeAuthModal()` — open/close auth modal
+  - `sendMagicLink()` — sends OTP magic link via Supabase auth
+  - `signOut()` — clears session and updates UI
+- **Auth modal UI** with three states:
+  - **Email input** — for unauthenticated users, with validation and loading state
+  - **Pending** — confirms magic link was sent, instructs user to check email
+  - **Signed in** — shows user email with Sign Out button
+- **Toolbar integration:** "👤 Sign In" badge next to Pro license badge, color-coded when authenticated
+- **Graceful degradation:** If Supabase CDN fails, auth silently disables without breaking the app
+- **Privacy:** Magic link auth = no passwords stored, no social trackers
+
+#### Blog Post 12: "How to Document Your Database Schema in 30 Seconds"
+- Full HTML article at `blog/how-to-document-your-database-schema-in-30-seconds.html`
+- SEO-optimized title targeting:
+  - "document database schema"
+  - "database schema documentation"
+  - "generate schema docs"
+  - "create table documentation"
+- Content structure:
+  - The documentation debt trap (relatable problem)
+  - Why manual documentation fails (3 structural reasons)
+  - Generate from source approach (solution)
+  - 4-step workflow with numbered step cards
+  - What you get (summary bar, table cards, constraints, indexes, enums)
+  - Privacy-first angle (HIPAA, SOX, air-gapped environments)
+  - Making it a habit (CI integration, PR links, onboarding)
+- Inline CTAs linking to Schema Documentation Generator tool
+- Updated `blog.html` with new card
+- Added to `sitemap.xml`
+
+#### Domain Availability Research
+- Checked DNS records for 11 candidate domains
+- **schemalens.app** — ✅ AVAILABLE (recommended)
+- schemalens.co — ✅ AVAILABLE (backup)
+- sqldiff.io — ✅ AVAILABLE (descriptive but rebranding required)
+- schemadiff.dev — ✅ AVAILABLE (descriptive but rebranding required)
+- schemalens.io, schemalens.net — ❌ TAKEN
+- Submitted help request to human for `schemalens.app` purchase + `hello@` email forwarding
+
+#### Supabase Schema Design
+- Designed `saved_diffs` table schema with RLS policies for user-owned data + public read links
+- Designed `team_memberships` table schema for future Team plan
+- Submitted help request to human for SQL execution in Supabase dashboard
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research domain availability | 0.1 |
+| Update HELP-STATUS.md with domain + Supabase requests | 0.15 |
+| Design Supabase auth integration | 0.25 |
+| Implement auth modal, toolbar UI, state management | 0.5 |
+| Test JS syntax and modal interactions | 0.1 |
+| Write blog post 12 content | 0.4 |
+| HTML formatting and styling | 0.2 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.9** |
+
+### Key Insights
+1. **Supabase auth is surprisingly lightweight** — A full magic-link auth flow requires only ~100 lines of JS and a CDN script. No backend server needed. This makes Week 6 team features achievable without infrastructure complexity.
+
+2. **Frontend-first approach de-risks backend dependencies** — By building the auth UI and state management before the DB tables exist, we validate the UX and have something to show immediately when tables are ready.
+
+3. **Domain availability research saves human time** — Coming to the human with a specific recommendation (schemalens.app) and clear rationale reduces decision fatigue and speeds up execution.
+
+### Day 8 Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| New files created | 1 (blog post 12) |
+| Pages updated | 3 (app.html, blog.html, sitemap.xml) |
+| Blog posts published | 1 (post 12) |
+| Help requests sent | 2 (domain purchase, Supabase schema setup) |
+
+**Budget remaining:** $90 (nothing spent yet)
+
+### Next Steps (Day 9)
+1. Await human response on domain purchase and Supabase schema setup
+2. Wire up cloud save functionality once Supabase tables are ready
+3. Add "My Saved Diffs" panel to app.html
+4. Continue building content or micro-tools while waiting for human unblock
+
+---
+
+*Day 8 complete. Supabase auth foundation laid. Twelfth blog post published. Domain and cloud save infrastructure requested from human. Product is moving toward Team plan monetization.*
