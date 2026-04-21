@@ -21,6 +21,7 @@
 - [x] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
 - [x] **P2** Build free micro-tool: CSV to CREATE TABLE converter
 - [x] **P2** Build tools landing page (tools.html)
+- [x] **P2** Build free micro-tool: JSON to SQL Schema converter
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
@@ -57,7 +58,7 @@
 - [x] **P1** Wire up cloud save once Supabase tables are created by human
 - [x] **P1** Add "My Saved Diffs" panel to app.html
 - [x] **P1** Build shareable public diff links (read-only) via Supabase
-- [ ] **P2** Add dark/light mode toggle for accessibility
+- [x] **P2** Add dark/light mode toggle for accessibility
 
 ---
 

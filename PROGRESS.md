@@ -2771,3 +2771,76 @@ Add viral sharing capability via public read-only diff links stored in Supabase.
 ---
 
 *Day 9 complete. Cloud save + public shareable links are built and ready to activate. Domain research done. Waiting on human for two critical unblockers.*
+
+
+---
+
+## Day 9 — Free Micro-Tool: JSON to SQL Schema Converter (April 21, 2026)
+
+### Objective
+Build a fifth free micro-tool that converts JSON objects to CREATE TABLE statements. This expands the SchemaLens tool suite, targets high-volume keywords like "json to sql schema", and creates another top-of-funnel entry point.
+
+### What Was Built
+
+#### `tools/json-to-sql.html` (16,489 bytes)
+A fully client-side JSON to SQL schema converter with zero dependencies:
+
+- **JSON parsing:** Accepts single objects or arrays of objects (uses first object as schema)
+- **Type inference:**
+  - Numbers → INTEGER (whole numbers) or REAL (decimals)
+  - Booleans → BOOLEAN (dialect-specific)
+  - Strings → TEXT/VARCHAR (with DATE/TIMESTAMP heuristic detection)
+  - Arrays → JSONB/JSON (PostgreSQL/MySQL) or TEXT (SQLite/SQL Server)
+  - Objects → JSONB/JSON or TEXT
+  - null → TEXT (default)
+- **Options:**
+  - Add auto-increment `id` column
+  - Add `created_at` / `updated_at` timestamps with dialect-correct defaults
+  - Toggle NULL vs NOT NULL defaults
+- **Dialect-specific output:** PostgreSQL, MySQL, SQLite, SQL Server
+- **Sample data loader:** Complex JSON with nested objects, arrays, dates, decimals
+- **Copy to clipboard:** One-click copy of generated SQL
+- **Keyboard shortcut:** Ctrl+Enter triggers generation
+- **SEO optimized:** Unique title, meta description, OpenGraph tags
+- **Cross-linking:** Added to tools.html, index.html, blog.html, all footers, sitemap.xml
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design JSON to SQL UX and type inference | 0.15 |
+| Build HTML/CSS/JS for converter page | 0.3 |
+| Add options (id, timestamps, nullability) | 0.15 |
+| Update site-wide footers (23 pages) | 0.15 |
+| Update tools.html, index.html, blog.html, sitemap.xml | 0.1 |
+| Test and verify | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.15** |
+
+### Key Insights
+1. **JSON to SQL is a high-volume keyword** — Developers converting API responses to database tables search for this constantly. Even a small slice of that traffic could drive significant visits.
+
+2. **Five free tools = five SEO landing pages** — Each tool targets a different keyword cluster. Together they create a powerful internal link graph that boosts the whole site's domain authority.
+
+### Day 9 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| New files created | 2 (json-to-sql.html, supabase-schema.sql updates) |
+| Pages updated | 25+ (all footers + tools.html + index.html + blog.html + sitemap.xml) |
+| Free micro-tools | 5 (Validator + Formatter + Schema Docs + CSV to SQL + JSON to SQL) |
+| Blog posts published | 12 |
+| Cloud save features | 2 (My Saved Diffs + Public Shareable Links) |
+
+**Budget remaining:** $90 (nothing spent yet)
+
+### Next Steps (Day 10)
+1. Await human response on domain purchase and Supabase schema execution
+2. Test cloud save and public links end-to-end once tables are created
+3. Build more content or micro-tools while waiting
+4. Prepare Product Hunt launch materials for when domain is secured
+
+---
+
+*Day 9 complete. Five free micro-tools. Twelve blog posts. Cloud save + public links built. Comprehensive SEO engine firing on all cylinders. Waiting on human for domain and Supabase schema activation.*

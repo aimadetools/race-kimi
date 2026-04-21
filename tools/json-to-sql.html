@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free CSV to SQL Converter — SchemaLens</title>
-  <meta name="description" content="Convert CSV files to CREATE TABLE and INSERT statements. Auto-detects column types. Supports PostgreSQL, MySQL, SQLite, and SQL Server. No upload required.">
-  <meta property="og:title" content="Free CSV to SQL Converter — SchemaLens">
-  <meta property="og:description" content="Paste CSV data and get CREATE TABLE + INSERT SQL instantly. Supports all major dialects. Runs in your browser.">
+  <title>Free JSON to SQL Schema Converter — SchemaLens</title>
+  <meta name="description" content="Convert JSON objects to CREATE TABLE statements. Auto-detects column types from JSON values. Supports PostgreSQL, MySQL, SQLite, and SQL Server. No upload required.">
+  <meta property="og:title" content="Free JSON to SQL Schema Converter — SchemaLens">
+  <meta property="og:description" content="Paste JSON and get CREATE TABLE SQL instantly. Supports nested objects and all major dialects. Runs in your browser.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/tools/csv-to-sql.html">
+  <meta property="og:url" content="https://schemalens.vercel.app/tools/json-to-sql.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -136,6 +136,26 @@
     }
     .cta-box h3 { margin-bottom: 8px; }
     .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+
+    .options-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .options-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .options-row input[type="checkbox"] {
+      accent-color: var(--primary);
+    }
   </style>
 <script>
 (function() {
@@ -174,8 +194,8 @@
 
   <div class="page-header">
     <div class="container">
-      <h1>CSV to SQL Converter</h1>
-      <p>Paste CSV data and get CREATE TABLE + INSERT statements instantly. Auto-detects column types. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+      <h1>JSON to SQL Schema Converter</h1>
+      <p>Paste JSON objects and get CREATE TABLE statements instantly. Auto-detects types. Handles nested objects. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
     </div>
   </div>
 
@@ -189,22 +209,38 @@
         <option value="mssql">SQL Server</option>
       </select>
       <label for="tableName">Table</label>
-      <input id="tableName" type="text" value="imported_data" style="width:140px;">
-      <button id="convertBtn">Convert to SQL</button>
+      <input id="tableName" type="text" value="api_data" style="width:140px;">
+      <button id="convertBtn">Generate SQL</button>
       <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
       <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
+    </div>
+
+    <div class="options-row">
+      <label><input type="checkbox" id="addIdCol" checked> Add <code>id</code> column</label>
+      <label><input type="checkbox" id="addTimestamps" checked> Add <code>created_at</code> / <code>updated_at</code></label>
+      <label><input type="checkbox" id="nullDefaults" checked> Allow NULL by default</label>
     </div>
 
     <div class="editor-grid">
       <div class="editor-wrap">
         <div class="editor-label">
-          <span>CSV Input</span>
+          <span>JSON Input</span>
         </div>
-        <textarea id="csvInput" placeholder="Paste your CSV data here...
-id,name,email,age,active
-1,Alice,alice@example.com,30,true
-2,Bob,bob@example.com,25,false
-3,Charlie,charlie@example.com,35,true"></textarea>
+        <textarea id="jsonInput" placeholder="Paste your JSON here...
+{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;Alice&quot;,
+  &quot;email&quot;: &quot;alice@example.com&quot;,
+  &quot;age&quot;: 30,
+  &quot;active&quot;: true,
+  &quot;metadata&quot;: { &quot;plan&quot;: &quot;pro&quot; }
+}
+
+Or an array of objects:
+[
+  { &quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot; },
+  { &quot;id&quot;: 2, &quot;name&quot;: &quot;Bob&quot; }
+]"></textarea>
       </div>
       <div class="editor-wrap">
         <div class="editor-label">
@@ -216,7 +252,7 @@ id,name,email,age,active
     </div>
 
     <div class="cta-box">
-      <h3>Need to compare this schema with another?</h3>
+      <h3>Need to compare this schema with your existing database?</h3>
       <p>SchemaLens diffs database schemas and generates migration scripts instantly.</p>
       <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
     </div>
@@ -280,68 +316,43 @@ id,name,email,age,active
 
 <script>
 (function() {
-  const csvInput = document.getElementById('csvInput');
+  const jsonInput = document.getElementById('jsonInput');
   const sqlOutput = document.getElementById('sqlOutput');
   const dialectEl = document.getElementById('dialect');
   const tableNameEl = document.getElementById('tableName');
+  const addIdCol = document.getElementById('addIdCol');
+  const addTimestamps = document.getElementById('addTimestamps');
+  const nullDefaults = document.getElementById('nullDefaults');
 
-  function detectDelimiter(text) {
-    const firstLine = text.split('\n')[0] || '';
-    const counts = {
-      ',': (firstLine.match(/,/g) || []).length,
-      '\t': (firstLine.match(/\t/g) || []).length,
-      ';': (firstLine.match(/;/g) || []).length,
-      '|': (firstLine.match(/\|/g) || []).length
-    };
-    let best = ',';
-    let bestCount = 0;
-    for (const [delim, count] of Object.entries(counts)) {
-      if (count > bestCount) {
-        best = delim;
-        bestCount = count;
+  function parseJSON(text) {
+    try {
+      const parsed = JSON.parse(text.trim());
+      if (Array.isArray(parsed)) {
+        if (parsed.length === 0) return null;
+        return parsed[0];
       }
+      if (typeof parsed === 'object' && parsed !== null) return parsed;
+      return null;
+    } catch (e) {
+      return null;
     }
-    return best;
   }
 
-  function parseCSV(text) {
-    const delim = detectDelimiter(text);
-    const lines = text.trim().split('\n').filter(l => l.trim());
-    if (lines.length < 2) return null;
-    const headers = lines[0].split(delim).map(h => h.trim().replace(/^["']|["']$/g, ''));
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(delim).map(v => v.trim().replace(/^["']|["']$/g, ''));
-      rows.push(values);
+  function jsonType(value) {
+    if (value === null) return 'NULL';
+    const t = typeof value;
+    if (t === 'boolean') return 'BOOLEAN';
+    if (t === 'number') {
+      if (Number.isInteger(value) && Math.abs(value) <= 9007199254740991) return 'INTEGER';
+      return 'REAL';
     }
-    return { headers, rows, delim };
-  }
-
-  function inferType(values) {
-    let allInt = true;
-    let allReal = true;
-    let allBool = true;
-    let allDate = true;
-    let emptyCount = 0;
-
-    for (const v of values) {
-      if (v === '' || v === null || v === undefined) {
-        emptyCount++;
-        continue;
-      }
-      const lower = v.toLowerCase();
-      if (!/^-?\d+$/.test(v)) allInt = false;
-      if (!/^-?\d+(\.\d+)?$/.test(v)) allReal = false;
-      if (!['true','false','1','0','yes','no'].includes(lower)) allBool = false;
-      if (!/^\d{4}-\d{2}-\d{2}/.test(v) && !/^\d{2}\/\d{2}\/\d{4}/.test(v)) allDate = false;
+    if (t === 'string') {
+      if (/^\d{4}-\d{2}-\d{2}T/.test(value)) return 'TIMESTAMP';
+      if (/^\d{4}-\d{2}-\d{2}/.test(value)) return 'DATE';
+      return 'TEXT';
     }
-
-    const nonEmpty = values.length - emptyCount;
-    if (nonEmpty === 0) return 'TEXT';
-    if (allBool) return 'BOOLEAN';
-    if (allDate) return 'DATE';
-    if (allInt) return 'INTEGER';
-    if (allReal) return 'REAL';
+    if (Array.isArray(value)) return 'ARRAY';
+    if (t === 'object') return 'OBJECT';
     return 'TEXT';
   }
 
@@ -353,87 +364,101 @@ id,name,email,age,active
 
   function sqlType(inferred, dialect) {
     const map = {
-      postgres: { INTEGER: 'INTEGER', REAL: 'NUMERIC', TEXT: 'TEXT', BOOLEAN: 'BOOLEAN', DATE: 'DATE' },
-      mysql: { INTEGER: 'INT', REAL: 'DECIMAL(10,2)', TEXT: 'VARCHAR(255)', BOOLEAN: 'TINYINT(1)', DATE: 'DATE' },
-      sqlite: { INTEGER: 'INTEGER', REAL: 'REAL', TEXT: 'TEXT', BOOLEAN: 'INTEGER', DATE: 'TEXT' },
-      mssql: { INTEGER: 'INT', REAL: 'DECIMAL(18,2)', TEXT: 'NVARCHAR(255)', BOOLEAN: 'BIT', DATE: 'DATE' }
+      postgres: {
+        INTEGER: 'INTEGER', REAL: 'NUMERIC', TEXT: 'TEXT',
+        BOOLEAN: 'BOOLEAN', DATE: 'DATE', TIMESTAMP: 'TIMESTAMPTZ',
+        ARRAY: 'JSONB', OBJECT: 'JSONB', NULL: 'TEXT'
+      },
+      mysql: {
+        INTEGER: 'INT', REAL: 'DECIMAL(18,4)', TEXT: 'VARCHAR(255)',
+        BOOLEAN: 'TINYINT(1)', DATE: 'DATE', TIMESTAMP: 'DATETIME',
+        ARRAY: 'JSON', OBJECT: 'JSON', NULL: 'VARCHAR(255)'
+      },
+      sqlite: {
+        INTEGER: 'INTEGER', REAL: 'REAL', TEXT: 'TEXT',
+        BOOLEAN: 'INTEGER', DATE: 'TEXT', TIMESTAMP: 'TEXT',
+        ARRAY: 'TEXT', OBJECT: 'TEXT', NULL: 'TEXT'
+      },
+      mssql: {
+        INTEGER: 'INT', REAL: 'DECIMAL(18,4)', TEXT: 'NVARCHAR(500)',
+        BOOLEAN: 'BIT', DATE: 'DATE', TIMESTAMP: 'DATETIME2',
+        ARRAY: 'NVARCHAR(MAX)', OBJECT: 'NVARCHAR(MAX)', NULL: 'NVARCHAR(500)'
+      }
     };
     return (map[dialect] || map.postgres)[inferred] || 'TEXT';
   }
 
   function generateSQL() {
-    const text = csvInput.value;
+    const text = jsonInput.value;
     const dialect = dialectEl.value;
-    const tableName = tableNameEl.value.trim() || 'imported_data';
-    const parsed = parseCSV(text);
-    if (!parsed) {
-      sqlOutput.querySelector('code').textContent = '-- Please paste valid CSV data with at least a header row and one data row.';
+    const tableName = tableNameEl.value.trim() || 'api_data';
+    const obj = parseJSON(text);
+    if (!obj) {
+      sqlOutput.querySelector('code').textContent = '-- Please paste valid JSON with at least one object.';
       return;
     }
 
-    const { headers, rows } = parsed;
-    const types = headers.map((_, i) => inferType(rows.map(r => r[i] || '')));
+    const entries = Object.entries(obj);
     const lines = [];
-
     lines.push(`CREATE TABLE ${quoteId(tableName, dialect)} (`);
-    const colDefs = headers.map((h, i) => {
-      return `  ${quoteId(h, dialect)} ${sqlType(types[i], dialect)}`;
-    });
-    lines.push(colDefs.join(',\n'));
-    lines.push(');');
-    lines.push('');
 
-    const batchSize = dialect === 'mssql' ? 1000 : 500;
-    for (let b = 0; b < rows.length; b += batchSize) {
-      const batch = rows.slice(b, b + batchSize);
-      if (dialect === 'mysql' || dialect === 'postgres' || dialect === 'sqlite') {
-        lines.push(`INSERT INTO ${quoteId(tableName, dialect)} (${headers.map(h => quoteId(h, dialect)).join(', ')}) VALUES`);
-        batch.forEach((row, idx) => {
-          const vals = row.map((v, i) => {
-            if (v === '' || v === null || v === undefined) return 'NULL';
-            if (types[i] === 'BOOLEAN') {
-              const lower = v.toLowerCase();
-              if (dialect === 'sqlite' || dialect === 'mysql') return ['true','1','yes'].includes(lower) ? '1' : '0';
-              return ['true','1','yes'].includes(lower) ? 'TRUE' : 'FALSE';
-            }
-            if (types[i] === 'INTEGER' || types[i] === 'REAL') return v;
-            return "'" + v.replace(/'/g, "''") + "'";
-          });
-          const suffix = idx === batch.length - 1 ? ';' : ',';
-          lines.push(`  (${vals.join(', ')})${suffix}`);
-        });
-      } else {
-        // SQL Server - individual INSERT statements
-        batch.forEach(row => {
-          const vals = row.map((v, i) => {
-            if (v === '' || v === null || v === undefined) return 'NULL';
-            if (types[i] === 'BOOLEAN') return ['true','1','yes'].includes(v.toLowerCase()) ? '1' : '0';
-            if (types[i] === 'INTEGER' || types[i] === 'REAL') return v;
-            return "'" + v.replace(/'/g, "''") + "'";
-          });
-          lines.push(`INSERT INTO ${quoteId(tableName, dialect)} (${headers.map(h => quoteId(h, dialect)).join(', ')}) VALUES (${vals.join(', ')});`);
-        });
-      }
-      lines.push('');
+    const colDefs = [];
+    if (addIdCol.checked) {
+      if (dialect === 'postgres') colDefs.push(`  ${quoteId('id', dialect)} SERIAL PRIMARY KEY`);
+      else if (dialect === 'mysql') colDefs.push(`  ${quoteId('id', dialect)} INT AUTO_INCREMENT PRIMARY KEY`);
+      else if (dialect === 'mssql') colDefs.push(`  ${quoteId('id', dialect)} INT IDENTITY(1,1) PRIMARY KEY`);
+      else colDefs.push(`  ${quoteId('id', dialect)} INTEGER PRIMARY KEY AUTOINCREMENT`);
     }
 
+    for (const [key, value] of entries) {
+      if (key === 'id' && addIdCol.checked) continue;
+      const inferred = jsonType(value);
+      let type = sqlType(inferred, dialect);
+      let def = `  ${quoteId(key, dialect)} ${type}`;
+      if (!nullDefaults.checked) def += ' NOT NULL';
+      colDefs.push(def);
+    }
+
+    if (addTimestamps.checked) {
+      if (dialect === 'postgres') {
+        colDefs.push(`  ${quoteId('created_at', dialect)} TIMESTAMPTZ DEFAULT NOW()`);
+        colDefs.push(`  ${quoteId('updated_at', dialect)} TIMESTAMPTZ DEFAULT NOW()`);
+      } else if (dialect === 'mysql') {
+        colDefs.push(`  ${quoteId('created_at', dialect)} TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
+        colDefs.push(`  ${quoteId('updated_at', dialect)} TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`);
+      } else if (dialect === 'mssql') {
+        colDefs.push(`  ${quoteId('created_at', dialect)} DATETIME2 DEFAULT GETDATE()`);
+        colDefs.push(`  ${quoteId('updated_at', dialect)} DATETIME2 DEFAULT GETDATE()`);
+      } else {
+        colDefs.push(`  ${quoteId('created_at', dialect)} TEXT DEFAULT (datetime('now'))`);
+        colDefs.push(`  ${quoteId('updated_at', dialect)} TEXT DEFAULT (datetime('now'))`);
+      }
+    }
+
+    lines.push(colDefs.join(',\n'));
+    lines.push(');');
     sqlOutput.querySelector('code').textContent = lines.join('\n');
   }
 
   document.getElementById('convertBtn').addEventListener('click', generateSQL);
   document.getElementById('sampleBtn').addEventListener('click', () => {
-    csvInput.value = `id,name,email,age,active,joined
-1,Alice Smith,alice@example.com,30,true,2023-01-15
-2,Bob Jones,bob@example.com,25,false,2024-03-22
-3,Charlie Brown,charlie@example.com,35,true,2022-11-08
-4,Diana Prince,diana@example.com,28,true,2023-07-01
-5,Evan Wright,evan@example.com,42,false,2021-05-19`;
+    jsonInput.value = JSON.stringify({
+      id: 1,
+      name: "Alice Smith",
+      email: "alice@example.com",
+      age: 30,
+      active: true,
+      score: 94.5,
+      joined: "2023-01-15T09:30:00Z",
+      metadata: { plan: "pro", source: "web" },
+      tags: ["developer", "beta"]
+    }, null, 2);
     generateSQL();
   });
   document.getElementById('clearBtn').addEventListener('click', () => {
-    csvInput.value = '';
+    jsonInput.value = '';
     sqlOutput.querySelector('code').textContent = '';
-    csvInput.focus();
+    jsonInput.focus();
   });
   document.getElementById('copyBtn').addEventListener('click', () => {
     const text = sqlOutput.textContent;
