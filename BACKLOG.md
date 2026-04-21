@@ -7,7 +7,7 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 6-7)
+## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 7-8)
 
 ### Code & Product
 - [x] **P1** Add export to Markdown from diff results
@@ -16,6 +16,10 @@
 - [x] **P2** Add query param preloading (share a diff via URL)
 - [x] **P2** Add drag-and-drop SQL file upload
 - [x] **P1** Add dialect pre-selection via URL params (?dialect=postgres|mysql|sqlite|mssql)
+- [x] **P2** Create free micro-tool: SQL Formatter
+- [ ] **P2** Add dark/light mode toggle for accessibility
+- [ ] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
+- [ ] **P2** Build free micro-tool: CSV to CREATE TABLE converter
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
@@ -38,6 +42,10 @@
 - [x] **P1** Share on IndieHackers with open metrics — drafts ready, posting pending
 - [x] **P1** Draft "Show HN" post for Hacker News
 - [ ] **P2** Create Twitter/X account for SchemaLens
+- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories
+- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
+- [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
+- [ ] **P2** Write blog post: "3 Free Tools for Database Schema Management"
 
 ### Business & Ops
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
@@ -182,7 +190,7 @@
 - [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
 - [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [x] **P1"** Guest post on dev.to or Hashnode about schema diff
-- [ ] **P2** Create free micro-tool: "SQL Formatter" (drives traffic)
+- [x] **P2** Create free micro-tool: "SQL Formatter" (drives traffic)
 
 ### Business & Ops
 - [ ] **P1** Review first week of Pro conversions — what's working?

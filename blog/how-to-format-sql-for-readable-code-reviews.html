@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Format SQL for Readable Code Reviews — SchemaLens</title>
+  <meta name="description" content="Learn how to format SQL queries for readable code reviews. Practical rules, before/after examples, and a free formatter tool.">
+  <meta property="og:title" content="How to Format SQL for Readable Code Reviews — SchemaLens">
+  <meta property="og:description" content="Practical SQL formatting rules with before/after examples. Make your database code readable in PRs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/how-to-format-sql-for-readable-code-reviews.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: #c7c7c7; }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .diff-example { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 640px) { .diff-example { grid-template-columns: 1fr; } }
+    .diff-box { background: #0b0b0b; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+    .diff-box h4 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .diff-box pre { margin: 0; border: none; padding: 0; background: transparent; }
+    .keyword { color: #c084fc; }
+    .string { color: #4ade80; }
+    .comment { color: #64748b; font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>How to Format SQL for Readable Code Reviews</h1>
+    <div class="meta">April 21, 2026 · 6 min read · SchemaLens Team</div>
+
+    <p>Unreadable SQL is a tax on every engineer who touches your codebase. A messy query buried in a migration file or a stored procedure takes longer to review, longer to debug, and longer to refactor. Worse, reviewers skim over dense SQL — which is exactly when <a href="dangerous-schema-changes.html">dangerous schema changes</a> slip through.</p>
+
+    <p>The good news: SQL formatting is mechanical. A few consistent rules make any query readable. This post covers the rules we use at SchemaLens, with before/after examples you can apply today.</p>
+
+    <div class="cta-box">
+      <h3>Want a head start?</h3>
+      <p>Our free <a href="../tools/sql-formatter.html">SQL Formatter</a> applies these rules automatically. Paste your query, get clean output.</p>
+      <a href="../tools/sql-formatter.html" class="btn btn-primary">Format SQL Free</a>
+    </div>
+
+    <h2>Rule 1: One major clause per line</h2>
+    <p>SELECT, FROM, WHERE, JOIN, GROUP BY, ORDER BY, and LIMIT are signposts. Put each on its own line so a reviewer can scan the query structure in milliseconds.</p>
+
+    <div class="diff-example">
+      <div class="diff-box">
+        <h4>❌ Before</h4>
+        <pre><code>select u.id, u.name, o.total from users u join orders o on u.id=o.user_id where o.status='shipped' and o.total > 100 group by u.id, u.name order by o.total desc limit 10;</code></pre>
+      </div>
+      <div class="diff-box">
+        <h4>✅ After</h4>
+        <pre><code><span class="keyword">SELECT</span>
+  u.id,
+  u.name,
+  o.total
+<span class="keyword">FROM</span> users u
+<span class="keyword">JOIN</span> orders o <span class="keyword">ON</span> u.id = o.user_id
+<span class="keyword">WHERE</span> o.status = <span class="string">'shipped'</span>
+  <span class="keyword">AND</span> o.total > 100
+<span class="keyword">GROUP BY</span>
+  u.id,
+  u.name
+<span class="keyword">ORDER BY</span> o.total <span class="keyword">DESC</span>
+<span class="keyword">LIMIT</span> 10;</code></pre>
+      </div>
+    </div>
+
+    <h2>Rule 2: Indent to show hierarchy</h2>
+    <p>Indentation is not decoration — it shows what belongs to what. Columns belong to SELECT. Conditions belong to WHERE. Expressions belong to CASE.</p>
+
+    <div class="diff-example">
+      <div class="diff-box">
+        <h4>❌ Before</h4>
+        <pre><code><span class="keyword">SELECT</span> id, <span class="keyword">CASE WHEN</span> status = <span class="string">'active'</span> <span class="keyword">THEN</span> 1 <span class="keyword">ELSE</span> 0 <span class="keyword">END</span> <span class="keyword">AS</span> is_active, created_at <span class="keyword">FROM</span> users;</code></pre>
+      </div>
+      <div class="diff-box">
+        <h4>✅ After</h4>
+        <pre><code><span class="keyword">SELECT</span>
+  id,
+  <span class="keyword">CASE</span>
+    <span class="keyword">WHEN</span> status = <span class="string">'active'</span> <span class="keyword">THEN</span> 1
+    <span class="keyword">ELSE</span> 0
+  <span class="keyword">END</span> <span class="keyword">AS</span> is_active,
+  created_at
+<span class="keyword">FROM</span> users;</code></pre>
+      </div>
+    </div>
+
+    <h2>Rule 3: Align AND and OR operators</h2>
+    <p>When you have multiple conditions, align the boolean operators so the eye can compare predicates vertically.</p>
+
+    <div class="diff-example">
+      <div class="diff-box">
+        <h4>❌ Before</h4>
+        <pre><code><span class="keyword">WHERE</span> status = <span class="string">'active'</span> <span class="keyword">AND</span> (email_verified = <span class="keyword">TRUE</span> <span class="keyword">OR</span> created_at > <span class="string">'2024-01-01'</span>) <span class="keyword">AND</span> deleted_at <span class="keyword">IS NULL</span></code></pre>
+      </div>
+      <div class="diff-box">
+        <h4>✅ After</h4>
+        <pre><code><span class="keyword">WHERE</span> status = <span class="string">'active'</span>
+  <span class="keyword">AND</span> (
+    email_verified = <span class="keyword">TRUE</span>
+    <span class="keyword">OR</span> created_at > <span class="string">'2024-01-01'</span>
+  )
+  <span class="keyword">AND</span> deleted_at <span class="keyword">IS NULL</span></code></pre>
+      </div>
+    </div>
+
+    <h2>Rule 4: Keep lists vertical</h2>
+    <p>Whether it is a column list, a VALUES list, or a set of columns in GROUP BY, put each item on its own line. This makes diffs readable and prevents merge conflicts when two developers add a column at the same time.</p>
+
+    <div class="diff-example">
+      <div class="diff-box">
+        <h4>❌ Before</h4>
+        <pre><code><span class="keyword">INSERT INTO</span> users (id, name, email, phone, address, city, country, created_at) <span class="keyword">VALUES</span> (1, <span class="string">'Alice'</span>, <span class="string">'a@example.com'</span>, <span class="string">'+1-555-0100'</span>, <span class="string">'123 Main St'</span>, <span class="string">'Springfield'</span>, <span class="string">'US'</span>, <span class="keyword">NOW</span>());</code></pre>
+      </div>
+      <div class="diff-box">
+        <h4>✅ After</h4>
+        <pre><code><span class="keyword">INSERT INTO</span> users (
+  id,
+  name,
+  email,
+  phone,
+  address,
+  city,
+  country,
+  created_at
+) <span class="keyword">VALUES</span> (
+  1,
+  <span class="string">'Alice'</span>,
+  <span class="string">'a@example.com'</span>,
+  <span class="string">'+1-555-0100'</span>,
+  <span class="string">'123 Main St'</span>,
+  <span class="string">'Springfield'</span>,
+  <span class="string">'US'</span>,
+  <span class="keyword">NOW</span>()
+);</code></pre>
+      </div>
+    </div>
+
+    <h2>Rule 5: Use consistent keyword casing</h2>
+    <p>Pick uppercase or lowercase for keywords and stick to it. Mixed casing (<code>select</code> vs <code>SELECT</code> vs <code>Select</code>) makes a query look sloppy and unreviewed.</p>
+
+    <p>We prefer uppercase keywords because they stand out from table and column names, making the query structure instantly scannable. But lowercase is fine if your team agrees on it — consistency beats perfection.</p>
+
+    <h2>Rule 6: Add a trailing comma</h2>
+    <p>This is a style choice, but trailing commas in SELECT lists and column definitions make diffs cleaner. When you add a new line, the diff shows only that line — not the previous line changing its comma.</p>
+
+    <h2>What about CREATE TABLE and ALTER TABLE?</h2>
+    <p>The same rules apply. One column per line, aligned data types, constraints at the end. If your migration files are formatted consistently, reviewers can spot type changes and missing indexes in a single glance.</p>
+
+    <p>For migrations specifically, formatting matters even more. A poorly formatted ALTER TABLE can hide a <a href="dangerous-schema-changes.html">dropped column or a type narrowing</a>. Vertical formatting forces every change onto its own line, making the diff obvious.</p>
+
+    <h2>Automate it</h2>
+    <p>Manual formatting is a waste of engineering time. The rules above are 100% mechanical — which means they can be automated.</p>
+
+    <p>Use a formatter in your editor, your CI pipeline, or a browser-based tool. The less time you spend pressing Enter and Tab, the more time you spend on logic that actually matters.</p>
+
+    <div class="cta-box">
+      <h3>Format SQL in your browser</h3>
+      <p>Our free SQL Formatter supports PostgreSQL, MySQL, SQLite, and SQL Server. Paste, format, copy. No signup, no data leaves your device.</p>
+      <a href="../tools/sql-formatter.html" class="btn btn-primary">Try the SQL Formatter</a>
+    </div>
+
+    <h2>Summary checklist</h2>
+    <ul>
+      <li>One major clause per line (SELECT, FROM, WHERE, JOIN, GROUP BY, ORDER BY, LIMIT)</li>
+      <li>Indent to show hierarchy (columns under SELECT, conditions under WHERE)</li>
+      <li>Align AND/OR operators vertically</li>
+      <li>Put list items on separate lines (columns, VALUES, GROUP BY)</li>
+      <li>Use consistent keyword casing across your codebase</li>
+      <li>Consider trailing commas for cleaner diffs</li>
+      <li>Automate formatting — don't do it by hand</li>
+    </ul>
+
+    <p>Readable SQL is not a luxury. It is a courtesy to your teammates, your future self, and the production database you are about to modify.</p>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a> · <a href="dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a> · <a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../app.html">Schema Diff</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>

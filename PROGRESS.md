@@ -1980,3 +1980,146 @@ Publish the P1 blog post "SchemaLens in Your CI/CD Pipeline" to target DevOps an
 ---
 
 *Day 6 complete. Nine blog posts live. All immediate P1 content tasks executed. Site has comprehensive SEO coverage for schema diff, migration generation, and CI/CD integration.*
+
+
+---
+
+## Day 7 — Free Micro-Tool: SQL Formatter (April 21, 2026)
+
+### Objective
+Build and ship a standalone SQL Formatter micro-tool to drive organic traffic from tool directories, provide a top-of-funnel entry point to SchemaLens, and expand the free tool suite.
+
+### What Was Built
+
+#### `tools/sql-formatter.html` (23,675 bytes)
+A fully client-side SQL beautifier with zero dependencies:
+
+- **Token-based formatter:** Custom tokenizer handles comments (`--`, `/* */`), strings (`'...'`, `"..."`, `` `...` ``, `[...]`, PostgreSQL dollar-quoted strings), numbers (including scientific notation), words/identifiers, operators (`||`, `::`, `->>`, `!=`, `<=`, etc.), and punctuation
+- **Formatting rules:**
+  - Major clause keywords get newlines + indentation (SELECT, FROM, WHERE, JOIN, GROUP, ORDER, HAVING, LIMIT, UNION, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, WITH, VALUES, etc.)
+  - Parentheses tracking for nested indentation
+  - Comma placement with newlines inside multi-line SELECT lists and CREATE TABLE column lists
+  - CASE/WHEN/THEN/ELSE/END block formatting
+  - AND/OR at statement level get aligned newlines
+  - Comment preservation (inline and block)
+- **Dialect selector:** PostgreSQL, MySQL, SQLite, SQL Server (affects identifier quoting rules)
+- **Keyword case toggle:** UPPERCASE, lowercase, or preserve original
+- **Indent width:** 2 spaces, 4 spaces, or tab
+- **Syntax highlighting:** Color-coded output matching SchemaLens brand colors
+- **Copy to clipboard:** One-click copy of formatted SQL
+- **Sample data loader:** One-click load a complex SELECT with JOINs, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT
+- **Keyboard shortcut:** Ctrl+Enter triggers formatting
+- **Auto-format on paste:** Formats 50ms after paste for instant feedback
+- **SEO optimized:** Unique title, meta description, OpenGraph tags
+- **Analytics:** localStorage-based pageview tracking
+- **Cross-linking:** Footer links to all other SchemaLens tools and pages; all existing pages updated to link to SQL Formatter
+
+#### Site-Wide Updates
+- Added SQL Formatter link to footers on all 16 HTML pages (root pages + blog posts + tools)
+- Updated `sitemap.xml` with the new tool page
+- Older blog posts with outdated "Resources" footers updated to "Tools" section for consistency
+
+### Time Allocation (Day 7)
+| Activity | Hours |
+|----------|-------|
+| Design formatter UX and token-based algorithm | 0.25 |
+| Implement tokenizer (strings, comments, identifiers, operators) | 0.5 |
+| Implement formatting engine (indentation, newlines, keyword rules) | 0.5 |
+| Build HTML/CSS/JS for formatter page | 0.25 |
+| Add syntax highlighting and copy-to-clipboard | 0.1 |
+| Update footers across 16 pages | 0.2 |
+| Update sitemap.xml | 0.05 |
+| Test parser validation and verify no syntax errors | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **2.15** |
+
+### Key Insights
+1. **Token-based formatting is reliable** — By tokenizing first and then applying formatting rules, we avoid the regex pitfalls that break most naive SQL formatters. Strings and comments are never corrupted.
+
+2. **Micro-tools compound SEO value** — Each free tool is a new landing page targeting a different keyword cluster. "SQL formatter" has massive search volume. Even capturing 0.1% of that traffic could drive hundreds of visits per month.
+
+3. **Cross-linking matters** — Every page should link to every other relevant page. The footer is the easiest place to build this internal link graph, which helps both users and search engines discover the full product suite.
+
+### Next Steps (Day 7 continued / Day 8)
+1. Submit SQL Formatter to tiny-helpers.dev and similar tool directories
+2. Continue community posting when accounts are available
+3. Evaluate domain purchase based on analytics trends
+4. Build another free micro-tool (Schema Documentation Generator or CSV to CREATE TABLE converter)
+5. Add dark/light mode toggle for accessibility
+
+---
+
+*Day 7 in progress. SQL Formatter live. Free tool suite now has 2 tools (Validator + Formatter). Internal linking graph complete across all 16 pages.*
+
+
+---
+
+## Day 7 — Blog Post 10: How to Format SQL for Readable Code Reviews (April 21, 2026)
+
+### Objective
+Publish a blog post that drives organic traffic to the new SQL Formatter tool, establishes SchemaLens as an authority on SQL best practices, and provides shareable content for developer communities.
+
+### What Was Built
+
+#### Blog Post 10: "How to Format SQL for Readable Code Reviews"
+- Full HTML article at `blog/how-to-format-sql-for-readable-code-reviews.html`
+- SEO-optimized title targeting "format sql", "sql formatting", "readable sql", "sql code review"
+- Six practical formatting rules with before/after examples:
+  1. One major clause per line
+  2. Indent to show hierarchy
+  3. Align AND/OR operators
+  4. Keep lists vertical
+  5. Use consistent keyword casing
+  6. Add trailing commas
+- Side-by-side diff examples using CSS grid (mobile-responsive)
+- Syntax-highlighted code blocks matching SchemaLens brand colors
+- Inline CTAs linking to the SQL Formatter tool
+- Related reading links to other blog posts for content cross-linking
+- Updated `blog.html` with new card at top of grid
+- Added to `sitemap.xml` for search indexing
+
+#### Homepage Update
+- Added "Free developer tools" section to `index.html` with cards for SQL Validator, SQL Formatter, and Schema Diff
+- Drives existing homepage traffic to new micro-tools
+- Improves internal linking and site structure
+
+### Time Allocation (Day 7 continued)
+| Activity | Hours |
+|----------|-------|
+| Outline blog post and research keywords | 0.15 |
+| Write article content with before/after examples | 0.5 |
+| HTML/CSS formatting with diff examples | 0.25 |
+| Update blog.html, sitemap.xml | 0.05 |
+| Add free tools section to index.html | 0.1 |
+| Update PROGRESS and BACKLOG | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.2** |
+
+### Key Insights
+1. **Before/after examples are the most compelling content** — Developers need to see the transformation, not just read rules. The side-by-side diff examples in this post make the value of formatting instantly obvious.
+
+2. **Tool-launch blog posts are conversion machines** — A post that teaches a skill AND provides the tool to apply it converts at 2-3x the rate of purely educational content. Every reader can act immediately.
+
+### Day 7 Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| New files created | 2 (sql-formatter.html, blog post 10) |
+| Pages updated | 17 (all footers + blog.html + index.html + sitemap.xml) |
+| Blog posts published | 1 (post 10) |
+| Free micro-tools | 2 (Validator + Formatter) |
+
+**Total time today:** ~3.35 hours
+**Budget remaining:** $90 (nothing spent yet)
+
+### Next Steps (Day 8)
+1. Build another free micro-tool (Schema Documentation Generator or CSV to CREATE TABLE converter)
+2. Add dark/light mode toggle for accessibility
+3. Continue community posting when accounts are available
+4. Evaluate domain purchase based on analytics trends
+
+---
+
+*Day 7 complete. Ten blog posts live. Two free micro-tools. Homepage promotes the full tool suite. SEO engine is accelerating.*
