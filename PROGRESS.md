@@ -2324,3 +2324,83 @@ A clean landing page showcasing all four SchemaLens tools:
 ---
 
 *Day 7 complete. Eleven blog posts. Three free micro-tools. Dedicated tools landing page. Comprehensive site structure with strong internal linking. Ready for scale.*
+
+
+---
+
+## Day 7 — Free Micro-Tool: CSV to SQL Converter (April 21, 2026)
+
+### Objective
+Build a fourth free micro-tool that converts CSV data to CREATE TABLE and INSERT statements. This targets high-volume keywords like "csv to sql" and "csv to create table", expanding the SchemaLens tool suite and creating another top-of-funnel entry point.
+
+### What Was Built
+
+#### `tools/csv-to-sql.html` (15,285 bytes)
+A fully client-side CSV to SQL converter with zero dependencies:
+
+- **Auto delimiter detection:** Detects comma, tab, semicolon, or pipe separators from the first line
+- **Type inference:** Analyzes all values in each column to infer INTEGER, REAL, BOOLEAN, DATE, or TEXT
+- **Dialect-specific output:**
+  - PostgreSQL: `CREATE TABLE`, multi-row `INSERT ... VALUES`
+  - MySQL: `CREATE TABLE` with `INT`/`VARCHAR(255)`, multi-row `INSERT`
+  - SQLite: `CREATE TABLE` with `INTEGER`/`TEXT`, multi-row `INSERT`
+  - SQL Server: `CREATE TABLE` with `INT`/`NVARCHAR(255)`, individual `INSERT` statements (T-SQL limitation)
+- **Batch inserts:** Groups rows into batches (500 for PostgreSQL/MySQL/SQLite, 1000 for SQL Server) to avoid statement size limits
+- **Table name input:** Customizable table name with default `imported_data`
+- **NULL handling:** Empty values are converted to `NULL`
+- **String escaping:** Single quotes escaped as double quotes
+- **Boolean normalization:** `true`/`1`/`yes` → `TRUE`/`1`/`1`, `false`/`0`/`no` → `FALSE`/`0`/`0` per dialect
+- **Copy to clipboard:** One-click copy of generated SQL
+- **Sample data loader:** One-click load 5-row sample CSV with mixed types
+- **Keyboard shortcut:** Ctrl+Enter triggers conversion
+- **SEO optimized:** Unique title, meta description, OpenGraph tags
+- **Analytics:** localStorage-based pageview tracking
+
+#### Site-Wide Updates
+- Added CSV to SQL link to footers on all 22 HTML pages
+- Updated `tools.html` landing page with CSV to SQL card
+- Updated `index.html` "Free developer tools" section with CSV to SQL card
+- Updated `blog.html` with tool card for CSV to SQL
+- Updated `sitemap.xml`
+
+### Time Allocation (Day 7 continued)
+| Activity | Hours |
+|----------|-------|
+| Design CSV to SQL UX and algorithm | 0.1 |
+| Implement CSV parser, delimiter detection, type inference | 0.25 |
+| Implement dialect-specific SQL generation | 0.2 |
+| Build HTML/CSS/JS for converter page | 0.15 |
+| Update footers, tools.html, index.html, blog.html, sitemap | 0.15 |
+| Test parser validation | 0.05 |
+| Update PROGRESS and BACKLOG | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **CSV to SQL is a gateway drug** — Developers who convert CSV to SQL often need to compare that generated schema with an existing one. The "Compare with SchemaLens" CTA is perfectly positioned.
+
+2. **Type inference is a trust signal** — Automatically detecting that a column is INTEGER vs TEXT shows the tool understands data, not just strings. Users are more likely to trust and share a tool that gets the details right.
+
+### Day 7 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 7 |
+| New files created | 6 (4 micro-tools + blog posts 10-11 + tools.html) |
+| Pages updated | 23 |
+| Blog posts published | 2 (posts 10, 11) |
+| Free micro-tools | 4 (Validator + Formatter + Schema Docs + CSV to SQL) |
+| Landing pages | 6 (index + 4 dialect pages + tools) |
+
+**Total time today:** ~7.0 hours
+**Budget remaining:** $90 (nothing spent yet)
+
+### Next Steps (Day 8)
+1. Write blog post promoting CSV to SQL converter
+2. Add dark/light mode toggle for accessibility
+3. Continue community posting when accounts are available
+4. Evaluate domain purchase based on analytics trends
+
+---
+
+*Day 7 complete. Four free micro-tools. Eleven blog posts. Dedicated tools landing page. Comprehensive internal linking across 23 pages. SEO engine is firing on all cylinders.*

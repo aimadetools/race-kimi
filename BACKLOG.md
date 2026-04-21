@@ -19,7 +19,7 @@
 - [x] **P2** Create free micro-tool: SQL Formatter
 - [ ] **P2** Add dark/light mode toggle for accessibility
 - [x] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
-- [ ] **P2** Build free micro-tool: CSV to CREATE TABLE converter
+- [x] **P2** Build free micro-tool: CSV to CREATE TABLE converter
 - [x] **P2** Build tools landing page (tools.html)
 
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
