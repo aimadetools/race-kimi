@@ -390,6 +390,21 @@
     .license-status.locked {
       color: var(--text-muted);
     }
+    .auth-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    .auth-status.signed-in {
+      color: var(--success);
+    }
+    .auth-status:hover {
+      color: var(--text);
+    }
     .pro-hint {
       background: rgba(99,102,241,0.08);
       border: 1px solid rgba(99,102,241,0.2);
@@ -423,6 +438,7 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -461,6 +477,7 @@
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
       <span id="licenseStatus" class="license-status locked" style="margin-left:auto;cursor:pointer;" onclick="openLicenseModal()">🔒 Unlock Pro</span>
+      <span id="authStatus" class="auth-status" onclick="toggleAuthModal()">👤 Sign In</span>
     </div>
 
     <div class="editor-grid">
@@ -549,6 +566,33 @@ CREATE TABLE users (
         <button class="btn btn-primary" onclick="applyLicense()">Activate</button>
       </div>
       <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">Get Pro for $12/mo</a></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <h3>👤 Cloud Save & Team Workspace</h3>
+      <p id="authModalText">Sign in with your email to save diffs to the cloud and access them from any device. No password required — we send you a magic link.</p>
+      <div id="authEmailSection">
+        <input type="email" id="authEmail" placeholder="you@example.com">
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeAuthModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="sendMagicLink()">Send Magic Link</button>
+        </div>
+      </div>
+      <div id="authPendingSection" style="display:none;">
+        <p style="color:var(--success);">✓ Check your email for the magic link!</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeAuthModal()">Close</button>
+        </div>
+      </div>
+      <div id="authSignedInSection" style="display:none;">
+        <p>Signed in as <strong id="authUserEmail"></strong></p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeAuthModal()">Close</button>
+          <button class="btn btn-primary" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2201,6 +2245,116 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('compareBtn').click();
   }
 });
+
+/* ---------- Supabase Auth ---------- */
+const SUPABASE_URL = 'https://fmfwdwwvvcdtreduncev.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw';
+let supabaseClient = null;
+let currentUser = null;
+
+function initSupabase() {
+  if (typeof supabase === 'undefined' || !supabase.createClient) {
+    console.warn('Supabase client not loaded');
+    return;
+  }
+  try {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true }
+    });
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      currentUser = session?.user || null;
+      updateAuthUI();
+    });
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      currentUser = session?.user || null;
+      updateAuthUI();
+    });
+  } catch (err) {
+    console.error('Supabase init error:', err);
+  }
+}
+
+function updateAuthUI() {
+  const el = document.getElementById('authStatus');
+  if (!el) return;
+  if (currentUser) {
+    el.textContent = '👤 ' + (currentUser.email || 'Account');
+    el.classList.add('signed-in');
+  } else {
+    el.textContent = '👤 Sign In';
+    el.classList.remove('signed-in');
+  }
+}
+
+function toggleAuthModal() {
+  const modal = document.getElementById('authModal');
+  if (!modal) return;
+  if (modal.classList.contains('active')) {
+    closeAuthModal();
+    return;
+  }
+  document.getElementById('authEmailSection').style.display = currentUser ? 'none' : 'block';
+  document.getElementById('authPendingSection').style.display = 'none';
+  document.getElementById('authSignedInSection').style.display = currentUser ? 'block' : 'none';
+  if (currentUser) {
+    document.getElementById('authUserEmail').textContent = currentUser.email || '';
+  }
+  modal.classList.add('active');
+  if (!currentUser) {
+    document.getElementById('authEmail').focus();
+  }
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('authModal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function sendMagicLink() {
+  const email = document.getElementById('authEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    showError('Please enter a valid email address.');
+    return;
+  }
+  if (!supabaseClient) {
+    showError('Auth service is not available. Please try again later.');
+    return;
+  }
+  const btn = document.querySelector('#authEmailSection .btn-primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  try {
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.href }
+    });
+    if (error) throw error;
+    document.getElementById('authEmailSection').style.display = 'none';
+    document.getElementById('authPendingSection').style.display = 'block';
+  } catch (err) {
+    showError('Failed to send magic link: ' + err.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+async function signOut() {
+  if (!supabaseClient) return;
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+  closeAuthModal();
+}
+
+// Close auth modal on overlay click
+document.getElementById('authModal').addEventListener('click', (e) => {
+  if (e.target.id === 'authModal') closeAuthModal();
+});
+
+// Init Supabase when DOM is ready
+initSupabase();
 </script>
 </body>
 </html>
