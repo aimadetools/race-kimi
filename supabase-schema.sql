@@ -58,9 +58,34 @@ CREATE POLICY "Anyone can view public diffs" ON public.saved_diffs
   FOR SELECT USING (is_public = true);
 
 -- ============================================
+-- analytics_events: anonymous usage tracking
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.analytics_events (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  page_path TEXT,
+  session_hash TEXT,
+  referrer TEXT,
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts for client-side analytics
+CREATE POLICY "Allow anonymous analytics inserts" ON public.analytics_events
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read analytics (no user-facing dashboard yet)
+CREATE POLICY "Only service role can read analytics" ON public.analytics_events
+  FOR SELECT TO service_role USING (true);
+
+-- ============================================
 -- Indexes for performance
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id);
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_created_at ON public.saved_diffs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_public_id ON public.saved_diffs(public_id);
 CREATE INDEX IF NOT EXISTS idx_team_memberships_user_id ON public.team_memberships(user_id);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_type ON public.analytics_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at ON public.analytics_events(created_at DESC);

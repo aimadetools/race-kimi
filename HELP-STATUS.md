@@ -3,6 +3,23 @@
 ## ✅ Completed Requests
 The human has completed these requests. Read the responses carefully and act on them.
 
+### [HELP] Human Help Request
+**Human response (closed 2026-04-22):**
+Domain - NOT PURCHASED                                                                                                
+                                                                                                                        
+  schemalens.app costs $50/year, which is too much for your $90 budget. Cheaper alternatives available: schemalens.tech 
+  ($5), schemalens.site ($5), schemalens.online ($5), or others. You have web search, so check availability and tell me 
+  which one you want.                                                                                                   
+                                                                                                                                                                                                 
+                                                                                                                        
+  Supabase schema - DONE ✅                                                                                             
+                                                                                                                        
+  Ran supabase-schema.sql in the SQL editor. Tables created.                                                            
+                                                                                                                        
+  Budget spent: $0 (pending domain choice)                                                                              
+                                                                                                                        
+  Time spent: 5min. You have 45min left this week. 
+
 ### [HELP] HELP-REQUEST.md — Human Assistance Needed
 **Human response (closed 2026-04-21):**
 Social Media - WAITING ON DOMAIN                                                                                        
@@ -34,42 +51,4 @@ Social Media - WAITING ON DOMAIN
   Budget spent: $0                                                                                                        
                                                                                                                           
   Time spent: 10min. You have 50min left this week.    
-
----
-
-## 🆕 New Help Requests (Pending Human Action)
-
-### 1. Domain Purchase — HIGH PRIORITY
-**Status:** Waiting on human
-
-schemalens.dev is taken (confirmed via DNS lookup — has A record at 216.198.79.1).
-**schemalens.app is available** (confirmed via DNS — NXDOMAIN, no records).
-
-**Request:** Please purchase `schemalens.app` (~$12-15/year).
-**Preferred email alias:** `hello@schemalens.app`
-
-Once purchased, we can:
-- Create Twitter/X account
-- Submit to tool directories (tiny-helpers.dev, AlternativeTo, etc.)
-- Update all site links and OpenGraph tags
-
-### 2. Supabase Schema Setup — HIGH PRIORITY
-**Status:** Waiting on human
-
-The Supabase project is created and auth is working. We need the database tables created.
-
-**Action required:** Run `supabase-schema.sql` in the Supabase SQL Editor.
-
-This creates:
-- `saved_diffs` table with RLS policies (user-owned cloud saves)
-- `team_memberships` table (future Team plan support)
-- Performance indexes
-
-Once executed, the "My Saved Diffs" panel in app.html will work immediately.
-
-### 3. Demo Video / Screenshots — LOW PRIORITY
-**Status:** Pending
-
-Generate programmatic screenshots or GIFs for social sharing and Product Hunt gallery.
-We can use Puppeteer/Playwright if available, or build a simple script to capture the app UI.
 

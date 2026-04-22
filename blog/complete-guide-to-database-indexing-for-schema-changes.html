@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Guide to Database Indexing for Schema Changes</title>
+<meta name="description" content="Adding a column without an index can lock tables for hours. Learn when to index during schema migrations, how to avoid locking, and the 5 indexes every migration needs.">
+<meta property="og:title" content="The Complete Guide to Database Indexing for Schema Changes">
+<meta property="og:description" content="Adding a column without an index can lock tables for hours. Learn when to index during schema migrations, how to avoid locking, and the 5 indexes every migration needs.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.vercel.app/blog/complete-guide-to-database-indexing-for-schema-changes.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<article style="max-width:720px;margin:0 auto;padding:2rem 1rem;">
+  <header style="margin-bottom:2rem;">
+    <h1 style="font-size:2rem;margin-bottom:0.5rem;line-height:1.2;">The Complete Guide to Database Indexing for Schema Changes</h1>
+    <p style="color:var(--text-muted);">Published April 22, 2026 · SchemaLens</p>
+  </header>
+
+  <p>You add a foreign key. You run the migration. Everything looks green. Then your application slows to a crawl, queries time out, and your database CPU graph looks like a ski slope.</p>
+
+  <p>The culprit? You added the constraint but forgot the index. And now every INSERT into the child table triggers a full table scan on the parent.</p>
+
+  <p>Indexing during schema changes is not optional. It is the difference between a migration that deploys in milliseconds and one that locks tables for hours. This guide covers when to create indexes, how to do it safely, and the five index patterns every schema migration should include.</p>
+
+  <h2>Why Indexing Matters During Schema Migrations</h2>
+
+  <p>Most developers think of indexes as a performance optimization — something you add later when queries slow down. This is backwards. Indexes are a <strong>structural requirement</strong> for many schema changes. Without them, your migrations create production incidents.</p>
+
+  <p>Consider what happens when you add a foreign key without an index:</p>
+
+  <ol>
+    <li>Every INSERT or UPDATE on the child table must verify the parent key exists.</li>
+    <li>Without an index on the parent column, the database scans the entire parent table.</li>
+    <li>On a large table, this scan holds a lock for seconds or minutes.</li>
+    <li>Concurrent writes queue up. Timeouts cascade. Your application falls over.</li>
+  </ol>
+
+  <p>This is not theoretical. It is one of the most common causes of migration-related outages. The fix is trivial: add the index <em>before</em> or <em>with</em> the foreign key. But you have to know to do it.</p>
+
+  <h2>The 5 Indexes Every Schema Migration Needs</h2>
+
+  <h3>1. Foreign Key Indexes</h3>
+
+  <p>Every foreign key column needs its own index. Not the primary key on the parent table — that already has one. The <strong>foreign key column on the child table</strong> needs an index.</p>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">-- PostgreSQL / MySQL / SQLite
+ALTER TABLE orders ADD COLUMN user_id INT NOT NULL;
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- CRITICAL: add the index on the child table
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+</code></pre>
+
+  <p>Some databases (like PostgreSQL) do not auto-create this index. Others (like MySQL's InnoDB) require it for certain operations. Do not rely on defaults. Explicitly create the index.</p>
+
+  <h3>2. Unique Constraint Indexes</h3>
+
+  <p>When you add a UNIQUE constraint, the database creates an index automatically. But if you remove a unique constraint, the index may or may not be dropped depending on your dialect.</p>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">-- PostgreSQL: dropping the constraint drops the index
+ALTER TABLE users DROP CONSTRAINT users_email_key;
+
+-- MySQL: dropping the constraint may leave the index behind
+ALTER TABLE users DROP INDEX users_email_key;
+</code></pre>
+
+  <p>After removing a unique constraint, audit your indexes. Orphaned unique indexes waste write performance and storage.</p>
+
+  <h3>3. Composite Indexes for Multi-Column Lookups</h3>
+
+  <p>If your migration adds multiple columns that will be queried together, a composite index is often better than separate single-column indexes.</p>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">-- Good: covers queries like WHERE tenant_id = ? AND status = ?
+CREATE INDEX idx_orders_tenant_status ON orders(tenant_id, status);
+
+-- Less good for the same query pattern
+CREATE INDEX idx_orders_tenant ON orders(tenant_id);
+CREATE INDEX idx_orders_status ON orders(status);
+</code></pre>
+
+  <p>Order matters in composite indexes. Put the most selective column first. If you are unsure which is more selective, check your query logs.</p>
+
+  <h3>4. Partial Indexes for Conditional Queries</h3>
+
+  <p>PostgreSQL supports partial indexes — indexes that only cover rows matching a condition. These are smaller, faster to maintain, and highly effective for soft-delete patterns.</p>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">-- Only index active users; ignore deleted rows
+CREATE INDEX idx_users_active_email
+  ON users(email)
+  WHERE deleted_at IS NULL;
+</code></pre>
+
+  <p>If your migration adds a <code>deleted_at</code> column for soft deletes, add partial indexes on your existing unique constraints. Otherwise, you will not be able to reuse email addresses after deletion.</p>
+
+  <h3>5. Covering Indexes for Read-Heavy Workloads</h3>
+
+  <p>A covering index includes all columns needed for a query, allowing the database to satisfy the query entirely from the index without touching the table.</p>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">-- MySQL / PostgreSQL (INDEX INCLUDE)
+CREATE INDEX idx_orders_user_created
+  ON orders(user_id, created_at)
+  INCLUDE (total_amount, status);
+</code></pre>
+
+  <p>Use covering indexes when your migration adds columns to a table that is queried heavily and you know the exact access pattern.</p>
+
+  <h2>How to Create Indexes Without Locking Tables</h2>
+
+  <p>The biggest risk of index creation is table locking. On large tables, a standard <code>CREATE INDEX</code> can lock writes for minutes or hours. Here is how to avoid that in each major dialect.</p>
+
+  <h3>PostgreSQL: <code>CREATE INDEX CONCURRENTLY</code></h3>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">CREATE INDEX CONCURRENTLY idx_orders_user_id ON orders(user_id);
+</code></pre>
+
+  <p>This builds the index without locking the table. It takes longer and uses more CPU, but your application keeps running. Use it for every index on a production table with &gt;100,000 rows.</p>
+
+  <h3>MySQL: <code>ALGORITHM=INPLACE, LOCK=NONE</code></h3>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">ALTER TABLE orders ADD INDEX idx_user_id (user_id),
+  ALGORITHM=INPLACE, LOCK=NONE;
+</code></pre>
+
+  <p>MySQL 5.6+ supports online DDL for index creation. Always specify <code>ALGORITHM=INPLACE, LOCK=NONE</code> to ensure the operation fails rather than locks if online DDL is not possible.</p>
+
+  <h3>SQL Server: <code>ONLINE = ON</code></h3>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;"><code style="color:var(--code-text);">CREATE INDEX idx_orders_user_id ON orders(user_id)
+  WITH (ONLINE = ON);
+</code></pre>
+
+  <p>SQL Server Enterprise Edition supports online index builds. Standard Edition does not. Know your edition before running this in production.</p>
+
+  <h3>SQLite: No Online Index Creation</h3>
+
+  <p>SQLite locks the entire database during <code>CREATE INDEX</code>. For large SQLite databases, consider creating the index during a maintenance window or using a replica.</p>
+
+  <h2>Indexing Checklist for Every Migration</h2>
+
+  <p>Before you merge any schema change, verify:</p>
+
+  <ul>
+    <li>Every new foreign key has a supporting index on the child table.</li>
+    <li>Every new unique constraint is intentional and has the correct columns.</li>
+    <li>Multi-column lookups use composite indexes, not separate single-column indexes.</li>
+    <li>Soft-delete columns trigger partial index updates on existing unique constraints.</li>
+    <li>Index creation on large tables uses the online / concurrent variant for your dialect.</li>
+    <li>Removing a constraint does not leave an orphaned index behind.</li>
+  </ul>
+
+  <p>If your migration tool does not enforce this checklist, enforce it in code review. A single missing index can cost more than every other migration in the sprint combined.</p>
+
+  <h2>Index Migration Safety Tips</h2>
+
+  <p>Beyond the checklist, follow these rules for safe index management:</p>
+
+  <ul>
+    <li><strong>Create indexes in separate migrations.</strong> If a migration adds a column AND an index, a failure leaves the schema in an inconsistent state. Split them.</li>
+    <li><strong>Monitor disk space.</strong> Indexes can double table size. Large indexes on SSDs are fast. Large indexes on spinning disks are not.</li>
+    <li><strong>Test on production-sized data.</strong> An index that builds in 2 seconds on your laptop may take 20 minutes on a 500GB table.</li>
+    <li><strong>Drop unused indexes.</strong> Every index slows down writes. Use <code>pg_stat_user_indexes</code> (PostgreSQL) or <code>sys.dm_db_index_usage_stats</code> (SQL Server) to find indexes that are never scanned.</li>
+    <li><strong>Index naming matters.</strong> Use a consistent convention like <code>idx_&lt;table&gt;_&lt;columns&gt;</code>. Future you will thank present you when debugging query plans.</li>
+  </ul>
+
+  <h2>How SchemaLens Helps</h2>
+
+  <p>SchemaLens compares two schemas and flags missing indexes automatically. When you paste an old schema and a new schema, you see:</p>
+
+  <ul>
+    <li>New foreign keys without supporting indexes</li>
+    <li>Added, removed, or modified indexes side-by-side</li>
+    <li>Breaking change warnings for dangerous migrations</li>
+    <li>Generated migration SQL with dialect-correct syntax</li>
+  </ul>
+
+  <p>Use it during code review to catch index gaps before they reach production.</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;">
+    <p style="margin:0 0 0.5rem;font-weight:700;">Try SchemaLens — free, browser-based, privacy-first.</p>
+    <p style="margin:0 0 1rem;color:var(--text-muted);">Compare two SQL schemas instantly. Spot missing indexes before they break production.</p>
+    <a href="../app.html" class="btn btn-primary" style="display:inline-block;">Open Schema Diff →</a>
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--border);margin:2rem 0;">
+
+  <h3>Related Reading</h3>
+  <ul>
+    <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+    <li><a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+    <li><a href="dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (and How to Catch Them)</a></li>
+    <li><a href="schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+  </ul>
+</article>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../api.html">API</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+</body>
+</html>

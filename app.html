@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SchemaLens — Schema Diff Tool</title>
   <meta name="description" content="Compare two SQL schemas in your browser. Generate migration scripts instantly. No data leaves your device.">
+  <meta property="og:title" content="SchemaLens — SQL Schema Diff Tool">
+  <meta property="og:description" content="Compare two SQL schemas in your browser. Generate migration scripts instantly. No data leaves your device.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/app.html">
+  <meta property="og:image" content="https://schemalens.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <style>
     /* App-specific styles */
@@ -503,6 +509,7 @@
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="lib/analytics-client.js"></script>
 <script>
 (function() {
   const saved = localStorage.getItem('schemalens-theme');
@@ -726,6 +733,7 @@ CREATE TABLE users (
           <a href="tools/schema-doc-generator.html">Schema Docs</a>
           <a href="tools/csv-to-sql.html">CSV to SQL</a>
           <a href="tools/json-to-sql.html">JSON to SQL</a>
+      <a href="tools/schema-health-check.html">Health Check</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
@@ -1979,10 +1987,10 @@ function renderVisualDiff(diff, breakingChanges) {
   }
 
   for (const table of diff.tablesAdded) {
-    html += renderTableDiff(table.name, 'added', table.columns, [], [], [], [], tableBreaking.get(table.name) || []);
+    html += renderTableDiff(table.name, 'added', table.columns, [], [], [], [], [], tableBreaking.get(table.name) || []);
   }
   for (const table of diff.tablesRemoved) {
-    html += renderTableDiff(table.name, 'removed', [], table.columns, [], [], [], tableBreaking.get(table.name) || []);
+    html += renderTableDiff(table.name, 'removed', [], table.columns, [], [], [], [], tableBreaking.get(table.name) || []);
   }
   for (const td of diff.tablesModified) {
     html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsRenamed, td.columnsModified, td.constraintsAdded, td.constraintsRemoved, tableBreaking.get(td.name) || []);
@@ -2197,6 +2205,7 @@ function renderMigration(sql, diff) {
 function downloadSQL() {
   if (!lastMigrationSQL) return;
   downloadFile(lastMigrationSQL, 'schemalens_migration.sql', 'text/plain');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_sql');
 }
 
 function downloadJSON() {
@@ -2208,12 +2217,14 @@ function downloadJSON() {
     migrationSQL: lastMigrationSQL
   };
   downloadFile(JSON.stringify(payload, null, 2), 'schemalens_diff.json', 'application/json');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_json');
 }
 
 function downloadMarkdown() {
   if (!lastDiff) return;
   const md = generateMarkdown(lastDiff, lastMigrationSQL, document.getElementById('dialect').value);
   downloadFile(md, 'schemalens_diff.md', 'text/markdown');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_markdown');
 }
 
 function downloadFile(content, filename, mimeType) {
@@ -2677,6 +2688,7 @@ function constraintText(con) {
 
 function printPDF() {
   window.print();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_pdf');
 }
 
 let lastMigrationSQL = '';
@@ -2745,6 +2757,7 @@ function applyLicense() {
     checkLicense();
     closeLicenseModal();
     if (lastDiff) renderMigration(lastMigrationSQL, lastDiff);
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_activate');
   } else {
     input.style.borderColor = 'var(--danger)';
     setTimeout(() => input.style.borderColor = '', 2000);
@@ -2888,13 +2901,20 @@ function shareDiff() {
     const old = btn.textContent;
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = old, 2000);
+  }).catch(() => {
+    const btn = document.getElementById('shareBtn');
+    const old = btn.textContent;
+    btn.textContent = 'URL ready';
+    setTimeout(() => btn.textContent = old, 2000);
   });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_diff');
 }
 
 function loadSample(dialect) {
   document.getElementById('schemaA').value = SAMPLES[dialect] || SAMPLES.postgres;
   document.getElementById('dialect').value = dialect;
   updateStats();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('sample_loaded', { dialect });
 }
 
 function loadSampleB() {
@@ -2926,6 +2946,75 @@ function updateStats() {
   } catch(e) {
     // ignore
   }
+}
+
+// -----------------------------
+// Parser Confidence
+// -----------------------------
+function calculateConfidence(sql, dialect, schema) {
+  const warnings = [];
+  const upper = sql.toUpperCase();
+  const lines = sql.split('\n');
+
+  // Unparsed CREATE TABLE statements
+  const createTableMatches = sql.match(/CREATE\s+TABLE\s+/gi) || [];
+  const parsedTables = Object.keys(schema.tables || {}).length;
+  if (createTableMatches.length > parsedTables) {
+    warnings.push(`${createTableMatches.length - parsedTables} CREATE TABLE statement(s) could not be fully parsed`);
+  }
+
+  // Array types
+  if (/\w+\[\s*\]/.test(sql) || /\b(INTEGER|TEXT|VARCHAR|BIGINT|SMALLINT|REAL|DOUBLE)\s*\[\s*\]/.test(sql)) {
+    warnings.push('Array column types detected (limited support)');
+  }
+
+  // JSON / JSONB
+  if (/\bJSON\b/i.test(sql) || /\bJSONB\b/i.test(sql)) {
+    warnings.push('JSON/JSONB columns detected (treated as generic types)');
+  }
+
+  // Generated / virtual / stored columns
+  if (/\bGENERATED\b/i.test(sql) || /\bVIRTUAL\b/i.test(sql) || /\bSTORED\b/i.test(sql) || /\bPERSISTED\b/i.test(sql)) {
+    warnings.push('Generated/virtual columns detected (parsing may be incomplete)');
+  }
+
+  // CREATE FUNCTION / PROCEDURE
+  if (/\bCREATE\s+(OR\s+REPLACE\s+)?FUNCTION\b/i.test(sql) || /\bCREATE\s+PROCEDURE\b/i.test(sql)) {
+    warnings.push('Functions/procedures are not parsed (ignored during diff)');
+  }
+
+  // Partitioning
+  if (/\bPARTITION\s+BY\b/i.test(sql)) {
+    warnings.push('Partitioning clauses detected (ignored during diff)');
+  }
+
+  // Non-ENUM CREATE TYPE
+  if (/\bCREATE\s+TYPE\b/i.test(sql) && !/\bENUM\b/i.test(sql)) {
+    warnings.push('Non-ENUM CREATE TYPE detected (only ENUM types are parsed)');
+  }
+
+  // FULLTEXT / SPATIAL indexes
+  if (/\bFULLTEXT\b/i.test(sql) || /\bSPATIAL\b/i.test(sql)) {
+    warnings.push('FULLTEXT/SPATIAL indexes detected (parsed as regular indexes)');
+  }
+
+  // Views (we now parse these, so no warning)
+  // Triggers (we now parse these, so no warning)
+
+  // Score based on warning severity
+  let score = 'high';
+  const hasMajor = warnings.some(w =>
+    w.includes('could not be fully parsed') ||
+    w.includes('Functions/procedures') ||
+    w.includes('Partitioning')
+  );
+  if (hasMajor) {
+    score = 'low';
+  } else if (warnings.length > 0) {
+    score = 'medium';
+  }
+
+  return { score, warnings };
 }
 
 // -----------------------------
@@ -2992,6 +3081,15 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   document.getElementById('results').classList.add('active');
   document.getElementById('welcomeHint').classList.add('hidden');
   setCompareLoading(false);
+
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('diff_run', {
+      dialect,
+      tables_old: diff.totalTablesOld,
+      tables_new: diff.totalTablesNew,
+      changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length
+    });
+  }
 
   // Scroll to results
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });

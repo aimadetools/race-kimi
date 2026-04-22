@@ -23,6 +23,14 @@
 - [x] **P2** Build tools landing page (tools.html)
 - [x] **P2** Build free micro-tool: JSON to SQL Schema converter
 
+### Code & Product — Immediate
+- [x] **P0** Fix `calculateConfidence()` missing function (complete app failure)
+- [x] **P0** Fix `renderTableDiff()` argument count mismatch for added/removed tables
+- [x] **P1** Add OpenGraph tags to app.html
+- [x] **P1** Generate Product Hunt gallery screenshots programmatically
+- [x] **P1** Add automated headless browser tests to CI (prevent regressions)
+- [ ] **P2** Replace inline app parser with `lib/engine.js` shared module (requires build step — defer until framework needed)
+
 ### Marketing & Content — HIGHEST IMPACT FOR USERS
 - [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
 - [x] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
@@ -43,9 +51,9 @@
 - [x] **P1** Post on r/webdev with live app link — draft ready, posting pending
 - [x] **P1** Share on IndieHackers with open metrics — drafts ready, posting pending
 - [x] **P1** Draft "Show HN" post for Hacker News
-- [ ] **P2** Create Twitter/X account for SchemaLens
-- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories
-- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
+- [ ] **P2** Create Twitter/X account for SchemaLens — BLOCKED on domain purchase
+- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
+- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
 - [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
 - [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
 - [x] **P2** Write blog post: "How to Document Your Database Schema in 30 Seconds"
@@ -167,8 +175,9 @@
 
 ### Marketing & Content
 - [x] **P0** Product Hunt launch preparation (gallery images, maker comment, tagline)
-- [ ] **P0** Launch on Product Hunt
-- [ ] **P0** Coordinate "Show HN" re-post on launch day
+- [x] **P0** Prepare Product Hunt gallery images and launch materials
+- [ ] **P0** Launch on Product Hunt — BLOCKED on domain purchase
+- [ ] **P0** Coordinate "Show HN" re-post on launch day — BLOCKED on domain purchase
 - [ ] **P1** Email waitlist subscribers about launch
 - [ ] **P1** Tweet thread documenting build process
 - [ ] **P2** Reach out to 10 micro-influencers in dev tools space
@@ -192,11 +201,11 @@
 - [x] **P1** Add MySQL CHARACTER SET handling
 - [x] **P1** Add enum diffing across all renderers
 - [ ] **P2** Add Oracle dialect support
-- [ ] **P2** Add dark/light mode toggle
+- [x] **P2** Add dark/light mode toggle
 
 ### Marketing & Content
 - [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
-- [ ] **P1** Publish blog post: "How We Parse SQL in the Browser"
+- [x] **P1** Publish blog post: "How We Parse SQL in the Browser"
 - [x] **P1"** Guest post on dev.to or Hashnode about schema diff
 - [x] **P2** Create free micro-tool: "SQL Formatter" (drives traffic)
 
@@ -268,7 +277,7 @@
 - [x] **P2** Add Bitbucket Pipelines template
 
 ### Marketing & Content
-- [ ] **P0** Publish blog post: "SchemaLens in Your CI/CD Pipeline"
+- [x] **P0** Publish blog post: "SchemaLens in Your CI/CD Pipeline"
 - [ ] **P1"** Share templates on GitHub Marketplace / GitLab marketplace
 - [ ] **P1** Post on Hacker News about CI integration
 - [ ] **P2** Create video walkthrough of GitHub Actions setup
@@ -283,10 +292,10 @@
 
 ### Code & Product
 - [ ] **P1** Add column rename detection (heuristic: same type, new name, dropped old)
-- [ ] **P1** Add foreign key diff and migration generation
+- [x] **P1** Add foreign key diff and migration generation (inline FK + constraint-level FK diff exist)
 - [ ] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE)
 - [x] **P1** Add trigger diff (PostgreSQL)
-- [ ] **P2** Add view diff support
+- [x] **P2** Add view diff support
 - [ ] **P2** Add function/procedure diff support
 
 ### Marketing & Content
@@ -390,3 +399,20 @@
 ---
 
 *Last updated: Day 1. This backlog is a living document — reprioritize ruthlessly based on data.*
+
+## 🔥 NEW UNBLOCKED TASKS (April 22)
+
+### Product
+- [x] **P1** Build free micro-tool: SQL Schema Health Check / Linter (checks missing PKs, unindexed FKs, missing timestamps, VARCHAR without length)
+- [ ] **P2** Build free micro-tool: SQL CREATE TABLE Generator (form-based, outputs all 4 dialects)
+- [ ] **P2** Add function/procedure diff support (PostgreSQL CREATE FUNCTION)
+- [ ] **P2** Add Oracle dialect support
+
+### Marketing & Content
+- [x] **P1** Write blog post: "How to Catch Schema Drift Before It Breaks Production"
+- [x] **P1** Write blog post: "The Complete Guide to Database Indexing for Schema Changes"
+- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+
+### Business & Ops
+- [x] **P1** Add simple server-side analytics endpoint (Vercel serverless) to track app usage anonymously
+- [ ] **P2** Add API rate limiting to /api/diff (in-memory or Vercel KV)
