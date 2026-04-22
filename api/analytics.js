@@ -8,6 +8,10 @@
  *   metadata     object  optional  Additional event data (max 10 keys, strings/numbers only)
  *
  * Response: 204 No Content on success
+ *
+ * Events are written to both:
+ *   1. stdout (Vercel log collection)
+ *   2. Supabase analytics_events table (if configured)
  */
 
 // Simple in-memory rate limiter per IP (resets on cold start)
@@ -48,7 +52,42 @@ function cleanMetadata(input) {
   return out;
 }
 
-module.exports = (req, res) => {
+// Supabase configuration — override via environment variables on Vercel
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://fmfwdwwvvcdtreduncev.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw';
+
+async function writeToSupabase(payload) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/analytics_events`, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        event_type: payload.event_type,
+        page_path: payload.page_path,
+        session_hash: payload.session_hash,
+        referrer: payload.referrer,
+        metadata: payload.metadata,
+        ip_hash: payload.ip_hash
+      })
+    });
+
+    clearTimeout(timeout);
+    return res.ok;
+  } catch (err) {
+    return false;
+  }
+}
+
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -100,9 +139,14 @@ module.exports = (req, res) => {
     ts: new Date().toISOString()
   };
 
-  // Log to stdout for Vercel log collection
-  // Format: ANALYTICS_EVENT <json> — easy to parse with log drains or grep
+  // Always log to stdout for Vercel log collection
   console.log('ANALYTICS_EVENT', JSON.stringify(payload));
+
+  // Async write to Supabase — failure is silent to avoid blocking the client
+  const supabaseOk = await writeToSupabase(payload);
+  if (!supabaseOk) {
+    console.log('ANALYTICS_SUPABASE_FAILED', JSON.stringify({ event_type: payload.event_type, ts: payload.ts }));
+  }
 
   return res.status(204).end();
 };
