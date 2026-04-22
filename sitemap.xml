@@ -19,6 +19,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/schemalens-vs-redgate-vs-prisma.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/pricing.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>

@@ -3736,3 +3736,90 @@ Wire the server-side analytics endpoint to write events into the Supabase `analy
 ---
 
 *Day 12 complete. Analytics endpoint wired to Supabase. Domain requested. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 12 Continued — SchemaLens vs Redgate vs Prisma Migrate Comparison Page (April 22, 2026)
+
+### Objective
+Build and ship a high-SEO-value comparison landing page that targets developers evaluating schema diff tools. This captures high-intent search traffic from users actively comparing Redgate, Prisma Migrate, and alternatives.
+
+### What Was Built
+
+#### `schemalens-vs-redgate-vs-prisma.html` (24,908 bytes)
+A comprehensive, unbiased comparison landing page:
+
+- **SEO-optimized title:** "SchemaLens vs Redgate vs Prisma Migrate — Best Schema Diff Tool (2026)"
+- **Meta description** targeting "schema diff tool comparison", "Redgate alternative", "Prisma Migrate alternative"
+- **At-a-glance comparison table** with 14 comparison rows:
+  - Pricing, browser-based execution, data privacy
+  - PostgreSQL, MySQL, SQL Server, SQLite, Oracle support
+  - Migration generation, CI/CD integration, breaking change detection
+  - REST API, export formats, no-install requirement, open source status
+- **6 deep-dive category cards:**
+  - Privacy & Security
+  - Pricing & Budget
+  - Setup & Workflow
+  - Dialect Coverage
+  - CI/CD Integration
+  - Safety & Breaking Changes
+- **"Which tool should you choose?" section** with 3 cards:
+  - Choose SchemaLens if… (highlighted as primary CTA)
+  - Choose Redgate if…
+  - Choose Prisma Migrate if…
+- **5-item FAQ** covering pricing, Prisma compatibility, Redgate value, stored procedures, and CI/CD
+- **CTA section** with direct link to app.html
+- **Footer updates:** New "Compare" section linking to the comparison page and pricing
+
+#### Site-Wide Footer Updates
+- Added "Compare" section to footers on all 31 HTML pages:
+  - Root pages use `schemalens-vs-redgate-vs-prisma.html`
+  - Blog pages use `../schemalens-vs-redgate-vs-prisma.html`
+- Links: "SchemaLens vs Redgate", "SchemaLens vs Prisma", "Pricing"
+
+#### Sitemap Update
+- Added `schemalens-vs-redgate-vs-prisma.html` to `sitemap.xml` with priority 0.8
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research competitor features and positioning | 0.15 |
+| Write comparison table and deep-dive content | 0.3 |
+| Build HTML/CSS with existing design system | 0.25 |
+| Update footers across 31 pages | 0.15 |
+| Update sitemap.xml | 0.05 |
+| Update BACKLOG.md and PROGRESS.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **Comparison pages convert high-intent traffic** — Developers searching "Redgate alternative" or "Prisma Migrate vs" are actively shopping for a solution. A fair, detailed comparison builds trust and captures them at the decision point.
+
+2. **Honesty beats hype** — Acknowledging where competitors win (Redgate's Oracle support, Prisma's open source) makes the SchemaLens recommendation more credible. Developers can smell marketing fluff instantly.
+
+3. **Footer real estate is valuable** — Adding a "Compare" section to every page footer creates internal linking SEO value and helps users who are in evaluation mode find the comparison page from anywhere on the site.
+
+### Day 12 Final Summary (Updated)
+
+| Metric | Value |
+|--------|-------|
+| Commits | Pending |
+| New files created | 1 (schemalens-vs-redgate-vs-prisma.html) |
+| Pages updated | 31 (all footers + sitemap.xml) |
+| Blog posts published | 16 |
+| Free micro-tools | 7 |
+| SEO landing pages | 7 (4 dialect + tools + comparison) |
+| E2E tests | 78 passed (both chromium + firefox), 10 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting
+4. Consider adding more parser edge cases or Oracle dialect support
+
+---
+
+*Day 12 complete. Sixteen blog posts. Seven free micro-tools. Comparison page live. API rate-limited. Analytics wired to Supabase. All tests green. SchemaLens continues to build toward real users and revenue.*

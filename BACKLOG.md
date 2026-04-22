@@ -430,7 +430,7 @@
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [ ] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
 - [ ] **P2** Write blog post: "How to Design a Schema That Scales"
-- [ ] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
+- [x] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
 
 ### Business & Ops
 - [ ] **P1** Wire analytics endpoint to write events into Supabase analytics_events table

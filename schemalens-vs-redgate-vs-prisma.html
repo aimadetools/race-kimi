@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens vs Redgate vs Prisma Migrate — Best Schema Diff Tool (2026)</title>
+  <meta name="description" content="Compare SchemaLens, Redgate SQL Compare, and Prisma Migrate side by side. See pricing, privacy, dialect support, and CI/CD integration. Choose the right schema diff tool for your team.">
+  <meta property="og:title" content="SchemaLens vs Redgate vs Prisma Migrate — Best Schema Diff Tool (2026)">
+  <meta property="og:description" content="Compare the top 3 schema diff tools side by side. Pricing, privacy, dialect support, and CI/CD integration.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/schemalens-vs-redgate-vs-prisma.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="api.html">API</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Unbiased comparison — updated April 2026
+      </div>
+      <h1>SchemaLens vs Redgate<br>vs Prisma Migrate.<br><span>Which fits your workflow?</span></h1>
+      <p>Choosing a schema diff tool isn't just about features — it's about privacy, pricing, and how your team actually works. Here's the honest breakdown.</p>
+      <div class="hero-actions">
+        <a href="#comparison-table" class="btn btn-primary btn-lg">Jump to Comparison</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Try SchemaLens Free</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section" id="comparison-table">
+    <div class="container">
+      <h2 class="section-title text-center">At-a-glance comparison</h2>
+      <p class="section-subtitle text-center">How SchemaLens stacks up against Redgate SQL Compare and Prisma Migrate on the dimensions that matter most.</p>
+      <div class="table-wrapper" style="overflow-x: auto; margin-top: 32px;">
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Feature</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 700; color: var(--primary);">SchemaLens</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Redgate SQL Compare</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Prisma Migrate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Pricing</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Free tier + $12/mo Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">~$405/yr per user</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (open source)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Runs in browser</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Windows app</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ CLI only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Data privacy</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ 100% client-side</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Local app</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Schema introspection</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">PostgreSQL support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Full</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">MySQL support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Full</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQL Server support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQLite support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Limited</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Full</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Oracle support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Migration generation</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ ALTER TABLE DDL</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ ALTER TABLE DDL</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Prisma migrations</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CI/CD integration</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ CLI + GitHub Actions + GitLab + Bitbucket</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ PowerShell / CLI</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Native CLI</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Breaking change detection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in heuristic</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">REST API</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Free</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Export formats</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">SQL, Markdown, PDF, JSON</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL, HTML report</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">No install required</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Installer + license key</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ npm install + Node.js</td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 16px; font-weight: 500;">Open source</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Deep dive by category</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🔒</div>
+          <h3>Privacy &amp; Security</h3>
+          <p><strong>SchemaLens</strong> runs entirely in your browser. Your schema never touches a server — ideal for HIPAA, SOX, and air-gapped environments.</p>
+          <p><strong>Redgate</strong> is a local Windows app, so data stays on your machine. But it requires installation and license activation.</p>
+          <p><strong>Prisma Migrate</strong> introspects your database over the network. While Prisma is trustworthy, some compliance teams prohibit any external tool touching production schemas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">💰</div>
+          <h3>Pricing &amp; Budget</h3>
+          <p><strong>SchemaLens</strong> is free for up to 10 tables. Pro is $12/month or $99/year — no per-user pricing, so teams scale affordably.</p>
+          <p><strong>Redgate</strong> starts around $405/year per user. For a 5-person team, that's over $2,000/year. Powerful, but expensive for small teams.</p>
+          <p><strong>Prisma Migrate</strong> is free and open source. But it requires Prisma as your ORM — switching costs can be high if you're using Drizzle, TypeORM, or raw SQL.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">⚙️</div>
+          <h3>Setup &amp; Workflow</h3>
+          <p><strong>SchemaLens</strong> works instantly: open the URL, paste two SQL dumps, click Compare. No install, no signup, no database connection strings.</p>
+          <p><strong>Redgate</strong> requires a Windows machine, installation, and license activation. Great for DBAs, but slow for developers who need a quick diff.</p>
+          <p><strong>Prisma Migrate</strong> requires a Node.js project, Prisma schema, and CLI commands. It's seamless if you already use Prisma, but overkill for one-off diffs.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🌍</div>
+          <h3>Dialect Coverage</h3>
+          <p><strong>SchemaLens</strong> supports PostgreSQL, MySQL, SQLite, and SQL Server from a single interface. Perfect for polyglot teams and consultants.</p>
+          <p><strong>Redgate</strong> supports the widest range — including Oracle — but each dialect is a separate product or license tier.</p>
+          <p><strong>Prisma Migrate</strong> supports PostgreSQL, MySQL, SQLite, SQL Server, CockroachDB, and MongoDB — but only through the Prisma Client ecosystem.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🚀</div>
+          <h3>CI/CD Integration</h3>
+          <p><strong>SchemaLens</strong> provides a zero-dependency CLI, GitHub Actions, GitLab CI, and Bitbucket Pipelines templates. Plus a free REST API.</p>
+          <p><strong>Redgate</strong> offers a command-line interface and PowerShell modules, but requires licensed agents on build servers.</p>
+          <p><strong>Prisma Migrate</strong> integrates naturally with Node.js CI pipelines. Great for Prisma shops, but not a general-purpose schema diff tool.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🛡️</div>
+          <h3>Safety &amp; Breaking Changes</h3>
+          <p><strong>SchemaLens</strong> detects 6 types of dangerous changes: dropped tables/columns, type narrowing, NOT NULL without defaults, missing FK indexes, and dropped constraints.</p>
+          <p><strong>Redgate</strong> shows the diff comprehensively but doesn't flag which changes are dangerous. You must review manually.</p>
+          <p><strong>Prisma Migrate</strong> generates safe migrations by default but won't warn you about risky changes in an external schema dump.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Which tool should you choose?</h2>
+      <div class="features-grid" style="max-width: 900px; margin: 32px auto 0;">
+        <div class="feature-card" style="border: 2px solid var(--primary); background: var(--primary-glow);">
+          <div class="feature-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff;">✨</div>
+          <h3>Choose SchemaLens if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You want instant results without installing anything</li>
+            <li>Privacy matters — you can't upload schemas to external servers</li>
+            <li>You work with multiple SQL dialects</li>
+            <li>You need shareable diff reports (Markdown, PDF, JSON)</li>
+            <li>Your budget is under $15/month</li>
+            <li>You want a free REST API for automation</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Try SchemaLens Free</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🏢</div>
+          <h3>Choose Redgate if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You need Oracle or legacy database support</li>
+            <li>Your DBA team prefers a rich Windows GUI</li>
+            <li>You have budget for enterprise tooling</li>
+            <li>You need data comparison (not just schema)</li>
+            <li>You want Microsoft SQL Server ecosystem integration</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🌿</div>
+          <h3>Choose Prisma Migrate if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You already use Prisma as your ORM</li>
+            <li>You want version-controlled migrations in your repo</li>
+            <li>Your team is 100% TypeScript/JavaScript</li>
+            <li>You need shadow database migration testing</li>
+            <li>Open source is a hard requirement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Frequently asked questions</h2>
+      <div class="faq-grid" style="max-width: 800px; margin: 32px auto 0;">
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Is SchemaLens really free? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Yes. SchemaLens is free for schemas up to 10 tables. You get the full visual diff, migration preview, and export to Markdown. Pro unlocks unlimited tables, full migration SQL generation, PDF export, and shareable public links for $12/month.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Can I use SchemaLens if I already use Prisma? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Absolutely. SchemaLens complements Prisma Migrate perfectly. Use Prisma for day-to-day migrations, and SchemaLens when you need to compare a legacy database dump, review a teammate's SQL migration, or generate ALTER TABLE scripts for a database that isn't managed by Prisma.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Is Redgate worth the price? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Redgate SQL Compare is the industry standard for SQL Server teams and large enterprises. If you need Oracle support, data comparison, or deep Microsoft ecosystem integration, it's worth the investment. For smaller teams or occasional diffs, SchemaLens offers 90% of the value at 3% of the cost.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Does SchemaLens support stored procedures and functions? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">SchemaLens currently diffs tables, columns, indexes, constraints, triggers, views, and enum types. Stored procedure and function diffing is on the roadmap. For teams that need this today, Redgate is the better choice.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Can I run SchemaLens in CI/CD? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Yes. SchemaLens provides a zero-dependency CLI, pre-built GitHub Actions / GitLab CI / Bitbucket Pipelines templates, and a REST API. You can diff schemas in pull requests and fail the build on breaking changes.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Still deciding? Try SchemaLens in 10 seconds.</h2>
+      <p class="mb-24">Paste two CREATE TABLE dumps and see the diff instantly. No signup, no install, no credit card.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Compare Schemas Free</a>
+      <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+</body>
+</html>
