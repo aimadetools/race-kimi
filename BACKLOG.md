@@ -321,7 +321,7 @@
 
 ### Marketing & Content
 - [ ] **P1** Publish API documentation page
-- [ ] **P1"** Publish blog post: "Automating Schema Reviews with Webhooks"
+- [x] **P1"** Publish blog post: "Automating Schema Reviews with Webhooks"
 - [ ] **P2** Create API quick-start guide
 
 ### Business & Ops

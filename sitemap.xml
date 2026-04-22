@@ -207,6 +207,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/blog/automating-schema-reviews-with-webhooks.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/blog/complete-guide-to-database-indexing-for-schema-changes.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
