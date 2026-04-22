@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — SchemaLens</title>
+  <meta name="description" content="See what's new in SchemaLens. Schema diffing, migration generation, CI/CD integration, breaking change detection, and more.">
+  <meta property="og:title" content="Changelog — SchemaLens">
+  <meta property="og:description" content="See what's new in SchemaLens. Schema diffing, migration generation, CI/CD integration, breaking change detection, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/changelog.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="api.html">API</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Always improving
+      </div>
+      <h1>Changelog.<br><span>What we've shipped.</span></h1>
+      <p>A running log of features, fixes, and improvements to SchemaLens. Last updated April 22, 2026.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="changelog-timeline" style="max-width: 720px; margin: 0 auto;">
+
+        <div class="changelog-entry" style="margin-bottom: 3rem; padding-left: 24px; border-left: 2px solid var(--border);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <span style="width: 12px; height: 12px; background: var(--primary); border-radius: 50%; margin-left: -31px; border: 3px solid var(--bg);"></span>
+            <h2 style="margin: 0; font-size: 1.3rem;">April 2026</h2>
+            <span style="background: var(--primary-glow); color: var(--primary); padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">Latest</span>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔌 REST API</h3>
+            <p style="margin-bottom: 0;">Programmatic schema diffing via <code>POST /api/diff</code>. Supports JSON and Markdown output, rate limiting, and CORS. Perfect for CI/CD and automation.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">📊 Server-side Analytics</h3>
+            <p style="margin-bottom: 0;">Anonymous usage tracking via <code>/api/analytics</code>, wired to Supabase for long-term querying. Localhost detection prevents dev noise.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔍 Schema Health Check</h3>
+            <p style="margin-bottom: 0;">New free micro-tool that lints SQL schemas for 10 common design issues: missing primary keys, unindexed foreign keys, missing timestamps, and more.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🏗️ SQL CREATE TABLE Generator</h3>
+            <p style="margin-bottom: 0;">Visual form-based builder for CREATE TABLE statements across all 4 dialects. Generate correct DDL with one click.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">⚡ Breaking Change Detection</h3>
+            <p style="margin-bottom: 0;">Automatic detection of 6 dangerous patterns: dropped tables/columns, type narrowing, NOT NULL without defaults, missing FK indexes, and dropped constraints.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🌓 Dark / Light Mode</h3>
+            <p style="margin-bottom: 0;">Full theming support across all 31+ pages. Respects system preference and persists user choice in localStorage.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔔 Trigger Diff Support</h3>
+            <p style="margin-bottom: 0;">PostgreSQL CREATE TRIGGER parsing, diffing, and migration generation. Detects added, removed, and modified triggers.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">☁️ Cloud Save & Public Links</h3>
+            <p style="margin-bottom: 0;">Supabase-powered cloud save for diffs with magic-link auth. Generate public read-only shareable links for team collaboration.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🛠️ Seven Free Micro-Tools</h3>
+            <p style="margin-bottom: 0;">SQL Validator, SQL Formatter, Schema Documentation Generator, CSV to SQL Converter, JSON to SQL Converter, Schema Health Check, and CREATE TABLE Generator.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">📝 18 SEO Blog Posts</h3>
+            <p style="margin-bottom: 0;">Comprehensive content library covering schema diffing, migration safety, CI/CD integration, SQL best practices, and database design.</p>
+          </div>
+        </div>
+
+        <div class="changelog-entry" style="margin-bottom: 3rem; padding-left: 24px; border-left: 2px solid var(--border);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <span style="width: 12px; height: 12px; background: var(--border); border-radius: 50%; margin-left: -31px; border: 3px solid var(--bg);"></span>
+            <h2 style="margin: 0; font-size: 1.3rem;">March 2026</h2>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🚀 SchemaLens Launch</h3>
+            <p style="margin-bottom: 0;">Initial release of the browser-based schema diff tool. Custom SQL parser for PostgreSQL, MySQL, and SQLite. Semantic diff engine with migration generation.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Want to see it in action?</h2>
+      <p class="mb-24">Try the schema diff tool free. No signup required.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+</body>
+</html>

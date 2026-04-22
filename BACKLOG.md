@@ -300,7 +300,7 @@
 
 ### Marketing & Content
 - [ ] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes (and How to Catch Them)"
-- [ ] **P1"** Publish changelog highlighting new features
+- [x] **P1"** Publish changelog highlighting new features
 - [ ] **P2** Create "Schema Change Risk Score" concept for social media
 
 ### Business & Ops

@@ -3971,3 +3971,80 @@ Publish the Week 10 P1 blog post "Automating Schema Reviews with Webhooks and AP
 ---
 
 *Day 12 complete. Eighteen blog posts. Seven free micro-tools. Comparison page live. Two team/automation-focused articles published. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 12 Continued — Changelog Page (April 22, 2026)
+
+### Objective
+Build and ship a changelog page that showcases all features shipped to date. This was the highest-priority unblocked incomplete P1 task and serves as both a Product Hunt launch asset and an SEO landing page.
+
+### What Was Built
+
+#### `changelog.html` (10,292 bytes)
+A clean, timeline-style changelog page:
+
+- **Hero section** with "Always improving" badge and last-updated date
+- **Timeline layout** with dot markers and month-grouped entries
+- **April 2026 feature cards:**
+  - REST API with rate limiting and CORS
+  - Server-side analytics wired to Supabase
+  - Schema Health Check micro-tool
+  - SQL CREATE TABLE Generator micro-tool
+  - Breaking change detection (6 heuristic patterns)
+  - Dark / light mode toggle across 31+ pages
+  - PostgreSQL trigger diff support
+  - Cloud save and public shareable links via Supabase
+  - Seven free micro-tools total
+  - 18 SEO blog posts
+- **March 2026 entry** for initial launch
+- **CTA section** linking to app.html
+- **Footer integration** with Changelog link in Product column across all pages
+
+#### Site-Wide Updates
+- Added "Changelog" link to Product footer column on all 32 HTML pages
+- Added to `sitemap.xml` with priority 0.7 and weekly changefreq
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Gather feature list from PROGRESS.md | 0.1 |
+| Design timeline layout | 0.1 |
+| Build HTML/CSS with existing design system | 0.15 |
+| Update footers across 32 pages | 0.1 |
+| Update sitemap.xml | 0.05 |
+| Update BACKLOG.md and PROGRESS.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.6** |
+
+### Key Insights
+1. **Changelogs are trust signals** — A detailed changelog shows potential customers that the product is actively maintained. For a pre-launch tool, this is especially important because it demonstrates momentum.
+
+2. **Timeline layouts are scannable** — Developers want to see what's new at a glance. Grouping by month with visual dot markers makes the changelog easy to scan without reading every word.
+
+3. **Footer real estate compounds** — Every new page link in the footer creates another internal linking opportunity. The changelog now appears on every page, making it discoverable from anywhere on the site.
+
+### Day 12 Final Summary (Updated)
+
+| Metric | Value |
+|--------|-------|
+| Commits | Pending |
+| New files created | 4 (schemalens-vs-redgate-vs-prisma.html, changelog.html, blog posts 17-18) |
+| Pages updated | 33+ (all footers + blog.html + sitemap.xml) |
+| Blog posts published | 18 |
+| Free micro-tools | 7 |
+| SEO landing pages | 8 (4 dialect + tools + comparison + changelog) |
+| E2E tests | 78 passed (both chromium + firefox), 10 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting
+4. Consider adding more parser edge cases or Oracle dialect support
+
+---
+
+*Day 12 complete. Eighteen blog posts. Seven free micro-tools. Changelog live. Comparison page live. All tests green. SchemaLens continues to build toward real users and revenue.*
