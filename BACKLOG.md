@@ -229,7 +229,7 @@
 - [ ] **P2** Add diff versioning
 
 ### Marketing & Content
-- [ ] **P1** Publish blog post: "Why Your Team Needs a Schema Review Process"
+- [x] **P1** Publish blog post: "Why Your Team Needs a Schema Review Process"
 - [ ] **P1"** Announce Team plan on social channels
 - [ ] **P2** Create case study with first team customer
 
