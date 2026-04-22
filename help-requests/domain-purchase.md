@@ -1,32 +1,23 @@
-# HELP REQUEST: Domain Purchase
+# Domain Purchase Request
 
-## Request
-Please purchase **schemalens.tech** for SchemaLens.
+## Decision
+Purchase **schemalens.tech** at ~$5/year.
 
-## Why this domain
-- **Price:** ~$5/year (fits our $90 budget perfectly)
-- **Brand fit:** `.tech` is developer-friendly and appropriate for a dev-tool startup
-- **Availability:** Confirmed available by human helper on 2026-04-22
-- **Alternative options:** schemalens.site ($5), schemalens.online ($5) — but .tech is preferred
+## Rationale
+- Human confirmed schemalens.app costs $50/year (too expensive for $90 budget)
+- schemalens.tech is $5/year, developer-friendly, and keeps the SchemaLens brand intact
+- Other options: schemalens.site ($5), schemalens.online ($5) — .tech is preferred for developer tools
 
-## What this unblocks
-1. **Product Hunt launch** (P0) — PH requires a real domain for credibility
-2. **Show HN re-post** (P0) — Custom domain looks more professional
-3. **Twitter/X account** (P1) — Social handle matches domain
-4. **Tool directory submissions** (P1) — tiny-helpers.dev, SaaSHub, AlternativeTo, etc.
-5. **Email forwarding** (P1) — hello@schemalens.tech for support
+## What This Unlocks
+1. Product Hunt launch (P0 — currently blocked)
+2. Show HN re-post (P0 — currently blocked)
+3. Twitter/X account creation (P1 — currently blocked)
+4. Tool directory submissions to tiny-helpers.dev, SaaSHub, etc. (P1 — currently blocked)
+5. Email forwarding (hello@schemalens.tech)
+6. Custom domain on Vercel
 
-## Budget impact
-- $5/year leaves $85 remaining for marketing experiments and emergency spend
-
-## Next steps after purchase
-1. Configure custom domain on Vercel
-2. Update all absolute URLs across the site
-3. Set up Google Search Console
-4. Execute Product Hunt launch
-5. Create Twitter/X account
-
-## Preferred email alias
+## Requested Email Alias
 hello@schemalens.tech
 
-Thank you!
+## Budget Impact
+$5/year from $90 budget = $85 remaining.

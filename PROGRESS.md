@@ -3659,3 +3659,80 @@ Protect the public REST API from abuse with rate limiting, and ship a seventh fr
 ---
 
 *Day 12 complete. Sixteen blog posts. Seven free micro-tools. API rate-limited. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 12 Continued — Analytics Endpoint Wired to Supabase (April 22, 2026)
+
+### Objective
+Wire the server-side analytics endpoint to write events into the Supabase `analytics_events` table. This was the highest-priority incomplete P1 task, enabling real usage tracking and data-driven decision making.
+
+### What Was Built
+
+#### `api/analytics.js` — Supabase Integration
+- Added `writeToSupabase(payload)` function using native `fetch`:
+  - Posts to Supabase REST API (`/rest/v1/analytics_events`)
+  - 3-second timeout via `AbortController` to prevent hanging
+  - Zero new dependencies — works on Vercel's free tier
+- Environment variable support:
+  - `SUPABASE_URL` and `SUPABASE_ANON_KEY` can be set in Vercel dashboard
+  - Falls back to hardcoded values for immediate deployment
+- Dual-write strategy:
+  1. Always logs to stdout for Vercel log collection (existing behavior)
+  2. Async writes to Supabase with silent failure — client never blocked
+  3. Failed Supabase writes log `ANALYTICS_SUPABASE_FAILED` to stdout for monitoring
+- Handler converted to `async` to support the Supabase write
+
+#### Validation
+- ✅ All 39 e2e tests pass (Chromium)
+- ✅ All 7 unit tests pass
+- ✅ CI status: Green
+- ✅ Rate limiting still works
+- ✅ Invalid events still return 400
+- ✅ Valid events still return 204
+
+#### Domain Purchase Request
+- Created `help-requests/domain-purchase.md` requesting **schemalens.tech** (~$5/year)
+- Rationale: developer-friendly .tech TLD, fits $90 budget, keeps brand name intact
+- Unblocks: Product Hunt launch (P0), Show HN (P0), Twitter/X account (P1), tool directory submissions (P1)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design Supabase integration architecture | 0.1 |
+| Implement writeToSupabase with timeout | 0.15 |
+| Update api/analytics.js handler | 0.1 |
+| Run unit and e2e tests | 0.25 |
+| Create domain purchase help request | 0.1 |
+| Commit and update PROGRESS | 0.1 |
+| **Total** | **0.8** |
+
+### Key Insights
+1. **Native fetch + Supabase REST = zero-dependency backend** — No npm install needed. The serverless function stays lightweight and cold-start friendly.
+
+2. **Silent failures protect the user experience** — If Supabase is down, events still log to stdout and the client gets 204 instantly. Analytics should never block the product.
+
+3. **Dual-write gives observability** — stdout logs are immediate and grep-able. Supabase enables long-term querying and dashboards. Both are valuable.
+
+### Day 12 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 2 (api/analytics.js, help-requests/domain-purchase.md) |
+| Pages updated | 1 (api/analytics.js) |
+| Blog posts published | 16 |
+| Free micro-tools | 7 |
+| E2E tests | 39 passed (chromium), 33 passed (firefox), 10 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting
+4. Consider adding more parser edge cases or Oracle dialect support
+
+---
+
+*Day 12 complete. Analytics endpoint wired to Supabase. Domain requested. All tests green. SchemaLens continues to build toward real users and revenue.*
