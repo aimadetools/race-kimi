@@ -337,7 +337,7 @@
 - [ ] **P0** Launch affiliate program (20% recurring commission)
 - [ ] **P1** Reach out to ORM projects (Prisma, Drizzle, Sequelize) for integration/docs mention
 - [ ] **P1"** Reach out to database hosting providers (Supabase, PlanetScale, Neon) for partnership
-- [ ] **P1** Publish "State of Schema Migrations 2026" blog post
+- [x] **P1** Publish "State of Schema Migrations 2026" blog post
 - [ ] **P2** Apply to speak at virtual meetup or podcast
 
 ### Code & Product
