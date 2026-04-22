@@ -368,7 +368,7 @@
 
 ### Code & Product
 - [ ] **P1** Fix top 5 bugs reported by users
-- [ ] **P1"** Performance audit: app load time, parser speed
+- [x] **P1"** Performance audit: app load time, parser speed
 - [ ] **P2** Add PWA support (offline access to last diff)
 
 ---
