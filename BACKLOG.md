@@ -404,15 +404,35 @@
 
 ### Product
 - [x] **P1** Build free micro-tool: SQL Schema Health Check / Linter (checks missing PKs, unindexed FKs, missing timestamps, VARCHAR without length)
-- [ ] **P2** Build free micro-tool: SQL CREATE TABLE Generator (form-based, outputs all 4 dialects)
+- [x] **P2** Build free micro-tool: SQL CREATE TABLE Generator (form-based, outputs all 4 dialects)
 - [ ] **P2** Add function/procedure diff support (PostgreSQL CREATE FUNCTION)
 - [ ] **P2** Add Oracle dialect support
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "How to Catch Schema Drift Before It Breaks Production"
 - [x] **P1** Write blog post: "The Complete Guide to Database Indexing for Schema Changes"
+- [x] **P2** Write blog post: "Generate CREATE TABLE Statements Visually"
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 
 ### Business & Ops
 - [x] **P1** Add simple server-side analytics endpoint (Vercel serverless) to track app usage anonymously
-- [ ] **P2** Add API rate limiting to /api/diff (in-memory or Vercel KV)
+- [x] **P2** Add API rate limiting to /api/diff (in-memory or Vercel KV)
+
+## 🔥 NEW UNBLOCKED TASKS (April 22 continued)
+
+### Product
+- [ ] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
+- [ ] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
+- [ ] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
+- [ ] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
+
+### Marketing & Content
+- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+- [ ] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
+- [ ] **P2** Write blog post: "How to Design a Schema That Scales"
+- [ ] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
+
+### Business & Ops
+- [ ] **P1** Wire analytics endpoint to write events into Supabase analytics_events table
+- [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
+- [ ] **P2** Create affiliate/referral program landing page

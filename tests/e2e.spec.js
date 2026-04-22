@@ -385,3 +385,24 @@ test('indexing guide blog post loads without errors', async ({ page }) => {
   expect(bodyText).toContain('Database Indexing');
   expect(bodyText).toContain('SchemaLens');
 });
+
+test('create table generator loads and generates sql', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/create-table-generator.html`);
+  await page.fill('#tableName', 'products');
+  await page.fill('.col-name', 'id');
+  await page.selectOption('.col-type', 'SERIAL');
+  await page.check('.col-pk');
+  await page.check('.col-nn');
+  await page.click('#generateBtn');
+  const output = await page.locator('#sqlOutput').textContent();
+  expect(output).toContain('CREATE TABLE');
+  expect(output).toContain('products');
+  expect(output).toContain('id');
+});
+
+test('create table generator blog post loads without errors', async ({ page }) => {
+  await page.goto(`${BASE_URL}/blog/generate-create-table-statements-visually.html`);
+  const bodyText = await page.locator('body').textContent();
+  expect(bodyText).toContain('CREATE TABLE');
+  expect(bodyText).toContain('SchemaLens');
+});

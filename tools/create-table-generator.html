@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free SQL CREATE TABLE Generator — SchemaLens</title>
+  <meta name="description" content="Generate CREATE TABLE statements for PostgreSQL, MySQL, SQLite, and SQL Server. Build schemas visually with a form. No signup required.">
+  <meta property="og:title" content="Free SQL CREATE TABLE Generator — SchemaLens">
+  <meta property="og:description" content="Build CREATE TABLE statements visually. Supports all major SQL dialects. Runs in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/tools/create-table-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .generator-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0 16px;
+    }
+    .generator-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .generator-toolbar select, .generator-toolbar button, .generator-toolbar input {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+    }
+    .generator-toolbar button {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .generator-toolbar button:hover {
+      background: var(--primary-light);
+    }
+
+    .table-config {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .table-config-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .table-config-row:last-child { margin-bottom: 0; }
+    .table-config-row label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-width: 100px;
+    }
+    .table-config-row input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-family: var(--mono);
+    }
+
+    .columns-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .columns-header {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 60px 60px 60px 60px 40px;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--nav-bg);
+    }
+    .columns-header span { text-align: center; }
+    .columns-header span:first-child, .columns-header span:nth-child(2) { text-align: left; }
+
+    .column-row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 60px 60px 60px 60px 40px;
+      gap: 8px;
+      padding: 8px 14px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .column-row:last-child { border-bottom: none; }
+    .column-row input, .column-row select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      font-family: var(--mono);
+      width: 100%;
+    }
+    .column-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      justify-self: center;
+    }
+    .column-row .delete-col {
+      background: transparent;
+      color: var(--danger);
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      justify-self: center;
+    }
+
+    @media (max-width: 768px) {
+      .columns-header, .column-row {
+        grid-template-columns: 1.5fr 1fr 60px 40px;
+      }
+      .columns-header span:nth-child(3),
+      .columns-header span:nth-child(4),
+      .columns-header span:nth-child(5),
+      .columns-header span:nth-child(6),
+      .column-row input:nth-child(3),
+      .column-row input:nth-child(4),
+      .column-row input:nth-child(5),
+      .column-row input:nth-child(6) {
+        display: none;
+      }
+    }
+
+    .add-col-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      color: var(--primary);
+      border: 1px dashed var(--border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .add-col-btn:hover {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+    }
+
+    .output-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    .output-label {
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-label button {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .output-label button:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+    .output-wrap pre {
+      flex: 1;
+      width: 100%;
+      min-height: 200px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      margin: 0;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .cta-box h3 { margin-bottom: 8px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SQL CREATE TABLE Generator</h1>
+      <p>Build CREATE TABLE statements visually. Choose columns, types, and constraints. Generate SQL for PostgreSQL, MySQL, SQLite, and SQL Server instantly.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="generator-toolbar">
+      <label for="dialect">Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+      </select>
+      <button id="generateBtn">Generate SQL</button>
+      <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
+    </div>
+
+    <div class="table-config">
+      <div class="table-config-row">
+        <label for="tableName">Table Name</label>
+        <input type="text" id="tableName" value="users" placeholder="e.g. users">
+      </div>
+    </div>
+
+    <div class="columns-section">
+      <div class="columns-header">
+        <span>Column</span>
+        <span>Type</span>
+        <span>Default / Length</span>
+        <span>PK</span>
+        <span>NN</span>
+        <span>UQ</span>
+        <span>AI</span>
+        <span></span>
+      </div>
+      <div id="columnsContainer"></div>
+      <button class="add-col-btn" id="addColBtn">+ Add Column</button>
+    </div>
+
+    <div class="output-wrap">
+      <div class="output-label">
+        <span>Generated SQL</span>
+        <button id="copyBtn">Copy</button>
+      </div>
+      <pre id="sqlOutput"><code style="display:block;white-space:pre;"></code></pre>
+    </div>
+
+    <div class="cta-box">
+      <h3>Need to compare this schema with an existing one?</h3>
+      <p>SchemaLens diffs database schemas and generates migration scripts instantly.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="sql-validator.html">SQL Validator</a>
+          <a href="sql-formatter.html">SQL Formatter</a>
+          <a href="schema-doc-generator.html">Schema Docs</a>
+          <a href="csv-to-sql.html">CSV to SQL</a>
+          <a href="json-to-sql.html">JSON to SQL</a>
+          <a href="schema-health-check.html">Health Check</a>
+          <a href="create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+
+<script>
+(function() {
+  const container = document.getElementById('columnsContainer');
+  const dialectEl = document.getElementById('dialect');
+  const tableNameEl = document.getElementById('tableName');
+  const sqlOutput = document.getElementById('sqlOutput');
+
+  const commonTypes = {
+    postgres: ['SERIAL','INTEGER','BIGINT','SMALLINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','NUMERIC(10,2)','REAL','JSONB','UUID'],
+    mysql: ['INT','BIGINT','SMALLINT','TINYINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','DECIMAL(10,2)','FLOAT','JSON','CHAR(36)'],
+    sqlite: ['INTEGER','TEXT','REAL','NUMERIC','BLOB','INTEGER PRIMARY KEY','DATETIME','DATE','BOOLEAN','JSON'],
+    mssql: ['INT','BIGINT','SMALLINT','TINYINT','BIT','NVARCHAR(255)','VARCHAR(MAX)','DATETIME2','DATE','DECIMAL(10,2)','FLOAT','UNIQUEIDENTIFIER','NVARCHAR(4000)']
+  };
+
+  function createColumnRow(data) {
+    const div = document.createElement('div');
+    div.className = 'column-row';
+    const types = commonTypes[dialectEl.value] || commonTypes.postgres;
+    const typeOptions = types.map(t => `<option value="${t}"${data.type === t ? ' selected' : ''}>${t}</option>`).join('');
+    div.innerHTML = `
+      <input type="text" class="col-name" placeholder="column_name" value="${esc(data.name || '')}">
+      <select class="col-type">${typeOptions}<option value="custom">Custom…</option></select>
+      <input type="text" class="col-extra" placeholder="255 / DEFAULT …" value="${esc(data.extra || '')}">
+      <input type="checkbox" class="col-pk"${data.pk ? ' checked' : ''}>
+      <input type="checkbox" class="col-nn"${data.nn ? ' checked' : ''}>
+      <input type="checkbox" class="col-uq"${data.uq ? ' checked' : ''}>
+      <input type="checkbox" class="col-ai"${data.ai ? ' checked' : ''}>
+      <button class="delete-col" title="Remove column">×</button>
+    `;
+    div.querySelector('.delete-col').addEventListener('click', () => div.remove());
+    const typeSelect = div.querySelector('.col-type');
+    const extraInput = div.querySelector('.col-extra');
+    typeSelect.addEventListener('change', () => {
+      if (typeSelect.value === 'custom') {
+        const custom = prompt('Enter custom type:');
+        if (custom) {
+          const opt = document.createElement('option');
+          opt.value = custom;
+          opt.textContent = custom;
+          typeSelect.insertBefore(opt, typeSelect.lastElementChild);
+          typeSelect.value = custom;
+        } else {
+          typeSelect.value = types[0];
+        }
+      }
+    });
+    return div;
+  }
+
+  function addColumn(data) {
+    container.appendChild(createColumnRow(data || {}));
+  }
+
+  function getColumns() {
+    return Array.from(container.querySelectorAll('.column-row')).map(row => ({
+      name: row.querySelector('.col-name').value.trim(),
+      type: row.querySelector('.col-type').value,
+      extra: row.querySelector('.col-extra').value.trim(),
+      pk: row.querySelector('.col-pk').checked,
+      nn: row.querySelector('.col-nn').checked,
+      uq: row.querySelector('.col-uq').checked,
+      ai: row.querySelector('.col-ai').checked
+    })).filter(c => c.name);
+  }
+
+  function generateSQL() {
+    const table = tableNameEl.value.trim() || 'my_table';
+    const dialect = dialectEl.value;
+    const cols = getColumns();
+    if (!cols.length) {
+      sqlOutput.textContent = '-- Add at least one column to generate SQL';
+      return;
+    }
+
+    let sql = '';
+    const q = (id) => {
+      if (dialect === 'mssql') return '[' + id + ']';
+      if (dialect === 'mysql') return '`' + id + '`';
+      return '"' + id + '"';
+    };
+
+    const lines = [];
+    const constraints = [];
+
+    cols.forEach(col => {
+      let def = '  ' + q(col.name) + ' ';
+      let type = col.type;
+      if (col.extra && !col.extra.toUpperCase().startsWith('DEFAULT') && col.type.includes('(') === false && col.type !== 'custom') {
+        if (type === 'VARCHAR(255)' || type === 'NVARCHAR(255)') {
+          type = type.replace('255', col.extra);
+        }
+      }
+
+      if (dialect === 'postgres') {
+        if (col.ai) {
+          if (type === 'INTEGER' || type === 'INT') type = 'SERIAL';
+          else if (type === 'BIGINT') type = 'BIGSERIAL';
+          else if (type === 'SMALLINT') type = 'SMALLSERIAL';
+        }
+        def += type;
+        if (col.nn) def += ' NOT NULL';
+        if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
+        else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
+      } else if (dialect === 'mysql') {
+        def += type;
+        if (col.ai) def += ' AUTO_INCREMENT';
+        if (col.nn) def += ' NOT NULL';
+        if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
+        else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
+      } else if (dialect === 'sqlite') {
+        def += type;
+        if (col.ai && col.pk) def += ' AUTOINCREMENT';
+        if (col.nn) def += ' NOT NULL';
+        if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
+        else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
+      } else if (dialect === 'mssql') {
+        def += type;
+        if (col.ai) def += ' IDENTITY(1,1)';
+        if (col.nn) def += ' NOT NULL';
+        if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
+        else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
+      }
+      lines.push(def);
+
+      if (col.uq) {
+        if (dialect === 'postgres') constraints.push('  CONSTRAINT ' + q('uq_' + table + '_' + col.name) + ' UNIQUE (' + q(col.name) + ')');
+        else if (dialect === 'mysql') constraints.push('  UNIQUE KEY ' + q('uq_' + col.name) + ' (' + q(col.name) + ')');
+        else if (dialect === 'sqlite') constraints.push('  UNIQUE (' + q(col.name) + ')');
+        else if (dialect === 'mssql') constraints.push('  CONSTRAINT ' + q('UQ_' + table + '_' + col.name) + ' UNIQUE (' + q(col.name) + ')');
+      }
+    });
+
+    const pkCols = cols.filter(c => c.pk).map(c => q(c.name));
+    if (pkCols.length) {
+      if (dialect === 'postgres') constraints.push('  CONSTRAINT ' + q('pk_' + table) + ' PRIMARY KEY (' + pkCols.join(', ') + ')');
+      else if (dialect === 'mysql') constraints.push('  PRIMARY KEY (' + pkCols.join(', ') + ')');
+      else if (dialect === 'sqlite') constraints.push('  PRIMARY KEY (' + pkCols.join(', ') + ')');
+      else if (dialect === 'mssql') constraints.push('  CONSTRAINT ' + q('PK_' + table) + ' PRIMARY KEY CLUSTERED (' + pkCols.join(', ') + ')');
+    }
+
+    sql = 'CREATE TABLE ' + q(table) + ' (\n' + lines.join(',\n');
+    if (constraints.length) sql += ',\n' + constraints.join(',\n');
+    sql += '\n);';
+
+    sqlOutput.textContent = sql;
+  }
+
+  function loadSample() {
+    tableNameEl.value = 'users';
+    container.innerHTML = '';
+    dialectEl.value = 'postgres';
+    addColumn({ name: 'id', type: 'SERIAL', pk: true, nn: true });
+    addColumn({ name: 'email', type: 'VARCHAR(255)', nn: true, uq: true });
+    addColumn({ name: 'username', type: 'VARCHAR(50)', nn: true });
+    addColumn({ name: 'role', type: 'VARCHAR(20)', extra: 'DEFAULT \'member\'' });
+    addColumn({ name: 'created_at', type: 'TIMESTAMP', extra: 'DEFAULT NOW()' });
+    generateSQL();
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+  }
+
+  document.getElementById('addColBtn').addEventListener('click', () => addColumn());
+  document.getElementById('generateBtn').addEventListener('click', generateSQL);
+  document.getElementById('sampleBtn').addEventListener('click', loadSample);
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    container.innerHTML = '';
+    sqlOutput.textContent = '';
+    tableNameEl.value = '';
+  });
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(sqlOutput.textContent).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  });
+
+  dialectEl.addEventListener('change', () => {
+    // Rebuild type dropdowns for existing rows
+    Array.from(container.querySelectorAll('.column-row')).forEach(row => {
+      const current = row.querySelector('.col-type').value;
+      const types = commonTypes[dialectEl.value] || commonTypes.postgres;
+      const sel = document.createElement('select');
+      sel.className = 'col-type';
+      sel.innerHTML = types.map(t => `<option value="${t}"${t === current ? ' selected' : ''}>${t}</option>`).join('') + '<option value="custom">Custom…</option>';
+      sel.addEventListener('change', () => {
+        if (sel.value === 'custom') {
+          const custom = prompt('Enter custom type:');
+          if (custom) {
+            const opt = document.createElement('option');
+            opt.value = custom; opt.textContent = custom;
+            sel.insertBefore(opt, sel.lastElementChild);
+            sel.value = custom;
+          } else { sel.value = types[0]; }
+        }
+      });
+      row.querySelector('.col-type').replaceWith(sel);
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') generateSQL();
+  });
+
+  // Start with one empty row
+  addColumn();
+})();
+</script>
+</body>
+</html>

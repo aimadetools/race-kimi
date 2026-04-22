@@ -186,12 +186,22 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/tools/create-table-generator.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/blog/how-to-catch-schema-drift.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://schemalens.vercel.app/blog/complete-guide-to-database-indexing-for-schema-changes.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://schemalens.vercel.app/blog/generate-create-table-statements-visually.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>

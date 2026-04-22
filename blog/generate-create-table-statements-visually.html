@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate CREATE TABLE Statements Visually (No SQL Required) — SchemaLens</title>
+  <meta name="description" content="Build CREATE TABLE statements with a visual form. Choose columns, types, and constraints. Generate SQL for PostgreSQL, MySQL, SQLite, and SQL Server instantly.">
+  <meta property="og:title" content="Generate CREATE TABLE Statements Visually (No SQL Required) — SchemaLens">
+  <meta property="og:description" content="Build CREATE TABLE statements with a visual form. Supports all major SQL dialects. Runs entirely in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/generate-create-table-statements-visually.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>Generate CREATE TABLE Statements Visually (No SQL Required)</h1>
+    <div class="meta">April 22, 2026 · 4 min read · SchemaLens Team</div>
+
+    <p>You need a new database table. You open your editor, type <code>CREATE TABLE</code>, and then pause. What was the syntax for auto-increment in PostgreSQL again? Does SQL Server need brackets or quotes? Should you use <code>VARCHAR(255)</code> or <code>TEXT</code>?</p>
+
+    <p>There is a faster way.</p>
+
+    <div class="cta-box">
+      <h3>Try it now</h3>
+      <p>Build CREATE TABLE statements visually. Choose columns, types, and constraints. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+      <a href="../tools/create-table-generator.html" class="btn btn-primary">Generate CREATE TABLE</a>
+    </div>
+
+    <h2>The problem with writing DDL by hand</h2>
+    <p>Writing <code>CREATE TABLE</code> statements manually is slow and error-prone, even for experienced developers:</p>
+    <ul>
+      <li><strong>Dialect syntax is inconsistent.</strong> PostgreSQL uses <code>SERIAL</code>, MySQL uses <code>AUTO_INCREMENT</code>, SQL Server uses <code>IDENTITY(1,1)</code>, and SQLite uses <code>AUTOINCREMENT</code>. It is easy to mix them up.</li>
+      <li><strong>Constraint naming is tedious.</strong> Every <code>PRIMARY KEY</code>, <code>UNIQUE</code>, and <code>FOREIGN KEY</code> needs a name. Coming up with consistent naming conventions takes mental energy better spent elsewhere.</li>
+      <li><strong>Quoting rules differ.</strong> PostgreSQL uses double quotes, MySQL uses backticks, SQL Server uses brackets, and SQLite accepts almost anything. Use the wrong quote and your script fails on the target database.</li>
+      <li><strong>You forget constraints.</strong> It is easy to add a column and forget <code>NOT NULL</code>, or to create a table without a primary key, or to miss a unique constraint on an email field.</li>
+    </ul>
+
+    <h2>A better approach: build it visually</h2>
+    <p>Instead of writing SQL character by character, use a visual builder that generates the correct DDL for your target dialect:</p>
+    <ul>
+      <li><strong>Speed.</strong> Add a column in two clicks. Set the type from a dropdown. Toggle constraints with checkboxes.</li>
+      <li><strong>Accuracy.</strong> The generator knows every dialect's quirks. You get <code>SERIAL</code> for PostgreSQL and <code>IDENTITY(1,1)</code> for SQL Server without thinking about it.</li>
+      <li><strong>Consistency.</strong> Constraints are named automatically using a predictable convention. Primary keys, unique indexes, and defaults are generated with the right syntax every time.</li>
+      <li><strong>Discoverability.</strong> A form shows you every option available — primary key, not null, unique, auto-increment — so you do not forget the constraints your schema needs.</li>
+    </ul>
+
+    <h2>How it works</h2>
+    <p>A visual CREATE TABLE generator does three things:</p>
+
+    <h3>1. Collect column definitions</h3>
+    <p>You add columns one at a time. For each column you specify:</p>
+    <ul>
+      <li><strong>Name</strong> — the column identifier</li>
+      <li><strong>Type</strong> — chosen from dialect-appropriate options like <code>INTEGER</code>, <code>VARCHAR</code>, <code>TIMESTAMP</code>, or a custom type</li>
+      <li><strong>Length / Default</strong> — optional length for <code>VARCHAR</code> or a default value expression</li>
+      <li><strong>Constraints</strong> — <code>PRIMARY KEY</code>, <code>NOT NULL</code>, <code>UNIQUE</code>, <code>AUTO_INCREMENT</code></li>
+    </ul>
+
+    <h3>2. Apply dialect-specific rules</h3>
+    <p>When you select a dialect, the generator adapts every piece of syntax:</p>
+    <pre><code>-- PostgreSQL
+CREATE TABLE "users" (
+  "id" SERIAL NOT NULL,
+  "email" VARCHAR(255) NOT NULL,
+  "role" VARCHAR(20) DEFAULT 'member',
+  "created_at" TIMESTAMP DEFAULT NOW(),
+  CONSTRAINT "pk_users" PRIMARY KEY ("id"),
+  CONSTRAINT "uq_users_email" UNIQUE ("email")
+);
+
+-- MySQL
+CREATE TABLE `users` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(20) DEFAULT 'member',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_email` (`email`)
+);
+
+-- SQL Server
+CREATE TABLE [users] (
+  [id] INT IDENTITY(1,1) NOT NULL,
+  [email] NVARCHAR(255) NOT NULL,
+  [role] NVARCHAR(20) DEFAULT 'member',
+  [created_at] DATETIME2 DEFAULT GETDATE(),
+  CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED ([id]),
+  CONSTRAINT [UQ_users_email] UNIQUE ([email])
+);</code></pre>
+
+    <h3>3. Generate constraints automatically</h3>
+    <p>The builder handles the constraint boilerplate for you:</p>
+    <ul>
+      <li>Primary keys get a named constraint using a <code>pk_table</code> or <code>PK_table</code> convention</li>
+      <li>Unique columns get a named <code>uq_table_column</code> or <code>UQ_table_column</code> constraint</li>
+      <li>Auto-increment is translated to the correct dialect keyword</li>
+      <li>Identifiers are quoted with the correct character for the target database</li>
+    </ul>
+
+    <h2>When to use this</h2>
+    <p>A visual CREATE TABLE generator is perfect for:</p>
+    <ul>
+      <li><strong>Prototyping</strong> — Quickly spin up tables for a new feature without looking up syntax</li>
+      <li><strong>Learning SQL</strong> — See how column definitions map to real DDL across dialects</li>
+      <li><strong>Code reviews</strong> — Generate the "correct" version of a table to compare against a handwritten migration</li>
+      <li><strong>Cross-database work</strong> — Build a table for PostgreSQL, then switch the dialect and get the MySQL equivalent instantly</li>
+      <li><strong>Teaching</strong> — Show beginners how schema design choices translate to SQL</li>
+    </ul>
+
+    <h2>From generator to diff</h2>
+    <p>The generator creates the first version of your schema. As your application evolves, you will need to modify that schema — add columns, change types, add indexes. That is where SchemaLens comes in.</p>
+
+    <p>Paste your original <code>CREATE TABLE</code> into Schema A, paste your updated version into Schema B, and get an instant visual diff with a generated migration script. The generator creates the table. SchemaLens keeps it in sync.</p>
+
+    <div class="cta-box">
+      <h3>Build your next table</h3>
+      <p>Our free CREATE TABLE Generator supports PostgreSQL, MySQL, SQLite, and SQL Server. No signup required. No SQL memorization required.</p>
+      <a href="../tools/create-table-generator.html" class="btn btn-primary">Generate CREATE TABLE</a>
+    </div>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="convert-json-to-sql-schema-in-seconds.html">Convert JSON to SQL Schema in Seconds</a> · <a href="3-free-tools-for-database-schema-management.html">3 Free Tools for Database Schema Management</a> · <a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>

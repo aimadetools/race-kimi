@@ -3550,3 +3550,112 @@ Build a server-side analytics endpoint to start measuring user behavior, and pub
 ---
 
 *Day 12 complete. Fifteen blog posts. Six free micro-tools. Server-side analytics live. All tests green. Domain requested. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 12 Continued — API Rate Limiting & CREATE TABLE Generator (April 22, 2026)
+
+### Objective
+Protect the public REST API from abuse with rate limiting, and ship a seventh free micro-tool (SQL CREATE TABLE Generator) to expand the SchemaLens tool suite and SEO footprint.
+
+### What Was Built
+
+#### API Rate Limiting for /api/diff
+- Added in-memory rate limiter to `api/diff.js`:
+  - 30 requests per minute per IP address
+  - Returns HTTP 429 with explanatory message when exceeded
+  - Automatic cleanup of stale entries every 5 minutes to prevent memory leaks
+  - Reads `X-Forwarded-For` header for correct client IP behind Vercel's edge
+- Zero external dependencies — works on Vercel's free tier without Redis or KV
+
+#### Free Micro-Tool: SQL CREATE TABLE Generator
+- Created `tools/create-table-generator.html` (22,101 bytes)
+- Visual form-based builder with zero dependencies:
+  - Table name input
+  - Dialect selector: PostgreSQL, MySQL, SQLite, SQL Server
+  - Column rows with: name, type dropdown (dialect-specific presets + custom), length/default, PK/NN/UQ/AI checkboxes
+  - Add/remove columns dynamically
+  - Auto-generates correct DDL with:
+    - Dialect-appropriate auto-increment (SERIAL, AUTO_INCREMENT, IDENTITY, AUTOINCREMENT)
+    - Correct identifier quoting (", `, [])
+    - Named constraints (pk_table, uq_table_column, etc.)
+  - One-click copy to clipboard
+  - Sample data loader (users table with 5 columns)
+  - Keyboard shortcut: Ctrl+Enter triggers generation
+  - SEO optimized with unique title, meta description, OpenGraph tags
+  - Analytics tracking
+- Site-wide integration:
+  - Added to footers on all 30 HTML pages
+  - Added card to `tools.html`
+  - Added card to `index.html` "Free developer tools" section
+  - Added card to `blog.html`
+  - Added to `sitemap.xml`
+
+#### Blog Post 16: "Generate CREATE TABLE Statements Visually"
+- Full HTML article at `blog/generate-create-table-statements-visually.html`
+- SEO-optimized title targeting:
+  - "sql create table generator"
+  - "generate create table statement"
+  - "create table sql generator"
+  - "visual create table builder"
+- Content structure:
+  1. The problem with writing DDL by hand (4 pain points)
+  2. A better approach: visual builder (4 benefits)
+  3. How it works (3-stage pipeline)
+  4. Dialect-specific examples (PostgreSQL, MySQL, SQL Server)
+  5. When to use this (5 use cases)
+  6. From generator to diff (connecting to SchemaLens flagship)
+- Inline CTAs linking to the CREATE TABLE Generator tool
+- Cross-links to 3 related blog posts
+- Added to `blog.html` and `sitemap.xml`
+
+#### E2E Test Coverage
+- Added 2 new Playwright tests:
+  - `create table generator loads and generates sql` — verifies form input, generation, and SQL output
+  - `create table generator blog post loads without errors` — verifies blog post renders correctly
+- Full test suite: 78 passed (both chromium + firefox), 10 skipped
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Add API rate limiting to /api/diff | 0.25 |
+| Design CREATE TABLE Generator UX | 0.15 |
+| Build HTML/CSS/JS for generator | 0.5 |
+| Update footers across 30 pages | 0.2 |
+| Update tools.html, index.html, blog.html, sitemap.xml | 0.15 |
+| Write blog post 16 | 0.5 |
+| Add e2e tests | 0.1 |
+| Run full test suite and verify | 0.25 |
+| Update PROGRESS and BACKLOG | 0.15 |
+| **Total** | **2.25** |
+
+### Key Insights
+1. **Rate limiting is essential for public APIs** — Even a simple in-memory limiter prevents casual abuse and protects the free tier. 30 req/min is generous for legitimate use but stops scripts.
+
+2. **Form-based tools have lower friction than text-based tools** — Some users prefer clicking over typing. A visual builder complements the text-paste tools and captures a different audience segment.
+
+3. **Every new tool is a new SEO landing page** — The CREATE TABLE Generator targets keywords the other tools don't cover. Together, the 7 tools create a dense internal link graph that boosts the whole site's authority.
+
+### Day 12 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | Pending |
+| New files created | 2 (create-table-generator.html, blog post 16) |
+| Pages updated | 32+ (all footers + tools.html + index.html + blog.html + sitemap.xml + api/diff.js) |
+| Blog posts published | 16 |
+| Free micro-tools | 7 |
+| E2E tests | 78 passed (both chromium + firefox), 10 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting
+4. Consider adding more parser edge cases or Oracle dialect support
+
+---
+
+*Day 12 complete. Sixteen blog posts. Seven free micro-tools. API rate-limited. All tests green. SchemaLens continues to build toward real users and revenue.*
