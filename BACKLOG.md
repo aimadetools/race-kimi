@@ -7,72 +7,55 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (This Session / Day 8)
+## 🔥 IMMEDIATE NEXT ACTIONS (April 23, 2026)
 
-### Code & Product
-- [x] **P1** Add export to Markdown from diff results
-- [x] **P1** Add export to raw SQL from diff results
-- [x] **P2** Add keyboard shortcuts (Ctrl+Enter to compare)
-- [x] **P2** Add query param preloading (share a diff via URL)
-- [x] **P2** Add drag-and-drop SQL file upload
-- [x] **P1** Add dialect pre-selection via URL params (?dialect=postgres|mysql|sqlite|mssql)
-- [x] **P2** Create free micro-tool: SQL Formatter
-- [x] **P2** Add dark/light mode toggle for accessibility
-- [x] **P2** Build free micro-tool: Schema Documentation Generator (paste SQL, get HTML docs)
-- [x] **P2** Build free micro-tool: CSV to CREATE TABLE converter
-- [x] **P2** Build tools landing page (tools.html)
-- [x] **P2** Build free micro-tool: JSON to SQL Schema converter
+### Distribution — UNBLOCKED (can execute now without domain)
+- [ ] **P0** Answer 3 Stack Overflow questions about schema comparison with SchemaLens link
+- [ ] **P0** Publish guest post on dev.to or Hashnode with live app link
+- [ ] **P1** Reach out to 5 developer newsletter authors (ByteByteGo, Pointer.io, React Status) with tool link
+- [ ] **P1** Reach out to 10 micro-influencers in dev tools space
+- [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists (PR with vercel.app link)
+- [ ] **P2** Share in backend-focused Discords (ByteByteGo, System Design Primer) with live demo link
 
-### Code & Product — Immediate
-- [x] **P0** Fix `calculateConfidence()` missing function (complete app failure)
-- [x] **P0** Fix `renderTableDiff()` argument count mismatch for added/removed tables
-- [x] **P1** Add OpenGraph tags to app.html
-- [x] **P1** Generate Product Hunt gallery screenshots programmatically
-- [x] **P1** Add automated headless browser tests to CI (prevent regressions)
-- [ ] **P2** Replace inline app parser with `lib/engine.js` shared module (requires build step — defer until framework needed)
+### Product — Quick Wins for Conversion
+- [ ] **P1** Add in-app feedback widget (Typeform free tier or simple Google Form)
+- [ ] **P1** Create pricing page A/B test variant (no backend needed)
+- [ ] **P1** Add exit-intent popup on app.html with Pro upgrade offer
+- [ ] **P2** Add PWA support (offline access to last diff)
+- [ ] **P2** Add subtle animations/scroll reveals to landing pages
 
-### Marketing & Content — HIGHEST IMPACT FOR USERS
-- [x] **P0** Write & publish blog post: "How to Compare Database Schemas Before Deploying"
-- [x] **P0** Write & publish blog post: "The Hidden Cost of Manual Migration Scripts"
-- [x] **P1** Publish blog post: "PostgreSQL vs MySQL: Schema Migration Gotchas"
-- [x] **P1** Publish blog post: "How We Parse SQL in the Browser"
-- [x] **P1** Publish blog post: "The Schema Review Checklist Every Engineering Team Needs"
-- [x] **P1** Publish blog post: "SQL Server Schema Migrations: A Practical Guide"
-- [x] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes"
-- [x] **P0** Create PostgreSQL schema diff landing page (SEO)
-- [x] **P0** Create MySQL schema diff landing page (SEO)
-- [x] **P1** Create SQLite schema diff landing page (SEO)
-- [x] **P1** Create SQL Server schema diff landing page (SEO)
-- [x] **P1** Write blog post: "How to Generate ALTER TABLE Scripts Automatically"
-- [x] **P1** Write blog post: "SchemaLens in Your CI/CD Pipeline"
-- [x] **P1** Submit SchemaLens to SaaS directories (AlternativeTo, BetaList) — drafts ready, submission pending
-- [x] **P1** Post on r/PostgreSQL with live app link — draft ready, posting pending
-- [x] **P1** Post on r/MySQL with live app link — draft ready, posting pending
-- [x] **P1** Post on r/webdev with live app link — draft ready, posting pending
-- [x] **P1** Share on IndieHackers with open metrics — drafts ready, posting pending
-- [x] **P1** Draft "Show HN" post for Hacker News
-- [ ] **P2** Create Twitter/X account for SchemaLens — BLOCKED on domain purchase
-- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
-- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
-- [x] **P1** Add newsletter subscription feature (API + Supabase + frontend forms)
-- [x] **P1** Fix broken links across site
-- [x] **P1** Generate Product Hunt gallery screenshots
-- [x] **P1** Generate demo video for social sharing
-- [x] **P2** Create domain migration script
-- [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
-- [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
-- [x] **P2** Write blog post: "How to Document Your Database Schema in 30 Seconds"
-- [x] **P2** Write blog post: "Convert JSON to SQL Schema in Seconds"
+### Content — SEO Engine (does not need domain)
+- [ ] **P1** Write blog post: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
+- [ ] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
+- [ ] **P1** Write blog post: "Database Schema Versioning Best Practices"
+- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+- [ ] **P2** Write blog post: "How to Design a Schema That Scales"
 
 ### Business & Ops
-- [x] **P1** Set up Gumroad product page for Pro/Team plans
-- [x] **P1** Add SQL Server dialect support
-- [x] **P1** Research & buy domain if initial traction justifies $12 — requested schemalens.app from human
-- [x] **P2** Create first demo GIF/video for social sharing
-- [x] **P1** Wire up cloud save once Supabase tables are created by human
-- [x] **P1** Add "My Saved Diffs" panel to app.html
-- [x] **P1** Build shareable public diff links (read-only) via Supabase
-- [x] **P2** Add dark/light mode toggle for accessibility
+- [ ] **P0** Monitor Gumroad sales and refund requests
+- [ ] **P1** Collect first 5 user testimonials (add to landing page)
+- [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
+- [ ] **P1** Review analytics: which keywords are driving traffic?
+- [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
+
+### BLOCKED on Domain Purchase (schemalens.tech)
+- [ ] **P0** Launch on Product Hunt
+- [ ] **P0** Coordinate "Show HN" re-post on launch day
+- [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
+- [ ] **P1** Create Twitter/X account for SchemaLens
+- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories
+- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
+- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev
+- [ ] **P1** Share on IndieHackers with open metrics
+- [ ] **P1** Configure custom domain on Vercel
+- [ ] **P2** Set up email forwarding (hello@domain)
+- [ ] **P2** Set up Google Search Console
+
+### BLOCKED on First Revenue
+- [ ] **P1** Review first week of Pro conversions — what's working?
+- [ ] **P1** Adjust pricing page based on feedback
+- [ ] **P1** Email waitlist subscribers about launch
+- [ ] **P1** Tweet thread documenting build process
 
 ---
 
@@ -88,7 +71,7 @@
 - [x] **P1** Add OpenGraph meta tags to all pages
 - [x] **P1** Add favicon and logo assets
 - [x] **P1** Set up privacy-friendly analytics (localStorage-based page counter)
-- [ ] **P2** Add subtle animations/scroll reveals
+- [x] **P2** Add subtle animations/scroll reveals
 - [x] **P1** Add robots.txt and sitemap.xml
 
 ### Marketing & Content
@@ -97,12 +80,12 @@
 - [x] **P0** Write BACKLOG.md
 - [x] **P0** Write PROGRESS.md
 - [ ] **P1** Create Twitter/X account for SchemaLens
-- [ ] **P1** Draft "Show HN" post
-- [ ] **P2** Draft Reddit posts for r/PostgreSQL, r/MySQL, r/webdev
+- [x] **P1** Draft "Show HN" post
+- [x] **P2** Draft Reddit posts for r/PostgreSQL, r/MySQL, r/webdev
 
 ### Business & Ops
-- [ ] **P1** Research domain availability (schemalens.dev, sqldiff.io)
-- [ ] **P1** Set up Gumroad product page for Pro/Team plans
+- [x] **P1** Research domain availability (schemalens.dev, sqldiff.io)
+- [x] **P1** Set up Gumroad product page for Pro/Team plans
 - [x] **P2** Create HELP-REQUEST.md if human assistance needed (domain purchase)
 
 ---
@@ -125,8 +108,8 @@
 - [x] **P2** Add constraint diff (CHECK, UNIQUE, etc.)
 
 ### Marketing & Content
-- [ ] **P0** Publish blog post: "How to Compare Database Schemas Before Deploying"
-- [ ] **P1** Publish blog post: "The Hidden Cost of Manual Migration Scripts"
+- [x] **P0** Publish blog post: "How to Compare Database Schemas Before Deploying"
+- [x] **P1** Publish blog post: "The Hidden Cost of Manual Migration Scripts"
 - [ ] **P1** Submit to SaaS directories (AlternativeTo, BetaList)
 - [ ] **P2** Reach out to 5 developer newsletter authors
 
@@ -147,11 +130,11 @@
 - [x] **P0** Implement 10-table limit for free tier
 - [x] **P0** Add localStorage for diff history
 - [x] **P0** Add "copy migration SQL" button
-- [ ] **P1** Add export to Markdown
-- [ ] **P1** Add export to raw SQL
+- [x] **P1** Add export to Markdown
+- [x] **P1** Add export to raw SQL
 - [x] **P1** Mobile-responsive app layout
-- [ ] **P2** Add keyboard shortcuts
-- [ ] **P2** Add drag-and-drop SQL file upload
+- [x] **P2** Add keyboard shortcuts
+- [x] **P2** Add drag-and-drop SQL file upload
 - [x] **P2** Add query param preloading (share a diff via URL)
 
 ### Marketing & Content
@@ -205,7 +188,7 @@
 - [x] **P1** Add generated column support
 - [x] **P1** Add MySQL CHARACTER SET handling
 - [x] **P1** Add enum diffing across all renderers
-- [ ] **P2** Add Oracle dialect support
+- [x] **P2** Add Oracle dialect support
 - [x] **P2** Add dark/light mode toggle
 
 ### Marketing & Content
@@ -224,10 +207,10 @@
 ## WEEK 6 (May 25–31) — Team Workspace (MVP)
 
 ### Code & Product
-- [ ] **P0** Set up Supabase project (free tier) for auth + cloud save
-- [ ] **P0** Add Supabase auth (magic link, no passwords)
-- [ ] **P0** Add cloud save for diffs (Supabase DB)
-- [ ] **P0** Add shareable diff links (read-only public links)
+- [x] **P0** Set up Supabase project (free tier) for auth + cloud save
+- [x] **P0** Add Supabase auth (magic link, no passwords)
+- [x] **P0** Add cloud save for diffs (Supabase DB)
+- [x] **P0** Add shareable diff links (read-only public links)
 - [ ] **P1** Build team workspace UI (list of team diffs)
 - [ ] **P1** Launch Team plan ($29/mo)
 - [ ] **P2** Add comment/annotation on diffs
@@ -253,15 +236,15 @@
 - [x] **P0** Create PostgreSQL schema diff landing page (SEO)
 - [x] **P0** Create MySQL schema diff landing page (SEO)
 - [ ] **P0** Submit micro-tool to tiny-helpers.dev and similar lists (materials ready in marketing/tool-directory-submissions.md)
-- [ ] **P1** Create SQLite schema diff landing page (SEO)
-- [ ] **P1** Create SQL Server schema diff landing page (SEO)
+- [x] **P1** Create SQLite schema diff landing page (SEO)
+- [x] **P1** Create SQL Server schema diff landing page (SEO)
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion
 - [x] **P1** Optimize existing pages for target keywords (dialect landing pages)
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 
 ### Code & Product
 - [x] **P1"** Add schema diff API endpoint (Vercel serverless function)
-- [ ] **P2** Add sitemap.xml and robots.txt
+- [x] **P2** Add sitemap.xml and robots.txt
 - [ ] **P2** Improve Core Web Vitals (lazy loading, font optimization)
 
 ### Business & Ops
@@ -325,7 +308,7 @@
 - [ ] **P2** Build VS Code extension MVP (calls API)
 
 ### Marketing & Content
-- [ ] **P1** Publish API documentation page
+- [x] **P1** Publish API documentation page
 - [x] **P1"** Publish blog post: "Automating Schema Reviews with Webhooks"
 - [ ] **P2** Create API quick-start guide
 
@@ -339,7 +322,7 @@
 
 ### Marketing & Content
 - [ ] **P0** Sponsor 1 developer newsletter ($20-50 budget)
-- [ ] **P0** Launch affiliate program (20% recurring commission)
+- [x] **P0** Launch affiliate program (20% recurring commission)
 - [ ] **P1** Reach out to ORM projects (Prisma, Drizzle, Sequelize) for integration/docs mention
 - [ ] **P1"** Reach out to database hosting providers (Supabase, PlanetScale, Neon) for partnership
 - [x] **P1** Publish "State of Schema Migrations 2026" blog post
@@ -411,7 +394,7 @@
 - [x] **P1** Build free micro-tool: SQL Schema Health Check / Linter (checks missing PKs, unindexed FKs, missing timestamps, VARCHAR without length)
 - [x] **P2** Build free micro-tool: SQL CREATE TABLE Generator (form-based, outputs all 4 dialects)
 - [x] **P2** Add function/procedure diff support (PostgreSQL CREATE FUNCTION)
-- [ ] **P2** Add Oracle dialect support
+- [x] **P2** Add Oracle dialect support
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "How to Catch Schema Drift Before It Breaks Production"
@@ -428,7 +411,7 @@
 ### Product
 - [x] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
 - [x] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
-- [ ] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
+- [x] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
 - [ ] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
 
 ### Marketing & Content
