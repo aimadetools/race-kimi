@@ -9,6 +9,7 @@
   <meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.vercel.app/">
+  <meta property="og:image" content="https://schemalens.vercel.app/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -207,6 +208,18 @@
           <p>Build CREATE TABLE statements visually. Add columns, set types, and choose constraints for any dialect.</p>
           <a href="tools/create-table-generator.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Generate Table</a>
         </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏥</div>
+          <h3>Schema Health Check</h3>
+          <p>Lint your schema for missing primary keys, unindexed foreign keys, and other design issues.</p>
+          <a href="tools/schema-health-check.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Check Health</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>SQL Index Analyzer</h3>
+          <p>Find missing indexes, unindexed foreign keys, and query-specific index gaps. Get instant recommendations.</p>
+          <a href="tools/sql-index-analyzer.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Analyze Indexes</a>
+        </div>
       </div>
     </div>
   </section>
@@ -272,6 +285,58 @@
     </div>
   </section>
 
+  <section class="cta-section" style="padding-top:0;">
+    <div class="container">
+      <h2>Get schema migration tips in your inbox</h2>
+      <p>New features, blog posts, and best practices. No spam. Unsubscribe anytime.</p>
+      <form id="subscribeForm" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+        <input type="email" id="subscribeEmail" placeholder="you@example.com" required style="padding:12px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:16px;min-width:260px;max-width:100%;">
+        <button type="submit" class="btn btn-primary btn-lg" id="subscribeBtn">Subscribe</button>
+      </form>
+      <p id="subscribeMsg" style="margin-top:12px;min-height:24px;color:var(--success);font-weight:500;"></p>
+    </div>
+  </section>
+  <script>
+    (function() {
+      const form = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('subscribeEmail');
+      const btn = document.getElementById('subscribeBtn');
+      const msg = document.getElementById('subscribeMsg');
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+          msg.textContent = 'Please enter a valid email address.';
+          msg.style.color = 'var(--danger)';
+          return;
+        }
+        btn.textContent = 'Subscribing...';
+        btn.disabled = true;
+        try {
+          const res = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source: 'homepage' })
+          });
+          if (res.ok) {
+            msg.textContent = '✓ You\'re subscribed! Check your inbox for a welcome note.';
+            msg.style.color = 'var(--success)';
+            emailInput.value = '';
+          } else {
+            const data = await res.json().catch(() => ({}));
+            msg.textContent = data.error || 'Something went wrong. Please try again.';
+            msg.style.color = 'var(--danger)';
+          }
+        } catch (err) {
+          msg.textContent = 'Network error. Please try again.';
+          msg.style.color = 'var(--danger)';
+        }
+        btn.textContent = 'Subscribe';
+        btn.disabled = false;
+      });
+    })();
+  </script>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -289,6 +354,7 @@
           <a href="about.html">About</a>
           <a href="blog.html">Blog</a>
           <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
           <a href="api.html">API</a>
         </div>
         <div class="footer-col">
@@ -303,6 +369,7 @@
           <a href="tools/csv-to-sql.html">CSV to SQL</a>
           <a href="tools/json-to-sql.html">JSON to SQL</a>
       <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
           <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
         </div>
         <div class="footer-col">

@@ -7,3 +7,6 @@ build/
 .env
 .env.local
 license-keys.txt
+logs/
+test-results/
+

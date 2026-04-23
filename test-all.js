@@ -105,5 +105,71 @@ if (schemaViewA.views && schemaViewA.views.active_users && viewDiff.viewsAdded.l
   console.log('view: FAIL — expected 1 added + 1 modified, got added:', viewDiff.viewsAdded.length, 'modified:', viewDiff.viewsModified.length);
 }
 
-console.log('\n' + ok + '/7 tests passed');
-process.exit(ok === 7 ? 0 : 1);
+// Function parsing and diff test
+const funcSQLA = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE FUNCTION update_updated_at() RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$;
+`;
+
+const funcSQLB = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE FUNCTION update_updated_at() RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$;
+CREATE FUNCTION get_user_count() RETURNS INTEGER LANGUAGE sql AS $$ SELECT COUNT(*) FROM users; $$;
+`;
+
+const funcSQLC = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE FUNCTION update_updated_at() RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$;
+`;
+
+const schemaFuncA = parseSQL(funcSQLA, 'postgres');
+const schemaFuncB = parseSQL(funcSQLB, 'postgres');
+const schemaFuncC = parseSQL(funcSQLC, 'postgres');
+const funcDiff = diffSchemas(schemaFuncA, schemaFuncB);
+const funcModDiff = diffSchemas(schemaFuncA, schemaFuncC);
+
+if (schemaFuncA.functions && schemaFuncA.functions['update_updated_at'] && funcDiff.functionsAdded.length === 1) {
+  console.log('function: OK — 1 function added detected');
+  ok++;
+} else {
+  console.log('function: FAIL — expected 1 function added, got', funcDiff.functionsAdded.length, 'functions parsed:', Object.keys(schemaFuncA.functions || {}));
+}
+
+if (funcModDiff.functionsModified.length === 1) {
+  console.log('function-mod: OK — 1 function modification detected');
+  ok++;
+} else {
+  console.log('function-mod: FAIL — expected 1 function modified, got', funcModDiff.functionsModified.length);
+}
+
+// Procedure parsing test
+const procSQL = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
+CREATE PROCEDURE archive_old_users() LANGUAGE plpgsql AS $$
+BEGIN
+    DELETE FROM users WHERE last_login < NOW() - INTERVAL '1 year';
+END;
+$$;
+`;
+
+const schemaProc = parseSQL(procSQL, 'postgres');
+if (schemaProc.functions && schemaProc.functions['archive_old_users'] && schemaProc.functions['archive_old_users'].isProcedure) {
+  console.log('procedure: OK — 1 procedure parsed');
+  ok++;
+} else {
+  console.log('procedure: FAIL — expected 1 procedure parsed, keys:', Object.keys(schemaProc.functions || {}));
+}
+
+console.log('\n' + ok + '/10 tests passed');
+process.exit(ok === 10 ? 0 : 1);

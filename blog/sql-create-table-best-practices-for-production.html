@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL CREATE TABLE Best Practices for Production Databases | SchemaLens</title>
+<meta name="description" content="11 essential SQL CREATE TABLE best practices for production databases. Learn how to design schemas that scale, stay safe, and perform well from day one.">
+<meta property="og:title" content="SQL CREATE TABLE Best Practices for Production Databases">
+<meta property="og:description" content="11 essential SQL CREATE TABLE best practices for production databases. Design schemas that scale, stay safe, and perform well.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.vercel.app/blog/sql-create-table-best-practices-for-production.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<style>
+.article { max-width: 720px; margin: 0 auto; padding: 2rem 1rem; }
+.article h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.article h2 { font-size: 1.3rem; margin-top: 2.5rem; margin-bottom: 1rem; }
+.article h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article p { line-height: 1.75; margin-bottom: 1rem; color: var(--text); }
+.article ul, .article ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.article li { margin-bottom: 0.5rem; line-height: 1.7; }
+.article code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.article pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1.25rem; }
+.article pre code { background: none; padding: 0; }
+.article .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 2rem 0; }
+.article .cta-box p { margin-bottom: 0.75rem; }
+.article .tag { display: inline-block; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 0.2rem 0.7rem; font-size: 0.8rem; margin-right: 0.5rem; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<article class="article">
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;"><a href="../blog.html" style="color:var(--text-muted);">← Back to Blog</a></p>
+  <h1>SQL CREATE TABLE Best Practices for Production Databases</h1>
+  <p style="color:var(--text-muted);font-size:0.9rem;">April 23, 2026 · 10 min read</p>
+
+  <p>A poorly designed table is a ticking time bomb. It might work fine in development with 100 rows, but in production with 10 million rows, the same schema causes query timeouts, migration failures, and data corruption. The good news: most production schema problems are preventable with a short checklist of CREATE TABLE best practices.</p>
+
+  <p>This post covers 11 rules that every production CREATE TABLE statement should follow. They are dialect-agnostic where possible, with PostgreSQL, MySQL, SQL Server, and SQLite examples where they differ.</p>
+
+  <h2>1. Every table needs a primary key</h2>
+  <p>This sounds obvious, but ORMs and quick prototypes often skip it. A table without a primary key cannot be reliably updated, referenced by foreign keys, or efficiently joined. Some databases (like MySQL's InnoDB) will silently create a hidden 6-byte key for you, which wastes space and makes troubleshooting harder.</p>
+
+  <pre><code>-- PostgreSQL
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  ...
+);
+
+-- MySQL
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ...
+);
+
+-- SQL Server
+CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  ...
+);</code></pre>
+
+  <p><strong>Why it matters:</strong> Primary keys give the database a guaranteed unique row identifier. They are the foundation for relationships, replication, and ORM identity mapping.</p>
+
+  <h2>2. Use the right integer size</h2>
+  <p>Do not default to <code>BIGINT</code> or <code>INT</code> out of habit. Choose the smallest integer type that fits your expected row count:</p>
+
+  <ul>
+    <li><code>SMALLINT</code> (-32,768 to 32,767) — statuses, enums with few values</li>
+    <li><code>INT</code> (-2.1B to 2.1B) — most tables</li>
+    <li><code>BIGINT</code> — only when you genuinely expect >2 billion rows</li>
+  </ul>
+
+  <p>Smaller integers mean smaller indexes, faster joins, and less memory usage. If you are using PostgreSQL, <code>SERIAL</code> is an <code>INT</code>. Use <code>BIGSERIAL</code> only when needed.</p>
+
+  <h2>3. Always specify NOT NULL explicitly</h2>
+  <p>Database defaults vary. In most systems, columns are nullable by default. This means a forgotten <code>NOT NULL</code> constraint creates a landmine: your application assumes a value exists, but the database allows <code>NULL</code>.</p>
+
+  <pre><code>CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  total_cents INT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+  <p>Be explicit about nullability on every column. It documents intent and catches bugs at the database layer.</p>
+
+  <h2>4. Add created_at and updated_at timestamps</h2>
+  <p>Every production table should track when rows were created and modified. These timestamps are invaluable for debugging, auditing, analytics, and soft-delete strategies.</p>
+
+  <pre><code>-- PostgreSQL
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Trigger for updated_at (PostgreSQL)
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER products_updated_at
+BEFORE UPDATE ON products
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();</code></pre>
+
+  <h2>5. Index every foreign key column</h2>
+  <p>Foreign keys enforce referential integrity, but they do not automatically create indexes. Without an index, every JOIN, UPDATE, or DELETE on the parent table triggers a full table scan on the child table.</p>
+
+  <pre><code>CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id)
+);
+
+-- Don't forget this!
+CREATE INDEX idx_orders_user_id ON orders (user_id);</code></pre>
+
+  <p><strong>Pro tip:</strong> Use the <a href="../tools/sql-index-analyzer.html">SQL Index Analyzer</a> to automatically detect unindexed foreign keys in your schema.</p>
+
+  <h2>6. Use CHECK constraints for data integrity</h2>
+  <p><code>CHECK</code> constraints are the cheapest data validation you can add. They run once on INSERT/UPDATE and prevent garbage data from entering your tables.</p>
+
+  <pre><code>CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price_cents INT NOT NULL CHECK (price_cents >= 0),
+  stock INT NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'discontinued', 'draft'))
+);</code></pre>
+
+  <p>CHECK constraints are supported by PostgreSQL, MySQL 8.0.16+, SQL Server, and SQLite. They are faster than application-level validation and survive regardless of which client connects.</p>
+
+  <h2>7. Choose VARCHAR with a length limit</h2>
+  <p>Unbounded text fields are convenient but dangerous. A <code>VARCHAR</code> without a length (or <code>TEXT</code> used for short strings) allows unexpectedly large values that bloat indexes, slow queries, and break UI layouts.</p>
+
+  <pre><code>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100) NOT NULL,
+  bio TEXT  -- OK for genuinely long content
+);</code></pre>
+
+  <p>Set limits based on real requirements: 255 for emails, 100 for display names, 20 for country codes. If a field truly needs unlimited length, <code>TEXT</code> is the right choice.</p>
+
+  <h2>8. Use DECIMAL for money, not FLOAT</h2>
+  <p>Floating-point types (<code>FLOAT</code>, <code>REAL</code>, <code>DOUBLE PRECISION</code>) use binary fractions and cannot represent most decimal values exactly. This causes rounding errors that accumulate over time.</p>
+
+  <pre><code>-- Wrong: 0.1 + 0.2 != 0.3 with FLOAT
+CREATE TABLE invoices (
+  id SERIAL PRIMARY KEY,
+  total FLOAT  -- Dangerous
+);
+
+-- Right: exact decimal arithmetic
+CREATE TABLE invoices (
+  id SERIAL PRIMARY KEY,
+  total DECIMAL(12, 2) NOT NULL  -- 999,999,999.99 max
+);</code></pre>
+
+  <p>Always use <code>DECIMAL</code> (or <code>NUMERIC</code>) for money, prices, and any value where precision matters.</p>
+
+  <h2>9. Normalize to third normal form, then denormalize selectively</h2>
+  <p>Start with properly normalized tables:</p>
+  <ul>
+    <li>Each table has one purpose</li>
+    <li>Each column depends on the primary key</li>
+    <li>No repeating groups or multi-valued attributes</li>
+  </ul>
+
+  <p>Denormalize only when you have measured a performance problem and the JOIN cost is proven to be the bottleneck. Premature denormalization creates update anomalies and data inconsistency.</p>
+
+  <h2>10. Plan for soft deletes</h2>
+  <p>Hard-deleting rows destroys audit trails and makes data recovery impossible. A soft-delete pattern adds a <code>deleted_at</code> timestamp and filters it in queries.</p>
+
+  <pre><code>CREATE TABLE customers (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  deleted_at TIMESTAMP,
+  CHECK (deleted_at IS NULL OR deleted_at >= created_at)
+);
+
+-- Query active rows only
+SELECT * FROM customers WHERE deleted_at IS NULL;</code></pre>
+
+  <p>Adding <code>deleted_at</code> later requires a migration that touches every query in your application. It is far easier to include it from the start.</p>
+
+  <h2>11. Document your schema in code</h2>
+  <p>Use <code>COMMENT ON</code> (PostgreSQL) or inline comments to explain non-obvious design decisions. Future maintainers — including yourself in six months — will thank you.</p>
+
+  <pre><code>-- PostgreSQL
+COMMENT ON TABLE users IS 'Core user accounts. Email is unique and verified before insertion.';
+COMMENT ON COLUMN users.role IS 'One of: admin, editor, viewer. Controlled by invite flow.';</code></pre>
+
+  <p>Even better, generate living documentation from your CREATE TABLE statements with the <a href="../tools/schema-doc-generator.html">Schema Documentation Generator</a>.</p>
+
+  <h2>Bonus: Validate before you deploy</h2>
+  <p>Run your schema through a linter before every deployment. The <a href="../tools/schema-health-check.html">Schema Health Check</a> catches missing primary keys, unindexed foreign keys, missing timestamps, and other common mistakes in seconds.</p>
+
+  <div class="cta-box">
+    <p style="font-weight:700;margin-bottom:0.5rem;">Ready to audit your schema?</p>
+    <p>Paste your CREATE TABLE statements into the <a href="../tools/schema-health-check.html">Schema Health Check</a> or <a href="../tools/sql-index-analyzer.html">SQL Index Analyzer</a> and get instant feedback on production readiness.</p>
+  </div>
+
+  <h2>Related reading</h2>
+  <ul>
+    <li><a href="../blog/how-to-document-your-database-schema-in-30-seconds.html">How to Document Your Database Schema in 30 Seconds</a></li>
+    <li><a href="../blog/complete-guide-to-database-indexing-for-schema-changes.html">The Complete Guide to Database Indexing for Schema Changes</a></li>
+    <li><a href="../blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (and How to Catch Them)</a></li>
+    <li><a href="../blog/schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+  </ul>
+
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-top:3rem;">© 2026 SchemaLens · <a href="../index.html">SchemaLens</a> is a browser-based SQL schema diff tool built in the $100 AI Startup Race.</p>
+</article>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../api.html">API</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+</body>
+</html>

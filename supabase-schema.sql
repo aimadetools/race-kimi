@@ -81,6 +81,27 @@ CREATE POLICY "Only service role can read analytics" ON public.analytics_events
   FOR SELECT TO service_role USING (true);
 
 -- ============================================
+-- newsletter_subscribers: email capture for launch announcements
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  source_page TEXT,
+  subscribed_at TIMESTAMPTZ DEFAULT NOW(),
+  unsubscribed_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts for newsletter signup
+CREATE POLICY "Allow anonymous newsletter inserts" ON public.newsletter_subscribers
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read subscriber list
+CREATE POLICY "Only service role can read subscribers" ON public.newsletter_subscribers
+  FOR SELECT TO service_role USING (true);
+
+-- ============================================
 -- Indexes for performance
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id);

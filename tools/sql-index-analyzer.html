@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Index Analyzer — Free Database Index Recommendations | SchemaLens</title>
+<meta name="description" content="Analyze your SQL schema and queries to find missing indexes, unindexed foreign keys, and duplicate indexes. Get instant CREATE INDEX recommendations. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL Index Analyzer — Free Database Index Recommendations">
+<meta property="og:description" content="Paste your CREATE TABLE statements and SQL queries to get instant index recommendations. Supports PostgreSQL, MySQL, SQLite, and SQL Server.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.vercel.app/tools/sql-index-analyzer.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<style>
+.health-score { font-size: 3rem; font-weight: 800; text-align: center; margin: 1rem 0; }
+.health-score.good { color: var(--success); }
+.health-score.warn { color: var(--warning); }
+.health-score.bad { color: var(--danger); }
+.score-bar { height: 12px; border-radius: 6px; background: var(--surface); overflow: hidden; margin-bottom: 1.5rem; }
+.score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+.issue-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; }
+.issue-card.critical { border-left: 4px solid var(--danger); }
+.issue-card.warning { border-left: 4px solid var(--warning); }
+.issue-card.info { border-left: 4px solid var(--primary); }
+.issue-severity { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+.issue-severity.critical { color: var(--danger); }
+.issue-severity.warning { color: var(--warning); }
+.issue-severity.info { color: var(--primary); }
+.issue-message { font-size: 0.95rem; margin-bottom: 0.25rem; }
+.issue-fix { font-size: 0.85rem; color: var(--text-muted); background: var(--code-bg); padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; font-family: monospace; }
+.issue-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+.editor-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.3rem; display: block; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<div style="max-width:1100px;margin:0 auto;padding:2rem 1rem;">
+  <h1 style="font-size:1.8rem;margin-bottom:0.5rem;">SQL Index Analyzer</h1>
+  <p style="color:var(--text-muted);margin-bottom:1.5rem;">Paste your <code>CREATE TABLE</code> and <code>CREATE INDEX</code> statements, plus an optional query, to get instant index recommendations. Detects missing foreign key indexes, duplicate indexes, and query-slowing column gaps.</p>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;">
+    <select id="dialect" class="dialect-select" style="padding:0.5rem 0.75rem;border-radius:6px;background:var(--surface);color:var(--text);border:1px solid var(--border);">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+    </select>
+    <button class="btn btn-primary" id="analyzeBtn">Analyze Indexes</button>
+    <button class="btn btn-secondary" id="clearBtn">Clear</button>
+    <button class="btn btn-secondary" id="sampleBtn">Load Sample</button>
+    <button class="btn btn-secondary" id="copyAllBtn" style="display:none;">Copy All Indexes</button>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <label class="editor-label">Schema (CREATE TABLE + CREATE INDEX)</label>
+      <textarea id="schemaInput" placeholder="-- Paste your CREATE TABLE and CREATE INDEX statements here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  team_id INTEGER REFERENCES teams(id)
+);" style="width:100%;min-height:220px;padding:1rem;border-radius:8px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);font-family:monospace;font-size:0.9rem;resize:vertical;"></textarea>
+    </div>
+    <div>
+      <label class="editor-label">Query (optional — for query-specific recommendations)</label>
+      <textarea id="queryInput" placeholder="-- Optional: paste a SELECT / UPDATE / DELETE query
+SELECT * FROM users
+WHERE team_id = 5
+  AND email LIKE '%@example.com'
+ORDER BY created_at;" style="width:100%;min-height:220px;padding:1rem;border-radius:8px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);font-family:monospace;font-size:0.9rem;resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div id="results" style="margin-top:1.5rem;display:none;"></div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../api.html">API</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+// ─── Parser (subset from app.html) ───
+function stripComments(sql) {
+  return sql.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ');
+}
+
+function tokenize(sql) {
+  const tokens = [];
+  let i = 0;
+  while (i < sql.length) {
+    const c = sql[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if (c === "'" || c === '"' || c === '`') {
+      const quote = c;
+      let s = quote; i++;
+      while (i < sql.length && sql[i] !== quote) { if (sql[i] === '\\') { s += sql[i]; i++; } s += sql[i]; i++; }
+      s += quote; i++;
+      tokens.push(s);
+    } else if (c === '[') {
+      let s = c; i++;
+      while (i < sql.length && sql[i] !== ']') { s += sql[i]; i++; }
+      s += ']'; i++;
+      tokens.push(s);
+    } else if (/[0-9]/.test(c)) {
+      let s = '';
+      while (i < sql.length && /[0-9.]/.test(sql[i])) { s += sql[i]; i++; }
+      tokens.push(s);
+    } else if (/[a-zA-Z_]/.test(c)) {
+      let s = '';
+      while (i < sql.length && /[a-zA-Z0-9_$]/.test(sql[i])) { s += sql[i]; i++; }
+      tokens.push(s);
+    } else {
+      let s = c; i++;
+      if (i < sql.length && '=:<>!|&'.includes(c) && '=:<>!|&'.includes(sql[i])) { s += sql[i]; i++; }
+      tokens.push(s);
+    }
+  }
+  return tokens;
+}
+
+function splitStatements(sql) {
+  const statements = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const c = sql[i];
+    if (inString) {
+      current += c;
+      if (c === stringChar && sql[i-1] !== '\\') inString = false;
+    } else if (c === "'" || c === '"' || c === '`') {
+      inString = true; stringChar = c; current += c;
+    } else if (c === ';') {
+      current += c; statements.push(current.trim()); current = '';
+    } else {
+      current += c;
+    }
+  }
+  if (current.trim()) statements.push(current.trim());
+  return statements;
+}
+
+function normalizeName(name, dialect) {
+  if (!name) return '';
+  let n = name;
+  if ((n[0] === '"' && n[n.length-1] === '"') || (n[0] === '`' && n[n.length-1] === '`') || (n[0] === '[' && n[n.length-1] === ']')) {
+    n = n.slice(1, -1);
+  }
+  if (dialect === 'postgres' || dialect === 'sqlite') return n.toLowerCase();
+  if (dialect === 'mysql') return n.toLowerCase();
+  return n;
+}
+
+function parseColumn(tokens, startIdx, dialect) {
+  let i = startIdx;
+  const name = tokens[i++];
+  let type = '';
+  while (i < tokens.length && !['NOT','NULL','DEFAULT','PRIMARY','UNIQUE','REFERENCES','CHECK','COLUMN','CONSTRAINT','FOREIGN','KEY',',',')'].includes(tokens[i].toUpperCase())) {
+    type += (type ? ' ' : '') + tokens[i]; i++;
+  }
+  const col = { name: normalizeName(name, dialect), type: type.toUpperCase(), nullable: true, default: null, primaryKey: false, unique: false, autoIncrement: false, foreignKey: null };
+  while (i < tokens.length && tokens[i] !== ',') {
+    const tok = tokens[i].toUpperCase();
+    if (tok === 'NOT' && tokens[i+1]?.toUpperCase() === 'NULL') { col.nullable = false; i += 2; }
+    else if (tok === 'NULL') { col.nullable = true; i++; }
+    else if (tok === 'DEFAULT') { i++; let def = ''; while (i < tokens.length && !['NOT','NULL','PRIMARY','UNIQUE','REFERENCES','CHECK',',',')'].includes(tokens[i].toUpperCase())) { def += (def ? ' ' : '') + tokens[i]; i++; } col.default = def; }
+    else if (tok === 'PRIMARY' && tokens[i+1]?.toUpperCase() === 'KEY') { col.primaryKey = true; i += 2; }
+    else if (tok === 'UNIQUE') { col.unique = true; i++; }
+    else if (tok === 'AUTO_INCREMENT' || tok === 'SERIAL' || (tok === 'IDENTITY' && dialect === 'mssql')) { col.autoIncrement = true; i++; }
+    else if (tok === 'REFERENCES') {
+      i++;
+      const refTable = normalizeName(tokens[i++] || '', dialect);
+      let refCols = [];
+      if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') refCols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+      col.foreignKey = { table: refTable, columns: refCols };
+    }
+    else { i++; }
+  }
+  return { column: col, nextIndex: i };
+}
+
+function parseCreateTable(stmt, dialect) {
+  const tokens = tokenize(stripComments(stmt));
+  let i = 0;
+  while (i < tokens.length && tokens[i].toUpperCase() !== 'TABLE') i++;
+  i++;
+  if (i >= tokens.length) return null;
+  const tableName = normalizeName(tokens[i], dialect);
+  i++;
+  while (i < tokens.length && tokens[i] !== '(') i++;
+  if (i >= tokens.length) return null;
+  i++;
+  const columns = [];
+  const constraints = [];
+  while (i < tokens.length && tokens[i] !== ')') {
+    if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+      i++;
+      let cname = tokens[i] || ''; i++;
+      const ctype = (tokens[i] || '').toUpperCase();
+      if (ctype === 'PRIMARY' && tokens[i+1]?.toUpperCase() === 'KEY') {
+        i += 2;
+        const cols = [];
+        if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+        constraints.push({ type: 'PRIMARY KEY', name: cname, columns: cols });
+      } else if (ctype === 'UNIQUE') {
+        i++;
+        const cols = [];
+        if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+        constraints.push({ type: 'UNIQUE', name: cname, columns: cols });
+      } else if (ctype === 'FOREIGN' && tokens[i+1]?.toUpperCase() === 'KEY') {
+        i += 2;
+        const cols = [];
+        if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+        let refTable = '', refCols = [];
+        if (tokens[i]?.toUpperCase() === 'REFERENCES') {
+          i++;
+          refTable = normalizeName(tokens[i] || '', dialect); i++;
+          if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') refCols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+        }
+        constraints.push({ type: 'FOREIGN KEY', name: cname, columns: cols, refTable, refColumns: refCols });
+      } else {
+        while (i < tokens.length && tokens[i] !== ',') i++;
+      }
+    } else if (tokens[i].toUpperCase() === 'PRIMARY' && tokens[i+1]?.toUpperCase() === 'KEY') {
+      i += 2;
+      const cols = [];
+      if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+      constraints.push({ type: 'PRIMARY KEY', columns: cols });
+    } else if (tokens[i].toUpperCase() === 'UNIQUE') {
+      i++;
+      const cols = [];
+      if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+      constraints.push({ type: 'UNIQUE', columns: cols });
+    } else if (tokens[i].toUpperCase() === 'FOREIGN' && tokens[i+1]?.toUpperCase() === 'KEY') {
+      i += 2;
+      const cols = [];
+      if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+      let refTable = '', refCols = [];
+      if (tokens[i]?.toUpperCase() === 'REFERENCES') {
+        i++;
+        refTable = normalizeName(tokens[i] || '', dialect); i++;
+        if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') refCols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+      }
+      constraints.push({ type: 'FOREIGN KEY', columns: cols, refTable, refColumns: refCols });
+    } else if (tokens[i] === ',') {
+      i++;
+    } else {
+      const res = parseColumn(tokens, i, dialect);
+      if (res.column) { columns.push(res.column); i = res.nextIndex; }
+      else { i++; }
+    }
+  }
+  return { name: tableName, columns, constraints };
+}
+
+function parseCreateIndex(stmt, dialect) {
+  const tokens = tokenize(stripComments(stmt));
+  let i = 0;
+  let unique = false;
+  let name = '';
+  while (i < tokens.length && tokens[i].toUpperCase() !== 'INDEX') {
+    if (tokens[i].toUpperCase() === 'UNIQUE') unique = true;
+    i++;
+  }
+  i++;
+  if (i < tokens.length && tokens[i].toUpperCase() !== 'ON') { name = normalizeName(tokens[i], dialect); i++; }
+  while (i < tokens.length && tokens[i].toUpperCase() !== 'ON') i++;
+  i++;
+  const tableName = normalizeName(tokens[i] || '', dialect); i++;
+  const cols = [];
+  if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') cols.push(normalizeName(tokens[i], dialect)); i++; } i++; }
+  return { name, table: tableName, columns: cols, unique };
+}
+
+function parseSQL(sql, dialect) {
+  const schema = { tables: [], indexes: [], errors: [] };
+  const stmts = splitStatements(stripComments(sql));
+  for (const stmt of stmts) {
+    if (!stmt.trim()) continue;
+    const t = stmt.toUpperCase();
+    if (t.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) schema.tables.push(table);
+      else schema.errors.push(stmt);
+    } else if (t.includes('CREATE INDEX') || t.includes('CREATE UNIQUE INDEX')) {
+      const idx = parseCreateIndex(stmt, dialect);
+      if (idx) schema.indexes.push(idx);
+    }
+  }
+  for (const idx of schema.indexes) {
+    const tbl = schema.tables.find(t => t.name === idx.table);
+    if (tbl) tbl.indexes = (tbl.indexes || []).concat([idx]);
+  }
+  return schema;
+}
+
+// ─── Query Analyzer ───
+function extractQueryColumns(querySql, schema, dialect) {
+  const result = { where: [], join: [], order: [], tables: [] };
+  if (!querySql.trim()) return result;
+  const tokens = tokenize(stripComments(querySql));
+  const aliases = {};
+
+  // Extract FROM / JOIN tables
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i].toUpperCase();
+    if ((tok === 'FROM' || tok === 'JOIN') && i + 1 < tokens.length) {
+      const tableName = normalizeName(tokens[i+1], dialect);
+      const knownTable = schema.tables.find(t => t.name === tableName);
+      if (knownTable) {
+        result.tables.push(tableName);
+        let alias = tableName;
+        if (i + 2 < tokens.length && tokens[i+2].toUpperCase() === 'AS' && i + 3 < tokens.length) {
+          alias = normalizeName(tokens[i+3], dialect);
+          aliases[alias] = tableName;
+          i += 3;
+        } else if (i + 2 < tokens.length && !['ON','WHERE','LEFT','RIGHT','INNER','OUTER','JOIN','GROUP','ORDER','LIMIT','UNION',',',';'].includes(tokens[i+2].toUpperCase())) {
+          alias = normalizeName(tokens[i+2], dialect);
+          aliases[alias] = tableName;
+          i += 2;
+        }
+      }
+    }
+  }
+
+  // Helper: resolve column reference to table.column
+  function addCol(targetArr, raw) {
+    if (raw.includes('.')) {
+      const parts = raw.split('.');
+      const alias = normalizeName(parts[0], dialect);
+      const col = normalizeName(parts[1], dialect);
+      const tableName = aliases[alias] || alias;
+      const known = schema.tables.find(t => t.name === tableName);
+      if (known && known.columns.some(c => c.name === col)) {
+        targetArr.push({ table: tableName, column: col });
+      }
+    } else {
+      const col = normalizeName(raw, dialect);
+      // Try to match against queried tables first
+      for (const t of result.tables) {
+        const known = schema.tables.find(tbl => tbl.name === t);
+        if (known && known.columns.some(c => c.name === col)) {
+          targetArr.push({ table: t, column: col });
+          return;
+        }
+      }
+      // Fallback: any table with this column
+      for (const t of schema.tables) {
+        if (t.columns.some(c => c.name === col)) {
+          targetArr.push({ table: t.name, column: col });
+          return;
+        }
+      }
+    }
+  }
+
+  // WHERE columns
+  let inWhere = false;
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i].toUpperCase();
+    if (tok === 'WHERE') { inWhere = true; continue; }
+    if (['GROUP','ORDER','LIMIT','UNION','HAVING'].includes(tok)) { inWhere = false; continue; }
+    if (inWhere) {
+      // Look for pattern: identifier [= < > LIKE IN] or identifier BETWEEN
+      const next = (tokens[i+1] || '').toUpperCase();
+      const next2 = (tokens[i+2] || '').toUpperCase();
+      if (next && (['=','<','>','<=','>=','!=','<>','LIKE'].includes(next) || next2 === 'LIKE' || next === 'IN' || next === 'BETWEEN')) {
+        addCol(result.where, tokens[i]);
+      }
+    }
+  }
+
+  // JOIN ON columns
+  let inOn = false;
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i].toUpperCase();
+    if (tok === 'ON') { inOn = true; continue; }
+    if (['WHERE','GROUP','ORDER','LEFT','RIGHT','INNER','OUTER','JOIN'].includes(tok)) { inOn = false; continue; }
+    if (inOn) {
+      const next = (tokens[i+1] || '').toUpperCase();
+      if (next === '=') {
+        addCol(result.join, tokens[i]);
+      }
+    }
+  }
+
+  // ORDER BY columns
+  let inOrder = false;
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i].toUpperCase();
+    if (tok === 'ORDER') { inOrder = true; continue; }
+    if (tok === 'BY' && inOrder) { continue; }
+    if (['LIMIT','UNION','OFFSET'].includes(tok)) { inOrder = false; continue; }
+    if (inOrder && tokens[i] !== ',' && tokens[i].toUpperCase() !== 'ASC' && tokens[i].toUpperCase() !== 'DESC') {
+      addCol(result.order, tokens[i]);
+    }
+  }
+
+  return result;
+}
+
+// ─── Index Analysis Engine ───
+function analyzeIndexes(schema, queryInfo, dialect) {
+  const issues = [];
+  const suggestedIndexes = [];
+
+  function suggest(table, columns, reason, severity) {
+    const cols = Array.isArray(columns) ? columns : [columns];
+    const idxName = `idx_${table}_${cols.join('_')}`;
+    let sql = '';
+    if (dialect === 'postgres') sql = `CREATE INDEX ${idxName} ON ${table} (${cols.join(', ')});`;
+    else if (dialect === 'mysql') sql = `CREATE INDEX ${idxName} ON ${table} (${cols.join(', ')});`;
+    else if (dialect === 'sqlite') sql = `CREATE INDEX ${idxName} ON ${table} (${cols.join(', ')});`;
+    else if (dialect === 'mssql') sql = `CREATE INDEX ${idxName} ON ${table} (${cols.join(', ')});`;
+    issues.push({ severity, message: reason, table, columns: cols, fix: sql });
+    suggestedIndexes.push(sql);
+  }
+
+  function hasIndex(tableName, colNames) {
+    const tbl = schema.tables.find(t => t.name === tableName);
+    if (!tbl) return false;
+    const allIndexes = tbl.indexes || [];
+    // Also consider PK and UNIQUE constraints as indexed
+    for (const c of tbl.constraints) {
+      if (c.type === 'PRIMARY KEY' || c.type === 'UNIQUE') {
+        allIndexes.push({ columns: c.columns, unique: true });
+      }
+    }
+    // Check if any index covers these columns as prefix
+    const needed = colNames.join(',');
+    return allIndexes.some(idx => {
+      const avail = idx.columns.join(',');
+      return avail === needed || avail.startsWith(needed + ',');
+    });
+  }
+
+  for (const tbl of schema.tables) {
+    const pkCols = [];
+    for (const c of tbl.constraints) {
+      if (c.type === 'PRIMARY KEY') pkCols.push(...c.columns);
+    }
+    for (const col of tbl.columns) {
+      if (col.primaryKey) pkCols.push(col.name);
+    }
+
+    // Missing PK
+    if (pkCols.length === 0) {
+      issues.push({ severity: 'critical', message: `Table "${tbl.name}" has no PRIMARY KEY.`, table: tbl.name, columns: [], fix: 'Add a PRIMARY KEY column.' });
+    }
+
+    // FK columns without indexes
+    const fkCols = new Set();
+    for (const c of tbl.constraints) {
+      if (c.type === 'FOREIGN KEY') {
+        for (const col of c.columns) fkCols.add(col);
+      }
+    }
+    for (const col of tbl.columns) {
+      if (col.foreignKey) fkCols.add(col.name);
+    }
+    for (const colName of fkCols) {
+      if (!hasIndex(tbl.name, [colName])) {
+        suggest(tbl.name, [colName], `Foreign key column "${colName}" on "${tbl.name}" has no supporting index.`, 'critical');
+      }
+    }
+
+    // Duplicate indexes
+    const idxSignatures = [];
+    for (const idx of (tbl.indexes || [])) {
+      const sig = idx.columns.join(',');
+      const existing = idxSignatures.find(s => s.sig === sig);
+      if (existing) {
+        issues.push({ severity: 'warning', message: `Duplicate index on "${tbl.name}" (${sig}). Consider dropping one.`, table: tbl.name, columns: idx.columns, fix: `DROP INDEX ${idx.name || existing.name} ON ${tbl.name};` });
+      } else {
+        idxSignatures.push({ sig, name: idx.name || `idx_${tbl.name}_${sig.replace(/,/g,'_')}` });
+      }
+    }
+
+    // Redundant indexes (A,B) makes (A) redundant
+    const allIdxs = (tbl.indexes || []).map(i => i.columns);
+    for (const c of tbl.constraints) {
+      if (c.type === 'PRIMARY KEY' || c.type === 'UNIQUE') allIdxs.push(c.columns);
+    }
+    for (let i = 0; i < allIdxs.length; i++) {
+      for (let j = 0; j < allIdxs.length; j++) {
+        if (i === j) continue;
+        const a = allIdxs[i].join(',');
+        const b = allIdxs[j].join(',');
+        if (b.startsWith(a + ',') && (tbl.indexes || [])[j]) {
+          issues.push({ severity: 'info', message: `Index on "${tbl.name}" (${a}) is redundant because (${b}) covers it.`, table: tbl.name, columns: allIdxs[i], fix: `Consider dropping the narrower index to save space.` });
+        }
+      }
+    }
+  }
+
+  // Query-based recommendations
+  for (const colRef of queryInfo.where) {
+    if (!hasIndex(colRef.table, [colRef.column])) {
+      suggest(colRef.table, [colRef.column], `Query filters on "${colRef.column}" without an index. Adding one can speed up WHERE lookups.`, 'warning');
+    }
+  }
+  for (const colRef of queryInfo.join) {
+    if (!hasIndex(colRef.table, [colRef.column])) {
+      suggest(colRef.table, [colRef.column], `Query joins on "${colRef.column}" without an index. Foreign key indexes dramatically improve JOIN performance.`, 'warning');
+    }
+  }
+  for (const colRef of queryInfo.order) {
+    if (!hasIndex(colRef.table, [colRef.column])) {
+      suggest(colRef.table, [colRef.column], `Query sorts on "${colRef.column}" without an index. An index avoids expensive sorting.`, 'info');
+    }
+  }
+
+  return { issues, suggestedIndexes };
+}
+
+function computeScore(issues) {
+  const critical = issues.filter(i => i.severity === 'critical').length;
+  const warning = issues.filter(i => i.severity === 'warning').length;
+  const info = issues.filter(i => i.severity === 'info').length;
+  let score = 100 - critical * 15 - warning * 7 - info * 2;
+  return Math.max(0, Math.min(100, score));
+}
+
+// ─── UI ───
+const SAMPLES = {
+  schema: {
+    postgres: `CREATE TABLE teams (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  role VARCHAR(20) DEFAULT 'user',
+  team_id INTEGER REFERENCES teams(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,
+    mysql: `CREATE TABLE teams (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  role VARCHAR(20) DEFAULT 'user',
+  team_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (team_id) REFERENCES teams(id)
+);`,
+    sqlite: `CREATE TABLE teams (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  name TEXT,
+  role TEXT DEFAULT 'user',
+  team_id INTEGER REFERENCES teams(id),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);`,
+    mssql: `CREATE TABLE teams (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  email NVARCHAR(255) NOT NULL,
+  name NVARCHAR(100),
+  role NVARCHAR(20) DEFAULT 'user',
+  team_id INT,
+  created_at DATETIME DEFAULT GETDATE(),
+  CONSTRAINT fk_users_team FOREIGN KEY (team_id) REFERENCES teams(id)
+);`
+  },
+  query: `SELECT u.id, u.email, u.name
+FROM users u
+JOIN teams t ON u.team_id = t.id
+WHERE u.role = 'admin'
+  AND u.created_at > '2026-01-01'
+ORDER BY u.created_at;`
+};
+
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  const dialect = document.getElementById('dialect').value;
+  document.getElementById('schemaInput').value = SAMPLES.schema[dialect] || SAMPLES.schema.postgres;
+  document.getElementById('queryInput').value = SAMPLES.query;
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('schemaInput').value = '';
+  document.getElementById('queryInput').value = '';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('copyAllBtn').style.display = 'none';
+});
+
+document.getElementById('analyzeBtn').addEventListener('click', () => {
+  const schemaSql = document.getElementById('schemaInput').value;
+  const querySql = document.getElementById('queryInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const schema = parseSQL(schemaSql, dialect);
+  const queryInfo = extractQueryColumns(querySql, schema, dialect);
+  const { issues, suggestedIndexes } = analyzeIndexes(schema, queryInfo, dialect);
+  const score = computeScore(issues);
+
+  let scoreClass = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
+  let scoreLabel = score >= 80 ? 'Well Indexed' : score >= 50 ? 'Needs Work' : 'Critical Gaps';
+
+  let html = '';
+  html += `<div class="health-score ${scoreClass}">${score}<span style="font-size:1rem;font-weight:500;color:var(--text-muted);">/100</span></div>`;
+  html += `<div class="score-bar"><div class="score-bar-fill" style="width:${score}%;background:${score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)'};"></div></div>`;
+  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem;">${scoreLabel} — ${issues.length} issue${issues.length !== 1 ? 's' : ''} found across ${schema.tables.length} table${schema.tables.length !== 1 ? 's' : ''}</p>`;
+
+  if (schema.errors.length) {
+    html += `<div class="issue-card critical"><div class="issue-severity critical">Parse Error</div><div class="issue-message">${schema.errors.length} CREATE TABLE statement(s) could not be parsed.</div></div>`;
+  }
+
+  const criticals = issues.filter(i => i.severity === 'critical');
+  const warnings = issues.filter(i => i.severity === 'warning');
+  const infos = issues.filter(i => i.severity === 'info');
+
+  for (const issue of criticals) html += renderIssue(issue);
+  for (const issue of warnings) html += renderIssue(issue);
+  for (const issue of infos) html += renderIssue(issue);
+
+  if (issues.length === 0 && schema.tables.length > 0) {
+    html += `<div class="empty-state"><p>🎉 No index issues found. Your schema is well indexed!</p></div>`;
+  } else if (schema.tables.length === 0) {
+    html += `<div class="empty-state"><p>Paste some CREATE TABLE statements to get started.</p></div>`;
+  }
+
+  const results = document.getElementById('results');
+  results.innerHTML = html;
+  results.style.display = 'block';
+
+  const copyBtn = document.getElementById('copyAllBtn');
+  if (suggestedIndexes.length > 0) {
+    copyBtn.style.display = 'inline-block';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(suggestedIndexes.join('\n')).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy All Indexes', 2000);
+      });
+    };
+  } else {
+    copyBtn.style.display = 'none';
+  }
+});
+
+function renderIssue(issue) {
+  return `<div class="issue-card ${issue.severity}">
+    <div class="issue-severity ${issue.severity}">${issue.severity}</div>
+    <div class="issue-message">${escapeHtml(issue.message)}</div>
+    ${issue.fix ? `<div class="issue-fix">${escapeHtml(issue.fix)}</div>` : ''}
+    ${issue.table ? `<div class="issue-meta">Table: ${escapeHtml(issue.table)}${issue.columns && issue.columns.length ? ' · Columns: ' + escapeHtml(issue.columns.join(', ')) : ''}</div>` : ''}
+  </div>`;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    document.getElementById('analyzeBtn').click();
+  }
+});
+</script>
+</body>
+</html>

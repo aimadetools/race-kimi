@@ -341,6 +341,50 @@ function parseCreateEnum(stmt, dialect) {
   };
 }
 
+function parseCreateFunction(stmt, dialect) {
+  const upper = stmt.toUpperCase();
+  if (!upper.includes('CREATE FUNCTION') && !upper.includes('CREATE OR REPLACE FUNCTION') && !upper.includes('CREATE PROCEDURE') && !upper.includes('CREATE OR REPLACE PROCEDURE')) return null;
+
+  const normalized = stmt.replace(/\s+/g, ' ').trim();
+  const nameMatch = normalized.match(/(?:FUNCTION|PROCEDURE)\s+([\w".]+)/i);
+  if (!nameMatch) return null;
+  const name = nameMatch[1].replace(/["]/g, '');
+
+  const funcIdx = normalized.toUpperCase().indexOf('FUNCTION') !== -1 ? normalized.toUpperCase().indexOf('FUNCTION') : normalized.toUpperCase().indexOf('PROCEDURE');
+  const afterFunc = normalized.slice(funcIdx);
+  const openIdx = afterFunc.indexOf('(');
+
+  let args = '';
+  let key = name;
+  if (openIdx !== -1) {
+    let depth = 1;
+    let closeIdx = -1;
+    for (let i = openIdx + 1; i < afterFunc.length; i++) {
+      if (afterFunc[i] === '(') depth++;
+      else if (afterFunc[i] === ')') {
+        depth--;
+        if (depth === 0) {
+          closeIdx = i;
+          break;
+        }
+      }
+    }
+    args = closeIdx > -1 ? afterFunc.slice(openIdx + 1, closeIdx).trim() : '';
+    key = args ? `${name}(${args})` : name;
+  }
+
+  const afterArgs = openIdx !== -1 ? afterFunc.slice(afterFunc.indexOf(')', openIdx) + 1).trim() : '';
+  const returnsMatch = afterArgs.match(/\bRETURNS\s+(\S+(?:\s+(?!LANGUAGE\b|AS\b|IMMUTABLE\b|STABLE\b|VOLATILE\b|SECURITY\b|SET\b|CALLED\b|RETURNS\b|STRICT\b|PARALLEL\b|COST\b|ROWS\b|WINDOW\b|LEAKPROOF\b|TRANSFORM\b|SUPPORT\b|BEGIN\b|\$\w*\$)[\S]+)*)/i);
+  const returns = returnsMatch ? returnsMatch[1].trim() : '';
+
+  const langMatch = afterArgs.match(/\bLANGUAGE\s+(\w+)/i);
+  const language = langMatch ? langMatch[1] : '';
+
+  const isProcedure = upper.includes('PROCEDURE');
+
+  return { name, args, key, returns, language, isProcedure, raw: stmt.trim() };
+}
+
 function parseCreateView(stmt, dialect) {
   const normalized = stmt.replace(/\s+/g, ' ').trim();
   const match = normalized.match(/CREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMP\s+|TEMPORARY\s+)?VIEW\s+([\w"`\[\]]+)(?:\s*\([^)]+\))?\s+AS\s+(.+)/i);
@@ -473,6 +517,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE VIEW') || upper.includes('CREATE OR REPLACE VIEW')) {
       const vw = parseCreateView(stmt, dialect);
       if (vw) schema.views[vw.name] = vw;
+    } else if (upper.includes('CREATE FUNCTION') || upper.includes('CREATE OR REPLACE FUNCTION') || upper.includes('CREATE PROCEDURE') || upper.includes('CREATE OR REPLACE PROCEDURE')) {
+      const fn = parseCreateFunction(stmt, dialect);
+      if (fn) schema.functions[fn.key] = fn;
     }
   }
 
@@ -502,6 +549,9 @@ function diffSchemas(oldSchema, newSchema) {
     viewsAdded: [],
     viewsRemoved: [],
     viewsModified: [],
+    functionsAdded: [],
+    functionsRemoved: [],
+    functionsModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -574,6 +624,22 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const name of oldViewNames) {
     if (!newViewNames.has(name)) diff.viewsRemoved.push(oldViews[name]);
+  }
+
+  // Function diff
+  const oldFunctions = oldSchema.functions || {};
+  const newFunctions = newSchema.functions || {};
+  const oldFunctionKeys = new Set(Object.keys(oldFunctions));
+  const newFunctionKeys = new Set(Object.keys(newFunctions));
+
+  for (const key of newFunctionKeys) {
+    if (!oldFunctionKeys.has(key)) diff.functionsAdded.push(newFunctions[key]);
+    else if (oldFunctions[key].raw !== newFunctions[key].raw) {
+      diff.functionsModified.push({ oldFunction: oldFunctions[key], newFunction: newFunctions[key] });
+    }
+  }
+  for (const key of oldFunctionKeys) {
+    if (!newFunctionKeys.has(key)) diff.functionsRemoved.push(oldFunctions[key]);
   }
 
   return diff;
@@ -816,7 +882,7 @@ function main() {
     console.log(output);
   }
 
-  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0 || diff.triggersAdded.length > 0 || diff.triggersRemoved.length > 0 || diff.triggersModified.length > 0 || diff.viewsAdded.length > 0 || diff.viewsRemoved.length > 0 || diff.viewsModified.length > 0;
+  const hasDiff = diff.tablesAdded.length > 0 || diff.tablesRemoved.length > 0 || diff.tablesModified.length > 0 || diff.enumsAdded.length > 0 || diff.enumsRemoved.length > 0 || diff.triggersAdded.length > 0 || diff.triggersRemoved.length > 0 || diff.triggersModified.length > 0 || diff.viewsAdded.length > 0 || diff.viewsRemoved.length > 0 || diff.viewsModified.length > 0 || diff.functionsAdded.length > 0 || diff.functionsRemoved.length > 0 || diff.functionsModified.length > 0;
   if (failOnBreaking && breakingChanges.length > 0) {
     process.exit(3);
   }
@@ -1005,6 +1071,35 @@ function generateMarkdown(diff, dialect) {
       md += `### ${vm.newView.name}\n\n`;
       md += `**Old query:**\n\`\`\`sql\n${vm.oldView.query}\n\`\`\`\n\n`;
       md += `**New query:**\n\`\`\`sql\n${vm.newView.query}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.functionsAdded && diff.functionsAdded.length) {
+    md += `## Functions Added\n\n`;
+    for (const fn of diff.functionsAdded) {
+      md += `### ${fn.name}${fn.args ? '(' + fn.args + ')' : ''}\n\n`;
+      if (fn.returns) md += `- **Returns:** ${fn.returns}\n`;
+      if (fn.language) md += `- **Language:** ${fn.language}\n`;
+      md += `\`\`\`sql\n${fn.raw}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.functionsRemoved && diff.functionsRemoved.length) {
+    md += `## Functions Removed\n\n`;
+    for (const fn of diff.functionsRemoved) {
+      md += `### ${fn.name}${fn.args ? '(' + fn.args + ')' : ''}\n\n`;
+      if (fn.returns) md += `- **Returns:** ${fn.returns}\n`;
+      if (fn.language) md += `- **Language:** ${fn.language}\n`;
+      md += `\`\`\`sql\n${fn.raw}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.functionsModified && diff.functionsModified.length) {
+    md += `## Functions Modified\n\n`;
+    for (const fm of diff.functionsModified) {
+      md += `### ${fm.newFunction.name}${fm.newFunction.args ? '(' + fm.newFunction.args + ')' : ''}\n\n`;
+      md += `**Old:**\n\`\`\`sql\n${fm.oldFunction.raw}\n\`\`\`\n\n`;
+      md += `**New:**\n\`\`\`sql\n${fm.newFunction.raw}\n\`\`\`\n\n`;
     }
   }
 

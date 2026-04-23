@@ -721,6 +721,7 @@ CREATE TABLE users (
           <a href="about.html">About</a>
           <a href="blog.html">Blog</a>
           <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
           <a href="api.html">API</a>
         </div>
         <div class="footer-col">
@@ -735,6 +736,7 @@ CREATE TABLE users (
           <a href="tools/csv-to-sql.html">CSV to SQL</a>
           <a href="tools/json-to-sql.html">JSON to SQL</a>
       <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
           <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
         </div>
         <div class="footer-col">
@@ -844,7 +846,7 @@ function tokenize(text) {
 function parseSQL(sql, dialect) {
   sql = stripComments(sql);
   const statements = splitStatements(sql);
-  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], views: {} };
+  const schema = { tables: {}, indexes: [], enums: {}, triggers: [], views: {}, functions: {} };
 
   for (const stmt of statements) {
     const upper = stmt.toUpperCase();
@@ -863,6 +865,9 @@ function parseSQL(sql, dialect) {
     } else if (upper.includes('CREATE VIEW') || upper.includes('CREATE OR REPLACE VIEW')) {
       const vw = parseCreateView(stmt, dialect);
       if (vw) schema.views[vw.name] = vw;
+    } else if (upper.includes('CREATE FUNCTION') || upper.includes('CREATE OR REPLACE FUNCTION') || upper.includes('CREATE PROCEDURE') || upper.includes('CREATE OR REPLACE PROCEDURE')) {
+      const fn = parseCreateFunction(stmt, dialect);
+      if (fn) schema.functions[fn.key] = fn;
     }
   }
 
@@ -1288,6 +1293,51 @@ function parseCreateTrigger(stmt, dialect) {
   };
 }
 
+function parseCreateFunction(stmt, dialect) {
+  const upper = stmt.toUpperCase();
+  if (!upper.includes('CREATE FUNCTION') && !upper.includes('CREATE OR REPLACE FUNCTION') && !upper.includes('CREATE PROCEDURE') && !upper.includes('CREATE OR REPLACE PROCEDURE')) return null;
+
+  const normalized = stmt.replace(/\s+/g, ' ').trim();
+  const nameMatch = normalized.match(/(?:FUNCTION|PROCEDURE)\s+([\w".]+)/i);
+  if (!nameMatch) return null;
+  const name = nameMatch[1].replace(/["]/g, '');
+
+  // Extract args between first ( and matching )
+  const funcIdx = normalized.toUpperCase().indexOf('FUNCTION') !== -1 ? normalized.toUpperCase().indexOf('FUNCTION') : normalized.toUpperCase().indexOf('PROCEDURE');
+  const afterFunc = normalized.slice(funcIdx);
+  const openIdx = afterFunc.indexOf('(');
+
+  let args = '';
+  let key = name;
+  if (openIdx !== -1) {
+    let depth = 1;
+    let closeIdx = -1;
+    for (let i = openIdx + 1; i < afterFunc.length; i++) {
+      if (afterFunc[i] === '(') depth++;
+      else if (afterFunc[i] === ')') {
+        depth--;
+        if (depth === 0) {
+          closeIdx = i;
+          break;
+        }
+      }
+    }
+    args = closeIdx > -1 ? afterFunc.slice(openIdx + 1, closeIdx).trim() : '';
+    key = args ? `${name}(${args})` : name;
+  }
+
+  const afterArgs = openIdx !== -1 ? afterFunc.slice(afterFunc.indexOf(')', openIdx) + 1).trim() : '';
+  const returnsMatch = afterArgs.match(/\bRETURNS\s+(\S+(?:\s+(?!LANGUAGE\b|AS\b|IMMUTABLE\b|STABLE\b|VOLATILE\b|SECURITY\b|SET\b|CALLED\b|RETURNS\b|STRICT\b|PARALLEL\b|COST\b|ROWS\b|WINDOW\b|LEAKPROOF\b|TRANSFORM\b|SUPPORT\b|BEGIN\b|\$\w*\$)[\S]+)*)/i);
+  const returns = returnsMatch ? returnsMatch[1].trim() : '';
+
+  const langMatch = afterArgs.match(/\bLANGUAGE\s+(\w+)/i);
+  const language = langMatch ? langMatch[1] : '';
+
+  const isProcedure = upper.includes('PROCEDURE');
+
+  return { name, args, key, returns, language, isProcedure, raw: stmt.trim() };
+}
+
 // -----------------------------
 // Diff Engine
 // -----------------------------
@@ -1304,6 +1354,9 @@ function diffSchemas(oldSchema, newSchema) {
     viewsAdded: [],
     viewsRemoved: [],
     viewsModified: [],
+    functionsAdded: [],
+    functionsRemoved: [],
+    functionsModified: [],
     totalTablesOld: Object.keys(oldSchema.tables).length,
     totalTablesNew: Object.keys(newSchema.tables).length
   };
@@ -1381,6 +1434,22 @@ function diffSchemas(oldSchema, newSchema) {
   }
   for (const name of oldViewNames) {
     if (!newViewNames.has(name)) diff.viewsRemoved.push(oldViews[name]);
+  }
+
+  // Function diff
+  const oldFunctions = oldSchema.functions || {};
+  const newFunctions = newSchema.functions || {};
+  const oldFunctionKeys = new Set(Object.keys(oldFunctions));
+  const newFunctionKeys = new Set(Object.keys(newFunctions));
+
+  for (const key of newFunctionKeys) {
+    if (!oldFunctionKeys.has(key)) diff.functionsAdded.push(newFunctions[key]);
+    else if (oldFunctions[key].raw !== newFunctions[key].raw) {
+      diff.functionsModified.push({ oldFunction: oldFunctions[key], newFunction: newFunctions[key] });
+    }
+  }
+  for (const key of oldFunctionKeys) {
+    if (!newFunctionKeys.has(key)) diff.functionsRemoved.push(oldFunctions[key]);
   }
 
   return diff;
@@ -1875,6 +1944,31 @@ function generateMigration(diff, dialect) {
     if (diff.viewsAdded.length) lines.push('');
   }
 
+  // Function migrations
+  if (diff.functionsRemoved && diff.functionsRemoved.length) {
+    for (const fn of diff.functionsRemoved) {
+      const dropType = fn.isProcedure ? 'PROCEDURE' : 'FUNCTION';
+      lines.push(`DROP ${dropType} IF EXISTS ${quoteId(fn.name, dialect)}${fn.args ? '(' + fn.args + ')' : ''};`);
+    }
+    if (diff.functionsRemoved.length) lines.push('');
+  }
+
+  if (diff.functionsModified && diff.functionsModified.length) {
+    for (const fm of diff.functionsModified) {
+      const dropType = fm.oldFunction.isProcedure ? 'PROCEDURE' : 'FUNCTION';
+      lines.push(`DROP ${dropType} IF EXISTS ${quoteId(fm.oldFunction.name, dialect)}${fm.oldFunction.args ? '(' + fm.oldFunction.args + ')' : ''};`);
+      lines.push(fm.newFunction.raw + ';');
+    }
+    if (diff.functionsModified.length) lines.push('');
+  }
+
+  if (diff.functionsAdded && diff.functionsAdded.length) {
+    for (const fn of diff.functionsAdded) {
+      lines.push(fn.raw + ';');
+    }
+    if (diff.functionsAdded.length) lines.push('');
+  }
+
   return lines.join('\n');
 }
 
@@ -1944,6 +2038,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
     ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
     ${(diff.viewsAdded.length || diff.viewsRemoved.length || diff.viewsModified.length) ? `<div class="summary-pill modified"><span class="num">👁${diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length}</span> views</div>` : ''}
+    ${(diff.functionsAdded.length || diff.functionsRemoved.length || diff.functionsModified.length) ? `<div class="summary-pill modified"><span class="num">ƒ${diff.functionsAdded.length + diff.functionsRemoved.length + diff.functionsModified.length}</span> functions</div>` : ''}
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
@@ -1983,7 +2078,7 @@ function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
-  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length && !diff.viewsAdded.length && !diff.viewsRemoved.length && !diff.viewsModified.length) {
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length && !diff.viewsAdded.length && !diff.viewsRemoved.length && !diff.viewsModified.length && !diff.functionsAdded.length && !diff.functionsRemoved.length && !diff.functionsModified.length) {
     html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
     container.innerHTML = html;
     return;
@@ -2127,6 +2222,61 @@ function renderVisualDiff(diff, breakingChanges) {
             <table><tbody>
               <tr class="row-removed"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vm.oldView.query)}</pre></td></tr>
               <tr class="row-added"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(vm.newView.query)}</pre></td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Function diffs
+  if (diff.functionsAdded.length) {
+    for (const fn of diff.functionsAdded) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(fn.name)} <span class="badge badge-added">${fn.isProcedure ? 'Procedure' : 'Function'} Added</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              ${fn.args ? `<tr class="row-added"><td colspan="4"><strong>Args:</strong> ${esc(fn.args)}</td></tr>` : ''}
+              ${fn.returns ? `<tr class="row-added"><td colspan="4"><strong>Returns:</strong> ${esc(fn.returns)}</td></tr>` : ''}
+              ${fn.language ? `<tr class="row-added"><td colspan="4"><strong>Language:</strong> ${esc(fn.language)}</td></tr>` : ''}
+              <tr class="row-added"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(fn.raw)}</pre></td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.functionsRemoved.length) {
+    for (const fn of diff.functionsRemoved) {
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(fn.name)} <span class="badge badge-removed">${fn.isProcedure ? 'Procedure' : 'Function'} Removed</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              ${fn.args ? `<tr class="row-removed"><td colspan="4"><strong>Args:</strong> ${esc(fn.args)}</td></tr>` : ''}
+              ${fn.returns ? `<tr class="row-removed"><td colspan="4"><strong>Returns:</strong> ${esc(fn.returns)}</td></tr>` : ''}
+              ${fn.language ? `<tr class="row-removed"><td colspan="4"><strong>Language:</strong> ${esc(fn.language)}</td></tr>` : ''}
+              <tr class="row-removed"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(fn.raw)}</pre></td></tr>
+            </tbody></table>
+          </div>
+        </div>`;
+    }
+  }
+  if (diff.functionsModified.length) {
+    for (const fm of diff.functionsModified) {
+      const fn = fm.newFunction;
+      html += `
+        <div class="diff-table">
+          <div class="diff-table-header">
+            <h4>${esc(fn.name)} <span class="badge badge-modified">${fn.isProcedure ? 'Procedure' : 'Function'} Modified</span></h4>
+          </div>
+          <div class="diff-table-body">
+            <table><tbody>
+              <tr class="row-removed"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(fm.oldFunction.raw)}</pre></td></tr>
+              <tr class="row-added"><td colspan="4"><pre style="margin:0;white-space:pre-wrap;font-size:0.85rem;">${esc(fn.raw)}</pre></td></tr>
             </tbody></table>
           </div>
         </div>`;
@@ -2446,6 +2596,35 @@ function generateMarkdown(diff, migrationSQL, dialect) {
     }
   }
 
+  if (diff.functionsAdded && diff.functionsAdded.length) {
+    md += `## Functions Added\n\n`;
+    for (const fn of diff.functionsAdded) {
+      md += `### ${fn.name}${fn.args ? '(' + fn.args + ')' : ''}\n\n`;
+      if (fn.returns) md += `- **Returns:** ${fn.returns}\n`;
+      if (fn.language) md += `- **Language:** ${fn.language}\n`;
+      md += `\`\`\`sql\n${fn.raw}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.functionsRemoved && diff.functionsRemoved.length) {
+    md += `## Functions Removed\n\n`;
+    for (const fn of diff.functionsRemoved) {
+      md += `### ${fn.name}${fn.args ? '(' + fn.args + ')' : ''}\n\n`;
+      if (fn.returns) md += `- **Returns:** ${fn.returns}\n`;
+      if (fn.language) md += `- **Language:** ${fn.language}\n`;
+      md += `\`\`\`sql\n${fn.raw}\n\`\`\`\n\n`;
+    }
+  }
+
+  if (diff.functionsModified && diff.functionsModified.length) {
+    md += `## Functions Modified\n\n`;
+    for (const fm of diff.functionsModified) {
+      md += `### ${fm.newFunction.name}${fm.newFunction.args ? '(' + fm.newFunction.args + ')' : ''}\n\n`;
+      md += `**Old:**\n\`\`\`sql\n${fm.oldFunction.raw}\n\`\`\`\n\n`;
+      md += `**New:**\n\`\`\`sql\n${fm.newFunction.raw}\n\`\`\`\n\n`;
+    }
+  }
+
   if (migrationSQL && migrationSQL.trim()) {
     md += `## Migration SQL\n\n`;
     md += `\`\`\`sql\n`;
@@ -2672,6 +2851,33 @@ function renderPDF() {
       html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vm.oldView.query)}</pre>`;
       html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">New query</p>`;
       html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(vm.newView.query)}</pre>`;
+    }
+  }
+
+  if (diff.functionsAdded && diff.functionsAdded.length) {
+    html += `<h3>Functions Added</h3>`;
+    for (const fn of diff.functionsAdded) {
+      html += `<h4 style="margin-bottom:4px;">${esc(fn.name)}${fn.args ? '(' + esc(fn.args) + ')' : ''}</h4>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(fn.raw)}</pre>`;
+    }
+  }
+
+  if (diff.functionsRemoved && diff.functionsRemoved.length) {
+    html += `<h3>Functions Removed</h3>`;
+    for (const fn of diff.functionsRemoved) {
+      html += `<h4 style="margin-bottom:4px;">${esc(fn.name)}${fn.args ? '(' + esc(fn.args) + ')' : ''}</h4>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(fn.raw)}</pre>`;
+    }
+  }
+
+  if (diff.functionsModified && diff.functionsModified.length) {
+    html += `<h3>Functions Modified</h3>`;
+    for (const fm of diff.functionsModified) {
+      html += `<h4 style="margin-bottom:4px;">${esc(fm.newFunction.name)}${fm.newFunction.args ? '(' + esc(fm.newFunction.args) + ')' : ''}</h4>`;
+      html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">Old</p>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(fm.oldFunction.raw)}</pre>`;
+      html += `<p style="font-size:0.85rem;margin:8px 0 4px;font-weight:600;">New</p>`;
+      html += `<pre style="background:#f8f8f8;border:1px solid #ccc;padding:12px;font-size:0.8rem;overflow-x:auto;">${esc(fm.newFunction.raw)}</pre>`;
     }
   }
 
@@ -2987,11 +3193,6 @@ function calculateConfidence(sql, dialect, schema) {
     warnings.push('Generated/virtual columns detected (parsing may be incomplete)');
   }
 
-  // CREATE FUNCTION / PROCEDURE
-  if (/\bCREATE\s+(OR\s+REPLACE\s+)?FUNCTION\b/i.test(sql) || /\bCREATE\s+PROCEDURE\b/i.test(sql)) {
-    warnings.push('Functions/procedures are not parsed (ignored during diff)');
-  }
-
   // Partitioning
   if (/\bPARTITION\s+BY\b/i.test(sql)) {
     warnings.push('Partitioning clauses detected (ignored during diff)');
@@ -3014,7 +3215,6 @@ function calculateConfidence(sql, dialect, schema) {
   let score = 'high';
   const hasMajor = warnings.some(w =>
     w.includes('could not be fully parsed') ||
-    w.includes('Functions/procedures') ||
     w.includes('Partitioning')
   );
   if (hasMajor) {

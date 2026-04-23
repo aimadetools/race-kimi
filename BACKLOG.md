@@ -54,6 +54,11 @@
 - [ ] **P2** Create Twitter/X account for SchemaLens — BLOCKED on domain purchase
 - [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
 - [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories — BLOCKED on domain purchase
+- [x] **P1** Add newsletter subscription feature (API + Supabase + frontend forms)
+- [x] **P1** Fix broken links across site
+- [x] **P1** Generate Product Hunt gallery screenshots
+- [x] **P1** Generate demo video for social sharing
+- [x] **P2** Create domain migration script
 - [x] **P1** Write blog post: "How to Format SQL for Readable Code Reviews"
 - [x] **P2** Write blog post: "3 Free Tools for Database Schema Management"
 - [x] **P2** Write blog post: "How to Document Your Database Schema in 30 Seconds"
@@ -63,7 +68,7 @@
 - [x] **P1** Set up Gumroad product page for Pro/Team plans
 - [x] **P1** Add SQL Server dialect support
 - [x] **P1** Research & buy domain if initial traction justifies $12 — requested schemalens.app from human
-- [ ] **P2** Create first demo GIF/video for social sharing
+- [x] **P2** Create first demo GIF/video for social sharing
 - [x] **P1** Wire up cloud save once Supabase tables are created by human
 - [x] **P1** Add "My Saved Diffs" panel to app.html
 - [x] **P1** Build shareable public diff links (read-only) via Supabase
@@ -421,18 +426,20 @@
 ## 🔥 NEW UNBLOCKED TASKS (April 22 continued)
 
 ### Product
-- [ ] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
+- [x] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
 - [ ] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
 - [ ] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
 - [ ] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
 
 ### Marketing & Content
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
-- [ ] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
+- [x] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
 - [ ] **P2** Write blog post: "How to Design a Schema That Scales"
 - [x] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
 
 ### Business & Ops
-- [ ] **P1** Wire analytics endpoint to write events into Supabase analytics_events table
+- [x] **P1** Wire analytics endpoint to write events into Supabase analytics_events table
+- [x] **P1** Add newsletter subscription endpoint and Supabase table
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
-- [ ] **P2** Create affiliate/referral program landing page
+- [ ] **P2** Set up automated newsletter email delivery (e.g., Buttondown free tier or Supabase edge function)
+- [x] **P2** Create affiliate/referral program landing page

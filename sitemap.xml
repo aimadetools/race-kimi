@@ -25,6 +25,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://schemalens.vercel.app/affiliate.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://schemalens.vercel.app/schemalens-vs-redgate-vs-prisma.html</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
@@ -230,6 +236,16 @@
   <url>
     <loc>https://schemalens.vercel.app/blog/generate-create-table-statements-visually.html</loc>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://schemalens.vercel.app/blog/sql-create-table-best-practices-for-production.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://schemalens.vercel.app/tools/sql-index-analyzer.html</loc>
+    <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
 
