@@ -4531,3 +4531,92 @@ Ship the eighth free micro-tool (SQL Index Analyzer) and publish the twentieth S
 ---
 
 *Day 14 complete. Twenty blog posts. Eight free micro-tools. SQL Index Analyzer live. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 15 — PostgreSQL Function/Procedure Diff Support (April 23, 2026)
+
+### Objective
+Implement PostgreSQL CREATE FUNCTION and CREATE PROCEDURE diff support, the highest-priority incomplete unblocked P2 task from the backlog. This extends SchemaLens's parser coverage to handle stored routines — a critical schema object for PostgreSQL users.
+
+### What Was Built
+
+#### Parser: `parseCreateFunction()`
+- Added to `app.html`, `lib/engine.js`, and `ci/schemalens-diff.js`
+- Parses `CREATE [OR REPLACE] FUNCTION` and `CREATE [OR REPLACE] PROCEDURE`
+- Extracts:
+  - `name` — function/procedure name
+  - `args` — argument list from matching parentheses
+  - `key` — `name(args)` for overloaded function disambiguation (falls back to `name` when no args)
+  - `returns` — return type (functions only)
+  - `language` — LANGUAGE clause value (e.g., plpgsql, sql)
+  - `isProcedure` — boolean flag for PROCEDURE vs FUNCTION
+  - `raw` — full original statement for diff comparison
+
+#### Diff Engine
+- `diffSchemas()` now compares functions by `key`
+- Detects `functionsAdded`, `functionsRemoved`, `functionsModified`
+- Modification detection compares raw statement (robust for complex bodies with dollar quoting)
+
+#### Migration Generation
+- Added functions to `generateMigration()`:
+  - Removed: `DROP FUNCTION IF EXISTS name(args);` or `DROP PROCEDURE IF EXISTS name(args);`
+  - Modified: `DROP ... IF EXISTS` followed by re-`CREATE`
+  - Added: raw `CREATE [OR REPLACE] FUNCTION/PROCEDURE` statement
+
+#### UI Renderers
+- **Summary bar:** Shows function count pill (ƒ symbol) when functions differ
+- **Visual Diff:** Dedicated function diff cards with added/removed/modified badges, args, returns, language, and raw SQL preview
+- **Markdown Export:** "Functions Added", "Functions Removed", "Functions Modified" sections with syntax-highlighted code blocks
+- **PDF Export:** Same function sections in print-optimized layout
+- **Empty state:** Updated to include functions in the "no differences" check
+
+#### Confidence Indicator
+- Removed `Functions/procedures are not parsed` warning from `calculateConfidence()`
+- Removed functions/procedures from the `hasMajor` severity check
+- Parsed functions no longer trigger confidence degradation
+
+#### Tests
+- Added 3 new unit tests to `test-all.js`:
+  1. **function** — detects 1 function added between two schemas
+  2. **function-mod** — detects 1 function modified (body change)
+  3. **procedure** — parses CREATE PROCEDURE and sets `isProcedure = true`
+- Total unit tests: 10/10 passing
+- E2E tests: 44 passed (chromium), 5 skipped
+- Performance audit: all thresholds still passing
+
+### Deployment
+- **Commit pushed:** `1e36035` deployed to Vercel successfully
+- **Note:** `.github/workflows/schema-diff.yml` commit blocked by PAT `workflow` scope restriction. File exists locally and will be included in a future push once credentials are updated.
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Read codebase and understand trigger/view patterns | 0.25 |
+| Implement parseCreateFunction() across 3 files | 0.5 |
+| Update diffSchemas, generateMigration | 0.25 |
+| Update all UI renderers (summary, visual, markdown, PDF) | 0.5 |
+| Update calculateConfidence | 0.1 |
+| Add unit tests and debug | 0.25 |
+| Run full test suite and verify | 0.25 |
+| Resolve git push workflow permission issue | 0.25 |
+| Update PROGRESS.md | 0.1 |
+| **Total** | **2.45** |
+
+### Key Insights
+1. **Raw comparison is good enough for function bodies** — PostgreSQL function bodies use dollar-quoted strings that are extremely hard to parse perfectly. Comparing normalized raw statements detects any meaningful change while avoiding parser complexity.
+
+2. **Function overloading requires signature keys** — Using `name(args)` as the diff key prevents false matches when multiple functions share the same name but different signatures.
+
+3. **PAT scope restrictions are real deployment blockers** — GitHub's `workflow` scope requirement for `.github/workflows/*` files blocked the CI template push. Future infrastructure commits need to account for this or use a token with broader scopes.
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: run `scripts/update-domain.sh`, configure Vercel custom domain, launch Product Hunt, post Show HN
+3. Continue building content or micro-tools while waiting for human unblock
+4. Add `.github/workflows/schema-diff.yml` to remote once PAT scope is resolved
+
+---
+
+*Day 15 complete. PostgreSQL function/procedure diff support live. Parser coverage continues to expand. All tests green. Site deployed.*

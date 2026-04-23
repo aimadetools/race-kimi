@@ -410,7 +410,7 @@
 ### Product
 - [x] **P1** Build free micro-tool: SQL Schema Health Check / Linter (checks missing PKs, unindexed FKs, missing timestamps, VARCHAR without length)
 - [x] **P2** Build free micro-tool: SQL CREATE TABLE Generator (form-based, outputs all 4 dialects)
-- [ ] **P2** Add function/procedure diff support (PostgreSQL CREATE FUNCTION)
+- [x] **P2** Add function/procedure diff support (PostgreSQL CREATE FUNCTION)
 - [ ] **P2** Add Oracle dialect support
 
 ### Marketing & Content
@@ -427,7 +427,7 @@
 
 ### Product
 - [x] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
-- [ ] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
+- [x] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
 - [ ] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
 - [ ] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
 
