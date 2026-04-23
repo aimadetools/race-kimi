@@ -41,12 +41,14 @@ const pg = `CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NUL
 const my = `CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL);`;
 const sq = `CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);`;
 const ms = `CREATE TABLE users (id INT IDENTITY(1,1) PRIMARY KEY, name NVARCHAR(100) NOT NULL);`;
+const ora = `CREATE TABLE users (id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name VARCHAR2(100) NOT NULL);`;
 
 let ok = 0;
 if (testDialect('postgres', pg)) ok++;
 if (testDialect('mysql', my)) ok++;
 if (testDialect('sqlite', sq)) ok++;
 if (testDialect('mssql', ms)) ok++;
+if (testDialect('oracle', ora)) ok++;
 
 // Trigger parsing test
 const triggerSQL = `CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);
@@ -171,5 +173,5 @@ if (schemaProc.functions && schemaProc.functions['archive_old_users'] && schemaP
   console.log('procedure: FAIL — expected 1 procedure parsed, keys:', Object.keys(schemaProc.functions || {}));
 }
 
-console.log('\n' + ok + '/10 tests passed');
-process.exit(ok === 10 ? 0 : 1);
+console.log('\n' + ok + '/11 tests passed');
+process.exit(ok === 11 ? 0 : 1);

@@ -137,7 +137,7 @@ function parseColumn(tokens, dialect) {
 
   let i = 1;
   const typeTokens = [];
-  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED'];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
   while (i < tokens.length) {
     const t = tokens[i].toUpperCase();
     if (t === 'CHARACTER' && tokens[i+1] && tokens[i+1].toUpperCase() === 'SET') {
@@ -174,7 +174,7 @@ function parseColumn(tokens, dialect) {
     } else if (t === 'DEFAULT') {
       i++;
       const defaultTokens = [];
-      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL'];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
       while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
         defaultTokens.push(tokens[i]);
         i++;
@@ -780,7 +780,7 @@ function printUsage() {
   console.log(`Usage: node schemalens-diff.js <schemaA.sql> <schemaB.sql> [options]
 
 Options:
-  --dialect=postgres|mysql|sqlite|mssql   SQL dialect (default: postgres)
+  --dialect=postgres|mysql|sqlite|mssql|oracle   SQL dialect (default: postgres)
   --format=json|markdown                  Output format (default: json)
   --output=<file>                         Write output to file (default: stdout)
   --fail-on-breaking                      Exit with code 3 if breaking changes detected
@@ -831,7 +831,7 @@ function main() {
     process.exit(2);
   }
 
-  if (!['postgres', 'mysql', 'sqlite', 'mssql'].includes(dialect)) {
+  if (!['postgres', 'mysql', 'sqlite', 'mssql', 'oracle'].includes(dialect)) {
     console.error(`Error: Unsupported dialect "${dialect}".`);
     process.exit(2);
   }
@@ -891,7 +891,7 @@ function main() {
 
 function generateMarkdown(diff, dialect) {
   const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const dialectName = dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : dialect === 'mssql' ? 'SQL Server' : 'SQLite';
+  const dialectName = dialect === 'postgres' ? 'PostgreSQL' : dialect === 'mysql' ? 'MySQL / MariaDB' : dialect === 'mssql' ? 'SQL Server' : dialect === 'oracle' ? 'Oracle' : 'SQLite';
   let md = `# Schema Diff Report\n\n`;
   md += `**Generated:** ${now}  \n`;
   md += `**Dialect:** ${dialectName}  \n\n`;

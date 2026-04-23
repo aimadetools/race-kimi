@@ -208,6 +208,7 @@
         <option value="mysql">MySQL / MariaDB</option>
         <option value="sqlite">SQLite</option>
         <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
       </select>
       <label for="tableName">Table</label>
       <input id="tableName" type="text" value="api_data" style="width:140px;">
@@ -370,6 +371,7 @@ Or an array of objects:
   function quoteId(name, dialect) {
     if (dialect === 'mssql') return '[' + name + ']';
     if (dialect === 'mysql') return '`' + name + '`';
+    if (dialect === 'oracle') return '"' + name + '"';
     return '"' + name + '"';
   }
 
@@ -394,6 +396,11 @@ Or an array of objects:
         INTEGER: 'INT', REAL: 'DECIMAL(18,4)', TEXT: 'NVARCHAR(500)',
         BOOLEAN: 'BIT', DATE: 'DATE', TIMESTAMP: 'DATETIME2',
         ARRAY: 'NVARCHAR(MAX)', OBJECT: 'NVARCHAR(MAX)', NULL: 'NVARCHAR(500)'
+      },
+      oracle: {
+        INTEGER: 'NUMBER', REAL: 'NUMBER', TEXT: 'VARCHAR2(500)',
+        BOOLEAN: 'NUMBER(1)', DATE: 'DATE', TIMESTAMP: 'TIMESTAMP',
+        ARRAY: 'CLOB', OBJECT: 'CLOB', NULL: 'VARCHAR2(500)'
       }
     };
     return (map[dialect] || map.postgres)[inferred] || 'TEXT';
@@ -418,6 +425,7 @@ Or an array of objects:
       if (dialect === 'postgres') colDefs.push(`  ${quoteId('id', dialect)} SERIAL PRIMARY KEY`);
       else if (dialect === 'mysql') colDefs.push(`  ${quoteId('id', dialect)} INT AUTO_INCREMENT PRIMARY KEY`);
       else if (dialect === 'mssql') colDefs.push(`  ${quoteId('id', dialect)} INT IDENTITY(1,1) PRIMARY KEY`);
+      else if (dialect === 'oracle') colDefs.push(`  ${quoteId('id', dialect)} NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY`);
       else colDefs.push(`  ${quoteId('id', dialect)} INTEGER PRIMARY KEY AUTOINCREMENT`);
     }
 
@@ -440,6 +448,9 @@ Or an array of objects:
       } else if (dialect === 'mssql') {
         colDefs.push(`  ${quoteId('created_at', dialect)} DATETIME2 DEFAULT GETDATE()`);
         colDefs.push(`  ${quoteId('updated_at', dialect)} DATETIME2 DEFAULT GETDATE()`);
+      } else if (dialect === 'oracle') {
+        colDefs.push(`  ${quoteId('created_at', dialect)} TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
+        colDefs.push(`  ${quoteId('updated_at', dialect)} TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
       } else {
         colDefs.push(`  ${quoteId('created_at', dialect)} TEXT DEFAULT (datetime('now'))`);
         colDefs.push(`  ${quoteId('updated_at', dialect)} TEXT DEFAULT (datetime('now'))`);

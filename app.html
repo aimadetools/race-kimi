@@ -560,6 +560,7 @@
         <option value="mysql">MySQL / MariaDB</option>
         <option value="sqlite">SQLite</option>
         <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
       </select>
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
@@ -584,6 +585,7 @@ CREATE TABLE users (
           <button onclick="loadSample('postgres')">Load sample (PostgreSQL)</button>
           <button onclick="loadSample('mysql')">Load sample (MySQL)</button>
           <button onclick="loadSample('mssql')">Load sample (SQL Server)</button>
+          <button onclick="loadSample('oracle')">Load sample (Oracle)</button>
         </div>
       </div>
       <div class="editor-panel" id="panelB">
@@ -730,6 +732,7 @@ CREATE TABLE users (
           <a href="mysql-schema-diff.html">MySQL Diff</a>
           <a href="sqlite-schema-diff.html">SQLite Diff</a>
           <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
           <a href="tools/sql-validator.html">SQL Validator</a>
           <a href="tools/sql-formatter.html">SQL Formatter</a>
           <a href="tools/schema-doc-generator.html">Schema Docs</a>
@@ -963,7 +966,7 @@ function parseColumn(tokens, dialect) {
   let i = 1;
   // Collect type tokens
   const typeTokens = [];
-  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED'];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
   while (i < tokens.length) {
     const t = tokens[i].toUpperCase();
     // Handle CHARACTER SET sequence in MySQL
@@ -1003,7 +1006,7 @@ function parseColumn(tokens, dialect) {
     } else if (t === 'DEFAULT') {
       i++;
       const defaultTokens = [];
-      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL'];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
       while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
         defaultTokens.push(tokens[i]);
         i++;
@@ -1751,6 +1754,8 @@ function generateMigration(diff, dialect) {
         lines.push(`-- SQLite does not support DROP COLUMN directly.`);
         lines.push(`-- You must recreate the table. See: https://sqlite.org/lang_altertable.html`);
         lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)}; -- NOT SUPPORTED`);
+      } else if (dialect === 'oracle') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
       } else {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
       }
@@ -1764,6 +1769,8 @@ function generateMigration(diff, dialect) {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} CHANGE COLUMN ${quoteId(ren.oldColumn.name, dialect)} ${columnDefSQL(ren.newColumn, dialect)};`);
       } else if (dialect === 'mssql') {
         lines.push(`EXEC sp_rename '${quoteId(td.name, dialect).replace(/[[\]]/g, '')}.${quoteId(ren.oldColumn.name, dialect).replace(/[[\]]/g, '')}', '${ren.newColumn.name}', 'COLUMN';`);
+      } else if (dialect === 'oracle') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} RENAME COLUMN ${quoteId(ren.oldColumn.name, dialect)} TO ${quoteId(ren.newColumn.name, dialect)};`);
       }
     }
     if (td.columnsRenamed.length) lines.push('');
@@ -1771,6 +1778,8 @@ function generateMigration(diff, dialect) {
     for (const col of td.columnsAdded) {
       if (dialect === 'sqlite') {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+      } else if (dialect === 'oracle') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD ${columnDefSQL(col, dialect)};`);
       } else {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD ${columnDefSQL(col, dialect)};`);
       }
@@ -1787,6 +1796,8 @@ function generateMigration(diff, dialect) {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
           } else if (dialect === 'mssql') {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} ${col.type}${col.nullable ? '' : ' NOT NULL'};`);
+          } else if (dialect === 'oracle') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${quoteId(col.name, dialect)} ${col.type});`);
           } else {
             lines.push(`-- SQLite: type changes require table recreation`);
             lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} ... -- NOT SUPPORTED`);
@@ -1802,6 +1813,8 @@ function generateMigration(diff, dialect) {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(col, dialect)};`);
           } else if (dialect === 'mssql') {
             lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(col.name, dialect)} ${col.type}${col.nullable ? '' : ' NOT NULL'};`);
+          } else if (dialect === 'oracle') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${quoteId(col.name, dialect)} ${col.nullable ? '' : 'NOT NULL'});`);
           } else {
             lines.push(`-- SQLite: nullability changes require table recreation`);
           }
@@ -1824,6 +1837,12 @@ function generateMigration(diff, dialect) {
             } else {
               lines.push(`-- MSSQL: drop existing default constraint for ${col.name} before adding a new one`);
             }
+          } else if (dialect === 'oracle') {
+            if (col.defaultValue) {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${quoteId(col.name, dialect)} DEFAULT ${col.defaultValue});`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${quoteId(col.name, dialect)} DEFAULT NULL);`);
+            }
           } else {
             lines.push(`-- SQLite: default changes require table recreation`);
           }
@@ -1835,6 +1854,8 @@ function generateMigration(diff, dialect) {
             lines.push(`-- Review change: ${change.field} on ${col.name}`);
           } else if (dialect === 'mssql') {
             lines.push(`-- Review change: ${change.field} on ${col.name}`);
+          } else if (dialect === 'oracle') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${columnDefSQL(col, dialect)});`);
           } else {
             lines.push(`-- SQLite: column changes require table recreation`);
           }
@@ -1976,6 +1997,7 @@ function quoteId(name, dialect) {
   if (dialect === 'mysql') return '`' + name + '`';
   if (dialect === 'postgres') return '"' + name + '"';
   if (dialect === 'mssql') return '[' + name + ']';
+  if (dialect === 'oracle') return '"' + name + '"';
   return `"${name}"`;
 }
 
@@ -1989,6 +2011,7 @@ function columnDefSQL(col, dialect) {
     if (dialect === 'mysql') sql += ' AUTO_INCREMENT';
     else if (dialect === 'sqlite') sql += ' AUTOINCREMENT';
     else if (dialect === 'mssql') sql += ' IDENTITY(1,1)';
+    else if (dialect === 'oracle') sql += ' GENERATED ALWAYS AS IDENTITY';
     else sql += ' GENERATED ALWAYS AS IDENTITY';
   }
   return sql;
@@ -3085,6 +3108,31 @@ CREATE TABLE comments (
   body NVARCHAR(MAX) NOT NULL,
   created_at DATETIME DEFAULT GETDATE()
 );`,
+
+  oracle: `CREATE TABLE users (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR2(100) NOT NULL,
+  email VARCHAR2(100) UNIQUE,
+  role_id NUMBER DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id NUMBER NOT NULL,
+  title VARCHAR2(255),
+  body CLOB,
+  published NUMBER(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  post_id NUMBER NOT NULL,
+  user_id NUMBER NOT NULL,
+  body CLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,
 };
 
 function encodeState(a, b, dialect) {
@@ -3138,10 +3186,13 @@ function loadSampleB() {
   // Make some modifications
   let b = a
     .replace(/VARCHAR\(100\)/g, "VARCHAR(255)")
+    .replace(/VARCHAR2\(100\)/g, "VARCHAR2(255)")
     .replace(/role_id INT DEFAULT 1/, "role_id INT NOT NULL DEFAULT 1\n  , avatar_url VARCHAR(500)")
+    .replace(/role_id NUMBER DEFAULT 1/, "role_id NUMBER NOT NULL DEFAULT 1\n  , avatar_url VARCHAR2(500)")
     .replace(/published BOOLEAN DEFAULT false/, "published BOOLEAN DEFAULT false\n  , slug VARCHAR(300) UNIQUE")
     .replace(/published TINYINT\(1\) DEFAULT 0/, "published TINYINT(1) DEFAULT 0\n  , slug VARCHAR(300) UNIQUE")
     .replace(/published BIT DEFAULT 0/, "published BIT DEFAULT 0\n  , slug NVARCHAR(300) UNIQUE")
+    .replace(/published NUMBER\(1\) DEFAULT 0/, "published NUMBER(1) DEFAULT 0\n  , slug VARCHAR2(300) UNIQUE")
     + "\n\nCREATE TABLE tags (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(50) NOT NULL\n);";
   document.getElementById('schemaB').value = b;
   updateStats();
@@ -3330,10 +3381,10 @@ document.querySelectorAll('.results-tab').forEach(tab => {
 (function init() {
   checkLicense();
 
-  // Simple dialect pre-selection via ?dialect=postgres|mysql|sqlite|mssql
+  // Simple dialect pre-selection via ?dialect=postgres|mysql|sqlite|mssql|oracle
   const params = new URLSearchParams(location.search);
   const paramDialect = params.get('dialect');
-  if (paramDialect && ['postgres','mysql','sqlite','mssql'].includes(paramDialect)) {
+  if (paramDialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(paramDialect)) {
     document.getElementById('dialect').value = paramDialect;
     updateStats();
   }

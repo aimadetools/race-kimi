@@ -188,6 +188,7 @@
         <option value="mysql">MySQL / MariaDB</option>
         <option value="sqlite">SQLite</option>
         <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
       </select>
       <label for="tableName">Table</label>
       <input id="tableName" type="text" value="imported_data" style="width:140px;">
@@ -359,6 +360,7 @@ id,name,email,age,active
   function quoteId(name, dialect) {
     if (dialect === 'mssql') return '[' + name + ']';
     if (dialect === 'mysql') return '`' + name + '`';
+    if (dialect === 'oracle') return '"' + name + '"';
     return '"' + name + '"';
   }
 
@@ -367,7 +369,8 @@ id,name,email,age,active
       postgres: { INTEGER: 'INTEGER', REAL: 'NUMERIC', TEXT: 'TEXT', BOOLEAN: 'BOOLEAN', DATE: 'DATE' },
       mysql: { INTEGER: 'INT', REAL: 'DECIMAL(10,2)', TEXT: 'VARCHAR(255)', BOOLEAN: 'TINYINT(1)', DATE: 'DATE' },
       sqlite: { INTEGER: 'INTEGER', REAL: 'REAL', TEXT: 'TEXT', BOOLEAN: 'INTEGER', DATE: 'TEXT' },
-      mssql: { INTEGER: 'INT', REAL: 'DECIMAL(18,2)', TEXT: 'NVARCHAR(255)', BOOLEAN: 'BIT', DATE: 'DATE' }
+      mssql: { INTEGER: 'INT', REAL: 'DECIMAL(18,2)', TEXT: 'NVARCHAR(255)', BOOLEAN: 'BIT', DATE: 'DATE' },
+      oracle: { INTEGER: 'NUMBER', REAL: 'NUMBER', TEXT: 'VARCHAR2(255)', BOOLEAN: 'NUMBER(1)', DATE: 'DATE' }
     };
     return (map[dialect] || map.postgres)[inferred] || 'TEXT';
   }
@@ -397,14 +400,14 @@ id,name,email,age,active
     const batchSize = dialect === 'mssql' ? 1000 : 500;
     for (let b = 0; b < rows.length; b += batchSize) {
       const batch = rows.slice(b, b + batchSize);
-      if (dialect === 'mysql' || dialect === 'postgres' || dialect === 'sqlite') {
+      if (dialect === 'mysql' || dialect === 'postgres' || dialect === 'sqlite' || dialect === 'oracle') {
         lines.push(`INSERT INTO ${quoteId(tableName, dialect)} (${headers.map(h => quoteId(h, dialect)).join(', ')}) VALUES`);
         batch.forEach((row, idx) => {
           const vals = row.map((v, i) => {
             if (v === '' || v === null || v === undefined) return 'NULL';
             if (types[i] === 'BOOLEAN') {
               const lower = v.toLowerCase();
-              if (dialect === 'sqlite' || dialect === 'mysql') return ['true','1','yes'].includes(lower) ? '1' : '0';
+              if (dialect === 'sqlite' || dialect === 'mysql' || dialect === 'oracle') return ['true','1','yes'].includes(lower) ? '1' : '0';
               return ['true','1','yes'].includes(lower) ? 'TRUE' : 'FALSE';
             }
             if (types[i] === 'INTEGER' || types[i] === 'REAL') return v;

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oracle Schema Migrations: A Practical Guide for Developers</title>
+  <meta name="description" content="Learn how to compare Oracle schemas, generate ALTER TABLE scripts, and avoid production incidents. A practical guide for developers working with Oracle Database.">
+  <meta property="og:title" content="Oracle Schema Migrations: A Practical Guide for Developers">
+  <meta property="og:description" content="Learn how to compare Oracle schemas, generate ALTER TABLE scripts, and avoid production incidents.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/oracle-schema-migrations-practical-guide.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../api.html">API</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <article class="section article">
+    <div class="container" style="max-width: 720px;">
+      <header style="margin-bottom: 48px;">
+        <span class="blog-meta">Oracle</span>
+        <h1 style="font-size: 2.2rem; margin: 16px 0;">Oracle Schema Migrations: A Practical Guide for Developers</h1>
+        <p style="color: var(--text-muted);">Published April 23, 2026 · 8 min read</p>
+      </header>
+
+      <p>Oracle Database powers some of the world's most critical systems — banks, telecoms, healthcare, and government. Yet when it comes to schema migrations, Oracle developers are often stuck with expensive enterprise tools or manual scripting. This guide shows you how to compare Oracle schemas, generate safe ALTER TABLE scripts, and build a migration workflow that won't wake you up at 3 AM.</p>
+
+      <h2>Why Oracle schema migrations are different</h2>
+
+      <p>Oracle's SQL dialect has quirks that make schema diffing uniquely challenging:</p>
+
+      <ul>
+        <li><strong>VARCHAR2, not VARCHAR</strong> — Oracle recommends VARCHAR2 for all character data. Generic diff tools that expect VARCHAR will flag false positives.</li>
+        <li><strong>NUMBER(p,s) instead of INT/DECIMAL</strong> — Oracle uses NUMBER for almost all numeric types. A change from NUMBER(10,0) to NUMBER(19,0) is meaningful but easy to miss.</li>
+        <li><strong>Identity columns are new</strong> — Oracle 12c introduced GENERATED ALWAYS AS IDENTITY. Before that, developers used triggers + sequences. Mixed environments create confusion.</li>
+        <li><strong>Tablespace and storage clauses</strong> — Exported DDL often includes TABLESPACE, STORAGE, PCTFREE, and other physical attributes that clutter semantic comparison.</li>
+        <li><strong>ALTER TABLE syntax</strong> — Oracle uses MODIFY for column changes (not ALTER COLUMN like PostgreSQL), and supports parentheses around column lists.</li>
+      </ul>
+
+      <h2>How to export Oracle schemas for comparison</h2>
+
+      <p>The most reliable way to get clean DDL is using <code>DBMS_METADATA</code>:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>-- Get DDL for a single table
+SELECT DBMS_METADATA.GET_DDL('TABLE', 'EMPLOYEES') FROM DUAL;
+
+-- Get DDL for all tables in a schema
+SELECT DBMS_METADATA.GET_DDL('TABLE', table_name)
+FROM user_tables
+WHERE table_name NOT LIKE 'BIN$%';</code></pre>
+
+      <p>Alternatively, SQL Developer can export schema DDL to a SQL file. Just be sure to exclude grants, storage clauses, and tablespace definitions for cleaner diffing.</p>
+
+      <h2>Common Oracle migration patterns</h2>
+
+      <h3>1. Adding a column</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>ALTER TABLE "employees" ADD "department_id" NUMBER;</code></pre>
+
+      <p>Unlike SQL Server, Oracle does not require the COLUMN keyword.</p>
+
+      <h3>2. Modifying a column type</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>ALTER TABLE "employees" MODIFY ("salary" NUMBER(15,2));</code></pre>
+
+      <p>Oracle uses MODIFY, not ALTER COLUMN. Parentheses are optional for single-column changes but recommended for clarity.</p>
+
+      <h3>3. Dropping a column</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>ALTER TABLE "employees" DROP COLUMN "temp_column";</code></pre>
+
+      <h3>4. Renaming a column</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>ALTER TABLE "employees" RENAME COLUMN "old_name" TO "new_name";</code></pre>
+
+      <h3>5. Adding a constraint</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>ALTER TABLE "orders"
+  ADD CONSTRAINT "fk_orders_customer"
+  FOREIGN KEY ("customer_id") REFERENCES "customers"("id");</code></pre>
+
+      <h2>Oracle vs other dialects: ALTER TABLE comparison</h2>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="text-align: left; padding: 12px;">Operation</th>
+            <th style="text-align: left; padding: 12px;">Oracle</th>
+            <th style="text-align: left; padding: 12px;">PostgreSQL</th>
+            <th style="text-align: left; padding: 12px;">MySQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 12px;">Add column</td>
+            <td style="padding: 12px;"><code>ADD col TYPE</code></td>
+            <td style="padding: 12px;"><code>ADD COLUMN col TYPE</code></td>
+            <td style="padding: 12px;"><code>ADD COLUMN col TYPE</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 12px;">Type change</td>
+            <td style="padding: 12px;"><code>MODIFY (col TYPE)</code></td>
+            <td style="padding: 12px;"><code>ALTER COLUMN col TYPE type</code></td>
+            <td style="padding: 12px;"><code>MODIFY COLUMN col TYPE</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 12px;">Set NOT NULL</td>
+            <td style="padding: 12px;"><code>MODIFY (col NOT NULL)</code></td>
+            <td style="padding: 12px;"><code>ALTER COLUMN col SET NOT NULL</code></td>
+            <td style="padding: 12px;"><code>MODIFY COLUMN col TYPE NOT NULL</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 12px;">Set default</td>
+            <td style="padding: 12px;"><code>MODIFY (col DEFAULT val)</code></td>
+            <td style="padding: 12px;"><code>ALTER COLUMN col SET DEFAULT val</code></td>
+            <td style="padding: 12px;"><code>ALTER COLUMN col SET DEFAULT val</code></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 12px;">Rename column</td>
+            <td style="padding: 12px;"><code>RENAME COLUMN old TO new</code></td>
+            <td style="padding: 12px;"><code>RENAME COLUMN old TO new</code></td>
+            <td style="padding: 12px;"><code>CHANGE COLUMN old new TYPE</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>A safe Oracle migration workflow</h2>
+
+      <ol>
+        <li><strong>Export both schemas</strong> using DBMS_METADATA or SQL Developer.</li>
+        <li><strong>Compare semantically</strong> with a tool that understands Oracle syntax (not line-based text diff).</li>
+        <li><strong>Review breaking changes</strong> — dropped columns, narrowed types, removed constraints.</li>
+        <li><strong>Generate ALTER TABLE scripts</strong> in Oracle dialect.</li>
+        <li><strong>Test in staging</strong> on a copy of production data.</li>
+        <li><strong>Run in production</strong> during a maintenance window for large tables.</li>
+      </ol>
+
+      <h2>Oracle-specific pitfalls to avoid</h2>
+
+      <ul>
+        <li><strong>Implicit data truncation</strong> — Narrowing a VARCHAR2(255) to VARCHAR2(100) will truncate data silently in some contexts. Always verify data fits.</li>
+        <li><strong>Adding NOT NULL without default</strong> — On a table with existing rows, this fails immediately. Add a default first, then switch to NOT NULL.</li>
+        <li><strong>Dropping columns on huge tables</strong> — Oracle marks columns as unused rather than reclaiming space immediately. For very large tables, consider setting UNUSED first, then dropping later.</li>
+        <li><strong>Foreign key locks</strong> — Adding a foreign key constraint acquires a share lock on both tables. On busy systems, this can block writes.</li>
+      </ul>
+
+      <h2>Tool recommendation</h2>
+
+      <p>SchemaLens now supports Oracle schema diffing directly in your browser. Paste two Oracle DDL dumps, get an instant visual diff with color-coded changes, and export ready-to-run ALTER TABLE scripts in Oracle syntax. No installation, no data upload, no enterprise license.</p>
+
+      <div style="background: var(--surface); padding: 24px; border-radius: var(--radius-sm); margin: 32px 0;">
+        <p style="margin: 0;"><a href="../app.html?dialect=oracle" style="color: var(--primary); font-weight: 600;">Try SchemaLens for Oracle →</a></p>
+      </div>
+
+      <h2>Related reading</h2>
+      <ul>
+        <li><a href="../blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></li>
+        <li><a href="../blog/how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+        <li><a href="../blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></li>
+      </ul>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../affiliate.html">Affiliate</a>
+          <a href="../api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../oracle-schema-diff.html">Oracle Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p> SchemaLens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

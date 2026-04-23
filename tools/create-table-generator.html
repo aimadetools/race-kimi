@@ -294,6 +294,7 @@
         <option value="mysql">MySQL / MariaDB</option>
         <option value="sqlite">SQLite</option>
         <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
       </select>
       <button id="generateBtn">Generate SQL</button>
       <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
@@ -414,7 +415,8 @@
     postgres: ['SERIAL','INTEGER','BIGINT','SMALLINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','NUMERIC(10,2)','REAL','JSONB','UUID'],
     mysql: ['INT','BIGINT','SMALLINT','TINYINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','DECIMAL(10,2)','FLOAT','JSON','CHAR(36)'],
     sqlite: ['INTEGER','TEXT','REAL','NUMERIC','BLOB','INTEGER PRIMARY KEY','DATETIME','DATE','BOOLEAN','JSON'],
-    mssql: ['INT','BIGINT','SMALLINT','TINYINT','BIT','NVARCHAR(255)','VARCHAR(MAX)','DATETIME2','DATE','DECIMAL(10,2)','FLOAT','UNIQUEIDENTIFIER','NVARCHAR(4000)']
+    mssql: ['INT','BIGINT','SMALLINT','TINYINT','BIT','NVARCHAR(255)','VARCHAR(MAX)','DATETIME2','DATE','DECIMAL(10,2)','FLOAT','UNIQUEIDENTIFIER','NVARCHAR(4000)'],
+    oracle: ['NUMBER','NUMBER(10,2)','INTEGER','VARCHAR2(255)','CLOB','NCLOB','BLOB','DATE','TIMESTAMP','RAW(16)','CHAR(36)']
   };
 
   function createColumnRow(data) {
@@ -481,6 +483,7 @@
     const q = (id) => {
       if (dialect === 'mssql') return '[' + id + ']';
       if (dialect === 'mysql') return '`' + id + '`';
+      if (dialect === 'oracle') return '"' + id + '"';
       return '"' + id + '"';
     };
 
@@ -524,6 +527,12 @@
         if (col.nn) def += ' NOT NULL';
         if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
         else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
+      } else if (dialect === 'oracle') {
+        def += type;
+        if (col.ai) def += ' GENERATED ALWAYS AS IDENTITY';
+        if (col.nn) def += ' NOT NULL';
+        if (col.extra && col.extra.toUpperCase().startsWith('DEFAULT')) def += ' ' + col.extra;
+        else if (col.extra && !type.includes(col.extra)) def += ' DEFAULT ' + col.extra;
       }
       lines.push(def);
 
@@ -532,6 +541,7 @@
         else if (dialect === 'mysql') constraints.push('  UNIQUE KEY ' + q('uq_' + col.name) + ' (' + q(col.name) + ')');
         else if (dialect === 'sqlite') constraints.push('  UNIQUE (' + q(col.name) + ')');
         else if (dialect === 'mssql') constraints.push('  CONSTRAINT ' + q('UQ_' + table + '_' + col.name) + ' UNIQUE (' + q(col.name) + ')');
+        else if (dialect === 'oracle') constraints.push('  CONSTRAINT ' + q('UQ_' + table + '_' + col.name) + ' UNIQUE (' + q(col.name) + ')');
       }
     });
 
