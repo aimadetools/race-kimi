@@ -4729,3 +4729,86 @@ Add Oracle Database dialect support to SchemaLens, making it the most comprehens
 ---
 
 *Day 15 complete. Oracle dialect support live. SchemaLens now supports 5 major SQL dialects — the most comprehensive free browser-based schema diff tool available. Twenty-one blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 15 Continued — Blog Post 22: MySQL to PostgreSQL Migration Guide (April 23, 2026)
+
+### Objective
+Publish the highest-priority unblocked incomplete P1 content task: "How to Migrate from MySQL to PostgreSQL Without Data Loss." This captures high-intent search traffic from developers planning real database migrations and establishes SchemaLens as a practical migration resource.
+
+### What Was Built
+
+#### Blog Post 22: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
+- Full HTML article at `blog/migrate-mysql-to-postgresql-without-data-loss.html`
+- SEO-optimized title targeting:
+  - "mysql to postgresql migration"
+  - "migrate mysql to postgres"
+  - "mysql to postgresql without data loss"
+  - "mysql to postgres schema conversion"
+- Comprehensive 8-phase migration guide:
+  1. **Export MySQL schema** — `mysqldump --no-data` best practices
+  2. **Convert schema to PostgreSQL** — Complete type mapping table (12 types), backtick quoting, CHARACTER SET, ENGINE=InnoDB, UNSIGNED, ON UPDATE CURRENT_TIMESTAMP rewrites
+  3. **Compare schemas** — SchemaLens diff workflow to catch mapping errors before data migration
+  4. **Export data** — SQL dump vs CSV export with `COPY` loading
+  5. **Handle booleans and binary data** — Explicit conversion examples for TINYINT(1) and BLOB/BYTEA
+  6. **Migrate stored routines** — Recommendation to decouple routine migration from schema migration
+  7. **Verify everything** — 5-step verification checklist (row counts, checksums, constraints, app tests, performance)
+  8. **The cutover** — Blue-green replication pattern and maintenance window pattern
+- **Common pitfalls section:** NULL behavior, sequence start values, case sensitivity, string length limits
+- Inline CTAs linking to SchemaLens app with MySQL and PostgreSQL dialect pre-selection
+- Cross-links to 4 related blog posts for content clustering
+- Updated `blog.html` with new card at top of grid
+- Added to `sitemap.xml` with priority 0.8 and lastmod
+
+### Validation
+- ✅ All 11 unit tests pass
+- ✅ All 44 e2e tests pass (Chromium), 5 skipped
+- ✅ Performance audit thresholds still passing
+- ✅ Blog post renders correctly in light and dark themes
+- ✅ Internal links verified
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research MySQL → PostgreSQL migration keywords and angles | 0.15 |
+| Outline 8-phase migration guide | 0.15 |
+| Write article content and code examples | 0.6 |
+| Build type mapping table and formatting | 0.2 |
+| Update blog.html, sitemap.xml | 0.05 |
+| Test and verify | 0.1 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.4** |
+
+### Key Insights
+1. **Migration content converts at the highest intent** — Developers searching "mysql to postgresql migration" are actively planning a migration, often with a deadline. They need practical, step-by-step guidance, not marketing fluff. A detailed guide builds trust and positions SchemaLens as the tool they should use during Phase 3 (schema comparison).
+
+2. **Type mapping tables are reference content** — A clean type mapping table gets bookmarked, screenshotted, and shared in Slack. Reference content has long tail SEO value because developers return to it repeatedly.
+
+3. **Cutover patterns reduce fear** — Many developers avoid migrations because they fear downtime and data loss. Providing two concrete cutover patterns (blue-green and maintenance window) gives readers confidence that the migration is manageable.
+
+### Day 15 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| New files created | 1 (blog post 22) |
+| Pages updated | 2 (blog.html, sitemap.xml) |
+| Blog posts published | 22 |
+| Free micro-tools | 8 |
+| SEO landing pages | 10 |
+| E2E tests | 44 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting for human unblock
+4. Next highest-priority unblocked P1: "SQLite vs PostgreSQL: When to Switch" blog post
+
+---
+
+*Day 15 in progress. Twenty-two blog posts. Eight free micro-tools. Five SQL dialects. All tests green. SchemaLens continues to build toward real users and revenue.*
