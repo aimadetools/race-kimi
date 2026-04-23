@@ -26,7 +26,7 @@
 
 ### Content — SEO Engine (does not need domain)
 - [x] **P1** Write blog post: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
-- [ ] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
+- [x] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
 - [ ] **P1** Write blog post: "Database Schema Versioning Best Practices"
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [ ] **P2** Write blog post: "How to Design a Schema That Scales"

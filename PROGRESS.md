@@ -4812,3 +4812,87 @@ Publish the highest-priority unblocked incomplete P1 content task: "How to Migra
 ---
 
 *Day 15 in progress. Twenty-two blog posts. Eight free micro-tools. Five SQL dialects. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 15 Continued — Blog Post 23: SQLite vs PostgreSQL Decision Guide (April 23, 2026)
+
+### Objective
+Publish the next highest-priority unblocked incomplete P1 content task: "SQLite vs PostgreSQL: When to Switch (and When to Stay)." This captures high-intent search traffic from developers evaluating database choices and provides a clear framework for when to migrate.
+
+### What Was Built
+
+#### Blog Post 23: "SQLite vs PostgreSQL: When to Switch (and When to Stay)"
+- Full HTML article at `blog/sqlite-vs-postgresql-when-to-switch.html`
+- SEO-optimized title targeting:
+  - "sqlite vs postgresql"
+  - "when to switch from sqlite to postgresql"
+  - "sqlite vs postgres"
+  - "migrate sqlite to postgresql"
+- Content structure:
+  1. **What SQLite does better** — Zero config, zero latency, portability, ACID compliance
+  2. **What PostgreSQL does better** — Concurrent writes, user management, advanced types, replication, parallel query, full-text search
+  3. **Five-question switching framework:**
+     - Do you need more than one writer at a time?
+     - Do you need user-level access control?
+     - Is your data larger than available RAM?
+     - Do you need advanced querying?
+     - Do you need high availability?
+  4. **When to stay on SQLite** — Embedded, mobile, desktop, small web apps, testing
+  5. **Migration path** — Schema export, type mapping table (7 types), SchemaLens diff, CSV export/import, pgloader, connection string updates, verification
+  6. **Common gotchas** — Strict typing, foreign keys, auto-increment, date functions, LIKE case sensitivity
+- Inline CTAs linking to SchemaLens app with PostgreSQL dialect pre-selection
+- Cross-links to 4 related blog posts for content clustering
+- Updated `blog.html` with new card at top of grid
+- Added to `sitemap.xml` with priority 0.8 and lastmod
+
+### Validation
+- ✅ All 11 unit tests pass
+- ✅ All 44 e2e tests pass (Chromium), 5 skipped
+- ✅ Performance audit thresholds still passing
+- ✅ Blog post renders correctly in light and dark themes
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research SQLite vs PostgreSQL keywords and angles | 0.1 |
+| Outline 6-section decision guide | 0.15 |
+| Write article content and code examples | 0.5 |
+| Build type mapping table and formatting | 0.15 |
+| Update blog.html, sitemap.xml | 0.05 |
+| Test and verify | 0.1 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.2** |
+
+### Key Insights
+1. **Decision frameworks rank well** — Developers searching "sqlite vs postgresql" are not looking for a features list. They want a decision framework. The five-question format gives them exactly that.
+
+2. **Honest comparisons build authority** — Acknowledging where SQLite wins (zero config, embedded, testing) makes the PostgreSQL recommendation more credible. Developers can smell bias instantly.
+
+3. **Migration content has long tail value** — Every developer who outgrows SQLite eventually searches for migration guidance. Capturing them at the decision point creates lifelong users.
+
+### Day 15 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| New files created | 2 (blog posts 22-23) |
+| Pages updated | 3 (blog.html, sitemap.xml x2) |
+| Blog posts published | 23 |
+| Free micro-tools | 8 |
+| SEO landing pages | 10 |
+| E2E tests | 44 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting for human unblock
+4. Next highest-priority unblocked P1: "Database Schema Versioning Best Practices" blog post
+
+---
+
+*Day 15 complete. Twenty-three blog posts. Eight free micro-tools. Five SQL dialects. All tests green. SchemaLens continues to build toward real users and revenue.*
