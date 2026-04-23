@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Migrate from MySQL to PostgreSQL Without Data Loss</title>
+  <meta name="description" content="A step-by-step guide to migrating MySQL databases to PostgreSQL safely. Schema conversion, data export, type mapping, and common pitfalls to avoid.">
+  <meta property="og:title" content="How to Migrate from MySQL to PostgreSQL Without Data Loss">
+  <meta property="og:description" content="A step-by-step guide to migrating MySQL databases to PostgreSQL safely. Schema conversion, data export, type mapping, and common pitfalls to avoid.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/migrate-mysql-to-postgresql-without-data-loss.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../api.html">API</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <article class="section article">
+    <div class="container" style="max-width: 720px;">
+      <header style="margin-bottom: 48px;">
+        <span class="blog-meta">Migration</span>
+        <h1 style="font-size: 2.2rem; margin: 16px 0;">How to Migrate from MySQL to PostgreSQL Without Data Loss</h1>
+        <p style="color: var(--text-muted);">Published April 23, 2026 · 12 min read</p>
+      </header>
+
+      <p>Moving from MySQL to PostgreSQL is one of the most common database migrations in modern software engineering. Teams switch for richer data types, stricter ACID compliance, better JSON support, or simply because their ORM defaults to PostgreSQL. But migrations are risky. A single mis-mapped type or skipped constraint can corrupt data silently. This guide walks you through a safe, reversible migration from MySQL to PostgreSQL — schema first, data second, verification always.</p>
+
+      <h2>Phase 1: Export your MySQL schema</h2>
+
+      <p>Start with a clean schema dump. Avoid dumping data at this stage — you only need the structure:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>mysqldump --no-data --routines --events \
+  -u root -p mydatabase &gt; mysql_schema.sql</code></pre>
+
+      <p>The <code>--no-data</code> flag ensures you get only CREATE TABLE, CREATE INDEX, and routine definitions. The <code>--routines</code> and <code>--events</code> flags include stored procedures and triggers, which you'll need to evaluate for PostgreSQL compatibility.</p>
+
+      <h2>Phase 2: Convert the schema to PostgreSQL</h2>
+
+      <p>This is where most migrations fail. MySQL and PostgreSQL speak different dialects. A naive copy-paste of MySQL DDL into PostgreSQL will throw syntax errors and create broken tables. Here is the type mapping you need:</p>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="text-align: left; padding: 8px;">MySQL</th>
+            <th style="text-align: left; padding: 8px;">PostgreSQL</th>
+            <th style="text-align: left; padding: 8px;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>INT</code></td>
+            <td style="padding: 8px;"><code>INTEGER</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>BIGINT</code></td>
+            <td style="padding: 8px;"><code>BIGINT</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>VARCHAR(n)</code></td>
+            <td style="padding: 8px;"><code>VARCHAR(n)</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>TEXT</code></td>
+            <td style="padding: 8px;"><code>TEXT</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>DATETIME</code></td>
+            <td style="padding: 8px;"><code>TIMESTAMP</code></td>
+            <td style="padding: 8px;">Use <code>TIMESTAMPTZ</code> if you need timezone awareness</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>TINYINT(1)</code></td>
+            <td style="padding: 8px;"><code>BOOLEAN</code></td>
+            <td style="padding: 8px;">MySQL uses 0/1; PostgreSQL uses true/false</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>FLOAT</code></td>
+            <td style="padding: 8px;"><code>REAL</code></td>
+            <td style="padding: 8px;">Both are 32-bit IEEE floats</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>DOUBLE</code></td>
+            <td style="padding: 8px;"><code>DOUBLE PRECISION</code></td>
+            <td style="padding: 8px;">Both are 64-bit IEEE floats</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>DECIMAL(p,s)</code></td>
+            <td style="padding: 8px;"><code>NUMERIC(p,s)</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>JSON</code></td>
+            <td style="padding: 8px;"><code>JSONB</code></td>
+            <td style="padding: 8px;">JSONB is indexed and decomposed; preferred in PostgreSQL</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>ENUM(...)</code></td>
+            <td style="padding: 8px;"><code>CREATE TYPE ... AS ENUM</code></td>
+            <td style="padding: 8px;">PostgreSQL enums are proper types</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>AUTO_INCREMENT</code></td>
+            <td style="padding: 8px;"><code>SERIAL</code> or <code>GENERATED ALWAYS AS IDENTITY</code></td>
+            <td style="padding: 8px;">Identity columns are the modern standard</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Beyond types, you need to rewrite these MySQL-isms:</p>
+
+      <ul>
+        <li><strong>Backtick quoting</strong> → Double quotes. MySQL uses <code>`table_name`</code>; PostgreSQL uses <code>"table_name"</code>.</li>
+        <li><strong>CHARACTER SET and COLLATE</strong> → Remove them. PostgreSQL uses database-level encoding. Collations are specified differently.</li>
+        <li><strong>ENGINE=InnoDB</strong> → Remove it. PostgreSQL has no table-level engine clause.</li>
+        <li><strong>UNSIGNED</strong> → Remove it. PostgreSQL does not support UNSIGNED. Use CHECK constraints if you need non-negative values: <code>CHECK (column &gt;= 0)</code>.</li>
+        <li><strong>ON UPDATE CURRENT_TIMESTAMP</strong> → Replace with a trigger. PostgreSQL does not support this column attribute.</li>
+      </ul>
+
+      <h2>Phase 3: Compare schemas before creating tables</h2>
+
+      <p>Before you run a single CREATE TABLE in PostgreSQL, compare your converted schema against the original MySQL schema. This catches mapping errors early — when they are cheap to fix.</p>
+
+      <p>Paste your MySQL schema into <a href="../app.html?dialect=mysql">SchemaLens with MySQL selected</a>, paste your converted PostgreSQL schema with PostgreSQL selected, and run the comparison. SchemaLens will show you:</p>
+
+      <ul>
+        <li>Columns that changed type (e.g., TINYINT(1) → BOOLEAN)</li>
+        <li>Constraints that were lost in translation</li>
+        <li>Indexes that are missing or renamed</li>
+        <li>Default values that differ</li>
+      </ul>
+
+      <p>Fix every discrepancy before moving to data migration. A schema diff now saves hours of data recovery later.</p>
+
+      <h2>Phase 4: Export data from MySQL</h2>
+
+      <p>Use <code>mysqldump</code> with PostgreSQL-compatible options, or export to CSV for bulk loading:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code># Option A: SQL dump (needs manual editing for syntax)
+mysqldump --no-create-info --complete-insert --extended-insert=FALSE \
+  -u root -p mydatabase &gt; mysql_data.sql
+
+# Option B: CSV export per table (recommended for large datasets)
+SELECT * INTO OUTFILE '/tmp/users.csv'
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM users;</code></pre>
+
+      <p>For CSV export, use PostgreSQL's <code>COPY</code> command for fast bulk loading:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>COPY users(id, email, created_at)
+FROM '/tmp/users.csv'
+WITH (FORMAT csv, HEADER true);</code></pre>
+
+      <h2>Phase 5: Handle boolean and binary data carefully</h2>
+
+      <p>Two data types are notorious for silent corruption during MySQL → PostgreSQL migrations:</p>
+
+      <p><strong>Booleans:</strong> MySQL stores booleans as TINYINT(1) with values 0 and 1. PostgreSQL expects <code>true</code>/<code>false</code> or <code>'t'</code>/<code>'f'</code>. If you import 0/1 into a BOOLEAN column, PostgreSQL will accept it — but some drivers and ORMs behave differently. Explicitly convert during import:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>-- Convert 0/1 to boolean during COPY
+ALTER TABLE users ALTER COLUMN is_active TYPE BOOLEAN
+  USING CASE WHEN is_active = 1 THEN true ELSE false END;</code></pre>
+
+      <p><strong>Binary data (BLOB):</strong> MySQL <code>BLOB</code> maps to PostgreSQL <code>BYTEA</code>. Encoding differences between hex and escape formats can corrupt images and files. Use <code>BYTEA</code> with the hex format (default in modern PostgreSQL) and verify a few files after import.</p>
+
+      <h2>Phase 6: Migrate stored routines and triggers</h2>
+
+      <p>MySQL and PostgreSQL stored procedure languages are incompatible. MySQL uses SQL/PSM; PostgreSQL uses PL/pgSQL. You cannot automatically translate them — they must be rewritten.</p>
+
+      <p>My recommendation: do not migrate stored procedures in the same deployment as the schema migration. Rewrite them as application code first, or schedule a separate migration sprint for complex routines. This keeps the critical path (schema + data) clean and reversible.</p>
+
+      <h2>Phase 7: Verify everything</h2>
+
+      <p>Verification is non-negotiable. Run these checks before cutting over traffic:</p>
+
+      <ol>
+        <li><strong>Row counts match:</strong> <code>SELECT COUNT(*) FROM table</code> on both sides for every table.</li>
+        <li><strong>Checksum sample data:</strong> Hash a few columns on random rows to confirm values are identical.</li>
+        <li><strong>Test constraints:</strong> Try inserting invalid data (duplicate PK, NULL in NOT NULL column) and confirm PostgreSQL rejects it.</li>
+        <li><strong>Run application tests:</strong> Point your test suite at the PostgreSQL instance. Every query should pass.</li>
+        <li><strong>Performance baseline:</strong> Run your slowest queries and compare execution times. Missing indexes are the most common post-migration performance regression.</li>
+      </ol>
+
+      <h2>Phase 8: The cutover</h2>
+
+      <p>Never do an in-place cutover on a Friday. Use one of these patterns:</p>
+
+      <p><strong>Blue-green cutover (recommended):</strong></p>
+
+      <ol>
+        <li>Keep MySQL as the primary database.</li>
+        <li>Replicate writes to PostgreSQL in real time using a tool like <code>pg_chameleon</code> or <code>Debezium</code>.</li>
+        <li>Switch read traffic to PostgreSQL first.</li>
+        <li>Switch write traffic after 24-48 hours of clean reads.</li>
+        <li>Keep MySQL on standby for 1 week as a rollback option.</li>
+      </ol>
+
+      <p><strong>Maintenance window cutover:</strong></p>
+
+      <ol>
+        <li>Stop application writes.</li>
+        <li>Export final MySQL data delta.</li>
+        <li>Import delta into PostgreSQL.</li>
+        <li>Update application connection strings.</li>
+        <li>Resume traffic.</li>
+      </ol>
+
+      <h2>Common pitfalls to avoid</h2>
+
+      <ul>
+        <li><strong>Assuming NULL behavior is identical:</strong> In MySQL, <code>NULL = NULL</code> evaluates to NULL. In PostgreSQL, it also evaluates to NULL — but some edge cases in GROUP BY and DISTINCT differ. Test carefully.</li>
+        <li><strong>Forgetting to re-create sequences:</strong> If you used <code>SERIAL</code> or <code>IDENTITY</code>, ensure sequence start values are set above the maximum imported ID. Otherwise inserts will fail with duplicate key errors.</li>
+        <li><strong>Case sensitivity:</strong> MySQL's <code>VARCHAR</code> comparison is case-insensitive by default on many collations. PostgreSQL is case-sensitive unless you use <code>ILIKE</code> or a case-insensitive collation. Update queries that rely on case folding.</li>
+        <li><strong>String length limits:</strong> MySQL <code>VARCHAR(255)</code> counts characters in some collations and bytes in others. PostgreSQL <code>VARCHAR(255)</code> counts characters. Multi-byte strings that fit in MySQL may exceed the limit in PostgreSQL.</li>
+      </ul>
+
+      <h2>Making migration safe with SchemaLens</h2>
+
+      <p>SchemaLens reduces migration risk by giving you a semantic diff of your schemas before you move data. Paste your original MySQL schema and your converted PostgreSQL schema, and SchemaLens highlights every difference that matters — types, defaults, constraints, and indexes. No more guessing whether your migration script is correct.</p>
+
+      <p><a href="../app.html?dialect=postgres" class="btn">Compare MySQL and PostgreSQL schemas →</a></p>
+
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 48px 0;">
+
+      <p style="color: var(--text-muted);"><strong>Related reading:</strong></p>
+      <ul style="color: var(--text-muted);">
+        <li><a href="postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></li>
+        <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+        <li><a href="sql-create-table-best-practices-for-production.html">SQL CREATE TABLE Best Practices for Production Databases</a></li>
+        <li><a href="complete-guide-to-database-indexing-for-schema-changes.html">The Complete Guide to Database Indexing for Schema Changes</a></li>
+      </ul>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">SchemaLens</div>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Compare SQL schemas, generate migrations, and catch breaking changes — entirely in your browser.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../api.html">API</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../affiliate.html">Affiliate</a>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="../blog.html">Blog</a>
+          <a href="../blog/how-to-catch-schema-drift.html">Schema Drift</a>
+          <a href="../blog/schema-review-checklist.html">Review Checklist</a>
+        </div>
+      </div>
+      <p style="text-align: center; color: var(--text-muted); margin-top: 32px; font-size: 0.85rem;">© 2026 SchemaLens. Built in public.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
