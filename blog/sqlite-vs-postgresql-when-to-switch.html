@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQLite vs PostgreSQL: When to Switch (and When to Stay)</title>
+  <meta name="description" content="A practical guide to choosing between SQLite and PostgreSQL. Learn when SQLite is enough, when PostgreSQL becomes necessary, and how to migrate safely when you outgrow SQLite.">
+  <meta property="og:title" content="SQLite vs PostgreSQL: When to Switch (and When to Stay)">
+  <meta property="og:description" content="A practical guide to choosing between SQLite and PostgreSQL. Learn when SQLite is enough, when PostgreSQL becomes necessary, and how to migrate safely.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/sqlite-vs-postgresql-when-to-switch.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../api.html">API</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <article class="section article">
+    <div class="container" style="max-width: 720px;">
+      <header style="margin-bottom: 48px;">
+        <span class="blog-meta">Decision Guide</span>
+        <h1 style="font-size: 2.2rem; margin: 16px 0;">SQLite vs PostgreSQL: When to Switch (and When to Stay)</h1>
+        <p style="color: var(--text-muted);">Published April 23, 2026 · 10 min read</p>
+      </header>
+
+      <p>SQLite powers more applications than any other database on earth. It ships in every iPhone, Android device, and most web browsers. PostgreSQL powers the backends of the world's most demanding SaaS platforms. Choosing between them — or knowing when to migrate from one to the other — is a decision every developer faces. This guide gives you a clear framework for when SQLite is enough, when PostgreSQL becomes necessary, and how to migrate without losing data or sleep.</p>
+
+      <h2>What SQLite does better than PostgreSQL</h2>
+
+      <p>SQLite is not a toy database. It is a production-grade, battle-tested embedded engine with distinct advantages:</p>
+
+      <ul>
+        <li><strong>Zero configuration:</strong> No server to install, no port to configure, no users to create. The database is a single file.</li>
+        <li><strong>Zero latency:</strong> Because it runs in-process, queries execute with no network round-trip. For read-heavy workloads, this is unbeatable.</li>
+        <li><strong>Zero dependencies:</strong> SQLite is a single C library. It has no runtime requirements beyond libc.</li>
+        <li><strong>Perfect for testing:</strong> Spinning up a test database is as simple as opening a temporary file. Tear-down is deleting the file.</li>
+        <li><strong>Portable:</strong> A SQLite database file works identically on macOS, Linux, Windows, iOS, and Android.</li>
+        <li><strong>ACID compliant:</strong> SQLite writes are fully atomic, consistent, isolated, and durable. It passes the same durability tests as PostgreSQL.</li>
+      </ul>
+
+      <p>If your application is a single-node service, a mobile app, a desktop tool, or a small web app with modest concurrency, SQLite is often the right choice. Don't let database fashion pressure you into running PostgreSQL when a file would suffice.</p>
+
+      <h2>What PostgreSQL does better than SQLite</h2>
+
+      <p>PostgreSQL is a full-featured client-server relational database with capabilities SQLite simply does not have:</p>
+
+      <ul>
+        <li><strong>Concurrent writes:</strong> SQLite handles concurrency with file-level locking. Write throughput is limited to one writer at a time. PostgreSQL uses MVCC and allows hundreds of concurrent writers without blocking.</li>
+        <li><strong>User management and permissions:</strong> PostgreSQL has granular role-based access control. SQLite has no user system — anyone with file access has full database access.</li>
+        <li><strong>Advanced data types:</strong> PostgreSQL supports arrays, JSONB, geometric types, ranges, UUIDs, and custom types. SQLite has five storage classes.</li>
+        <li><strong>Stored procedures and triggers:</strong> PostgreSQL PL/pgSQL is a full programming language. SQLite triggers are basic and procedures are nonexistent.</li>
+        <li><strong>Partial indexes and expression indexes:</strong> PostgreSQL can index subsets of data and computed expressions. SQLite indexes are simpler.</li>
+        <li><strong>Replication and high availability:</strong> PostgreSQL supports streaming replication, logical replication, and failover. SQLite has no built-in replication (though third-party tools exist).</li>
+        <li><strong>Parallel query execution:</strong> PostgreSQL can use multiple CPU cores for a single query. SQLite is single-threaded per connection.</li>
+        <li><strong>Full-text search:</strong> PostgreSQL has tsvector and tsquery. SQLite has FTS5, but it is less powerful and less commonly used.</li>
+      </ul>
+
+      <h2>The switching framework: 5 questions</h2>
+
+      <p>Use these five questions to decide whether you need PostgreSQL or if SQLite is still sufficient:</p>
+
+      <h3>1. Do you need more than one writer at a time?</h3>
+
+      <p>SQLite's write concurrency model is simple: one writer, many readers. If your application has multiple processes or threads writing simultaneously, SQLite will serialize them. For low-volume writes, this is fine. For high-volume writes, it becomes a bottleneck.</p>
+
+      <p><strong>Rule:</strong> If your application has &gt;10 writes per second sustained, or unpredictable write bursts, consider PostgreSQL.</p>
+
+      <h3>2. Do you need user-level access control?</h3>
+
+      <p>SQLite has no authentication. File-system permissions are the only security boundary. If your database contains sensitive data and multiple applications or users need different access levels, PostgreSQL's role system is essential.</p>
+
+      <p><strong>Rule:</strong> If more than one application or user class touches the database, use PostgreSQL.</p>
+
+      <h3>3. Is your data larger than available RAM?</h3>
+
+      <p>SQLite performs well when the working set fits in memory. For databases larger than RAM, PostgreSQL's query planner, parallel execution, and sophisticated caching generally outperform SQLite.</p>
+
+      <p><strong>Rule:</strong> If your database exceeds 50% of available RAM and query performance matters, benchmark PostgreSQL.</p>
+
+      <h3>4. Do you need advanced querying?</h3>
+
+      <p>Window functions, common table expressions (CTEs), LATERAL joins, and recursive queries are all fully supported in PostgreSQL. SQLite supports window functions and CTEs, but with limitations. Complex analytical queries are PostgreSQL's strength.</p>
+
+      <p><strong>Rule:</strong> If you write queries with multiple CTEs, window functions, or recursive logic, use PostgreSQL.</p>
+
+      <h3>5. Do you need high availability?</h3>
+
+      <p>SQLite is a single file. If the disk fails, the database is gone unless you have backups. PostgreSQL supports streaming replication, point-in-time recovery, and automatic failover.</p>
+
+      <p><strong>Rule:</strong> If downtime costs money or reputation, use PostgreSQL with replication.</p>
+
+      <h2>When to stay on SQLite</h2>
+
+      <p>Many teams prematurely migrate to PostgreSQL. Here are situations where SQLite is not just acceptable — it is superior:</p>
+
+      <ul>
+        <li><strong>Embedded systems and IoT:</strong> A 500KB library beats a 100MB Docker container.</li>
+        <li><strong>Mobile applications:</strong> Core Data on iOS and Room on Android are both SQLite-based.</li>
+        <li><strong>Desktop applications:</strong> Firefox, Chrome, and VS Code all use SQLite for local storage.</li>
+        <li><strong>Small web apps:</strong> If your app serves &lt;1,000 requests per minute and has &lt;10 concurrent writers, SQLite on a fast SSD is often faster than PostgreSQL over a network socket.</li>
+        <li><strong>Data analysis pipelines:</strong> DuckDB has largely replaced SQLite for analytics, but SQLite remains excellent for ETL staging and small-scale analysis.</li>
+        <li><strong>Testing and development:</strong> Spin-up time for SQLite is milliseconds. For integration tests, this matters.</li>
+      </ul>
+
+      <h2>How to migrate from SQLite to PostgreSQL</h2>
+
+      <p>If you've answered the five questions and decided to switch, here is a safe migration path:</p>
+
+      <h3>Step 1: Export SQLite schema</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>sqlite3 mydb.db ".schema" &gt; sqlite_schema.sql</code></pre>
+
+      <h3>Step 2: Convert the schema</h3>
+
+      <p>SQLite and PostgreSQL are closer than MySQL and PostgreSQL, but there are still differences:</p>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="text-align: left; padding: 8px;">SQLite</th>
+            <th style="text-align: left; padding: 8px;">PostgreSQL</th>
+            <th style="text-align: left; padding: 8px;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>INTEGER PRIMARY KEY</code></td>
+            <td style="padding: 8px;"><code>SERIAL</code> or <code>GENERATED ALWAYS AS IDENTITY</code></td>
+            <td style="padding: 8px;">SQLite auto-increments on INTEGER PRIMARY KEY</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>TEXT</code></td>
+            <td style="padding: 8px;"><code>TEXT</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>REAL</code></td>
+            <td style="padding: 8px;"><code>REAL</code></td>
+            <td style="padding: 8px;">Direct equivalent</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>BLOB</code></td>
+            <td style="padding: 8px;"><code>BYTEA</code></td>
+            <td style="padding: 8px;">Binary data storage</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>BOOLEAN</code></td>
+            <td style="padding: 8px;"><code>BOOLEAN</code></td>
+            <td style="padding: 8px;">SQLite stores 0/1; PostgreSQL stores true/false</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>DATETIME</code></td>
+            <td style="padding: 8px;"><code>TIMESTAMPTZ</code></td>
+            <td style="padding: 8px;">Always use TIMESTAMPTZ in PostgreSQL</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 8px;"><code>JSON</code></td>
+            <td style="padding: 8px;"><code>JSONB</code></td>
+            <td style="padding: 8px;">JSONB is indexed and queryable</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Step 3: Compare schemas before migrating data</h3>
+
+      <p>Paste your SQLite schema and converted PostgreSQL schema into <a href="../app.html?dialect=postgres">SchemaLens</a> to catch mapping errors before you move a single row. SchemaLens will flag type mismatches, missing constraints, and index differences.</p>
+
+      <h3>Step 4: Export and import data</h3>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code># Export SQLite to CSV
+sqlite3 -header -csv mydb.db "SELECT * FROM users" &gt; users.csv
+
+# Import into PostgreSQL
+psql -d mypostgres -c "COPY users FROM '/path/to/users.csv' WITH (FORMAT csv, HEADER true);"</code></pre>
+
+      <p>For larger datasets, use <code>pgloader</code> — a dedicated SQLite-to-PostgreSQL migration tool:</p>
+
+      <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); overflow-x: auto;"><code>pgloader sqlite:///path/to/mydb.db postgresql:///mypostgres</code></pre>
+
+      <h3>Step 5: Update application connection strings</h3>
+
+      <p>Replace SQLite connection logic with PostgreSQL connection pools. Most ORMs (Prisma, Sequelize, SQLAlchemy, Django ORM) make this trivial — just change the connection string dialect.</p>
+
+      <h3>Step 6: Verify</h3>
+
+      <p>Run your full test suite against PostgreSQL. Check row counts, constraint behavior, and query results. Performance will differ — some queries will be faster, others slower. Profile before optimizing.</p>
+
+      <h2>Common migration gotchas</h2>
+
+      <ul>
+        <li><strong>Strict typing:</strong> SQLite is dynamically typed. You can insert a string into an INTEGER column and SQLite will accept it. PostgreSQL will reject it. Clean your data before migration.</li>
+        <li><strong>Foreign key enforcement:</strong> SQLite disables foreign keys by default. Many SQLite schemas have broken foreign keys that PostgreSQL will reject. Run <code>PRAGMA foreign_key_check;</code> before exporting.</li>
+        <li><strong>Auto-increment behavior:</strong> SQLite's <code>INTEGER PRIMARY KEY</code> auto-increments. PostgreSQL requires <code>SERIAL</code> or <code>IDENTITY</code>. Map carefully or sequence values will conflict.</li>
+        <li><strong>Date functions:</strong> SQLite's date functions (<code>date()</code>, <code>datetime()</code>, <code>strftime()</code>) are different from PostgreSQL's. Update queries that manipulate dates.</li>
+        <li><strong>LIKE case sensitivity:</strong> SQLite <code>LIKE</code> is case-insensitive by default. PostgreSQL <code>LIKE</code> is case-sensitive. Use <code>ILIKE</code> in PostgreSQL for case-insensitive matching.</li>
+      </ul>
+
+      <h2>The bottom line</h2>
+
+      <p>SQLite and PostgreSQL are not competitors. They are tools for different jobs. SQLite is the right default for single-node, low-concurrency applications. PostgreSQL is the right choice for multi-user, high-concurrency, or complex-query workloads.</p>
+
+      <p>The mistake is not choosing one or the other. The mistake is refusing to switch when your requirements change. A startup that begins with SQLite and migrates to PostgreSQL at product-market fit is making a smart engineering decision. A startup that runs PostgreSQL from day one for a prototype with ten users is wasting money and complexity.</p>
+
+      <p>When you do switch, use SchemaLens to compare your SQLite and PostgreSQL schemas before moving data. Catching a type mismatch or missing constraint in the schema diff stage is infinitely cheaper than debugging data corruption in production.</p>
+
+      <p><a href="../app.html?dialect=postgres" class="btn">Compare SQLite and PostgreSQL schemas →</a></p>
+
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 48px 0;">
+
+      <p style="color: var(--text-muted);"><strong>Related reading:</strong></p>
+      <ul style="color: var(--text-muted);">
+        <li><a href="migrate-mysql-to-postgresql-without-data-loss.html">How to Migrate from MySQL to PostgreSQL Without Data Loss</a></li>
+        <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+        <li><a href="sql-create-table-best-practices-for-production.html">SQL CREATE TABLE Best Practices for Production Databases</a></li>
+        <li><a href="complete-guide-to-database-indexing-for-schema-changes.html">The Complete Guide to Database Indexing for Schema Changes</a></li>
+      </ul>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">SchemaLens</div>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Compare SQL schemas, generate migrations, and catch breaking changes — entirely in your browser.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../api.html">API</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../affiliate.html">Affiliate</a>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="../blog.html">Blog</a>
+          <a href="../blog/how-to-catch-schema-drift.html">Schema Drift</a>
+          <a href="../blog/schema-review-checklist.html">Review Checklist</a>
+        </div>
+      </div>
+      <p style="text-align: center; color: var(--text-muted); margin-top: 32px; font-size: 0.85rem;">© 2026 SchemaLens. Built in public.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
