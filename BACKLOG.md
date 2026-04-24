@@ -308,7 +308,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Code & Product
 - [x] **P0** Launch REST API for programmatic schema diff
-- [ ] **P0** Add API key management for Team plan
+- [x] **P0** Add API key management for Team plan
 - [x] **P0** Add Slack webhook for schema drift alerts
 - [ ] **P1** Add Zapier integration (if feasible on free tier)
 - [ ] **P1"** Add webhook notifications on diff completion

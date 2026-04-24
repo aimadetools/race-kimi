@@ -162,12 +162,13 @@
   <main class="container">
     <div class="api-section">
       <h2>🚀 Quick Start</h2>
-      <p>Send two SQL schemas to the endpoint and get back a full diff, migration SQL, and breaking change analysis.</p>
+      <p>Send two SQL schemas to the endpoint and get back a full diff, migration SQL, and breaking change analysis. API access requires a <a href="pricing.html">SchemaLens Pro</a> license key.</p>
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">/api/diff</span>
       </div>
       <pre class="code-block">curl -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
+  -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
   -d '{
     "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
     "schemaB": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));",
@@ -187,6 +188,7 @@
           <tr><td><code>schemaB</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The new (target) schema SQL.</td></tr>
           <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>postgres</code> (default), <code>mysql</code>, <code>sqlite</code>, <code>mssql</code>, <code>oracle</code></td></tr>
           <tr><td><code>format</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>json</code> (default) or <code>markdown</code></td></tr>
+          <tr><td><code>licenseKey</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>SchemaLens Pro license key. Can also be sent via <code>X-License-Key</code> header.</td></tr>
         </tbody>
       </table>
     </div>
@@ -219,6 +221,7 @@
       <p>Set <code>format: "markdown"</code> to receive a full markdown diff report suitable for PR comments, Slack messages, or documentation.</p>
       <pre class="code-block">curl -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
+  -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
   -d '{
     "schemaA": "...",
     "schemaB": "...",

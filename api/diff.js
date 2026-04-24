@@ -3,10 +3,11 @@
  * POST /api/diff
  *
  * Body:
- *   schemaA    string  required  Old schema SQL
- *   schemaB    string  required  New schema SQL
- *   dialect    string  optional  postgres | mysql | sqlite | mssql (default: postgres)
- *   format     string  optional  json | markdown (default: json)
+ *   schemaA     string  required  Old schema SQL
+ *   schemaB     string  required  New schema SQL
+ *   dialect     string  optional  postgres | mysql | sqlite | mssql | oracle (default: postgres)
+ *   format      string  optional  json | markdown (default: json)
+ *   licenseKey  string  required  Valid SchemaLens Pro license key (SL-XXXX-XXXX-XXXX-XXXX)
  *
  * Response (json):
  *   diff              object   Full diff result
@@ -25,6 +26,23 @@ const {
   generateMigration,
   generateMarkdown
 } = require('../lib/engine');
+
+const SALT = 'SchemaLensPro2026';
+
+function validateLicenseKey(key) {
+  if (!/^SL-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)) return false;
+  const parts = key.replace(/^SL-/, '').split('-');
+  const payload = parts.slice(0, 3).join('');
+  const check = parts[3];
+  let hash = 0;
+  const data = payload + SALT;
+  for (let i = 0; i < data.length; i++) {
+    hash = ((hash << 5) - hash + data.charCodeAt(i)) | 0;
+  }
+  hash = Math.abs(hash) % 46656;
+  const expected = hash.toString(36).toUpperCase().padStart(4, '0');
+  return check === expected;
+}
 
 // In-memory rate limiter (per IP, per minute)
 const rateLimitMap = new Map();
@@ -63,7 +81,7 @@ module.exports = (req, res) => {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-License-Key');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -78,13 +96,22 @@ module.exports = (req, res) => {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
-  const { schemaA, schemaB, dialect = 'postgres', format = 'json' } = req.body || {};
+  const { schemaA, schemaB, dialect = 'postgres', format = 'json', licenseKey } = req.body || {};
+  const headerKey = req.headers['x-license-key'];
+  const key = licenseKey || headerKey;
+
+  if (!key || !validateLicenseKey(key)) {
+    return res.status(401).json({
+      error: 'A valid SchemaLens Pro license key is required for API access.',
+      upgradeUrl: 'https://schemalens.tech/pricing.html'
+    });
+  }
 
   if (typeof schemaA !== 'string' || typeof schemaB !== 'string') {
     return res.status(400).json({ error: 'schemaA and schemaB are required string fields.' });
   }
 
-  const validDialects = ['postgres', 'mysql', 'sqlite', 'mssql'];
+  const validDialects = ['postgres', 'mysql', 'sqlite', 'mssql', 'oracle'];
   if (!validDialects.includes(dialect)) {
     return res.status(400).json({ error: `Invalid dialect. Must be one of: ${validDialects.join(', ')}` });
   }
@@ -123,6 +150,9 @@ module.exports = (req, res) => {
         viewsAdded: diff.viewsAdded.length,
         viewsRemoved: diff.viewsRemoved.length,
         viewsModified: diff.viewsModified.length,
+        functionsAdded: diff.functionsAdded.length,
+        functionsRemoved: diff.functionsRemoved.length,
+        functionsModified: diff.functionsModified.length,
         breakingChangeCount: breakingChanges.length
       }
     });
