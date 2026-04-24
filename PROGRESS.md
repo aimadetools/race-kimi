@@ -5081,3 +5081,92 @@ Add an exit-intent popup on app.html to capture users who are about to leave wit
 ---
 
 *Day 16 in progress. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Pricing Page A/B Test Variant (April 24, 2026)
+
+### Objective
+Create a pricing page A/B test variant to optimize conversion. This was the highest-priority unblocked P1 task after the exit-intent popup.
+
+### What Was Built
+
+#### `pricing-b.html` — Variant B
+A benefit-focused pricing page with 4 key differences from the control (`pricing.html`):
+
+1. **Benefit-driven hero:** "Stop writing migrations by hand" instead of "Simple, transparent pricing"
+   - Subheadline emphasizes speed: "generates your ALTER TABLE scripts in seconds"
+   - Risk-reversal banner with 3 trust signals: 14-day money-back guarantee, cancel anytime, no credit card required
+
+2. **Pro-first card ordering:** Pro (featured) is leftmost, then Team, then Free
+   - Users reading left-to-right see the paid option first
+   - Pro card badge changed from "Most Popular" to "Best Value"
+   - Annual savings highlighted with bold green text: "save $25/year" and "save $58/year"
+
+3. **Enhanced Pro card copy:**
+   - Added "Breaking change detection" as a listed feature
+   - Added "Export JSON" alongside Markdown, PDF, SQL
+   - Added guarantee line below CTA button
+   - Target persona: "For developers who ship weekly"
+
+4. **Updated Free card:**
+   - Changed dialect list from "PostgreSQL, MySQL, SQLite" to "All 5 SQL dialects" to reflect current product breadth
+
+#### A/B Test Infrastructure
+- **50/50 traffic split:** Inline script in `pricing.html` `<head>` assigns variant A or B via `sessionStorage`
+- **Session persistence:** Once assigned, user stays in the same variant for the entire session
+- **No flicker:** Redirect runs before any content renders
+- **Analytics-ready:** Variant stored in `sessionStorage` as `schemalens_pricing_variant` for future analysis
+
+#### SEO & Site Health
+- Added `pricing-b.html` to `sitemap.xml` with priority 0.5
+- Unique meta description for variant: "Stop writing ALTER TABLE scripts by hand. Pro starts at $12/mo with a 14-day money-back guarantee."
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ HTML syntax balanced (24 open/close divs)
+- ✅ Redirect script tested manually: variant B loads correctly
+- ✅ Pricing-b.html renders in both dark and light themes
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research pricing A/B best practices | 0.1 |
+| Design variant differences | 0.15 |
+| Build pricing-b.html | 0.2 |
+| Implement redirect script and sessionStorage tracking | 0.1 |
+| Update sitemap.xml | 0.05 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **0.9** |
+
+### Key Insights
+1. **Card order matters** — Most pricing page optimization guides recommend putting the desired conversion tier first or in the center. By testing Pro-first vs Pro-middle, we can measure which layout drives more clicks.
+
+2. **Annual emphasis increases LTV** — Highlighting annual savings with bold green text makes the annual plan feel like a deal rather than a commitment. Even a small shift from monthly to annual significantly improves customer lifetime value.
+
+3. **Benefit headlines outperform feature headlines** — "Stop writing migrations by hand" speaks to the user's pain point. "Simple, transparent pricing" speaks to the company's values. Pain-point copy almost always converts better.
+
+### Day 16 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 5 |
+| New files created | 1 (pricing-b.html) |
+| Pages updated | 3 (pricing.html, sitemap.xml, BACKLOG.md) |
+| Blog posts published | 24 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Build keyboard shortcut cheat sheet modal (highest-priority unblocked P2)
+2. Await human response on domain purchase (schemalens.tech)
+3. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+
+---
+
+*Day 16 in progress. Pricing A/B test live. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*

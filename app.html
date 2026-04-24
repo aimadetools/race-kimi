@@ -462,6 +462,42 @@
       color: var(--text);
       text-decoration: underline;
     }
+    .shortcuts-modal .modal {
+      max-width: 520px;
+      text-align: left;
+    }
+    .shortcuts-modal .modal h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .shortcuts-list {
+      display: grid;
+      gap: 10px;
+    }
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--code-bg);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+    }
+    .shortcut-row kbd {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      box-shadow: 0 2px 0 var(--border);
+    }
+    .shortcut-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 16px;
+    }
     .save-btn {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -859,6 +895,44 @@ CREATE TABLE users (
 
   <!-- Feedback FAB -->
   <button class="feedback-fab" onclick="openFeedbackModal()" title="Send feedback" aria-label="Send feedback">💬</button>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div class="modal-overlay shortcuts-modal" id="shortcutsModal">
+    <div class="modal">
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <div class="shortcuts-list">
+        <div class="shortcut-row">
+          <span>Compare schemas</span>
+          <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Load sample schema</span>
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Save diff to cloud</span>
+          <kbd>Ctrl</kbd> + <kbd>S</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Share diff via URL</span>
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Clear editors</span>
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Toggle this help</span>
+          <kbd>?</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span>Close modal</span>
+          <kbd>Esc</kbd>
+        </div>
+      </div>
+      <p class="shortcut-hint">Press <kbd>?</kbd> anytime to show this dialog. Shortcuts work anywhere except when typing in a text field.</p>
+    </div>
+  </div>
 
   <!-- Exit Intent Modal -->
   <div class="modal-overlay exit-intent-modal" id="exitIntentModal">
@@ -3639,11 +3713,61 @@ setupDrop('panelB', 'schemaB');
 document.getElementById('schemaA').addEventListener('input', updateStats);
 document.getElementById('schemaB').addEventListener('input', updateStats);
 
-// Keyboard shortcut: Ctrl+Enter to compare
+// Keyboard shortcuts
+const shortcutsModal = document.getElementById('shortcutsModal');
+function openShortcutsModal() { shortcutsModal?.classList.add('active'); }
+function closeShortcutsModal() { shortcutsModal?.classList.remove('active'); }
+shortcutsModal?.addEventListener('click', (e) => {
+  if (e.target.id === 'shortcutsModal') closeShortcutsModal();
+});
+
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'Enter') {
+  const tag = document.activeElement?.tagName;
+  const isTyping = tag === 'INPUT' || tag === 'TEXTAREA';
+
+  if (e.key === '?' && !isTyping && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    if (shortcutsModal?.classList.contains('active')) {
+      closeShortcutsModal();
+    } else {
+      openShortcutsModal();
+    }
+    return;
+  }
+
+  if (e.key === 'Escape') {
+    closeShortcutsModal();
+    return;
+  }
+
+  if (e.ctrlKey && e.key === 'Enter' && !isTyping) {
     e.preventDefault();
     document.getElementById('compareBtn').click();
+    return;
+  }
+
+  if (e.ctrlKey && e.key === 's' && !e.shiftKey && !isTyping) {
+    e.preventDefault();
+    openSaveModal();
+    return;
+  }
+
+  if (e.ctrlKey && e.shiftKey && e.key === 'S' && !isTyping) {
+    e.preventDefault();
+    document.getElementById('shareBtn').click();
+    return;
+  }
+
+  if (e.ctrlKey && e.shiftKey && e.key === 'c' && !isTyping) {
+    e.preventDefault();
+    document.getElementById('clearBtn').click();
+    return;
+  }
+
+  if (e.ctrlKey && e.shiftKey && e.key === 'l' && !isTyping) {
+    e.preventDefault();
+    loadSample('postgres');
+    return;
   }
 });
 
