@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oracle vs PostgreSQL: Schema Migration Differences — SchemaLens</title>
+  <meta name="description" content="Key differences between Oracle and PostgreSQL schema migrations. Syntax, types, constraints, and tooling compared with practical examples for each dialect.">
+  <meta property="og:title" content="Oracle vs PostgreSQL: Schema Migration Differences — SchemaLens">
+  <meta property="og:description" content="Compare Oracle and PostgreSQL schema migration syntax. Type mappings, ALTER TABLE differences, and practical migration tips for developers switching between the two.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/oracle-vs-postgresql-schema-migration-differences.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .diff-table th, .diff-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .diff-table th {
+      background: var(--code-bg);
+      font-weight: 600;
+    }
+    .diff-table td code {
+      font-size: 0.85em;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../api.html">API</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="article">
+      <h1>Oracle vs PostgreSQL: Schema Migration Differences</h1>
+      <p class="meta">April 24, 2026 · 7 min read · <a href="../blog.html">Back to blog</a></p>
+
+      <p>Oracle and PostgreSQL are both powerful relational databases, but their schema migration syntax diverges in ways that can trip up even experienced DBAs. If you're moving from Oracle to PostgreSQL — or supporting both — you need to know where the pitfalls are.</p>
+
+      <p>This guide covers the most common migration differences: data types, identity columns, ALTER TABLE syntax, constraints, and quoting rules. Every example shows both Oracle and PostgreSQL side by side.</p>
+
+      <h2>Type Mapping: The First Migration Hurdle</h2>
+
+      <p>Oracle's type system is older and more granular than PostgreSQL's. Many Oracle types have no direct equivalent, which means you need to make intentional choices during migration.</p>
+
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>Oracle</th>
+            <th>PostgreSQL</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>VARCHAR2(n)</code></td>
+            <td><code>VARCHAR(n)</code></td>
+            <td>Behavior is nearly identical for <code>n &lt; 10,485,760</code></td>
+          </tr>
+          <tr>
+            <td><code>NUMBER</code></td>
+            <td><code>NUMERIC</code> or <code>BIGINT</code></td>
+            <td><code>NUMBER</code> without precision is arbitrary precision; map to <code>NUMERIC</code></td>
+          </tr>
+          <tr>
+            <td><code>NUMBER(p,s)</code></td>
+            <td><code>NUMERIC(p,s)</code></td>
+            <td>Direct mapping when both precision and scale are specified</td>
+          </tr>
+          <tr>
+            <td><code>CLOB</code></td>
+            <td><code>TEXT</code></td>
+            <td>PostgreSQL <code>TEXT</code> has no size limit</td>
+          </tr>
+          <tr>
+            <td><code>BLOB</code></td>
+            <td><code>BYTEA</code></td>
+            <td>Both store binary data; escaping rules differ</td>
+          </tr>
+          <tr>
+            <td><code>DATE</code></td>
+            <td><code>TIMESTAMP</code></td>
+            <td>Oracle <code>DATE</code> includes time; PostgreSQL <code>DATE</code> does not</td>
+          </tr>
+          <tr>
+            <td><code>TIMESTAMP WITH TIME ZONE</code></td>
+            <td><code>TIMESTAMPTZ</code></td>
+            <td>Direct equivalent</td>
+          </tr>
+          <tr>
+            <td><code>RAW(n)</code></td>
+            <td><code>BYTEA</code></td>
+            <td>Use <code>BYTEA</code> or <code>UUID</code> for fixed-length binary</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>The NUMBER trap</h3>
+      <p>Oracle's <code>NUMBER</code> without precision is extremely flexible — it stores integers, decimals, and arbitrarily large values. PostgreSQL has no single type that matches this behavior.</p>
+
+      <pre><code>-- Oracle: one type fits all
+CREATE TABLE measurements (
+  id NUMBER PRIMARY KEY,
+  value NUMBER,        -- could be integer or decimal
+  precise NUMBER(19,4) -- definitely decimal
+);
+
+-- PostgreSQL: choose explicitly
+CREATE TABLE measurements (
+  id BIGINT PRIMARY KEY,
+  value NUMERIC,       -- matches arbitrary precision
+  precise NUMERIC(19,4)
+);</code></pre>
+
+      <p>Migration tip: profile your Oracle data first. If a <code>NUMBER</code> column contains only whole numbers under 9 quintillion, use <code>BIGINT</code>. If it contains decimals, use <code>NUMERIC</code> with appropriate precision.</p>
+
+      <h2>Identity Columns and Sequences</h2>
+
+      <p>Oracle 12c introduced identity columns, but many Oracle schemas still use explicit sequences. PostgreSQL has had serial/auto-increment support for decades and added true identity columns in version 10.</p>
+
+      <pre><code>-- Oracle 12c+ identity column
+CREATE TABLE users (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR2(255)
+);
+
+-- PostgreSQL identity column (recommended)
+CREATE TABLE users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR(255)
+);
+
+-- PostgreSQL legacy SERIAL (still common)
+CREATE TABLE users (
+  id BIGSERIAL PRIMARY KEY,
+  email VARCHAR(255)
+);</code></pre>
+
+      <p>Migration tip: PostgreSQL's <code>GENERATED ALWAYS AS IDENTITY</code> is the closest semantic match to Oracle's identity columns. Use it for new migrations. <code>BIGSERIAL</code> is fine for legacy compatibility.</p>
+
+      <h2>ALTER TABLE Syntax Differences</h2>
+
+      <p>This is where migrations get painful. Oracle and PostgreSQL use different keywords and ordering for the same operations.</p>
+
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>Oracle</th>
+            <th>PostgreSQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Add column</td>
+            <td><code>ALTER TABLE t ADD col INT;</code></td>
+            <td><code>ALTER TABLE t ADD COLUMN col INT;</code></td>
+          </tr>
+          <tr>
+            <td>Drop column</td>
+            <td><code>ALTER TABLE t DROP COLUMN col;</code></td>
+            <td><code>ALTER TABLE t DROP COLUMN col;</code></td>
+          </tr>
+          <tr>
+            <td>Rename column</td>
+            <td><code>ALTER TABLE t RENAME COLUMN old TO new;</code></td>
+            <td><code>ALTER TABLE t RENAME COLUMN old TO new;</code></td>
+          </tr>
+          <tr>
+            <td>Modify type</td>
+            <td><code>ALTER TABLE t MODIFY (col VARCHAR(200));</code></td>
+            <td><code>ALTER TABLE t ALTER COLUMN col TYPE VARCHAR(200);</code></td>
+          </tr>
+          <tr>
+            <td>Set NOT NULL</td>
+            <td><code>ALTER TABLE t MODIFY (col NOT NULL);</code></td>
+            <td><code>ALTER TABLE t ALTER COLUMN col SET NOT NULL;</code></td>
+          </tr>
+          <tr>
+            <td>Drop NOT NULL</td>
+            <td><code>ALTER TABLE t MODIFY (col NULL);</code></td>
+            <td><code>ALTER TABLE t ALTER COLUMN col DROP NOT NULL;</code></td>
+          </tr>
+          <tr>
+            <td>Set default</td>
+            <td><code>ALTER TABLE t MODIFY (col DEFAULT 'x');</code></td>
+            <td><code>ALTER TABLE t ALTER COLUMN col SET DEFAULT 'x';</code></td>
+          </tr>
+          <tr>
+            <td>Add constraint</td>
+            <td><code>ALTER TABLE t ADD CONSTRAINT ...;</code></td>
+            <td><code>ALTER TABLE t ADD CONSTRAINT ...;</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The pattern: Oracle uses <code>MODIFY</code> for almost everything related to existing columns. PostgreSQL uses explicit <code>ALTER COLUMN ... TYPE/SET/DROP</code> commands. This makes PostgreSQL more verbose but also more explicit.</p>
+
+      <h2>Quoted Identifiers and Case Sensitivity</h2>
+
+      <p>This difference causes more migration bugs than any other. Oracle is case-insensitive for unquoted identifiers and stores them as uppercase. PostgreSQL is case-insensitive for unquoted identifiers and stores them as lowercase.</p>
+
+      <pre><code>-- Oracle: unquoted becomes uppercase
+CREATE TABLE MyTable (MyCol INT);
+-- Stored as: MYTABLE, MYCOL
+
+-- PostgreSQL: unquoted becomes lowercase
+CREATE TABLE MyTable (MyCol INT);
+-- Stored as: mytable, mycol
+
+-- Both: quoted preserves case
+CREATE TABLE "MyTable" ("MyCol" INT);
+-- Stored as: MyTable, MyCol</code></pre>
+
+      <p>Migration tip: if your Oracle schema uses quoted mixed-case identifiers, you must quote them identically in PostgreSQL. If your Oracle schema uses unquoted identifiers, they will automatically become lowercase in PostgreSQL — which is usually what you want.</p>
+
+      <h2>Constraints and Indexes</h2>
+
+      <h3>Constraint naming</h3>
+      <p>Oracle auto-generates constraint names like <code>SYS_C0012345</code> if you don't name them explicitly. PostgreSQL also auto-generates names, but uses a different pattern (<code>tablename_columnname_check</code>). Always name your constraints explicitly in both databases.</p>
+
+      <pre><code>-- Good in both databases
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  CONSTRAINT uq_users_email UNIQUE (email)
+);
+
+-- Bad: relying on auto-generated names
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE
+);</code></pre>
+
+      <h3>Function-based indexes</h3>
+      <p>Both databases support function-based indexes, but the syntax is slightly different:</p>
+
+      <pre><code>-- Oracle
+CREATE INDEX idx_users_lower_email ON users (LOWER(email));
+
+-- PostgreSQL
+CREATE INDEX idx_users_lower_email ON users (LOWER(email));</code></pre>
+
+      <p>Good news: this one is actually identical.</p>
+
+      <h2>Sequences and Triggers</h2>
+
+      <p>Legacy Oracle schemas often use triggers to populate primary keys from sequences:</p>
+
+      <pre><code>-- Oracle: trigger + sequence pattern
+CREATE SEQUENCE users_seq START WITH 1;
+
+CREATE OR REPLACE TRIGGER users_bi
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+  :NEW.id := users_seq.NEXTVAL;
+END;
+/
+
+-- PostgreSQL: simpler with identity or DEFAULT
+CREATE TABLE users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR(255)
+);
+
+-- Or with explicit sequence
+CREATE SEQUENCE users_seq START 1;
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY DEFAULT nextval('users_seq'),
+  email VARCHAR(255)
+);</code></pre>
+
+      <p>Migration tip: replace Oracle trigger+sequence patterns with PostgreSQL identity columns or <code>DEFAULT nextval()</code>. Triggers are slower and harder to maintain.</p>
+
+      <h2>Schema and User Concepts</h2>
+
+      <p>In Oracle, a user and a schema are essentially the same thing. In PostgreSQL, they are separate: a database contains schemas, and schemas contain objects. Users (roles) have permissions on schemas.</p>
+
+      <pre><code>-- Oracle: user = schema
+CREATE USER app_user IDENTIFIED BY password;
+GRANT CREATE SESSION, CREATE TABLE TO app_user;
+-- app_user now has their own schema
+
+-- PostgreSQL: schema is a namespace within a database
+CREATE SCHEMA app_schema;
+GRANT ALL ON SCHEMA app_schema TO app_user;</code></pre>
+
+      <p>Migration tip: don't create a separate PostgreSQL user for every Oracle schema. Instead, create PostgreSQL schemas within a single database and grant appropriate permissions.</p>
+
+      <div class="cta-box">
+        <h3>Compare Oracle and PostgreSQL schemas instantly</h3>
+        <p>Paste your Oracle DDL and PostgreSQL DDL into SchemaLens to see a semantic diff with type mappings, syntax differences, and migration SQL.</p>
+        <a href="../app.html?dialect=oracle" class="btn btn-primary">Open SchemaLens — Oracle Mode</a>
+      </div>
+
+      <h2>Quick Reference: Oracle → PostgreSQL</h2>
+
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>Concept</th>
+            <th>Oracle</th>
+            <th>PostgreSQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Auto-increment</td>
+            <td><code>GENERATED ALWAYS AS IDENTITY</code></td>
+            <td><code>GENERATED ALWAYS AS IDENTITY</code> or <code>SERIAL</code></td>
+          </tr>
+          <tr>
+            <td>Current timestamp</td>
+            <td><code>SYSDATE</code></td>
+            <td><code>NOW()</code> or <code>CURRENT_TIMESTAMP</code></td>
+          </tr>
+          <tr>
+            <td>Concatenation</td>
+            <td><code>||</code></td>
+            <td><code>||</code> or <code>CONCAT()</code></td>
+          </tr>
+          <tr>
+            <td>Subquery limit</td>
+            <td><code>ROWNUM &lt;= 10</code></td>
+            <td><code>LIMIT 10</code></td>
+          </tr>
+          <tr>
+            <td>Empty string vs NULL</td>
+            <td><code>''</code> is NULL</td>
+            <td><code>''</code> is empty string</td>
+          </tr>
+          <tr>
+            <td>Dual table</td>
+            <td><code>SELECT 1 FROM DUAL;</code></td>
+            <td><code>SELECT 1;</code></td>
+          </tr>
+          <tr>
+            <td>Owner syntax</td>
+            <td><code>OWNER.TABLE</code></td>
+            <td><code>SCHEMA.TABLE</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Related Reading</h2>
+      <ul>
+        <li><a href="oracle-schema-migrations-practical-guide.html">Oracle Schema Migrations: A Practical Guide for Developers</a></li>
+        <li><a href="postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></li>
+        <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+        <li><a href="how-to-design-a-schema-that-scales.html">How to Design a Database Schema That Scales</a></li>
+      </ul>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../affiliate.html">Affiliate</a>
+          <a href="../api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../oracle-schema-diff.html">Oracle Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
