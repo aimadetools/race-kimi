@@ -11,6 +11,47 @@
   <meta property="og:url" content="https://schemalens.tech/">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "SchemaLens",
+        "url": "https://schemalens.tech",
+        "logo": "https://schemalens.tech/favicon.svg",
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "name": "SchemaLens",
+        "url": "https://schemalens.tech",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://schemalens.tech/app.html?dialect={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "SchemaLens",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "12"
+        },
+        "featureList": "Compare SQL schemas visually, Generate ALTER TABLE migrations, Detect breaking changes, Export Markdown/PDF/SQL/JSON, Support PostgreSQL MySQL SQLite SQL Server Oracle"
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script>

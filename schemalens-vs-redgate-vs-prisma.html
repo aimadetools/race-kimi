@@ -10,6 +10,54 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/schemalens-vs-redgate-vs-prisma.html">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is SchemaLens really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. SchemaLens is free for schemas up to 10 tables. You get the full visual diff, migration preview, and export to Markdown. Pro unlocks unlimited tables, full migration SQL generation, PDF export, and shareable public links for $12/month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SchemaLens if I already use Prisma?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. SchemaLens complements Prisma Migrate perfectly. Use Prisma for day-to-day migrations, and SchemaLens when you need to compare a legacy database dump, review a teammate's SQL migration, or generate ALTER TABLE scripts for a database that isn't managed by Prisma."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Redgate worth the price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Redgate SQL Compare is the industry standard for SQL Server teams and large enterprises. If you need Oracle support, data comparison, or deep Microsoft ecosystem integration, it's worth the investment. For smaller teams or occasional diffs, SchemaLens offers 90% of the value at 3% of the cost."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SchemaLens support stored procedures and functions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens currently diffs tables, columns, indexes, constraints, triggers, views, and enum types. Stored procedure and function diffing is on the roadmap. For teams that need this today, Redgate is the better choice."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I run SchemaLens in CI/CD?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. SchemaLens provides a zero-dependency CLI, pre-built GitHub Actions / GitLab CI / Bitbucket Pipelines templates, and a REST API. You can diff schemas in pull requests and fail the build on breaking changes."
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script>

@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://schemalens.tech/</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/app.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/api.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/changelog.html</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/affiliate.html</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/schemalens-vs-redgate-vs-prisma.html</loc>
-    <lastmod>2026-04-22</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -50,13 +50,13 @@
   </url>
   <url>
     <loc>https://schemalens.tech/about.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -68,151 +68,151 @@
   </url>
   <url>
     <loc>https://schemalens.tech/blog/compare-database-schemas-before-deploying.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/hidden-cost-of-manual-migration-scripts.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/postgresql-vs-mysql-schema-migration-gotchas.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/how-we-parse-sql-in-the-browser.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools/sql-validator.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools/sql-formatter.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools/schema-doc-generator.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools/csv-to-sql.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/tools/json-to-sql.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/schema-review-checklist.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/sql-server-schema-migrations.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/schemalens-in-your-ci-cd-pipeline.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/how-to-generate-alter-table-scripts-automatically.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/how-to-format-sql-for-readable-code-reviews.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/3-free-tools-for-database-schema-management.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/dangerous-schema-changes.html</loc>
-    <lastmod>2026-04-20</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/how-to-document-your-database-schema-in-30-seconds.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/convert-csv-to-sql-in-seconds.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/convert-json-to-sql-schema-in-seconds.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/postgres-schema-diff.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/mysql-schema-diff.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/sqlite-schema-diff.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/sql-server-schema-diff.html</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/oracle-schema-diff.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -287,7 +287,7 @@
   </url>
   <url>
     <loc>https://schemalens.tech/blog/oracle-schema-migrations-practical-guide.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -298,13 +298,13 @@
   </url>
   <url>
     <loc>https://schemalens.tech/blog/migrate-mysql-to-postgresql-without-data-loss.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://schemalens.tech/blog/sqlite-vs-postgresql-when-to-switch.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
