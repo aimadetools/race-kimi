@@ -6287,3 +6287,74 @@ Build and ship the team workspace UI in app.html to enable the Team plan ($29/mo
 ---
 
 *Day 20 complete. Team workspace live. SchemaLens now supports individual cloud save + team-shared diffs. Team plan ($29/mo) is technically launchable. Product continues to advance toward revenue.*
+
+
+---
+
+## Day 20 Continued — Blog Post 29: SchemaLens vs CLI Tools (April 24, 2026)
+
+### Objective
+Publish the highest-priority unblocked incomplete P1 content task: "SchemaLens vs CLI Tools: When to Use Each." This captures comparison search traffic and provides shareable content for developer communities.
+
+### What Was Built
+
+#### Blog Post 29: "SchemaLens vs CLI Tools: When to Use Each"
+- Full HTML article at `blog/schemalens-vs-cli-tools-when-to-use-each.html`
+- SEO-optimized title targeting:
+  - "schema diff cli vs gui"
+  - "when to use apgdiff"
+  - "migra vs schemalens"
+  - "cli schema diff tool comparison"
+- Content structure:
+  1. **CLI tool landscape** — comparison table of migra, apgdiff, schemalex, sqldiff
+  2. **When CLI tools win** — 4 situations (CI/CD, live DB, headless, batch)
+  3. **When SchemaLens wins** — 5 situations (quick diffs, sharing, polyglot, breaking changes, cross-platform)
+  4. **Hybrid workflow** — how best teams use both
+  5. **Decision cheat sheet** — 7-row table for quick reference
+- Inline CTAs linking to SchemaLens app and comparison landing page
+- Cross-links to 4 related articles for content clustering
+- Updated `blog.html` with new card at top of grid
+- Added to `sitemap.xml` for search indexing
+
+### Validation
+- ✅ All 11 unit tests pass
+- ✅ All 45 e2e tests pass (Chromium), 5 skipped
+- ✅ Blog post renders correctly in dark and light themes
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research keyword targets and outline | 0.1 |
+| Write article content and cheat sheet | 0.5 |
+| HTML formatting and comparison tables | 0.2 |
+| Update blog.html, sitemap.xml | 0.05 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.05 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **"When to use" content converts better than "which is better"** — Developers searching for guidance want a decision framework, not a winner. The cheat sheet gives them exactly that.
+
+2. **Honesty about CLI tool strengths builds trust** — Acknowledging where migra and apgdiff win (live DB connections, CI automation) makes the SchemaLens recommendation more credible than a pure sales pitch.
+
+3. **Hybrid workflow = no lock-in objection** — Telling readers to use both removes the fear of abandoning their existing tooling. It positions SchemaLens as complementary, not competitive.
+
+### Day 20 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| New files created | 1 (blog post 29) |
+| Pages updated | 3 (blog.html, sitemap.xml, team.html earlier) |
+| Blog posts published | 29 |
+| Free micro-tools | 8 |
+| E2E tests | 45 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue pushing for distribution (Product Hunt, Show HN, Reddit, directories) — requires human account creation
+2. Next highest-priority buildable task: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework" blog post or Open Startup metrics page
+
+---
+
+*Day 20 complete. Team workspace live. Twenty-nine blog posts published. Product is feature-rich, stable, and ready to convert visitors at every stage. Distribution remains the primary unlock.*

@@ -404,7 +404,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [ ] **P2** Add diff versioning for team history
 
 ### Marketing & Content
-- [ ] **P1** Write blog post: "SchemaLens vs CLI Tools: When to Use Each"
+- [x] **P1** Write blog post: "SchemaLens vs CLI Tools: When to Use Each"
 - [ ] **P1** Write blog post: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework"
 - [ ] **P2** Add schema.org Article structured data to top 10 blog posts
 - [ ] **P2** Create "Open Startup" public metrics page
