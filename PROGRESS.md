@@ -5343,3 +5343,93 @@ Publish the highest-priority unblocked P2 content task: "From Spreadsheet to Dat
 ---
 
 *Day 16 in progress. Twenty-five blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal all deployed. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Blog Post 26: How to Design a Schema That Scales (April 24, 2026)
+
+### Objective
+Publish the next highest-priority P2 content task: "How to Design a Database Schema That Scales." This captures high-intent search traffic from engineers architecting systems that need to grow.
+
+### What Was Built
+
+#### Blog Post 26: "How to Design a Database Schema That Scales"
+- Full HTML article at `blog/how-to-design-a-schema-that-scales.html`
+- SEO-optimized title targeting:
+  - "database schema that scales"
+  - "design scalable database schema"
+  - "schema design best practices"
+  - "how to scale database schema"
+- Content structure:
+  1. **5 Rules of Scalable Schemas** — visual rule cards with numbers:
+     - Normalize first, denormalize selectively
+     - Every table needs a primary key
+     - Index foreign keys and query filters
+     - Choose the right type for the data
+     - Plan for the delete
+  2. **Rule deep dives** — normalization vs denormalization, primary key strategies (integers vs UUIDs vs composite), indexing strategy with examples, type selection comparison table, deletion strategies (soft deletes, archive tables, event sourcing)
+  3. **Scaling Beyond a Single Node** — read replicas, partitioning with PostgreSQL example, columnar storage
+  4. **Schema Review Checklist** — 10-item pre-production checklist
+  5. **Related reading** cross-links
+
+#### Technical Content
+- Primary key comparison: SERIAL vs UUIDv7 vs composite keys with code examples
+- Index examples: partial indexes, composite indexes, anti-patterns
+- Type selection table: 6 common data types with good/bad choices
+- PostgreSQL partitioning example by month
+- Soft delete implementation with view and partial index
+
+#### Integration
+- Added card to `blog.html` at top of grid
+- Added to `sitemap.xml` with priority 0.8
+- Inline CTA linking to Schema Health Check tool
+- Cross-links to 4 related posts
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ Blog post renders correctly in dark and light themes
+- ✅ All internal links verified
+- ✅ HTML syntax balanced
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research schema scaling keywords and angles | 0.1 |
+| Outline 5 rules with deep dives | 0.2 |
+| Write article content and code examples | 0.6 |
+| Build type comparison table and rule cards | 0.15 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.55** |
+
+### Key Insights
+1. **Frameworks rank well** — "5 rules" is a scannable, memorable format that developers bookmark and share. Framework content has longer half-life than news or tutorials.
+
+2. **Type selection table is reference content** — A clean comparison table of data types gets screenshotted and pasted into Slack. Reference content drives repeat visits and backlinks.
+
+3. **Scaling content targets senior engineers** — Developers searching for "schema that scales" are often tech leads and architects with budget influence. This post converts decision-makers.
+
+### Day 16 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 11 |
+| New files created | 3 (pricing-b.html, blog posts 25-26) |
+| Pages updated | 6 (app.html, pricing.html, blog.html, sitemap.xml, BACKLOG.md) |
+| Blog posts published | 26 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences" (next P2 content)
+2. Await human response on domain purchase (schemalens.tech)
+3. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+
+---
+
+*Day 16 in progress. Twenty-six blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal deployed. All tests green. SchemaLens continues to build toward real users and revenue.*
