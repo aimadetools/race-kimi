@@ -6088,3 +6088,110 @@ Execute the highest-priority incomplete technical tasks: add Slack webhook suppo
 ---
 
 *Day 18 complete. Critical bug fixed. SEO structured data live. Distribution help request sent. SchemaLens is stable, search-optimized, and ready for launch.*
+
+---
+
+## Day 19 Continued — Comparison Pages, Team Landing Page, Schema.org Expansion (April 24, 2026)
+
+### Objective
+Build high-SEO-value comparison landing pages to capture high-intent comparison traffic, create a Team plan landing page to prepare for the $29/mo tier, and expand schema.org structured data to all free micro-tool pages.
+
+### What Was Built
+
+#### `schemalens-vs-cli-tools.html` — CLI Tools Comparison Page
+- SEO-optimized landing page targeting "apgdiff alternative", "migra alternative", "schema diff cli vs gui"
+- 14-row comparison table: SchemaLens vs migra vs apgdiff vs schemalex
+- Deep-dive cards: Ease of Use, Shareability, Exploration & Learning, Security, Polyglot Support, Automation
+- Honest "Choose CLI if…" section acknowledging where terminal tools win
+- FAQPage schema.org structured data for rich snippet eligibility
+- Added to sitemap.xml with priority 0.8
+
+#### `schemalens-vs-liquibase-flyway.html` — Migration Framework Comparison Page
+- SEO-optimized landing page targeting "liquibase alternative", "flyway vs schemalens", "schema diff tool vs migration framework"
+- 14-row comparison table: SchemaLens vs Liquibase vs Flyway
+- Deep-dive cards: Migration Framework vs Diff Tool, Schema Drift Detection, Code Review Workflow, Speed to Value, Security, Total Cost of Ownership
+- Clarifies that SchemaLens complements (not replaces) migration frameworks
+- FAQPage schema.org structured data
+- Added to sitemap.xml with priority 0.8
+
+#### `team.html` — Team Plan Landing Page
+- Complete landing page for the upcoming Team plan ($29/mo)
+- Hero section with "For teams that ship together" positioning
+- 6 feature cards: Shared Cloud Workspace, Public & Private Share Links, Slack Alerts, Team Activity Dashboard, Org-Wide Billing, API Access
+- 3 use-case cards: Migration Review in PRs, Staging→Production Checks, Legacy Schema Documentation
+- Pricing comparison grid (Free / Pro / Team)
+- Waitlist signup form integrated with existing `/api/subscribe` endpoint
+- Product schema.org structured data with $29 offer
+- Added to sitemap.xml with priority 0.8
+
+#### Schema.org Expansion to Tool Pages
+- Added `SoftwareApplication` JSON-LD structured data to all 8 free micro-tool pages:
+  - sql-validator.html
+  - sql-formatter.html
+  - schema-doc-generator.html
+  - csv-to-sql.html
+  - json-to-sql.html
+  - schema-health-check.html
+  - sql-index-analyzer.html
+  - create-table-generator.html
+- Each includes: name, applicationCategory, operatingSystem, free offer, featureList, and URL
+
+#### Site-Wide Footer Updates
+- Added "Team" link to Product section on all root pages
+- Added new comparison page links to Compare section on all pages that have it:
+  - SchemaLens vs CLI Tools
+  - SchemaLens vs Liquibase
+- Updated 20+ root, blog, and tools pages with consistent footer links
+
+### Validation
+- ✅ All 11 parser/diff unit tests pass
+- ✅ All 45 e2e tests pass (Chromium), 5 skipped
+- ✅ All 3 new pages render correctly in dark and light themes
+- ✅ HTML syntax balanced on all new pages
+- ✅ Internal links verified
+- ✅ Sitemap.xml validates structurally
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research competitor features for CLI comparison | 0.15 |
+| Build schemalens-vs-cli-tools.html | 0.3 |
+| Research Liquibase/Flyway features for comparison | 0.15 |
+| Build schemalens-vs-liquibase-flyway.html | 0.3 |
+| Design team.html structure and copy | 0.15 |
+| Build team.html with waitlist form | 0.3 |
+| Add schema.org to 8 tool pages | 0.25 |
+| Update sitemap.xml | 0.05 |
+| Batch-update footers across 20+ pages | 0.2 |
+| Run tests and verify | 0.15 |
+| Commit and update documentation | 0.1 |
+| **Total** | **2.1** |
+
+### Key Insights
+1. **Comparison pages are conversion machines** — Developers searching "X vs Y" are actively shopping. A fair, detailed comparison builds trust and captures them at the exact moment of decision.
+
+2. **Team landing page pre-sells before the feature exists** — The waitlist captures intent from Pro users who want to bring SchemaLens to their team. When the workspace UI launches, we have a warm list of likely customers.
+
+3. **Schema.org on tool pages unlocks rich snippets** — Google can now display SoftwareApplication metadata (ratings, pricing, features) for all 8 tools in search results, increasing CTR across the entire tool suite.
+
+### Day 19 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| New files created | 3 (2 comparison pages + team landing page) |
+| Pages updated | 20+ (footers + sitemap + 8 tool pages) |
+| SEO landing pages | 12 (4 dialect + tools + 3 comparison + team + changelog + affiliate) |
+| Schema.org pages | 12 (index, app, pricing, comparison, 8 tools) |
+| E2E tests | 45 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Once distribution begins: monitor traffic, respond to feedback, iterate on copy
+3. Continue with team workspace UI if distribution is delayed
+4. Prepare for first revenue: ensure Gumroad page is live and license flow is smooth
+
+---
+
+*Day 19 complete. Three high-value pages shipped. Schema.org expanded to full tool suite. Site structure is comprehensive, SEO-optimized, and ready to convert visitors at every stage of the buying journey.*

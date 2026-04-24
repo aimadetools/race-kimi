@@ -393,7 +393,26 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ---
 
-*Last updated: Day 18 (April 24, 2026). This backlog is a living document — reprioritize ruthlessly based on data.*
+*Last updated: Day 19 (April 24, 2026). This backlog is a living document — reprioritize ruthlessly based on data.*
+
+## 🔥 NEW UNBLOCKED TASKS (April 24)
+
+### Product
+- [ ] **P1** Build team workspace UI in app.html (list of team diffs, invite members)
+- [ ] **P1** Launch Team plan ($29/mo) once workspace UI is ready
+- [ ] **P2** Add comment/annotation on diffs for team collaboration
+- [ ] **P2** Add diff versioning for team history
+
+### Marketing & Content
+- [ ] **P1** Write blog post: "SchemaLens vs CLI Tools: When to Use Each"
+- [ ] **P1** Write blog post: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework"
+- [ ] **P2** Add schema.org Article structured data to top 10 blog posts
+- [ ] **P2** Create "Open Startup" public metrics page
+
+### Business & Ops
+- [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
+- [ ] **P2** Create testimonial collection form and "Wall of Love" page
+- [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
 
 ## 🔥 NEW UNBLOCKED TASKS (April 22)
 
@@ -407,7 +426,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P1** Write blog post: "How to Catch Schema Drift Before It Breaks Production"
 - [x] **P1** Write blog post: "The Complete Guide to Database Indexing for Schema Changes"
 - [x] **P2** Write blog post: "Generate CREATE TABLE Statements Visually"
-- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+- [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 
 ### Business & Ops
 - [x] **P1** Add simple server-side analytics endpoint (Vercel serverless) to track app usage anonymously
@@ -424,8 +443,12 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ### Marketing & Content
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [x] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
-- [ ] **P2** Write blog post: "How to Design a Schema That Scales"
+- [x] **P2** Write blog post: "How to Design a Schema That Scales"
 - [x] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
+- [x] **P1** Create comparison page: SchemaLens vs apgdiff vs migra vs schemalex (CLI tools)
+- [x] **P1** Create comparison page: SchemaLens vs Liquibase vs Flyway (migration frameworks)
+- [x] **P1** Build Team plan landing page with waitlist signup (team.html)
+- [x] **P2** Add schema.org SoftwareApplication structured data to all 8 free micro-tool pages
 
 ### Business & Ops
 - [x] **P1** Wire analytics endpoint to write events into Supabase analytics_events table
