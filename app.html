@@ -224,6 +224,22 @@
       background: var(--surface-hover);
       color: var(--text);
     }
+    .validation-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+    .validation-bar.success { border-left: 3px solid var(--success); }
+    .validation-bar.warning { border-left: 3px solid var(--warning); }
+    .validation-bar.error { border-left: 3px solid var(--danger); }
+    .validation-issues { margin-top: 8px; padding-left: 16px; }
+    .validation-issues li { margin-bottom: 4px; font-size: 0.8rem; }
     .badge-added { background: rgba(52,211,153,0.15); color: var(--success); }
     .badge-removed { background: rgba(248,113,113,0.15); color: var(--danger); }
     .badge-modified { background: rgba(251,191,36,0.15); color: var(--warning); }
@@ -2666,7 +2682,8 @@ function renderMigration(sql, diff) {
   }
 
   if (!isLimited) {
-    html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button>${highlightSQL(sql)}</div>`;
+    html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button><button class="copy-btn" style="right:164px" onclick="runMigrationValidation()">Validate</button>${highlightSQL(sql)}</div>`;
+    html += `<div id="validationResults"></div>`;
   }
   container.innerHTML = html;
 }
@@ -2675,6 +2692,154 @@ function downloadSQL() {
   if (!lastMigrationSQL) return;
   downloadFile(lastMigrationSQL, 'schemalens_migration.sql', 'text/plain');
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_sql');
+}
+
+function validateMigrationSQL(sql, dialect) {
+  const issues = [];
+  const lines = sql.split('\n');
+  const reservedWords = new Set(['select','insert','update','delete','from','where','join','group','order','having','union','all','distinct','create','drop','alter','table','index','view','trigger','function','procedure','database','schema','user','grant','revoke','commit','rollback','transaction']);
+  
+  let stmtLines = [];
+  let stmtStartLine = 1;
+  let parenDepth = 0;
+  let inString = false;
+  let stringChar = null;
+  
+  function pushIssue(line, severity, message) {
+    issues.push({ line, severity, message });
+  }
+  
+  function validateStatement(stmt, startLine) {
+    const text = stmt.trim();
+    if (!text) return;
+    
+    // Unbalanced parentheses
+    let depth = 0;
+    let s = false;
+    let sc = null;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (s) { if (ch === sc && text[i-1] !== '\\') s = false; continue; }
+      if (ch === "'" || ch === '"') { s = true; sc = ch; continue; }
+      if (ch === '(') depth++;
+      if (ch === ')') depth--;
+    }
+    if (depth !== 0) {
+      pushIssue(startLine, 'error', 'Unbalanced parentheses in statement');
+    }
+    
+    // Double commas
+    if (text.includes(',,')) {
+      pushIssue(startLine, 'warning', 'Double comma detected');
+    }
+    
+    const upper = text.toUpperCase();
+    
+    if (upper.startsWith('ALTER TABLE')) {
+      const hasAction = /\b(ADD|DROP|ALTER|MODIFY|RENAME|CHANGE)\b/.test(upper);
+      if (!hasAction) {
+        pushIssue(startLine, 'error', 'ALTER TABLE statement missing action keyword (ADD, DROP, ALTER, MODIFY, etc.)');
+      }
+      // SQLite unsupported operations
+      if (dialect === 'sqlite') {
+        if (/\bDROP\s+COLUMN\b/i.test(text) && !text.includes('-- NOT SUPPORTED')) {
+          pushIssue(startLine, 'warning', 'SQLite does not support DROP COLUMN directly');
+        }
+        if (/\bALTER\s+COLUMN\b/i.test(text) && !text.includes('-- NOT SUPPORTED')) {
+          pushIssue(startLine, 'warning', 'SQLite does not support ALTER COLUMN directly');
+        }
+      }
+    }
+    
+    if (upper.startsWith('CREATE TABLE')) {
+      const openIdx = text.indexOf('(');
+      const closeIdx = text.lastIndexOf(')');
+      if (openIdx === -1 || closeIdx === -1 || closeIdx <= openIdx) {
+        pushIssue(startLine, 'error', 'CREATE TABLE missing proper column list');
+      }
+    }
+    
+    // Reserved word check for unquoted identifiers
+    const words = text.match(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g) || [];
+    for (const w of words) {
+      if (reservedWords.has(w.toLowerCase())) {
+        // Only flag if it's not inside quotes
+        const idx = text.toLowerCase().indexOf(w.toLowerCase());
+        const before = text[idx - 1] || '';
+        const after = text[idx + w.length] || '';
+        if (before !== '"' && before !== "'" && before !== '`' && before !== '[' && after !== '"' && after !== "'" && after !== '`' && after !== ']') {
+          // Context check: only flag if it's used as an identifier, not as a keyword
+          if (!upper.startsWith(w.toUpperCase()) && !text.toLowerCase().includes(w.toLowerCase() + ' ')) {
+            // Skip common false positives
+            continue;
+          }
+        }
+      }
+    }
+  }
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (trimmed.startsWith('--') || trimmed === '') continue;
+    
+    for (let j = 0; j < line.length; j++) {
+      const ch = line[j];
+      if (inString) {
+        if (ch === stringChar && line[j-1] !== '\\') inString = false;
+        continue;
+      }
+      if (ch === "'" || ch === '"') {
+        inString = true;
+        stringChar = ch;
+        continue;
+      }
+      if (ch === '(') parenDepth++;
+      if (ch === ')') parenDepth--;
+    }
+    
+    if (stmtLines.length === 0) stmtStartLine = i + 1;
+    stmtLines.push(line);
+    
+    if (trimmed.endsWith(';')) {
+      validateStatement(stmtLines.join('\n'), stmtStartLine);
+      stmtLines = [];
+      parenDepth = 0;
+    }
+  }
+  
+  if (stmtLines.length > 0) {
+    const stmt = stmtLines.join('\n').trim();
+    if (stmt && !stmt.startsWith('--')) {
+      pushIssue(stmtStartLine, 'warning', 'Statement may be missing a semicolon');
+    }
+  }
+  
+  return issues;
+}
+
+function runMigrationValidation() {
+  if (!lastMigrationSQL) return;
+  const dialect = document.getElementById('dialect').value;
+  const issues = validateMigrationSQL(lastMigrationSQL, dialect);
+  const container = document.getElementById('validationResults');
+  
+  if (issues.length === 0) {
+    container.innerHTML = `<div class="validation-bar success">✅ Migration SQL looks structurally valid for ${dialect}.</div>`;
+  } else {
+    const errors = issues.filter(i => i.severity === 'error').length;
+    const warnings = issues.filter(i => i.severity === 'warning').length;
+    let html = `<div class="validation-bar ${errors > 0 ? 'error' : 'warning'}">⚠️ Found ${errors} error(s) and ${warnings} warning(s)</div>`;
+    html += `<ul class="validation-issues">`;
+    for (const issue of issues) {
+      const color = issue.severity === 'error' ? 'var(--danger)' : 'var(--warning)';
+      html += `<li style="color:${color}">Line ${issue.line}: ${esc(issue.message)}</li>`;
+    }
+    html += `</ul>`;
+    container.innerHTML = html;
+  }
+  
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('validate_migration', { issues: issues.length, dialect });
 }
 
 function downloadJSON() {

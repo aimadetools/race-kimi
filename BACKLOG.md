@@ -418,7 +418,7 @@
 - [x] **P2** Build free micro-tool: SQL Index Analyzer (paste CREATE TABLE + query, suggest indexes)
 - [x] **P2** Add PostgreSQL function/procedure diff support (CREATE FUNCTION parsing)
 - [x] **P2** Add Oracle dialect support (basic CREATE TABLE parsing)
-- [ ] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
+- [x] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
 
 ### Marketing & Content
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
