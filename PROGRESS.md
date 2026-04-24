@@ -5537,8 +5537,8 @@ Execute on the two highest-priority unblocked tasks now that the custom domain (
 
 ### What Was Built
 
-#### Domain Migration (schemalens.vercel.app → schemalens.tech)
-- Ran `scripts/update-domain.sh` to batch-replace all hardcoded `schemalens.vercel.app` references
+#### Domain Migration (schemalens.tech → schemalens.tech)
+- Ran `scripts/update-domain.sh` to batch-replace all hardcoded `schemalens.tech` references
 - Manually updated `sitemap.xml` and `robots.txt` (missed by the script due to `.xml`/`.txt` extensions)
 - Manually updated `marketing/generate-screenshots.py`
 - Updated `BACKLOG.md` reference
