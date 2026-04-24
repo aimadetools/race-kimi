@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Schema Versioning Best Practices for Engineering Teams | SchemaLens</title>
+<meta name="description" content="10 database schema versioning best practices every engineering team should follow. Learn how to version, test, and deploy schema changes safely.">
+<meta property="og:title" content="Database Schema Versioning Best Practices for Engineering Teams">
+<meta property="og:description" content="10 schema versioning best practices every engineering team should follow. Version, test, and deploy schema changes safely.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.vercel.app/blog/database-schema-versioning-best-practices.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<style>
+.article { max-width: 720px; margin: 0 auto; padding: 2rem 1rem; }
+.article h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.article h2 { font-size: 1.3rem; margin-top: 2.5rem; margin-bottom: 1rem; }
+.article h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article p { line-height: 1.75; margin-bottom: 1rem; color: var(--text); }
+.article ul, .article ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.article li { margin-bottom: 0.5rem; line-height: 1.7; }
+.article code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.article pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1.25rem; }
+.article pre code { background: none; padding: 0; }
+.article .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 2rem 0; }
+.article .cta-box p { margin-bottom: 0.75rem; }
+.article .tag { display: inline-block; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 0.2rem 0.7rem; font-size: 0.8rem; margin-right: 0.5rem; }
+.article .callout { background: var(--surface); border-left: 3px solid var(--primary); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; }
+.article .callout p:last-child { margin-bottom: 0; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<article class="article">
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;"><a href="../blog.html" style="color:var(--text-muted);">← Back to Blog</a></p>
+  <h1>Database Schema Versioning Best Practices for Engineering Teams</h1>
+  <p style="color:var(--text-muted);font-size:0.9rem;">April 24, 2026 · 11 min read</p>
+
+  <p>Schema drift is the silent killer of production databases. One team adds a column in staging. Another drops an index in a hotfix. Three months later, nobody can explain why production and development schemas diverged — or which one is correct.</p>
+
+  <p>Schema versioning solves this. It treats your database structure like application code: tracked, reviewed, tested, and deployed with the same rigor. This post covers 10 best practices that separate teams who sleep through deploys from teams who get paged at 3 AM.</p>
+
+  <h2>1. Keep one source of truth</h2>
+  <p>Your schema definition should live in exactly one place: version control. Whether you use migration files, ORM models, or a schema.sql dump, there must be a single file that represents the current desired state of the database.</p>
+
+  <p>Avoid these anti-patterns:</p>
+  <ul>
+    <li>Multiple developers maintaining separate "latest" schema dumps</li>
+    <li>Schema changes applied manually through GUI tools without updating code</li>
+    <li>Environment-specific schema files that diverge over time</li>
+  </ul>
+
+  <pre><code>-- Good: a single schema.sql in version control
+-- Bad: schema-dev.sql, schema-staging.sql, schema-prod.sql</code></pre>
+
+  <h2>2. Make migrations immutable</h2>
+  <p>Once a migration has run in any shared environment (staging, production), <strong>never edit it</strong>. If the migration was wrong, write a new migration that fixes it. Editing a deployed migration is like rewriting Git history after a push: it creates divergent realities.</p>
+
+  <div class="callout">
+    <p><strong>Golden rule:</strong> If a migration file has a timestamp in its name, it is frozen. Create a new file with a newer timestamp for any corrections.</p>
+  </div>
+
+  <pre><code>-- 2026042401_create_orders_table.sql  (deployed → frozen)
+-- 2026042402_add_orders_index.sql      (deployed → frozen)
+-- 2026042403_fix_orders_timestamp.sql  (new correction)</code></pre>
+
+  <h2>3. Use descriptive migration names</h2>
+  <p>A migration filename should tell you exactly what it does without opening it. Teams that use opaque names like <code>migration_047.sql</code> waste hours searching for when a specific change happened.</p>
+
+  <pre><code>-- Bad
+20260424000001.sql
+migration_47.sql
+
+-- Good
+20260424000001_add_user_preferences_table.sql
+20260424000002_add_index_on_orders_created_at.sql
+20260424000003_make_email_unique_on_users.sql</code></pre>
+
+  <h2>4. Test migrations against production-sized data</h2>
+  <p>A migration that takes 50 milliseconds on your laptop with 1,000 rows can take 50 minutes in production with 50 million rows. The difference is usually:</p>
+  <ul>
+    <li>Adding a <code>NOT NULL</code> column without a default on a large table</li>
+    <li>Creating an index without <code>CONCURRENTLY</code> (PostgreSQL) or <code>ONLINE=ON</code> (SQL Server)</li>
+    <li>Updating every row in a table with a single <code>UPDATE</code></li>
+  </ul>
+
+  <p>Before deploying, test migrations on a database with row counts and hardware specs similar to production. If you cannot replicate production scale, at least estimate the runtime using <code>EXPLAIN ANALYZE</code> on a representative sample.</p>
+
+  <h2>5. Make every migration reversible</h2>
+  <p>Every migration should have a corresponding rollback. This does not mean you will use rollbacks often — in fact, rolling back a deployed migration is rare and sometimes impossible without data loss. But writing the rollback forces you to think through the consequences of the change.</p>
+
+  <pre><code>-- Forward
+ALTER TABLE users ADD COLUMN phone VARCHAR(20);
+
+-- Rollback
+ALTER TABLE users DROP COLUMN phone;</code></pre>
+
+  <p>For destructive changes (dropping columns, tables, or constraints), the rollback may be a no-op or a data-restore script. Document this explicitly rather than pretending the rollback is trivial.</p>
+
+  <h2>6. Version control your schema, not just your migrations</h2>
+  <p>Migration files show <em>how</em> you got to the current schema. A schema dump shows <em>what</em> the current schema is. Both belong in version control.</p>
+
+  <p>The schema dump is invaluable for:</p>
+  <ul>
+    <li>Code reviews — reviewers can see the full table definition without running 47 migrations</li>
+    <li>Diffing — comparing two schema dumps reveals drift instantly</li>
+    <li>Onboarding — new developers can create a database in one command</li>
+  </ul>
+
+  <pre><code># Generate schema dump for version control
+pg_dump --schema-only --no-owner --no-privileges mydb > db/schema.sql
+
+# Compare current code schema against production
+pg_dump --schema-only --no-owner prod_db > prod_schema.sql
+diff db/schema.sql prod_schema.sql</code></pre>
+
+  <p>Better yet, use <a href="../app.html">SchemaLens</a> to diff two schema dumps visually and generate the migration script automatically.</p>
+
+  <h2>7. Run schema diffs in CI/CD</h2>
+  <p>Every pull request that modifies schema-related files should trigger an automated schema diff. This catches two problems early:</p>
+  <ul>
+    <li><strong>Unintended changes:</strong> A developer thought they only added a column, but the diff reveals they also dropped an index</li>
+    <li><strong>Drift detection:</strong> The PR schema does not match the expected base schema, indicating someone manually edited a migration</li>
+  </ul>
+
+  <p>See <a href="../blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a> for complete GitHub Actions and GitLab CI templates.</p>
+
+  <h2>8. Enforce code review for all schema changes</h2>
+  <p>Schema changes are infrastructure changes. They should require the same approval process as modifying load balancers or IAM policies. A good schema review checks:</p>
+  <ul>
+    <li>Is the migration reversible?</li>
+    <li>Does it lock tables for longer than a few seconds?</li>
+    <li>Are indexes added for new foreign keys?</li>
+    <li>Does it handle existing data safely?</li>
+    <li>Is the naming consistent with existing conventions?</li>
+  </ul>
+
+  <p>See <a href="../blog/schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a> for a complete review framework.</p>
+
+  <h2>9. Maintain environment parity</h2>
+  <p>Staging should mirror production as closely as possible. This includes:</p>
+  <ul>
+    <li>Same database version and configuration</li>
+    <li>Same indexes and constraints</li>
+    <li>Similar data volume (or at least representative distributions)</li>
+  </ul>
+
+  <p>When environments diverge, migrations that pass in staging fail in production. Worse, they fail silently — a missing foreign key constraint in staging might not be noticed until production data corruption occurs.</p>
+
+  <h2>10. Document the "why," not just the "what"</h2>
+  <p>Every migration should include a comment explaining the business reason for the change. Future maintainers need context, not just syntax.</p>
+
+  <pre><code>-- 20260424000004_add_customer_tier.sql
+-- Business context: Sales needs to segment customers by MRR for
+-- the new quarterly report. Tier is derived from subscription
+-- data but cached here for query performance.
+-- Risk: Low. New nullable column, no index locks.
+-- Reviewer: @sarah-backend
+
+ALTER TABLE customers ADD COLUMN tier VARCHAR(20);</code></pre>
+
+  <p>This documentation lives in the migration file itself, close to the code it describes. It is far more useful than a separate wiki page that drifts out of date.</p>
+
+  <h2>The complete workflow</h2>
+  <p>Here is what a schema versioning workflow looks like when all 10 practices are in place:</p>
+
+  <ol>
+    <li>Developer writes a migration with a descriptive name and business context comment</li>
+    <li>Developer runs the migration locally and verifies with the schema diff tool</li>
+    <li>Pull request triggers CI schema diff against the base branch</li>
+    <li>Code reviewer approves using the schema review checklist</li>
+    <li>Migration runs in staging against production-like data</li>
+    <li>Schema dump is regenerated and committed</li>
+    <li>Migration runs in production during a maintenance window or online</li>
+    <li>Post-deploy verification confirms schema matches the dump</li>
+  </ol>
+
+  <div class="cta-box">
+    <p style="font-weight:700;margin-bottom:0.5rem;">Start versioning your schemas today</p>
+    <p>Compare schema dumps, catch drift, and generate migration scripts with <a href="../app.html">SchemaLens</a>. Browser-based, privacy-first, and free for up to 10 tables.</p>
+  </div>
+
+  <h2>Related reading</h2>
+  <ul>
+    <li><a href="../blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+    <li><a href="../blog/schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+    <li><a href="../blog/how-to-catch-schema-drift.html">How to Catch Schema Drift Before It Breaks Production</a></li>
+    <li><a href="../blog/the-hidden-cost-of-manual-migration-scripts.html">The Hidden Cost of Manual Migration Scripts</a></li>
+    <li><a href="../blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (and How to Catch Them)</a></li>
+  </ul>
+
+  <p style="color:var(--text-muted);font-size:0.9rem;margin-top:3rem;">© 2026 SchemaLens · <a href="../index.html">SchemaLens</a> is a browser-based SQL schema diff tool built in the $100 AI Startup Race.</p>
+</article>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../api.html">API</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+</body>
+</html>

@@ -406,3 +406,10 @@ test('create table generator blog post loads without errors', async ({ page }) =
   expect(bodyText).toContain('CREATE TABLE');
   expect(bodyText).toContain('SchemaLens');
 });
+
+test('schema versioning blog post loads without errors', async ({ page }) => {
+  await page.goto(`${BASE_URL}/blog/database-schema-versioning-best-practices.html`);
+  const bodyText = await page.locator('body').textContent();
+  expect(bodyText).toContain('Schema Versioning');
+  expect(bodyText).toContain('SchemaLens');
+});
