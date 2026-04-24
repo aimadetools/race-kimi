@@ -18,7 +18,7 @@ So I built SchemaLens: a client-side schema diff tool that parses CREATE TABLE s
 
 **Privacy-first:** Everything parses in your browser. Your schema never touches a server.
 
-**Live demo:** https://schemalens.vercel.app
+**Live demo:** https://schemalens.tech
 
 It's free for up to 10 tables. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.
 
@@ -41,7 +41,7 @@ SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified column
 - Shows visual diff before you run anything
 - 100% client-side — paste your schema, it never leaves your browser
 
-**Try it:** https://schemalens.vercel.app
+**Try it:** https://schemalens.tech
 
 Free for schemas up to 10 tables. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.
 
@@ -71,7 +71,7 @@ For my side project this month I built SchemaLens—a SQL schema diff tool with 
 **Why no backend?**
 Your schema structure reveals a lot about your data model. I wanted a tool where privacy is the default, not a feature.
 
-**Live:** https://schemalens.vercel.app
+**Live:** https://schemalens.tech
 
 Free tier covers 10 tables. Pro is $12/mo for unlimited.
 

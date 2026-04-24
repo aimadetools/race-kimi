@@ -8,7 +8,7 @@
   <meta property="og:title" content="SchemaLens API — Programmatic Schema Diff">
   <meta property="og:description" content="Diff SQL schemas programmatically. Supports PostgreSQL, MySQL, SQLite, and SQL Server.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/api.html">
+  <meta property="og:url" content="https://schemalens.tech/api.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -130,6 +130,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -163,7 +166,7 @@
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">/api/diff</span>
       </div>
-      <pre class="code-block">curl -X POST https://schemalens.vercel.app/api/diff \
+      <pre class="code-block">curl -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -d '{
     "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
@@ -214,7 +217,7 @@
     <div class="api-section">
       <h2>📝 Response (Markdown)</h2>
       <p>Set <code>format: "markdown"</code> to receive a full markdown diff report suitable for PR comments, Slack messages, or documentation.</p>
-      <pre class="code-block">curl -X POST https://schemalens.vercel.app/api/diff \
+      <pre class="code-block">curl -X POST https://schemalens.tech/api/diff \
   -H "Content-Type: application/json" \
   -d '{
     "schemaA": "...",
@@ -323,5 +326,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

@@ -8,8 +8,8 @@
   <meta property="og:title" content="SchemaLens — Compare SQL Schemas & Generate Migrations">
   <meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/">
-  <meta property="og:image" content="https://schemalens.vercel.app/og-image.png">
+  <meta property="og:url" content="https://schemalens.tech/">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -29,6 +29,16 @@
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -101,11 +111,11 @@
     </div>
   </header>
 
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
       <h2 class="section-title">Why developers love SchemaLens</h2>
       <p class="section-subtitle">Stop squinting at text diffs. Get a semantic, visual comparison that understands your schema.</p>
-      <div class="features-grid">
+      <div class="features-grid reveal">
         <div class="feature-card">
           <div class="feature-icon">🔍</div>
           <h3>Semantic Diff</h3>
@@ -165,7 +175,7 @@
     <div class="container">
       <h2 class="section-title">Free developer tools</h2>
       <p class="section-subtitle">Handy utilities that run in your browser. No signup required.</p>
-      <div class="features-grid">
+      <div class="features-grid reveal">
         <div class="feature-card">
           <div class="feature-icon">✅</div>
           <h3>SQL Validator</h3>
@@ -224,11 +234,11 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
       <h2 class="section-title">Simple, transparent pricing</h2>
       <p class="section-subtitle">Start free. Upgrade when you need more power.</p>
-      <div class="pricing-grid">
+      <div class="pricing-grid reveal">
         <div class="pricing-card">
           <h3>Free</h3>
           <p style="color: var(--text-muted); font-size: 0.9rem;">For side projects & quick checks</p>
@@ -276,7 +286,7 @@
     </div>
   </section>
 
-  <section class="cta-section" id="early-access">
+  <section class="cta-section reveal" id="early-access">
     <div class="container">
       <h2>Stop writing migrations by hand.</h2>
       <p>Join 200+ developers who use SchemaLens to catch schema drift before it hits production.</p>
@@ -285,7 +295,7 @@
     </div>
   </section>
 
-  <section class="cta-section" style="padding-top:0;">
+  <section class="cta-section reveal" style="padding-top:0;">
     <div class="container">
       <h2>Get schema migration tips in your inbox</h2>
       <p>New features, blog posts, and best practices. No spam. Unsubscribe anytime.</p>
@@ -396,6 +406,14 @@
 
 <script>
 (function() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+</script>
+<script>
+(function() {
   const key = 'schemalens_analytics';
   let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
   const now = Date.now();
@@ -408,5 +426,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

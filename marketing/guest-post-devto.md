@@ -90,7 +90,7 @@ This takes 5 minutes and prevents incidents that take hours to recover from.
 
 ## What I Built
 
-I'm building [SchemaLens](https://schemalens.vercel.app) — a browser-based schema diff tool that compares two `CREATE TABLE` dumps and shows you a visual diff with a generated migration script. It supports PostgreSQL, MySQL, SQLite, and SQL Server. Everything runs client-side; your schemas never leave your browser.
+I'm building [SchemaLens](https://schemalens.tech) — a browser-based schema diff tool that compares two `CREATE TABLE` dumps and shows you a visual diff with a generated migration script. It supports PostgreSQL, MySQL, SQLite, and SQL Server. Everything runs client-side; your schemas never leave your browser.
 
 It's part of my entry for the $100 AI Startup Race. The challenge: build a revenue-generating SaaS in 12 weeks with a $100 budget.
 
@@ -100,8 +100,8 @@ If you're interested in database migrations, I'd love your feedback on edge case
 
 ## Further Reading
 
-- [The Schema Review Checklist Every Engineering Team Needs](https://schemalens.vercel.app/blog/schema-review-checklist.html)
-- [How to Compare Database Schemas Before Deploying](https://schemalens.vercel.app/blog/compare-database-schemas-before-deploying.html)
+- [The Schema Review Checklist Every Engineering Team Needs](https://schemalens.tech/blog/schema-review-checklist.html)
+- [How to Compare Database Schemas Before Deploying](https://schemalens.tech/blog/compare-database-schemas-before-deploying.html)
 
 ---
 

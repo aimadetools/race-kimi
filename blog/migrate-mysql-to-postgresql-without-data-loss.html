@@ -8,7 +8,7 @@
   <meta property="og:title" content="How to Migrate from MySQL to PostgreSQL Without Data Loss">
   <meta property="og:description" content="A step-by-step guide to migrating MySQL databases to PostgreSQL safely. Schema conversion, data export, type mapping, and common pitfalls to avoid.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/migrate-mysql-to-postgresql-without-data-loss.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/migrate-mysql-to-postgresql-without-data-loss.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -26,6 +26,9 @@
     };
   })();
   </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -312,5 +315,6 @@ ALTER TABLE users ALTER COLUMN is_active TYPE BOOLEAN
     </div>
   </footer>
 
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

@@ -1,0 +1,21 @@
+{
+  "name": "SchemaLens",
+  "short_name": "SchemaLens",
+  "description": "Compare SQL schemas. Spot changes instantly. Generate migrations.",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
+  "orientation": "any",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["developer tools", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+}

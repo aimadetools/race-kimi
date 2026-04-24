@@ -8,7 +8,7 @@
   <meta property="og:title" content="The 5 Most Dangerous Schema Changes (and How to Catch Them)">
   <meta property="og:description" content="These 5 schema changes cause the most production incidents. Here's how to catch them before deploy.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/dangerous-schema-changes.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/dangerous-schema-changes.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <style>
@@ -96,6 +96,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -272,5 +275,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

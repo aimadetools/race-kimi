@@ -8,7 +8,7 @@
   <meta property="og:title" content="Free SQL Developer Tools — SchemaLens">
   <meta property="og:description" content="Validate SQL, format queries, generate schema docs, analyze indexes, and diff database schemas — all in your browser.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/tools.html">
+  <meta property="og:url" content="https://schemalens.tech/tools.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -98,6 +98,9 @@
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -262,5 +265,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

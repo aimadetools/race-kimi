@@ -8,7 +8,7 @@
 <meta property="og:title" content="SQL Schema Health Check — Free Database Linter">
 <meta property="og:description" content="Check your SQL schema for missing primary keys, unindexed foreign keys, missing timestamps, and other database design issues.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://schemalens.vercel.app/tools/schema-health-check.html">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-health-check.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
 <style>
@@ -47,6 +47,9 @@
   }
 })();
 </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -551,5 +554,6 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

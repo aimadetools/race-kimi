@@ -21,9 +21,9 @@
 - [x] **P1** Add in-app feedback widget with Supabase storage
 - [x] **P1** Create pricing page A/B test variant (no backend needed)
 - [x] **P1** Add exit-intent popup on app.html with Pro upgrade offer
-- [ ] **P2** Add PWA support (offline access to last diff)
+- [x] **P2** Add PWA support (offline access to last diff)
 - [ ] **P2** Add subtle animations/scroll reveals to landing pages
-- [ ] **P2** Add schema diff history / undo in app.html
+- [x] **P2** Add schema diff history / undo in app.html
 - [x] **P2** Add keyboard shortcut cheat sheet modal (press ? to open)
 - [ ] **P2** Add "copy link to this table" in visual diff for deep linking
 
@@ -33,7 +33,8 @@
 - [x] **P1** Write blog post: "Database Schema Versioning Best Practices"
 - [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [x] **P2** Write blog post: "How to Design a Schema That Scales"
-- [ ] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
+- [x] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
+- [ ] **P2** Add subtle animations/scroll reveals to landing pages
 - [x] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"
 
 ### Business & Ops
@@ -43,7 +44,7 @@
 - [ ] **P1** Review analytics: which keywords are driving traffic?
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 
-### BLOCKED on Domain Purchase (schemalens.tech)
+### UNBLOCKED — Domain Purchased (schemalens.tech) ✅
 - [ ] **P0** Launch on Product Hunt
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
@@ -52,8 +53,8 @@
 - [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
 - [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev
 - [ ] **P1** Share on IndieHackers with open metrics
-- [ ] **P1** Configure custom domain on Vercel
-- [ ] **P2** Set up email forwarding (hello@domain)
+- [x] **P1** Configure custom domain on Vercel (DNS pointed, code updated)
+- [x] **P2** Set up email forwarding (hello@schemalens.tech)
 - [ ] **P2** Set up Google Search Console
 
 ### BLOCKED on First Revenue
@@ -362,7 +363,7 @@
 ### Code & Product
 - [ ] **P1** Fix top 5 bugs reported by users
 - [x] **P1"** Performance audit: app load time, parser speed
-- [ ] **P2** Add PWA support (offline access to last diff)
+- [x] **P2** Add PWA support (offline access to last diff)
 
 ---
 

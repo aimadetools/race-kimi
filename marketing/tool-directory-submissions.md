@@ -15,7 +15,7 @@ Validate SQL CREATE TABLE syntax in your browser. Supports PostgreSQL, MySQL, SQ
 
 **Tags:** sql, database, validator, postgres, mysql, sqlite, mssql
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 **Screenshot:** (upload a 1200×800 screenshot of the validator with a sample schema parsed)
 
@@ -34,7 +34,7 @@ Paste your CREATE TABLE statements and get instant validation for PostgreSQL, My
 
 **Category:** Developer Tools
 
-**Website:** https://schemalens.vercel.app/tools/sql-validator.html
+**Website:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 
@@ -52,7 +52,7 @@ A free, browser-based validator for SQL CREATE TABLE statements. Supports Postgr
 
 **Category:** Developer Tools
 
-**Website:** https://schemalens.vercel.app/tools/sql-validator.html
+**Website:** https://schemalens.tech/tools/sql-validator.html
 
 **Features:**
 - PostgreSQL, MySQL, SQLite, SQL Server support
@@ -76,7 +76,7 @@ Free browser-based SQL validator that parses CREATE TABLE, CREATE INDEX, and CRE
 
 **Category:** Developer Tools / Database
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 **Maker:** SchemaLens (solo indie dev)
 
@@ -93,7 +93,7 @@ Free browser-based SQL validator that parses CREATE TABLE, CREATE INDEX, and CRE
 **Description:**
 A client-side SQL CREATE TABLE validator supporting PostgreSQL, MySQL, SQLite, and SQL Server. Parses tables, columns, constraints, indexes, and enums with structured output.
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 **Category:** Database Tools
 
@@ -105,7 +105,7 @@ A client-side SQL CREATE TABLE validator supporting PostgreSQL, MySQL, SQLite, a
 
 **Entry:**
 ```
-- [SchemaLens SQL Validator](https://schemalens.vercel.app/tools/sql-validator.html) - Browser-based SQL CREATE TABLE validator for PostgreSQL, MySQL, SQLite, and SQL Server. `BSD-3-Clause` `JavaScript`
+- [SchemaLens SQL Validator](https://schemalens.tech/tools/sql-validator.html) - Browser-based SQL CREATE TABLE validator for PostgreSQL, MySQL, SQLite, and SQL Server. `BSD-3-Clause` `JavaScript`
 ```
 
 *(Note: SchemaLens is client-side only, so it fits "self-hosted" in the sense that data never leaves the user's machine.)*
@@ -123,7 +123,7 @@ Free SQL CREATE TABLE validator that runs entirely in the browser. Supports Post
 
 **Category:** Database Tools
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 
@@ -142,7 +142,7 @@ Built by SchemaLens — the privacy-first schema diff tool.
 
 **Topics:** SQL, Database, Developer Tools, PostgreSQL, MySQL
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 **Gallery:**
 1. Screenshot of validator with PostgreSQL sample
@@ -169,7 +169,7 @@ It's a side project from SchemaLens (a schema diff tool I'm building for the $10
 
 Would love feedback on edge cases it misses!
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 
@@ -188,7 +188,7 @@ Supports PostgreSQL, MySQL, SQLite, and SQL Server. All client-side.
 
 Feedback welcome!
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 
@@ -203,7 +203,7 @@ I built the parser from scratch in vanilla JS as part of SchemaLens (a schema di
 
 Would appreciate feedback on edge cases or dialect-specific syntax it should handle.
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 
@@ -228,7 +228,7 @@ What it does:
 
 It's part of SchemaLens, but completely standalone. Check it out and let me know what dialect edge cases I'm missing.
 
-**Link:** https://schemalens.vercel.app/tools/sql-validator.html
+**Link:** https://schemalens.tech/tools/sql-validator.html
 
 ---
 

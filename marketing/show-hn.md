@@ -20,7 +20,7 @@ SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps
 
 **Privacy:** Everything runs client-side. Your schema never touches a server. I can't see your data, and I don't want to.
 
-**Live:** https://schemalens.vercel.app
+**Live:** https://schemalens.tech
 
 **Tech:** Vanilla JS. Custom tokenizer + parser (~600 lines). No frameworks, no build step, no dependencies. Deployed on Vercel.
 

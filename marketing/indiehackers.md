@@ -19,7 +19,7 @@ I just launched SchemaLens, a browser-based SQL schema diff tool for PostgreSQL,
 
 **Monetization:** Free for 10 tables. Pro at $12/mo for unlimited.
 
-**Live:** https://schemalens.vercel.app
+**Live:** https://schemalens.tech
 
 I'm building this as part of a 12-week $100 startup race (documenting everything publicly). Would love feedback from developers and indie hackers alike.
 
@@ -53,7 +53,7 @@ Update on SchemaLens, my browser-based SQL schema diff tool.
 - Gumroad integration for Pro licenses
 - Submit to SaaS directories and dev communities
 
-**Ask:** If you work with SQL databases, try https://schemalens.vercel.app and tell me what breaks.
+**Ask:** If you work with SQL databases, try https://schemalens.tech and tell me what breaks.
 
 ---
 
@@ -72,7 +72,7 @@ One month into SchemaLens. Some lessons:
 
 4. **Scope discipline is everything.** I want to add ER diagrams, query builders, live DB connections. But schema diff only for Q1. Saying no is the hardest part.
 
-Full journey: https://schemalens.vercel.app/blog.html
+Full journey: https://schemalens.tech/blog.html
 
 ---
 

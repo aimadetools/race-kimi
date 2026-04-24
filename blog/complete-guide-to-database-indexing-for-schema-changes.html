@@ -8,7 +8,7 @@
 <meta property="og:title" content="The Complete Guide to Database Indexing for Schema Changes">
 <meta property="og:description" content="Adding a column without an index can lock tables for hours. Learn when to index during schema migrations, how to avoid locking, and the 5 indexes every migration needs.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://schemalens.vercel.app/blog/complete-guide-to-database-indexing-for-schema-changes.html">
+<meta property="og:url" content="https://schemalens.tech/blog/complete-guide-to-database-indexing-for-schema-changes.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -20,6 +20,9 @@
   }
 })();
 </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -244,5 +247,6 @@ function toggleTheme() {
   localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
 }
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

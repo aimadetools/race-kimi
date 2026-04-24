@@ -31,7 +31,7 @@ SchemaLens is a privacy-first, browser-based SQL schema diff tool for developers
 
 **How it works:**
 1. Buy your license key on this page
-2. Go to [schemalens.vercel.app](https://schemalens.vercel.app)
+2. Go to [schemalens.tech](https://schemalens.tech)
 3. Click "Unlock Pro" in the app toolbar
 4. Paste your key — Pro features activate instantly
 
@@ -79,7 +79,7 @@ Thanks for buying SchemaLens Pro! Your license key is:
 **[license_key]**
 
 To activate Pro:
-1. Open [schemalens.vercel.app](https://schemalens.vercel.app)
+1. Open [schemalens.tech](https://schemalens.tech)
 2. Click "Unlock Pro" in the top toolbar
 3. Paste your key and click Activate
 

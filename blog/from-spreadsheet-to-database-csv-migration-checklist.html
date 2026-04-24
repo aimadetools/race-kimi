@@ -8,7 +8,7 @@
   <meta property="og:title" content="From Spreadsheet to Database: A CSV Migration Checklist — SchemaLens">
   <meta property="og:description" content="Migrate from CSV to SQL without losing data. A practical checklist for engineers moving from spreadsheets to PostgreSQL, MySQL, or SQLite.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/from-spreadsheet-to-database-csv-migration-checklist.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/from-spreadsheet-to-database-csv-migration-checklist.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -88,6 +88,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -372,5 +375,6 @@ IGNORE 1 ROWS;
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

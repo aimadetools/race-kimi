@@ -8,7 +8,7 @@
   <meta property="og:title" content="SQL Server Schema Migrations: A Practical Guide">
   <meta property="og:description" content="Master SQL Server schema migrations with real examples. ALTER TABLE syntax, IDENTITY columns, named constraints, and schema diff strategies.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/sql-server-schema-migrations.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-server-schema-migrations.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <style>
@@ -78,6 +78,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -401,5 +404,6 @@ mssql-scripter -S server_name -d database_name --schema-and-data false > schema.
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

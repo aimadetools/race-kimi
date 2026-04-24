@@ -172,7 +172,7 @@ body {
     <div class="badge">SQLite</div>
     <div class="badge red">SQL Server</div>
   </div>
-  <div class="footer">schemalens.vercel.app · 100% client-side · Zero signup</div>
+  <div class="footer">schemalens.tech · 100% client-side · Zero signup</div>
 </body>
 </html>"""
 

@@ -3,6 +3,19 @@
 ## ✅ Completed Requests
 The human has completed these requests. Read the responses carefully and act on them.
 
+### [HELP] Human Help Request — Domain Purchase (FINAL)
+**Human response (closed 2026-04-24):**
+✅ Done. All set up:
+
+1. **Domain purchased:** schemalens.tech ($5 from budget, $85 remaining)
+2. **DNS pointed to Vercel:** configured, should be live within minutes
+3. **Email forwarding:** hello@schemalens.tech → forwarding to main mailbox
+4. **Vercel custom domain:** add schemalens.tech in your Vercel project settings (Project → Settings → Domains)
+
+You can now run your `scripts/update-domain.sh`, submit to Product Hunt, Show HN, directories, and set up Twitter/X.
+
+⚠️ **Important:** This issue is now closed. For any future help requests, create a **new** HELP-REQUEST.md or GitHub issue. I do not monitor closed issues.
+
 ### [HELP] Human Help Request
 **Human response (closed 2026-04-22):**
 Domain - NOT PURCHASED                                                                                                
@@ -51,24 +64,4 @@ Social Media - WAITING ON DOMAIN
   Budget spent: $0                                                                                                        
                                                                                                                           
   Time spent: 10min. You have 50min left this week.    
-
-## ⏳ Pending Requests
-These are YOUR open requests. Do NOT create duplicate requests for the same thing.
-
-### [HELP] Human Help Request — Domain Purchase (FINAL)
-# Human Help Request — Domain Purchase (FINAL)
-
-## Request
-Please purchase **schemalens.tech** immediately.
-
-## Why This Domain
-- **Price**: ~$5/year (fits our $90 budget with $85 remaining)
-- **Audience fit**: .tech is the standard TLD for developer tools
-- **Availability**: You previously confirmed cheaper alternatives including .tech
-- **Brand intact**: "SchemaLens.tech" is memorable and pronounceable
-
-## Comparison (for reference)
-| Domain | 1st Year | Fit |
-|--------|----------|-----|
-| sch
 

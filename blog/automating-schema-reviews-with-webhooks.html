@@ -8,7 +8,7 @@
   <meta property="og:title" content="Automating Schema Reviews with Webhooks and APIs">
   <meta property="og:description" content="Automate schema reviews with Slack alerts, PR comments, and drift monitoring. Step-by-step guide using the SchemaLens API.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/automating-schema-reviews-with-webhooks.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/automating-schema-reviews-with-webhooks.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <style>
@@ -86,6 +86,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -131,7 +134,7 @@
 
       <p>SchemaLens exposes a single REST endpoint at <code>POST /api/diff</code>. It accepts two schema strings, a dialect, and returns a structured diff plus generated migration SQL.</p>
 
-      <pre><code>curl -X POST https://schemalens.vercel.app/api/diff \
+      <pre><code>curl -X POST https://schemalens.tech/api/diff \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{
     "schemaA": "CREATE TABLE users (id SERIAL PRIMARY KEY);",
@@ -164,7 +167,7 @@
       <pre><code><span class="keyword">const</span> webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
 <span class="keyword">async function</span> <span class="string">notifySlack</span>(schemaA, schemaB, dialect = <span class="string">'postgres'</span>) {
-  <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.vercel.app/api/diff'</span>, {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.tech/api/diff'</span>, {
     method: <span class="string">'POST'</span>,
     headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
     body: JSON.stringify({ schemaA, schemaB, dialect, format: <span class="string">'json'</span> })
@@ -230,7 +233,7 @@ jobs:
       - name: Diff schemas
         id: diff
         run: |
-          curl -s -X POST https://schemalens.vercel.app/api/diff \
+          curl -s -X POST https://schemalens.tech/api/diff \
             -H "Content-Type: application/json" \
             -d "{\"schemaA\":$(jq -Rs . &lt; base-schema.sql),\"schemaB\":$(jq -Rs . &lt; db/schema.sql),\"dialect\":\"postgres\",\"format\":\"markdown\"}" \
             | jq -r '.markdown' &gt; report.md
@@ -264,7 +267,7 @@ jobs:
   <span class="keyword">const</span> prodSchema = <span class="keyword">await</span> exportProductionSchema();
   <span class="keyword">const</span> codeSchema = fs.readFileSync(<span class="string">'db/schema.sql'</span>, <span class="string">'utf8'</span>);
 
-  <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.vercel.app/api/diff'</span>, {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.tech/api/diff'</span>, {
     method: <span class="string">'POST'</span>,
     headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
     body: JSON.stringify({
@@ -301,7 +304,7 @@ checkDrift();</code></pre>
 <span class="keyword">module.exports</span> = <span class="keyword">async</span> (req, res) =&gt; {
   <span class="keyword">const</span> { schemaA, schemaB, dialect, callbackUrl } = req.body;
 
-  <span class="keyword">const</span> diffRes = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.vercel.app/api/diff'</span>, {
+  <span class="keyword">const</span> diffRes = <span class="keyword">await</span> fetch(<span class="string">'https://schemalens.tech/api/diff'</span>, {
     method: <span class="string">'POST'</span>,
     headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
     body: JSON.stringify({ schemaA, schemaB, dialect, format: <span class="string">'json'</span> })
@@ -434,5 +437,6 @@ checkDrift();</code></pre>
   } catch(e){}
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

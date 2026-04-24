@@ -8,7 +8,7 @@
 <meta property="og:title" content="Database Schema Versioning Best Practices for Engineering Teams">
 <meta property="og:description" content="10 schema versioning best practices every engineering team should follow. Version, test, and deploy schema changes safely.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://schemalens.vercel.app/blog/database-schema-versioning-best-practices.html">
+<meta property="og:url" content="https://schemalens.tech/blog/database-schema-versioning-best-practices.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
 <style>
@@ -37,6 +37,9 @@
   }
 })();
 </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -208,7 +211,7 @@ ALTER TABLE customers ADD COLUMN tier VARCHAR(20);</code></pre>
     <li><a href="../blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
     <li><a href="../blog/schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
     <li><a href="../blog/how-to-catch-schema-drift.html">How to Catch Schema Drift Before It Breaks Production</a></li>
-    <li><a href="../blog/the-hidden-cost-of-manual-migration-scripts.html">The Hidden Cost of Manual Migration Scripts</a></li>
+    <li><a href="../blog/hidden-cost-of-manual-migration-scripts.html">The Hidden Cost of Manual Migration Scripts</a></li>
     <li><a href="../blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (and How to Catch Them)</a></li>
   </ul>
 
@@ -237,5 +240,6 @@ function toggleTheme() {
   localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
 }
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

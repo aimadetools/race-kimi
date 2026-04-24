@@ -8,7 +8,7 @@
   <meta property="og:title" content="Free SQL Formatter — SchemaLens">
   <meta property="og:description" content="Paste messy SQL and get beautifully indented, readable queries. Supports all major dialects.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/tools/sql-formatter.html">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-formatter.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -166,6 +166,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -773,5 +776,6 @@ select id, name, email from users u join orders o on u.id=o.user_id where o.stat
 
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

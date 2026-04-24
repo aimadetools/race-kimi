@@ -8,7 +8,7 @@
 <meta property="og:title" content="How to Catch Schema Drift Before It Breaks Production">
 <meta property="og:description" content="Schema drift silently breaks applications. Learn how to detect, prevent, and fix database schema drift with automated diffing, CI gates, and review checklists.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://schemalens.vercel.app/blog/how-to-catch-schema-drift.html">
+<meta property="og:url" content="https://schemalens.tech/blog/how-to-catch-schema-drift.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
 <script>
@@ -20,6 +20,9 @@
   }
 })();
 </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -175,5 +178,6 @@ function toggleTheme() {
 }
 </script>
 
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

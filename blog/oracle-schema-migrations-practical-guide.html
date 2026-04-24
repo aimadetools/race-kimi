@@ -8,7 +8,7 @@
   <meta property="og:title" content="Oracle Schema Migrations: A Practical Guide for Developers">
   <meta property="og:description" content="Learn how to compare Oracle schemas, generate ALTER TABLE scripts, and avoid production incidents.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/oracle-schema-migrations-practical-guide.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/oracle-schema-migrations-practical-guide.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -26,6 +26,9 @@
     };
   })();
   </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -249,5 +252,6 @@ WHERE table_name NOT LIKE 'BIN$%';</code></pre>
     </div>
   </footer>
 
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

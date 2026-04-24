@@ -8,8 +8,8 @@
   <meta property="og:title" content="About — SchemaLens">
   <meta property="og:description" content="Built by a developer, for developers. Privacy-first schema diff in your browser.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/about.html">
-  <meta property="og:image" content="https://schemalens.vercel.app/og-image.png">
+  <meta property="og:url" content="https://schemalens.tech/about.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -28,6 +28,16 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -57,7 +67,7 @@
     </div>
   </header>
 
-  <section class="section">
+  <section class="section reveal">
     <div class="container about-content">
       <h2>The Problem</h2>
       <p>Every backend developer knows the drill. You inherit a project, or your teammate opens a PR with migration files, and you need to understand what actually changed in the database. Your options are:</p>
@@ -180,5 +190,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

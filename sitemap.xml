@@ -1,303 +1,309 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://schemalens.vercel.app/</loc>
+    <loc>https://schemalens.tech/</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/app.html</loc>
+    <loc>https://schemalens.tech/app.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/api.html</loc>
+    <loc>https://schemalens.tech/api.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/changelog.html</loc>
+    <loc>https://schemalens.tech/changelog.html</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/affiliate.html</loc>
+    <loc>https://schemalens.tech/affiliate.html</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/schemalens-vs-redgate-vs-prisma.html</loc>
+    <loc>https://schemalens.tech/schemalens-vs-redgate-vs-prisma.html</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/pricing.html</loc>
+    <loc>https://schemalens.tech/pricing.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/pricing-b.html</loc>
+    <loc>https://schemalens.tech/pricing-b.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/about.html</loc>
+    <loc>https://schemalens.tech/about.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog.html</loc>
+    <loc>https://schemalens.tech/blog.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/compare-database-schemas-before-deploying.html</loc>
+    <loc>https://schemalens.tech/blog/sql-index-analyzer-practical-guide.html</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/blog/compare-database-schemas-before-deploying.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/hidden-cost-of-manual-migration-scripts.html</loc>
+    <loc>https://schemalens.tech/blog/hidden-cost-of-manual-migration-scripts.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/postgresql-vs-mysql-schema-migration-gotchas.html</loc>
+    <loc>https://schemalens.tech/blog/postgresql-vs-mysql-schema-migration-gotchas.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-we-parse-sql-in-the-browser.html</loc>
+    <loc>https://schemalens.tech/blog/how-we-parse-sql-in-the-browser.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/sql-validator.html</loc>
+    <loc>https://schemalens.tech/tools/sql-validator.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/sql-formatter.html</loc>
+    <loc>https://schemalens.tech/tools/sql-formatter.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/schema-doc-generator.html</loc>
+    <loc>https://schemalens.tech/tools/schema-doc-generator.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools.html</loc>
+    <loc>https://schemalens.tech/tools.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/csv-to-sql.html</loc>
+    <loc>https://schemalens.tech/tools/csv-to-sql.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/json-to-sql.html</loc>
+    <loc>https://schemalens.tech/tools/json-to-sql.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/schema-review-checklist.html</loc>
+    <loc>https://schemalens.tech/blog/schema-review-checklist.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/sql-server-schema-migrations.html</loc>
+    <loc>https://schemalens.tech/blog/sql-server-schema-migrations.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/schemalens-in-your-ci-cd-pipeline.html</loc>
+    <loc>https://schemalens.tech/blog/schemalens-in-your-ci-cd-pipeline.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-to-generate-alter-table-scripts-automatically.html</loc>
+    <loc>https://schemalens.tech/blog/how-to-generate-alter-table-scripts-automatically.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-to-format-sql-for-readable-code-reviews.html</loc>
+    <loc>https://schemalens.tech/blog/how-to-format-sql-for-readable-code-reviews.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/3-free-tools-for-database-schema-management.html</loc>
+    <loc>https://schemalens.tech/blog/3-free-tools-for-database-schema-management.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/dangerous-schema-changes.html</loc>
+    <loc>https://schemalens.tech/blog/dangerous-schema-changes.html</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-to-document-your-database-schema-in-30-seconds.html</loc>
+    <loc>https://schemalens.tech/blog/how-to-document-your-database-schema-in-30-seconds.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/convert-csv-to-sql-in-seconds.html</loc>
+    <loc>https://schemalens.tech/blog/convert-csv-to-sql-in-seconds.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/convert-json-to-sql-schema-in-seconds.html</loc>
+    <loc>https://schemalens.tech/blog/convert-json-to-sql-schema-in-seconds.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/postgres-schema-diff.html</loc>
+    <loc>https://schemalens.tech/postgres-schema-diff.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/mysql-schema-diff.html</loc>
+    <loc>https://schemalens.tech/mysql-schema-diff.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/sqlite-schema-diff.html</loc>
+    <loc>https://schemalens.tech/sqlite-schema-diff.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/sql-server-schema-diff.html</loc>
+    <loc>https://schemalens.tech/sql-server-schema-diff.html</loc>
     <lastmod>2026-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/oracle-schema-diff.html</loc>
+    <loc>https://schemalens.tech/oracle-schema-diff.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/schema-health-check.html</loc>
+    <loc>https://schemalens.tech/tools/schema-health-check.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/create-table-generator.html</loc>
+    <loc>https://schemalens.tech/tools/create-table-generator.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-to-catch-schema-drift.html</loc>
+    <loc>https://schemalens.tech/blog/how-to-catch-schema-drift.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/why-your-team-needs-a-schema-review-process.html</loc>
+    <loc>https://schemalens.tech/blog/why-your-team-needs-a-schema-review-process.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/automating-schema-reviews-with-webhooks.html</loc>
+    <loc>https://schemalens.tech/blog/automating-schema-reviews-with-webhooks.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/state-of-schema-migrations-2026.html</loc>
+    <loc>https://schemalens.tech/blog/state-of-schema-migrations-2026.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/complete-guide-to-database-indexing-for-schema-changes.html</loc>
+    <loc>https://schemalens.tech/blog/complete-guide-to-database-indexing-for-schema-changes.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/generate-create-table-statements-visually.html</loc>
+    <loc>https://schemalens.tech/blog/generate-create-table-statements-visually.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/sql-create-table-best-practices-for-production.html</loc>
+    <loc>https://schemalens.tech/blog/sql-create-table-best-practices-for-production.html</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/database-schema-versioning-best-practices.html</loc>
+    <loc>https://schemalens.tech/blog/database-schema-versioning-best-practices.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/from-spreadsheet-to-database-csv-migration-checklist.html</loc>
+    <loc>https://schemalens.tech/blog/from-spreadsheet-to-database-csv-migration-checklist.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/how-to-design-a-schema-that-scales.html</loc>
+    <loc>https://schemalens.tech/blog/how-to-design-a-schema-that-scales.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/oracle-vs-postgresql-schema-migration-differences.html</loc>
+    <loc>https://schemalens.tech/blog/oracle-vs-postgresql-schema-migration-differences.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/oracle-schema-migrations-practical-guide.html</loc>
+    <loc>https://schemalens.tech/blog/oracle-schema-migrations-practical-guide.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/tools/sql-index-analyzer.html</loc>
+    <loc>https://schemalens.tech/tools/sql-index-analyzer.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/migrate-mysql-to-postgresql-without-data-loss.html</loc>
+    <loc>https://schemalens.tech/blog/migrate-mysql-to-postgresql-without-data-loss.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://schemalens.vercel.app/blog/sqlite-vs-postgresql-when-to-switch.html</loc>
+    <loc>https://schemalens.tech/blog/sqlite-vs-postgresql-when-to-switch.html</loc>
     <lastmod>2026-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

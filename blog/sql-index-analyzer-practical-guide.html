@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Index Analyzer: A Practical Guide — Find Missing Indexes Instantly | SchemaLens</title>
+  <meta name="description" content="Learn how to analyze your SQL schema for missing indexes, unindexed foreign keys, and duplicate indexes. Step-by-step guide with real examples.">
+  <meta property="og:title" content="SQL Index Analyzer: A Practical Guide — Find Missing Indexes Instantly">
+  <meta property="og:description" content="Learn how to analyze your SQL schema for missing indexes, unindexed foreign keys, and duplicate indexes. Step-by-step guide with real examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-index-analyzer-practical-guide.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .issue-example {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 20px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+    }
+    .issue-example .badge {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .badge.critical { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .badge.warning { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .badge.info { background: rgba(99,102,241,0.15); color: #6366f1; }
+    .issue-example h4 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
+    .issue-example p { margin: 0; }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    .step .num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step h4 { margin: 0 0 6px; }
+    .step p { margin: 0; }
+    .score-demo {
+      text-align: center;
+      padding: 24px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 24px 0;
+    }
+    .score-demo .score { font-size: 3rem; font-weight: 800; }
+    .score-demo .score.good { color: var(--success); }
+    .score-demo .score.warn { color: var(--warning); }
+    .score-demo .score.bad { color: var(--danger); }
+  </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<main class="article" style="padding:2rem 1rem;">
+  <header style="margin-bottom:2rem;">
+    <h1 style="font-size:2rem;margin-bottom:0.5rem;line-height:1.2;">SQL Index Analyzer: A Practical Guide</h1>
+    <p class="meta">Published April 24, 2026 · SchemaLens</p>
+  </header>
+
+  <p>Indexes are the silent performance layer of every database. When they are right, queries fly. When they are wrong — or missing — queries crawl, locks pile up, and users complain. The frustrating part? Most developers only discover missing indexes <em>after</em> an incident.</p>
+
+  <p>An <strong>SQL Index Analyzer</strong> inspects your <code>CREATE TABLE</code> statements and tells you exactly which indexes are missing, which are redundant, and which foreign keys are unprotected. This guide walks through how to use one effectively, what to look for in the results, and how to turn recommendations into safe migrations.</p>
+
+  <h2>Why Index Analysis Belongs in Your Workflow</h2>
+
+  <p>Schema design and index design are two sides of the same coin. You design the tables first, then you design the queries, and the indexes bridge the gap. But too many teams treat indexes as an afterthought — something DBAs add when queries slow down.</p>
+
+  <p>This reactive approach is expensive. A missing index on a foreign key can turn a millisecond lookup into a minutes-long table scan. A duplicate index wastes disk space and slows down every write. An unused index adds write overhead with zero read benefit.</p>
+
+  <p>The fix is proactive index analysis: review your schema for structural index issues <em>before</em> they hurt performance.</p>
+
+  <h2>What the SQL Index Analyzer Checks</h2>
+
+  <p>A good index analyzer looks at your schema structure — not query logs — to find the patterns that cause the most trouble. Here are the checks that matter:</p>
+
+  <div class="issue-example">
+    <span class="badge critical">Critical</span>
+    <div>
+      <h4>Missing Primary Key</h4>
+      <p>Tables without a primary key cannot be reliably updated or deleted. Row-level operations become table scans. Every production table needs a primary key.</p>
+    </div>
+  </div>
+
+  <div class="issue-example">
+    <span class="badge critical">Critical</span>
+    <div>
+      <h4>Unindexed Foreign Key</h4>
+      <p>Foreign key columns without indexes force the database to scan the referenced table on every INSERT, UPDATE, or DELETE. This is the #1 cause of migration-related lock contention.</p>
+    </div>
+  </div>
+
+  <div class="issue-example">
+    <span class="badge warning">Warning</span>
+    <div>
+      <h4>Missing Index on Filter Column</h4>
+      <p>Columns that appear in <code>WHERE</code>, <code>JOIN</code>, or <code>ORDER BY</code> clauses should be indexed. Without one, the query planner falls back to sequential scans.</p>
+    </div>
+  </div>
+
+  <div class="issue-example">
+    <span class="badge warning">Warning</span>
+    <div>
+      <h4>VARCHAR Without Length Limit</h4>
+      <p>While not strictly an index issue, unbounded <code>VARCHAR</code> columns waste memory and can prevent efficient indexing strategies. Set sensible limits.</p>
+    </div>
+  </div>
+
+  <div class="issue-example">
+    <span class="badge info">Info</span>
+    <div>
+      <h4>Duplicate or Redundant Index</h4>
+      <p>Two indexes on the same column set waste space and slow writes. A composite index on <code>(a, b)</code> usually covers queries that need <code>(a)</code> alone.</p>
+    </div>
+  </div>
+
+  <h2>How to Use the SQL Index Analyzer</h2>
+
+  <div class="step">
+    <div class="num">1</div>
+    <div>
+      <h4>Copy Your CREATE TABLE Statements</h4>
+      <p>Export your schema from any database. You only need the <code>CREATE TABLE</code> and <code>CREATE INDEX</code> statements. Paste them into the analyzer input.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">2</div>
+    <div>
+      <h4>Paste Your Queries (Optional)</h4>
+      <p>If you paste representative queries alongside your schema, the analyzer can suggest indexes for specific filter patterns, joins, and sort orders.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">3</div>
+    <div>
+      <h4>Review the Health Score</h4>
+      <p>The analyzer gives your schema a score from 0 to 100. Think of it as a quick pulse check. A score above 80 means your indexing is solid. Below 50 means there are critical gaps to fix.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">4</div>
+    <div>
+      <h4>Fix Issues in Priority Order</h4>
+      <p>Start with critical issues (missing primary keys, unindexed foreign keys), then move to warnings (missing filter indexes), then clean up info-level suggestions (redundant indexes).</p>
+    </div>
+  </div>
+
+  <h2>Reading the Results: A Real Example</h2>
+
+  <p>Consider this schema for a small e-commerce application:</p>
+
+  <pre><code>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  category_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(10,2) NOT NULL
+);</code></pre>
+
+  <p>Running this through the index analyzer produces several important findings:</p>
+
+  <ul>
+    <li><strong>Critical:</strong> <code>orders.user_id</code> is a foreign key candidate but has no index. Every user lookup will scan the orders table.</li>
+    <li><strong>Critical:</strong> <code>order_items.order_id</code> and <code>order_items.product_id</code> need indexes for join performance.</li>
+    <li><strong>Warning:</strong> <code>products.category_id</code> should be indexed if you filter products by category.</li>
+    <li><strong>Warning:</strong> <code>orders.status</code> is commonly filtered. An index on status (or a composite index on <code>(status, created_at)</code>) would help.</li>
+  </ul>
+
+  <p>The recommended fixes are straightforward:</p>
+
+  <pre><code>CREATE INDEX idx_orders_user ON orders(user_id);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_order_items_product ON order_items(product_id);
+CREATE INDEX idx_products_category ON products(category_id);
+CREATE INDEX idx_orders_status_created ON orders(status, created_at);</code></pre>
+
+  <h2>When NOT to Add an Index</h2>
+
+  <p>Indexes are not free. Every index slows down writes and consumes disk space. Here are the cases where you should skip the recommendation:</p>
+
+  <ul>
+    <li><strong>Tiny tables.</strong> On tables with fewer than 1,000 rows, a sequential scan is often faster than index traversal. The planner knows this and will ignore the index anyway.</li>
+    <li><strong>Write-heavy tables.</strong> If a table receives 100 writes per second and almost no reads, the index maintenance cost outweighs the benefit.</li>
+    <li><strong>Low-cardinality columns.</strong> Indexing a boolean column or a status field with only three values rarely helps. The planner will prefer a sequential scan.</li>
+    <li><strong>Temporary or log tables.</strong> Tables that are truncated frequently or hold short-lived data do not need indexes.</li>
+  </ul>
+
+  <p>A good index analyzer tells you <em>what</em> is missing. A good engineer decides <em>whether</em> to add it based on query patterns, table size, and write load.</p>
+
+  <h2>Index Analysis as a Team Habit</h2>
+
+  <p>Make index analysis part of your schema review process. Before any migration reaches production, run the schema through an analyzer. Treat missing foreign key indexes the same way you treat missing foreign key constraints: non-negotiable.</p>
+
+  <p>Over time, this habit compounds. Your database stays fast. Your migrations stay safe. And your sleep stays uninterrupted.</p>
+
+  <div class="cta-box">
+    <h3>Analyze Your Schema for Missing Indexes</h3>
+    <p>Paste your <code>CREATE TABLE</code> statements into the free SQL Index Analyzer. Get instant recommendations for missing indexes, unindexed foreign keys, and duplicate indexes.</p>
+    <a href="../tools/sql-index-analyzer.html" class="btn btn-primary">Try the SQL Index Analyzer</a>
+  </div>
+
+  <h2>Related Reading</h2>
+
+  <ul>
+    <li><a href="complete-guide-to-database-indexing-for-schema-changes.html">The Complete Guide to Database Indexing for Schema Changes</a></li>
+    <li><a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+    <li><a href="dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (and How to Catch Them)</a></li>
+    <li><a href="how-to-design-a-schema-that-scales.html">How to Design a Database Schema That Scales</a></li>
+  </ul>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <p>© 2026 SchemaLens. Built for developers who care about clean schemas.</p>
+  <p style="margin-top:0.5rem;"><a href="../index.html" style="color:var(--text-muted);">Home</a> · <a href="../app.html" style="color:var(--text-muted);">Diff Tool</a> · <a href="../tools.html" style="color:var(--text-muted);">Free Tools</a> · <a href="../pricing.html" style="color:var(--text-muted);">Pricing</a></p>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('schemalens-theme', next);
+}
+</script>
+
+</body>
+</html>

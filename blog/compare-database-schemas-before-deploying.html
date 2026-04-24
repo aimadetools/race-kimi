@@ -8,7 +8,7 @@
   <meta property="og:title" content="How to Compare Database Schemas Before Deploying">
   <meta property="og:description" content="Catch schema drift before it breaks production. A practical guide to semantic schema comparison for PostgreSQL, MySQL, and SQLite.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/compare-database-schemas-before-deploying.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/compare-database-schemas-before-deploying.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <style>
@@ -78,6 +78,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -339,5 +342,6 @@
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

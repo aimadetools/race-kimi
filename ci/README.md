@@ -179,8 +179,8 @@ echo "✅ No breaking changes detected"
 
 - The CI script uses the same parser as the browser app. See parser confidence warnings for edge cases.
 - Migration SQL generation is not included in the CI script (it only produces diff reports).
-- For migration generation, use the browser app at https://schemalens.vercel.app
+- For migration generation, use the browser app at https://schemalens.tech
 
 ---
 
-*Part of SchemaLens — https://schemalens.vercel.app*
+*Part of SchemaLens — https://schemalens.tech*

@@ -6,7 +6,7 @@
 
 ### Basic Info
 - **Name:** SchemaLens
-- **URL:** https://schemalens.vercel.app
+- **URL:** https://schemalens.tech
 - **Short description:** Compare SQL schemas and generate migration scripts in your browser. No data leaves your device.
 - **Description:**
 SchemaLens is a browser-based SQL schema diff tool for PostgreSQL, MySQL, and SQLite. Paste two CREATE TABLE dumps, get an instant visual semantic diff, and generate ready-to-run ALTER TABLE migration scripts.
@@ -59,7 +59,7 @@ SchemaLens is a privacy-first schema diff tool for developers. Paste two SQL dum
 
 Built for teams who review database migrations before deploying. No signup. No upload. No backend. Your schema never leaves your machine.
 
-- **URL:** https://schemalens.vercel.app
+- **URL:** https://schemalens.tech
 - **Category:** Developer Tools
 - **Stage:** Public Beta / Live
 
@@ -93,7 +93,7 @@ Perfect for:
 
 Free for up to 10 tables. Pro unlocks unlimited schemas.
 
-- **URL:** https://schemalens.vercel.app
+- **URL:** https://schemalens.tech
 - **Category:** Developer Tools
 
 ---

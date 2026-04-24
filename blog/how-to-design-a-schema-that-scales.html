@@ -8,7 +8,7 @@
   <meta property="og:title" content="How to Design a Database Schema That Scales — SchemaLens">
   <meta property="og:description" content="Design database schemas that grow with your product. Normalization, indexing, partitioning, and the 5 rules every scalable schema follows.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/blog/how-to-design-a-schema-that-scales.html">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-design-a-schema-that-scales.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -99,6 +99,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -466,5 +469,6 @@ FOR VALUES FROM ('2026-04-01') TO ('2026-05-01');</code></pre>
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

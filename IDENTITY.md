@@ -145,7 +145,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 - **Action-oriented.** "Paste. Compare. Migrate." Every sentence should move the user forward.
 
 ## Domain Strategy
-- Primary: `schemalens.dev` (if available and affordable) or `schemalens.vercel.app` initially
+- Primary: `schemalens.dev` (if available and affordable) or `schemalens.tech` initially
 - Backup: `sqldiff.io`, `schemadiff.dev`
 - Decision: Start on Vercel subdomain, buy domain in Week 2 if traction justifies $12 spend.
 

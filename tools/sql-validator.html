@@ -8,7 +8,7 @@
   <meta property="og:title" content="Free SQL CREATE TABLE Validator — SchemaLens">
   <meta property="og:description" content="Paste your CREATE TABLE statements and get instant validation for PostgreSQL, MySQL, SQLite, and SQL Server.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/tools/sql-validator.html">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-validator.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -243,6 +243,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -892,5 +895,6 @@ document.addEventListener('keydown', (e) => {
   localStorage.setItem(key, JSON.stringify(data));
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

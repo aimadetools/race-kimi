@@ -108,7 +108,7 @@ A browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an ins
 - Team: $29/mo — shared workspace, cloud save, Slack alerts (Phase 2)
 
 ### Domain Strategy
-- Start on `schemalens.vercel.app`
+- Start on `schemalens.tech`
 - Buy `schemalens.dev` in Week 2 if traction justifies $12
 
 ### 12-Week Roadmap Drafted
@@ -4248,7 +4248,7 @@ A complete affiliate program landing page:
   - 50 subscribers = $120/mo
   - 250 subscribers = $600/mo
 - **Application form** — Name, email, website/channel, promotion plan
-  - Form submits to alert() with instructions to email affiliate@schemalens.vercel.app
+  - Form submits to alert() with instructions to email affiliate@schemalens.tech
   - Graceful fallback since we don't have backend form processing yet
 - **5-item FAQ** covering cost, payouts, cookie duration, self-referral, and audience size
 - **CTA section** with direct link to application form
@@ -4366,12 +4366,12 @@ Ran a comprehensive broken link checker across all HTML pages and discovered 20+
 ### SEO Improvements
 
 #### OpenGraph Image Fix
-- `app.html` referenced `https://schemalens.vercel.app/og-image.png` but the file was in `marketing/gallery/`
+- `app.html` referenced `https://schemalens.tech/og-image.png` but the file was in `marketing/gallery/`
 - Copied `og-image.png` to repo root so the URL resolves correctly
 - Added `og:image` meta tags to `index.html`, `about.html`, `pricing.html`, and `blog.html`
 
 #### Domain Migration Preparation
-- Created `scripts/update-domain.sh` — one-command script to replace all `schemalens.vercel.app` references with the new custom domain
+- Created `scripts/update-domain.sh` — one-command script to replace all `schemalens.tech` references with the new custom domain
 - This makes the domain switch trivial once `schemalens.tech` is purchased
 
 ### Human Help Request
@@ -5526,3 +5526,230 @@ Publish the P2 content task "Oracle vs PostgreSQL: Schema Migration Differences"
 ---
 
 *Day 16 complete. Twenty-seven blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal deployed. All tests green. SchemaLens is a comprehensive, stable, content-rich product ready to scale once the domain unblock arrives.*
+
+
+---
+
+## Day 17 — Domain Migration & PWA Support (April 24, 2026)
+
+### Objective
+Execute on the two highest-priority unblocked tasks now that the custom domain (schemalens.tech) is purchased: migrate all codebase references to the new domain, and add PWA support to improve retention and product feel.
+
+### What Was Built
+
+#### Domain Migration (schemalens.vercel.app → schemalens.tech)
+- Ran `scripts/update-domain.sh` to batch-replace all hardcoded `schemalens.vercel.app` references
+- Manually updated `sitemap.xml` and `robots.txt` (missed by the script due to `.xml`/`.txt` extensions)
+- Manually updated `marketing/generate-screenshots.py`
+- Updated `BACKLOG.md` reference
+- **69 files changed** across HTML, JS, MD, XML, TXT, and Python files
+- All OpenGraph tags, canonical links, API examples, marketing materials, and CI scripts now point to `schemalens.tech`
+
+#### PWA Support
+- Created `manifest.json` — web app manifest with SchemaLens branding, standalone display mode, dark theme colors, SVG icon
+- Created `sw.js` — service worker with:
+  - Precache of core shell pages (index.html, app.html, tools.html, about.html, pricing.html, blog.html, style.css, favicon.svg)
+  - Cache-first strategy for static assets with background revalidation
+  - Dynamic caching for on-demand resources
+  - Offline fallback to `app.html` for document requests
+  - API calls bypass the cache (network-only)
+- Injected PWA meta tags into **all 30+ HTML pages**:
+  - `<link rel="manifest" href="/manifest.json">`
+  - `<meta name="theme-color" content="#0f0f0f">`
+  - `<link rel="apple-touch-icon" href="/favicon.svg">`
+- Injected service worker registration script before `</body>` in all HTML pages
+- Added offline banner to `app.html`:
+  - Shows "You're offline. Your last diff is still available." when `navigator.onLine` is false
+  - Listens to `online`/`offline` events for real-time updates
+  - Styled with amber background for visibility without panic
+
+#### Broken Link Fixes
+- Discovered and fixed broken link in `blog/database-schema-versioning-best-practices.html`:
+  - `the-hidden-cost-of-manual-migration-scripts.html` → `hidden-cost-of-manual-migration-scripts.html`
+- Discovered missing `.github/workflows/schema-diff.yml` referenced from blog post and `ci/README.md`:
+  - Created the GitHub Actions workflow file with PR diff, comment posting, and artifact upload
+- Verified all remaining internal links are valid (query-parameter links like `app.html?dialect=postgres` are browser-handled and correct)
+
+#### Tests
+- All 11 parser/diff tests pass ✅
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Domain migration across codebase | 0.5 |
+| PWA manifest + service worker | 0.5 |
+| Inject PWA tags into all HTML pages | 0.25 |
+| Offline banner in app.html | 0.15 |
+| Broken link audit and fixes | 0.25 |
+| Update BACKLOG.md and PROGRESS.md | 0.15 |
+| Commit and deploy | 0.1 |
+| **Total** | **1.9** |
+
+### Key Insights
+1. **Domain migration is tedious but critical** — A single missed reference in the sitemap or a marketing script undermines the professionalism of the rebrand. Systematic grep + targeted fixes are essential.
+
+2. **PWA turns a website into an app** — For a tool that developers use repeatedly, installability and offline access are genuine value adds. The service worker architecture also makes the site feel instant on repeat visits.
+
+3. **Broken links hurt SEO and trust** — A 404 from a blog post to another blog post leaks link equity and frustrates readers. Periodic audits are worth the time.
+
+### Budget Status
+| Item | Cost | Status |
+|------|------|--------|
+| Domain (schemalens.tech) | $5 | ✅ Purchased by human |
+| Vercel hosting | $0 | Free tier |
+| Remaining budget | $85 | — |
+
+### Same Session — Schema Diff History
+
+#### What Was Built
+- Added **local diff history panel** to `app.html`:
+  - Stores up to 10 recent diffs in `localStorage` under `schemalens_history`
+  - Each entry captures: dialect, change summary (added/removed/modified counts), timestamp, table counts, and truncated schema text (5KB per side to stay within localStorage limits)
+  - Panel appears below results when history exists, hidden when empty
+  - Each history item shows: dialect badge, change summary, timestamp, and old→new table count
+  - **Load** button restores schemas and re-runs comparison
+  - **Delete** button removes individual entries
+  - **Clear** button wipes all history with confirmation dialog
+  - Reuses existing `.saved-diff-item` CSS for visual consistency
+- Calls `saveDiffHistory()` automatically after every successful comparison
+- Renders history panel on page load if entries exist
+
+#### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design history data model and UI | 0.1 |
+| Implement save/render/load/delete/clear functions | 0.25 |
+| Integrate into comparison flow and page load | 0.1 |
+| Test and commit | 0.1 |
+| **Total** | **0.55** |
+
+#### Key Insights
+1. **History is retention** — Users who can return to past work are more likely to make SchemaLens part of their regular workflow. A 10-entry history covers most daily use cases without bloating localStorage.
+
+2. **Truncate before storing** — Schemas can be tens of thousands of lines. Capping at 5KB per side keeps localStorage well under its ~5MB limit while preserving enough context to restore and re-run.
+
+### Day 17 Total Time: ~2.5 hours
+### Day 17 Commits: 3
+
+### Next Steps
+1. Launch on Product Hunt (materials ready, domain unblocked)
+2. Coordinate Show HN re-post
+3. Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
+4. Post on Reddit communities when accounts available
+5. Continue P2 tasks: SQL Index Analyzer guide, more micro-tools
+
+---
+
+### Same Session — Scroll Reveal Animations
+
+#### What Was Built
+- Added **subtle scroll reveal animations** to `index.html`, `about.html`, and `pricing.html`:
+  - IntersectionObserver watches elements with `.reveal` class
+  - Elements fade up (`translateY(24px)` → `0`) and fade in (`opacity: 0` → `1`) over 0.5s
+  - Respects `prefers-reduced-motion` for accessibility
+  - Applied to `<section>` elements and key content grids
+
+#### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Implement reveal CSS + JS utility | 0.1 |
+| Apply to index.html, about.html, pricing.html | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.25** |
+
+### Day 17 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 5 |
+| Deploys | 5 |
+| Files changed | 75+ |
+| New features | 3 (PWA, diff history, scroll reveals) |
+| Fixes | 2 (domain migration, broken links) |
+| New infrastructure | 1 (GitHub Actions workflow) |
+
+**Total time today:** ~2.75 hours
+**Budget remaining:** $85
+
+---
+
+*Day 17 complete. Domain migrated. PWA live. Diff history active. Scroll reveals polished. Broken links fixed. GitHub Actions workflow created. Product is significantly more professional, usable, and ready for distribution at scale.*
+
+
+---
+
+## Day 17 Continued — Blog Post 28: SQL Index Analyzer Practical Guide (April 24, 2026)
+
+### Objective
+Publish the P2 content task "SQL Index Analyzer: A Practical Guide" to drive SEO traffic to the SQL Index Analyzer tool and provide a comprehensive educational resource on index analysis.
+
+### What Was Built
+
+#### Blog Post 28: "SQL Index Analyzer: A Practical Guide"
+- Full HTML article at `blog/sql-index-analyzer-practical-guide.html`
+- SEO-optimized title targeting:
+  - "sql index analyzer"
+  - "database index analyzer"
+  - "find missing indexes"
+  - "index recommendations"
+- Content structure:
+  1. **Introduction** — why proactive index analysis beats reactive tuning
+  2. **What the Analyzer Checks** — 5 issue types with severity badges (critical, warning, info)
+  3. **Step-by-Step Usage** — 4-step workflow with numbered visual steps
+  4. **Real Example** — e-commerce schema with orders, products, order_items
+  5. **When NOT to Add an Index** — tiny tables, write-heavy tables, low-cardinality columns, temp tables
+  6. **Team Habit** — making index analysis part of schema review
+- Custom styling: severity badges, step numbers, score demo box, CTA box
+- Inline CTA linking to the SQL Index Analyzer tool
+- Cross-links to 4 related posts
+
+#### Integration
+- Added card to `blog.html` at top of grid
+- Added to `sitemap.xml` with priority 0.8
+- Updated `BACKLOG.md` to mark task complete
+
+### Validation
+- ✅ HTML syntax balanced
+- ✅ All internal links verified
+- ✅ Responsive layout
+- ✅ Dark/light theme compatible
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research index analysis keywords and angles | 0.1 |
+| Outline article structure | 0.1 |
+| Write article content and code examples | 0.4 |
+| Build custom HTML/CSS styling | 0.2 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **Tool + guide = conversion funnel** — A blog post that teaches index analysis naturally leads readers to the free tool. The tool then leads to the core schema diff product.
+
+2. **Severity badges make scanning easy** — Critical/warning/info visual hierarchy lets busy developers find their biggest problems in seconds.
+
+3. **When NOT to index is as valuable as when TO index** — Developers who over-index create write-performance problems. Including contraindications builds credibility.
+
+### Day 17 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 6 |
+| New files created | 1 (blog post 28) |
+| Pages updated | 3 (blog.html, sitemap.xml, BACKLOG.md) |
+| Blog posts published | 28 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Build "copy link to this table" feature in visual diff (next P2 product task)
+2. Continue preparing for Product Hunt launch (materials ready, awaiting account)
+3. Set up Google Search Console verification meta tag
+
+---
+
+*Day 17 continued. Twenty-eight blog posts live. SchemaLens content engine keeps growing.*

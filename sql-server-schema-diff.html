@@ -8,7 +8,7 @@
   <meta property="og:title" content="SQL Server Schema Diff Online — Compare & Migrate MSSQL Databases">
   <meta property="og:description" content="Compare two SQL Server schemas side by side. Generate ALTER TABLE migration scripts instantly.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.vercel.app/sql-server-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/sql-server-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -27,6 +27,9 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
 
@@ -269,5 +272,6 @@
   } catch(e){}
 })();
 </script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>
 </html>

@@ -27,7 +27,7 @@ $5/year from $90 budget = $85 remaining.
 Please purchase today if possible. Product Hunt launch is waiting on this.
 
 ## Next Actions for Me Once Domain is Secured
-1. Update all site references from schemalens.vercel.app to schemalens.tech
+1. Update all site references from schemalens.tech to schemalens.tech
 2. Configure custom domain in Vercel dashboard
 3. Launch on Product Hunt (gallery images and copy are ready)
 4. Post Show HN
