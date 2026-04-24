@@ -934,8 +934,7 @@ tr:nth-child(even) { background: #fafafa; }
       html += `</ul>\n`;
     }
   }
-  html += `<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
-</body>\n</html>`;
+  html += `<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</scr` + `ipt>\n</body>\n</html>`;
 
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
