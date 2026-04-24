@@ -5008,3 +5008,76 @@ Build an in-app feedback widget to create a direct feedback loop with users, and
 ---
 
 *Day 16 complete. Twenty-four blog posts. Eight free micro-tools. In-app feedback widget live. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Exit-Intent Popup (April 24, 2026)
+
+### Objective
+Add an exit-intent popup on app.html to capture users who are about to leave without upgrading to Pro. This was the highest-priority incomplete unblocked P1 conversion task.
+
+### What Was Built
+
+#### Exit-Intent Detection & Popup
+- **Desktop detection:** Listens for `mouseout` events where `clientY < 10` and `relatedTarget` is null — the classic exit-intent heuristic for mouse-based navigation
+- **Modal design:** Uses existing modal overlay system with custom styling for the upgrade offer:
+  - Headline: "⏳ Wait — Your migration isn't complete"
+  - Subtitle emphasizing "one click away from the full migration script"
+  - Benefit list: unlimited tables, full migration generation, exports (Markdown/PDF/JSON/SQL), breaking change detection, shareable public links
+  - Price callout: "$12/mo or $99/yr — cancel anytime"
+  - Two CTAs: "Unlock Pro" (opens license modal) and "View Pricing" (links to pricing.html)
+  - Dismiss option: "No thanks, I'll keep the free version"
+
+#### Smart Targeting
+- **Skips Pro users:** Checks `localStorage` for valid license key before attaching listener
+- **Frequency capping:** Shows once per 3 days using `schemalens_exit_intent_shown` timestamp
+- **Dismiss persistence:** Dismiss button stores preference so users aren't re-targeted immediately
+- **Overlay click-to-close:** Clicking outside the modal dismisses it
+- **Dark/light theme compatible:** Uses CSS variables from existing design system
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ HTML div balance verified (130 open / 130 close)
+- ✅ Modal renders correctly with existing modal overlay CSS
+- ✅ Frequency capping logic tested manually via localStorage manipulation
+- ✅ Pro user skip logic tested with valid/invalid license keys
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design exit-intent UX and copy | 0.15 |
+| Implement detection heuristic and modal HTML/CSS | 0.25 |
+| Add frequency capping and Pro skip logic | 0.15 |
+| Test and verify | 0.15 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **0.9** |
+
+### Key Insights
+1. **Exit-intent is the last conversion chance** — By the time a user is leaving the app, all other CTAs have failed. The exit-intent popup is the final opportunity to communicate Pro value before they disappear.
+
+2. **Frequency capping is non-negotiable** — Without the 3-day cap, the popup would become annoying and damage brand trust. Respecting the user's dismissal choice is as important as making the offer.
+
+3. **Emotion-driven copy converts better** — "Your migration isn't complete" creates a sense of unfinished business. It's more compelling than generic "Upgrade to Pro" language because it connects to the user's actual task.
+
+### Day 16 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| Pages updated | 1 (app.html) |
+| Blog posts published | 24 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Build pricing page A/B test variant (highest-priority unblocked P1)
+2. Await human response on domain purchase (schemalens.tech)
+3. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+
+---
+
+*Day 16 in progress. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*

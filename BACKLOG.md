@@ -20,7 +20,7 @@
 ### Product — Quick Wins for Conversion
 - [x] **P1** Add in-app feedback widget with Supabase storage
 - [ ] **P1** Create pricing page A/B test variant (no backend needed)
-- [ ] **P1** Add exit-intent popup on app.html with Pro upgrade offer
+- [x] **P1** Add exit-intent popup on app.html with Pro upgrade offer
 - [ ] **P2** Add PWA support (offline access to last diff)
 - [ ] **P2** Add subtle animations/scroll reveals to landing pages
 - [ ] **P2** Add schema diff history / undo in app.html
