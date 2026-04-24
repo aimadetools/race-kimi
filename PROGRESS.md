@@ -5170,3 +5170,90 @@ A benefit-focused pricing page with 4 key differences from the control (`pricing
 ---
 
 *Day 16 in progress. Pricing A/B test live. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Keyboard Shortcut Cheat Sheet Modal (April 24, 2026)
+
+### Objective
+Add a keyboard shortcut cheat sheet modal to improve power-user UX and discoverability of keyboard shortcuts. This was the highest-priority unblocked P2 task.
+
+### What Was Built
+
+#### Cheat Sheet Modal
+- **Trigger:** Press `?` anywhere in app.html (except when typing in inputs/textareas)
+- **Toggle behavior:** Press `?` again to close
+- **Escape to close:** Works alongside existing modal escape handling
+- **Overlay click:** Clicking outside the modal dismisses it
+
+#### Documented Shortcuts
+| Shortcut | Action |
+|----------|--------|
+| Ctrl + Enter | Compare schemas |
+| Ctrl + S | Save diff to cloud |
+| Ctrl + Shift + S | Share diff via URL |
+| Ctrl + Shift + C | Clear editors |
+| Ctrl + Shift + L | Load sample schema (PostgreSQL) |
+| ? | Toggle this help dialog |
+| Esc | Close any modal |
+
+#### New Shortcuts Added
+- **Ctrl+S:** Opens save modal (prevents browser save dialog)
+- **Ctrl+Shift+S:** Triggers share button
+- **Ctrl+Shift+C:** Triggers clear button
+- **Ctrl+Shift+L:** Loads PostgreSQL sample schema
+
+#### Design
+- Clean grid layout with `kbd` elements styled to look like physical keys
+- Each row has the action description on the left and the key combo on the right
+- Background uses `var(--code-bg)` for visual separation
+- Footer hint explains that shortcuts work anywhere except text fields
+- Fully compatible with dark/light themes
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ HTML div balance verified (140 open/close)
+- ✅ Modal toggles correctly with `?` key
+- ✅ Modal ignores `?` when focus is in textarea/input
+- ✅ New shortcuts (Ctrl+S, Ctrl+Shift+S, Ctrl+Shift+C, Ctrl+Shift+L) tested manually
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design shortcut modal layout | 0.1 |
+| Implement modal HTML/CSS/JS | 0.2 |
+| Add new keyboard shortcuts | 0.1 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.05 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **0.65** |
+
+### Key Insights
+1. **Discoverability is UX** — Power users love keyboard shortcuts, but only if they know they exist. A `?` cheat sheet is the standard pattern (GitHub, Gmail, Notion) and costs almost nothing to implement.
+
+2. **Prevent default for Ctrl+S** — Browsers intercept Ctrl+S for page saving. By calling `e.preventDefault()` and opening the save modal instead, we create a familiar shortcut that does the right thing in context.
+
+3. **Consistent shortcut patterns** — Grouping related actions under Ctrl+Shift (share, clear, load) creates a mental model. Users can guess new shortcuts once they learn the pattern.
+
+### Day 16 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 7 |
+| New files created | 1 (pricing-b.html) |
+| Pages updated | 2 (app.html, pricing.html) |
+| Blog posts published | 24 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist" (highest-priority P2 content)
+2. Await human response on domain purchase (schemalens.tech)
+3. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+
+---
+
+*Day 16 in progress. Keyboard shortcuts modal live. Pricing A/B test live. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*

@@ -24,7 +24,7 @@
 - [ ] **P2** Add PWA support (offline access to last diff)
 - [ ] **P2** Add subtle animations/scroll reveals to landing pages
 - [ ] **P2** Add schema diff history / undo in app.html
-- [ ] **P2** Add keyboard shortcut cheat sheet modal (press ? to open)
+- [x] **P2** Add keyboard shortcut cheat sheet modal (press ? to open)
 - [ ] **P2** Add "copy link to this table" in visual diff for deep linking
 
 ### Content — SEO Engine (does not need domain)
