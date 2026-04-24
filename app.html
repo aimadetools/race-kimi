@@ -932,6 +932,21 @@ CREATE TABLE users (
     </div>
   </div>
 
+  <!-- Slack Integration Modal -->
+  <div class="modal-overlay" id="slackModal">
+    <div class="modal">
+      <h3>💬 Slack Integration</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Send diff summaries directly to a Slack channel using an <a href="https://api.slack.com/messaging/webhooks" target="_blank" rel="noopener">Incoming Webhook</a>.</p>
+      <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:6px;">Slack Webhook URL</label>
+      <input type="url" id="slackWebhookUrl" placeholder="https://hooks.slack.com/services/T00/B00/XXXX" style="width:100%;margin-bottom:12px;">
+      <p id="slackError" style="color:var(--danger);font-size:0.85rem;margin:0 0 12px;display:none;"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeSlackModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSlackWebhook()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Feedback Modal -->
   <div class="modal-overlay feedback-modal" id="feedbackModal">
     <div class="modal">
@@ -2383,6 +2398,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
+    <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="sendToSlack()">Send to Slack</button>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
   `;
 
@@ -2857,6 +2873,90 @@ function runMigrationValidation() {
   
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('validate_migration', { issues: issues.length, dialect });
 }
+
+// -----------------------------
+// Slack Integration
+// -----------------------------
+const SLACK_WEBHOOK_KEY = 'schemalens_slack_webhook';
+
+function openSlackModal() {
+  const modal = document.getElementById('slackModal');
+  const input = document.getElementById('slackWebhookUrl');
+  const errorEl = document.getElementById('slackError');
+  input.value = localStorage.getItem(SLACK_WEBHOOK_KEY) || '';
+  errorEl.style.display = 'none';
+  errorEl.textContent = '';
+  modal.classList.add('active');
+}
+
+function closeSlackModal() {
+  document.getElementById('slackModal').classList.remove('active');
+}
+
+function saveSlackWebhook() {
+  const input = document.getElementById('slackWebhookUrl');
+  const errorEl = document.getElementById('slackError');
+  const url = input.value.trim();
+
+  if (url && !/^https:\/\/hooks\.slack\.com\/services\//.test(url)) {
+    errorEl.textContent = 'Please enter a valid Slack webhook URL (https://hooks.slack.com/services/...)';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  if (url) {
+    localStorage.setItem(SLACK_WEBHOOK_KEY, url);
+  } else {
+    localStorage.removeItem(SLACK_WEBHOOK_KEY);
+  }
+
+  errorEl.style.display = 'none';
+  closeSlackModal();
+}
+
+async function sendToSlack() {
+  const webhookUrl = localStorage.getItem(SLACK_WEBHOOK_KEY);
+  if (!webhookUrl) {
+    openSlackModal();
+    return;
+  }
+  if (!lastDiff) return;
+
+  const btn = document.querySelector('.summary-bar button[onclick="sendToSlack()"]');
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+  try {
+    const res = await fetch('/api/slack', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        webhookUrl,
+        diff: lastDiff,
+        migration: lastMigrationSQL,
+        breakingChanges: window.lastBreakingChanges || [],
+        dialect: document.getElementById('dialect').value
+      })
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok) {
+      alert('✓ Sent to Slack successfully.');
+    } else {
+      alert('Failed to send to Slack: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    alert('Failed to send to Slack. Please check your connection and webhook URL.');
+  } finally {
+    if (btn) { btn.textContent = 'Send to Slack'; btn.disabled = false; }
+  }
+
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('send_slack');
+}
+
+document.getElementById('slackModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'slackModal') closeSlackModal();
+});
 
 function downloadJSON() {
   if (!lastDiff) return;
@@ -3831,6 +3931,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
   const confidenceB = calculateConfidence(sqlB, dialect, schemaB);
   const breakingChanges = detectBreakingChanges(diff);
+  window.lastBreakingChanges = breakingChanges;
 
   // Save to localStorage
   localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));

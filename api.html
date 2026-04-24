@@ -185,7 +185,7 @@
         <tbody>
           <tr><td><code>schemaA</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The old (base) schema SQL.</td></tr>
           <tr><td><code>schemaB</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The new (target) schema SQL.</td></tr>
-          <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>postgres</code> (default), <code>mysql</code>, <code>sqlite</code>, <code>mssql</code></td></tr>
+          <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>postgres</code> (default), <code>mysql</code>, <code>sqlite</code>, <code>mssql</code>, <code>oracle</code></td></tr>
           <tr><td><code>format</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>json</code> (default) or <code>markdown</code></td></tr>
         </tbody>
       </table>
@@ -242,6 +242,37 @@
         <li><span class="badge badge-yellow">warning</span> <strong>NARROW_TYPE</strong> — Column type narrowed (e.g., VARCHAR(255) → VARCHAR(100))</li>
         <li><span class="badge badge-yellow">warning</span> <strong>ADD_FK_NO_INDEX</strong> — Foreign key added without supporting index</li>
       </ul>
+    </div>
+
+    <div class="api-section">
+      <h2>💬 Slack Webhooks</h2>
+      <p>Send diff summaries directly to a Slack channel. Perfect for team notifications and CI/CD alerts.</p>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="url">/api/slack</span>
+      </div>
+      <table class="param-table">
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>webhookUrl</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>Slack Incoming Webhook URL (<code>https://hooks.slack.com/services/...</code>)</td></tr>
+          <tr><td><code>diff</code></td><td>object</td><td><span class="badge badge-red">Yes</span></td><td>Diff result from <code>/api/diff</code>.</td></tr>
+          <tr><td><code>migration</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td>Generated migration SQL to include in the message.</td></tr>
+          <tr><td><code>breakingChanges</code></td><td>array</td><td><span class="badge badge-yellow">No</span></td><td>Breaking changes array to highlight critical issues.</td></tr>
+          <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td>SQL dialect for context.</td></tr>
+        </tbody>
+      </table>
+      <pre class="code-block">curl -X POST https://schemalens.tech/api/slack \
+  -H "Content-Type: application/json" \
+  -d '{
+    "webhookUrl": "https://hooks.slack.com/services/T00/B00/XXXX",
+    "diff": { /* diff object */ },
+    "migration": "ALTER TABLE ...",
+    "breakingChanges": [],
+    "dialect": "postgres"
+  }'</pre>
+      <p>Response:</p>
+      <pre class="code-block">{ "success": true, "message": "Sent to Slack successfully." }</pre>
     </div>
 
     <div class="api-section">
