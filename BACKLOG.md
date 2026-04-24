@@ -31,7 +31,7 @@
 - [x] **P1** Write blog post: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
 - [x] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
 - [x] **P1** Write blog post: "Database Schema Versioning Best Practices"
-- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+- [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [ ] **P2** Write blog post: "How to Design a Schema That Scales"
 - [ ] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
 - [ ] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"

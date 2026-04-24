@@ -5257,3 +5257,89 @@ Add a keyboard shortcut cheat sheet modal to improve power-user UX and discovera
 ---
 
 *Day 16 in progress. Keyboard shortcuts modal live. Pricing A/B test live. Exit-intent popup live. Twenty-four blog posts. Eight free micro-tools. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Blog Post 25: CSV Migration Checklist (April 24, 2026)
+
+### Objective
+Publish the highest-priority unblocked P2 content task: "From Spreadsheet to Database: A CSV Migration Checklist." This captures high-intent search traffic from developers and analysts moving data from spreadsheets to SQL databases.
+
+### What Was Built
+
+#### Blog Post 25: "From Spreadsheet to Database: A CSV Migration Checklist"
+- Full HTML article at `blog/from-spreadsheet-to-database-csv-migration-checklist.html`
+- SEO-optimized title targeting:
+  - "csv to database migration"
+  - "spreadsheet to sql"
+  - "migrate csv to postgresql"
+  - "csv migration checklist"
+- Interactive checklist UI with 20 checkboxes across 6 phases:
+  1. **Audit Your Data** — remove empty rows, standardize headers, fix mixed types, handle dates, check for duplicate keys
+  2. **Design Your Schema** — flat vs normalized decision framework, primary keys, type inference, NULL vs defaults
+  3. **Generate and Validate SQL** — CREATE TABLE first, test with small batch, handle encoding
+  4. **Migrate the Data** — small/medium/large dataset strategies with copy-pasteable commands for PostgreSQL, MySQL, SQLite
+  5. **Validate Everything** — row counts, random sampling, constraint checks, silent truncation detection
+  6. **Post-Migration Cleanup** — add indexes, set up backups, document schema
+
+#### Technical Content
+- Bulk import commands for PostgreSQL (`COPY`), MySQL (`LOAD DATA INFILE`), SQLite (`.import`)
+- `pgloader` recommendation for large datasets
+- Common pitfalls section: encoding, leading zeros, formulas vs values, time zones
+- Related reading cross-links to 4 existing posts
+
+#### Integration
+- Added card to `blog.html` at top of grid
+- Added to `sitemap.xml` with priority 0.8
+- Inline CTA linking to CSV to SQL converter tool
+- Second CTA linking to Schema Documentation Generator
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ Blog post renders correctly in dark and light themes
+- ✅ Checkboxes are interactive
+- ✅ All internal links verified
+- ✅ HTML syntax balanced
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research CSV migration keywords and angles | 0.1 |
+| Outline 6-phase checklist with 20 steps | 0.15 |
+| Write article content and code examples | 0.5 |
+| Build interactive checklist UI | 0.15 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.3** |
+
+### Key Insights
+1. **Checklists convert tool users** — A developer who follows a 20-step CSV migration checklist is exactly the user who needs the CSV to SQL converter at step 3. The post is both educational and a conversion funnel.
+
+2. **Database size determines strategy** — Small, medium, and large datasets need completely different migration approaches. Organizing the post by dataset size helps readers skip to their relevant section.
+
+3. **Encoding is the silent killer** — Most CSV migration guides ignore encoding. Calling it out explicitly (with a `file -i` command) saves readers hours of debugging garbled characters.
+
+### Day 16 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 9 |
+| New files created | 2 (pricing-b.html, blog post 25) |
+| Pages updated | 5 (app.html, pricing.html, blog.html, sitemap.xml, BACKLOG.md) |
+| Blog posts published | 25 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Write blog post: "How to Design a Schema That Scales" (next highest-priority P2 content)
+2. Await human response on domain purchase (schemalens.tech)
+3. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+
+---
+
+*Day 16 in progress. Twenty-five blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal all deployed. All tests green. SchemaLens continues to build toward real users and revenue.*
