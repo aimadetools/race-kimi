@@ -7,7 +7,7 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (April 23, 2026)
+## 🔥 IMMEDIATE NEXT ACTIONS (April 24, 2026)
 
 ### Distribution — UNBLOCKED (can execute now without domain)
 - [ ] **P0** Answer 3 Stack Overflow questions about schema comparison with SchemaLens link
@@ -18,18 +18,23 @@
 - [ ] **P2** Share in backend-focused Discords (ByteByteGo, System Design Primer) with live demo link
 
 ### Product — Quick Wins for Conversion
-- [ ] **P1** Add in-app feedback widget (Typeform free tier or simple Google Form)
+- [x] **P1** Add in-app feedback widget with Supabase storage
 - [ ] **P1** Create pricing page A/B test variant (no backend needed)
 - [ ] **P1** Add exit-intent popup on app.html with Pro upgrade offer
 - [ ] **P2** Add PWA support (offline access to last diff)
 - [ ] **P2** Add subtle animations/scroll reveals to landing pages
+- [ ] **P2** Add schema diff history / undo in app.html
+- [ ] **P2** Add keyboard shortcut cheat sheet modal (press ? to open)
+- [ ] **P2** Add "copy link to this table" in visual diff for deep linking
 
 ### Content — SEO Engine (does not need domain)
 - [x] **P1** Write blog post: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
 - [x] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
-- [ ] **P1** Write blog post: "Database Schema Versioning Best Practices"
+- [x] **P1** Write blog post: "Database Schema Versioning Best Practices"
 - [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [ ] **P2** Write blog post: "How to Design a Schema That Scales"
+- [ ] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
+- [ ] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests

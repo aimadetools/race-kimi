@@ -4896,3 +4896,115 @@ Publish the next highest-priority unblocked incomplete P1 content task: "SQLite 
 ---
 
 *Day 15 complete. Twenty-three blog posts. Eight free micro-tools. Five SQL dialects. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 — In-App Feedback Widget & Blog Post 24 (April 24, 2026)
+
+### Objective
+Build an in-app feedback widget to create a direct feedback loop with users, and publish the 24th SEO blog post on database schema versioning best practices. Both were the highest-priority unblocked incomplete tasks.
+
+### What Was Built
+
+#### In-App Feedback Widget
+- **Floating feedback button** (💬) in the bottom-right corner of app.html
+- **Feedback modal** with category selector (🐛 Bug, ✨ Feature, 💡 Other)
+- **Message textarea** with 2000-character limit and validation
+- **Optional email field** for follow-up, pre-filled for authenticated users
+- **Loading state** and error handling with fallback to email
+- **Success state** with thank-you message
+- **Dark/light theme compatible** using CSS variables
+- **Hidden in print mode** so it doesn't appear in PDF exports
+
+#### `/api/feedback.js` — Vercel Serverless Function
+- `POST /api/feedback` endpoint
+- Validates message length and category
+- Writes to Supabase `feedback` table via REST API
+- CORS-enabled with silent failure on Supabase errors
+- Logs to stdout for Vercel log collection
+
+#### Supabase Schema Update
+- Added `feedback` table to `supabase-schema.sql`:
+  - `id` (UUID PK), `message` (TEXT), `category` (TEXT), `email` (TEXT), `page_path` (TEXT), `created_at` (TIMESTAMPTZ)
+  - RLS: anonymous INSERT allowed, service_role SELECT only
+  - Indexes on `category` and `created_at` for fast querying
+
+#### Blog Post 24: "Database Schema Versioning Best Practices for Engineering Teams"
+- Full HTML article at `blog/database-schema-versioning-best-practices.html`
+- SEO-optimized title targeting:
+  - "database schema versioning"
+  - "schema versioning best practices"
+  - "version control database schema"
+  - "schema migration best practices"
+- 10 comprehensive best practices:
+  1. Keep one source of truth
+  2. Make migrations immutable
+  3. Use descriptive migration names
+  4. Test migrations against production-sized data
+  5. Make every migration reversible
+  6. Version control your schema, not just migrations
+  7. Run schema diffs in CI/CD
+  8. Enforce code review for all schema changes
+  9. Maintain environment parity
+  10. Document the "why," not just the "what"
+- Complete workflow section showing the end-to-end process
+- Inline CTAs linking to SchemaLens app, CI/CD post, and schema review checklist
+- Cross-links to 5 related blog posts for content clustering
+- Added to `blog.html` and `sitemap.xml`
+- Added e2e test to verify the post loads without errors
+
+### Validation
+- ✅ All 45 e2e tests pass (Chromium)
+- ✅ All 11 unit tests pass
+- ✅ Performance audit thresholds still passing
+- ✅ Feedback widget renders in both dark and light themes
+- ✅ Blog post renders correctly and contains target keywords
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design feedback widget UX and data model | 0.2 |
+| Build /api/feedback.js serverless function | 0.2 |
+| Add feedback modal, FAB, and CSS to app.html | 0.3 |
+| Update supabase-schema.sql with feedback table | 0.1 |
+| Research and outline schema versioning blog post | 0.2 |
+| Write blog post content and code examples | 0.5 |
+| HTML formatting and internal linking | 0.2 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Add e2e test for new blog post | 0.1 |
+| Run full test suite and verify | 0.2 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and deploy | 0.1 |
+| **Total** | **2.3** |
+
+### Key Insights
+1. **Feedback widgets are a moat** — Every piece of user feedback is a product improvement that competitors don't have. A 5-minute feedback loop beats a 5-week market research cycle.
+
+2. **Schema versioning content targets the buyer** — Engineering managers searching for "schema versioning best practices" have budget authority and team-wide influence. This post converts decision-makers, not just individual developers.
+
+3. **Supabase + serverless = zero-cost backend** — Adding a new table and API endpoint costs $0 on the free tier. The feedback system is production-ready without any infrastructure spend.
+
+### Day 16 Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| New files created | 2 (api/feedback.js, blog post 24) |
+| Pages updated | 4 (app.html, blog.html, sitemap.xml, supabase-schema.sql) |
+| Blog posts published | 24 |
+| Free micro-tools | 8 |
+| SEO landing pages | 10 |
+| E2E tests | 45 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue building content or micro-tools while waiting for human unblock
+4. Next highest-priority unblocked P1: pricing page A/B test variant or exit-intent popup
+
+---
+
+*Day 16 complete. Twenty-four blog posts. Eight free micro-tools. In-app feedback widget live. All tests green. SchemaLens continues to build toward real users and revenue.*
