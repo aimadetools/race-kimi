@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemaLens vs CLI Tools: When to Use Each — SchemaLens</title>
+<meta name="description" content="CLI tools like migra and apgdiff are powerful. SchemaLens is fast. Learn when to reach for the terminal and when a browser-based diff tool is the better choice.">
+<meta property="og:title" content="SchemaLens vs CLI Tools: When to Use Each">
+<meta property="og:description" content="CLI tools like migra and apgdiff are powerful. SchemaLens is fast. Learn when to reach for the terminal and when a browser-based diff tool is the better choice.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.tech/blog/schemalens-vs-cli-tools-when-to-use-each.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<article style="max-width:720px;margin:0 auto;padding:2rem 1rem;">
+  <header style="margin-bottom:2rem;">
+    <h1 style="font-size:2rem;margin-bottom:0.5rem;line-height:1.2;">SchemaLens vs CLI Tools: When to Use Each</h1>
+    <p style="color:var(--text-muted);">Published April 24, 2026 · SchemaLens</p>
+  </header>
+
+  <p>Most developers have a favorite schema diff CLI tool. Maybe it is <code>migra</code> for PostgreSQL, <code>apgdiff</code> for quick comparisons, or <code>schemalex</code> for MySQL. These tools are fast, scriptable, and feel natural if you already live in the terminal.</p>
+
+  <p>But CLI tools are not always the right tool for the job. There are moments when a browser-based diff tool saves time, reduces errors, and makes the result easier to share. The trick is knowing which situation calls for which tool.</p>
+
+  <h2>The CLI tool landscape</h2>
+
+  <p>Here is a quick summary of the most popular open-source schema diff CLI tools:</p>
+
+  <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:8px;">Tool</th>
+        <th style="text-align:left;padding:8px;">Dialects</th>
+        <th style="text-align:left;padding:8px;">Best for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;"><code>migra</code></td>
+        <td style="padding:8px;">PostgreSQL</td>
+        <td style="padding:8px;">Deep PostgreSQL diffing with live DB connections</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;"><code>apgdiff</code></td>
+        <td style="padding:8px;">PostgreSQL</td>
+        <td style="padding:8px;">Comparing two SQL dump files</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;"><code>schemalex</code></td>
+        <td style="padding:8px;">MySQL</td>
+        <td style="padding:8px;">MySQL schema diffing and migration generation</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;"><code>sqldiff</code> (SQLite)</td>
+        <td style="padding:8px;">SQLite</td>
+        <td style="padding:8px;">Built-in SQLite database comparison</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>These tools are excellent at what they do. If your workflow is already terminal-first, they fit right in.</p>
+
+  <h2>When CLI tools are the right choice</h2>
+
+  <h3>1. Automated CI/CD pipelines</h3>
+  <p>If you want to fail a build when someone accidentally drops a column, a CLI tool is the obvious choice. You can pipe the output into a PR comment, store the report as an artifact, and gate merges on zero breaking changes. SchemaLens offers a CLI too (<code>ci/schemalens-diff.js</code>), but if your team is already committed to <code>migra</code>, switching has a cost.</p>
+
+  <h3>2. Live database comparisons</h3>
+  <p>Tools like <code>migra</code> connect directly to running databases. If you need to compare staging against production without exporting dumps, a live connection is unbeatable. SchemaLens currently works with exported SQL, so for live connections CLI tools win.</p>
+
+  <h3>3. Headless servers and air-gapped environments</h3>
+  <p>If you are on a server with no browser, a CLI tool is your only option. Similarly, if your security policy forbids accessing web apps for sensitive schemas, running a local Python or Java tool is the safer path.</p>
+
+  <h3>4. Batch processing and scripting</h3>
+  <p>Need to diff fifty schemas overnight and email the reports? A CLI tool wrapped in a bash loop is the right abstraction. GUIs do not scale to batch workloads.</p>
+
+  <h2>When SchemaLens is the better choice</h2>
+
+  <h3>1. Quick exploratory diffs</h3>
+  <p>You have two <code>CREATE TABLE</code> dumps in Slack and you want to see what changed in thirty seconds. Opening a browser tab is faster than installing Python dependencies, setting up a virtualenv, and reading man pages. SchemaLens runs instantly with zero install.</p>
+
+  <h3>2. Sharing results with non-technical stakeholders</h3>
+  <p>A product manager or compliance officer needs to review schema changes before deploy. Sending them a terminal screenshot is unprofessional. SchemaLens generates a visual diff, a Markdown report, or a PDF that anyone can read. You can also generate a public shareable link in one click.</p>
+
+  <h3>3. Polyglot teams</h3>
+  <p>If your organization uses PostgreSQL, MySQL, SQL Server, SQLite, and Oracle, maintaining five separate CLI tools is a headache. SchemaLens supports all five dialects in one interface with consistent output formatting.</p>
+
+  <h3>4. Breaking change detection</h3>
+  <p>SchemaLens highlights dangerous changes — dropped columns, type narrowing, missing indexes on new foreign keys — with color-coded severity badges. Most CLI tools show you <em>what</em> changed; SchemaLens tells you <em>why you should care</em>.</p>
+
+  <h3>5. Cross-platform consistency</h3>
+  <p>A developer on Windows, a designer on macOS, and a DBA on Linux can all open the same URL and see the same diff. No "works on my machine" issues with Python versions or package dependencies.</p>
+
+  <h2>The hybrid workflow</h2>
+
+  <p>The best teams do not choose one or the other. They use both:</p>
+
+  <ul>
+    <li><strong>Development:</strong> Use SchemaLens for quick checks while writing migrations. The visual diff catches mistakes before you commit.</li>
+    <li><strong>Code review:</strong> Attach a SchemaLens Markdown export to your pull request so reviewers can see the semantic diff without running commands.</li>
+    <li><strong>CI/CD:</strong> Use the SchemaLens CLI (or your existing CLI tool) to gate deployments automatically.</li>
+    <li><strong>Documentation:</strong> Export a PDF diff report for auditors, onboarding docs, or change management tickets.</li>
+  </ul>
+
+  <p>This hybrid approach gives you the speed of a GUI for human tasks and the reliability of a CLI for automated tasks.</p>
+
+  <h2>Decision cheat sheet</h2>
+
+  <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:8px;">Situation</th>
+        <th style="text-align:left;padding:8px;">Recommended tool</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Need a diff in under 30 seconds</td>
+        <td style="padding:8px;">SchemaLens (browser)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Automated CI gate</td>
+        <td style="padding:8px;">CLI tool (migra, apgdiff, or SchemaLens CLI)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Sharing with PMs / auditors</td>
+        <td style="padding:8px;">SchemaLens (Markdown / PDF export)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Live DB to live DB comparison</td>
+        <td style="padding:8px;">CLI tool with DB connection</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Multiple SQL dialects</td>
+        <td style="padding:8px;">SchemaLens (5 dialects in one tool)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Headless server / batch job</td>
+        <td style="padding:8px;">CLI tool</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Detect breaking changes visually</td>
+        <td style="padding:8px;">SchemaLens (breaking change badges)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The bottom line</h2>
+
+  <p>CLI schema diff tools are powerful, scriptable, and essential for automation. SchemaLens is fast, shareable, and designed for human review. The question is not which one is better — it is which one fits the task in front of you.</p>
+
+  <p>If you are staring at two SQL dumps and need to know what changed right now, <a href="../app.html">open SchemaLens</a>. If you are wiring schema checks into your deployment pipeline, keep your CLI tool close. The smartest engineers use both.</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;">
+    <p style="margin:0 0 0.5rem;font-weight:700;">Try SchemaLens — free, browser-based, privacy-first.</p>
+    <p style="margin:0 0 1rem;color:var(--text-muted);">Compare two SQL schemas instantly. No install. No signup. No data leaves your machine.</p>
+    <a href="../app.html" class="btn btn-primary" style="display:inline-block;">Open Schema Diff →</a>
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--border);margin:2rem 0;">
+
+  <h3>Related Reading</h3>
+  <ul>
+    <li><a href="../schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools — Full Comparison</a></li>
+    <li><a href="schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+    <li><a href="how-to-compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></li>
+    <li><a href="../schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase vs Flyway</a></li>
+  </ul>
+</article>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../api.html">API</a>
+      <a href="../team.html">Team</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
