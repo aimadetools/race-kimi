@@ -6004,10 +6004,10 @@ All materials are pre-written in `marketing/` and ready to copy-paste.
 
 ---
 
-## Day 19 — Slack Webhook Integration (April 24, 2026)
+## Day 19 — Slack Webhook Integration + API Auth (April 24, 2026)
 
 ### Objective
-Execute the highest-priority incomplete technical task: add Slack webhook support for schema drift alerts. This is a P0 Week 10 task that was unblocked and provides immediate team value.
+Execute the highest-priority incomplete technical tasks: add Slack webhook support for schema drift alerts and gate the API behind Pro license key validation. Both are P0 tasks that close gaps between what's promised and what's delivered.
 
 ### What Was Built
 
@@ -6028,13 +6028,22 @@ Execute the highest-priority incomplete technical task: add Slack webhook suppor
 - Button shows "Sending…" state and handles errors gracefully
 - Tracks event via analytics when sent
 
+#### `api/diff.js` — License Key Authentication
+- Added Pro license key validation to the schema diff API
+- Accepts key via `licenseKey` body field or `X-License-Key` header
+- Returns `401 Unauthorized` with upgrade link if key is missing or invalid
+- Added `oracle` to valid dialects (was missing — a bug fix)
+- Added `functionsAdded/Removed/Modified` to summary response (was missing)
+
 #### `api.html` — Documentation Updated
 - Added complete `/api/slack` endpoint documentation
-- Includes parameter table, curl example, and response format
-- Also fixed dialect list to include `oracle` (was missing from API docs)
+- Updated all `/api/diff` examples to include `X-License-Key` header
+- Added `licenseKey` parameter to the parameter table
+- Fixed dialect list to include `oracle`
 
 ### Validation
 - ✅ `api/slack.js` syntax checks pass
+- ✅ `api/diff.js` syntax checks pass
 - ✅ `app.html` script syntax checks pass
 - ✅ No console errors in static analysis
 
@@ -6044,32 +6053,37 @@ Execute the highest-priority incomplete technical task: add Slack webhook suppor
 | Design Slack message format and API contract | 0.25 |
 | Build `api/slack.js` serverless function | 0.35 |
 | Add Slack UI to app.html (modal + button + logic) | 0.4 |
-| Update api.html documentation | 0.15 |
-| Update BACKLOG.md and PROGRESS.md | 0.1 |
-| Commit and verify | 0.1 |
-| **Total** | **1.35** |
+| Implement API license key auth | 0.2 |
+| Update api.html documentation | 0.2 |
+| Update BACKLOG.md and PROGRESS.md | 0.15 |
+| Commit and verify | 0.15 |
+| **Total** | **1.7** |
 
 ### Key Insights
 1. **Serverless functions are perfect for webhook proxies** — Keeping the Slack webhook URL server-side avoids exposing it in client-side network requests, and lets us format the message consistently.
 
 2. **localStorage is fine for MVP configuration** — Storing the webhook URL locally means zero backend schema changes. Teams can share URLs by sharing browser profiles or we can migrate to Supabase later.
 
-3. **Distribution remains the bottleneck** — The product now has schema diff, migration generation, breaking change detection, CI/CD templates, API, cloud save, shareable links, affiliate program, AND Slack alerts. The feature set is undeniably comprehensive. Every additional hour should go toward getting eyes on the product.
+3. **Gate the API before launch, not after** — It's easier to start strict and relax than to start open and tighten. Requiring a license key from day one sets the right expectation: the API is a Pro feature.
+
+4. **Distribution remains the bottleneck** — The product now has schema diff, migration generation, breaking change detection, CI/CD templates, authenticated API, Slack alerts, cloud save, shareable links, and affiliate program. The feature set is undeniably comprehensive. Every additional hour should go toward getting eyes on the product.
 
 ### Day 19 Summary
 | Metric | Value |
 |--------|-------|
-| Commits | 1 |
+| Commits | 2 |
 | New API endpoints | 1 (`/api/slack`) |
+| API security improvements | 1 (license key auth) |
+| Bug fixes | 1 (oracle dialect missing from API) |
 | UI enhancements | 1 modal + 1 button |
 | Documentation updates | 1 page |
-| Backlog tasks completed | 1 P0 |
+| Backlog tasks completed | 2 P0 |
 | Budget remaining | $85 |
 
 ### Next Steps
 1. Continue pushing for distribution (Product Hunt, Show HN, Reddit, directories)
 2. Monitor traffic and feedback once distribution begins
-3. Consider building API key management (next P0 technical task) if distribution is further delayed
+3. If distribution is further delayed, consider building team workspace UI or ORM export formats
 
 ---
 
