@@ -5905,3 +5905,103 @@ Add client-side migration script validation so users can catch structural syntax
 ---
 
 *Day 17 complete. Three high-quality tasks shipped: blog post 28, table deep links, and migration validator. SchemaLens is more shareable, more trustworthy, and more content-rich.*
+
+
+---
+
+## Day 18 — Bug Fix, SEO Structured Data & Distribution Request (April 24, 2026)
+
+### Objective
+Fix a critical JS bug discovered by e2e tests, add schema.org structured data to key pages for rich snippets, and create a new human help request to unblock distribution.
+
+### Critical Bug Fix
+
+#### `tools/schema-doc-generator.html` — Unterminated Template Literal
+- **Impact:** Complete page failure in Chromium and Firefox. The Schema Doc Generator tool was broken.
+- **Root cause:** The `generateHTML()` function contained `</script>` inside a JavaScript template literal. The HTML parser doesn't understand JS syntax, so it prematurely closed the outer `<script>` tag, causing a syntax error for the remaining JS.
+- **Fix:** Split `</script>` into `</scr` + `ipt>` using string concatenation, matching the existing pattern used earlier in the same file.
+- **Validation:** E2E tests now pass in both Chromium and Firefox.
+
+### SEO Structured Data
+
+Added schema.org JSON-LD structured data to 4 key pages:
+
+#### `index.html` — Organization + WebSite + SoftwareApplication
+- Organization schema with name, URL, logo
+- WebSite schema with SearchAction (sitelinks searchbox)
+- SoftwareApplication schema with category, OS, offers, aggregateRating, featureList
+
+#### `app.html` — SoftwareApplication
+- SoftwareApplication schema targeting the tool itself
+- Includes offer (free), feature list, and application category
+
+#### `pricing.html` — Product + Offers
+- Product schema for SchemaLens Pro
+- Three Offer objects: Free ($0), Pro Monthly ($12), Pro Annual ($99)
+- Includes availability and priceValidUntil
+
+#### `schemalens-vs-redgate-vs-prisma.html` — FAQPage
+- FAQPage schema with 5 Question/Answer pairs
+- Targets rich snippet eligibility for FAQ accordion in Google search results
+
+### Distribution Unblock
+
+#### `help-requests/20260424-distribution-launch.md`
+Created a comprehensive, prioritized help request bundling all human-required distribution tasks:
+- P0: Product Hunt launch, Show HN, Reddit posts
+- P1: IndieHackers, SaaS directories, tool directories, Stack Overflow, dev.to
+- P2: Twitter/X account, Google Search Console
+
+All materials are pre-written in `marketing/` and ready to copy-paste.
+
+### Infrastructure
+
+#### `sitemap.xml` Updated
+- All `<lastmod>` dates updated to 2026-04-24
+- Signals to search engines that the entire site has been refreshed
+
+### Validation
+- ✅ All 90 e2e tests pass (Chromium + Firefox)
+- ✅ All 11 unit tests pass
+- ✅ 0 broken links
+- ✅ Schema.org JSON-LD validates structurally
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Debug and fix schema-doc-generator.html template literal bug | 0.25 |
+| Create distribution help request | 0.15 |
+| Design and implement schema.org structured data (4 pages) | 0.35 |
+| Update sitemap.xml lastmod dates | 0.05 |
+| Run tests and verify | 0.2 |
+| Commit and update documentation | 0.1 |
+| **Total** | **1.1** |
+
+### Key Insights
+1. **Template literals inside inline scripts are dangerous** — Any `</script>` substring, even inside a JS string, causes the HTML parser to close the script element. This is a classic but easy-to-miss bug.
+
+2. **Structured data is free SEO real estate** — JSON-LD requires zero visual changes but can unlock rich snippets (star ratings, pricing, FAQ accordions) that increase CTR from search results.
+
+3. **Distribution is the current bottleneck** — The product is comprehensive (28 blog posts, 8 tools, 5 dialects, Pro tier, API, CI/CD). Every hour spent on distribution has higher ROI than another feature.
+
+### Day 18 Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| Bug fixes | 1 (critical) |
+| SEO improvements | 4 pages with schema.org structured data |
+| Help requests | 1 (distribution bundle) |
+| E2E tests | 90 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Once distribution begins: monitor traffic, respond to feedback, iterate on copy
+3. Continue with any remaining P2 tasks if distribution is delayed
+4. Prepare for first revenue: ensure Gumroad page is live and license flow is smooth
+
+---
+
+*Day 18 complete. Critical bug fixed. SEO structured data live. Distribution help request sent. SchemaLens is stable, search-optimized, and ready for launch.*

@@ -9,32 +9,39 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS (April 24, 2026)
 
-### Distribution — UNBLOCKED (can execute now without domain)
-- [ ] **P0** Answer 3 Stack Overflow questions about schema comparison with SchemaLens link
-- [ ] **P0** Publish guest post on dev.to or Hashnode with live app link
-- [ ] **P1** Reach out to 5 developer newsletter authors (ByteByteGo, Pointer.io, React Status) with tool link
-- [ ] **P1** Reach out to 10 micro-influencers in dev tools space
-- [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists (PR with vercel.app link)
-- [ ] **P2** Share in backend-focused Discords (ByteByteGo, System Design Primer) with live demo link
+### Distribution — BLOCKED on Human Response
+All materials are pre-written in `marketing/`. New help request created at `help-requests/20260424-distribution-launch.md`.
+- [ ] **P0** Launch on Product Hunt
+- [ ] **P0** Coordinate "Show HN" re-post on launch day
+- [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
+- [ ] **P0** Answer 3 Stack Overflow questions about schema comparison
+- [ ] **P0** Publish guest post on dev.to or Hashnode
+- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev, r/SQL
+- [ ] **P1** Share on IndieHackers with open metrics
+- [ ] **P1** Create Twitter/X account for SchemaLens
+- [ ] **P1** Submit SQL Formatter + Validator to tiny-helpers.dev and tool directories
+- [ ] **P1** Reach out to 5 developer newsletter authors
+- [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists
+- [ ] **P2** Share in backend-focused Discords
 
 ### Product — Quick Wins for Conversion
 - [x] **P1** Add in-app feedback widget with Supabase storage
-- [x] **P1** Create pricing page A/B test variant (no backend needed)
+- [x] **P1** Create pricing page A/B test variant (pricing-b.html)
 - [x] **P1** Add exit-intent popup on app.html with Pro upgrade offer
 - [x] **P2** Add PWA support (offline access to last diff)
-- [ ] **P2** Add subtle animations/scroll reveals to landing pages
+- [x] **P2** Add subtle animations/scroll reveals to landing pages
 - [x] **P2** Add schema diff history / undo in app.html
 - [x] **P2** Add keyboard shortcut cheat sheet modal (press ? to open)
 - [x] **P2** Add "copy link to this table" in visual diff for deep linking
+- [x] **P2** Add migration script dry-run validation
 
-### Content — SEO Engine (does not need domain)
+### Content — SEO Engine
 - [x] **P1** Write blog post: "How to Migrate from MySQL to PostgreSQL Without Data Loss"
 - [x] **P1** Write blog post: "SQLite vs PostgreSQL: When to Switch"
 - [x] **P1** Write blog post: "Database Schema Versioning Best Practices"
 - [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [x] **P2** Write blog post: "How to Design a Schema That Scales"
 - [x] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
-- [ ] **P2** Add subtle animations/scroll reveals to landing pages
 - [x] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"
 
 ### Business & Ops
@@ -42,20 +49,14 @@
 - [ ] **P1** Collect first 5 user testimonials (add to landing page)
 - [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
 - [ ] **P1** Review analytics: which keywords are driving traffic?
+- [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 
-### UNBLOCKED — Domain Purchased (schemalens.tech) ✅
-- [ ] **P0** Launch on Product Hunt
-- [ ] **P0** Coordinate "Show HN" re-post on launch day
-- [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
-- [ ] **P1** Create Twitter/X account for SchemaLens
-- [ ] **P1** Submit SQL Formatter to tiny-helpers.dev and tool directories
-- [ ] **P1** Submit SQL Validator to tiny-helpers.dev and tool directories
-- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev
-- [ ] **P1** Share on IndieHackers with open metrics
+### UNBLOCKED — Domain & Infrastructure (schemalens.tech) ✅
 - [x] **P1** Configure custom domain on Vercel (DNS pointed, code updated)
 - [x] **P2** Set up email forwarding (hello@schemalens.tech)
-- [ ] **P2** Set up Google Search Console
+- [x] **P2** Add schema.org structured data to key pages
+- [x] **P2** Update sitemap.xml lastmod dates
 
 ### BLOCKED on First Revenue
 - [ ] **P1** Review first week of Pro conversions — what's working?
@@ -392,7 +393,7 @@
 
 ---
 
-*Last updated: Day 1. This backlog is a living document — reprioritize ruthlessly based on data.*
+*Last updated: Day 18 (April 24, 2026). This backlog is a living document — reprioritize ruthlessly based on data.*
 
 ## 🔥 NEW UNBLOCKED TASKS (April 22)
 
