@@ -498,7 +498,7 @@
     }
     @media print {
       nav, .app-header, .app-toolbar, .editor-grid, .pro-hint,
-      .results-tabs, footer, .modal-overlay, .pdf-actions { display: none !important; }
+      .results-tabs, footer, .modal-overlay, .pdf-actions, .feedback-fab { display: none !important; }
       body { background: #fff; color: #111; }
       .container { max-width: 100%; padding: 0; }
       .results { margin-top: 0; border: none; }
@@ -506,6 +506,72 @@
       #panel-pdf { display: block !important; }
       a { text-decoration: none; color: #111; }
     }
+
+    /* Feedback widget */
+    .feedback-fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 100;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .feedback-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+    .feedback-fab:active { transform: translateY(0); }
+    .feedback-modal .modal { max-width: 460px; }
+    .feedback-modal textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-top: 8px;
+    }
+    .feedback-modal textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+    }
+    .feedback-categories {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .feedback-category {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .feedback-category:hover { border-color: var(--primary); color: var(--primary); }
+    .feedback-category.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .feedback-success { color: var(--success); text-align: center; padding: 12px 0; }
+    .feedback-error { color: var(--danger); font-size: 0.85rem; margin-top: 6px; }
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -708,6 +774,40 @@ CREATE TABLE users (
       </div>
     </div>
   </div>
+
+  <!-- Feedback Modal -->
+  <div class="modal-overlay feedback-modal" id="feedbackModal">
+    <div class="modal">
+      <h3>💬 Send Feedback</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Found a bug? Have a feature idea? We read every message.</p>
+      <div id="feedbackFormSection">
+        <label style="font-size:0.85rem;color:var(--text-muted);">Category</label>
+        <div class="feedback-categories">
+          <button class="feedback-category" data-category="bug" onclick="setFeedbackCategory('bug')">🐛 Bug</button>
+          <button class="feedback-category" data-category="feature" onclick="setFeedbackCategory('feature')">✨ Feature</button>
+          <button class="feedback-category active" data-category="other" onclick="setFeedbackCategory('other')">💡 Other</button>
+        </div>
+        <label style="font-size:0.85rem;color:var(--text-muted);margin-top:16px;display:block;">Message</label>
+        <textarea id="feedbackMessage" placeholder="Describe your experience, issue, or idea…" maxlength="2000"></textarea>
+        <label style="font-size:0.85rem;color:var(--text-muted);margin-top:12px;display:block;">Email (optional)</label>
+        <input type="email" id="feedbackEmail" placeholder="you@example.com" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;">
+        <p id="feedbackError" class="feedback-error"></p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="submitFeedback()">Send Feedback</button>
+        </div>
+      </div>
+      <div id="feedbackSuccessSection" style="display:none;">
+        <p class="feedback-success">✓ Thank you! Your feedback helps us improve SchemaLens.</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeFeedbackModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback FAB -->
+  <button class="feedback-fab" onclick="openFeedbackModal()" title="Send feedback" aria-label="Send feedback">💬</button>
 
   <footer class="footer" style="margin-top:60px">
     <div class="container">
@@ -3817,6 +3917,77 @@ async function signOut() {
 // Close auth modal on overlay click
 document.getElementById('authModal').addEventListener('click', (e) => {
   if (e.target.id === 'authModal') closeAuthModal();
+});
+
+// Feedback widget
+function openFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  if (!modal) return;
+  document.getElementById('feedbackFormSection').style.display = 'block';
+  document.getElementById('feedbackSuccessSection').style.display = 'none';
+  document.getElementById('feedbackMessage').value = '';
+  document.getElementById('feedbackEmail').value = currentUser?.email || '';
+  setFeedbackCategory('other');
+  modal.classList.add('active');
+}
+
+function closeFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  if (modal) modal.classList.remove('active');
+}
+
+let currentFeedbackCategory = 'other';
+function setFeedbackCategory(cat) {
+  currentFeedbackCategory = cat;
+  document.querySelectorAll('.feedback-category').forEach(el => {
+    el.classList.toggle('active', el.dataset.category === cat);
+  });
+}
+
+async function submitFeedback() {
+  const message = document.getElementById('feedbackMessage').value.trim();
+  const email = document.getElementById('feedbackEmail').value.trim();
+  const errorEl = document.getElementById('feedbackError');
+  errorEl.textContent = '';
+
+  if (!message) {
+    errorEl.textContent = 'Please enter a message.';
+    return;
+  }
+  if (message.length > 2000) {
+    errorEl.textContent = 'Message must be 2000 characters or less.';
+    return;
+  }
+
+  const btn = document.querySelector('#feedbackFormSection .btn-primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        category: currentFeedbackCategory,
+        email: email || undefined,
+        page: window.location.pathname
+      })
+    });
+    if (!res.ok) throw new Error('Server error');
+    document.getElementById('feedbackFormSection').style.display = 'none';
+    document.getElementById('feedbackSuccessSection').style.display = 'block';
+  } catch (err) {
+    errorEl.textContent = 'Failed to send feedback. Please try again or email us at schemalens@proton.me';
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'feedbackModal') closeFeedbackModal();
 });
 
 // Init Supabase when DOM is ready

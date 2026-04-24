@@ -102,6 +102,28 @@ CREATE POLICY "Only service role can read subscribers" ON public.newsletter_subs
   FOR SELECT TO service_role USING (true);
 
 -- ============================================
+-- feedback: in-app user feedback
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.feedback (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  message TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'other',
+  email TEXT,
+  page_path TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts for feedback widget
+CREATE POLICY "Allow anonymous feedback inserts" ON public.feedback
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read feedback
+CREATE POLICY "Only service role can read feedback" ON public.feedback
+  FOR SELECT TO service_role USING (true);
+
+-- ============================================
 -- Indexes for performance
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id);
@@ -110,3 +132,5 @@ CREATE INDEX IF NOT EXISTS idx_saved_diffs_public_id ON public.saved_diffs(publi
 CREATE INDEX IF NOT EXISTS idx_team_memberships_user_id ON public.team_memberships(user_id);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_type ON public.analytics_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at ON public.analytics_events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_feedback_category ON public.feedback(category);
+CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON public.feedback(created_at DESC);
