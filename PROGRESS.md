@@ -5753,3 +5753,72 @@ Publish the P2 content task "SQL Index Analyzer: A Practical Guide" to drive SEO
 ---
 
 *Day 17 continued. Twenty-eight blog posts live. SchemaLens content engine keeps growing.*
+
+
+---
+
+## Day 17 Continued — Copy Link to Table in Visual Diff (April 24, 2026)
+
+### Objective
+Add deep-linking support for individual tables in the visual diff viewer. This enables users to share a URL that jumps directly to a specific table's changes — useful for code reviews, Slack discussions, and PR comments.
+
+### What Was Built
+
+#### "Copy Link to This Table" Feature
+- Added a small **🔗 Link** button to every table header in the visual diff viewer
+- Clicking the button copies a URL with both the diff hash and a `table=` parameter
+- URL format: `app.html#diff=<hash>&table=users`
+- When someone opens the shared URL:
+  - Schemas auto-populate and comparison runs as before
+  - After rendering, the page smoothly scrolls to the linked table
+  - The table gets a temporary highlight glow (2-second `--primary` border) so it's easy to spot
+
+#### Technical Implementation
+- `renderTableDiff()` now assigns `id="table-${name}"` to each table card
+- New `copyTableLink(name)` function generates the table-specific URL
+- New `scrollToLinkedTable()` function parses `table=` from the hash, finds the element, and scrolls + highlights it
+- Regex for parsing the diff hash remains unchanged — the `&table=` parameter is safely ignored by the existing pattern
+- Works for added, removed, and modified tables
+
+### Validation
+- ✅ All 11 parser/diff tests pass
+- ✅ HTML syntax balanced
+- ✅ No breaking changes to existing share URL format
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design deep-link UX | 0.1 |
+| Add table IDs and link buttons to renderTableDiff | 0.15 |
+| Implement copyTableLink and scrollToLinkedTable | 0.15 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| **Total** | **0.5** |
+
+### Key Insights
+1. **Deep links are review currency** — A developer can paste a link to a specific table change in a PR comment. The reviewer clicks, sees exactly what changed, and approves. This is high-leverage viral behavior.
+
+2. **Visual highlight matters** — Smooth scrolling alone isn't enough. The 2-second glow tells the user "this is the table you came for" without needing to read the entire diff.
+
+3. **Backward compatibility** — Existing `#diff=<hash>` URLs work unchanged. The `&table=` parameter is additive.
+
+### Day 17 Updated Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 7 |
+| New files created | 1 (blog post 28) |
+| Pages updated | 2 (app.html, BACKLOG.md) |
+| Blog posts published | 28 |
+| Free micro-tools | 8 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Set up Google Search Console verification meta tag
+2. Continue preparing for Product Hunt launch
+3. Add migration script dry-run validation (P2 product task)
+
+---
+
+*Day 17 continued. Twenty-eight blog posts. Deep links for tables. SchemaLens keeps getting more shareable.*
