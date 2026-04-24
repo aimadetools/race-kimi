@@ -80,10 +80,10 @@
       <h1>Schema reviews,<br><span>shared by default.</span></h1>
       <p>SchemaLens Team turns individual schema diffs into a team workflow. Cloud save, shared workspaces, Slack alerts, and one bill for the whole company.</p>
       <div class="hero-actions">
-        <a href="#waitlist" class="btn btn-primary btn-lg">Join the Waitlist</a>
+        <a href="app.html" class="btn btn-primary btn-lg">Start Your Team Workspace</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">See Pricing</a>
       </div>
-      <p class="hero-note">Launching soon. Be the first to get Team access.</p>
+      <p class="hero-note">Team workspaces are live. Sign in on the app, create a team, and share diffs instantly.</p>
     </div>
   </header>
 
@@ -184,7 +184,7 @@
           <a href="pricing.html" class="btn btn-primary" style="width: 100%;">Upgrade to Pro</a>
         </div>
         <div class="pricing-card" style="border: 2px solid var(--primary);">
-          <div class="pricing-badge" style="background: var(--primary); color: #fff;">Coming Soon</div>
+          <div class="pricing-badge" style="background: var(--primary); color: #fff;">New</div>
           <div class="pricing-header">
             <h3>Team</h3>
             <div class="pricing-price">$29<span>/mo</span></div>
@@ -198,24 +198,35 @@
             <li>Admin controls</li>
             <li>Priority API access</li>
           </ul>
-          <a href="#waitlist" class="btn btn-primary" style="width: 100%;">Join Waitlist</a>
+          <a href="app.html" class="btn btn-primary" style="width: 100%;">Get Started</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" style="background: var(--surface);" id="waitlist">
+  <section class="section" style="background: var(--surface);" id="get-started">
     <div class="container">
-      <h2 class="section-title text-center">Be the first to get Team access</h2>
-      <p class="section-subtitle text-center">Join the waitlist and we'll notify you the moment Team workspaces are live. No spam, ever.</p>
-      <div style="max-width: 480px; margin: 32px auto 0;">
-        <form id="waitlistForm" style="display: flex; flex-direction: column; gap: 16px;">
-          <input type="email" id="waitlistEmail" placeholder="you@company.com" required style="padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem;">
-          <input type="text" id="waitlistCompany" placeholder="Company name (optional)" style="padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem;">
-          <button type="submit" class="btn btn-primary btn-lg" id="waitlistBtn">Join Waitlist</button>
-        </form>
-        <p id="waitlistSuccess" style="display: none; margin-top: 16px; color: var(--success); text-align: center; font-weight: 500;">✅ You're on the list! We'll email you when Team workspaces are ready.</p>
-        <p id="waitlistError" style="display: none; margin-top: 16px; color: var(--danger); text-align: center;">Something went wrong. Please try again.</p>
+      <h2 class="section-title text-center">How to start your team workspace</h2>
+      <p class="section-subtitle text-center">Team sharing is built into the SchemaLens app. No separate signup required.</p>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">1</div>
+          <h3>Open the App</h3>
+          <p>Sign in with your email on <a href="app.html" style="color:var(--primary);">SchemaLens</a>. Magic link auth — no password needed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">2</div>
+          <h3>Create or Join a Team</h3>
+          <p>Click your account badge and enter a team name. Anyone who uses the same name joins the same workspace instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">3</div>
+          <h3>Share Diffs</h3>
+          <p>When saving a diff, check "Save to team workspace." Your teammates will see it in the Team Diffs panel immediately.</p>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top: 32px;">
+        <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
       </div>
     </div>
   </section>
@@ -299,36 +310,7 @@
 })();
 </script>
 <script>
-document.getElementById('waitlistForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const email = document.getElementById('waitlistEmail').value.trim();
-  const company = document.getElementById('waitlistCompany').value.trim();
-  const btn = document.getElementById('waitlistBtn');
-  const success = document.getElementById('waitlistSuccess');
-  const error = document.getElementById('waitlistError');
-  btn.disabled = true;
-  btn.textContent = 'Joining…';
-  try {
-    const res = await fetch('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'team-waitlist' + (company ? ' (' + company + ')' : '') })
-    });
-    if (res.ok) {
-      success.style.display = 'block';
-      error.style.display = 'none';
-      document.getElementById('waitlistForm').reset();
-    } else {
-      throw new Error('Failed');
-    }
-  } catch (err) {
-    success.style.display = 'none';
-    error.style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Join Waitlist';
-  }
-});
+// Team workspace is live — no waitlist needed
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>

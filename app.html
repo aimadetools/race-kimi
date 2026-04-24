@@ -879,6 +879,16 @@ CREATE TABLE users (
         <p class="saved-diffs-empty">Sign in to save and access your diffs from any device.</p>
       </div>
     </div>
+
+    <div class="saved-diffs-panel" id="teamDiffsPanel" style="display:none;">
+      <div class="saved-diffs-header">
+        <h3>👥 Team Diffs</h3>
+        <button class="btn btn-secondary" onclick="loadTeamDiffs()" style="font-size:0.8rem;padding:6px 10px;">Refresh</button>
+      </div>
+      <div class="saved-diffs-list" id="teamDiffsList">
+        <p class="saved-diffs-empty">Join or create a team to share diffs with your team.</p>
+      </div>
+    </div>
   </main>
 
   <div class="modal-overlay" id="licenseModal">
@@ -899,6 +909,12 @@ CREATE TABLE users (
       <h3>💾 Save Diff</h3>
       <p>Give your diff a name so you can find it later.</p>
       <input type="text" id="saveDiffName" placeholder="e.g. Users table migration v2">
+      <div id="saveTeamSection" style="display:none;margin-top:12px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;">
+          <input type="checkbox" id="saveToTeam" style="width:auto;">
+          <span>Save to team workspace (<span id="saveTeamName"></span>)</span>
+        </label>
+      </div>
       <div class="modal-actions">
         <button class="btn btn-secondary" onclick="closeSaveModal()">Cancel</button>
         <button class="btn btn-primary" onclick="saveDiffToCloud()">Save to Cloud</button>
@@ -925,7 +941,22 @@ CREATE TABLE users (
       </div>
       <div id="authSignedInSection" style="display:none;">
         <p>Signed in as <strong id="authUserEmail"></strong></p>
-        <div class="modal-actions">
+        <div id="teamAuthSection" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+          <div id="teamAuthNoTeam" style="display:none;">
+            <p style="font-size:0.9rem;margin-bottom:8px;">You are not in a team yet.</p>
+            <input type="text" id="joinTeamName" placeholder="Enter team name to join or create" style="margin-bottom:8px;">
+            <div class="modal-actions">
+              <button class="btn btn-secondary" onclick="joinOrCreateTeam()">Join / Create Team</button>
+            </div>
+          </div>
+          <div id="teamAuthHasTeam" style="display:none;">
+            <p style="font-size:0.9rem;margin-bottom:8px;">Team: <strong id="teamAuthName"></strong></p>
+            <div class="modal-actions">
+              <button class="btn btn-secondary" onclick="leaveTeam()">Leave Team</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions" style="margin-top:16px;">
           <button class="btn btn-secondary" onclick="closeAuthModal()">Close</button>
           <button class="btn btn-primary" onclick="signOut()">Sign Out</button>
         </div>
@@ -4157,6 +4188,20 @@ document.getElementById('saveModal')?.addEventListener('click', (e) => {
   if (e.target.id === 'saveModal') closeSaveModal();
 });
 
+function updateSaveModalTeamUI() {
+  const section = document.getElementById('saveTeamSection');
+  const checkbox = document.getElementById('saveToTeam');
+  const nameSpan = document.getElementById('saveTeamName');
+  if (!section) return;
+  if (userTeamMemberships.length) {
+    section.style.display = 'block';
+    if (nameSpan) nameSpan.textContent = userTeamMemberships[0].team_name;
+  } else {
+    section.style.display = 'none';
+    if (checkbox) checkbox.checked = false;
+  }
+}
+
 async function saveDiffToCloud() {
   const name = document.getElementById('saveDiffName').value.trim();
   if (!name) {
@@ -4180,14 +4225,18 @@ async function saveDiffToCloud() {
   btn.textContent = 'Saving…';
   btn.disabled = true;
 
+  const saveToTeam = document.getElementById('saveToTeam')?.checked && userTeamMemberships.length;
+  const teamName = saveToTeam ? userTeamMemberships[0].team_name : null;
+
   try {
     const { error } = await supabaseClient
       .from('saved_diffs')
-      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB }]);
+      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName }]);
     if (error) throw error;
     closeSaveModal();
-    showError('✓ Diff saved to cloud!');
+    showError('✓ Diff saved to cloud!' + (teamName ? ' (Team: ' + teamName + ')' : ''));
     loadSavedDiffs();
+    if (teamName) loadTeamDiffs();
   } catch (err) {
     showError('Failed to save diff: ' + err.message);
   } finally {
@@ -4303,7 +4352,7 @@ async function loadPublicDiff(publicId) {
     }
     document.getElementById('schemaA').value = data.schema_a || '';
     document.getElementById('schemaB').value = data.schema_b || '';
-    if (data.dialect && ['postgres','mysql','sqlite','mssql'].includes(data.dialect)) {
+    if (data.dialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(data.dialect)) {
       document.getElementById('dialect').value = data.dialect;
     }
     updateStats();
@@ -4338,7 +4387,7 @@ async function loadDiffIntoEditors(id) {
     if (!data) return;
     document.getElementById('schemaA').value = data.schema_a || '';
     document.getElementById('schemaB').value = data.schema_b || '';
-    if (data.dialect && ['postgres','mysql','sqlite','mssql'].includes(data.dialect)) {
+    if (data.dialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(data.dialect)) {
       document.getElementById('dialect').value = data.dialect;
     }
     updateStats();
@@ -4410,6 +4459,10 @@ function updateAuthUI() {
     saveBtn.classList.toggle('visible', !!currentUser);
   }
   loadSavedDiffs();
+  loadTeamMemberships().then(() => {
+    loadTeamDiffs();
+    updateSaveModalTeamUI();
+  });
 }
 
 function toggleAuthModal() {
@@ -4424,6 +4477,7 @@ function toggleAuthModal() {
   document.getElementById('authSignedInSection').style.display = currentUser ? 'block' : 'none';
   if (currentUser) {
     document.getElementById('authUserEmail').textContent = currentUser.email || '';
+    updateTeamAuthUI();
   }
   modal.classList.add('active');
   if (!currentUser) {
@@ -4478,6 +4532,141 @@ async function signOut() {
 document.getElementById('authModal').addEventListener('click', (e) => {
   if (e.target.id === 'authModal') closeAuthModal();
 });
+
+/* ---------- Team Workspace ---------- */
+let userTeamMemberships = [];
+
+async function loadTeamMemberships() {
+  if (!supabaseClient || !currentUser) {
+    userTeamMemberships = [];
+    return;
+  }
+  try {
+    const { data, error } = await supabaseClient
+      .from('team_memberships')
+      .select('team_name, role')
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+    userTeamMemberships = data || [];
+  } catch (err) {
+    console.error('loadTeamMemberships error:', err);
+    userTeamMemberships = [];
+  }
+}
+
+async function joinOrCreateTeam() {
+  const name = document.getElementById('joinTeamName')?.value.trim();
+  if (!name) {
+    showError('Please enter a team name.');
+    return;
+  }
+  if (!supabaseClient || !currentUser) {
+    showError('You must be signed in to join a team.');
+    return;
+  }
+  try {
+    const { error } = await supabaseClient
+      .from('team_memberships')
+      .insert([{ user_id: currentUser.id, team_name: name, role: 'member' }]);
+    if (error) throw error;
+    await loadTeamMemberships();
+    updateTeamAuthUI();
+    loadTeamDiffs();
+    showError('✓ You joined team: ' + esc(name));
+  } catch (err) {
+    showError('Failed to join team: ' + err.message);
+  }
+}
+
+async function leaveTeam() {
+  if (!supabaseClient || !currentUser || !userTeamMemberships.length) return;
+  const teamName = userTeamMemberships[0].team_name;
+  if (!confirm('Leave team "' + teamName + '"?')) return;
+  try {
+    const { error } = await supabaseClient
+      .from('team_memberships')
+      .delete()
+      .eq('user_id', currentUser.id)
+      .eq('team_name', teamName);
+    if (error) throw error;
+    userTeamMemberships = [];
+    updateTeamAuthUI();
+    const panel = document.getElementById('teamDiffsPanel');
+    if (panel) panel.style.display = 'none';
+    showError('✓ You left team: ' + esc(teamName));
+  } catch (err) {
+    showError('Failed to leave team: ' + err.message);
+  }
+}
+
+function updateTeamAuthUI() {
+  const noTeamEl = document.getElementById('teamAuthNoTeam');
+  const hasTeamEl = document.getElementById('teamAuthHasTeam');
+  const teamNameEl = document.getElementById('teamAuthName');
+  if (!noTeamEl || !hasTeamEl) return;
+  if (userTeamMemberships.length) {
+    noTeamEl.style.display = 'none';
+    hasTeamEl.style.display = 'block';
+    if (teamNameEl) teamNameEl.textContent = userTeamMemberships[0].team_name;
+  } else {
+    noTeamEl.style.display = 'block';
+    hasTeamEl.style.display = 'none';
+  }
+}
+
+async function loadTeamDiffs() {
+  const panel = document.getElementById('teamDiffsPanel');
+  const list = document.getElementById('teamDiffsList');
+  if (!panel || !list) return;
+
+  if (!currentUser || !userTeamMemberships.length) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  panel.style.display = 'block';
+  list.innerHTML = '<p class="saved-diffs-empty">Loading…</p>';
+
+  const teamNames = userTeamMemberships.map(m => m.team_name);
+  try {
+    const { data, error } = await supabaseClient
+      .from('saved_diffs')
+      .select('id, name, dialect, created_at, user_id, public_id, is_public')
+      .in('team_name', teamNames)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    renderTeamDiffsList(data || []);
+  } catch (err) {
+    list.innerHTML = '<p class="saved-diffs-empty">Failed to load team diffs. Please try again.</p>';
+    console.error('loadTeamDiffs error:', err);
+  }
+}
+
+function renderTeamDiffsList(diffs) {
+  const list = document.getElementById('teamDiffsList');
+  if (!list) return;
+  if (!diffs.length) {
+    list.innerHTML = '<p class="saved-diffs-empty">No team diffs yet. Save a diff to your team workspace to share it.</p>';
+    return;
+  }
+  list.innerHTML = diffs.map(d => {
+    const date = new Date(d.created_at).toLocaleDateString();
+    const isMine = d.user_id === currentUser?.id;
+    const linkBtn = d.public_id
+      ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
+      : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
+    return `<div class="saved-diff-item">
+      <div class="saved-diff-info">
+        <div class="saved-diff-name">${esc(d.name)}${isMine ? ' · You' : ''}</div>
+        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
+      </div>
+      <div class="saved-diff-actions">
+        <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
+        ${linkBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // Feedback widget
 function openFeedbackModal() {

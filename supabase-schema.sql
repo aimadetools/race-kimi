@@ -47,6 +47,36 @@ ALTER TABLE public.team_memberships ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own memberships" ON public.team_memberships
   FOR SELECT USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can insert own memberships" ON public.team_memberships
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- ============================================
+-- Team workspace columns on saved_diffs
+-- ============================================
+ALTER TABLE public.saved_diffs ADD COLUMN IF NOT EXISTS team_name TEXT;
+
+-- Team members can view diffs shared with their team
+CREATE POLICY "Team members can view team diffs" ON public.saved_diffs
+  FOR SELECT USING (
+    team_name IS NOT NULL AND
+    EXISTS (
+      SELECT 1 FROM public.team_memberships tm
+      WHERE tm.team_name = saved_diffs.team_name
+      AND tm.user_id = auth.uid()
+    )
+  );
+
+-- Team members can insert diffs to their team
+CREATE POLICY "Team members can insert team diffs" ON public.saved_diffs
+  FOR INSERT WITH CHECK (
+    team_name IS NULL OR
+    EXISTS (
+      SELECT 1 FROM public.team_memberships tm
+      WHERE tm.team_name = saved_diffs.team_name
+      AND tm.user_id = auth.uid()
+    )
+  );
+
 -- ============================================
 -- Public shareable diff links
 -- ============================================
@@ -130,6 +160,8 @@ CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_created_at ON public.saved_diffs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_public_id ON public.saved_diffs(public_id);
 CREATE INDEX IF NOT EXISTS idx_team_memberships_user_id ON public.team_memberships(user_id);
+CREATE INDEX IF NOT EXISTS idx_team_memberships_team_name ON public.team_memberships(team_name);
+CREATE INDEX IF NOT EXISTS idx_saved_diffs_team_name ON public.saved_diffs(team_name);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_type ON public.analytics_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at ON public.analytics_events(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_feedback_category ON public.feedback(category);
