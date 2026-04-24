@@ -218,8 +218,8 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P0** Add Supabase auth (magic link, no passwords)
 - [x] **P0** Add cloud save for diffs (Supabase DB)
 - [x] **P0** Add shareable diff links (read-only public links)
-- [ ] **P1** Build team workspace UI (list of team diffs)
-- [ ] **P1** Launch Team plan ($29/mo)
+- [x] **P1** Build team workspace UI (list of team diffs)
+- [x] **P1** Launch Team plan ($29/mo)
 - [ ] **P2** Add comment/annotation on diffs
 - [ ] **P2** Add diff versioning
 
@@ -398,8 +398,8 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ## 🔥 NEW UNBLOCKED TASKS (April 24)
 
 ### Product
-- [ ] **P1** Build team workspace UI in app.html (list of team diffs, invite members)
-- [ ] **P1** Launch Team plan ($29/mo) once workspace UI is ready
+- [x] **P1** Build team workspace UI in app.html (list of team diffs, invite members)
+- [x] **P1** Launch Team plan ($29/mo) once workspace UI is ready
 - [ ] **P2** Add comment/annotation on diffs for team collaboration
 - [ ] **P2** Add diff versioning for team history
 

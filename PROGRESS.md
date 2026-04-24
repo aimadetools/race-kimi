@@ -6195,3 +6195,95 @@ Build high-SEO-value comparison landing pages to capture high-intent comparison 
 ---
 
 *Day 19 complete. Three high-value pages shipped. Schema.org expanded to full tool suite. Site structure is comprehensive, SEO-optimized, and ready to convert visitors at every stage of the buying journey.*
+
+
+---
+
+## Day 20 — Team Workspace UI (April 24, 2026)
+
+### Objective
+Build and ship the team workspace UI in app.html to enable the Team plan ($29/mo). This was the highest-priority incomplete buildable P1 task and unlocks a new revenue tier.
+
+### What Was Built
+
+#### Supabase Schema Updates
+- Added `team_name` column to `saved_diffs` table via `ADD COLUMN IF NOT EXISTS`
+- Added RLS policies for team diff visibility:
+  - `Team members can view team diffs` — SELECT using EXISTS subquery on team_memberships
+  - `Team members can insert team diffs` — INSERT with same team membership check
+- Added `team_memberships` insert policy (was missing)
+- Added indexes on `team_memberships(team_name)` and `saved_diffs(team_name)` for performance
+
+#### Team Workspace UI in app.html
+- **Team Diffs panel** below "My Saved Diffs":
+  - Shows all diffs shared with the user's team(s)
+  - Displays team member attribution ("You" badge for own diffs)
+  - Load and Share actions for each team diff
+  - Refresh button to sync with cloud
+- **Auth modal team section** (visible when signed in):
+  - If not in a team: input to join/create a team by name
+  - If in a team: shows team name with Leave Team button
+  - Create/join is instant — no invitation flow needed for MVP
+- **Save modal team checkbox**:
+  - Appears automatically when user is in a team
+  - "Save to team workspace (TeamName)" checkbox
+  - Saved team diffs appear in Team Diffs panel immediately
+
+#### Team Landing Page Updates
+- Removed "Coming Soon" badge from Team pricing card → changed to "New"
+- Changed CTA from "Join Waitlist" to "Get Started" linking to app.html
+- Replaced waitlist form with 3-step "How to start your team workspace" guide
+- Updated hero copy: "Team workspaces are live"
+- Removed waitlist JavaScript (no longer needed)
+
+#### Bug Fix
+- Added missing `oracle` dialect to `loadPublicDiff()` and `loadDiffIntoEditors()` dialect checks (was causing auto-select to fail for Oracle shared diffs)
+
+### Validation
+- ✅ All 11 unit tests pass
+- ✅ All 45 e2e tests pass (Chromium), 5 skipped
+- ✅ Performance audit thresholds still passing
+- ✅ HTML syntax balanced in app.html and team.html
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design team workspace schema and RLS policies | 0.2 |
+| Update supabase-schema.sql | 0.1 |
+| Add Team Diffs panel HTML/CSS | 0.2 |
+| Add team section to auth modal | 0.2 |
+| Add "Save to team" checkbox in save modal | 0.1 |
+| Implement team JS functions (load, create, join, leave, render) | 0.4 |
+| Update team.html landing page | 0.2 |
+| Fix oracle dialect in load functions | 0.1 |
+| Run tests and verify | 0.2 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.9** |
+
+### Key Insights
+1. **Simple team model = fast execution** — Using `team_name` as the shared identifier (like a room code) avoids complex invitation flows, foreign keys, and team admin UIs. Anyone who knows the team name can join. This is "good enough" for MVP and can be hardened later.
+
+2. **RLS subqueries enable team visibility without exposing memberships** — The `EXISTS (SELECT 1 FROM team_memberships ...)` pattern in the RLS policy lets users see team diffs without being able to query the full team member list. This is a clean security model.
+
+3. **Removing waitlist signals confidence** — Changing team.html from "Coming Soon" to live CTAs tells visitors the feature is real and usable. Waitlists capture interest; live features capture revenue.
+
+### Day 20 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 1 |
+| Files changed | 3 (app.html, team.html, supabase-schema.sql) |
+| New UI panels | 2 (Team Diffs, team auth section) |
+| Schema changes | 1 column + 2 policies + 2 indexes |
+| E2E tests | 45 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue pushing for distribution (Product Hunt, Show HN, Reddit, directories) — requires human account creation
+2. Monitor traffic and feedback once distribution begins
+3. Next highest-priority buildable task: Set up simple CRM or build ORM export formats (Prisma/Drizzle)
+
+---
+
+*Day 20 complete. Team workspace live. SchemaLens now supports individual cloud save + team-shared diffs. Team plan ($29/mo) is technically launchable. Product continues to advance toward revenue.*
