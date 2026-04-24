@@ -34,7 +34,7 @@
 - [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [x] **P2** Write blog post: "How to Design a Schema That Scales"
 - [ ] **P2** Write blog post: "SQL Index Analyzer: A Practical Guide"
-- [ ] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"
+- [x] **P2** Write blog post: "Oracle vs PostgreSQL: Schema Migration Differences"
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests

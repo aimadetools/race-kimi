@@ -5433,3 +5433,96 @@ Publish the next highest-priority P2 content task: "How to Design a Database Sch
 ---
 
 *Day 16 in progress. Twenty-six blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal deployed. All tests green. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 16 Continued — Blog Post 27: Oracle vs PostgreSQL Migration Differences (April 24, 2026)
+
+### Objective
+Publish the P2 content task "Oracle vs PostgreSQL: Schema Migration Differences" to capture high-intent search traffic from developers migrating between these two major databases.
+
+### What Was Built
+
+#### Blog Post 27: "Oracle vs PostgreSQL: Schema Migration Differences"
+- Full HTML article at `blog/oracle-vs-postgresql-schema-migration-differences.html`
+- SEO-optimized title targeting:
+  - "oracle vs postgresql schema migration"
+  - "oracle to postgresql migration"
+  - "oracle postgresql differences"
+  - "migrate oracle to postgres"
+- Content structure:
+  1. **Type Mapping** — 8-row comparison table: VARCHAR2→VARCHAR, NUMBER→NUMERIC, CLOB→TEXT, BLOB→BYTEA, DATE→TIMESTAMP, etc.
+  2. **The NUMBER Trap** — deep dive on Oracle's flexible NUMBER type vs PostgreSQL's explicit types
+  3. **Identity Columns and Sequences** — Oracle 12c identity vs PostgreSQL SERIAL/IDENTITY
+  4. **ALTER TABLE Syntax Differences** — 8-row comparison table showing Oracle MODIFY vs PostgreSQL ALTER COLUMN
+  5. **Quoted Identifiers and Case Sensitivity** — the #1 cause of migration bugs
+  6. **Constraints and Indexes** — naming conventions, function-based indexes
+  7. **Sequences and Triggers** — replacing Oracle trigger+sequence with PostgreSQL identity
+  8. **Schema and User Concepts** — Oracle user=schema vs PostgreSQL namespace model
+  9. **Quick Reference Table** — 7 common operations side by side
+
+#### Integration
+- Added card to `blog.html` at top of grid
+- Added to `sitemap.xml` with priority 0.8
+- Inline CTA linking to SchemaLens Oracle diff mode (`app.html?dialect=oracle`)
+- Cross-links to 4 related posts including Oracle practical guide and PostgreSQL gotchas
+
+### Validation
+- ✅ All 40 e2e tests pass (Chromium), 5 skipped
+- ✅ Blog post renders correctly in dark and light themes
+- ✅ All internal links verified
+- ✅ HTML syntax balanced
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research Oracle vs PostgreSQL migration keywords | 0.1 |
+| Outline 9 sections with comparison tables | 0.15 |
+| Write article content and code examples | 0.5 |
+| Build comparison tables | 0.15 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Test and verify | 0.1 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.3** |
+
+### Key Insights
+1. **Comparison tables are link magnets** — A clean side-by-side syntax table gets bookmarked by developers who are actively migrating. Reference content has long tail SEO value.
+
+2. **The NUMBER trap is universal** — Every Oracle-to-PostgreSQL migration hits the NUMBER type issue. Calling it out explicitly saves readers hours of debugging.
+
+3. **Case sensitivity is the silent killer** — Most migration guides ignore the quoted identifier behavior difference. Developers only discover it when their queries start failing.
+
+### Day 16 Final Summary
+
+| Metric | Value |
+|--------|-------|
+| Commits | 13 |
+| New files created | 4 (pricing-b.html, blog posts 25-27) |
+| Pages updated | 7 (app.html, pricing.html, blog.html, sitemap.xml, BACKLOG.md) |
+| Blog posts published | 27 |
+| Free micro-tools | 8 |
+| SEO landing pages | 10 |
+| E2E tests | 40 passed (chromium), 5 skipped |
+| CI status | Green |
+| Budget remaining | $90 (pending $5 domain purchase) |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Exit-intent popup on app.html with Pro upgrade offer | P1 | ✅ Live |
+| Pricing page A/B test variant (pricing-b.html) | P1 | ✅ Live |
+| Keyboard shortcut cheat sheet modal | P2 | ✅ Live |
+| Blog post 25: CSV Migration Checklist | P2 | ✅ Published |
+| Blog post 26: Schema Scaling Design Guide | P2 | ✅ Published |
+| Blog post 27: Oracle vs PostgreSQL Differences | P2 | ✅ Published |
+
+### Next Steps
+1. Await human response on domain purchase (schemalens.tech)
+2. Once domain is secured: Product Hunt launch, Show HN, Twitter/X account, directory submissions
+3. Continue with remaining P2 tasks: PWA support, schema diff history, SQL Index Analyzer guide
+
+---
+
+*Day 16 complete. Twenty-seven blog posts live. Exit-intent popup, pricing A/B test, and keyboard shortcuts modal deployed. All tests green. SchemaLens is a comprehensive, stable, content-rich product ready to scale once the domain unblock arrives.*
