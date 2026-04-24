@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens vs apgdiff vs migra vs schemalex — Best Schema Diff Tool (2026)</title>
+  <meta name="description" content="Compare SchemaLens with CLI schema diff tools: apgdiff, migra, and schemalex. See why a browser-based GUI beats the terminal for most developers.">
+  <meta property="og:title" content="SchemaLens vs apgdiff vs migra vs schemalex — Best Schema Diff Tool (2026)">
+  <meta property="og:description" content="Browser-based schema diff vs CLI tools. Compare features, ease of use, dialect support, and shareability.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schemalens-vs-cli-tools.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is SchemaLens better than CLI schema diff tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your workflow. CLI tools like migra and apgdiff are excellent for automation and CI/CD pipelines. SchemaLens is better for quick visual diffs, sharing results with teammates, and when you can't install software. Many teams use both: SchemaLens for exploration and CLI tools for production automation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SchemaLens and migra together?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Use SchemaLens for visual exploration and sharing diffs with stakeholders. Export the migration SQL and feed it into migra or your existing migration pipeline for production deployment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SchemaLens support PostgreSQL-only like apgdiff?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle in a single interface. Unlike apgdiff (PostgreSQL only) or migra (PostgreSQL only), you can diff schemas across different dialects."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which tool is best for CI/CD integration?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For pure CI/CD, migra and schemalex are lightweight and fast. SchemaLens also offers a zero-dependency CLI, GitHub Actions templates, and a REST API — giving you both visual and automated diffing in one platform."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Unbiased comparison — updated April 2026
+      </div>
+      <h1>SchemaLens vs CLI Tools.<br><span>GUI or terminal?</span></h1>
+      <p>apgdiff, migra, and schemalex are powerful CLI tools. But sometimes you need a visual diff, a shareable link, or a tool that works on a locked-down machine. Here's how they compare.</p>
+      <div class="hero-actions">
+        <a href="#comparison-table" class="btn btn-primary btn-lg">Jump to Comparison</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Try SchemaLens Free</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section" id="comparison-table">
+    <div class="container">
+      <h2 class="section-title text-center">At-a-glance comparison</h2>
+      <p class="section-subtitle text-center">How SchemaLens stacks up against the most popular open-source CLI schema diff tools.</p>
+      <div class="table-wrapper" style="overflow-x: auto; margin-top: 32px;">
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Feature</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 700; color: var(--primary);">SchemaLens</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">migra</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">apgdiff</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">schemalex</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Pricing</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Free tier + $12/mo Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (open source)</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (open source)</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (open source)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Visual diff</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Rich HTML</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Terminal text</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Terminal text</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Terminal text</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Runs in browser</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes — zero install</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ pip install</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Java binary</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Go binary</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">PostgreSQL</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">MySQL</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQLite</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQL Server</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Oracle</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Shareable links</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ URL + public links</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Export formats</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">SQL, Markdown, PDF, JSON</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL only</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL only</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Breaking change detection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CI/CD templates</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ GitHub + GitLab + Bitbucket</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Script yourself</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Script yourself</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Script yourself</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">REST API</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 16px; font-weight: 500;">Privacy</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ 100% client-side</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Local</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Local</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Local</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Deep dive by category</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🖥️</div>
+          <h3>Ease of Use</h3>
+          <p><strong>SchemaLens</strong> opens in any browser. Paste two SQL dumps, click Compare, get a color-coded diff. No dependencies, no environment setup.</p>
+          <p><strong>migra</strong> requires Python and pip. You need to understand PostgreSQL connection strings and Python environments.</p>
+          <p><strong>apgdiff</strong> needs a Java runtime. It's reliable but the output is plain text that you must read carefully.</p>
+          <p><strong>schemalex</strong> is a Go binary. Fast and lightweight, but requires manual download and terminal familiarity.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔗</div>
+          <h3>Shareability</h3>
+          <p><strong>SchemaLens</strong> generates shareable URLs and public links. Send a diff to a teammate in Slack and they see the exact same visual output.</p>
+          <p><strong>CLI tools</strong> output text to stdout. Sharing means copying terminal output into a gist or pasting into a PR comment — losing all visual context.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🧪</div>
+          <h3>Exploration &amp; Learning</h3>
+          <p><strong>SchemaLens</strong> lets you experiment instantly. Load sample schemas, modify them, and see results in real time. Perfect for learning SQL migrations.</p>
+          <p><strong>CLI tools</strong> are designed for automation, not exploration. Every change requires re-running a command and re-reading output.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🔐</div>
+          <h3>Security &amp; Compliance</h3>
+          <p><strong>SchemaLens</strong> runs entirely in the browser. Your schema never touches a server. Ideal for HIPAA, SOX, and air-gapped networks.</p>
+          <p><strong>CLI tools</strong> also run locally, but they require installation privileges that locked-down enterprise machines may not grant.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🌍</div>
+          <h3>Polyglot Support</h3>
+          <p><strong>SchemaLens</strong> supports 5 dialects from one interface. Compare a MySQL dump against a PostgreSQL dump to plan a migration.</p>
+          <p><strong>migra, apgdiff, schemalex</strong> are all PostgreSQL-only. If you work with multiple databases, you need multiple tools.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🚀</div>
+          <h3>Automation</h3>
+          <p><strong>SchemaLens</strong> provides a CLI, REST API, and pre-built CI/CD templates. Use the browser for exploration, the API for automation.</p>
+          <p><strong>CLI tools</strong> are purpose-built for automation. They're faster and lighter for pure headless diffing in pipelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Which tool should you choose?</h2>
+      <div class="features-grid" style="max-width: 900px; margin: 32px auto 0;">
+        <div class="feature-card" style="border: 2px solid var(--primary); background: var(--primary-glow);">
+          <div class="feature-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff;">✨</div>
+          <h3>Choose SchemaLens if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You want instant results without installing anything</li>
+            <li>You need to share diffs with non-technical stakeholders</li>
+            <li>You work with multiple SQL dialects</li>
+            <li>You're on a machine where you can't install software</li>
+            <li>You want breaking change detection and visual reports</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Try SchemaLens Free</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">⌨️</div>
+          <h3>Choose a CLI tool if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You live in the terminal and prefer text output</li>
+            <li>You need the fastest possible diff in a pipeline</li>
+            <li>You only work with PostgreSQL</li>
+            <li>You want zero network dependencies in CI</li>
+            <li>You prefer open-source tools with no pricing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Frequently asked questions</h2>
+      <div class="faq-grid" style="max-width: 800px; margin: 32px auto 0;">
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Is SchemaLens better than CLI schema diff tools? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">It depends on your workflow. CLI tools like migra and apgdiff are excellent for automation and CI/CD pipelines. SchemaLens is better for quick visual diffs, sharing results with teammates, and when you can't install software. Many teams use both.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Can I use SchemaLens and migra together? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Absolutely. Use SchemaLens for visual exploration and sharing diffs with stakeholders. Export the migration SQL and feed it into migra or your existing migration pipeline for production deployment.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Does SchemaLens support PostgreSQL-only like apgdiff? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">SchemaLens supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle in a single interface. Unlike apgdiff (PostgreSQL only) or migra (PostgreSQL only), you can diff schemas across different dialects.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Which tool is best for CI/CD integration? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">For pure CI/CD, migra and schemalex are lightweight and fast. SchemaLens also offers a zero-dependency CLI, GitHub Actions templates, and a REST API — giving you both visual and automated diffing in one platform.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Try the best of both worlds.</h2>
+      <p class="mb-24">Use SchemaLens for visual exploration and sharing. Export the SQL for your CLI pipeline. No compromise.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Compare Schemas Free</a>
+      <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

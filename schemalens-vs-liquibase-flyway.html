@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens vs Liquibase vs Flyway — Best Schema Diff Tool (2026)</title>
+  <meta name="description" content="Compare SchemaLens with Liquibase and Flyway. See when a lightweight browser-based diff tool beats a full migration framework.">
+  <meta property="og:title" content="SchemaLens vs Liquibase vs Flyway — Best Schema Diff Tool (2026)">
+  <meta property="og:description" content="Lightweight browser-based schema diff vs enterprise migration frameworks. Compare setup, pricing, and workflow fit.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schemalens-vs-liquibase-flyway.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I use SchemaLens or Liquibase?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use Liquibase if you need a full migration framework with change tracking, rollback support, and enterprise audit trails. Use SchemaLens if you need quick visual diffs, shareable reports, or work with legacy schemas that aren't managed by a migration framework. They complement each other well."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SchemaLens a replacement for Flyway?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Flyway is a migration execution framework. SchemaLens is a diff and visualization tool. You can use SchemaLens to review changes before writing Flyway migrations, or to compare a Flyway-managed schema against production to detect drift."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Liquibase have a visual diff?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Liquibase Pro offers a diff command, but the output is text-based XML or SQL. SchemaLens provides a rich visual diff with color-coded changes, breaking change detection, and export to Markdown/PDF — making it easier to review and share."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Unbiased comparison — updated April 2026
+      </div>
+      <h1>SchemaLens vs Liquibase<br>vs Flyway.<br><span>Diff tool or migration framework?</span></h1>
+      <p>Liquibase and Flyway are migration frameworks. SchemaLens is a diff tool. The question isn't which is better — it's when to use each. Here's the honest breakdown.</p>
+      <div class="hero-actions">
+        <a href="#comparison-table" class="btn btn-primary btn-lg">Jump to Comparison</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Try SchemaLens Free</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section" id="comparison-table">
+    <div class="container">
+      <h2 class="section-title text-center">At-a-glance comparison</h2>
+      <p class="section-subtitle text-center">SchemaLens complements migration frameworks. Use it for exploration, review, and drift detection.</p>
+      <div class="table-wrapper" style="overflow-x: auto; margin-top: 32px;">
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Feature</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 700; color: var(--primary);">SchemaLens</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Liquibase</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Flyway</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Primary use</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Schema diff &amp; review</td>
+              <td style="padding: 14px 16px; text-align: center;">Migration framework</td>
+              <td style="padding: 14px 16px; text-align: center;">Migration framework</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Pricing</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Free + $12/mo Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (OSS) / $3,600+ yr Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (OSS) / $2,950+ yr Teams</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Runs in browser</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Java/CLI</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Java/CLI</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Visual diff</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Rich HTML</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Text/XML only</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Text only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Migration execution</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full framework</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full framework</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Rollback support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Undo scripts</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Change tracking</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Diff history only</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ DATABASECHANGELOG</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ schema_history</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Dialect support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">5 dialects</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">30+ databases</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">20+ databases</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Shareable reports</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ URL + Markdown + PDF</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Breaking change detection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in heuristic</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Legacy schema support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Paste any CREATE TABLE</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Requires changelog</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Requires migration files</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Setup time</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">10 seconds</td>
+              <td style="padding: 14px 16px; text-align: center;">1-2 hours</td>
+              <td style="padding: 14px 16px; text-align: center;">30-60 minutes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CI/CD integration</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ CLI + API + Templates</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Native Maven/Gradle</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Native Maven/Gradle</td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 16px; font-weight: 500;">Privacy</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ 100% client-side</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Local execution</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Local execution</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Deep dive by category</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🏗️</div>
+          <h3>Migration Framework vs Diff Tool</h3>
+          <p><strong>Liquibase and Flyway</strong> are designed to execute and track migrations. They manage state over time with changelog tables and rollback scripts.</p>
+          <p><strong>SchemaLens</strong> is designed to compare two states and visualize the difference. It doesn't execute migrations or track history — it makes the diff itself beautiful and shareable.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔍</div>
+          <h3>Schema Drift Detection</h3>
+          <p><strong>SchemaLens</strong> excels at detecting drift: compare your Flyway-managed schema against production to find changes that bypassed the framework.</p>
+          <p><strong>Liquibase/Flyway</strong> assume all changes go through the framework. They can't easily detect manual schema changes made outside the changelog.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📋</div>
+          <h3>Code Review Workflow</h3>
+          <p><strong>SchemaLens</strong> generates Markdown and PDF reports perfect for PR descriptions. Reviewers see exactly what changed without reading SQL.</p>
+          <p><strong>Liquibase/Flyway</strong> changes are reviewed as raw XML/SQL migration files. The reviewer must mentally simulate the diff.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">⚡</div>
+          <h3>Speed to Value</h3>
+          <p><strong>SchemaLens</strong> delivers value in 10 seconds. Open the URL, paste schemas, see the diff. No configuration files or database connections.</p>
+          <p><strong>Liquibase/Flyway</strong> require project setup, dependency management, and database connectivity. Powerful but heavyweight for one-off tasks.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🔐</div>
+          <h3>Security &amp; Compliance</h3>
+          <p><strong>SchemaLens</strong> never connects to your database. Paste CREATE TABLE statements from your air-gapped environment safely.</p>
+          <p><strong>Liquibase/Flyway</strong> require database connectivity and write permissions. They also insert tracking tables into your schema.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">💰</div>
+          <h3>Total Cost of Ownership</h3>
+          <p><strong>SchemaLens Pro</strong> is $12/month for unlimited use. No per-seat pricing, no enterprise sales cycle.</p>
+          <p><strong>Liquibase Pro</strong> and <strong>Flyway Teams</strong> start at thousands per year. Worth it for large regulated teams, but overkill for small teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Which tool should you choose?</h2>
+      <div class="features-grid" style="max-width: 900px; margin: 32px auto 0;">
+        <div class="feature-card" style="border: 2px solid var(--primary); background: var(--primary-glow);">
+          <div class="feature-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff;">✨</div>
+          <h3>Choose SchemaLens if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You need quick visual diffs without setup</li>
+            <li>You review schemas in PRs or Slack</li>
+            <li>You need to detect drift in legacy databases</li>
+            <li>You work in air-gapped or high-security environments</li>
+            <li>You want shareable Markdown/PDF reports</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Try SchemaLens Free</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🏢</div>
+          <h3>Choose Liquibase or Flyway if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); margin-top: 12px;">
+            <li>You need a full migration execution framework</li>
+            <li>Rollback and audit trails are required</li>
+            <li>You manage hundreds of database environments</li>
+            <li>Your compliance team mandates change tracking</li>
+            <li>You have budget for enterprise tooling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Frequently asked questions</h2>
+      <div class="faq-grid" style="max-width: 800px; margin: 32px auto 0;">
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Should I use SchemaLens or Liquibase? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Use Liquibase if you need a full migration framework with change tracking, rollback support, and enterprise audit trails. Use SchemaLens if you need quick visual diffs, shareable reports, or work with legacy schemas that aren't managed by a migration framework. They complement each other well.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Is SchemaLens a replacement for Flyway? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">No. Flyway is a migration execution framework. SchemaLens is a diff and visualization tool. You can use SchemaLens to review changes before writing Flyway migrations, or to compare a Flyway-managed schema against production to detect drift.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Does Liquibase have a visual diff? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Liquibase Pro offers a diff command, but the output is text-based XML or SQL. SchemaLens provides a rich visual diff with color-coded changes, breaking change detection, and export to Markdown/PDF — making it easier to review and share.</p>
+        </details>
+        <details style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;">
+          <summary style="font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">Can I use SchemaLens with my existing Liquibase/Flyway setup? <span style="color: var(--text-muted);">+</span></summary>
+          <p style="margin-top: 12px; color: var(--text-muted);">Yes. Export your schema from the database (not the changelog), paste it into SchemaLens, and compare versions. SchemaLens is read-only — it never modifies your database or interferes with your migration framework.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Use the right tool for the job.</h2>
+      <p class="mb-24">SchemaLens for exploration and review. Liquibase or Flyway for execution and tracking. Together, they cover the full migration lifecycle.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Compare Schemas Free</a>
+      <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Team — Shared Schema Reviews for Engineering Teams</title>
+  <meta name="description" content="SchemaLens Team adds shared workspaces, cloud save, and Slack alerts to the browser-based schema diff tool your developers already love. $29/mo for your whole team.">
+  <meta property="og:title" content="SchemaLens Team — Shared Schema Reviews for Engineering Teams">
+  <meta property="og:description" content="Shared workspaces, cloud save, Slack alerts, and org-wide billing. The schema diff tool built for teams.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/team.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "SchemaLens Team",
+    "description": "Shared schema diff workspace for engineering teams with cloud save, Slack alerts, and org-wide billing.",
+    "brand": {
+      "@type": "Brand",
+      "name": "SchemaLens"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "29",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2026-12-31",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        For teams that ship together
+      </div>
+      <h1>Schema reviews,<br><span>shared by default.</span></h1>
+      <p>SchemaLens Team turns individual schema diffs into a team workflow. Cloud save, shared workspaces, Slack alerts, and one bill for the whole company.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn btn-primary btn-lg">Join the Waitlist</a>
+        <a href="pricing.html" class="btn btn-secondary btn-lg">See Pricing</a>
+      </div>
+      <p class="hero-note">Launching soon. Be the first to get Team access.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Everything in Pro, plus team superpowers</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">☁️</div>
+          <h3>Shared Cloud Workspace</h3>
+          <p>Every diff your team creates is saved to a shared cloud workspace. No more emailing SQL files or losing track of who reviewed what.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔗</div>
+          <h3>Public &amp; Private Share Links</h3>
+          <p>Share diffs with internal stakeholders via private team links, or with external contractors via public read-only URLs. Full control over visibility.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">💬</div>
+          <h3>Slack Alerts for Breaking Changes</h3>
+          <p>Get notified in Slack the moment a schema diff contains a breaking change. Route critical alerts to #engineering and summaries to #devops.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📊</div>
+          <h3>Team Activity Dashboard</h3>
+          <p>See who ran which diffs, when, and what changed. Audit trail for compliance teams without slowing down developers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🧾</div>
+          <h3>Org-Wide Billing</h3>
+          <p>One invoice. One admin dashboard. Add and remove team members without individual license juggling. Seats scale with your team.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔑</div>
+          <h3>API Access for Automation</h3>
+          <p>Team plans include higher-rate API access. Integrate SchemaLens diffing into your CI/CD, internal dashboards, and custom workflows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">How teams use SchemaLens</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">1</div>
+          <h3>Migration Review in PRs</h3>
+          <p>Developers paste their before/after schemas into SchemaLens, generate a Markdown report, and attach it to the PR. Reviewers approve with confidence.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">2</div>
+          <h3>Staging → Production Checks</h3>
+          <p>Before every deploy, the platform team diffs staging against production. Breaking changes are caught before they reach users.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">3</div>
+          <h3>Legacy Schema Documentation</h3>
+          <p>Consultants and new hires use SchemaLens to map legacy databases. The schema doc generator exports to Markdown for Confluence/Notion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Simple, transparent team pricing</h2>
+      <div class="pricing-grid" style="margin-top: 32px;">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Free</h3>
+            <div class="pricing-price">$0</div>
+            <p>Forever</p>
+          </div>
+          <ul class="pricing-features">
+            <li>Up to 10 tables per diff</li>
+            <li>Visual diff</li>
+            <li>Migration preview</li>
+            <li>Single user</li>
+          </ul>
+          <a href="app.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Best Value</div>
+          <div class="pricing-header">
+            <h3>Pro</h3>
+            <div class="pricing-price">$12<span>/mo</span></div>
+            <p>or $99/yr (2 months free)</p>
+          </div>
+          <ul class="pricing-features">
+            <li>Unlimited tables</li>
+            <li>Full migration generation</li>
+            <li>Markdown, PDF, JSON, SQL export</li>
+            <li>Shareable diff URLs</li>
+            <li>Breaking change detection</li>
+            <li>Cloud save</li>
+          </ul>
+          <a href="pricing.html" class="btn btn-primary" style="width: 100%;">Upgrade to Pro</a>
+        </div>
+        <div class="pricing-card" style="border: 2px solid var(--primary);">
+          <div class="pricing-badge" style="background: var(--primary); color: #fff;">Coming Soon</div>
+          <div class="pricing-header">
+            <h3>Team</h3>
+            <div class="pricing-price">$29<span>/mo</span></div>
+            <p>or $290/yr (2 months free)</p>
+          </div>
+          <ul class="pricing-features">
+            <li>Everything in Pro</li>
+            <li>Shared team workspace</li>
+            <li>Org-wide billing</li>
+            <li>Slack notifications</li>
+            <li>Admin controls</li>
+            <li>Priority API access</li>
+          </ul>
+          <a href="#waitlist" class="btn btn-primary" style="width: 100%;">Join Waitlist</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);" id="waitlist">
+    <div class="container">
+      <h2 class="section-title text-center">Be the first to get Team access</h2>
+      <p class="section-subtitle text-center">Join the waitlist and we'll notify you the moment Team workspaces are live. No spam, ever.</p>
+      <div style="max-width: 480px; margin: 32px auto 0;">
+        <form id="waitlistForm" style="display: flex; flex-direction: column; gap: 16px;">
+          <input type="email" id="waitlistEmail" placeholder="you@company.com" required style="padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem;">
+          <input type="text" id="waitlistCompany" placeholder="Company name (optional)" style="padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem;">
+          <button type="submit" class="btn btn-primary btn-lg" id="waitlistBtn">Join Waitlist</button>
+        </form>
+        <p id="waitlistSuccess" style="display: none; margin-top: 16px; color: var(--success); text-align: center; font-weight: 500;">✅ You're on the list! We'll email you when Team workspaces are ready.</p>
+        <p id="waitlistError" style="display: none; margin-top: 16px; color: var(--danger); text-align: center;">Something went wrong. Please try again.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Already using SchemaLens Pro?</h2>
+      <p class="mb-24">Your Team workspace will include all your existing diffs and settings. Upgrading is seamless.</p>
+      <a href="pricing.html" class="btn btn-primary btn-lg">View Pricing</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>
+document.getElementById('waitlistForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('waitlistEmail').value.trim();
+  const company = document.getElementById('waitlistCompany').value.trim();
+  const btn = document.getElementById('waitlistBtn');
+  const success = document.getElementById('waitlistSuccess');
+  const error = document.getElementById('waitlistError');
+  btn.disabled = true;
+  btn.textContent = 'Joining…';
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'team-waitlist' + (company ? ' (' + company + ')' : '') })
+    });
+    if (res.ok) {
+      success.style.display = 'block';
+      error.style.display = 'none';
+      document.getElementById('waitlistForm').reset();
+    } else {
+      throw new Error('Failed');
+    }
+  } catch (err) {
+    success.style.display = 'none';
+    error.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Join Waitlist';
+  }
+});
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
