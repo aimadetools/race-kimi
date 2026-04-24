@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Spreadsheet to Database: A CSV Migration Checklist — SchemaLens</title>
+  <meta name="description" content="A step-by-step checklist for migrating data from spreadsheets to a SQL database. Covers data cleaning, schema design, migration, and validation.">
+  <meta property="og:title" content="From Spreadsheet to Database: A CSV Migration Checklist — SchemaLens">
+  <meta property="og:description" content="Migrate from CSV to SQL without losing data. A practical checklist for engineers moving from spreadsheets to PostgreSQL, MySQL, or SQLite.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.vercel.app/blog/from-spreadsheet-to-database-csv-migration-checklist.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 16px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+    }
+    .checklist-item input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--primary);
+    }
+    .checklist-item label {
+      flex: 1;
+      cursor: pointer;
+      line-height: 1.6;
+    }
+    .checklist-item strong {
+      color: var(--text);
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../api.html">API</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="article">
+      <h1>From Spreadsheet to Database: A CSV Migration Checklist</h1>
+      <p class="meta">April 24, 2026 · 7 min read · <a href="../blog.html">Back to blog</a></p>
+
+      <p>Every production database starts somewhere. For many teams, that somewhere is a spreadsheet. Whether it's a Google Sheet tracking customers, an Excel file with inventory data, or a Notion table that finally outgrew itself — the day comes when rows freeze, formulas break, and someone asks, "Can we just put this in Postgres?"</p>
+
+      <p>CSV is the universal bridge between spreadsheets and SQL. But dumping a CSV into a database without a plan is how you end up with <code>VARCHAR(255)</code> columns that should be <code>DATE</code>, duplicate primary keys, and silent data truncation. This checklist will help you migrate cleanly.</p>
+
+      <h2>Phase 1: Audit Your Data (Before You Touch SQL)</h2>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c1">
+        <label for="c1"><strong>Remove empty rows and columns.</strong> Spreadsheets accumulate blank rows at the bottom and hidden columns on the right. Export to CSV and open it in a text editor — you'll be surprised what lurks past your visible range.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c2">
+        <label for="c2"><strong>Standardize headers.</strong> Replace spaces with underscores, remove special characters, and decide on a naming convention (<code>snake_case</code> is the SQL standard). <code>Customer ID</code> becomes <code>customer_id</code>.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c3">
+        <label for="c3"><strong>Fix mixed types in columns.</strong> A column that is mostly integers but has three cells with text notes will cause import failures. Either clean the data or decide those cells belong in a separate column.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c4">
+        <label for="c4"><strong>Handle dates explicitly.</strong> Spreadsheets store dates as opaque serial numbers. Export them in ISO 8601 format (<code>2026-04-24</code>) before converting to CSV so your database parser knows what they are.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c5">
+        <label for="c5"><strong>Check for duplicate keys.</strong> If your spreadsheet has a column you plan to use as a primary key, run a quick pivot or conditional formatting rule to highlight duplicates. Fix them before migration.</label>
+      </div>
+
+      <h2>Phase 2: Design Your Schema</h2>
+
+      <p>CSV files are flat. Relational databases are not. Before you create a single table, ask whether your data should be normalized.</p>
+
+      <h3>When to keep it flat (one table)</h3>
+      <ul>
+        <li>Under 10,000 rows</li>
+        <li>No repeating groups or multi-value cells</li>
+        <li>No obvious parent-child relationships</li>
+        <li>You need the migration done in the next hour</li>
+      </ul>
+
+      <h3>When to normalize (multiple tables)</h3>
+      <ul>
+        <li>Cells contain comma-separated values (e.g., <code>tags: "red, blue, green"</code>)</li>
+        <li>The same entity appears in multiple rows with redundant data</li>
+        <li>You have lookup values that should be foreign keys (e.g., <code>status</code> column with 5 repeated strings)</li>
+        <li>You plan to query with JOINs in the future</li>
+      </ul>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c6">
+        <label for="c6"><strong>Choose a primary key.</strong> If your data doesn't have a natural unique identifier, add an auto-incrementing <code>id</code> column. Every table should have a primary key.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c7">
+        <label for="c7"><strong>Infer types, then verify.</strong> Integers look like integers until row 8,402 contains a trailing space. Sample the first 1,000 rows to guess types, then spot-check the rest.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c8">
+        <label for="c8"><strong>Decide on NULL vs default values.</strong> Empty cells in spreadsheets can mean "unknown," "zero," or "not applicable." Be explicit about which becomes <code>NULL</code> and which gets a default value.</label>
+      </div>
+
+      <h2>Phase 3: Generate and Validate SQL</h2>
+
+      <p>Once your CSV is clean and your schema is sketched, it's time to generate the actual SQL. You have two options: manual DDL or a tool.</p>
+
+      <p>Manual DDL gives you full control but is error-prone. A tool like <a href="../tools/csv-to-sql.html">SchemaLens CSV to SQL Converter</a> auto-detects delimiters, infers column types, and generates dialect-correct <code>CREATE TABLE</code> and <code>INSERT</code> statements for PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c9">
+        <label for="c9"><strong>Generate CREATE TABLE first.</strong> Don't skip straight to inserting data. Create the table, inspect the column types, and make sure they match your expectations.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c10">
+        <label for="c10"><strong>Test with a small batch.</strong> Insert the first 100 rows, run a few <code>SELECT</code> queries, and verify counts and types. Catching a type mismatch on 100 rows is better than discovering it on 100,000.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c11">
+        <label for="c11"><strong>Handle encoding issues.</strong> CSVs exported from Excel on Windows are often UTF-8 with BOM or Windows-1252 encoded. If you see garbled characters in names or addresses, check the file encoding with <code>file -i data.csv</code> and re-encode if needed.</label>
+      </div>
+
+      <h2>Phase 4: Migrate the Data</h2>
+
+      <p>With a validated schema, you're ready for the full migration. The exact method depends on your database size and tooling.</p>
+
+      <h3>Small datasets (&lt; 10,000 rows)</h3>
+      <p>Use multi-row <code>INSERT</code> statements generated by a converter tool. Batch them in groups of 500–1,000 to avoid statement size limits.</p>
+
+      <h3>Medium datasets (10,000 – 1,000,000 rows)</h3>
+      <p>Use your database's native bulk import command:</p>
+
+      <pre><code>-- PostgreSQL
+COPY users FROM '/path/to/users.csv' WITH (FORMAT csv, HEADER true);
+
+-- MySQL
+LOAD DATA INFILE '/path/to/users.csv'
+INTO TABLE users
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+-- SQLite
+.mode csv
+.import /path/to/users.csv users</code></pre>
+
+      <h3>Large datasets (&gt; 1,000,000 rows)</h3>
+      <p>Use a dedicated ETL tool like <code>pgloader</code> (PostgreSQL), <code>mysqlimport</code>, or a streaming pipeline. For one-time migrations, <code>pgloader</code> handles type casting, encoding conversion, and batching automatically.</p>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c12">
+        <label for="c12"><strong>Run in a transaction (if possible).</strong> For smaller datasets, wrap the import in a transaction so you can <code>ROLLBACK</code> if something goes wrong.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c13">
+        <label for="c13"><strong>Monitor disk space.</strong> Bulk imports create WAL (write-ahead log) entries and may require temporary disk space equal to your dataset size. Make sure your server has headroom.</label>
+      </div>
+
+      <h2>Phase 5: Validate Everything</h2>
+
+      <p>Importing is not the end. Validation is. Run these checks before you declare victory:</p>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c14">
+        <label for="c14"><strong>Row count matches.</strong> <code>SELECT COUNT(*) FROM table;</code> should equal the number of data rows in your CSV (minus the header).</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c15">
+        <label for="c15"><strong>Spot-check random samples.</strong> Pick 10 random rows and compare them cell-by-cell against the original spreadsheet. Pay special attention to dates, booleans, and text with special characters.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c16">
+        <label for="c16"><strong>Run constraint checks.</strong> If you defined <code>NOT NULL</code>, <code>UNIQUE</code>, <code>CHECK</code>, or <code>FOREIGN KEY</code> constraints, verify they all pass. Any failure means your data or schema needs adjustment.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c17">
+        <label for="c17"><strong>Check for silent truncation.</strong> A <code>VARCHAR(50)</code> column will silently truncate a 60-character string in some databases. Compare <code>MAX(LENGTH(column))</code> against your column definitions.</label>
+      </div>
+
+      <h2>Phase 6: Post-Migration Cleanup</h2>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c18">
+        <label for="c18"><strong>Add indexes.</strong> At minimum, index your primary key and any foreign key columns. If you know your query patterns, add indexes on frequently filtered columns.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c19">
+        <label for="c19"><strong>Set up backups.</strong> Your data is now in a database. Configure automated backups before someone runs an accidental <code>DELETE</code> without a <code>WHERE</code> clause.</label>
+      </div>
+
+      <div class="checklist-item">
+        <input type="checkbox" id="c20">
+        <label for="c20"><strong>Document the schema.</strong> Use a tool like <a href="../tools/schema-doc-generator.html">SchemaLens Schema Documentation Generator</a> to create a shareable reference of your new table structure.</label>
+      </div>
+
+      <div class="cta-box">
+        <h3>Convert CSV to SQL in seconds</h3>
+        <p>Paste your CSV data and get CREATE TABLE + INSERT statements for PostgreSQL, MySQL, SQLite, or SQL Server. Auto-detects types and delimiters.</p>
+        <a href="../tools/csv-to-sql.html" class="btn btn-primary">Open CSV to SQL Converter</a>
+      </div>
+
+      <h2>Common Pitfalls to Avoid</h2>
+
+      <p><strong>Assuming CSV is UTF-8.</strong> Excel on macOS exports UTF-8. Excel on Windows often exports Windows-1252. Always verify encoding before importing.</p>
+
+      <p><strong>Ignoring leading zeros.</strong> ZIP codes, phone numbers, and IDs that start with zeros will lose those zeros if imported as integers. Store them as <code>TEXT</code> or <code>VARCHAR</code>.</p>
+
+      <p><strong>Using spreadsheet formulas as data.</strong> If a cell contains <code>=A1+B1</code>, the CSV export will contain the calculated value — which is what you want. But verify that calculated values were actually exported and not the formula string.</p>
+
+      <p><strong>Forgetting time zones.</strong> Spreadsheets don't store time zones. If your timestamps need zone awareness, decide on a canonical zone (usually UTC) and convert before import.</p>
+
+      <h2>Related Reading</h2>
+      <ul>
+        <li><a href="convert-csv-to-sql-in-seconds.html">Convert CSV to SQL in Seconds (No Upload Required)</a></li>
+        <li><a href="sql-create-table-best-practices-for-production.html">SQL CREATE TABLE Best Practices for Production Databases</a></li>
+        <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+        <li><a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+      </ul>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../affiliate.html">Affiliate</a>
+          <a href="../api.html">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../oracle-schema-diff.html">Oracle Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
