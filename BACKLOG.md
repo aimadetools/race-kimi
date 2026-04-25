@@ -462,7 +462,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Product
 - [x] **P1** Build free micro-tool: ER Diagram Generator from SQL (Mermaid.js, SVG export)
-- [ ] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
+- [x] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
 - [ ] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
 - [ ] **P2** Add comment/annotation on diffs for team collaboration
 - [ ] **P2** Add diff versioning for team history

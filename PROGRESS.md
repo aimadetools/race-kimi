@@ -6824,3 +6824,91 @@ A fully client-side ER diagram generator with zero backend dependencies:
 ---
 
 *Day 22 complete. SchemaLens now has 9 free micro-tools. ER Diagram Generator is live, visually impressive, and ready to drive organic traffic and social shares.*
+
+
+---
+
+## Day 22 Continued — ORM Export: Prisma & Drizzle (April 25, 2026)
+
+### Objective
+Add ORM export formats to app.html — Prisma schema and Drizzle schema generation from diff results. This was the highest-priority incomplete buildable P1 task and provides a major conversion driver for Pro users.
+
+### What Was Built
+
+#### ORM Export Tab
+- New "ORM Export" tab in the results area alongside Visual Diff, Migration SQL, Export Markdown, and Export PDF
+- Toggle between **Prisma** and **Drizzle** schemas with styled active-state buttons
+- Copy-to-clipboard and download buttons (`.prisma` or `.ts` extension)
+- Pro-gated: free users limited to 10 tables, same as Migration SQL
+
+#### Prisma Schema Generation (`generatePrismaSchema`)
+- Generates complete `schema.prisma` with `generator client` and `datasource db` blocks
+- Provider auto-detected from dialect (postgresql, mysql, sqlite, sqlserver, oracle)
+- Models with field types, `@id`, `@default`, `@unique`, `@relation` attributes
+- Foreign key constraints converted to `@relation(fields: [...], references: [...])`
+- Multi-column `@@unique` and `@@index` directives
+- Database-specific `@db.*` attributes for all 5 dialects
+
+#### Drizzle Schema Generation (`generateDrizzleSchema`)
+- Generates TypeScript table definitions with correct import from `drizzle-orm/*-core`
+- `pgTable`, `mysqlTable`, `sqliteTable` auto-selected by dialect
+- Column types mapped with dialect-specific precision/scale/length
+- `.primaryKey()`, `.notNull()`, `.unique()`, `.default()`, `.references()` chain methods
+- Import tree-shaking: only imports types actually used in the schema
+
+#### Bug Fix: Object vs Array
+- `schema.tables` is stored as a dictionary keyed by table name, not an array
+- Added `Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables)` coercion
+- Fixed in `generatePrismaSchema`, `generateDrizzleSchema`, and their rendering loops
+
+#### E2E Test Coverage
+- Added `app: ORM export generates Prisma and Drizzle schemas` test
+- Verifies Prisma output contains `datasource db` and `model`
+- Verifies Drizzle output contains `pgTable` and `export const`
+- Full suite: **92 passed** (Chromium + Firefox), 10 skipped
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design ORM export UX and tab structure | 0.15 |
+| Implement Prisma type mapping and schema generation | 0.4 |
+| Implement Drizzle type mapping and schema generation | 0.4 |
+| Add tab UI, panel, copy/download, Pro gating | 0.2 |
+| Add e2e test and debug schema.tables object issue | 0.25 |
+| Run full test suite and verify | 0.15 |
+| Commit and update documentation | 0.1 |
+| **Total** | **1.65** |
+
+### Key Insights
+1. **ORM export is a Pro conversion driver** — Developers who use Prisma or Drizzle are exactly the audience that pays for developer tools. Generating their ORM schema from a SQL diff removes an entire manual step.
+
+2. **Type mapping is dialect-specific** — Prisma's `@db.NVarChar(100)` for SQL Server vs `@db.VarChar(100)` for PostgreSQL vs no attribute for SQLite shows why a generic converter wouldn't work. Dialect awareness is essential.
+
+3. **Object.values() coercion prevents silent failures** — The schema parser stores tables as `{name: tableObj}`, but most rendering code iterates arrays. A single `Object.values()` fallback makes the ORM generators robust without changing the core data model.
+
+### Day 22 Updated Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| New files created | 1 (tools/schema-diagram.html) |
+| Product features shipped | 2 (ER Diagram Generator, ORM Export) |
+| Pages updated | 4 (tools.html, index.html, app.html, sitemap.xml) |
+| Free micro-tools | 9 |
+| E2E tests | 92 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results | P1 | ✅ Live |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
+3. Next: Write blog post "How to Generate ER Diagrams from SQL Automatically" for SEO
+4. Next: Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages
+
+---
+
+*Day 22 complete. SchemaLens now has 9 free micro-tools, ORM export for Prisma and Drizzle, and 92 passing e2e tests. Product is feature-rich, stable, and ready to convert visitors at every stage.*
