@@ -3689,7 +3689,8 @@ function generatePrismaSchema(schema, dialect) {
   let out = `generator client {\n  provider = "prisma-client-js"\n}\n\ndatasource db {\n  provider = "${provider}"\n  url      = env("DATABASE_URL")\n}\n\n`;
 
   const fkMap = [];
-  for (const table of schema.tables) {
+  const tables = Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables);
+  for (const table of tables) {
     const modelName = toPascalCase(table.name);
     out += `model ${modelName} {\n`;
     const pkCols = new Set();
@@ -3834,7 +3835,8 @@ function generateDrizzleSchema(schema, dialect) {
   const importName = dialect === 'postgres' ? 'pgTable' : dialect === 'mysql' ? 'mysqlTable' : dialect === 'sqlite' ? 'sqliteTable' : 'pgTable';
   let out = `import { ${importName}`;
   const usedTypes = new Set();
-  for (const table of schema.tables) {
+  const tables = Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables);
+  for (const table of tables) {
     for (const col of table.columns) {
       const base = (col.type || '').toLowerCase().replace(/\([^)]+\)/g, '').trim();
       // crude type collection
@@ -3868,7 +3870,7 @@ function generateDrizzleSchema(schema, dialect) {
   const typeList = Array.from(usedTypes).join(', ');
   out += `, ${typeList} } from "drizzle-orm/${dialect === 'mysql' ? 'mysql-core' : dialect === 'sqlite' ? 'sqlite-core' : 'pg-core'}";\n\n`;
 
-  for (const table of schema.tables) {
+  for (const table of tables) {
     const varName = toCamelCase(table.name);
     out += `export const ${varName} = ${importName}('${table.name}', {\n`;
     const pkCols = new Set();
