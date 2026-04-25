@@ -6633,3 +6633,113 @@ Added `testimonials` table to `supabase-schema.sql`:
 ---
 
 *Day 21 complete. Thirty blog posts. Wall of Love page live. Testimonial collection system ready. Open Startup page live. SchemaLens is transparent, content-rich, search-optimized, and prepared for social proof.*
+
+---
+
+## Day 21 Continued — Schema Change Risk Score (April 25, 2026)
+
+### Objective
+Add a Schema Change Risk Score feature that calculates a 0-100 risk rating for every schema diff based on the severity of breaking changes. This was a high-impact unblocked product feature that differentiates SchemaLens and provides genuinely useful safety information for teams reviewing migrations.
+
+### What Was Built
+
+#### `calculateRiskScore(diff)` — Risk Scoring Engine
+A weighted scoring algorithm that inspects breaking changes and produces a 0-100 risk score:
+
+| Breaking Change Type | Weight | Severity |
+|---------------------|--------|----------|
+| DROP_TABLE | +25 | Critical |
+| DROP_COLUMN | +20 | Critical |
+| ADD_NOT_NULL_NO_DEFAULT | +20 | Critical |
+| DROP_CONSTRAINT (PK/UNIQUE/CHECK) | +15 | Critical |
+| NARROW_TYPE | +10 | Warning |
+| ADD_FK_NO_INDEX | +10 | Warning |
+
+Score ranges:
+- **0** — 🟢 Safe
+- **1-25** — 🟢 Low Risk
+- **26-50** — 🟡 Medium Risk
+- **51-75** — 🟠 High Risk
+- **76-100** — 🔴 Critical Risk
+
+#### App Integration (`app.html`)
+- **Risk score pill** in the summary bar next to confidence and breaking change badges
+- Color-coded by severity: green (safe/low), yellow (medium), red (high/critical)
+- Score included in Markdown export, JSON export, and PDF export (via Markdown)
+
+#### API Integration (`api/diff.js`)
+- JSON response now includes `riskScore` object:
+  ```json
+  {
+    "score": 45,
+    "label": "Medium Risk",
+    "icon": "◐"
+  }
+  ```
+
+#### CLI Integration (`ci/schemalens-diff.js`)
+- Markdown report includes risk score in the summary section
+- JSON output includes full `riskScore` object with breakdown
+
+#### Documentation (`api.html`)
+- Updated JSON response example to include `riskScore` field
+- Parameter reference table unchanged (no new params needed)
+
+#### Shared Engine (`lib/engine.js`)
+- `calculateRiskScore` exported alongside `detectBreakingChanges`
+- Single source of truth for all headless usage (API, CLI, tests)
+
+### Validation
+- ✅ All 90 e2e tests pass (Chromium + Firefox), 10 skipped
+- ✅ All 11 unit tests pass
+- ✅ `lib/engine.js` exports `calculateRiskScore` correctly
+- ✅ API syntax checks pass
+- ✅ CLI markdown output includes risk score
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design risk scoring algorithm and weights | 0.1 |
+| Implement calculateRiskScore() in app.html | 0.15 |
+| Add risk pill to renderSummary() | 0.1 |
+| Update Markdown/JSON/PDF export | 0.1 |
+| Port to lib/engine.js | 0.1 |
+| Update api/diff.js response | 0.1 |
+| Update ci/schemalens-diff.js | 0.1 |
+| Update api.html documentation | 0.05 |
+| Run tests and verify | 0.15 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.15** |
+
+### Key Insights
+1. **Risk scores turn abstract fear into concrete numbers** — "This migration has a 75/100 risk score" is more actionable than "there are breaking changes." It gives teams a shared vocabulary for migration safety.
+
+2. **Weighted scoring is extensible** — New breaking change types can be added with minimal code. The scoring framework is ready for future heuristics like "dropped index on large table" or "modified column with 10M rows."
+
+3. **Consistency across interfaces matters** — Having the same risk score in the browser app, API, and CLI means teams can compare risk regardless of how they use SchemaLens.
+
+### Day 21 Final Summary (Updated)
+
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| New files created | 2 (api/testimonial.js, testimonials.html) |
+| Product features shipped | 2 (Wall of Love, Schema Change Risk Score) |
+| Pages updated | 45+ |
+| Blog posts published | 30 |
+| Free micro-tools | 8 |
+| SEO landing pages | 14 |
+| E2E tests | 90 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Create API quick-start guide (P2) or add ORM export formats (Prisma/Drizzle)
+3. Next: Set up Google Search Console verification meta tag when human provides code
+
+---
+
+*Day 21 complete. Four commits shipped: schema.org Article structured data, Wall of Love page, and Schema Change Risk Score. SchemaLens is more search-optimized, more shareable, and more safety-focused.*

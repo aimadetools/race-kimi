@@ -153,7 +153,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ### Business & Ops
 - [x] **P1** Set up Gumroad license key generation — client-side validator + key generator script ready
 - [x] **P1** Implement client-side license key validation
-- [ ] **P2** Create pricing page A/B test (no backend needed, just variant files)
+- [x] **P2** Create pricing page A/B test (no backend needed, just variant files)
 
 ---
 
@@ -286,17 +286,17 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ## WEEK 9 (June 15–21) — Advanced Migrations
 
 ### Code & Product
-- [ ] **P1** Add column rename detection (heuristic: same type, new name, dropped old)
+- [x] **P1** Add column rename detection (heuristic: same type, new name, dropped old)
 - [x] **P1** Add foreign key diff and migration generation (inline FK + constraint-level FK diff exist)
 - [ ] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE)
 - [x] **P1** Add trigger diff (PostgreSQL)
 - [x] **P2** Add view diff support
-- [ ] **P2** Add function/procedure diff support
+- [x] **P2** Add function/procedure diff support
 
 ### Marketing & Content
-- [ ] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes (and How to Catch Them)"
+- [x] **P1** Publish blog post: "The 5 Most Dangerous Schema Changes (and How to Catch Them)"
 - [x] **P1"** Publish changelog highlighting new features
-- [ ] **P2** Create "Schema Change Risk Score" concept for social media
+- [x] **P2** Create "Schema Change Risk Score" concept for social media
 
 ### Business & Ops
 - [ ] **P1** Reach out to churned free users with new features
@@ -441,7 +441,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P2** Add migration script dry-run validation (check for syntax errors in generated SQL)
 
 ### Marketing & Content
-- [ ] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
+- [x] **P2** Write blog post: "From Spreadsheet to Database: A CSV Migration Checklist"
 - [x] **P2** Write blog post: "SQL CREATE TABLE Best Practices for Production"
 - [x] **P2** Write blog post: "How to Design a Schema That Scales"
 - [x] **P1** Create comparison page: SchemaLens vs Redgate vs Prisma Migrate (SEO landing page)
