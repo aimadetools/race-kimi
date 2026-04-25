@@ -469,7 +469,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "How to Generate ER Diagrams from SQL Automatically" (SEO for new tool)
-- [ ] **P1** Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages
+- [x] **P1** Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages
 - [ ] **P2** Create API quick-start guide page with copy-pasteable curl examples
 - [ ] **P2** Write guest post for dev.to about the ER Diagram Generator
 

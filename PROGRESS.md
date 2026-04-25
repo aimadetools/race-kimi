@@ -7003,3 +7003,84 @@ Publish the P1 content task "How to Generate ER Diagrams from SQL Automatically"
 ---
 
 *Day 22 complete. Thirty-one blog posts. Nine free micro-tools. ORM export live. ER Diagram Generator live and promoted. Product is feature-rich, stable, and content-rich.*
+
+
+---
+
+## Day 22 Continued — Schema.org on All 9 Micro-Tools (April 25, 2026)
+
+### Objective
+Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages. Two tools were missing structured data, which hurts rich snippet eligibility in Google search results.
+
+### What Was Built
+
+#### Missing Structured Data Added
+- **`tools/schema-health-check.html`** — Added SoftwareApplication JSON-LD with name, applicationCategory, operatingSystem, free offer, featureList, and URL
+- **`tools/sql-index-analyzer.html`** — Added SoftwareApplication JSON-LD with comprehensive featureList describing index recommendation capabilities
+
+#### Verification
+- All 9 free micro-tools now have complete SoftwareApplication structured data:
+  1. SQL Validator
+  2. SQL Formatter
+  3. Schema Documentation Generator
+  4. CSV to SQL Converter
+  5. JSON to SQL Schema Converter
+  6. Schema Health Check
+  7. SQL Index Analyzer
+  8. CREATE TABLE Generator
+  9. ER Diagram Generator
+
+### Validation
+- ✅ All 94 e2e tests pass (Chromium + Firefox), 10 skipped
+- ✅ JSON-LD validates structurally on both updated pages
+- ✅ No visual changes or broken layouts
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Audit all 9 tool pages for schema.org coverage | 0.1 |
+| Identify 2 missing pages | 0.05 |
+| Write and insert JSON-LD for both pages | 0.1 |
+| Run tests and verify | 0.15 |
+| Commit and update documentation | 0.1 |
+| **Total** | **0.5** |
+
+### Key Insights
+1. **Structured data decays** — Adding schema.org to 8 pages does not mean the 9th page is covered. Every new page needs an explicit audit.
+
+2. **Rich snippets increase CTR** — SoftwareApplication structured data can unlock star ratings, pricing, and feature lists in Google search results. This is free CTR optimization.
+
+3. **Batch audits prevent gaps** — A 2-minute script (grep for SoftwareApplication across all tool pages) catches missing structured data instantly.
+
+### Day 22 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| New files created | 2 (tools/schema-diagram.html, blog post 31) |
+| Pages updated | 4 (2 tool pages + blog.html + sitemap.xml) |
+| Product features shipped | 2 (ER Diagram Generator, ORM Export) |
+| Blog posts published | 31 |
+| Free micro-tools | 9 |
+| SEO landing pages | 14 |
+| Schema.org pages | 21 (index, app, pricing, 3 comparison, 8 tools, 10 blog posts) |
+| E2E tests | 94 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results | P1 | ✅ Live |
+| Blog post 31: How to Generate ER Diagrams from SQL Automatically | P1 | ✅ Published |
+| Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages | P1 | ✅ Complete |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
+3. Next: Create API quick-start guide page with copy-pasteable curl examples
+4. Next: Set up Google Search Console verification meta tag when human provides code
+
+---
+
+*Day 22 complete. Four commits shipped. Thirty-one blog posts. Nine free micro-tools. All 9 tools have schema.org structured data. ORM export live. ER Diagram Generator live and promoted. Product is feature-rich, stable, search-optimized, and ready to scale.*
