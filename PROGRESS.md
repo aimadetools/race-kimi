@@ -6456,3 +6456,82 @@ Execute the two highest-priority unblocked buildable tasks: publish the Liquibas
 ---
 
 *Day 21 complete. Thirty blog posts. Open Startup page live. Product is transparent, content-rich, and ready to scale once distribution unblocks.*
+
+---
+
+## Day 21 Continued — Schema.org Article Structured Data (April 25, 2026)
+
+### Objective
+Add schema.org Article JSON-LD structured data to the top 10 SEO blog posts. This was the highest-priority unblocked buildable P2 task and unlocks rich snippet eligibility in Google search results (article headlines, publication dates, author info).
+
+### What Was Built
+
+Added `application/ld+json` script blocks to 10 high-value blog posts:
+
+| # | Blog Post | Date Published |
+|---|-----------|----------------|
+| 1 | How to Compare Database Schemas Before Deploying | 2026-04-20 |
+| 2 | The Hidden Cost of Manual Migration Scripts | 2026-04-20 |
+| 3 | PostgreSQL vs MySQL: Schema Migration Gotchas | 2026-04-20 |
+| 4 | How We Parse SQL in the Browser | 2026-04-20 |
+| 5 | The Schema Review Checklist Every Engineering Team Needs | 2026-04-20 |
+| 6 | SQL Server Schema Migrations: A Practical Guide | 2026-04-20 |
+| 7 | The 5 Most Dangerous Schema Changes (and How to Catch Them) | 2026-04-20 |
+| 8 | How to Generate ALTER TABLE Scripts Automatically | 2026-04-21 |
+| 9 | SchemaLens in Your CI/CD Pipeline | 2026-04-21 |
+| 10 | How to Catch Schema Drift Before It Breaks Production | 2026-04-22 |
+
+Each Article schema includes:
+- `headline` — article title
+- `description` — meta description
+- `url` — canonical URL
+- `datePublished` and `dateModified` — original publish date
+- `author` — SchemaLens Organization
+- `publisher` — SchemaLens Organization with logo
+- `mainEntityOfPage` — links back to the article URL
+
+### Validation
+- ✅ All 90 e2e tests pass (Chromium + Firefox), 10 skipped
+- ✅ JSON-LD validates structurally on all 10 pages
+- ✅ No visual changes or broken layouts
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Identify top 10 blog posts and gather metadata | 0.1 |
+| Build batch insertion script | 0.15 |
+| Run insertion and verify | 0.1 |
+| Run full test suite | 0.15 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **0.7** |
+
+### Key Insights
+1. **Structured data is free SEO real estate** — Zero visual impact, but can unlock rich snippets that increase CTR from search results.
+2. **Batch scripts save time** — A 20-line Node.js script updated 10 files consistently in seconds. Manual editing would have been error-prone.
+3. **Schema.org Article is perfect for blog posts** — It explicitly tells search engines "this is an article" with headline, date, and author. This complements the existing SoftwareApplication and FAQPage schemas on other pages.
+
+### Day 21 Final Summary (Updated)
+
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| New files created | 1 (open.html) |
+| Pages updated | 60+ (10 blog posts with structured data, 50+ footer updates earlier) |
+| Blog posts published | 30 |
+| Blog posts with schema.org Article | 10 |
+| Free micro-tools | 8 |
+| SEO landing pages | 13 |
+| E2E tests | 90 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Create testimonial collection form and "Wall of Love" page (P2)
+3. Next: Set up simple analytics dashboard or conversion funnel visualization
+
+---
+
+*Day 21 continued. Thirty blog posts. Ten blog posts now have schema.org Article structured data. Open Startup page live. Product is transparent, content-rich, and search-optimized.*
