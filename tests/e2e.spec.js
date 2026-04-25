@@ -38,6 +38,7 @@ const pages = [
   { path: '/blog.html', name: 'Blog' },
   { path: '/tools.html', name: 'Tools Landing' },
   { path: '/api.html', name: 'API Docs' },
+  { path: '/api-guide.html', name: 'API Quick Start Guide' },
   { path: '/postgres-schema-diff.html', name: 'PostgreSQL Diff Landing' },
   { path: '/mysql-schema-diff.html', name: 'MySQL Diff Landing' },
   { path: '/sqlite-schema-diff.html', name: 'SQLite Diff Landing' },
@@ -47,6 +48,11 @@ const pages = [
   { path: '/tools/schema-doc-generator.html', name: 'Schema Doc Generator' },
   { path: '/tools/csv-to-sql.html', name: 'CSV to SQL' },
   { path: '/tools/json-to-sql.html', name: 'JSON to SQL' },
+  { path: '/tools/schema-health-check.html', name: 'Schema Health Check' },
+  { path: '/tools/sql-index-analyzer.html', name: 'SQL Index Analyzer' },
+  { path: '/tools/create-table-generator.html', name: 'CREATE TABLE Generator' },
+  { path: '/tools/schema-diagram.html', name: 'ER Diagram Generator' },
+  { path: '/oracle-schema-diff.html', name: 'Oracle Diff Landing' },
 ];
 
 for (const { path, name } of pages) {

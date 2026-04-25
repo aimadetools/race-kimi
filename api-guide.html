@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens API Quick Start — Programmatic Schema Diff in 5 Minutes</title>
+  <meta name="description" content="Get started with the SchemaLens REST API in 5 minutes. Copy-paste curl, JavaScript, Python, and Go examples. Generate migration scripts and detect breaking changes programmatically.">
+  <meta property="og:title" content="SchemaLens API Quick Start — Programmatic Schema Diff in 5 Minutes">
+  <meta property="og:description" content="Copy-paste curl, JavaScript, and Python examples for the SchemaLens schema diff API.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/api-guide.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .guide-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .guide-section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guide-section h3 {
+      font-size: 1.05rem;
+      margin: 18px 0 10px;
+      color: var(--text);
+    }
+    .guide-section p, .guide-section li {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .guide-section ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    .guide-section li {
+      margin-bottom: 6px;
+    }
+    .endpoint {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+    .endpoint .method {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .endpoint .url {
+      color: var(--primary);
+    }
+    pre.code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 14px 0;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .step-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-content h3 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+    .pattern-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .pattern-card h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .pattern-card p {
+      margin: 0 0 12px;
+      font-size: 0.9rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .badge-green { background: rgba(16,185,129,0.15); color: #34d399; }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+    .lang-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: -1px;
+      z-index: 1;
+      position: relative;
+    }
+    .lang-tab {
+      padding: 8px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .lang-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+    }
+    .code-panel {
+      display: none;
+    }
+    .code-panel.active {
+      display: block;
+    }
+    .response-schema {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 16px;
+      font-size: 0.9rem;
+      margin: 12px 0;
+    }
+    .response-schema dt {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--primary);
+    }
+    .response-schema dd {
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .cta-box h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+    .cta-box p {
+      margin: 0 0 16px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "SchemaLens API Quick Start — Programmatic Schema Diff in 5 Minutes",
+    "description": "Get started with the SchemaLens REST API in 5 minutes. Copy-paste curl, JavaScript, Python, and Go examples.",
+    "url": "https://schemalens.tech/api-guide.html",
+    "author": { "@type": "Organization", "name": "SchemaLens" },
+    "publisher": { "@type": "Organization", "name": "SchemaLens", "logo": { "@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg" } },
+    "datePublished": "2026-04-25",
+    "dateModified": "2026-04-25"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SchemaLens API Quick Start</h1>
+      <p>Diff SQL schemas programmatically in 5 minutes. Copy-paste examples in curl, JavaScript, Python, and Go. Generate migrations, detect breaking changes, and automate your schema review pipeline.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="guide-section">
+      <h2>🎯 What You Can Build</h2>
+      <div class="pattern-card">
+        <h4>CI/CD Pipeline Gates</h4>
+        <p>Fail a build when a pull request introduces breaking schema changes. Catch dropped columns and NOT_NULL mismatches before they reach production.</p>
+      </div>
+      <div class="pattern-card">
+        <h4>Slack Alerts for Schema Drift</h4>
+        <p>Post a formatted diff summary to Slack whenever staging and production schemas diverge. Include risk scores and migration SQL.</p>
+      </div>
+      <div class="pattern-card">
+        <h4>Nightly Drift Monitoring</h4>
+        <p>Run a cron job every night that compares your committed schema against your production database. Detect undocumented changes automatically.</p>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <h2>🔑 Step 1 — Get a Pro License Key</h2>
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Purchase a Pro license</h3>
+          <p>API access requires a <a href="pricing.html">SchemaLens Pro</a> license key. Keys are delivered instantly after purchase.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Format</h3>
+          <p>License keys look like <code>SL-XXXX-XXXX-XXXX-XXXX</code>. Pass them in the <code>X-License-Key</code> header or <code>licenseKey</code> body field.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <h2>🚀 Step 2 — Make Your First Request</h2>
+      <p>The API has one primary endpoint. Send two SQL schemas and receive a full diff, migration SQL, breaking change analysis, and risk score.</p>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="url">https://schemalens.tech/api/diff</span>
+      </div>
+
+      <h3>Choose your language</h3>
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchLang('curl')">curl</button>
+        <button class="lang-tab" onclick="switchLang('js')">JavaScript</button>
+        <button class="lang-tab" onclick="switchLang('py')">Python</button>
+        <button class="lang-tab" onclick="switchLang('go')">Go</button>
+      </div>
+
+      <div class="code-panel active" id="panel-curl">
+        <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/diff \
+  -H "Content-Type: application/json" \
+  -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
+  -d '{
+    "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
+    "schemaB": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));",
+    "dialect": "postgres",
+    "format": "json"
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="code-panel" id="panel-js">
+        <pre class="code-block"><code>const response = await fetch('https://schemalens.tech/api/diff', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-License-Key': 'SL-XXXX-XXXX-XXXX-XXXX'
+  },
+  body: JSON.stringify({
+    schemaA: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+    schemaB: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));',
+    dialect: 'postgres',
+    format: 'json'
+  })
+});
+
+const data = await response.json();
+console.log(data.migration);
+// ALTER TABLE "users" ADD "email" VARCHAR ( 255 );</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="code-panel" id="panel-py">
+        <pre class="code-block"><code>import requests
+
+response = requests.post(
+    'https://schemalens.tech/api/diff',
+    headers={
+        'Content-Type': 'application/json',
+        'X-License-Key': 'SL-XXXX-XXXX-XXXX-XXXX'
+    },
+    json={
+        'schemaA': 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+        'schemaB': 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));',
+        'dialect': 'postgres',
+        'format': 'json'
+    }
+)
+
+data = response.json()
+print(data['migration'])
+# ALTER TABLE "users" ADD "email" VARCHAR ( 255 );</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="code-panel" id="panel-go">
+        <pre class="code-block"><code>package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+type DiffRequest struct {
+    SchemaA  string `json:"schemaA"`
+    SchemaB  string `json:"schemaB"`
+    Dialect  string `json:"dialect"`
+    Format   string `json:"format"`
+}
+
+func main() {
+    payload := DiffRequest{
+        SchemaA: "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
+        SchemaB: "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));",
+        Dialect: "postgres",
+        Format:  "json",
+    }
+    body, _ := json.Marshal(payload)
+
+    req, _ := http.NewRequest("POST", "https://schemalens.tech/api/diff", bytes.NewBuffer(body))
+    req.Header.Set("Content-Type", "application/json")
+    req.Header.Set("X-License-Key", "SL-XXXX-XXXX-XXXX-XXXX")
+
+    resp, _ := http.DefaultClient.Do(req)
+    defer resp.Body.Close()
+
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Println(result["migration"])
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <h2>📤 Step 3 — Understand the Response</h2>
+      <pre class="code-block"><code>{
+  "diff": {
+    "tablesAdded": [],
+    "tablesRemoved": [],
+    "tablesModified": [
+      {
+        "name": "users",
+        "columnsAdded": [{ "name": "email", "type": "VARCHAR(255)", ... }],
+        "columnsRemoved": [],
+        "columnsModified": []
+      }
+    ],
+    "enumsAdded": [],
+    "enumsRemoved": [],
+    "triggersAdded": [],
+    "triggersRemoved": [],
+    "triggersModified": [],
+    "viewsAdded": [],
+    "viewsRemoved": [],
+    "viewsModified": [],
+    "functionsAdded": [],
+    "functionsRemoved": [],
+    "functionsModified": []
+  },
+  "migration": "ALTER TABLE \"users\" ADD \"email\" VARCHAR ( 255 );",
+  "breakingChanges": [],
+  "riskScore": {
+    "score": 0,
+    "label": "Safe",
+    "icon": "🟢"
+  },
+  "summary": {
+    "tablesAdded": 0,
+    "tablesRemoved": 0,
+    "tablesModified": 1,
+    "enumsAdded": 0,
+    "enumsRemoved": 0,
+    "triggersAdded": 0,
+    "triggersRemoved": 0,
+    "triggersModified": 0,
+    "viewsAdded": 0,
+    "viewsRemoved": 0,
+    "viewsModified": 0,
+    "functionsAdded": 0,
+    "functionsRemoved": 0,
+    "functionsModified": 0,
+    "breakingChangeCount": 0
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Response Fields</h3>
+      <dl class="response-schema">
+        <dt>diff</dt>
+        <dd>Full semantic diff with added, removed, and modified tables, columns, constraints, indexes, enums, triggers, views, and functions.</dd>
+        <dt>migration</dt>
+        <dd>Generated ALTER TABLE / CREATE TABLE SQL to migrate from schemaA to schemaB.</dd>
+        <dt>breakingChanges</dt>
+        <dd>Array of dangerous changes (DROP_TABLE, DROP_COLUMN, ADD_NOT_NULL_NO_DEFAULT, etc.). Empty if safe.</dd>
+        <dt>riskScore</dt>
+        <dd>Object with <code>score</code> (0-100), <code>label</code> (Safe / Low / Medium / High / Critical), and <code>icon</code>.</dd>
+        <dt>summary</dt>
+        <dd>Counts of all object changes for quick dashboard display.</dd>
+      </dl>
+    </div>
+
+    <div class="guide-section">
+      <h2>🛠️ Step 4 — Common Patterns</h2>
+
+      <h3>Pattern A: Fail a CI Build on Breaking Changes</h3>
+      <pre class="code-block"><code>#!/bin/bash
+set -e
+
+RESPONSE=$(curl -s -X POST https://schemalens.tech/api/diff \
+  -H "Content-Type: application/json" \
+  -H "X-License-Key: $SCHEMALENS_KEY" \
+  -d "{\"schemaA\":$(cat base.sql | jq -Rs .),\"schemaB\":$(cat head.sql | jq -Rs .),\"dialect\":\"postgres\"}")
+
+COUNT=$(echo "$RESPONSE" | jq '.summary.breakingChangeCount')
+if [ "$COUNT" -gt 0 ]; then
+  echo "❌ Breaking changes detected:"
+  echo "$RESPONSE" | jq '.breakingChanges'
+  exit 1
+fi
+
+echo "✅ Schema diff passed. No breaking changes."</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Pattern B: Post Diff Summary to Slack</h3>
+      <pre class="code-block"><code># First, get the diff
+DIFF=$(curl -s -X POST https://schemalens.tech/api/diff \
+  -H "Content-Type: application/json" \
+  -H "X-License-Key: $SCHEMALENS_KEY" \
+  -d '{"schemaA":"...","schemaB":"...","dialect":"postgres"}')
+
+# Then, send to Slack via SchemaLens webhook proxy
+curl -X POST https://schemalens.tech/api/slack \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"webhookUrl\": \"$SLACK_WEBHOOK_URL\",
+    \"diff\": $(echo "$DIFF" | jq '.diff'),
+    \"migration\": $(echo "$DIFF" | jq '.migration'),
+    \"breakingChanges\": $(echo "$DIFF" | jq '.breakingChanges'),
+    \"dialect\": \"postgres\"
+  }"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Pattern C: Markdown Report for PR Comments</h3>
+      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/diff \
+  -H "Content-Type: application/json" \
+  -H "X-License-Key: SL-XXXX-XXXX-XXXX-XXXX" \
+  -d '{
+    "schemaA": "...",
+    "schemaB": "...",
+    "dialect": "postgres",
+    "format": "markdown"
+  }' | jq -r '.markdown' > schema-diff-report.md
+
+# Post the markdown to GitHub PR comment via gh CLI
+gh pr comment 42 --body-file schema-diff-report.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </div>
+
+    <div class="guide-section">
+      <h2>⚠️ Error Handling</h2>
+      <table class="param-table" style="width:100%;margin:14px 0;font-size:0.9rem;">
+        <thead>
+          <tr><th>Status</th><th>Meaning</th><th>How to Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge badge-red">400</span></td><td>Bad Request</td><td>Check that <code>schemaA</code> and <code>schemaB</code> are strings and <code>dialect</code> is valid.</td></tr>
+          <tr><td><span class="badge badge-red">401</span></td><td>Unauthorized</td><td>Provide a valid Pro <code>licenseKey</code> or <code>X-License-Key</code> header.</td></tr>
+          <tr><td><span class="badge badge-yellow">429</span></td><td>Rate Limited</td><td>Wait 60 seconds. Maximum 30 requests per minute per IP.</td></tr>
+          <tr><td><span class="badge badge-red">500</span></td><td>Server Error</td><td>Retry with exponential backoff. Contact support if persistent.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="guide-section">
+      <h2>📋 Parameters Reference</h2>
+      <table class="param-table" style="width:100%;margin:14px 0;font-size:0.9rem;">
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>schemaA</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The old (base) schema SQL.</td></tr>
+          <tr><td><code>schemaB</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>The new (target) schema SQL.</td></tr>
+          <tr><td><code>dialect</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>postgres</code> (default), <code>mysql</code>, <code>sqlite</code>, <code>mssql</code>, <code>oracle</code></td></tr>
+          <tr><td><code>format</code></td><td>string</td><td><span class="badge badge-yellow">No</span></td><td><code>json</code> (default) or <code>markdown</code></td></tr>
+          <tr><td><code>licenseKey</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td><td>SchemaLens Pro license key. Also accepted as <code>X-License-Key</code> header.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="guide-section">
+      <h2>🔒 Privacy & Limits</h2>
+      <ul>
+        <li><strong>Stateless:</strong> Schema data is processed in-memory and never stored or logged.</li>
+        <li><strong>Rate limit:</strong> 30 requests per minute per IP address.</li>
+        <li><strong>No external dependencies:</strong> The API runs on Vercel's edge network with sub-100ms response times.</li>
+        <li><strong>CORS enabled:</strong> Call the API from any domain, including localhost during development.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h2>💻 CLI Alternative</h2>
+      <p>For offline use or air-gapped environments, the <a href="ci/schemalens-diff.js">SchemaLens CLI</a> provides the same engine without network requests.</p>
+      <pre class="code-block"><code>node ci/schemalens-diff.js schemaA.sql schemaB.sql --dialect=postgres --format=json</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    </div>
+
+    <div class="cta-box">
+      <h3>Ready to automate your schema reviews?</h3>
+      <p>Get a SchemaLens Pro license and start diffing programmatically today.</p>
+      <a href="pricing.html" class="btn btn-primary">Get Pro — $12/mo</a>
+      <a href="api.html" class="btn" style="margin-left:8px;">Full API Docs →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+          <a href="api.html">API</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="team.html">Team</a>
+          <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="app.html">Schema Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+
+function switchLang(lang) {
+  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.lang-tab[onclick="switchLang(\'' + lang + '\')"]').classList.add('active');
+  document.getElementById('panel-' + lang).classList.add('active');
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const old = btn.innerText;
+    btn.innerText = 'Copied!';
+    setTimeout(() => btn.innerText = old, 1500);
+  }).catch(() => {
+    const old = btn.innerText;
+    btn.innerText = 'Ready';
+    setTimeout(() => btn.innerText = old, 1500);
+  });
+}
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
