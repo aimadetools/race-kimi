@@ -13,6 +13,7 @@
  *   diff              object   Full diff result
  *   migration         string   Generated migration SQL
  *   breakingChanges   array    Detected breaking changes
+ *   riskScore         object   Risk score (0-100), label, color, icon
  *   summary           object   Counts of tables, enums, triggers, views, breaking changes
  *
  * Response (markdown):
@@ -23,6 +24,7 @@ const {
   parseSQL,
   diffSchemas,
   detectBreakingChanges,
+  calculateRiskScore,
   generateMigration,
   generateMarkdown
 } = require('../lib/engine');
@@ -133,11 +135,17 @@ module.exports = (req, res) => {
     }
 
     const migration = generateMigration(diff, dialect);
+    const riskScore = calculateRiskScore(diff);
 
     return res.status(200).json({
       diff,
       migration,
       breakingChanges,
+      riskScore: {
+        score: riskScore.score,
+        label: riskScore.label,
+        icon: riskScore.icon
+      },
       summary: {
         tablesAdded: diff.tablesAdded.length,
         tablesRemoved: diff.tablesRemoved.length,

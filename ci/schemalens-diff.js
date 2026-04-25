@@ -773,6 +773,32 @@ function detectBreakingChanges(diff) {
   return breaking;
 }
 
+function calculateRiskScore(diff) {
+  const breaking = detectBreakingChanges(diff);
+  let score = 0;
+  const weights = {
+    'DROP_TABLE': 25,
+    'DROP_COLUMN': 20,
+    'ADD_NOT_NULL_NO_DEFAULT': 20,
+    'DROP_CONSTRAINT': 15,
+    'NARROW_TYPE': 10,
+    'ADD_FK_NO_INDEX': 10
+  };
+  for (const b of breaking) {
+    score += weights[b.type] || 10;
+  }
+  score = Math.min(100, score);
+
+  let label;
+  if (score === 0) label = 'Safe';
+  else if (score <= 25) label = 'Low Risk';
+  else if (score <= 50) label = 'Medium Risk';
+  else if (score <= 75) label = 'High Risk';
+  else label = 'Critical Risk';
+
+  return { score, label, breaking };
+}
+
 // -----------------------------
 // CLI
 // -----------------------------
@@ -861,7 +887,9 @@ function main() {
   }
 
   const breakingChanges = detectBreakingChanges(diff);
+  const riskScore = calculateRiskScore(diff);
   diff.breakingChanges = breakingChanges;
+  diff.riskScore = riskScore;
 
   let output;
   if (format === 'json') {
@@ -901,7 +929,11 @@ function generateMarkdown(diff, dialect) {
   md += `- Tables in new schema: ${diff.totalTablesNew}\n`;
   md += `- Tables added: ${diff.tablesAdded.length}\n`;
   md += `- Tables removed: ${diff.tablesRemoved.length}\n`;
-  md += `- Tables modified: ${diff.tablesModified.length}\n\n`;
+  md += `- Tables modified: ${diff.tablesModified.length}\n`;
+  if (diff.riskScore) {
+    md += `- **Risk Score:** ${diff.riskScore.score}/100 — ${diff.riskScore.label}\n`;
+  }
+  md += `\n`;
 
   if (diff.tablesAdded.length) {
     md += `## Tables Added\n\n`;

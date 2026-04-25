@@ -2088,6 +2088,32 @@ function detectBreakingChanges(diff) {
   return breaking;
 }
 
+function calculateRiskScore(diff) {
+  const breaking = detectBreakingChanges(diff);
+  let score = 0;
+  const weights = {
+    'DROP_TABLE': 25,
+    'DROP_COLUMN': 20,
+    'ADD_NOT_NULL_NO_DEFAULT': 20,
+    'DROP_CONSTRAINT': 15,
+    'NARROW_TYPE': 10,
+    'ADD_FK_NO_INDEX': 10
+  };
+  for (const b of breaking) {
+    score += weights[b.type] || 10;
+  }
+  score = Math.min(100, score);
+
+  let label, color, icon;
+  if (score === 0) { label = 'Safe'; color = 'var(--success)'; icon = '✓'; }
+  else if (score <= 25) { label = 'Low Risk'; color = 'var(--success)'; icon = '✓'; }
+  else if (score <= 50) { label = 'Medium Risk'; color = 'var(--warning)'; icon = '◐'; }
+  else if (score <= 75) { label = 'High Risk'; color = 'var(--danger)'; icon = '⚠'; }
+  else { label = 'Critical Risk'; color = 'var(--danger)'; icon = '🔴'; }
+
+  return { score, label, color, icon, breaking };
+}
+
 // -----------------------------
 // Migration Generator
 // -----------------------------
@@ -2390,7 +2416,7 @@ function columnDefSQL(col, dialect) {
 // -----------------------------
 // UI Rendering
 // -----------------------------
-function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
+function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScore) {
   const bar = document.getElementById('summaryBar');
   const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length;
 
@@ -2422,6 +2448,11 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     breakingHTML = `<div class="summary-pill" style="border-color:${bcColor};color:${bcColor}"><span class="num">${bcIcon}</span> ${breakingChanges.length} breaking (${criticalCount} critical)</div>`;
   }
 
+  let riskHTML = '';
+  if (riskScore) {
+    riskHTML = `<div class="summary-pill" style="border-color:${riskScore.color};color:${riskScore.color}"><span class="num">${riskScore.icon}</span> ${riskScore.score}/100 ${riskScore.label}</div>`;
+  }
+
   bar.innerHTML = `
     <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
@@ -2432,6 +2463,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges) {
     ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
     ${(diff.viewsAdded.length || diff.viewsRemoved.length || diff.viewsModified.length) ? `<div class="summary-pill modified"><span class="num">👁${diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length}</span> views</div>` : ''}
     ${(diff.functionsAdded.length || diff.functionsRemoved.length || diff.functionsModified.length) ? `<div class="summary-pill modified"><span class="num">ƒ${diff.functionsAdded.length + diff.functionsRemoved.length + diff.functionsModified.length}</span> functions</div>` : ''}
+    ${riskHTML}
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
@@ -3037,7 +3069,11 @@ function generateMarkdown(diff, migrationSQL, dialect) {
   md += `- Tables in new schema: ${diff.totalTablesNew}\n`;
   md += `- Tables added: ${diff.tablesAdded.length}\n`;
   md += `- Tables removed: ${diff.tablesRemoved.length}\n`;
-  md += `- Tables modified: ${diff.tablesModified.length}\n\n`;
+  md += `- Tables modified: ${diff.tablesModified.length}\n`;
+  if (window.lastRiskScore) {
+    md += `- **Risk Score:** ${window.lastRiskScore.score}/100 — ${window.lastRiskScore.label}\n`;
+  }
+  md += `\n`;
 
   if (diff.tablesAdded.length) {
     md += `## Tables Added\n\n`;
@@ -3974,7 +4010,10 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   localStorage.setItem('schemalens_last', JSON.stringify({ a: sqlA, b: sqlB, dialect, time: Date.now() }));
   saveDiffHistory(sqlA, sqlB, dialect, diff);
 
-  renderSummary(diff, confidenceA, confidenceB, breakingChanges);
+  const risk = calculateRiskScore(diff);
+  window.lastRiskScore = risk;
+
+  renderSummary(diff, confidenceA, confidenceB, breakingChanges, risk);
   renderVisualDiff(diff, breakingChanges);
   renderMigration(migrationSQL, diff);
   renderMarkdown();
