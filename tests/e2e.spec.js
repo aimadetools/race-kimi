@@ -149,6 +149,32 @@ test('app: breaking changes detection works for dropped column', async ({ page }
   expect(pageText).toMatch(/breaking|DROP COLUMN/i);
 });
 
+test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.click('text=Load sample (PostgreSQL)');
+  await page.waitForTimeout(300);
+  await page.evaluate(() => { if (typeof loadSampleB === 'function') loadSampleB(); });
+  await page.waitForTimeout(300);
+  await page.click('#compareBtn');
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  // Switch to ORM Export tab
+  await page.click('button[data-tab="orm"]');
+  await page.waitForTimeout(300);
+
+  // Prisma should be visible by default
+  const prismaOutput = await page.locator('#ormOutput').textContent();
+  expect(prismaOutput).toContain('datasource db');
+  expect(prismaOutput).toContain('model');
+
+  // Switch to Drizzle
+  await page.click('button:has-text("Drizzle")');
+  await page.waitForTimeout(300);
+  const drizzleOutput = await page.locator('#ormOutput').textContent();
+  expect(drizzleOutput).toContain('pgTable');
+  expect(drizzleOutput).toContain('export const');
+});
+
 test('app: license modal opens and closes', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   

@@ -201,6 +201,12 @@ img { max-width: 100%; display: block; }
   border-color: var(--hover-border);
 }
 
+.btn-secondary.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
 .btn-lg { padding: 14px 32px; font-size: 1.1rem; }
 
 /* Hero */

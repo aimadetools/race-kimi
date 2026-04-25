@@ -456,3 +456,29 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
 - [ ] **P2** Set up automated newsletter email delivery (e.g., Buttondown free tier or Supabase edge function)
 - [x] **P2** Create affiliate/referral program landing page
+
+
+## 🔥 NEW UNBLOCKED TASKS (April 25)
+
+### Product
+- [x] **P1** Build free micro-tool: ER Diagram Generator from SQL (Mermaid.js, SVG export)
+- [ ] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
+- [ ] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
+- [ ] **P2** Add comment/annotation on diffs for team collaboration
+- [ ] **P2** Add diff versioning for team history
+
+### Marketing & Content
+- [ ] **P1** Write blog post: "How to Generate ER Diagrams from SQL Automatically" (SEO for new tool)
+- [ ] **P1** Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages
+- [ ] **P2** Create API quick-start guide page with copy-pasteable curl examples
+- [ ] **P2** Write guest post for dev.to about the ER Diagram Generator
+
+### Business & Ops
+- [ ] **P1** Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
+- [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
+- [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
+- [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
+
+---
+
+*Backlog reprioritized April 25, 2026. Highest-priority unblocked task: ORM export formats or admin dashboard.*

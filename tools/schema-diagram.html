@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free ER Diagram Generator from SQL — SchemaLens</title>
+  <meta name="description" content="Generate ER diagrams from your SQL CREATE TABLE statements instantly. Supports PostgreSQL, MySQL, SQLite, and SQL Server. Export to SVG. No signup.">
+  <meta property="og:title" content="Free ER Diagram Generator from SQL — SchemaLens">
+  <meta property="og:description" content="Paste your CREATE TABLE statements and get a visual entity-relationship diagram in seconds. Export as SVG.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diagram.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ER Diagram Generator from SQL",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates ER diagrams from SQL CREATE TABLE statements with SVG export",
+    "url": "https://schemalens.tech/tools/schema-diagram.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .diagram-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0 16px;
+    }
+    .diagram-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .diagram-toolbar select, .diagram-toolbar button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .diagram-toolbar button#generateBtn {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    .diagram-toolbar button#generateBtn:hover {
+      background: var(--primary-light);
+    }
+
+    .editor-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .editor-wrap textarea {
+      width: 100%;
+      min-height: 260px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+    .editor-wrap textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .results { display: none; }
+    .results.active { display: block; }
+
+    .summary-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .summary-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-pill .num { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .tab-btn:hover {
+      color: var(--text);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .diagram-output {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+    .diagram-output svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mermaid-source {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 24px;
+    }
+    .action-bar button {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .action-bar button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state.hidden { display: none; }
+
+    .error-banner {
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.35);
+      color: #ff8a8a;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      display: none;
+    }
+    .error-banner.show { display: block; }
+
+    .cta-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .cta-box h3 { margin-bottom: 8px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../open.html">Open Startup</a>
+        <a href="../api.html">API</a>
+        <a href="../team.html">Team</a>
+        <a href="../testimonials.html">Wall of Love</a>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>ER Diagram Generator</h1>
+      <p>Paste your <code>CREATE TABLE</code> statements and generate a visual entity-relationship diagram instantly. Export as SVG. Supports PostgreSQL, MySQL, SQLite, and SQL Server.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="diagram-toolbar">
+      <label for="dialect">Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <button id="generateBtn">Generate Diagram</button>
+      <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
+    </div>
+
+    <div class="editor-wrap">
+      <textarea id="sqlInput" placeholder="-- Paste your CREATE TABLE statements here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"></textarea>
+    </div>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="results" id="results">
+      <div class="summary-bar" id="summaryBar"></div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="diagram">Diagram</button>
+        <button class="tab-btn" data-tab="source">Mermaid Source</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-diagram">
+        <div class="diagram-output" id="diagramOutput"></div>
+        <div class="action-bar">
+          <button id="downloadSvg">Download SVG</button>
+          <button id="copyMermaid">Copy Mermaid Source</button>
+          <a href="../app.html" class="btn btn-secondary" id="openInApp" style="text-decoration:none;display:inline-flex;align-items:center;">Open in SchemaLens →</a>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-source">
+        <pre class="mermaid-source" id="mermaidSource"></pre>
+        <div class="action-bar">
+          <button id="copySourceBtn">Copy to Clipboard</button>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <h3>Need to see what changed?</h3>
+        <p>SchemaLens compares two database schemas and generates migration scripts instantly.</p>
+        <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <h3>Ready to generate your diagram</h3>
+      <p>Paste your SQL above and click "Generate Diagram" to visualize your schema.</p>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="sql-validator.html">SQL Validator</a>
+          <a href="sql-formatter.html">SQL Formatter</a>
+          <a href="schema-doc-generator.html">Schema Docs</a>
+          <a href="schema-diagram.html">ER Diagram</a>
+          <a href="schema-health-check.html">Health Check</a>
+          <a href="sql-index-analyzer.html">Index Analyzer</a>
+          <a href="create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+/* ===== Parser (from lib/engine.js) ===== */
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts.filter(s => s.length > 0);
+}
+function tokenize(text) {
+  const tokens = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch;
+      inString = true;
+      stringChar = ch;
+      continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') {
+        inString = false;
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current.trim()) tokens.push(current.trim());
+      current = '';
+    } else if (ch === '(' || ch === ')' || ch === ',') {
+      if (current.trim()) tokens.push(current.trim());
+      tokens.push(ch);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+function splitBody(body) {
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    const prev = body[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        continue;
+      }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+function parseColumn(tokens, dialect) {
+  const col = {
+    name: tokens[0].replace(/["`\[\]]/g, ''),
+    type: '',
+    nullable: true,
+    defaultValue: null,
+    primaryKey: false,
+    unique: false,
+    autoIncrement: false,
+    raw: tokens.join(' ')
+  };
+  let i = 1;
+  const typeTokens = [];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','STORED','VIRTUAL','PERSISTED','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'CHARACTER' && tokens[i+1] && tokens[i+1].toUpperCase() === 'SET') {
+      typeTokens.push(tokens[i], tokens[i+1]);
+      i += 2;
+      if (i < tokens.length && !constraintKeywords.includes(tokens[i].toUpperCase())) {
+        typeTokens.push(tokens[i]);
+        i++;
+      }
+      continue;
+    }
+    if (constraintKeywords.includes(t)) break;
+    typeTokens.push(tokens[i]);
+    i++;
+  }
+  col.type = typeTokens.join(' ') || 'UNKNOWN';
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'NULL') {
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'NULL') {
+      col.nullable = true;
+      i++;
+    } else if (t === 'PRIMARY' && tokens[i+1] && tokens[i+1].toUpperCase() === 'KEY') {
+      col.primaryKey = true;
+      col.nullable = false;
+      i += 2;
+      if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+    } else if (t === 'UNIQUE') {
+      col.unique = true;
+      i++;
+    } else if (t === 'DEFAULT') {
+      i++;
+      const defaultTokens = [];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL','TABLESPACE','STORAGE','PCTFREE','INITRANS','MAXTRANS','NOPARALLEL','PARALLEL','LOGGING','NOLOGGING','CACHE','NOCACHE','LOB','PARTITION','SUBPARTITION'];
+      while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
+        defaultTokens.push(tokens[i]);
+        i++;
+      }
+      col.defaultValue = defaultTokens.join(' ') || null;
+    } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
+      col.autoIncrement = true;
+      i++;
+    } else if (t === 'IDENTITY') {
+      col.autoIncrement = true;
+      i++;
+      if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; }
+    } else if (t === 'REFERENCES') {
+      i++;
+      col.foreignKey = { table: '', columns: [] };
+      if (tokens[i]) {
+        col.foreignKey.table = tokens[i].replace(/["`]/g, '');
+        i++;
+      }
+      if (tokens[i] === '(') {
+        i++;
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+        i++;
+      }
+      while (i < tokens.length) {
+        const next = tokens[i].toUpperCase();
+        if (next === 'ON' || next === 'DEFERRABLE' || next === 'INITIALLY') {
+          i++;
+          while (i < tokens.length && !['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CONSTRAINT'].includes(tokens[i].toUpperCase())) i++;
+        } else break;
+      }
+    } else {
+      i++;
+    }
+  }
+  return col;
+}
+function parseConstraint(tokens, dialect) {
+  const con = { raw: tokens.join(' '), type: '', name: null, columns: [] };
+  let i = 0;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    i++;
+    con.name = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : null;
+    i++;
+  }
+  const t = tokens[i] ? tokens[i].toUpperCase() : '';
+  if (t === 'PRIMARY') {
+    con.type = 'PRIMARY KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+    if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+  } else if (t === 'UNIQUE') {
+    con.type = 'UNIQUE';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'FOREIGN') {
+    con.type = 'FOREIGN KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+      i++;
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
+      i++;
+      con.refTable = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+      i++;
+      if (tokens[i] === '(') {
+        i++;
+        con.refColumns = [];
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`\[\]]/g, ''));
+          i++;
+        }
+      }
+    }
+  } else if (t === 'CHECK') {
+    con.type = 'CHECK';
+    i++;
+    if (tokens[i] === '(') {
+      const start = i;
+      let depth = 0;
+      while (i < tokens.length) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') { depth--; if (depth === 0) break; }
+        i++;
+      }
+      con.expression = tokens.slice(start + 1, i).join(' ');
+    }
+  }
+  return con;
+}
+function parseCreateTable(stmt, dialect) {
+  const match = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)\s*\((.*)\)\s*[^)]*$/is);
+  if (!match) return null;
+  let tableName = match[1].replace(/["`\[\]]/g, '');
+  const rawBody = match[2];
+  const table = { name: tableName, columns: [], constraints: [], indexes: [] };
+  const parts = splitBody(rawBody);
+  for (const part of parts) {
+    const tokens = tokenize(part);
+    if (tokens.length < 2) continue;
+    const firstUpper = tokens[0].toUpperCase();
+    if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK') {
+      table.constraints.push(parseConstraint(tokens, dialect));
+      continue;
+    }
+    const col = parseColumn(tokens, dialect);
+    if (col) table.columns.push(col);
+  }
+  return table;
+}
+function parseSQL(sql, dialect) {
+  sql = stripComments(sql);
+  const statements = splitStatements(sql);
+  const schema = { tables: {}, indexes: [], enums: {}, errors: [] };
+  for (const stmt of statements) {
+    const upper = stmt.toUpperCase();
+    if (upper.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) {
+        schema.tables[table.name] = table;
+      } else {
+        schema.errors.push({ type: 'parse', stmt: stmt.substring(0, 120) + (stmt.length > 120 ? '...' : ''), msg: 'Could not parse CREATE TABLE statement' });
+      }
+    }
+  }
+  return schema;
+}
+
+/* ===== Diagram Generation ===== */
+function escapeMermaidId(id) {
+  if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(id)) return id;
+  return '`' + id.replace(/`/g, '') + '`';
+}
+function sanitizeMermaidType(type) {
+  return type.replace(/[^A-Za-z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '') || 'UNKNOWN';
+}
+function generateMermaidERDiagram(schema) {
+  const lines = ['erDiagram'];
+  const tables = Object.values(schema.tables);
+
+  for (const table of tables) {
+    lines.push(`    ${escapeMermaidId(table.name)} {`);
+    for (const col of table.columns) {
+      const type = sanitizeMermaidType(col.type);
+      let attr = `        ${type} ${escapeMermaidId(col.name)}`;
+      if (col.primaryKey) attr += ' PK';
+      lines.push(attr);
+    }
+    lines.push('    }');
+  }
+
+  for (const table of tables) {
+    const src = escapeMermaidId(table.name);
+    for (const col of table.columns) {
+      if (col.foreignKey && col.foreignKey.table) {
+        const ref = escapeMermaidId(col.foreignKey.table);
+        if (ref !== src) {
+          lines.push(`    ${src} }o--|| ${ref} : "FK"`);
+        }
+      }
+    }
+    for (const con of table.constraints) {
+      if (con.type === 'FOREIGN KEY' && con.refTable) {
+        const ref = escapeMermaidId(con.refTable);
+        if (ref !== src) {
+          lines.push(`    ${src} }o--|| ${ref} : "${con.name || 'FK'}"`);
+        }
+      }
+    }
+  }
+
+  return lines.join('\n');
+}
+
+/* ===== UI Logic ===== */
+const sqlInput = document.getElementById('sqlInput');
+const dialectSelect = document.getElementById('dialect');
+const generateBtn = document.getElementById('generateBtn');
+const sampleBtn = document.getElementById('sampleBtn');
+const clearBtn = document.getElementById('clearBtn');
+const results = document.getElementById('results');
+const emptyState = document.getElementById('emptyState');
+const summaryBar = document.getElementById('summaryBar');
+const diagramOutput = document.getElementById('diagramOutput');
+const mermaidSource = document.getElementById('mermaidSource');
+const errorBanner = document.getElementById('errorBanner');
+const openInApp = document.getElementById('openInApp');
+
+let lastMermaidSyntax = '';
+let lastSvg = '';
+
+function showError(msg) {
+  errorBanner.textContent = msg;
+  errorBanner.classList.add('show');
+  setTimeout(() => errorBanner.classList.remove('show'), 8000);
+}
+
+async function renderDiagram() {
+  const sql = sqlInput.value.trim();
+  const dialect = dialectSelect.value;
+  if (!sql) { showError('Please paste some SQL first.'); return; }
+
+  errorBanner.classList.remove('show');
+  generateBtn.textContent = 'Generating...';
+  generateBtn.disabled = true;
+
+  try {
+    const schema = parseSQL(sql, dialect);
+    const tableCount = Object.keys(schema.tables).length;
+    if (tableCount === 0) {
+      showError('No valid CREATE TABLE statements found. Please check your SQL syntax.');
+      generateBtn.textContent = 'Generate Diagram';
+      generateBtn.disabled = false;
+      return;
+    }
+
+    let fkCount = 0;
+    for (const t of Object.values(schema.tables)) {
+      for (const c of t.columns) if (c.foreignKey) fkCount++;
+      for (const c of t.constraints) if (c.type === 'FOREIGN KEY') fkCount++;
+    }
+
+    summaryBar.innerHTML = `
+      <div class="summary-pill"><span class="num">${tableCount}</span> tables</div>
+      <div class="summary-pill"><span class="num">${fkCount}</span> relationships</div>
+      <div class="summary-pill"><span class="num">${schema.errors.length}</span> parse issues</div>
+    `;
+
+    lastMermaidSyntax = generateMermaidERDiagram(schema);
+    mermaidSource.textContent = lastMermaidSyntax;
+
+    const theme = document.documentElement.dataset.theme === 'light' ? 'default' : 'dark';
+    mermaid.initialize({ startOnLoad: false, theme, securityLevel: 'loose' });
+
+    const id = 'mermaid-' + Date.now();
+    const { svg } = await mermaid.render(id, lastMermaidSyntax);
+    lastSvg = svg;
+    diagramOutput.innerHTML = svg;
+
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({ a: sql, b: '', dialect }))));
+    openInApp.href = `../app.html#diff=${payload}`;
+
+    results.classList.add('active');
+    emptyState.classList.add('hidden');
+  } catch (err) {
+    showError('Error generating diagram: ' + (err.message || 'Unknown error'));
+    console.error(err);
+  }
+
+  generateBtn.textContent = 'Generate Diagram';
+  generateBtn.disabled = false;
+}
+
+generateBtn.addEventListener('click', renderDiagram);
+
+sampleBtn.addEventListener('click', () => {
+  sqlInput.value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  role_id INTEGER REFERENCES roles(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE roles (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  permissions TEXT
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  total DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL REFERENCES orders(id),
+  product_name VARCHAR(255) NOT NULL,
+  quantity INTEGER NOT NULL,
+  price DECIMAL(10,2) NOT NULL
+);`;
+  dialectSelect.value = 'postgres';
+  renderDiagram();
+});
+
+clearBtn.addEventListener('click', () => {
+  sqlInput.value = '';
+  results.classList.remove('active');
+  emptyState.classList.remove('hidden');
+  errorBanner.classList.remove('show');
+  lastMermaidSyntax = '';
+  lastSvg = '';
+});
+
+/* Tabs */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* Download SVG */
+document.getElementById('downloadSvg').addEventListener('click', () => {
+  if (!lastSvg) return;
+  const blob = new Blob([lastSvg], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'schemalens-diagram.svg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+/* Copy Mermaid Source */
+document.getElementById('copyMermaid').addEventListener('click', async () => {
+  if (!lastMermaidSyntax) return;
+  try {
+    await navigator.clipboard.writeText(lastMermaidSyntax);
+    const btn = document.getElementById('copyMermaid');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  } catch (e) {}
+});
+
+/* Copy Source in source tab */
+document.getElementById('copySourceBtn').addEventListener('click', async () => {
+  if (!lastMermaidSyntax) return;
+  try {
+    await navigator.clipboard.writeText(lastMermaidSyntax);
+    const btn = document.getElementById('copySourceBtn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  } catch (e) {}
+});
+
+/* Keyboard shortcut */
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    renderDiagram();
+  }
+});
+
+/* Theme change re-render */
+const origToggleTheme = window.toggleTheme;
+window.toggleTheme = function() {
+  origToggleTheme();
+  if (lastMermaidSyntax) {
+    setTimeout(renderDiagram, 50);
+  }
+};
+
+/* Init Mermaid */
+mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+</script>
+
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

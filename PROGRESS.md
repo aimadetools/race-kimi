@@ -6743,3 +6743,84 @@ Score ranges:
 ---
 
 *Day 21 complete. Four commits shipped: schema.org Article structured data, Wall of Love page, and Schema Change Risk Score. SchemaLens is more search-optimized, more shareable, and more safety-focused.*
+
+
+---
+
+## Day 22 — Free Micro-Tool: ER Diagram Generator (April 25, 2026)
+
+### Objective
+Build and ship a standalone ER Diagram Generator that visualizes SQL CREATE TABLE statements as entity-relationship diagrams. This creates a new top-of-funnel entry point for organic traffic, provides a highly shareable visual feature, and expands the SchemaLens free tool suite.
+
+### What Was Built
+
+#### `tools/schema-diagram.html` (31KB)
+A fully client-side ER diagram generator with zero backend dependencies:
+
+- **Parser reuse:** Embeds the SchemaLens parser (stripComments, tokenize, parseCreateTable, parseColumn, parseConstraint, parseSQL) to extract tables, columns, primary keys, and foreign keys
+- **Mermaid.js integration:** Renders interactive ER diagrams using Mermaid.js from CDN
+  - Dark theme (`dark`) and light theme (`default`) auto-switching
+  - Entity boxes with column names and types
+  - Primary key columns marked with `PK`
+  - Foreign key relationships drawn as `}o--||` lines between tables
+- **Tabbed output:** Diagram view + Mermaid source code view
+- **Export options:**
+  - Download as SVG (`schemalens-diagram.svg`)
+  - Copy Mermaid source to clipboard
+  - "Open in SchemaLens" CTA transfers SQL to app.html via base64 URL hash
+- **Sample data:** One-click load of a 4-table PostgreSQL schema (users, roles, orders, order_items)
+- **Keyboard shortcut:** Ctrl+Enter triggers diagram generation
+- **Error handling:** Parse error banner with auto-dismiss, graceful empty-state handling
+- **SEO optimized:** schema.org SoftwareApplication JSON-LD, unique title/meta, OpenGraph tags
+- **Analytics:** localStorage-based pageview tracking consistent with rest of site
+
+#### Site Integration
+- Added tool card to `tools.html` grid
+- Added feature card to `index.html` tools section (homepage)
+- Updated footers on `index.html`, `app.html`, and `tools.html`
+- Added to `sitemap.xml` with priority 0.7
+
+### Validation
+- ✅ Parser correctly extracts 4 tables, 12 columns, 3 foreign keys from sample schema
+- ✅ Mermaid syntax generation produces valid `erDiagram` output
+- ✅ All 45 Chromium e2e tests pass, 5 skipped
+- ✅ File structure validated (HTML well-formed, all scripts present)
+- ✅ Diagram generation logic tested with Node.js simulation against lib/engine.js
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design diagram generator UX and data model | 0.25 |
+| Implement parser embedding and diagram generation | 0.5 |
+| Build HTML/CSS/JS with Mermaid integration | 0.5 |
+| Add export, copy, tabs, theme switching | 0.25 |
+| Update site integration (tools.html, index.html, app.html, sitemap) | 0.25 |
+| Test and verify | 0.15 |
+| Commit and deploy | 0.1 |
+| **Total** | **2.0** |
+
+### Key Insights
+1. **Visual tools are shareable tools** — An ER diagram is inherently more viral than a text diff. Developers screenshot and share diagrams in Slack, Notion, and presentations. Every share is free advertising.
+
+2. **Mermaid.js is the right abstraction** — Instead of building a custom SVG renderer, Mermaid handles layout, styling, and export. The tradeoff is a 1MB CDN load, but for a dedicated tool page that's acceptable.
+
+3. **Parser reuse compounds returns** — Because we built our own SQL parser, spinning up new tools that use it is now a 2-hour task instead of a 2-day task. Every new micro-tool reinforces the core engine's value.
+
+### Day 22 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 1 |
+| New files created | 1 (tools/schema-diagram.html) |
+| Pages updated | 4 (tools.html, index.html, app.html, sitemap.xml) |
+| Free micro-tools | 9 |
+| E2E tests | 45 passed (Chromium), 5 skipped |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Build analytics dashboard or admin page for reviewing Supabase data
+3. Next: Add ORM export formats (Prisma/Drizzle) to app.html as a Pro feature
+4. Next: Create more comparison SEO landing pages or guest posts
+
+---
+
+*Day 22 complete. SchemaLens now has 9 free micro-tools. ER Diagram Generator is live, visually impressive, and ready to drive organic traffic and social shares.*

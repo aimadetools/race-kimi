@@ -838,6 +838,7 @@ CREATE TABLE users (
         <button class="results-tab" data-tab="migration">Migration SQL</button>
         <button class="results-tab" data-tab="markdown">Export Markdown</button>
         <button class="results-tab" data-tab="pdf">Export PDF</button>
+        <button class="results-tab" data-tab="orm">ORM Export</button>
       </div>
 
       <div class="results-panel active" id="panel-visual">
@@ -859,6 +860,10 @@ CREATE TABLE users (
           <button class="btn btn-primary" onclick="printPDF()">Save as PDF</button>
         </div>
         <div id="pdfContainer"></div>
+      </div>
+
+      <div class="results-panel" id="panel-orm">
+        <div id="ormContainer"></div>
       </div>
     </div>
 
@@ -1110,6 +1115,7 @@ CREATE TABLE users (
           <a href="tools/json-to-sql.html">JSON to SQL</a>
       <a href="tools/schema-health-check.html">Health Check</a>
           <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/schema-diagram.html">ER Diagram</a>
           <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
         </div>
         <div class="footer-col">
@@ -3570,6 +3576,419 @@ function printPDF() {
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_pdf');
 }
 
+// -----------------------------
+// ORM Export: Prisma + Drizzle
+// -----------------------------
+function mapToPrismaType(sqlType, dialect) {
+  const t = (sqlType || '').toLowerCase().trim();
+  const base = t.replace(/\([^)]+\)/g, '').trim();
+  if (base === 'serial' || base === 'bigserial' || base.includes('int') || base === 'identity' || base === 'integer') {
+    if (base === 'bigserial' || base === 'bigint') return 'BigInt';
+    return 'Int';
+  }
+  if (base.includes('bool') || base === 'bit') return 'Boolean';
+  if (base === 'float' || base === 'real' || base.includes('double')) return 'Float';
+  if (base.includes('decimal') || base.includes('numeric') || base === 'number' || base === 'money') return 'Decimal';
+  if (base.includes('json')) return 'Json';
+  if (base === 'bytea' || base === 'blob' || base === 'varbinary' || base === 'binary') return 'Bytes';
+  if (base === 'uuid' || base === 'uniqueidentifier') return 'String';
+  if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime' || base === 'date') return 'DateTime';
+  if (base === 'time' || base === 'timetz') return 'DateTime';
+  if (base.includes('varchar') || base.includes('char') || base === 'text' || base === 'clob' || base === 'nvarchar' || base === 'nchar' || base === 'ntext' || base === 'varchar2' || base === 'nvarchar2') return 'String';
+  return 'String';
+}
+
+function prismaDbAttr(sqlType, dialect) {
+  const t = (sqlType || '').toLowerCase().trim();
+  const len = t.match(/\((\d+)(?:,(\d+))?\)/);
+  if (dialect === 'postgres') {
+    if (t.includes('varchar')) return len ? ` @db.VarChar(${len[1]})` : ' @db.VarChar';
+    if (t.includes('char') && !t.includes('var')) return len ? ` @db.Char(${len[1]})` : ' @db.Char';
+    if (t === 'text') return ' @db.Text';
+    if (t === 'smallint') return ' @db.SmallInt';
+    if (t === 'bigint') return ' @db.BigInt';
+    if (t === 'real') return ' @db.Real';
+    if (t.includes('double')) return ' @db.DoublePrecision';
+    if (t.includes('decimal') || t.includes('numeric')) return len ? ` @db.Decimal(${len[1]},${len[2]||0})` : ' @db.Decimal';
+    if (t === 'bytea') return ' @db.ByteA';
+    if (t.includes('timestamp')) return ' @db.Timestamp';
+    if (t === 'inet') return ' @db.Inet';
+    if (t === 'uuid') return ' @db.Uuid';
+    if (t === 'jsonb') return ' @db.JsonB';
+    if (t === 'json') return ' @db.Json';
+    if (t === 'citext') return ' @db.Citext';
+  }
+  if (dialect === 'mysql') {
+    if (t.includes('varchar')) return len ? ` @db.VarChar(${len[1]})` : ' @db.VarChar';
+    if (t.includes('char') && !t.includes('var')) return len ? ` @db.Char(${len[1]})` : ' @db.Char';
+    if (t === 'text') return ' @db.Text';
+    if (t === 'longtext') return ' @db.LongText';
+    if (t === 'tinyint') return ' @db.TinyInt';
+    if (t === 'smallint') return ' @db.SmallInt';
+    if (t === 'bigint') return ' @db.BigInt';
+    if (t === 'mediumint') return ' @db.MediumInt';
+    if (t === 'float') return ' @db.Float';
+    if (t.includes('double')) return ' @db.Double';
+    if (t.includes('decimal') || t.includes('numeric')) return len ? ` @db.Decimal(${len[1]},${len[2]||0})` : ' @db.Decimal';
+    if (t === 'datetime') return ' @db.DateTime';
+    if (t.includes('timestamp')) return ' @db.Timestamp';
+    if (t === 'date') return ' @db.Date';
+    if (t === 'time') return ' @db.Time';
+    if (t === 'json') return ' @db.Json';
+    if (t === 'blob') return ' @db.Blob';
+    if (t === 'longblob') return ' @db.LongBlob';
+    if (t === 'varbinary') return len ? ` @db.VarBinary(${len[1]})` : ' @db.VarBinary';
+    if (t === 'binary') return len ? ` @db.Binary(${len[1]})` : ' @db.Binary';
+  }
+  if (dialect === 'mssql') {
+    if (t.includes('nvarchar')) return len ? ` @db.NVarChar(${len[1]})` : ' @db.NVarChar';
+    if (t.includes('varchar')) return len ? ` @db.VarChar(${len[1]})` : ' @db.VarChar';
+    if (t.includes('nchar')) return len ? ` @db.NChar(${len[1]})` : ' @db.NChar';
+    if (t.includes('char') && !t.includes('var') && !t.includes('n')) return len ? ` @db.Char(${len[1]})` : ' @db.Char';
+    if (t === 'ntext') return ' @db.NText';
+    if (t === 'text') return ' @db.Text';
+    if (t === 'tinyint') return ' @db.TinyInt';
+    if (t === 'smallint') return ' @db.SmallInt';
+    if (t === 'bigint') return ' @db.BigInt';
+    if (t === 'float') return ' @db.Float';
+    if (t === 'real') return ' @db.Real';
+    if (t.includes('decimal') || t.includes('numeric')) return len ? ` @db.Decimal(${len[1]},${len[2]||0})` : ' @db.Decimal';
+    if (t === 'datetime' || t === 'datetime2') return ' @db.DateTime';
+    if (t === 'smalldatetime') return ' @db.SmallDateTime';
+    if (t === 'date') return ' @db.Date';
+    if (t === 'time') return ' @db.Time';
+    if (t === 'bit') return ' @db.Bit';
+    if (t === 'uniqueidentifier') return ' @db.UniqueIdentifier';
+    if (t === 'varbinary') return len ? ` @db.VarBinary(${len[1]})` : ' @db.VarBinary';
+    if (t === 'binary') return len ? ` @db.Binary(${len[1]})` : ' @db.Binary';
+    if (t === 'xml') return ' @db.Xml';
+  }
+  if (dialect === 'sqlite') {
+    if (t === 'text') return ' @db.Text';
+  }
+  if (dialect === 'oracle') {
+    if (t.includes('varchar2')) return len ? ` @db.VarChar2(${len[1]})` : ' @db.VarChar2';
+    if (t.includes('nvarchar2')) return len ? ` @db.NVarChar2(${len[1]})` : ' @db.NVarChar2';
+    if (t.includes('varchar')) return len ? ` @db.VarChar(${len[1]})` : ' @db.VarChar';
+    if (t.includes('char') && !t.includes('var')) return len ? ` @db.Char(${len[1]})` : ' @db.Char';
+    if (t === 'clob') return ' @db.Clob';
+    if (t === 'nclob') return ' @db.NClob';
+    if (t === 'blob') return ' @db.Blob';
+    if (t === 'number') return len ? ` @db.Number(${len[1]},${len[2]||0})` : ' @db.Number';
+    if (t.includes('timestamp')) return ' @db.Timestamp';
+    if (t === 'date') return ' @db.Date';
+    if (t === 'xmltype') return ' @db.XmlType';
+    if (t === 'raw') return len ? ` @db.Raw(${len[1]})` : ' @db.Raw';
+  }
+  return '';
+}
+
+function generatePrismaSchema(schema, dialect) {
+  if (!schema || !schema.tables) return '';
+  const provider = dialect === 'postgres' ? 'postgresql' : dialect === 'mysql' ? 'mysql' : dialect === 'sqlite' ? 'sqlite' : dialect === 'mssql' ? 'sqlserver' : dialect === 'oracle' ? 'oracle' : 'postgresql';
+  let out = `generator client {\n  provider = "prisma-client-js"\n}\n\ndatasource db {\n  provider = "${provider}"\n  url      = env("DATABASE_URL")\n}\n\n`;
+
+  const fkMap = [];
+  for (const table of schema.tables) {
+    const modelName = toPascalCase(table.name);
+    out += `model ${modelName} {\n`;
+    const pkCols = new Set();
+    for (const con of table.constraints || []) {
+      if (con.type === 'PRIMARY KEY' && con.columns) {
+        for (const c of con.columns) pkCols.add(c);
+      }
+    }
+    for (const col of table.columns) {
+      const prismaType = mapToPrismaType(col.type, dialect);
+      const dbAttr = prismaDbAttr(col.type, dialect);
+      let attrs = '';
+      if (pkCols.has(col.name)) {
+        attrs += ' @id';
+        if (col.autoIncrement || col.type.toLowerCase().includes('serial') || col.type.toLowerCase().includes('identity')) {
+          attrs += ' @default(autoincrement())';
+        }
+      }
+      if (col.unique && !pkCols.has(col.name)) attrs += ' @unique';
+      if (col.defaultValue && !attrs.includes('@default')) {
+        const dv = col.defaultValue;
+        if (/^\d+(\.\d+)?$/.test(dv)) attrs += ` @default(${dv})`;
+        else if (dv.toLowerCase() === 'true' || dv.toLowerCase() === 'false') attrs += ` @default(${dv.toLowerCase()})`;
+        else if (dv.toLowerCase() === 'now()' || dv.toLowerCase() === 'current_timestamp') attrs += ' @default(now())';
+        else attrs += ` @default(${dv})`;
+      }
+      if (col.foreignKey && col.foreignKey.refTable && col.foreignKey.refColumns) {
+        fkMap.push({ model: modelName, col: col.name, refTable: col.foreignKey.refTable, refCol: col.foreignKey.refColumns[0] });
+      }
+      const nullAttr = col.nullable ? '?' : '';
+      out += `  ${col.name} ${prismaType}${nullAttr}${attrs}${dbAttr}\n`;
+    }
+    for (const con of table.constraints || []) {
+      if (con.type === 'FOREIGN KEY' && con.columns && con.refTable && con.refColumns) {
+        const relName = toCamelCase(con.refTable);
+        const fkField = con.columns[0];
+        const refField = con.refColumns[0];
+        const refModel = toPascalCase(con.refTable);
+        if (!table.columns.find(c => c.name === relName)) {
+          out += `  ${relName} ${refModel} @relation(fields: [${fkField}], references: [${refField}])\n`;
+        }
+      }
+      if (con.type === 'UNIQUE' && con.columns && con.columns.length > 1) {
+        out += `  @@unique([${con.columns.map(c => `'${c}'`).join(', ')}])\n`;
+      }
+      if (con.type === 'INDEX' && con.columns) {
+        out += `  @@index([${con.columns.map(c => `'${c}'`).join(', ')}])\n`;
+      }
+    }
+    out += `}\n\n`;
+  }
+  return out.trim();
+}
+
+function mapToDrizzleType(sqlType, dialect, colName) {
+  const t = (sqlType || '').toLowerCase().trim();
+  const base = t.replace(/\([^)]+\)/g, '').trim();
+  const len = t.match(/\((\d+)(?:,(\d+))?\)/);
+  const n = `'${colName}'`;
+  if (dialect === 'postgres') {
+    if (base === 'serial') return `serial(${n}).primaryKey()`;
+    if (base === 'bigserial') return `bigserial(${n}, { mode: 'bigint' }).primaryKey()`;
+    if (base.includes('int') && !base.includes('big') && !base.includes('small')) return `integer(${n})`;
+    if (base === 'bigint') return `bigint(${n}, { mode: 'bigint' })`;
+    if (base === 'smallint') return `smallint(${n})`;
+    if (base.includes('bool')) return `boolean(${n})`;
+    if (base === 'float' || base === 'real') return `real(${n})`;
+    if (base.includes('double')) return `doublePrecision(${n})`;
+    if (base.includes('decimal') || base.includes('numeric')) return `decimal(${n}, { precision: ${len?len[1]:10}, scale: ${len&&len[2]?len[2]:0} })`;
+    if (base === 'jsonb') return `jsonb(${n})`;
+    if (base === 'json') return `json(${n})`;
+    if (base === 'bytea') return `bytea(${n})`;
+    if (base === 'uuid') return `uuid(${n})`;
+    if (base === 'text') return `text(${n})`;
+    if (base.includes('varchar')) return `varchar(${n}, { length: ${len?len[1]:255} })`;
+    if (base.includes('char') && !base.includes('var')) return `char(${n}, { length: ${len?len[1]:1} })`;
+    if (base.includes('timestamp')) return `timestamp(${n}, { withTimezone: true })`;
+    if (base === 'date') return `date(${n})`;
+    if (base === 'time') return `time(${n})`;
+    if (base === 'inet') return `inet(${n})`;
+    if (base === 'interval') return `interval(${n})`;
+    return `text(${n})`;
+  }
+  if (dialect === 'mysql') {
+    if (base === 'serial' || (base.includes('int') && base.includes('auto'))) return `int(${n}).autoincrement().primaryKey()`;
+    if (base === 'bigint') return `bigint(${n}, { mode: 'bigint' })`;
+    if (base === 'smallint') return `smallint(${n})`;
+    if (base === 'mediumint') return `mediumint(${n})`;
+    if (base === 'tinyint') return `tinyint(${n})`;
+    if (base.includes('int')) return `int(${n})`;
+    if (base.includes('bool')) return `boolean(${n})`;
+    if (base === 'float') return `float(${n})`;
+    if (base.includes('double')) return `double(${n})`;
+    if (base.includes('decimal') || base.includes('numeric')) return `decimal(${n}, { precision: ${len?len[1]:10}, scale: ${len&&len[2]?len[2]:0} })`;
+    if (base === 'json') return `json(${n})`;
+    if (base === 'text') return `text(${n})`;
+    if (base === 'longtext') return `longtext(${n})`;
+    if (base === 'mediumtext') return `mediumtext(${n})`;
+    if (base === 'tinytext') return `tinytext(${n})`;
+    if (base.includes('varchar')) return `varchar(${n}, { length: ${len?len[1]:255} })`;
+    if (base.includes('char') && !base.includes('var')) return `char(${n}, { length: ${len?len[1]:1} })`;
+    if (base === 'binary') return `binary(${n}, { length: ${len?len[1]:1} })`;
+    if (base === 'varbinary') return `varbinary(${n}, { length: ${len?len[1]:255} })`;
+    if (base.includes('timestamp')) return `timestamp(${n})`;
+    if (base === 'datetime') return `datetime(${n}, { mode: 'date' })`;
+    if (base === 'date') return `date(${n})`;
+    if (base === 'time') return `time(${n})`;
+    if (base === 'year') return `year(${n})`;
+    if (base === 'blob') return `blob(${n})`;
+    if (base === 'longblob') return `longblob(${n})`;
+    if (base === 'mediumblob') return `mediumblob(${n})`;
+    if (base === 'tinyblob') return `tinyblob(${n})`;
+    return `text(${n})`;
+  }
+  if (dialect === 'sqlite') {
+    if (base === 'integer' && t.includes('primary')) return `integer(${n}, { mode: 'number' }).primaryKey({ autoIncrement: true })`;
+    if (base === 'integer') return `integer(${n})`;
+    if (base === 'real' || base === 'float' || base === 'double') return `real(${n})`;
+    if (base === 'blob') return `blob(${n})`;
+    if (base === 'numeric' || base.includes('decimal')) return `numeric(${n})`;
+    return `text(${n})`;
+  }
+  // mssql + oracle fallback to generic
+  if (base === 'serial' || base.includes('identity') || (base.includes('int') && t.includes('auto'))) return `int(${n}).autoincrement().primaryKey()`;
+  if (base.includes('int') || base === 'number') return `int(${n})`;
+  if (base.includes('bool') || base === 'bit') return `boolean(${n})`;
+  if (base === 'float' || base === 'real' || base.includes('double')) return `real(${n})`;
+  if (base.includes('decimal') || base.includes('numeric')) return `decimal(${n}, { precision: ${len?len[1]:10}, scale: ${len&&len[2]?len[2]:0} })`;
+  if (base.includes('json')) return `json(${n})`;
+  if (base === 'blob' || base === 'bytea' || base === 'varbinary' || base === 'binary') return `blob(${n})`;
+  if (base === 'uuid' || base === 'uniqueidentifier') return `uuid(${n})`;
+  if (base === 'text' || base === 'clob' || base === 'ntext') return `text(${n})`;
+  if (base.includes('varchar') || base.includes('char') || base === 'nvarchar' || base === 'nchar' || base === 'varchar2' || base === 'nvarchar2') return `varchar(${n}, { length: ${len?len[1]:255} })`;
+  if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime') return `timestamp(${n}, { withTimezone: true })`;
+  if (base === 'date') return `date(${n})`;
+  if (base === 'time') return `time(${n})`;
+  return `text(${n})`;
+}
+
+function generateDrizzleSchema(schema, dialect) {
+  if (!schema || !schema.tables) return '';
+  const importName = dialect === 'postgres' ? 'pgTable' : dialect === 'mysql' ? 'mysqlTable' : dialect === 'sqlite' ? 'sqliteTable' : 'pgTable';
+  let out = `import { ${importName}`;
+  const usedTypes = new Set();
+  for (const table of schema.tables) {
+    for (const col of table.columns) {
+      const base = (col.type || '').toLowerCase().replace(/\([^)]+\)/g, '').trim();
+      // crude type collection
+      if (base === 'serial') usedTypes.add('serial');
+      else if (base === 'bigserial') usedTypes.add('bigserial');
+      else if (base.includes('int') && !base.includes('big') && !base.includes('small')) usedTypes.add('integer');
+      else if (base === 'bigint') usedTypes.add('bigint');
+      else if (base === 'smallint') usedTypes.add('smallint');
+      else if (base === 'tinyint') usedTypes.add('tinyint');
+      else if (base === 'mediumint') usedTypes.add('mediumint');
+      else if (base.includes('bool') || base === 'bit') usedTypes.add('boolean');
+      else if (base === 'float' || base === 'real') usedTypes.add('real');
+      else if (base.includes('double')) usedTypes.add('doublePrecision');
+      else if (base.includes('decimal') || base.includes('numeric')) usedTypes.add('decimal');
+      else if (base === 'jsonb') usedTypes.add('jsonb');
+      else if (base === 'json') usedTypes.add('json');
+      else if (base === 'bytea') usedTypes.add('bytea');
+      else if (base === 'blob' || base === 'varbinary' || base === 'binary') usedTypes.add('blob');
+      else if (base === 'uuid' || base === 'uniqueidentifier') usedTypes.add('uuid');
+      else if (base === 'text' || base === 'clob' || base === 'ntext' || base === 'longtext' || base === 'mediumtext' || base === 'tinytext') usedTypes.add('text');
+      else if (base.includes('varchar') || base.includes('char') || base === 'nvarchar' || base === 'nchar' || base === 'varchar2' || base === 'nvarchar2') usedTypes.add('varchar');
+      else if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime') usedTypes.add('timestamp');
+      else if (base === 'date') usedTypes.add('date');
+      else if (base === 'time') usedTypes.add('time');
+      else if (base === 'year') usedTypes.add('year');
+      else if (base === 'inet') usedTypes.add('inet');
+      else if (base === 'interval') usedTypes.add('interval');
+      else usedTypes.add('text');
+    }
+  }
+  const typeList = Array.from(usedTypes).join(', ');
+  out += `, ${typeList} } from "drizzle-orm/${dialect === 'mysql' ? 'mysql-core' : dialect === 'sqlite' ? 'sqlite-core' : 'pg-core'}";\n\n`;
+
+  for (const table of schema.tables) {
+    const varName = toCamelCase(table.name);
+    out += `export const ${varName} = ${importName}('${table.name}', {\n`;
+    const pkCols = new Set();
+    for (const con of table.constraints || []) {
+      if (con.type === 'PRIMARY KEY' && con.columns) {
+        for (const c of con.columns) pkCols.add(c);
+      }
+    }
+    for (const col of table.columns) {
+      let expr = mapToDrizzleType(col.type, dialect, col.name);
+      if (pkCols.has(col.name) && !expr.includes('primaryKey') && !expr.includes('autoincrement')) {
+        expr += '.primaryKey()';
+      }
+      if (!col.nullable) expr += '.notNull()';
+      if (col.unique && !pkCols.has(col.name)) expr += '.unique()';
+      if (col.defaultValue && !expr.includes('autoincrement') && !expr.includes('primaryKey')) {
+        const dv = col.defaultValue;
+        if (/^\d+(\.\d+)?$/.test(dv)) expr += `.default(${dv})`;
+        else if (dv.toLowerCase() === 'true' || dv.toLowerCase() === 'false') expr += `.default(${dv.toLowerCase()})`;
+        else if (dv.toLowerCase() === 'now()' || dv.toLowerCase() === 'current_timestamp') expr += `.defaultNow()`;
+        else expr += `.default('${dv.replace(/'/g, "\\'")}')`;
+      }
+      if (col.foreignKey && col.foreignKey.refTable && col.foreignKey.refColumns) {
+        const refVar = toCamelCase(col.foreignKey.refTable);
+        expr += `.references(() => ${refVar}.${col.foreignKey.refColumns[0]})`;
+      }
+      out += `  ${toCamelCase(col.name)}: ${expr},\n`;
+    }
+    out += `});\n\n`;
+  }
+  return out.trim();
+}
+
+function toPascalCase(str) {
+  return str.replace(/(^|_)([a-z])/g, (_, __, letter) => letter.toUpperCase());
+}
+
+function toCamelCase(str) {
+  const pc = toPascalCase(str);
+  return pc.charAt(0).toLowerCase() + pc.slice(1);
+}
+
+let currentOrmFormat = 'prisma';
+
+function renderORM() {
+  const container = document.getElementById('ormContainer');
+  if (!lastDiff || !lastDiff.schemaB) {
+    container.innerHTML = '<div class="empty-state"><h3>No schema to export</h3><p>Run a comparison first.</p></div>';
+    return;
+  }
+  const schema = lastDiff.schemaB;
+  const totalTables = schema.tables ? schema.tables.length : 0;
+  const hasLicense = checkLicense();
+  const isLimited = totalTables > 10 && !hasLicense;
+  const dialect = document.getElementById('dialect').value;
+
+  if (isLimited) {
+    container.innerHTML = `
+      <div class="upgrade-banner">
+        <h3>📈 Large schema detected (${totalTables} tables)</h3>
+        <p>ORM export is limited to schemas with 10 tables or fewer on the Free plan.<br>Upgrade to Pro for unlimited tables and full ORM schema generation.</p>
+        <button class="btn btn-primary" onclick="openLicenseModal()">Unlock with License Key</button>
+        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div style="margin-bottom:16px;display:flex;gap:8px;align-items:center;">
+      <button class="btn btn-secondary ${currentOrmFormat==='prisma'?'active':''}" onclick="switchOrmFormat('prisma')" id="btnPrisma">Prisma</button>
+      <button class="btn btn-secondary ${currentOrmFormat==='drizzle'?'active':''}" onclick="switchOrmFormat('drizzle')" id="btnDrizzle">Drizzle</button>
+      <button class="copy-btn" onclick="copyORM(this)" style="position:static;margin-left:auto;">Copy</button>
+      <button class="copy-btn" onclick="downloadORM()" style="position:static;">Download</button>
+    </div>
+    <div class="sql-output" id="ormOutput" style="white-space:pre-wrap;"></div>
+  `;
+  container.innerHTML = html;
+  updateORMOutput(schema, dialect);
+}
+
+function switchOrmFormat(fmt) {
+  currentOrmFormat = fmt;
+  document.getElementById('btnPrisma').classList.toggle('active', fmt === 'prisma');
+  document.getElementById('btnDrizzle').classList.toggle('active', fmt === 'drizzle');
+  if (lastDiff && lastDiff.schemaB) {
+    updateORMOutput(lastDiff.schemaB, document.getElementById('dialect').value);
+  }
+}
+
+function updateORMOutput(schema, dialect) {
+  const out = document.getElementById('ormOutput');
+  if (!out) return;
+  let code = '';
+  if (currentOrmFormat === 'prisma') {
+    code = generatePrismaSchema(schema, dialect);
+  } else {
+    code = generateDrizzleSchema(schema, dialect);
+  }
+  out.textContent = code;
+}
+
+function copyORM(btn) {
+  const out = document.getElementById('ormOutput');
+  if (!out) return;
+  navigator.clipboard.writeText(out.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+function downloadORM() {
+  const out = document.getElementById('ormOutput');
+  if (!out) return;
+  const ext = currentOrmFormat === 'prisma' ? '.prisma' : '.ts';
+  const name = currentOrmFormat === 'prisma' ? 'schema.prisma' : 'schema.ts';
+  downloadFile(out.textContent, name, 'text/plain');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_orm', { format: currentOrmFormat });
+}
+
 let lastMigrationSQL = '';
 let lastDiff = null;
 const LICENSE_SALT = 'SchemaLensPro2026';
@@ -3628,14 +4047,14 @@ function applyLicense() {
     checkLicense();
     closeLicenseModal();
     // Re-render migration if results are showing
-    if (lastDiff) renderMigration(lastMigrationSQL, lastDiff);
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastDiff); renderORM(); }
     return;
   }
   if (validateLicenseKey(key)) {
     localStorage.setItem('schemalens_license', key);
     checkLicense();
     closeLicenseModal();
-    if (lastDiff) renderMigration(lastMigrationSQL, lastDiff);
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastDiff); renderORM(); }
     if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_activate');
   } else {
     input.style.borderColor = 'var(--danger)';
@@ -3997,6 +4416,8 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   }
 
   diff = diffSchemas(schemaA, schemaB);
+  diff.schemaA = schemaA;
+  diff.schemaB = schemaB;
   const migrationSQL = generateMigration(diff, dialect);
   lastMigrationSQL = migrationSQL;
   lastDiff = diff;
@@ -4018,6 +4439,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderMigration(migrationSQL, diff);
   renderMarkdown();
   renderPDF();
+  renderORM();
 
   document.getElementById('results').classList.add('active');
   document.getElementById('welcomeHint').classList.add('hidden');
