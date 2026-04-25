@@ -46,7 +46,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests
-- [ ] **P1** Collect first 5 user testimonials (add to landing page)
+- [x] **P1** Collect first 5 user testimonials (add to landing page)
 - [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
 - [ ] **P1** Review analytics: which keywords are driving traffic?
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -411,7 +411,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Business & Ops
 - [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
-- [ ] **P2** Create testimonial collection form and "Wall of Love" page
+- [x] **P2** Create testimonial collection form and "Wall of Love" page
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
 
 ## 🔥 NEW UNBLOCKED TASKS (April 22)

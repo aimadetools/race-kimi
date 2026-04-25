@@ -6535,3 +6535,101 @@ Each Article schema includes:
 ---
 
 *Day 21 continued. Thirty blog posts. Ten blog posts now have schema.org Article structured data. Open Startup page live. Product is transparent, content-rich, and search-optimized.*
+
+---
+
+## Day 21 Continued — Wall of Love & Testimonial Collection (April 25, 2026)
+
+### Objective
+Build and ship a testimonial collection system and "Wall of Love" page. This was the highest-priority unblocked buildable P2 task and prepares SchemaLens for social proof once users start arriving.
+
+### What Was Built
+
+#### `api/testimonial.js` — Vercel Serverless Function
+- **POST /api/testimonial** — Accepts testimonial submissions:
+  - Validates name (required, ≤100 chars) and testimonial text (required, ≤2000 chars)
+  - Validates optional email format
+  - Rating normalization (1-5, defaults to 5)
+  - Writes to Supabase `testimonials` table with `approved=false` by default
+  - Returns friendly success message: "Thank you! Your testimonial will be reviewed shortly."
+  - CORS-enabled with silent Supabase failure handling
+- **GET /api/testimonial** — Returns all approved testimonials, newest first (limit 50)
+
+#### `testimonials.html` — Wall of Love Page
+- **Hero section** with "What developers say" headline
+- **Submission form** with:
+  - Name, role, company fields
+  - Interactive 5-star rating selector
+  - Testimonial textarea (2000 char limit)
+  - Optional email field
+  - Success/error banners with loading state
+- **Testimonials grid** fetched from `/api/testimonial` on page load:
+  - Cards with star rating, quote, author avatar (initials), name, role, and company
+  - Responsive CSS grid (`auto-fill, minmax(320px, 1fr)`)
+  - Empty state: "No testimonials yet. Be the first to share your experience!"
+- **Schema.org WebPage** JSON-LD structured data for SEO
+- **Dark/light theme compatible** using CSS variables
+
+#### Supabase Schema
+Added `testimonials` table to `supabase-schema.sql`:
+- `id` (UUID PK), `name`, `role`, `company`, `testimonial`, `rating` (1-5 CHECK), `approved` (default false), `created_at`
+- RLS policies: anonymous INSERT allowed, anonymous SELECT only on `approved=true`
+- Service role can SELECT all for moderation
+- Performance index on `(approved, created_at DESC)`
+
+#### Site-Wide Integration
+- Added "Wall of Love" link to Product footer column on 40+ pages (root pages, blog posts, tools)
+- Added `testimonials.html` to `sitemap.xml` with priority 0.7
+
+### Validation
+- ✅ All 90 e2e tests pass (Chromium + Firefox), 10 skipped
+- ✅ API syntax checks pass
+- ✅ testimonials.html renders correctly in dark and light themes
+- ✅ Form submission flow tested manually (success banner, reset, loading state)
+- ✅ Star rating interaction works correctly
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design testimonial data model and API | 0.15 |
+| Build /api/testimonial.js | 0.2 |
+| Build testimonials.html (form, grid, styling) | 0.4 |
+| Add testimonials table to supabase-schema.sql | 0.1 |
+| Batch-update footers across 40+ pages | 0.2 |
+| Update sitemap.xml | 0.05 |
+| Run full test suite | 0.15 |
+| Commit, push, deploy | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.45** |
+
+### Key Insights
+1. **Approval gates prevent spam** — Setting `approved=false` by default means a public form with no CAPTCHA is still safe. The human can approve genuine testimonials via the Supabase dashboard.
+
+2. **Empty states are conversion opportunities** — "Be the first to share your experience" turns an empty page from a disappointment into an invitation. The submission form is prominently displayed regardless of testimonial count.
+
+3. **Star ratings are visual trust signals** — Even a single 5-star testimonial with a name and role builds more credibility than a paragraph of marketing copy. Social proof is the highest-leverage conversion asset.
+
+### Day 21 Final Summary (Updated)
+
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| New files created | 3 (api/testimonial.js, testimonials.html, supabase-schema.sql additions) |
+| Pages updated | 44+ (testimonials.html + 40+ footer updates + sitemap.xml) |
+| Blog posts published | 30 |
+| Blog posts with schema.org Article | 10 |
+| Free micro-tools | 8 |
+| SEO landing pages | 14 (4 dialect + tools + 3 comparison + team + changelog + affiliate + open + testimonials) |
+| E2E tests | 90 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Add weekly analytics summary email or simple analytics dashboard (P2)
+3. Next: Set up Google Search Console verification meta tag when human provides code
+
+---
+
+*Day 21 complete. Thirty blog posts. Wall of Love page live. Testimonial collection system ready. Open Startup page live. SchemaLens is transparent, content-rich, search-optimized, and prepared for social proof.*
