@@ -433,6 +433,13 @@ test('create table generator blog post loads without errors', async ({ page }) =
   expect(bodyText).toContain('SchemaLens');
 });
 
+test('er diagram blog post loads without errors', async ({ page }) => {
+  await page.goto(`${BASE_URL}/blog/how-to-generate-er-diagrams-from-sql-automatically.html`);
+  const bodyText = await page.locator('body').textContent();
+  expect(bodyText).toContain('ER Diagram');
+  expect(bodyText).toContain('SchemaLens');
+});
+
 test('schema versioning blog post loads without errors', async ({ page }) => {
   await page.goto(`${BASE_URL}/blog/database-schema-versioning-best-practices.html`);
   const bodyText = await page.locator('body').textContent();

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Generate ER Diagrams from SQL Automatically — SchemaLens</title>
+  <meta name="description" content="Generate entity-relationship diagrams directly from your CREATE TABLE statements. No signup required. Export to SVG. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="How to Generate ER Diagrams from SQL Automatically — SchemaLens">
+  <meta property="og:description" content="Paste your CREATE TABLE statements and get an interactive ER diagram instantly. Export to SVG. Runs entirely in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-generate-er-diagrams-from-sql-automatically.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .steps { counter-reset: step; }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+    .step-number {
+      background: var(--primary);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step-content { flex: 1; }
+    .step-content h3 { margin-top: 0; margin-bottom: 6px; }
+    .step-content p { margin-bottom: 0; color: var(--text-muted); }
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Generate ER Diagrams from SQL Automatically",
+  "description": "Generate entity-relationship diagrams directly from your CREATE TABLE statements. No signup required. Export to SVG.",
+  "url": "https://schemalens.tech/blog/how-to-generate-er-diagrams-from-sql-automatically.html",
+  "datePublished": "2026-04-25",
+  "dateModified": "2026-04-25",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/how-to-generate-er-diagrams-from-sql-automatically.html"
+  }
+}
+</script>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="##0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>How to Generate ER Diagrams from SQL Automatically</h1>
+    <div class="meta">April 25, 2026 · 5 min read · SchemaLens Team</div>
+
+    <p>Entity-relationship diagrams are the universal language of database design. They turn dense SQL into visual maps that anyone — engineers, product managers, stakeholders — can understand in seconds. The problem is that drawing them by hand is tedious, and keeping them in sync with your schema is nearly impossible.</p>
+
+    <div class="cta-box">
+      <h3>Try the ER Diagram Generator</h3>
+      <p>Paste your CREATE TABLE statements and get an interactive ER diagram instantly. Export to SVG.</p>
+      <a href="../tools/schema-diagram.html" class="btn btn-primary">Generate ER Diagram</a>
+    </div>
+
+    <h2>Why ER diagrams still matter</h2>
+    <p>In an age of ORMs and auto-migrations, it is tempting to think schema visualization is obsolete. It is not. Here is why:</p>
+    <ul>
+      <li><strong>Onboarding accelerates.</strong> A new engineer can understand your entire data model in five minutes by looking at an ER diagram. Reading raw SQL takes an hour.</li>
+      <li><strong>Design reviews improve.</strong> Spotting a missing foreign key index or a circular dependency is easier when you can see the relationships visually.</li>
+      <li><strong>Communication bridges disciplines.</strong> Product managers do not read SQL. But they understand boxes and arrows. An ER diagram makes schema discussions inclusive.</li>
+      <li><strong>Documentation that does not rot.</strong> A generated diagram is always current because it is built from the source of truth: your CREATE TABLE statements.</li>
+    </ul>
+
+    <h2>The manual approach: painful and error-prone</h2>
+    <p>Most teams draw ER diagrams in one of three ways:</p>
+    <ol>
+      <li><strong>Hand-drawn in a design tool.</strong> Figma, Lucidchart, or draw.io. Pretty, but every schema change requires a manual update. Most teams update the diagram once and never touch it again.</li>
+      <li><strong>Database IDE exports.</strong> pgAdmin, MySQL Workbench, or DataGrip can generate diagrams. But they require a live database connection, which is impossible for air-gapped environments and risky for production schemas.</li>
+      <li><strong>Markdown + ASCII art.</strong> Some brave souls draw ER diagrams in text files. Maintaining these is a full-time job.</li>
+    </ol>
+    <p>All three approaches share the same flaw: <strong>they are decoupled from the schema itself.</strong> When the schema changes, the diagram does not.</p>
+
+    <h2>A better way: generate from SQL</h2>
+    <p>The only reliable way to keep an ER diagram current is to generate it directly from your SQL. If your CREATE TABLE statements change, you re-run the generator and get an updated diagram in seconds.</p>
+    <p>This approach has three advantages:</p>
+    <ul>
+      <li><strong>No database connection required.</strong> You paste your schema dump, not your database credentials. This works on airplanes, in secure environments, and on schemas you do not have live access to.</li>
+      <li><strong>No proprietary formats.</strong> The output is standard Mermaid.js syntax and SVG. You can version-control it, embed it in Markdown, or paste it into any documentation tool.</li>
+      <li><strong>Zero setup.</strong> No npm install, no CLI commands, no configuration files. Open a browser tab, paste SQL, see the diagram.</li>
+    </ul>
+
+    <h2>How it works in 30 seconds</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Export your schema</h3>
+          <p>Run <code>pg_dump --schema-only</code>, <code>mysqldump --no-data</code>, <code>sqlite3 .schema</code>, or export from SQL Developer / SSMS to get your CREATE TABLE statements.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Paste into the generator</h3>
+          <p>Copy your SQL and paste it into the ER Diagram Generator. The parser extracts every table, column, primary key, and foreign key automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Review the diagram</h3>
+          <p>Tables appear as entities. Columns are listed with types. Primary keys are marked. Foreign keys draw relationship lines between tables. The layout is handled automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Export and share</h3>
+          <p>Download the diagram as an SVG for presentations and documentation. Copy the Mermaid source for GitHub, Notion, or Confluence. Or click "Open in SchemaLens" to diff the schema against another version.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>What gets detected automatically</h2>
+    <p>A well-built ER diagram generator should understand more than just table names. Here is what SchemaLens extracts from your SQL:</p>
+    <ul>
+      <li><strong>Tables and columns</strong> — every table becomes an entity box; every column is listed with its SQL type</li>
+      <li><strong>Primary keys</strong> — marked with <code>PK</code> so you can identify the identifying side of every relationship</li>
+      <li><strong>Foreign keys</strong> — both inline <code>REFERENCES</code> clauses and table-level <code>FOREIGN KEY</code> constraints become relationship arrows</li>
+      <li><strong>Self-referencing relationships</strong> — a table that references itself (e.g., <code>employees.manager_id → employees.id</code>) is drawn as a loop</li>
+      <li><strong>Multi-column relationships</strong> — composite foreign keys are rendered as a single relationship line</li>
+    </ul>
+
+    <h2>Dialect support matters</h2>
+    <p>Not every database declares foreign keys the same way. PostgreSQL uses <code>REFERENCES</code> inline. MySQL uses both inline and constraint-level syntax. SQL Server uses <code>FOREIGN KEY</code> with bracket-quoted identifiers. Oracle uses <code>CONSTRAINT ... FOREIGN KEY</code> with its own naming conventions.</p>
+    <p>A generic SQL parser will miss half of these. A dialect-aware parser — one that understands the quirks of PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — captures relationships correctly regardless of which database you use.</p>
+
+    <h2>Privacy and security</h2>
+    <p>Because the generator runs entirely in your browser, your schema never leaves your machine. This is critical for:</p>
+    <ul>
+      <li>Healthcare organizations bound by HIPAA</li>
+      <li>Financial institutions with SOX and PCI-DSS requirements</li>
+      <li>Government and defense contractors in air-gapped environments</li>
+      <li>Any company that treats its data model as sensitive intellectual property</li>
+    </ul>
+    <p>No cloud upload means no data breach risk, no compliance review, and no legal approval needed.</p>
+
+    <h2>Use cases beyond documentation</h2>
+    <p>ER diagrams are not just for README files. Here are four high-value use cases:</p>
+    <ol>
+      <li><strong>Schema refactoring.</strong> Before you split a monolithic table or denormalize for performance, generate an ER diagram. Seeing the relationships helps you predict cascading changes.</li>
+      <li><strong>Code review.</strong> Attach an ER diagram to a migration PR. Reviewers can spot missing indexes, orphaned foreign keys, and normalization issues at a glance.</li>
+      <li><strong>Stakeholder updates.</strong> Product and leadership teams want to know what data you collect and how it relates. An ER diagram communicates this without a technical deep-dive.</li>
+      <li><strong>API design.</strong> When building a REST or GraphQL API, the ER diagram reveals natural resource boundaries and relationship depths. This informs endpoint design and pagination strategy.</li>
+    </ol>
+
+    <div class="cta-box">
+      <h3>Generate your ER diagram now</h3>
+      <p>Our free ER Diagram Generator works with PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Paste, generate, export. No signup required.</p>
+      <a href="../tools/schema-diagram.html" class="btn btn-primary">Generate ER Diagram</a>
+    </div>
+
+    <h2>Making it part of your workflow</h2>
+    <p>One diagram is useful. A continuously updated diagram is transformative. Here is how to integrate automatic ER diagram generation into your development process:</p>
+    <ol>
+      <li><strong>Generate on every migration.</strong> After running a migration, export your schema and regenerate the diagram. Store the SVG in your repo alongside the migration file.</li>
+      <li><strong>Link diagrams in PRs.</strong> When a pull request changes the schema, include a link to the generated ER diagram. Reviewers see the impact instantly.</li>
+      <li><strong>Embed in onboarding docs.</strong> New hires should see the ER diagram on day one. It gives them a mental model of the entire system before they read a single line of application code.</li>
+      <li><strong>Archive before major refactors.</strong> Before a big schema change, generate and save the current diagram. If the refactor goes wrong, you have a visual reference of the original structure.</li>
+    </ol>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="how-to-document-your-database-schema-in-30-seconds.html">How to Document Your Database Schema in 30 Seconds</a> · <a href="3-free-tools-for-database-schema-management.html">3 Free Tools for Database Schema Management</a> · <a href="how-to-design-a-schema-that-scales.html">How to Design a Schema That Scales</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="../tools/schema-diagram.html">ER Diagram Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
