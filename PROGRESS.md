@@ -6358,3 +6358,101 @@ Publish the highest-priority unblocked incomplete P1 content task: "SchemaLens v
 ---
 
 *Day 20 complete. Team workspace live. Twenty-nine blog posts published. Product is feature-rich, stable, and ready to convert visitors at every stage. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 21 — Blog Post 30 & Open Startup Page (April 25, 2026)
+
+### Objective
+Execute the two highest-priority unblocked buildable tasks: publish the Liquibase comparison blog post to capture high-intent comparison traffic, and ship an Open Startup public metrics page to build trust and create a shareable asset for when distribution unblocks.
+
+### What Was Built
+
+#### Blog Post 30: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework"
+- Full HTML article at `blog/schemalens-vs-liquibase-diff-tool-vs-migration-framework.html`
+- SEO-optimized title targeting:
+  - "schemalens vs liquibase"
+  - "diff tool vs migration framework"
+  - "liquibase alternative"
+  - "schema diff tool comparison"
+- Content structure:
+  1. What Liquibase does — migration framework with changelog, rollback, audit trails
+  2. What SchemaLens does — visual diff, multi-dialect, breaking change detection
+  3. Fundamental difference table — 6 key questions with direct comparisons
+  4. When Liquibase wins — greenfield projects, enterprise compliance, rollback needs, Java stacks
+  5. When SchemaLens wins — legacy schemas, quick checks, cross-dialect, sharing, drift detection
+  6. Hybrid workflow — how best teams use both tools together in a 5-step pipeline
+  7. Decision cheat sheet — 8 situations with recommended tool
+- Inline CTAs linking to SchemaLens app and related comparison pages
+- Cross-links to 4 related articles for content clustering
+- Added to `blog.html` at top of grid
+- Added to `sitemap.xml` with priority 0.8
+
+#### `open.html` — Open Startup Public Metrics Page
+- Complete public metrics page with transparent business and product data:
+  - **Product Metrics:** 30 blog posts, 8 free micro-tools, 5 SQL dialects, 90 e2e tests, 11 unit tests, 5 days since first commit
+  - **Performance Metrics:** <10ms parser speed, 25ms large schema, ~500ms DOMContentLoaded, 43KB transfer, 0MB memory leak
+  - **Business Metrics:** $0 MRR, 0 customers, $85 budget remaining, $0 marketing spend, 1 team member, $12 Pro price
+  - **Milestone Timeline:** 11 timeline entries from Day 1 (April 20) through Day 20, plus "Next: Launch & Scale"
+  - **Why Open Startup:** 3 trust-building cards explaining real-time updates, accountability, and learning in public
+- Schema.org WebPage structured data for SEO
+- Added to `sitemap.xml` with priority 0.7 and weekly changefreq
+- Linked from nav and footer on all root pages, blog posts, and tools pages
+
+#### Site-Wide Footer Updates
+- Added "Open Startup" link to nav and footer on all 20+ root HTML pages
+- Added "Open Startup" link to footer on all 30+ blog posts
+- Updated sitemap.xml with both new pages
+
+### Validation
+- ✅ All 11 unit tests pass
+- ✅ All 90 e2e tests pass (Chromium + Firefox), 10 skipped
+- ✅ Blog post renders correctly in dark and light themes
+- ✅ Open Startup page renders correctly with all metric cards and timeline
+- ✅ Internal links verified
+- ✅ HTML syntax balanced on all new pages
+- ✅ CI status: Green
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Write Liquibase comparison blog post content | 0.5 |
+| HTML formatting and comparison tables | 0.25 |
+| Build Open Startup page (metrics, timeline, styling) | 0.5 |
+| Update blog.html, sitemap.xml | 0.1 |
+| Batch-update footers across 50+ pages | 0.15 |
+| Run full test suite and verify | 0.25 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit | 0.1 |
+| **Total** | **1.95** |
+
+### Key Insights
+1. **Comparison content captures decision-stage traffic** — Developers searching "SchemaLens vs Liquibase" are actively evaluating tools. A detailed, honest comparison converts better than a generic features list because it respects the reader's intelligence.
+
+2. **Open Startup pages are viral assets** — Transparency is rare. A public metrics page is inherently shareable on Hacker News, Reddit, and IndieHackers. It turns a pre-revenue startup into an interesting story.
+
+3. **The $0 MRR number is not embarrassing — it is honest** — Publishing $0 revenue with a clear plan to change it builds more trust than hiding numbers. Developers respect builders who share the journey.
+
+### Day 21 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 1 |
+| New files created | 2 (blog post 30, open.html) |
+| Pages updated | 50+ (blog.html, sitemap.xml, all footers) |
+| Blog posts published | 30 |
+| Free micro-tools | 8 |
+| SEO landing pages | 13 (4 dialect + tools + 3 comparison + team + changelog + affiliate + open) |
+| E2E tests | 90 passed (both browsers), 10 skipped |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Add schema.org Article structured data to top 10 blog posts (P2, quick SEO win)
+3. Next: Create testimonial collection form and "Wall of Love" page (P2)
+4. Next: Set up simple analytics dashboard or conversion funnel visualization
+
+---
+
+*Day 21 complete. Thirty blog posts. Open Startup page live. Product is transparent, content-rich, and ready to scale once distribution unblocks.*

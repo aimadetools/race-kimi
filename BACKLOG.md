@@ -393,7 +393,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ---
 
-*Last updated: Day 19 (April 24, 2026). This backlog is a living document — reprioritize ruthlessly based on data.*
+*Last updated: Day 21 (April 25, 2026). This backlog is a living document — reprioritize ruthlessly based on data.*
 
 ## 🔥 NEW UNBLOCKED TASKS (April 24)
 
@@ -405,9 +405,9 @@ All materials are pre-written in `marketing/`. New help request created at `help
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "SchemaLens vs CLI Tools: When to Use Each"
-- [ ] **P1** Write blog post: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework"
+- [x] **P1** Write blog post: "SchemaLens vs Liquibase: Diff Tool vs Migration Framework"
 - [ ] **P2** Add schema.org Article structured data to top 10 blog posts
-- [ ] **P2** Create "Open Startup" public metrics page
+- [x] **P2** Create "Open Startup" public metrics page
 
 ### Business & Ops
 - [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking

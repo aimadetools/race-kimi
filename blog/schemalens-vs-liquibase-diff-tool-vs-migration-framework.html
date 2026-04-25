@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemaLens vs Liquibase: Diff Tool vs Migration Framework — SchemaLens</title>
+<meta name="description" content="Liquibase is a migration framework. SchemaLens is a diff tool. Learn when to use each, how they complement each other, and which fits your workflow.">
+<meta property="og:title" content="SchemaLens vs Liquibase: Diff Tool vs Migration Framework">
+<meta property="og:description" content="Liquibase is a migration framework. SchemaLens is a diff tool. Learn when to use each, how they complement each other, and which fits your workflow.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.tech/blog/schemalens-vs-liquibase-diff-tool-vs-migration-framework.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<article style="max-width:720px;margin:0 auto;padding:2rem 1rem;">
+  <header style="margin-bottom:2rem;">
+    <h1 style="font-size:2rem;margin-bottom:0.5rem;line-height:1.2;">SchemaLens vs Liquibase: Diff Tool vs Migration Framework</h1>
+    <p style="color:var(--text-muted);">Published April 25, 2026 · SchemaLens</p>
+  </header>
+
+  <p>Developers often ask whether SchemaLens can replace Liquibase. The short answer is no — but that is not the right question. SchemaLens and Liquibase solve different problems. One shows you what changed. The other manages how changes move through environments.</p>
+
+  <p>Understanding the difference between a <strong>diff tool</strong> and a <strong>migration framework</strong> will help you choose the right tool for the right job — and use both together when it matters.</p>
+
+  <h2>What Liquibase does</h2>
+
+  <p>Liquibase is a database migration framework. Its core job is to apply versioned schema changes to a database in a predictable, repeatable way. You write changesets in XML, YAML, JSON, or SQL. Liquibase tracks which changesets have run in a <code>DATABASECHANGELOG</code> table and only applies new ones.</p>
+
+  <p>Liquibase gives you:</p>
+
+  <ul>
+    <li><strong>Version control for schema changes.</strong> Every change is a file in Git with an author and ID.</li>
+    <li><strong>Rollback support.</strong> Many changesets include rollback instructions so you can undo a migration.</li>
+    <li><strong>Environment parity.</strong> The same changelog runs on dev, staging, and production.</li>
+    <li><strong>Preconditions and contexts.</strong> Run different changesets in different environments.</li>
+    <li><strong>Enterprise audit trails.</strong> The changelog table shows who changed what and when.</li>
+  </ul>
+
+  <p>If your team practices disciplined migration-driven development, Liquibase is an excellent choice.</p>
+
+  <h2>What SchemaLens does</h2>
+
+  <p>SchemaLens is a schema diff and visualization tool. Its core job is to compare two SQL schemas and show you exactly what changed — tables, columns, constraints, indexes, triggers, functions, and enums. It generates the migration SQL to get from one schema to the other.</p>
+
+  <p>SchemaLens gives you:</p>
+
+  <ul>
+    <li><strong>Instant visual diff.</strong> Paste two schemas and see color-coded changes in under a second.</li>
+    <li><strong>Multi-dialect support.</strong> PostgreSQL, MySQL, SQLite, SQL Server, and Oracle in one tool.</li>
+    <li><strong>Breaking change detection.</strong> Flags dropped columns, type narrowing, and missing indexes before they break production.</li>
+    <li><strong>Shareable reports.</strong> Export to Markdown, PDF, JSON, or SQL — or generate a public link.</li>
+    <li><strong>Zero setup.</strong> No Java, no XML, no changelog files. Open a browser tab and go.</li>
+  </ul>
+
+  <p>If you need to understand what changed between two schemas right now, SchemaLens is the fastest path.</p>
+
+  <h2>The fundamental difference</h2>
+
+  <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:8px;">Question</th>
+        <th style="text-align:left;padding:8px;">Liquibase answers</th>
+        <th style="text-align:left;padding:8px;">SchemaLens answers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">What should the schema look like?</td>
+        <td style="padding:8px;">✅ The changelog is the source of truth</td>
+        <td style="padding:8px;">❌ Not its job</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">What changed between these two schemas?</td>
+        <td style="padding:8px;">⚠️ Text diff or manual inspection</td>
+        <td style="padding:8px;">✅ Visual semantic diff in seconds</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Can I roll this back?</td>
+        <td style="padding:8px;">✅ Built-in rollback support</td>
+        <td style="padding:8px;">❌ No execution or rollback</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Will this migration break production?</td>
+        <td style="padding:8px;">⚠️ Manual review required</td>
+        <td style="padding:8px;">✅ Breaking change detection</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">How do I share this with my team?</td>
+        <td style="padding:8px;">✅ Git + code review</td>
+        <td style="padding:8px;">✅ Public link or PDF export</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">How long to get a diff?</td>
+        <td style="padding:8px;">⚠️ Requires Java + project setup</td>
+        <td style="padding:8px;">✅ Under 30 seconds, zero install</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>When Liquibase is the right choice</h2>
+
+  <h3>1. Greenfield projects with migration discipline</h3>
+  <p>If you are starting a new project and can enforce a "every schema change is a migration file" rule, Liquibase is ideal. It becomes the single source of truth for your database evolution.</p>
+
+  <h3>2. Enterprise compliance requirements</h3>
+  <p>Banks, healthcare companies, and regulated industries often need audit trails showing exactly who approved each schema change and when it ran. Liquibase's changelog table provides this natively.</p>
+
+  <h3>3. Teams that need rollback guarantees</h3>
+  <p>If a deployment goes wrong at 2 AM, having a tested rollback changeset is invaluable. Liquibase's rollback support is a safety net that diff tools cannot provide.</p>
+
+  <h3>4. Java-centric organizations</h3>
+  <p>If your team already uses Spring Boot, Hibernate, and Maven, Liquibase fits the stack. The learning curve is shallow when everyone speaks the same toolchain.</p>
+
+  <h2>When SchemaLens is the right choice</h2>
+
+  <h3>1. Legacy schemas without migration history</h3>
+  <p>Most production databases were not created with Liquibase. They grew organically over years. If you inherit a legacy database with no changelog, SchemaLens lets you compare it against your target schema and generate the migration SQL immediately.</p>
+
+  <h3>2. Quick pre-deploy checks</h3>
+  <p>Before deploying a migration, paste your local schema and the production schema into SchemaLens. In ten seconds you know whether your migration file actually captures everything that changed.</p>
+
+  <h3>3. Cross-dialect work</h3>
+  <p>Liquibase supports multiple databases but uses a single abstract changelog format. If you need dialect-specific diffs — comparing PostgreSQL against MySQL during a migration, for example — SchemaLens handles both natively.</p>
+
+  <h3>4. Sharing with non-developers</h3>
+  <p>A DBA, product manager, or compliance officer needs to review schema changes. Sending them a Liquibase XML file is unhelpful. SchemaLens produces a visual diff or PDF that anyone can understand.</p>
+
+  <h3>5. Schema drift detection</h3>
+  <p>Someone ran a manual <code>ALTER TABLE</code> on production outside of Liquibase. Now your changelog is out of sync. SchemaLens compares the actual production schema against your expected schema and shows exactly what drifted.</p>
+
+  <h2>How they work together</h2>
+
+  <p>The best teams use both tools in a pipeline:</p>
+
+  <ol>
+    <li><strong>Design the change.</strong> A developer makes schema changes locally.</li>
+    <li><strong>Diff before writing.</strong> Use SchemaLens to compare the old schema against the new one. Verify the generated migration SQL is correct.</li>
+    <li><strong>Write the changelog.</strong> Translate the verified changes into a Liquibase changeset with proper rollback logic.</li>
+    <li><strong>Review in PR.</strong> Attach the SchemaLens Markdown export to the pull request so reviewers can see the semantic diff.</li>
+    <li><strong>Run in CI.</strong> Liquibase applies the changeset. SchemaLens CLI optionally diffs the result against production to confirm zero drift.</li>
+  </ol>
+
+  <p>This workflow gives you the speed and clarity of a visual diff tool plus the safety and auditability of a migration framework.</p>
+
+  <h2>Decision cheat sheet</h2>
+
+  <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:8px;">Situation</th>
+        <th style="text-align:left;padding:8px;">Recommended tool</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Greenfield project with strict migration rules</td>
+        <td style="padding:8px;">Liquibase (or Flyway)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Legacy database with no changelog</td>
+        <td style="padding:8px;">SchemaLens</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Need audit trail and rollback</td>
+        <td style="padding:8px;">Liquibase</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Need a diff in under 30 seconds</td>
+        <td style="padding:8px;">SchemaLens</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Detect schema drift on production</td>
+        <td style="padding:8px;">SchemaLens</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Polyglot environment (5+ dialects)</td>
+        <td style="padding:8px;">SchemaLens</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Sharing schema changes with non-developers</td>
+        <td style="padding:8px;">SchemaLens (Markdown / PDF)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">Enterprise compliance requirements</td>
+        <td style="padding:8px;">Liquibase</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The bottom line</h2>
+
+  <p>Liquibase is a migration framework. It excels at versioning, executing, and auditing schema changes. SchemaLens is a diff tool. It excels at comparing, visualizing, and communicating schema changes. They are not competitors. They are complementary tools that solve different parts of the schema management puzzle.</p>
+
+  <p>If you are choosing between them, ask yourself: <em>Do I need to manage how changes happen, or do I need to understand what changed?</em> If the answer is both, use both.</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;">
+    <p style="margin:0 0 0.5rem;font-weight:700;">Try SchemaLens — free, browser-based, privacy-first.</p>
+    <p style="margin:0 0 1rem;color:var(--text-muted);">Compare two SQL schemas instantly. No install. No signup. No data leaves your machine.</p>
+    <a href="../app.html" class="btn btn-primary" style="display:inline-block;">Open Schema Diff →</a>
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--border);margin:2rem 0;">
+
+  <h3>Related Reading</h3>
+  <ul>
+    <li><a href="../schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase vs Flyway — Full Comparison</a></li>
+    <li><a href="schemalens-vs-cli-tools-when-to-use-each.html">SchemaLens vs CLI Tools: When to Use Each</a></li>
+    <li><a href="schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+    <li><a href="database-schema-versioning-best-practices.html">Database Schema Versioning Best Practices</a></li>
+  </ul>
+</article>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Schema Diff</a>
+      <a href="../tools.html">All Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../open.html">Open Startup</a>
+      <a href="../api.html">API</a>
+      <a href="../team.html">Team</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
