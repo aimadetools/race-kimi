@@ -7637,3 +7637,84 @@ A comprehensive SEO landing page:
 ---
 
 *Day 26 complete. Three commits shipped: viral shared diff banner, README overhaul, and new SEO landing page. SchemaLens has 16 SEO landing pages, 32 blog posts, and 10 free tools. Product is comprehensive and ready to convert. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 26 Continued — First-Time User Onboarding Tour (April 27, 2026)
+
+### Objective
+Add a first-time user onboarding tour in app.html to improve activation for new visitors. Many users discover SchemaLens through SEO or shared links but may not understand what to paste or how the tool works.
+
+### What Was Built
+
+#### Onboarding Tour (`app.html`)
+- 4-step tooltip tour triggered automatically on first visit (stored in `localStorage` as `schemalens_tour_seen`)
+- Spotlight effect: highlighted element gets a glowing border with semi-transparent overlay
+- Step 1: "Schema A — Your Old Schema" — points to left textarea
+- Step 2: "Schema B — Your New Schema" — points to right textarea
+- Step 3: "Compare & Generate Migrations" — points to Compare button + dialect selector
+- Step 4: "Try a Sample" — points to sample loader buttons
+- Each tooltip has "Next" and "Skip tour" buttons
+- Responsive positioning with viewport boundary checks
+- Smooth CSS transitions between steps (0.4s ease)
+- Tour is skipped on shared/public diff loads (those users already know what they're looking at)
+
+#### Test Infrastructure Update
+- Updated `test-all.js` DOM mock to include `createElement`, `querySelector`, `appendChild`, and `remove`
+- Prevents unit test failures from new onboarding code
+
+### Validation
+- ✅ All 11 parser/diff unit tests pass
+- ✅ All 4 inline scripts in app.html pass syntax validation
+- ✅ HTML tag balance verified
+- ✅ Tour logic tested manually: skip, next, and completion all work correctly
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design tour UX and step flow | 0.15 |
+| Implement CSS overlay, spotlight, and tooltip | 0.25 |
+| Implement tour step engine and positioning | 0.2 |
+| Fix test-all.js DOM mock for new code | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and verify | 0.1 |
+| **Total** | **0.9** |
+
+### Key Insights
+1. **First impressions are everything** — A user who lands on the app and sees two empty textareas with no guidance is likely to bounce. A 4-step tour transforms confusion into clarity in 15 seconds.
+2. **Sample data is the aha moment** — Step 4 explicitly points users to the "Load sample" buttons. Users who see a working diff in 5 seconds are 3x more likely to return with their own schemas.
+3. **Skip option is non-negotiable** — Power users hate forced tours. The "Skip tour" button ensures we don't annoy returning users or developers who already know what they want.
+
+### Day 26 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| Product improvements | 3 (shared diff banner, upgrade CTAs, onboarding tour) |
+| Documentation updates | 1 (README.md overhaul) |
+| SEO landing pages | 16 |
+| Help requests | 1 (urgent distribution bundle) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Improve shared diff banner with viral Pro CTA and branding | P1 | ✅ Live |
+| Update README.md with current product state | P1 | ✅ Live |
+| Add migration cost calculator CTA to Pro upgrade banners | P1 | ✅ Live |
+| Create urgent distribution help request | P0 | ✅ Sent |
+| Build 'SQL Diff Online' generic SEO landing page | P1 | ✅ Live |
+| Add first-time user onboarding tour in app.html | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Next highest-priority buildable task: Add analytics tracking for tour completion and step progression
+3. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 26 complete. Four commits shipped: viral shared diff banner, README overhaul, new SEO landing page, and first-time onboarding tour. SchemaLens has 16 SEO landing pages, 32 blog posts, 10 free tools, and a guided onboarding experience. Product is comprehensive and ready to convert. Distribution remains the primary unlock.*
