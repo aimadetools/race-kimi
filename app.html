@@ -837,6 +837,7 @@
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
       <button class="save-btn" id="saveBtn" title="Save diff to cloud" onclick="openSaveModal()">💾 Save</button>
+      <button class="btn btn-secondary" id="settingsBtn" title="Settings" onclick="openSettingsModal()">⚙️</button>
       <span id="licenseStatus" class="license-status locked" style="margin-left:auto;cursor:pointer;" onclick="openLicenseModal()">🔒 Unlock Pro</span>
       <span id="authStatus" class="auth-status" onclick="toggleAuthModal()">👤 Sign In</span>
     </div>
@@ -1124,6 +1125,34 @@ CREATE TABLE users (
         </div>
       </div>
       <p class="shortcut-hint">Press <kbd>?</kbd> anytime to show this dialog. Shortcuts work anywhere except when typing in a text field.</p>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <h3>⚙️ Settings</h3>
+      <div style="margin-bottom:16px;">
+        <h4 style="font-size:0.95rem;margin:0 0 8px;">Webhook Notifications</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 12px;">Automatically send a JSON payload to any URL after each diff completes. Works with Zapier, Discord, n8n, and custom endpoints.</p>
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:6px;">Webhook URL (https://)</label>
+        <input type="url" id="webhookUrl" placeholder="https://hooks.zapier.com/hooks/catch/..." style="width:100%;margin-bottom:10px;">
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:6px;">Secret (optional, for HMAC-SHA256 signature)</label>
+        <input type="password" id="webhookSecret" placeholder="whsec_..." style="width:100%;margin-bottom:10px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;margin-bottom:12px;">
+          <input type="checkbox" id="webhookAuto" style="width:auto;">
+          <span>Send automatically after each diff</span>
+        </label>
+        <p id="webhookError" style="color:var(--danger);font-size:0.85rem;margin:0 0 12px;display:none;"></p>
+        <p id="webhookSuccess" style="color:var(--success);font-size:0.85rem;margin:0 0 12px;display:none;"></p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" onclick="testWebhook()">Test Webhook</button>
+          <button class="btn btn-primary" onclick="saveWebhookSettings()">Save</button>
+        </div>
+      </div>
+      <div class="modal-actions" style="justify-content:flex-end;">
+        <button class="btn btn-secondary" onclick="closeSettingsModal()">Close</button>
+      </div>
     </div>
   </div>
 
@@ -3105,6 +3134,143 @@ document.getElementById('slackModal')?.addEventListener('click', (e) => {
   if (e.target.id === 'slackModal') closeSlackModal();
 });
 
+// Webhook Settings
+const WEBHOOK_URL_KEY = 'schemalens_webhook_url';
+const WEBHOOK_SECRET_KEY = 'schemalens_webhook_secret';
+const WEBHOOK_AUTO_KEY = 'schemalens_webhook_auto';
+
+function openSettingsModal() {
+  document.getElementById('webhookUrl').value = localStorage.getItem(WEBHOOK_URL_KEY) || '';
+  document.getElementById('webhookSecret').value = localStorage.getItem(WEBHOOK_SECRET_KEY) || '';
+  document.getElementById('webhookAuto').checked = localStorage.getItem(WEBHOOK_AUTO_KEY) === '1';
+  document.getElementById('webhookError').style.display = 'none';
+  document.getElementById('webhookSuccess').style.display = 'none';
+  document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettingsModal() {
+  document.getElementById('settingsModal').classList.remove('active');
+}
+
+function saveWebhookSettings() {
+  const url = document.getElementById('webhookUrl').value.trim();
+  const secret = document.getElementById('webhookSecret').value.trim();
+  const auto = document.getElementById('webhookAuto').checked;
+  const errorEl = document.getElementById('webhookError');
+  const successEl = document.getElementById('webhookSuccess');
+
+  if (url && !/^https:\/\//.test(url)) {
+    errorEl.textContent = 'Webhook URL must use HTTPS.';
+    errorEl.style.display = 'block';
+    successEl.style.display = 'none';
+    return;
+  }
+
+  if (url) localStorage.setItem(WEBHOOK_URL_KEY, url);
+  else localStorage.removeItem(WEBHOOK_URL_KEY);
+
+  if (secret) localStorage.setItem(WEBHOOK_SECRET_KEY, secret);
+  else localStorage.removeItem(WEBHOOK_SECRET_KEY);
+
+  localStorage.setItem(WEBHOOK_AUTO_KEY, auto ? '1' : '0');
+
+  errorEl.style.display = 'none';
+  successEl.textContent = 'Settings saved.';
+  successEl.style.display = 'block';
+  setTimeout(() => successEl.style.display = 'none', 2000);
+}
+
+async function testWebhook() {
+  const url = document.getElementById('webhookUrl').value.trim();
+  const secret = document.getElementById('webhookSecret').value.trim();
+  const errorEl = document.getElementById('webhookError');
+  const successEl = document.getElementById('webhookSuccess');
+
+  if (!url) {
+    errorEl.textContent = 'Enter a webhook URL to test.';
+    errorEl.style.display = 'block';
+    successEl.style.display = 'none';
+    return;
+  }
+
+  errorEl.style.display = 'none';
+  successEl.textContent = 'Sending test…';
+  successEl.style.display = 'block';
+
+  try {
+    const res = await fetch('/api/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url,
+        secret: secret || undefined,
+        payload: {
+          event: 'test',
+          source: 'schemalens',
+          timestamp: new Date().toISOString(),
+          message: 'This is a test webhook from SchemaLens. Your configuration is working!'
+        }
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      successEl.textContent = '✓ Test webhook sent successfully.';
+    } else {
+      errorEl.textContent = data.error || 'Webhook returned an error.';
+      errorEl.style.display = 'block';
+      successEl.style.display = 'none';
+    }
+  } catch (err) {
+    errorEl.textContent = 'Failed to send test: ' + err.message;
+    errorEl.style.display = 'block';
+    successEl.style.display = 'none';
+  }
+}
+
+async function maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect) {
+  if (localStorage.getItem(WEBHOOK_AUTO_KEY) !== '1') return;
+  const url = localStorage.getItem(WEBHOOK_URL_KEY);
+  if (!url) return;
+  const secret = localStorage.getItem(WEBHOOK_SECRET_KEY) || undefined;
+
+  const added = diff.tablesAdded?.length || 0;
+  const removed = diff.tablesRemoved?.length || 0;
+  const modified = diff.tablesModified?.length || 0;
+
+  const payload = {
+    event: 'diff_completed',
+    source: 'schemalens',
+    timestamp: new Date().toISOString(),
+    dialect,
+    summary: {
+      tables_old: diff.totalTablesOld || 0,
+      tables_new: diff.totalTablesNew || 0,
+      tables_added: added,
+      tables_removed: removed,
+      tables_modified: modified,
+      breaking_changes: breakingChanges?.length || 0
+    },
+    breaking_changes: (breakingChanges || []).slice(0, 20),
+    migration_sql_preview: migrationSQL ? migrationSQL.slice(0, 2000) : '',
+    url: location.href
+  };
+
+  try {
+    await fetch('/api/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, secret, payload })
+    });
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('webhook_auto_sent', { dialect });
+  } catch (e) {
+    // Silent fail — webhooks should never block the user
+  }
+}
+
+document.getElementById('settingsModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'settingsModal') closeSettingsModal();
+});
+
 function downloadJSON() {
   if (!lastDiff) return;
   const payload = {
@@ -4528,6 +4694,9 @@ document.getElementById('compareBtn').addEventListener('click', () => {
       changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length
     });
   }
+
+  // Auto-send webhook if configured
+  maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect);
 
   // Scroll to results
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
