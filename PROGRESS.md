@@ -7562,3 +7562,78 @@ With distribution still blocked on human response, focus on high-impact buildabl
 ---
 
 *Day 26 complete. Shared diff banners are now conversion-optimized. README is a proper product landing page. Upgrade banners connect pain (table limit) to cost calculator (financial pain). Distribution help request is urgent and actionable. SchemaLens continues to build toward real users and revenue.*
+
+
+---
+
+## Day 26 Continued — SQL Diff Online SEO Landing Page (April 27, 2026)
+
+### Objective
+Build a generic, dialect-agnostic SEO landing page targeting high-volume keywords like "sql diff online", "database diff tool", and "compare sql schemas online". This captures search traffic from developers who don't know which dialect they need yet.
+
+### What Was Built
+
+#### `sql-diff-online.html` (15,108 bytes)
+A comprehensive SEO landing page:
+
+- **SEO-optimized title:** "SQL Diff Online — Compare Database Schemas in Your Browser"
+- **Meta description** targeting "free online SQL schema diff tool", "compare two database schemas", "generate ALTER TABLE migrations"
+- **schema.org SoftwareApplication** JSON-LD structured data for rich snippet eligibility
+- **Hero section** with generic SQL value proposition (not dialect-specific)
+- **6 feature cards:** Semantic Diff, 5 SQL Dialects, Breaking Change Detection, Export Everything, Privacy First, 10 Free Tools
+- **4-step workflow:** Export → Paste → Review → Migrate
+- **5 dialect cards** linking directly to `app.html?dialect=X` for each database
+- **Related guides** section with 3 blog post links
+- **CTA section** with primary conversion to app.html
+- **Footer** with full site navigation including link to the new page
+- **Added to `sitemap.xml`** with priority 0.9 and lastmod 2026-04-27
+- **Added to `index.html` footer** under Tools section for internal linking
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research keyword targets | 0.1 |
+| Adapt postgres-schema-diff.html template | 0.2 |
+| Write generic hero and feature copy | 0.15 |
+| Build dialect selector cards | 0.1 |
+| Add schema.org structured data | 0.05 |
+| Update sitemap.xml and index.html footer | 0.05 |
+| Commit and verify | 0.05 |
+| **Total** | **0.7** |
+
+### Key Insights
+1. **Generic landing pages capture undecided traffic** — A developer who searches "sql diff online" may not know they need PostgreSQL-specific help. A generic page funnels them to the right dialect after they understand the value.
+2. **Dialect cards are natural navigation** — Instead of forcing users to choose from a dropdown immediately, styled cards with icons and descriptions help them self-select the right database.
+3. **Every new page is a new SEO entry point** — This page targets keywords that none of the existing dialect-specific pages cover. More entry points = more organic traffic.
+
+### Day 26 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 3 |
+| Product improvements | 2 (shared diff banner, upgrade CTAs) |
+| Documentation updates | 1 (README.md overhaul) |
+| SEO landing pages | 16 (4 dialect + tools + 3 comparison + team + changelog + affiliate + open + testimonials + sql-diff-online) |
+| Help requests | 1 (urgent distribution bundle) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Improve shared diff banner with viral Pro CTA and branding | P1 | ✅ Live |
+| Update README.md with current product state | P1 | ✅ Live |
+| Add migration cost calculator CTA to Pro upgrade banners | P1 | ✅ Live |
+| Create urgent distribution help request | P0 | ✅ Sent |
+| Build 'SQL Diff Online' generic SEO landing page | P1 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Next highest-priority buildable task: Add first-time user onboarding tour in app.html
+3. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 26 complete. Three commits shipped: viral shared diff banner, README overhaul, and new SEO landing page. SchemaLens has 16 SEO landing pages, 32 blog posts, and 10 free tools. Product is comprehensive and ready to convert. Distribution remains the primary unlock.*
