@@ -7177,3 +7177,105 @@ A comprehensive, tutorial-style API quick-start guide:
 ---
 
 *Day 23 complete. API quick-start guide live. SchemaLens now has comprehensive API documentation at two levels: quick-start (tutorial) and reference (api.html). Product continues to advance toward real users and revenue.*
+
+
+---
+
+## Day 24 — Migration Cost Calculator, CRM & Blog Post (April 27, 2026)
+
+### Objective
+With distribution still blocked on human response, focus on high-impact buildable tasks: a new free micro-tool that directly converts users, a lightweight CRM for business operations, and a supporting blog post for SEO.
+
+### What Was Built
+
+#### Free Micro-Tool: Migration Cost Calculator (`tools/migration-cost-calculator.html`)
+A standalone, interactive calculator that reveals the hidden annual cost of manual database migrations:
+- **6 adjustable sliders:** team size, hourly rate, migrations per month, hours per migration, incident rate, incident recovery time
+- **4 presets:** Startup (3 devs), Small Team (8 devs), Mid-size (20 devs), Enterprise (50 devs)
+- **Real-time calculation:** Shows annual cost breakdown (writing, review, incidents) with animated big-number display
+- **Savings banner:** Compares cost vs SchemaLens Pro ($99/yr) with direct CTA to pricing
+- **4 stat cards:** Time wasted per year, incidents per year, cost per migration, ROI on Pro
+- **SEO optimized:** schema.org SoftwareApplication JSON-LD, unique title/meta, OpenGraph tags
+- Site integration: Added to tools.html grid, index.html features section, app.html footer, sitemap.xml
+
+#### Lightweight CRM (`crm.html`)
+A client-side CRM for tracking outreach contacts and partnerships:
+- **Contact fields:** name, email, company, role, status, source, last contact date, notes
+- **5 statuses:** Lead, Contacted, Responded, Customer, Churned (color-coded badges)
+- **Dashboard stats:** Total, Leads, Contacted, Responded, Customers, Churned
+- **Search and filter:** By name/email/company and by status
+- **CRUD operations:** Add, edit, delete contacts with modal form
+- **Export to CSV:** One-click download of full contact list
+- **Data persistence:** localStorage (no backend needed)
+- **Responsive design:** Mobile-friendly stacked card layout
+- **Security:** `<meta name="robots" content="noindex, nofollow">` to prevent indexing
+
+#### Blog Post 32: "The Real Cost of Manual Database Migrations"
+- Full HTML article at `blog/the-real-cost-of-manual-database-migrations.html`
+- SEO-optimized title targeting "database migration cost", "manual migration cost", "schema migration time"
+- Content structure:
+  1. **The problem:** Teams underestimate migration costs
+  2. **Four hidden costs:** Writing, review/testing, incidents, context switching
+  3. **Cost breakdown table:** $13,800/year for an 8-dev team
+  4. **The automation dividend:** 100x–350x ROI on schema diff tooling
+  5. **Calculator CTA:** Direct link to the new Migration Cost Calculator
+  6. **App CTA:** Link to SchemaLens free trial
+- Two inline CTAs (calculator + app)
+- Cross-links to 3 related blog posts
+- schema.org Article JSON-LD structured data
+- Added to blog.html grid and sitemap.xml
+
+### Validation
+- ✅ Migration Cost Calculator renders correctly and computes accurately
+- ✅ CRM modal open/close, add/edit/delete, export all work
+- ✅ Blog post HTML validates (balanced tags, proper links)
+- ✅ sitemap.xml updated with new pages
+- ✅ All internal links verified relative
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design Migration Cost Calculator UX and math | 0.3 |
+| Build calculator HTML/CSS/JS | 0.4 |
+| Integrate calculator into site (4 pages + sitemap) | 0.2 |
+| Design CRM data model and UI | 0.2 |
+| Build CRM HTML/CSS/JS with modal + export | 0.4 |
+| Write blog post content | 0.4 |
+| Build blog post HTML with structured data | 0.2 |
+| Update blog.html and sitemap.xml | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **2.3** |
+
+### Key Insights
+1. **Cost calculators are conversion machines** — When a user sees "$13,800/year" in their own numbers, $99/year for Pro feels trivial. The calculator does the selling.
+
+2. **Client-side CRM is good enough for pre-revenue** — Until you have enough contacts to justify Airtable, a localStorage CRM keeps you organized with zero cost and zero setup.
+
+3. **Tool + blog post pairs dominate SEO** — A blog post that teaches a concept and links to a tool that applies it captures both informational and transactional search intent.
+
+### Day 24 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 1 (pending) |
+| New files created | 3 (migration-cost-calculator.html, crm.html, blog post 32) |
+| Pages updated | 5 (tools.html, index.html, app.html, blog.html, sitemap.xml) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Build free micro-tool: Migration Cost Calculator | P1 | ✅ Live |
+| Build lightweight CRM page for outreach tracking | P1 | ✅ Live |
+| Blog post 32: The Real Cost of Manual Database Migrations | P1 | ✅ Published |
+
+### Next Steps
+1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Next highest-priority buildable task: Add diff versioning for team history (P2) or build VS Code extension MVP (P2)
+3. Next: Write guest post for dev.to about ER Diagram Generator or Migration Cost Calculator
+4. Next: Continue to build more micro-tools and SEO content to drive organic traffic while distribution is blocked
+
+---
+
+*Day 24 complete. Three new assets shipped: a viral cost calculator, a business CRM, and a conversion-focused blog post. SchemaLens continues to build organic traffic and conversion infrastructure while awaiting distribution unlock.*

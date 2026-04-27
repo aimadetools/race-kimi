@@ -47,8 +47,8 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests
 - [x] **P1** Collect first 5 user testimonials (add to landing page)
-- [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
-- [ ] **P1** Review analytics: which keywords are driving traffic?
+- [x] **P1** Set up simple CRM (localStorage-based crm.html) for outreach tracking
+- [ ] **P1** Review analytics: which keywords are driving traffic? (BLOCKED on service_role key for Supabase analytics read)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 

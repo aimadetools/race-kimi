@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM — SchemaLens Outreach</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header {
+      padding: 32px 0 16px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-chip .value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .stat-chip .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .toolbar input, .toolbar select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .toolbar input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+    }
+    .toolbar button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .toolbar button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .contact-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .contact-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .contact-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .contact-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .contact-table tr:last-child td {
+      border-bottom: none;
+    }
+    .contact-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-lead { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .badge-contacted { background: rgba(96,165,250,0.15); color: #60a5fa; }
+    .badge-responded { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .badge-customer { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .badge-churned { background: rgba(248,113,113,0.15); color: #f87171; }
+
+    .note-preview {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      max-width: 240px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+    .actions button {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .actions button:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow: auto;
+      padding: 24px;
+    }
+    .modal h2 {
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
+    .form-row {
+      margin-bottom: 12px;
+    }
+    .form-row label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+    }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .form-row textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    .modal-actions button {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .modal-actions .primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .modal-actions .secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .contact-table thead { display: none; }
+      .contact-table, .contact-table tbody, .contact-table tr, .contact-table td {
+        display: block;
+        width: 100%;
+      }
+      .contact-table tr {
+        margin-bottom: 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+      }
+      .contact-table td {
+        border-bottom: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .contact-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+      .note-preview {
+        max-width: 140px;
+      }
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Outreach CRM</h1>
+      <p>Track leads, customers, and partnerships. Data stays in this browser.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-chip"><div class="value" id="st-total">0</div><div class="label">Total</div></div>
+      <div class="stat-chip"><div class="value" id="st-lead">0</div><div class="label">Leads</div></div>
+      <div class="stat-chip"><div class="value" id="st-contacted">0</div><div class="label">Contacted</div></div>
+      <div class="stat-chip"><div class="value" id="st-responded">0</div><div class="label">Responded</div></div>
+      <div class="stat-chip"><div class="value" id="st-customer">0</div><div class="label">Customers</div></div>
+      <div class="stat-chip"><div class="value" id="st-churned">0</div><div class="label">Churned</div></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Search contacts...">
+      <select id="filterStatus">
+        <option value="">All statuses</option>
+        <option value="lead">Lead</option>
+        <option value="contacted">Contacted</option>
+        <option value="responded">Responded</option>
+        <option value="customer">Customer</option>
+        <option value="churned">Churned</option>
+      </select>
+      <button onclick="openModal()">+ Add Contact</button>
+      <button class="secondary" onclick="exportCSV()">Export CSV</button>
+      <button class="secondary" onclick="if(confirm('Clear all data?')){localStorage.removeItem('schemalens_crm');render();}">Clear All</button>
+    </div>
+
+    <div class="contact-table-wrap">
+      <table class="contact-table" id="contactTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Last Contact</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">No contacts yet. Add your first lead.</div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2 id="modalTitle">Add Contact</h2>
+      <div class="form-row">
+        <label>Name</label>
+        <input type="text" id="mName" placeholder="Full name">
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" id="mEmail" placeholder="email@company.com">
+      </div>
+      <div class="form-row">
+        <label>Company</label>
+        <input type="text" id="mCompany" placeholder="Company name">
+      </div>
+      <div class="form-row">
+        <label>Role</label>
+        <input type="text" id="mRole" placeholder="e.g. Engineering Manager">
+      </div>
+      <div class="form-row">
+        <label>Status</label>
+        <select id="mStatus">
+          <option value="lead">Lead</option>
+          <option value="contacted">Contacted</option>
+          <option value="responded">Responded</option>
+          <option value="customer">Customer</option>
+          <option value="churned">Churned</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Source</label>
+        <input type="text" id="mSource" placeholder="e.g. Hacker News, Reddit, Product Hunt">
+      </div>
+      <div class="form-row">
+        <label>Last Contacted</label>
+        <input type="date" id="mLastContact">
+      </div>
+      <div class="form-row">
+        <label>Notes</label>
+        <textarea id="mNotes" placeholder="Conversation history, next steps..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="secondary" onclick="closeModal()">Cancel</button>
+        <button class="primary" onclick="saveContact()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">Schema Diff Tool</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="api.html">API</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="blog.html">Blog</a>
+          <a href="tools.html">Free Tools</a>
+          <a href="api-guide.html">API Quick Start</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="affiliate.html">Affiliate Program</a>
+          <a href="mailto:hello@schemalens.tech">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 SchemaLens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'schemalens_crm';
+    let editingId = null;
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch (e) { return []; }
+    }
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function openModal(id) {
+      editingId = id || null;
+      document.getElementById('modalTitle').textContent = id ? 'Edit Contact' : 'Add Contact';
+      if (id) {
+        const c = loadData().find(x => x.id === id);
+        if (c) {
+          document.getElementById('mName').value = c.name || '';
+          document.getElementById('mEmail').value = c.email || '';
+          document.getElementById('mCompany').value = c.company || '';
+          document.getElementById('mRole').value = c.role || '';
+          document.getElementById('mStatus').value = c.status || 'lead';
+          document.getElementById('mSource').value = c.source || '';
+          document.getElementById('mLastContact').value = c.lastContact || '';
+          document.getElementById('mNotes').value = c.notes || '';
+        }
+      } else {
+        ['mName','mEmail','mCompany','mRole','mSource','mNotes'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('mStatus').value = 'lead';
+        document.getElementById('mLastContact').value = new Date().toISOString().split('T')[0];
+      }
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      editingId = null;
+    }
+
+    function saveContact() {
+      const data = loadData();
+      const contact = {
+        id: editingId || crypto.randomUUID(),
+        name: document.getElementById('mName').value.trim(),
+        email: document.getElementById('mEmail').value.trim(),
+        company: document.getElementById('mCompany').value.trim(),
+        role: document.getElementById('mRole').value.trim(),
+        status: document.getElementById('mStatus').value,
+        source: document.getElementById('mSource').value.trim(),
+        lastContact: document.getElementById('mLastContact').value,
+        notes: document.getElementById('mNotes').value.trim(),
+        updatedAt: new Date().toISOString(),
+      };
+      if (!contact.name && !contact.email) { alert('Name or email required'); return; }
+      if (editingId) {
+        const idx = data.findIndex(x => x.id === editingId);
+        if (idx >= 0) data[idx] = contact;
+      } else {
+        contact.createdAt = contact.updatedAt;
+        data.push(contact);
+      }
+      saveData(data);
+      closeModal();
+      render();
+    }
+
+    function deleteContact(id) {
+      if (!confirm('Delete this contact?')) return;
+      saveData(loadData().filter(x => x.id !== id));
+      render();
+    }
+
+    function exportCSV() {
+      const data = loadData();
+      const headers = ['Name','Email','Company','Role','Status','Source','Last Contact','Notes','Created'];
+      const rows = data.map(c => [
+        c.name, c.email, c.company, c.role, c.status, c.source, c.lastContact,
+        (c.notes || '').replace(/"/g, '""'), c.createdAt || ''
+      ].map(v => `"${v}"`));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'schemalens-crm.csv';
+      a.click();
+    }
+
+    function render() {
+      const data = loadData();
+      const search = document.getElementById('search').value.toLowerCase();
+      const filterStatus = document.getElementById('filterStatus').value;
+
+      const filtered = data.filter(c => {
+        const matchesSearch = !search || [c.name, c.email, c.company, c.role, c.source].some(f => (f || '').toLowerCase().includes(search));
+        const matchesStatus = !filterStatus || c.status === filterStatus;
+        return matchesSearch && matchesStatus;
+      });
+
+      // Stats
+      const counts = { lead:0, contacted:0, responded:0, customer:0, churned:0 };
+      data.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+      document.getElementById('st-total').textContent = data.length;
+      document.getElementById('st-lead').textContent = counts.lead;
+      document.getElementById('st-contacted').textContent = counts.contacted;
+      document.getElementById('st-responded').textContent = counts.responded;
+      document.getElementById('st-customer').textContent = counts.customer;
+      document.getElementById('st-churned').textContent = counts.churned;
+
+      const tbody = document.getElementById('tableBody');
+      const empty = document.getElementById('emptyState');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      const statusClass = s => 'badge badge-' + (s || 'lead');
+      tbody.innerHTML = filtered.map(c => `
+        <tr>
+          <td data-label="Name"><strong>${escapeHtml(c.name || '-')}</strong><br><span style="font-size:0.8rem;color:var(--text-muted)">${escapeHtml(c.email || '')}</span></td>
+          <td data-label="Company">${escapeHtml(c.company || '-')}</td>
+          <td data-label="Role">${escapeHtml(c.role || '-')}</td>
+          <td data-label="Status"><span class="${statusClass(c.status)}">${c.status}</span></td>
+          <td data-label="Source">${escapeHtml(c.source || '-')}</td>
+          <td data-label="Last Contact">${c.lastContact || '-'}</td>
+          <td data-label="Notes"><div class="note-preview" title="${escapeHtml(c.notes || '')}">${escapeHtml(c.notes || '-')}</div></td>
+          <td data-label="Actions">
+            <div class="actions">
+              <button onclick="openModal('${c.id}')">Edit</button>
+              <button onclick="deleteContact('${c.id}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    document.getElementById('search').addEventListener('input', render);
+    document.getElementById('filterStatus').addEventListener('change', render);
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    render();
+  </script>
+</body>
+</html>
