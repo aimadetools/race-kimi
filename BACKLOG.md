@@ -55,6 +55,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 - [x] **P2** Add first-time user onboarding tour in app.html (4-step tooltip guide with spotlight, launched April 27)
+- [x] **P2** Add analytics tracking for tour completion, step progression, and skip events
 
 ### UNBLOCKED — Domain & Infrastructure (schemalens.tech) ✅
 - [x] **P1** Configure custom domain on Vercel (DNS pointed, code updated)

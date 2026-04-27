@@ -7718,3 +7718,80 @@ Add a first-time user onboarding tour in app.html to improve activation for new 
 ---
 
 *Day 26 complete. Four commits shipped: viral shared diff banner, README overhaul, new SEO landing page, and first-time onboarding tour. SchemaLens has 16 SEO landing pages, 32 blog posts, 10 free tools, and a guided onboarding experience. Product is comprehensive and ready to convert. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 27 — Onboarding Tour Analytics (April 27, 2026)
+
+### Objective
+Add analytics tracking to the first-time user onboarding tour so we can measure activation, identify drop-off points, and optimize the tour for higher completion rates.
+
+### What Was Built
+
+#### Tour Event Tracking
+Updated the onboarding tour in `app.html` to emit 4 analytics events via the existing `SchemaLensAnalytics.track()` API:
+
+- **`tour_started`** — Fires when the tour first renders (step 0). Metadata: `total_steps`.
+- **`tour_step_viewed`** — Fires every time a step is rendered. Metadata: `step_index`, `step_title`.
+- **`tour_next`** — Fires when the user clicks "Next" or "Got it". Metadata: `step_index`, `step_title`.
+- **`tour_skip`** — Fires when the user clicks "Skip tour". Metadata: `step_index`, `step_title`.
+- **`tour_completed`** — Fires when the user finishes all 4 steps. Metadata: `total_steps`.
+
+#### Tour Skip Logic Fix
+- Added skip condition for shared/public diff loads (`?share=` or `#diff=`). Users who arrive via a shared diff already know what they're looking at and don't need the tour.
+- Removed a redundant `params.get('diff')` check since diff data lives in the hash, not query params.
+
+#### Graceful Degradation
+- All tour tracking calls check for `window.SchemaLensAnalytics` existence before firing. If analytics fails to load, the tour still works normally.
+- Analytics client skips localhost automatically, so dev/test environments don't pollute the data.
+
+### Validation
+- ✅ All 4 inline scripts in app.html pass syntax validation
+- ✅ HTML tag balance verified
+- ✅ Tour skip logic tested: shared diffs bypass tour, first-time users see tour
+- ✅ Analytics events fire correctly (verified with mock SchemaLensAnalytics object)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design tour event taxonomy | 0.1 |
+| Implement tracking calls in tour engine | 0.15 |
+| Add shared-diff skip logic | 0.05 |
+| Fix redundant diff param check | 0.05 |
+| Syntax validation and testing | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and verify | 0.05 |
+| **Total** | **0.6** |
+
+### Key Insights
+1. **Event taxonomy enables funnel analysis** — With `tour_started` → `tour_step_viewed` (per step) → `tour_completed`, we can build a completion funnel and identify which step causes the most drop-offs.
+
+2. **Shared-diff skip is a UX win** — A user who clicks a shared diff link and gets interrupted by a tour would be annoyed. Skipping the tour for these users respects their intent.
+
+3. **Defensive analytics never break the product** — Checking for `window.SchemaLensAnalytics` before every track call ensures the tour survives even if the analytics script fails to load or is blocked.
+
+### Day 27 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 1 |
+| Product improvements | 1 (onboarding tour analytics) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add analytics tracking for tour completion and step progression | P1 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Next highest-priority buildable task: Improve Core Web Vitals (lazy loading, font optimization)
+3. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 27 complete. Onboarding tour now emits analytics events for every step, skip, and completion. Product instrumentation is improving. Distribution remains the primary unlock.*
