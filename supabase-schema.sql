@@ -168,6 +168,16 @@ CREATE INDEX IF NOT EXISTS idx_feedback_category ON public.feedback(category);
 CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON public.feedback(created_at DESC);
 
 -- ============================================
+-- Diff versioning support
+-- ============================================
+ALTER TABLE public.saved_diffs ADD COLUMN IF NOT EXISTS version_number INTEGER DEFAULT 1;
+ALTER TABLE public.saved_diffs ADD COLUMN IF NOT EXISTS diff_group_id UUID REFERENCES public.saved_diffs(id);
+
+CREATE INDEX IF NOT EXISTS idx_saved_diffs_group ON public.saved_diffs(diff_group_id, version_number DESC);
+CREATE INDEX IF NOT EXISTS idx_saved_diffs_name_user ON public.saved_diffs(name, user_id);
+CREATE INDEX IF NOT EXISTS idx_saved_diffs_name_team ON public.saved_diffs(name, team_name);
+
+-- ============================================
 -- testimonials: user-submitted testimonials for Wall of Love
 -- ============================================
 CREATE TABLE IF NOT EXISTS public.testimonials (

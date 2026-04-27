@@ -221,7 +221,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P1** Build team workspace UI (list of team diffs)
 - [x] **P1** Launch Team plan ($29/mo)
 - [ ] **P2** Add comment/annotation on diffs
-- [ ] **P2** Add diff versioning
+- [x] **P2** Add diff versioning
 
 ### Marketing & Content
 - [x] **P1** Publish blog post: "Why Your Team Needs a Schema Review Process"
@@ -401,7 +401,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P1** Build team workspace UI in app.html (list of team diffs, invite members)
 - [x] **P1** Launch Team plan ($29/mo) once workspace UI is ready
 - [ ] **P2** Add comment/annotation on diffs for team collaboration
-- [ ] **P2** Add diff versioning for team history
+- [x] **P2** Add diff versioning for team history
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "SchemaLens vs CLI Tools: When to Use Each"
@@ -465,7 +465,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
 - [ ] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
 - [ ] **P2** Add comment/annotation on diffs for team collaboration
-- [ ] **P2** Add diff versioning for team history
+- [x] **P2** Add diff versioning for team history
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "How to Generate ER Diagrams from SQL Automatically" (SEO for new tool)

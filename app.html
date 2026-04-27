@@ -1017,6 +1017,20 @@ CREATE TABLE users (
     </div>
   </div>
 
+  <!-- Diff Versions Modal -->
+  <div class="modal-overlay" id="versionsModal">
+    <div class="modal" style="max-width:520px;">
+      <h3>📜 Version History</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" id="versionsModalTitle">Loading…</p>
+      <div id="versionsList" style="max-height:400px;overflow-y:auto;">
+        <p class="saved-diffs-empty">Loading versions…</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeVersionsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Feedback FAB -->
   <button class="feedback-fab" onclick="openFeedbackModal()" title="Send feedback" aria-label="Send feedback">💬</button>
 
@@ -4598,6 +4612,7 @@ document.addEventListener('keydown', (e) => {
 
   if (e.key === 'Escape') {
     closeShortcutsModal();
+    closeVersionsModal();
     return;
   }
 
@@ -4697,12 +4712,26 @@ async function saveDiffToCloud() {
   const teamName = saveToTeam ? userTeamMemberships[0].team_name : null;
 
   try {
+    // Versioning: find existing diff with same name
+    const matchQuery = teamName
+      ? supabaseClient.from('saved_diffs').select('id, diff_group_id, version_number').eq('name', name).eq('team_name', teamName).order('version_number', { ascending: false }).limit(1)
+      : supabaseClient.from('saved_diffs').select('id, diff_group_id, version_number').eq('name', name).eq('user_id', currentUser.id).is('team_name', null).order('version_number', { ascending: false }).limit(1);
+    const { data: existing, error: findErr } = await matchQuery;
+    if (findErr) throw findErr;
+
+    let diffGroupId = null;
+    let versionNumber = 1;
+    if (existing && existing.length > 0) {
+      diffGroupId = existing[0].diff_group_id || existing[0].id;
+      versionNumber = (existing[0].version_number || 1) + 1;
+    }
+
     const { error } = await supabaseClient
       .from('saved_diffs')
-      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName }]);
+      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName, diff_group_id: diffGroupId, version_number: versionNumber }]);
     if (error) throw error;
     closeSaveModal();
-    showError('✓ Diff saved to cloud!' + (teamName ? ' (Team: ' + teamName + ')' : ''));
+    showError('✓ Diff saved to cloud!' + (teamName ? ' (Team: ' + teamName + ')' : '') + (versionNumber > 1 ? ' (v' + versionNumber + ')' : ''));
     loadSavedDiffs();
     if (teamName) loadTeamDiffs();
   } catch (err) {
@@ -4730,7 +4759,7 @@ async function loadSavedDiffs() {
   try {
     const { data, error } = await supabaseClient
       .from('saved_diffs')
-      .select('id, name, dialect, created_at, public_id, is_public')
+      .select('id, name, dialect, created_at, public_id, is_public, version_number, diff_group_id, user_id')
       .eq('user_id', currentUser.id)
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -4748,19 +4777,38 @@ function renderSavedDiffsList() {
     list.innerHTML = '<p class="saved-diffs-empty">No saved diffs yet. Click 💾 Save to store your first diff.</p>';
     return;
   }
-  list.innerHTML = savedDiffsCache.map(d => {
+  // Count versions per group
+  const groupCounts = {};
+  savedDiffsCache.forEach(d => {
+    const gid = d.diff_group_id || d.id;
+    groupCounts[gid] = (groupCounts[gid] || 0) + 1;
+  });
+  // Show only latest version of each group
+  const seenGroups = new Set();
+  const latestDiffs = savedDiffsCache.filter(d => {
+    const gid = d.diff_group_id || d.id;
+    if (seenGroups.has(gid)) return false;
+    seenGroups.add(gid);
+    return true;
+  });
+  list.innerHTML = latestDiffs.map(d => {
     const date = new Date(d.created_at).toLocaleDateString();
     const linkBtn = d.public_id
       ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
       : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
+    const gid = d.diff_group_id || d.id;
+    const versionCount = groupCounts[gid] || 1;
+    const versionBadge = versionCount > 1 ? ` <span style="font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 6px;border-radius:4px;">v${d.version_number || 1}</span>` : '';
+    const versionsBtn = versionCount > 1 ? `<button onclick="openVersionsModal('${gid}', '${esc(d.name)}')">Versions</button>` : '';
     return `<div class="saved-diff-item">
       <div class="saved-diff-info">
-        <div class="saved-diff-name">${esc(d.name)}</div>
+        <div class="saved-diff-name">${esc(d.name)}${versionBadge}</div>
         <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
       </div>
       <div class="saved-diff-actions">
         <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
         ${linkBtn}
+        ${versionsBtn}
         <button class="delete-btn" onclick="deleteSavedDiff('${d.id}')">Delete</button>
       </div>
     </div>`;
@@ -4843,8 +4891,7 @@ function showReadOnlyBanner(name) {
 }
 
 async function loadDiffIntoEditors(id) {
-  const diff = savedDiffsCache.find(d => d.id === id);
-  if (!diff) return;
+  if (!supabaseClient || !id) return;
   try {
     const { data, error } = await supabaseClient
       .from('saved_diffs')
@@ -5099,7 +5146,7 @@ async function loadTeamDiffs() {
   try {
     const { data, error } = await supabaseClient
       .from('saved_diffs')
-      .select('id, name, dialect, created_at, user_id, public_id, is_public')
+      .select('id, name, dialect, created_at, user_id, public_id, is_public, version_number, diff_group_id')
       .in('team_name', teamNames)
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -5117,20 +5164,96 @@ function renderTeamDiffsList(diffs) {
     list.innerHTML = '<p class="saved-diffs-empty">No team diffs yet. Save a diff to your team workspace to share it.</p>';
     return;
   }
-  list.innerHTML = diffs.map(d => {
+  // Count versions per group
+  const groupCounts = {};
+  diffs.forEach(d => {
+    const gid = d.diff_group_id || d.id;
+    groupCounts[gid] = (groupCounts[gid] || 0) + 1;
+  });
+  // Show only latest version of each group
+  const seenGroups = new Set();
+  const latestDiffs = diffs.filter(d => {
+    const gid = d.diff_group_id || d.id;
+    if (seenGroups.has(gid)) return false;
+    seenGroups.add(gid);
+    return true;
+  });
+  list.innerHTML = latestDiffs.map(d => {
     const date = new Date(d.created_at).toLocaleDateString();
     const isMine = d.user_id === currentUser?.id;
     const linkBtn = d.public_id
       ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
       : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
+    const gid = d.diff_group_id || d.id;
+    const versionCount = groupCounts[gid] || 1;
+    const versionBadge = versionCount > 1 ? ` <span style="font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 6px;border-radius:4px;">v${d.version_number || 1}</span>` : '';
+    const versionsBtn = versionCount > 1 ? `<button onclick="openVersionsModal('${gid}', '${esc(d.name)}')">Versions</button>` : '';
     return `<div class="saved-diff-item">
       <div class="saved-diff-info">
-        <div class="saved-diff-name">${esc(d.name)}${isMine ? ' · You' : ''}</div>
+        <div class="saved-diff-name">${esc(d.name)}${versionBadge}${isMine ? ' · You' : ''}</div>
         <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
       </div>
       <div class="saved-diff-actions">
         <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
         ${linkBtn}
+        ${versionsBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Diff Versioning
+let currentVersionsGroupId = null;
+
+function openVersionsModal(groupId, name) {
+  currentVersionsGroupId = groupId;
+  document.getElementById('versionsModalTitle').textContent = esc(name);
+  document.getElementById('versionsList').innerHTML = '<p class="saved-diffs-empty">Loading versions…</p>';
+  document.getElementById('versionsModal').classList.add('active');
+  loadDiffVersions(groupId);
+}
+
+function closeVersionsModal() {
+  document.getElementById('versionsModal').classList.remove('active');
+  currentVersionsGroupId = null;
+}
+
+async function loadDiffVersions(groupId) {
+  const list = document.getElementById('versionsList');
+  if (!supabaseClient) {
+    list.innerHTML = '<p class="saved-diffs-empty">Supabase not available.</p>';
+    return;
+  }
+  try {
+    const { data, error } = await supabaseClient
+      .from('saved_diffs')
+      .select('id, name, dialect, created_at, user_id, version_number')
+      .or('diff_group_id.eq.' + groupId + ',id.eq.' + groupId)
+      .order('version_number', { ascending: false });
+    if (error) throw error;
+    renderDiffVersionsList(data || []);
+  } catch (err) {
+    list.innerHTML = '<p class="saved-diffs-empty">Failed to load versions.</p>';
+    console.error('loadDiffVersions error:', err);
+  }
+}
+
+function renderDiffVersionsList(versions) {
+  const list = document.getElementById('versionsList');
+  if (!versions.length) {
+    list.innerHTML = '<p class="saved-diffs-empty">No versions found.</p>';
+    return;
+  }
+  list.innerHTML = versions.map(v => {
+    const date = new Date(v.created_at).toLocaleString();
+    const isMine = v.user_id === currentUser?.id;
+    return `<div class="saved-diff-item" style="padding:10px 12px;">
+      <div class="saved-diff-info">
+        <div class="saved-diff-name">v${v.version_number || 1}${isMine ? ' · You' : ''}</div>
+        <div class="saved-diff-meta">${esc(v.dialect)} · ${date}</div>
+      </div>
+      <div class="saved-diff-actions">
+        <button onclick="loadDiffIntoEditors('${v.id}'); closeVersionsModal();">Load</button>
       </div>
     </div>`;
   }).join('');
