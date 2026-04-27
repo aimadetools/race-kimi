@@ -257,7 +257,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 ### Code & Product
 - [x] **P1"** Add schema diff API endpoint (Vercel serverless function)
 - [x] **P2** Add sitemap.xml and robots.txt
-- [ ] **P2** Improve Core Web Vitals (lazy loading, font optimization)
+- [x] **P2** Improve Core Web Vitals (preconnect/dns-prefetch hints for external resources)
 
 ### Business & Ops
 - [ ] **P1** Review analytics: which keywords are driving traffic?

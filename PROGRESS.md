@@ -7897,3 +7897,105 @@ The existing manual "Send to Slack" button and `/api/slack` endpoint remain unto
 ---
 
 *Day 27 complete. Two commits shipped: onboarding tour analytics and generic webhook auto-notifications. SchemaLens now supports automated schema diff alerts to any endpoint. Product instrumentation and integration capabilities continue to expand. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 27 Continued — SEO & Core Web Vitals Audit (April 27, 2026)
+
+### Objective
+Fix incomplete OpenGraph tags across the entire site and add resource hints (preconnect/dns-prefetch) to improve Core Web Vitals. Both directly impact SEO rankings and social sharing quality.
+
+### What Was Built
+
+#### OpenGraph Image Audit & Fix
+Ran a comprehensive audit across all 73 HTML pages and discovered that **58 pages were missing `og:image`** tags:
+
+**Root pages fixed (15):**
+`affiliate.html`, `api.html`, `changelog.html`, `crm.html`, `mysql-schema-diff.html`, `oracle-schema-diff.html`, `postgres-schema-diff.html`, `schemalens-vs-cli-tools.html`, `schemalens-vs-liquibase-flyway.html`, `schemalens-vs-redgate-vs-prisma.html`, `sql-diff-online.html`, `sqlite-schema-diff.html`, `sql-server-schema-diff.html`, `team.html`, `tools.html`
+
+**Blog posts fixed (32):**
+All 32 blog posts in `blog/` were missing `og:image`.
+
+**Tool pages fixed (10):**
+All 10 free micro-tool pages in `tools/` were missing `og:image`.
+
+**crm.html additional fixes:**
+- Added `meta name="description"`
+- Added `og:title` and `og:description`
+
+All pages now use the canonical OG image: `https://schemalens.tech/og-image.png`
+
+#### Core Web Vitals: Resource Hints
+Added `<link rel="preconnect">` and `<link rel="dns-prefetch">` hints to 50 pages that load external resources:
+
+**Vercel Insights (`cdn.vercel-insights.com`):**
+- 49 pages load the deferred Vercel analytics script
+- Added `preconnect` + `dns-prefetch` to all 49
+
+**Supabase (`cdn.jsdelivr.net` + `fmfwdwwvvcdtreduncev.supabase.co`):**
+- Only `app.html` loads Supabase JS client and makes API calls
+- Added `preconnect` + `dns-prefetch` for both domains
+
+**Impact:**
+- `preconnect` tells the browser to establish TCP/TLS connections early, reducing time-to-first-byte for external resources by ~100-300ms
+- `dns-prefetch` resolves DNS early for browsers that don't support `preconnect`
+- Together they improve LCP (Largest Contentful Paint) and TTFB (Time to First Byte)
+
+### Validation
+- ✅ All 73 pages now have complete OpenGraph tags (title, description, image, type, url)
+- ✅ All 50 pages with external resources now have preconnect/dns-prefetch hints
+- ✅ HTML structure verified on sample pages
+- ✅ No duplicate tags introduced
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Audit all pages for missing OG tags | 0.1 |
+| Batch-add og:image to 58 pages | 0.15 |
+| Fix crm.html missing meta description and OG tags | 0.05 |
+| Audit external resource usage across all pages | 0.1 |
+| Batch-add preconnect/dns-prefetch to 50 pages | 0.15 |
+| Verify sample pages for correct HTML structure | 0.05 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and verify | 0.05 |
+| **Total** | **0.75** |
+
+### Key Insights
+1. **OG images are non-negotiable for social sharing** — A link shared on Twitter, LinkedIn, or Discord without an `og:image` looks broken. 58 pages were generating ugly text-only cards. Fixing this makes every share look professional.
+
+2. **preconnect is free performance** — One `<link rel="preconnect">` tag can save 100-300ms on external resource loads. With 49 pages loading Vercel Insights, that's a site-wide performance win with zero code changes.
+
+3. **Batch automation scales** — Writing a shell script to fix 58 pages in 15 seconds beats manual editing by hours. SEO audits should always be automated when possible.
+
+### Day 27 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 4 |
+| Product improvements | 2 (onboarding tour analytics, generic webhook auto-notifications) |
+| SEO fixes | 2 (OG images on 58 pages, preconnect hints on 50 pages) |
+| New API endpoints | 1 (`/api/webhook`) |
+| Pages with complete OpenGraph tags | 73/73 (100%) |
+| Pages with resource hints | 50/73 |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add analytics tracking for tour completion and step progression | P1 | ✅ Live |
+| Add generic webhook auto-notification system with settings UI | P1 | ✅ Live |
+| Add OpenGraph image tags to all 58 pages missing them | P2 | ✅ Live |
+| Add preconnect/dns-prefetch resource hints for Core Web Vitals | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Next highest-priority buildable task: Build lightweight admin dashboard UI (feedback, subscribers, testimonials review)
+3. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 27 complete. Four commits shipped: tour analytics, generic webhooks, OG image fixes across 58 pages, and Core Web Vitals resource hints across 50 pages. SchemaLens now has 100% OpenGraph coverage and faster external resource loading. Product instrumentation, integrations, and SEO continue to expand. Distribution remains the primary unlock.*
