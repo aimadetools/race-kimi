@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Diff Online — Compare Database Schemas in Your Browser</title>
+  <meta name="description" content="Free online SQL schema diff tool. Compare two database schemas side by side, generate ALTER TABLE migrations, and export to Markdown, PDF, or SQL. No install, no upload.">
+  <meta property="og:title" content="SQL Diff Online — Compare Database Schemas in Your Browser">
+  <meta property="og:description" content="Free online SQL schema diff tool. Compare two database schemas side by side, generate ALTER TABLE migrations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/sql-diff-online.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — SQL Diff Online",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Compare two SQL schemas side by side",
+      "Generate ALTER TABLE migration scripts",
+      "Detect breaking changes and risk score",
+      "Export to Markdown, PDF, SQL, JSON",
+      "Support for PostgreSQL, MySQL, SQLite, SQL Server, Oracle",
+      "ORM export: Prisma and Drizzle schemas",
+      "100% browser-based, no upload required"
+    ],
+    "url": "https://schemalens.tech/sql-diff-online.html"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="api.html">API</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Free SQL diff tool — no signup required
+      </div>
+      <h1>SQL Diff Online.<br><span>Compare schemas.</span><br>Generate migrations.</h1>
+      <p>Paste two <code>CREATE TABLE</code> dumps into your browser. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for PostgreSQL, MySQL, SQL Server, SQLite, or Oracle — all without installing anything.</p>
+      <div class="hero-actions">
+        <a href="app.html" class="btn btn-primary btn-lg">Start Diffing Schemas</a>
+        <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Why developers choose SchemaLens</h2>
+      <p class="section-subtitle text-center">The most comprehensive free browser-based schema diff tool.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🔍</div>
+          <h3>Semantic Diff</h3>
+          <p>Not a line-by-line text diff. SchemaLens understands <code>CREATE TABLE</code>, <code>ALTER TABLE</code>, indexes, constraints, triggers, views, and functions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">⚡</div>
+          <h3>5 SQL Dialects</h3>
+          <p>PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Dialect-aware migration generation means you get valid <code>ALTER TABLE</code> syntax every time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🛡️</div>
+          <h3>Breaking Change Detection</h3>
+          <p>Catches dropped columns, NOT NULL without defaults, type narrowing, and missing indexes before they hit production. Includes a 0-100 risk score.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📤</div>
+          <h3>Export Everything</h3>
+          <p>Download your diff as Markdown, PDF, raw SQL, JSON, Prisma schema, or Drizzle TypeScript. Share diffs via URL with teammates.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🔒</div>
+          <h3>Privacy First</h3>
+          <p>Your schema never leaves the browser. Compare production schemas safely without uploading sensitive table structures to a third-party server.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔧</div>
+          <h3>10 Free Tools</h3>
+          <p>SQL validator, formatter, schema doc generator, ER diagram generator, index analyzer, health check, CSV/JSON to SQL converters, and more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
+          <h3>Export your schemas</h3>
+          <p>Run <code>pg_dump --schema-only</code>, <code>mysqldump --no-data</code>, or <code>.schema</code> on both databases.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
+          <h3>Paste into SchemaLens</h3>
+          <p>Copy the SQL into the two editor panes. Select your SQL dialect from the dropdown.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
+          <h3>Review the diff</h3>
+          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
+          <h3>Copy the migration</h3>
+          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Run in staging, then production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Supported databases</h2>
+      <p class="section-subtitle text-center">Choose your dialect for tailored migration generation.</p>
+      <div class="features-grid" style="max-width: 900px; margin: 0 auto;">
+        <a href="app.html?dialect=postgres" class="feature-card" style="text-decoration:none;color:inherit;">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🐘</div>
+          <h3>PostgreSQL</h3>
+          <p>SERIAL, IDENTITY, ENUM types, arrays, JSONB, quoted identifiers, triggers, and functions.</p>
+        </a>
+        <a href="app.html?dialect=mysql" class="feature-card" style="text-decoration:none;color:inherit;">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🐬</div>
+          <h3>MySQL / MariaDB</h3>
+          <p>AUTO_INCREMENT, CHARACTER SET, COLLATE, backtick identifiers, generated columns, and inline FKs.</p>
+        </a>
+        <a href="app.html?dialect=sqlite" class="feature-card" style="text-decoration:none;color:inherit;">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🪶</div>
+          <h3>SQLite</h3>
+          <p>INTEGER PRIMARY KEY, AUTOINCREMENT, limited ALTER TABLE support with honest workarounds.</p>
+        </a>
+        <a href="app.html?dialect=mssql" class="feature-card" style="text-decoration:none;color:inherit;">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🗄️</div>
+          <h3>SQL Server</h3>
+          <p>IDENTITY, bracket identifiers, named default constraints, CLUSTERED/NONCLUSTERED indexes.</p>
+        </a>
+        <a href="app.html?dialect=oracle" class="feature-card" style="text-decoration:none;color:inherit;">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🏛️</div>
+          <h3>Oracle</h3>
+          <p>GENERATED ALWAYS AS IDENTITY, VARCHAR2/NUMBER types, tablespace clauses, and partitioned tables.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Workflow</span>
+            <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step workflow for catching schema drift between staging and production.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Migration</span>
+            <h3><a href="blog/how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></h3>
+            <p>Stop writing migration scripts by hand. Learn how automatic generation works for PostgreSQL, MySQL, and SQL Server.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Safety</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn how to catch dropped columns, missing indexes, and type changes before they cause incidents.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Stop writing migrations by hand.</h2>
+      <p>SchemaLens generates your <code>ALTER TABLE</code> scripts in seconds. Free for up to 10 tables. Pro starts at $12/mo with a 14-day money-back guarantee.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Start Diffing for Free</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No credit card required. No data leaves your browser.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+          <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+          <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
