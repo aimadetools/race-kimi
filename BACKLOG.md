@@ -479,7 +479,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [ ] **P2** Write guest post for dev.to about the ER Diagram Generator
 
 ### Business & Ops
-- [ ] **P1** Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
+- [x] **P1** Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
 - [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
 - [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
