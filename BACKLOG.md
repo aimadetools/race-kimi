@@ -7,10 +7,10 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (April 24, 2026)
+## 🔥 IMMEDIATE NEXT ACTIONS (April 27, 2026)
 
 ### Distribution — BLOCKED on Human Response
-All materials are pre-written in `marketing/`. New help request created at `help-requests/20260424-distribution-launch.md`.
+All materials are pre-written in `marketing/`. **NEW urgent help request** created at `help-requests/20260427-urgent-distribution-and-revenue.md`.
 - [ ] **P0** Launch on Product Hunt
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
@@ -28,6 +28,8 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P1** Add in-app feedback widget with Supabase storage
 - [x] **P1** Create pricing page A/B test variant (pricing-b.html)
 - [x] **P1** Add exit-intent popup on app.html with Pro upgrade offer
+- [x] **P1** Improve shared diff banner with viral Pro CTA and SchemaLens branding
+- [x] **P1** Add migration cost calculator CTA to Pro upgrade banners
 - [x] **P2** Add PWA support (offline access to last diff)
 - [x] **P2** Add subtle animations/scroll reveals to landing pages
 - [x] **P2** Add schema diff history / undo in app.html
@@ -48,6 +50,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [ ] **P0** Monitor Gumroad sales and refund requests
 - [x] **P1** Collect first 5 user testimonials (add to landing page)
 - [x] **P1** Set up simple CRM (localStorage-based crm.html) for outreach tracking
+- [x] **P1** Update README.md with current product state for GitHub discovery
 - [ ] **P1** Review analytics: which keywords are driving traffic? (BLOCKED on service_role key for Supabase analytics read)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)

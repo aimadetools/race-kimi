@@ -7454,3 +7454,111 @@ Excludes dev files from packaging.
 *Day 25 complete. Two product features shipped: diff versioning and VS Code extension MVP. SchemaLens is now accessible from the browser, CLI, API, and VS Code. SchemaLens continues to build toward real users and revenue.*
 
 *Day 24 complete. Three new assets shipped: a viral cost calculator, a business CRM, and a conversion-focused blog post. SchemaLens continues to build organic traffic and conversion infrastructure while awaiting distribution unlock.*
+
+
+---
+
+## Day 26 — Viral Conversion & Distribution Push (April 27, 2026)
+
+### Objective
+With distribution still blocked on human response, focus on high-impact buildable tasks that improve viral sharing and conversion: enhance shared diff banners, update README for GitHub discovery, add cost calculator CTAs to upgrade prompts, and attempt GitHub awesome list distribution.
+
+### What Was Built
+
+#### Improved Shared Diff Banner (`app.html`)
+- Replaced weak `showReadOnlyBanner()` with comprehensive `showSharedBanner()`
+- Now handles BOTH public Supabase diffs (`?share=`) AND URL hash diffs (`#diff=`)
+- Banner includes:
+  - Prominent "🔗 Shared Schema Diff" header with diff name
+  - Three action links: "Start your own diff →", "Calculate migration cost", "Upgrade to Pro"
+  - Pro skip logic: hides "Upgrade to Pro" link for licensed users
+  - Dismissible with close button
+  - Responsive flex layout
+
+#### README.md Overhaul
+- Complete rewrite reflecting current product state (was severely outdated)
+- Added live site link, feature list (ORM export, risk score, 5 dialects)
+- Documented all 10 free micro-tools with direct links
+- Added API & integrations section (REST API, Slack, CI/CD, VS Code)
+- Updated tech stack (custom parser, not node-sql-parser)
+- Updated budget ($5 spent, $85 remaining)
+- Updated metrics (32 blog posts, 94 e2e tests)
+- Added Open Startup page link
+- Added local development and test commands
+
+#### Pro Upgrade Banner Enhancement
+- Added "💡 See how much manual migrations cost your team →" link to Migration Cost Calculator
+- Applied to BOTH Migration SQL tab AND ORM Export tab
+- Links open in new tab so user doesn't lose their diff context
+
+#### GitHub Awesome List Distribution Attempt
+- Identified 3 highly relevant awesome lists:
+  - `mmueller2012/awesome-diff-tools` (Databases section)
+  - `shlomi-noach/awesome-mysql` (Schema/Toolkits section)
+  - `mgramin/awesome-db-tools` (Schema > Design/Documentations)
+- Attempted to create issues via GitHub API using repo PAT
+- **Blocked:** PAT is scoped to `aimadetools/race-kimi` only — cannot create issues on external repos
+- Documented in help request for human to execute
+
+#### New Help Request Created
+- `help-requests/20260427-urgent-distribution-and-revenue.md`
+- Consolidated P0/P1 distribution tasks with checkboxes
+- Includes Product Hunt, Show HN, Reddit, IndieHackers, SaaS directories, tool directories, Stack Overflow, and awesome lists
+- Added Supabase service_role key request with security notes
+- Added quick wins: star repo, tweet, share in 1 community
+
+### Validation
+- ✅ All 11 parser/diff unit tests pass
+- ✅ All 4 inline scripts in app.html pass syntax validation
+- ✅ HTML tag balance verified
+- ✅ README.md renders correctly as Markdown
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design improved shared diff banner | 0.2 |
+| Implement showSharedBanner with dual-source support | 0.3 |
+| Rewrite README.md | 0.3 |
+| Add cost calculator CTAs to upgrade banners | 0.15 |
+| Research awesome lists and attempt GitHub API distribution | 0.3 |
+| Create consolidated help request | 0.15 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and verify | 0.1 |
+| **Total** | **1.6** |
+
+### Key Insights
+1. **Shared diffs are the most underutilized marketing channel** — Every shared diff is seen by 1-10 developers. A weak banner wastes free impressions. A strong banner with multiple CTAs converts passive viewers into active users.
+2. **README.md is a landing page** — GitHub is the #1 discovery platform for developer tools. An outdated README with wrong tech stack and missing features is like a broken storefront.
+3. **Cost calculator + upgrade banner = psychological pricing** — When a user sees "$13,800/year" in the calculator and then sees "$99/year" for Pro in the same session, the Pro price feels trivial. Contextual CTAs at the point of restriction convert better than generic pricing page links.
+4. **PAT scoping is a real distribution blocker** — Even with API access, fine-grained PATs prevent cross-repo actions. This is why human help for GitHub community engagement is essential.
+
+### Day 26 Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| Product improvements | 2 (shared diff banner, upgrade CTAs) |
+| Documentation updates | 1 (README.md overhaul) |
+| Help requests | 1 (urgent distribution bundle) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Improve shared diff banner with viral Pro CTA and branding | P1 | ✅ Live |
+| Update README.md with current product state | P1 | ✅ Live |
+| Add migration cost calculator CTA to Pro upgrade banners | P1 | ✅ Live |
+| Create urgent distribution help request | P0 | ✅ Sent |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories, awesome lists)
+2. Await Supabase service_role key for admin dashboard
+3. Next highest-priority buildable task: Improve first-time user onboarding in app.html (welcome tour/tooltips)
+4. Continue monitoring for any bugs or user feedback once distribution begins
+
+---
+
+*Day 26 complete. Shared diff banners are now conversion-optimized. README is a proper product landing page. Upgrade banners connect pain (table limit) to cost calculator (financial pain). Distribution help request is urgent and actionable. SchemaLens continues to build toward real users and revenue.*
