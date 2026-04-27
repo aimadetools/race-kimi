@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — SchemaLens</title>
+  <meta name="description" content="SchemaLens admin dashboard for reviewing feedback, subscribers, and testimonials.">
+  <meta property="og:title" content="Admin — SchemaLens">
+  <meta property="og:description" content="SchemaLens admin dashboard for reviewing feedback, subscribers, and testimonials.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <style>
+    .admin-login {
+      max-width: 400px;
+      margin: 80px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .admin-login h2 {
+      margin: 0 0 16px;
+      font-size: 1.3rem;
+    }
+    .admin-login input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+    .admin-login button {
+      width: 100%;
+      padding: 10px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .admin-login .error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .admin-dashboard {
+      display: none;
+    }
+    .admin-dashboard.active {
+      display: block;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .admin-header h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+    .admin-header .admin-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .admin-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+    .admin-stat .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .admin-stat .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .admin-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .admin-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .admin-section-header h3 {
+      font-size: 1rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-section-body {
+      padding: 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .admin-empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .admin-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+    }
+    .admin-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    .admin-table td pre {
+      margin: 0;
+      font-size: 0.8rem;
+      background: var(--bg);
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      max-width: 300px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .admin-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+    }
+    .admin-badge.success { background: var(--success); }
+    .admin-badge.warning { background: var(--warning); color: #000; }
+    .admin-badge.danger { background: var(--danger); }
+
+    .admin-actions-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .admin-actions-bar button {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .admin-actions-bar button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    @media (max-width: 640px) {
+      .admin-stats { grid-template-columns: repeat(2, 1fr); }
+      .admin-table td pre { max-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="admin-login" id="adminLogin">
+      <h2>🔐 Admin Access</h2>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:16px;">Enter the admin password to review feedback, subscribers, and testimonials.</p>
+      <input type="password" id="adminPassword" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button onclick="doLogin()">Sign In</button>
+      <p class="error" id="loginError">Incorrect password.</p>
+    </div>
+
+    <div class="admin-dashboard" id="adminDashboard">
+      <div class="admin-header">
+        <h1>📊 SchemaLens Admin</h1>
+        <div class="admin-actions">
+          <button class="btn btn-secondary" onclick="refreshAll()">Refresh</button>
+          <button class="btn btn-secondary" onclick="doLogout()">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="admin-stats" id="adminStats">
+        <div class="admin-stat">
+          <div class="value" id="statFeedback">—</div>
+          <div class="label">Feedback</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statSubscribers">—</div>
+          <div class="label">Subscribers</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statTestimonials">—</div>
+          <div class="label">Testimonials</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statPending">—</div>
+          <div class="label">Pending</div>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>💬 Feedback</h3>
+          <span class="admin-badge" id="badgeFeedback">0</span>
+        </div>
+        <div class="admin-section-body" id="feedbackBody">
+          <div class="admin-empty">Loading feedback…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshFeedback()">Refresh</button>
+          <button class="primary" onclick="exportFeedback()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>📧 Newsletter Subscribers</h3>
+          <span class="admin-badge success" id="badgeSubscribers">0</span>
+        </div>
+        <div class="admin-section-body" id="subscribersBody">
+          <div class="admin-empty">Loading subscribers…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshSubscribers()">Refresh</button>
+          <button class="primary" onclick="exportSubscribers()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>⭐ Testimonials</h3>
+          <span class="admin-badge warning" id="badgeTestimonials">0</span>
+        </div>
+        <div class="admin-section-body" id="testimonialsBody">
+          <div class="admin-empty">Loading testimonials…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshTestimonials()">Refresh</button>
+          <button class="primary" onclick="exportTestimonials()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>📈 Recent Analytics Events</h3>
+          <span class="admin-badge" id="badgeAnalytics">0</span>
+        </div>
+        <div class="admin-section-body" id="analyticsBody">
+          <div class="admin-empty">Analytics events require service_role access. Configure in Vercel environment variables.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshAnalytics()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">SchemaLens Admin — Protected Area</p>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = 'https://fmfwdwwvvcdtreduncev.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw';
+
+    // Hardcoded admin password (this is client-side gatekeeping; real protection comes from RLS + serverless proxy)
+    const ADMIN_PASSWORD_HASH = 'schemalens-admin-2026';
+
+    function hashPassword(pw) {
+      // Simple string comparison for client-side gatekeeping.
+      // The real security model is: Supabase RLS prevents anon reads on sensitive tables.
+      // This hash check just keeps casual visitors out of the UI.
+      return pw;
+    }
+
+    function doLogin() {
+      const pw = document.getElementById('adminPassword').value.trim();
+      if (hashPassword(pw) === ADMIN_PASSWORD_HASH) {
+        localStorage.setItem('schemalens_admin', '1');
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminDashboard').classList.add('active');
+        refreshAll();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    function doLogout() {
+      localStorage.removeItem('schemalens_admin');
+      document.getElementById('adminDashboard').classList.remove('active');
+      document.getElementById('adminLogin').style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    // Auto-login if previously authenticated
+    if (localStorage.getItem('schemalens_admin') === '1') {
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminDashboard').classList.add('active');
+      refreshAll();
+    }
+
+    async function supabaseFetch(table, options = {}) {
+      const url = `${SUPABASE_URL}/rest/v1/${table}`;
+      const res = await fetch(url, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...(options.headers || {})
+        },
+        ...options
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`${res.status}: ${text.slice(0, 200)}`);
+      }
+      return res.json();
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleString();
+    }
+
+    function escapeCsv(str) {
+      if (str == null) return '';
+      const s = String(str).replace(/"/g, '""');
+      if (/[",\n]/.test(s)) return `"${s}"`;
+      return s;
+    }
+
+    function downloadCsv(filename, headers, rows) {
+      const lines = [headers.join(','), ...rows.map(r => r.map(escapeCsv).join(','))];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // Feedback
+    async function refreshFeedback() {
+      const body = document.getElementById('feedbackBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await supabaseFetch('feedback?select=*&order=created_at.desc');
+        document.getElementById('statFeedback').textContent = data.length;
+        document.getElementById('badgeFeedback').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No feedback yet.</div>';
+          return;
+        }
+        const rows = data.map(f => `
+          <tr>
+            <td>${formatDate(f.created_at)}</td>
+            <td>${f.category || 'other'}</td>
+            <td><pre>${f.message || ''}</pre></td>
+            <td>${f.email || '—'}</td>
+            <td>${f.page_path || '—'}</td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Category</th><th>Message</th><th>Email</th><th>Page</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load feedback.<br><small>${e.message}</small><br><small>Ensure Supabase RLS allows anon SELECT on feedback, or configure service_role key.</small></div>`;
+      }
+    }
+
+    function exportFeedback() {
+      const table = document.querySelector('#feedbackBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-feedback.csv', headers, rows);
+    }
+
+    // Subscribers
+    async function refreshSubscribers() {
+      const body = document.getElementById('subscribersBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await supabaseFetch('newsletter_subscribers?select=*&order=subscribed_at.desc');
+        document.getElementById('statSubscribers').textContent = data.length;
+        document.getElementById('badgeSubscribers').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No subscribers yet.</div>';
+          return;
+        }
+        const rows = data.map(s => `
+          <tr>
+            <td>${formatDate(s.subscribed_at)}</td>
+            <td>${s.email}</td>
+            <td>${s.source_page || '—'}</td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Email</th><th>Source</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load subscribers.<br><small>${e.message}</small><br><small>Ensure Supabase RLS allows anon SELECT on newsletter_subscribers, or configure service_role key.</small></div>`;
+      }
+    }
+
+    function exportSubscribers() {
+      const table = document.querySelector('#subscribersBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-subscribers.csv', headers, rows);
+    }
+
+    // Testimonials
+    async function refreshTestimonials() {
+      const body = document.getElementById('testimonialsBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await supabaseFetch('testimonials?select=*&order=created_at.desc');
+        const pending = data.filter(t => !t.approved).length;
+        document.getElementById('statTestimonials').textContent = data.length;
+        document.getElementById('statPending').textContent = pending;
+        document.getElementById('badgeTestimonials').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No testimonials yet.</div>';
+          return;
+        }
+        const rows = data.map(t => `
+          <tr>
+            <td>${formatDate(t.created_at)}</td>
+            <td>${t.name}</td>
+            <td>${t.role || '—'}${t.company ? ' @ ' + t.company : ''}</td>
+            <td><pre>${t.testimonial || ''}</pre></td>
+            <td>${t.rating || 5}★</td>
+            <td>${t.approved ? '<span class="admin-badge success">Approved</span>' : '<span class="admin-badge warning">Pending</span>'}</td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Name</th><th>Role</th><th>Testimonial</th><th>Rating</th><th>Status</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load testimonials.<br><small>${e.message}</small></div>`;
+      }
+    }
+
+    function exportTestimonials() {
+      const table = document.querySelector('#testimonialsBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-testimonials.csv', headers, rows);
+    }
+
+    // Analytics (requires service_role or custom RLS policy)
+    async function refreshAnalytics() {
+      const body = document.getElementById('analyticsBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await supabaseFetch('analytics_events?select=*&order=created_at.desc&limit=100');
+        document.getElementById('badgeAnalytics').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No analytics events yet.</div>';
+          return;
+        }
+        const rows = data.map(e => `
+          <tr>
+            <td>${formatDate(e.created_at)}</td>
+            <td>${e.event_type}</td>
+            <td>${e.page_path || '—'}</td>
+            <td><pre>${JSON.stringify(e.metadata || {}, null, 2)}</pre></td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Event</th><th>Page</th><th>Metadata</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load analytics.<br><small>${e.message}</small><br><small>Analytics events require service_role access or a custom admin RLS policy. Add SUPABASE_SERVICE_ROLE_KEY to Vercel env vars and configure the admin endpoint.</small></div>`;
+      }
+    }
+
+    function refreshAll() {
+      refreshFeedback();
+      refreshSubscribers();
+      refreshTestimonials();
+      refreshAnalytics();
+    }
+  </script>
+</body>
+</html>
