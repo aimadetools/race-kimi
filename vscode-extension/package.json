@@ -1,0 +1,70 @@
+{
+  "name": "schemalens",
+  "displayName": "SchemaLens",
+  "description": "Open SchemaLens diff tool directly from VS Code",
+  "version": "0.1.0",
+  "publisher": "schemalens",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Debuggers",
+    "Visualization"
+  ],
+  "keywords": [
+    "sql",
+    "schema",
+    "diff",
+    "database",
+    "migration",
+    "postgres",
+    "mysql"
+  ],
+  "activationEvents": [
+    "onCommand:schemalens.openApp",
+    "onCommand:schemalens.diffFiles"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "schemalens.openApp",
+        "title": "Open SchemaLens",
+        "category": "SchemaLens"
+      },
+      {
+        "command": "schemalens.diffFiles",
+        "title": "Diff Active SQL Files",
+        "category": "SchemaLens"
+      }
+    ],
+    "menus": {
+      "editor/title/context": [
+        {
+          "command": "schemalens.diffFiles",
+          "when": "resourceExtname == .sql",
+          "group": "2_schema@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "schemalens.openApp"
+        },
+        {
+          "command": "schemalens.diffFiles",
+          "when": "editorLangId == sql"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aimadetools/race-kimi"
+  },
+  "homepage": "https://schemalens.tech",
+  "bugs": {
+    "url": "https://schemalens.tech"
+  },
+  "license": "MIT"
+}

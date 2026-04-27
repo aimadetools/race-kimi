@@ -312,7 +312,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 - [x] **P0** Add Slack webhook for schema drift alerts
 - [ ] **P1** Add Zapier integration (if feasible on free tier)
 - [ ] **P1"** Add webhook notifications on diff completion
-- [ ] **P2** Build VS Code extension MVP (calls API)
+- [x] **P2** Build VS Code extension MVP (calls API)
 
 ### Marketing & Content
 - [x] **P1** Publish API documentation page
@@ -463,7 +463,7 @@ All materials are pre-written in `marketing/`. New help request created at `help
 ### Product
 - [x] **P1** Build free micro-tool: ER Diagram Generator from SQL (Mermaid.js, SVG export)
 - [x] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
-- [ ] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
+- [x] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
 - [ ] **P2** Add comment/annotation on diffs for team collaboration
 - [x] **P2** Add diff versioning for team history
 

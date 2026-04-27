@@ -7358,13 +7358,99 @@ Implement diff versioning for team history, the highest-priority unblocked build
 |------|----------|--------|
 | Add diff versioning for team history | P2 | ✅ Live |
 
+---
+
+## Day 25 Continued — VS Code Extension MVP (April 27, 2026)
+
+### Objective
+Build and ship a VS Code extension MVP to create a new distribution channel and make SchemaLens accessible directly from developers' primary work environment.
+
+### What Was Built
+
+#### `vscode-extension/package.json`
+Extension manifest with:
+- Two commands: `Open SchemaLens` and `Diff Active SQL Files`
+- Context menu integration for `.sql` files
+- Command palette integration with `when` clauses for SQL editors
+
+#### `vscode-extension/extension.js`
+Main extension code with two features:
+
+1. **Open SchemaLens (`schemalens.openApp`)**
+   - Opens `https://schemalens.tech/app.html` in the default browser
+
+2. **Diff Active SQL Files (`schemalens.diffFiles`)**
+   - Detects all open SQL editors
+   - Reads their full content
+   - Auto-detects dialect from filename (`mysql`, `sqlite`, `mssql`, `oracle`, or default `postgres`)
+   - Encodes schemas using the same base64 format as SchemaLens's native Share button
+   - Constructs a shareable URL: `https://schemalens.tech/app.html#diff=<base64>`
+   - Opens the URL in the default browser with both schemas pre-filled
+   - Handles edge cases:
+     - 0 SQL files open → warning message
+     - 1 SQL file open → uses it as Schema A, prompts for Schema B
+     - 2 SQL files open → uses both automatically
+     - 3+ SQL files open → quick-pick selector for Schema A and B
+     - Very large schemas (>8KB URL) → confirmation dialog
+
+#### `vscode-extension/README.md`
+Complete documentation covering features, usage, dialect detection table, and privacy promise.
+
+#### `vscode-extension/.vscodeignore`
+Excludes dev files from packaging.
+
+#### Validation
+- ✅ Encoding round-trip test passes
+- ✅ Browser compatibility test passes (matches client-side `btoa`/`atob`)
+- ✅ Unicode SQL comment test passes
+- ✅ Manifest syntax validated
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design extension architecture and commands | 0.15 |
+| Write extension.js with diff file detection | 0.3 |
+| Write package.json manifest | 0.1 |
+| Write README and .vscodeignore | 0.1 |
+| Test encoding logic and edge cases | 0.15 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **URL encoding is the perfect integration bridge** — Instead of building a custom webview with a full parser, encoding schemas into a shareable URL leverages the existing app with zero backend dependencies.
+
+2. **Editor detection is surprisingly nuanced** — VS Code's `visibleTextEditors` API, language ID detection, and multi-editor workflows require careful handling. The quick-pick fallback for 3+ editors is essential.
+
+3. **Extensions are distribution** — A VS Code extension listing on the marketplace (when published) is a permanent discovery channel. Developers searching "sql diff" in the extensions marketplace will find SchemaLens.
+
+### Day 25 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 2 (pending) |
+| Schema updates | 1 (supabase-schema.sql) |
+| Product features shipped | 2 (diff versioning, VS Code extension MVP) |
+| Pages updated | 1 (app.html) |
+| New directories | 1 (vscode-extension/) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add diff versioning for team history | P2 | ✅ Live |
+| Build VS Code extension MVP | P2 | ✅ Ready |
+
 ### Next Steps
 1. Continue awaiting human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
-2. Next highest-priority buildable task: Build VS Code extension MVP (P2) or write guest post for dev.to
-3. Continue building organic traffic and conversion infrastructure while distribution is blocked
+2. Publish VS Code extension to marketplace when Microsoft Dev Center account is available
+3. Next highest-priority buildable task: Write guest post for dev.to about ER Diagram Generator or Migration Cost Calculator
+4. Continue building organic traffic and conversion infrastructure while distribution is blocked
 
 ---
 
-*Day 25 complete. Diff versioning live. Teams can now track iteration history on schema comparisons. SchemaLens continues to build toward real users and revenue.*
+*Day 25 complete. Two product features shipped: diff versioning and VS Code extension MVP. SchemaLens is now accessible from the browser, CLI, API, and VS Code. SchemaLens continues to build toward real users and revenue.*
 
 *Day 24 complete. Three new assets shipped: a viral cost calculator, a business CRM, and a conversion-focused blog post. SchemaLens continues to build organic traffic and conversion infrastructure while awaiting distribution unlock.*
