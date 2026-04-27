@@ -4530,7 +4530,10 @@ document.querySelectorAll('.results-tab').forEach(tab => {
       if (data.d) document.getElementById('dialect').value = data.d;
       updateStats();
       // Auto-run comparison after a short delay to let UI settle
-      setTimeout(() => document.getElementById('compareBtn').click(), 300);
+      setTimeout(() => {
+        document.getElementById('compareBtn').click();
+        setTimeout(() => showSharedBanner(null, 'hash'), 400);
+      }, 300);
       return;
     }
   }
@@ -4874,19 +4877,34 @@ async function loadPublicDiff(publicId) {
     updateStats();
     // Auto-run comparison
     setTimeout(() => document.getElementById('compareBtn').click(), 300);
-    // Show read-only banner
-    showReadOnlyBanner(data.name);
+    // Show shared banner
+    showSharedBanner(data.name, 'public');
   } catch (err) {
     showError('Failed to load shared diff: ' + err.message);
   }
 }
 
-function showReadOnlyBanner(name) {
+function showSharedBanner(name, source) {
+  const isLicensed = checkLicense();
   const container = document.getElementById('errorContainer');
-  container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3);color:var(--text);">
-    <strong>🔗 Viewing shared diff${name ? ': ' + esc(name) : ''}</strong> — 
-    <a href="app.html" style="color:var(--primary);">Open in SchemaLens</a> to edit and generate migrations.
-    <button class="close" onclick="this.parentElement.remove()">×</button>
+  let actions = `<a href="app.html" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
+  actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html" style="color:var(--primary);">Calculate migration cost</a>`;
+  if (!isLicensed) {
+    actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html" style="color:var(--primary);">Upgrade to Pro</a>`;
+  }
+  container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.35);color:var(--text);">
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+      <div style="font-size:1.3rem;flex-shrink:0;">🔗</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:700;margin-bottom:4px;">Viewing a shared schema diff${name ? ': ' + esc(name) : ''}</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;">
+          ${source === 'public' ? 'This diff was shared via a public link.' : 'This diff was shared via URL.'}
+          SchemaLens compares SQL schemas in your browser — no upload, no signup.
+        </div>
+        <div style="font-size:0.9rem;">${actions}</div>
+      </div>
+    </div>
+    <button class="close" onclick="this.parentElement.remove()" style="color:var(--text-muted);">×</button>
   </div>`;
 }
 
