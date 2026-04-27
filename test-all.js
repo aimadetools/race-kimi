@@ -4,12 +4,16 @@ const mockEl = () => ({
   textContent: '',
   innerHTML: '',
   value: '',
-  style: {}
+  style: {},
+  appendChild: () => {},
+  remove: () => {}
 });
 global.document = {
   getElementById: () => mockEl(),
   querySelectorAll: () => [],
+  querySelector: () => mockEl(),
   addEventListener: () => {},
+  createElement: () => mockEl(),
   body: { appendChild: () => {}, removeChild: () => {} }
 };
 global.location = { hash: '', pathname: '/', origin: 'http://test' };

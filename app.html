@@ -716,6 +716,61 @@
       font-weight: 500;
     }
     .offline-banner.show { display: block; }
+    .tour-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 2000;
+      display: none;
+    }
+    .tour-spotlight {
+      position: absolute;
+      border-radius: var(--radius);
+      box-shadow: 0 0 0 4px var(--primary), 0 0 0 9999px rgba(0,0,0,0.65);
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+    .tour-tooltip {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      max-width: 320px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      z-index: 2001;
+      transition: all 0.4s ease;
+    }
+    .tour-tooltip h4 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+    .tour-tooltip p {
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .tour-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .tour-actions button {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tour-actions button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -4501,6 +4556,73 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
   });
 });
+
+// Onboarding tour
+(function initTour() {
+  if (localStorage.getItem('schemalens_tour_seen')) return;
+  const steps = [
+    { el: 'schemaA', title: 'Schema A — Your Old Schema', text: 'Paste your current (old) CREATE TABLE dump here. You can export it with pg_dump, mysqldump, or .schema.', placement: 'bottom' },
+    { el: 'schemaB', title: 'Schema B — Your New Schema', text: 'Paste the updated schema you want to compare against. SchemaLens will find every difference between the two.', placement: 'bottom' },
+    { el: 'compareBtn', title: 'Compare & Generate Migrations', text: 'Select your SQL dialect, then click Compare. SchemaLens shows a visual diff and generates ready-to-run ALTER TABLE scripts.', placement: 'bottom' },
+    { el: 'panelA', title: 'Try a Sample', text: 'Not sure what to paste? Click "Load sample" to see SchemaLens in action with realistic PostgreSQL, MySQL, SQL Server, or Oracle schemas.', placement: 'right' }
+  ];
+  let stepIndex = 0;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'tour-overlay';
+  document.body.appendChild(overlay);
+
+  const spotlight = document.createElement('div');
+  spotlight.className = 'tour-spotlight';
+  overlay.appendChild(spotlight);
+
+  const tooltip = document.createElement('div');
+  tooltip.className = 'tour-tooltip';
+  overlay.appendChild(tooltip);
+
+  function position(elId, placement) {
+    const el = document.getElementById(elId);
+    if (!el) return false;
+    const rect = el.getBoundingClientRect();
+    spotlight.style.left = (rect.left - 6) + 'px';
+    spotlight.style.top = (rect.top - 6 + window.scrollY) + 'px';
+    spotlight.style.width = (rect.width + 12) + 'px';
+    spotlight.style.height = (rect.height + 12) + 'px';
+
+    let tLeft = rect.left;
+    let tTop = rect.bottom + 12 + window.scrollY;
+    if (placement === 'right') {
+      tLeft = rect.right + 16;
+      tTop = rect.top + window.scrollY;
+    }
+    if (tLeft + 340 > window.innerWidth) tLeft = window.innerWidth - 340;
+    if (tLeft < 10) tLeft = 10;
+    tooltip.style.left = tLeft + 'px';
+    tooltip.style.top = tTop + 'px';
+    return true;
+  }
+
+  function render() {
+    if (stepIndex >= steps.length) {
+      overlay.remove();
+      localStorage.setItem('schemalens_tour_seen', '1');
+      return;
+    }
+    const s = steps[stepIndex];
+    if (!position(s.el, s.placement)) {
+      stepIndex++;
+      render();
+      return;
+    }
+    tooltip.innerHTML = `<h4>${s.title}</h4><p>${s.text}</p><div class="tour-actions"><button onclick="tourSkip()">Skip tour</button><button class="primary" onclick="tourNext()">${stepIndex === steps.length - 1 ? 'Got it' : 'Next'}</button></div>`;
+    overlay.style.display = 'block';
+  }
+
+  window.tourNext = function() { stepIndex++; render(); };
+  window.tourSkip = function() { overlay.remove(); localStorage.setItem('schemalens_tour_seen', '1'); };
+
+  setTimeout(render, 600);
+})();
 
 // Auto-load last diff or URL-shared diff
 (function init() {
