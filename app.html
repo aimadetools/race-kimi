@@ -2799,6 +2799,7 @@ function renderMigration(sql, diff) {
         <p>Migration generation is limited to schemas with 10 tables or fewer on the Free plan.<br>Upgrade to Pro for unlimited tables and full migration scripts.</p>
         <button class="btn btn-primary" onclick="openLicenseModal()">Unlock with License Key</button>
         <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a></p>
+        <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
       </div>
     `;
   }
@@ -3947,6 +3948,7 @@ function renderORM() {
       <div class="upgrade-banner">
         <h3>📈 Large schema detected (${totalTables} tables)</h3>
         <p>ORM export is limited to schemas with 10 tables or fewer on the Free plan.<br>Upgrade to Pro for unlimited tables and full ORM schema generation.</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
         <button class="btn btn-primary" onclick="openLicenseModal()">Unlock with License Key</button>
         <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a></p>
       </div>
