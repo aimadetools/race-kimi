@@ -4561,6 +4561,10 @@ document.querySelectorAll('.results-tab').forEach(tab => {
 // Onboarding tour
 (function initTour() {
   if (localStorage.getItem('schemalens_tour_seen')) return;
+  // Skip tour for shared/public diff loads — these users already know what they're looking at
+  const params = new URLSearchParams(location.search);
+  if (params.get('share') || location.hash.match(/#diff=/)) return;
+
   const steps = [
     { el: 'schemaA', title: 'Schema A — Your Old Schema', text: 'Paste your current (old) CREATE TABLE dump here. You can export it with pg_dump, mysqldump, or .schema.', placement: 'bottom' },
     { el: 'schemaB', title: 'Schema B — Your New Schema', text: 'Paste the updated schema you want to compare against. SchemaLens will find every difference between the two.', placement: 'bottom' },
@@ -4568,6 +4572,7 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     { el: 'panelA', title: 'Try a Sample', text: 'Not sure what to paste? Click "Load sample" to see SchemaLens in action with realistic PostgreSQL, MySQL, SQL Server, or Oracle schemas.', placement: 'right' }
   ];
   let stepIndex = 0;
+  let started = false;
 
   const overlay = document.createElement('div');
   overlay.className = 'tour-overlay';
@@ -4580,6 +4585,12 @@ document.querySelectorAll('.results-tab').forEach(tab => {
   const tooltip = document.createElement('div');
   tooltip.className = 'tour-tooltip';
   overlay.appendChild(tooltip);
+
+  function trackTour(event, meta) {
+    if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+      window.SchemaLensAnalytics.track(event, meta);
+    }
+  }
 
   function position(elId, placement) {
     const el = document.getElementById(elId);
@@ -4607,6 +4618,7 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     if (stepIndex >= steps.length) {
       overlay.remove();
       localStorage.setItem('schemalens_tour_seen', '1');
+      trackTour('tour_completed', { total_steps: steps.length });
       return;
     }
     const s = steps[stepIndex];
@@ -4615,12 +4627,25 @@ document.querySelectorAll('.results-tab').forEach(tab => {
       render();
       return;
     }
+    if (!started) {
+      started = true;
+      trackTour('tour_started', { total_steps: steps.length });
+    }
+    trackTour('tour_step_viewed', { step_index: stepIndex, step_title: s.title });
     tooltip.innerHTML = `<h4>${s.title}</h4><p>${s.text}</p><div class="tour-actions"><button onclick="tourSkip()">Skip tour</button><button class="primary" onclick="tourNext()">${stepIndex === steps.length - 1 ? 'Got it' : 'Next'}</button></div>`;
     overlay.style.display = 'block';
   }
 
-  window.tourNext = function() { stepIndex++; render(); };
-  window.tourSkip = function() { overlay.remove(); localStorage.setItem('schemalens_tour_seen', '1'); };
+  window.tourNext = function() {
+    trackTour('tour_next', { step_index: stepIndex, step_title: steps[stepIndex].title });
+    stepIndex++;
+    render();
+  };
+  window.tourSkip = function() {
+    trackTour('tour_skip', { step_index: stepIndex, step_title: steps[stepIndex].title });
+    overlay.remove();
+    localStorage.setItem('schemalens_tour_seen', '1');
+  };
 
   setTimeout(render, 600);
 })();
