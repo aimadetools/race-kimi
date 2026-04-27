@@ -316,7 +316,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P0** Add API key management for Team plan
 - [x] **P0** Add Slack webhook for schema drift alerts
 - [ ] **P1** Add Zapier integration (if feasible on free tier)
-- [ ] **P1"** Add webhook notifications on diff completion
+- [x] **P1"** Add webhook notifications on diff completion
 - [x] **P2** Build VS Code extension MVP (calls API)
 
 ### Marketing & Content

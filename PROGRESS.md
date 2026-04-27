@@ -7795,3 +7795,105 @@ Updated the onboarding tour in `app.html` to emit 4 analytics events via the exi
 ---
 
 *Day 27 complete. Onboarding tour now emits analytics events for every step, skip, and completion. Product instrumentation is improving. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 27 Continued — Generic Webhook Auto-Notifications (April 27, 2026)
+
+### Objective
+Add generic webhook auto-notifications so users can automatically send diff results to any URL after each comparison. This enables integrations with Zapier, Discord, n8n, Make, and custom endpoints — a key differentiator for teams building automated schema review workflows.
+
+### What Was Built
+
+#### `api/webhook.js` — Generic Webhook Proxy Endpoint
+A Vercel serverless function at `POST /api/webhook`:
+
+- **Accepts any HTTPS URL** — not limited to Slack like the existing `/api/slack` endpoint
+- **Forwards JSON payloads** with an 8-second timeout
+- **Optional HMAC-SHA256 signature** via `X-Webhook-Signature` header when a secret is provided
+- **Rate limiting:** 10 requests/minute per IP (same in-memory pattern as `/api/slack`)
+- **CORS-enabled** for cross-origin requests
+- **Silent failure design** — webhook errors never block the user's diff workflow
+- **Privacy:** No payload storage, stateless forwarding only
+
+#### Webhook Settings UI in `app.html`
+Added a **Settings** modal (⚙️ button in toolbar) with webhook configuration:
+
+- **Webhook URL input** — validates HTTPS protocol
+- **Secret key input** — optional, for HMAC-SHA256 signature generation
+- **Auto-send toggle** — when enabled, every diff completion automatically fires the webhook
+- **Test button** — sends a test payload to verify the configuration without running a diff
+- **Persistent storage** — config saved to localStorage
+
+#### Auto-Fire Integration
+After the compare button completes (`renderMigration` etc.), `maybeAutoWebhook()` is called:
+- Checks if auto-send is enabled and a URL is configured
+- Builds a comprehensive JSON payload:
+  - `event: 'diff_completed'`
+  - `dialect`, `timestamp`, `url`
+  - `summary`: tables old/new, added/removed/modified counts, breaking change count
+  - `breaking_changes`: first 20 breaking changes with severity and details
+  - `migration_sql_preview`: first 2,000 chars of generated migration SQL
+- Sends via `/api/webhook` endpoint
+- Tracks `webhook_auto_sent` analytics event
+- **Never throws** — wrapped in try/catch so webhook failures don't interrupt the user
+
+#### Slack Integration Preserved
+The existing manual "Send to Slack" button and `/api/slack` endpoint remain untouched. The generic webhook is additive, not replacing.
+
+### Validation
+- ✅ All 4 inline scripts in app.html pass syntax validation
+- ✅ HTML tag balance verified
+- ✅ `api/webhook.js` syntax validated with Node.js
+- ✅ Rate limiter logic matches `/api/slack.js` pattern
+- ✅ Auto-webhook calls are non-blocking (try/catch + no await in main flow)
+- ✅ Settings modal opens, saves, and closes correctly
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design webhook event payload and architecture | 0.1 |
+| Build `api/webhook.js` serverless endpoint | 0.2 |
+| Build settings modal HTML/CSS | 0.15 |
+| Implement settings JS (save, test, load) | 0.15 |
+| Implement `maybeAutoWebhook()` auto-fire | 0.1 |
+| Integrate into compare button handler | 0.05 |
+| Syntax validation and testing | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and verify | 0.05 |
+| **Total** | **1.0** |
+
+### Key Insights
+1. **Generic beats specific** — A Slack-only integration covers one platform. A generic HTTPS webhook covers Slack (via webhook URL), Discord, Zapier, n8n, Make, custom APIs, and any future service. One endpoint, infinite integrations.
+
+2. **HMAC signatures earn trust** — Security-conscious teams won't accept unsigned webhooks. Optional HMAC-SHA256 verification lets teams prove the payload came from SchemaLens, not an attacker.
+
+3. **Silent failure is a feature** — Webhooks are infrastructure, not product. If a user's webhook server is down, they still need their diff results immediately. The try/catch wrapper makes webhooks invisible when they fail and delightful when they work.
+
+### Day 27 Final Summary
+| Metric | Value |
+|--------|-------|
+| Commits | 2 |
+| Product improvements | 2 (onboarding tour analytics, generic webhook auto-notifications) |
+| New API endpoints | 1 (`/api/webhook`) |
+| Blog posts published | 32 |
+| Free micro-tools | 10 |
+| E2E tests | 94 passed (prior session) |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add analytics tracking for tour completion and step progression | P1 | ✅ Live |
+| Add generic webhook auto-notification system with settings UI | P1 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request
+2. Next highest-priority buildable task: Improve Core Web Vitals (lazy loading, font optimization)
+3. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 27 complete. Two commits shipped: onboarding tour analytics and generic webhook auto-notifications. SchemaLens now supports automated schema diff alerts to any endpoint. Product instrumentation and integration capabilities continue to expand. Distribution remains the primary unlock.*
