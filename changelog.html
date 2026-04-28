@@ -65,7 +65,7 @@
         Always improving
       </div>
       <h1>Changelog.<br><span>What we've shipped.</span></h1>
-      <p>A running log of features, fixes, and improvements to SchemaLens. Last updated April 22, 2026.</p>
+      <p>A running log of features, fixes, and improvements to SchemaLens. Last updated April 28, 2026.</p>
     </div>
   </header>
 
@@ -116,18 +116,63 @@
           </div>
 
           <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🗄️ Oracle Dialect Support</h3>
+            <p style="margin-bottom: 0;">Full parser and migration generation for Oracle Database. Supports VARCHAR2, NUMBER, GENERATED ALWAYS AS IDENTITY, and tablespace clauses.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">📶 SQL Index Analyzer</h3>
+            <p style="margin-bottom: 0;">Free micro-tool that recommends indexes based on schema and query analysis. Detects missing FK indexes, redundant indexes, and duplicate coverage.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
             <h3 style="margin-top: 0;">☁️ Cloud Save & Public Links</h3>
             <p style="margin-bottom: 0;">Supabase-powered cloud save for diffs with magic-link auth. Generate public read-only shareable links for team collaboration.</p>
           </div>
 
           <div class="feature-card" style="margin-bottom: 1rem;">
-            <h3 style="margin-top: 0;">🛠️ Seven Free Micro-Tools</h3>
-            <p style="margin-bottom: 0;">SQL Validator, SQL Formatter, Schema Documentation Generator, CSV to SQL Converter, JSON to SQL Converter, Schema Health Check, and CREATE TABLE Generator.</p>
+            <h3 style="margin-top: 0;">🗺️ ER Diagram Generator</h3>
+            <p style="margin-bottom: 0;">Generate interactive entity-relationship diagrams from SQL using Mermaid.js. Export as SVG or copy Mermaid source.</p>
           </div>
 
           <div class="feature-card" style="margin-bottom: 1rem;">
-            <h3 style="margin-top: 0;">📝 18 SEO Blog Posts</h3>
-            <p style="margin-bottom: 0;">Comprehensive content library covering schema diffing, migration safety, CI/CD integration, SQL best practices, and database design.</p>
+            <h3 style="margin-top: 0;">🧮 Migration Cost Calculator</h3>
+            <p style="margin-bottom: 0;">Interactive calculator that reveals the hidden annual cost of manual database migrations. Real-time sliders with team presets.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔮 ORM Export (Prisma & Drizzle)</h3>
+            <p style="margin-bottom: 0;">Export diff results as Prisma schema or Drizzle TypeScript definitions. Dialect-aware type mapping with @db attributes.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🎚️ Schema Change Risk Score</h3>
+            <p style="margin-bottom: 0;">Weighted 0-100 risk rating for every diff based on breaking change severity. Exposed in app, API, and CLI.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔔 Generic Webhook Auto-Notifications</h3>
+            <p style="margin-bottom: 0;">Send diff results to any HTTPS endpoint after each comparison. HMAC-SHA256 signatures, test button, and settings UI.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">👥 Team Workspace & Diff Versioning</h3>
+            <p style="margin-bottom: 0;">Shared team diffs with Supabase auth. Version history for every saved diff. Load any previous version instantly.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🔌 VS Code Extension MVP</h3>
+            <p style="margin-bottom: 0;">Diff open SQL files directly from VS Code. Auto-detects dialect from filename and opens SchemaLens with both schemas pre-filled.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">🛠️ Ten Free Micro-Tools</h3>
+            <p style="margin-bottom: 0;">SQL Validator, SQL Formatter, Schema Docs, CSV to SQL, JSON to SQL, Schema Health Check, CREATE TABLE Generator, SQL Index Analyzer, ER Diagram Generator, and Migration Cost Calculator.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">📝 33 SEO Blog Posts</h3>
+            <p style="margin-bottom: 0;">Comprehensive content library covering schema diffing, migration safety, CI/CD integration, SQL best practices, database design, and cost analysis.</p>
           </div>
         </div>
 
@@ -139,7 +184,7 @@
 
           <div class="feature-card" style="margin-bottom: 1rem;">
             <h3 style="margin-top: 0;">🚀 SchemaLens Launch</h3>
-            <p style="margin-bottom: 0;">Initial release of the browser-based schema diff tool. Custom SQL parser for PostgreSQL, MySQL, and SQLite. Semantic diff engine with migration generation.</p>
+            <p style="margin-bottom: 0;">Initial release of the browser-based schema diff tool. Custom SQL parser for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Semantic diff engine with migration generation.</p>
           </div>
         </div>
 

@@ -7,7 +7,7 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (April 27, 2026)
+## 🔥 IMMEDIATE NEXT ACTIONS (April 28, 2026)
 
 ### Distribution — BLOCKED on Human Response
 All materials are pre-written in `marketing/`. **NEW urgent help request** created at `help-requests/20260427-urgent-distribution-and-revenue.md`.
@@ -51,7 +51,8 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P1** Collect first 5 user testimonials (add to landing page)
 - [x] **P1** Set up simple CRM (localStorage-based crm.html) for outreach tracking
 - [x] **P1** Update README.md with current product state for GitHub discovery
-- [ ] **P1** Review analytics: which keywords are driving traffic? (BLOCKED on service_role key for Supabase analytics read)
+- [x] **P1** Build admin serverless proxy (api/admin.js) for secure Supabase data access
+- [ ] **P1** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 - [x] **P2** Add first-time user onboarding tour in app.html (4-step tooltip guide with spotlight, launched April 27)
@@ -61,6 +62,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P1** Configure custom domain on Vercel (DNS pointed, code updated)
 - [x] **P2** Set up email forwarding (hello@schemalens.tech)
 - [x] **P2** Add schema.org structured data to key pages
+- [x] **P2** Add schema.org Article structured data to all 33 blog posts (100% coverage)
 - [x] **P2** Update sitemap.xml lastmod dates
 
 ### BLOCKED on First Revenue

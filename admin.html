@@ -258,6 +258,10 @@
           <div class="label">Testimonials</div>
         </div>
         <div class="admin-stat">
+          <div class="value" id="statComments">—</div>
+          <div class="label">Comments</div>
+        </div>
+        <div class="admin-stat">
           <div class="value" id="statPending">—</div>
           <div class="label">Pending</div>
         </div>
@@ -302,6 +306,20 @@
         <div class="admin-actions-bar">
           <button onclick="refreshTestimonials()">Refresh</button>
           <button class="primary" onclick="exportTestimonials()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>🗨️ Diff Comments</h3>
+          <span class="admin-badge" id="badgeComments">0</span>
+        </div>
+        <div class="admin-section-body" id="commentsBody">
+          <div class="admin-empty">Loading comments…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshComments()">Refresh</button>
+          <button class="primary" onclick="exportComments()">Export CSV</button>
         </div>
       </div>
 
@@ -367,23 +385,17 @@
       refreshAll();
     }
 
-    async function supabaseFetch(table, options = {}) {
-      const url = `${SUPABASE_URL}/rest/v1/${table}`;
-      const res = await fetch(url, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          ...(options.headers || {})
-        },
-        ...options
+    async function adminFetch(action, limit = 100) {
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, password: ADMIN_PASSWORD_HASH, limit })
       });
+      const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        throw new Error(`${res.status}: ${text.slice(0, 200)}`);
+        throw new Error(json.error || `${res.status} error`);
       }
-      return res.json();
+      return json.data || [];
     }
 
     function formatDate(iso) {
@@ -414,7 +426,7 @@
       const body = document.getElementById('feedbackBody');
       body.innerHTML = '<div class="admin-empty">Loading…</div>';
       try {
-        const data = await supabaseFetch('feedback?select=*&order=created_at.desc');
+        const data = await adminFetch('feedback');
         document.getElementById('statFeedback').textContent = data.length;
         document.getElementById('badgeFeedback').textContent = data.length;
         if (!data.length) {
@@ -436,7 +448,7 @@
             <tbody>${rows}</tbody>
           </table>`;
       } catch (e) {
-        body.innerHTML = `<div class="admin-empty">Unable to load feedback.<br><small>${e.message}</small><br><small>Ensure Supabase RLS allows anon SELECT on feedback, or configure service_role key.</small></div>`;
+        body.innerHTML = `<div class="admin-empty">Unable to load feedback.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
       }
     }
 
@@ -455,7 +467,7 @@
       const body = document.getElementById('subscribersBody');
       body.innerHTML = '<div class="admin-empty">Loading…</div>';
       try {
-        const data = await supabaseFetch('newsletter_subscribers?select=*&order=subscribed_at.desc');
+        const data = await adminFetch('subscribers');
         document.getElementById('statSubscribers').textContent = data.length;
         document.getElementById('badgeSubscribers').textContent = data.length;
         if (!data.length) {
@@ -475,7 +487,7 @@
             <tbody>${rows}</tbody>
           </table>`;
       } catch (e) {
-        body.innerHTML = `<div class="admin-empty">Unable to load subscribers.<br><small>${e.message}</small><br><small>Ensure Supabase RLS allows anon SELECT on newsletter_subscribers, or configure service_role key.</small></div>`;
+        body.innerHTML = `<div class="admin-empty">Unable to load subscribers.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
       }
     }
 
@@ -494,7 +506,7 @@
       const body = document.getElementById('testimonialsBody');
       body.innerHTML = '<div class="admin-empty">Loading…</div>';
       try {
-        const data = await supabaseFetch('testimonials?select=*&order=created_at.desc');
+        const data = await adminFetch('testimonials');
         const pending = data.filter(t => !t.approved).length;
         document.getElementById('statTestimonials').textContent = data.length;
         document.getElementById('statPending').textContent = pending;
@@ -533,12 +545,53 @@
       downloadCsv('schemalens-testimonials.csv', headers, rows);
     }
 
+    // Diff Comments
+    async function refreshComments() {
+      const body = document.getElementById('commentsBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('comments');
+        document.getElementById('statComments').textContent = data.length;
+        document.getElementById('badgeComments').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No comments yet.</div>';
+          return;
+        }
+        const rows = data.map(c => `
+          <tr>
+            <td>${formatDate(c.created_at)}</td>
+            <td>${c.table_name || '—'}</td>
+            <td><pre>${c.message || ''}</pre></td>
+            <td>${c.user_id ? c.user_id.slice(0, 8) + '…' : '—'}</td>
+            <td>${c.saved_diff_id ? c.saved_diff_id.slice(0, 8) + '…' : '—'}</td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Table</th><th>Message</th><th>User</th><th>Diff ID</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load comments.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
+    function exportComments() {
+      const table = document.querySelector('#commentsBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-comments.csv', headers, rows);
+    }
+
     // Analytics (requires service_role or custom RLS policy)
     async function refreshAnalytics() {
       const body = document.getElementById('analyticsBody');
       body.innerHTML = '<div class="admin-empty">Loading…</div>';
       try {
-        const data = await supabaseFetch('analytics_events?select=*&order=created_at.desc&limit=100');
+        const data = await adminFetch('analytics', 100);
         document.getElementById('badgeAnalytics').textContent = data.length;
         if (!data.length) {
           body.innerHTML = '<div class="admin-empty">No analytics events yet.</div>';
@@ -558,7 +611,7 @@
             <tbody>${rows}</tbody>
           </table>`;
       } catch (e) {
-        body.innerHTML = `<div class="admin-empty">Unable to load analytics.<br><small>${e.message}</small><br><small>Analytics events require service_role access or a custom admin RLS policy. Add SUPABASE_SERVICE_ROLE_KEY to Vercel env vars and configure the admin endpoint.</small></div>`;
+        body.innerHTML = `<div class="admin-empty">Unable to load analytics.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
       }
     }
 
@@ -566,6 +619,7 @@
       refreshFeedback();
       refreshSubscribers();
       refreshTestimonials();
+      refreshComments();
       refreshAnalytics();
     }
   </script>

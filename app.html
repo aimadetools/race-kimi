@@ -246,6 +246,82 @@
       background: var(--surface-hover);
       color: var(--text);
     }
+    .table-comments {
+      background: var(--code-bg);
+      border-top: 1px solid var(--border);
+      padding: 12px 18px;
+    }
+    .table-comments-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+    .table-comments-header:hover { color: var(--text); }
+    .comment-count {
+      font-size: 0.7rem;
+      background: var(--border);
+      color: var(--text-muted);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .comments-list { margin-top: 10px; }
+    .comment-item {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .comment-item:last-child { border-bottom: none; }
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+    }
+    .comment-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .comment-input textarea {
+      flex: 1;
+      min-height: 44px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+    }
+    .comment-input button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .comment-input button:hover { background: var(--primary-hover); }
+    .comment-delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      margin-left: auto;
+    }
+    .comment-delete-btn:hover { color: var(--danger); }
     .validation-bar {
       display: flex;
       align-items: center;
@@ -2860,6 +2936,21 @@ function renderTableDiff(name, status, addedCols, removedCols, renamedCols, modi
     rows += `<tr class="row-removed"><td colspan="4"><strong>− Constraint:</strong> ${esc(con.name || 'unnamed')} — ${details}</td></tr>`;
   }
 
+  const commentSection = `
+    <div class="table-comments">
+      <div class="table-comments-header" onclick="toggleComments('${esc(name)}')">
+        💬 Comments <span class="comment-count" id="comment-count-${esc(name)}">0</span>
+      </div>
+      <div class="comments-body" id="comments-body-${esc(name)}" style="display:none;">
+        <div class="comments-list" id="comments-list-${esc(name)}"></div>
+        <div class="comment-input">
+          <textarea id="comment-input-${esc(name)}" placeholder="Add a comment about this table..." maxlength="2000"></textarea>
+          <button onclick="addComment('${esc(name)}')">Add</button>
+        </div>
+      </div>
+    </div>
+  `;
+
   return `
     <div class="diff-table" id="table-${esc(name)}">
       <div class="diff-table-header">
@@ -2872,8 +2963,125 @@ function renderTableDiff(name, status, addedCols, removedCols, renamedCols, modi
           <tbody>${rows}</tbody>
         </table>
       </div>
+      ${commentSection}
     </div>
   `;
+}
+
+function toggleComments(tableName) {
+  const body = document.getElementById('comments-body-' + tableName);
+  if (!body) return;
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+async function loadComments(savedDiffId) {
+  if (!supabaseClient || !savedDiffId) {
+    diffCommentsCache = [];
+    renderAllComments();
+    return;
+  }
+  try {
+    const { data, error } = await supabaseClient
+      .from('diff_comments')
+      .select('id, saved_diff_id, user_id, table_name, message, created_at')
+      .eq('saved_diff_id', savedDiffId)
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    diffCommentsCache = data || [];
+  } catch (err) {
+    diffCommentsCache = [];
+    console.error('loadComments error:', err);
+  }
+  renderAllComments();
+}
+
+function renderAllComments() {
+  const tableNames = new Set(diffCommentsCache.map(c => c.table_name));
+  for (const name of tableNames) {
+    renderCommentsForTable(name);
+  }
+  // Update counts for all tables (including zero)
+  document.querySelectorAll('[id^="comment-count-"]').forEach(el => {
+    const tableName = el.id.replace('comment-count-', '');
+    const count = diffCommentsCache.filter(c => c.table_name === tableName).length;
+    el.textContent = count;
+    if (count > 0) {
+      el.style.background = 'var(--primary)';
+      el.style.color = '#fff';
+    } else {
+      el.style.background = 'var(--border)';
+      el.style.color = 'var(--text-muted)';
+    }
+  });
+}
+
+function renderCommentsForTable(tableName) {
+  const list = document.getElementById('comments-list-' + tableName);
+  if (!list) return;
+  const comments = diffCommentsCache.filter(c => c.table_name === tableName);
+  if (!comments.length) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:4px 0;">No comments yet.</div>';
+    return;
+  }
+  list.innerHTML = comments.map(c => {
+    const date = new Date(c.created_at).toLocaleDateString();
+    const time = new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const isOwn = currentUser && c.user_id === currentUser.id;
+    const deleteBtn = isOwn
+      ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}', '${esc(tableName)}')" title="Delete comment">×</button>`
+      : '';
+    return `<div class="comment-item">
+      <div class="comment-meta">
+        <span>${esc((currentUser && c.user_id === currentUser.id) ? 'You' : 'Team member')}</span>
+        <span>·</span>
+        <span>${date} ${time}</span>
+        ${deleteBtn}
+      </div>
+      <div>${esc(c.message)}</div>
+    </div>`;
+  }).join('');
+}
+
+async function addComment(tableName) {
+  if (!supabaseClient || !currentUser) {
+    showError('Please sign in to add comments.');
+    return;
+  }
+  if (!currentSavedDiffId) {
+    showError('Save this diff to cloud first to enable comments.');
+    return;
+  }
+  const input = document.getElementById('comment-input-' + tableName);
+  if (!input) return;
+  const message = input.value.trim();
+  if (!message) return;
+  try {
+    const { error } = await supabaseClient
+      .from('diff_comments')
+      .insert([{ saved_diff_id: currentSavedDiffId, user_id: currentUser.id, table_name: tableName, message }]);
+    if (error) throw error;
+    input.value = '';
+    await loadComments(currentSavedDiffId);
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('comment_added', { table: tableName });
+  } catch (err) {
+    showError('Failed to add comment: ' + err.message);
+  }
+}
+
+async function deleteComment(commentId, tableName) {
+  if (!confirm('Delete this comment?')) return;
+  if (!supabaseClient) return;
+  try {
+    const { error } = await supabaseClient
+      .from('diff_comments')
+      .delete()
+      .eq('id', commentId)
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+    await loadComments(currentSavedDiffId);
+  } catch (err) {
+    showError('Failed to delete comment: ' + err.message);
+  }
 }
 
 function renderMigration(sql, diff) {
@@ -4238,6 +4446,8 @@ function downloadORM() {
 
 let lastMigrationSQL = '';
 let lastDiff = null;
+let currentSavedDiffId = null;
+let diffCommentsCache = [];
 const LICENSE_SALT = 'SchemaLensPro2026';
 
 function validateLicenseKey(key) {
@@ -4688,6 +4898,14 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderPDF();
   renderORM();
 
+  // Load comments if this diff is associated with a saved diff
+  if (currentSavedDiffId) {
+    loadComments(currentSavedDiffId);
+  } else {
+    diffCommentsCache = [];
+    renderAllComments();
+  }
+
   document.getElementById('results').classList.add('active');
   document.getElementById('welcomeHint').classList.add('hidden');
   setCompareLoading(false);
@@ -4719,6 +4937,8 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('schemaAStats').textContent = '';
   document.getElementById('schemaBStats').textContent = '';
   document.getElementById('welcomeHint').classList.remove('hidden');
+  currentSavedDiffId = null;
+  diffCommentsCache = [];
   history.replaceState(null, '', location.pathname);
 });
 
@@ -5054,10 +5274,15 @@ async function saveDiffToCloud() {
       versionNumber = (existing[0].version_number || 1) + 1;
     }
 
-    const { error } = await supabaseClient
+    const { data: inserted, error } = await supabaseClient
       .from('saved_diffs')
-      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName, diff_group_id: diffGroupId, version_number: versionNumber }]);
+      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName, diff_group_id: diffGroupId, version_number: versionNumber }])
+      .select('id')
+      .single();
     if (error) throw error;
+    if (inserted && inserted.id) {
+      currentSavedDiffId = inserted.id;
+    }
     closeSaveModal();
     showError('✓ Diff saved to cloud!' + (teamName ? ' (Team: ' + teamName + ')' : '') + (versionNumber > 1 ? ' (v' + versionNumber + ')' : ''));
     loadSavedDiffs();
@@ -5185,7 +5410,7 @@ async function loadPublicDiff(publicId) {
   try {
     const { data, error } = await supabaseClient
       .from('saved_diffs')
-      .select('schema_a, schema_b, dialect, name')
+      .select('id, schema_a, schema_b, dialect, name')
       .eq('public_id', publicId)
       .eq('is_public', true)
       .single();
@@ -5199,6 +5424,7 @@ async function loadPublicDiff(publicId) {
     if (data.dialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(data.dialect)) {
       document.getElementById('dialect').value = data.dialect;
     }
+    currentSavedDiffId = data.id || null;
     updateStats();
     // Auto-run comparison
     setTimeout(() => document.getElementById('compareBtn').click(), 300);
@@ -5248,6 +5474,7 @@ async function loadDiffIntoEditors(id) {
     if (data.dialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(data.dialect)) {
       document.getElementById('dialect').value = data.dialect;
     }
+    currentSavedDiffId = id;
     updateStats();
     document.getElementById('results').classList.remove('active');
     document.getElementById('welcomeHint').classList.remove('hidden');

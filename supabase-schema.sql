@@ -206,3 +206,70 @@ CREATE POLICY "Only service role can read all testimonials" ON public.testimonia
   FOR SELECT TO service_role USING (true);
 
 CREATE INDEX IF NOT EXISTS idx_testimonials_approved ON public.testimonials(approved, created_at DESC);
+
+-- ============================================
+-- diff_comments: team collaboration annotations
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.diff_comments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  saved_diff_id UUID NOT NULL REFERENCES public.saved_diffs(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  table_name TEXT NOT NULL,
+  message TEXT NOT NULL CHECK (LENGTH(message) <= 2000),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.diff_comments ENABLE ROW LEVEL SECURITY;
+
+-- Users can view comments on diffs they own
+CREATE POLICY "Users can view comments on own diffs" ON public.diff_comments
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.saved_diffs sd
+      WHERE sd.id = diff_comments.saved_diff_id
+      AND sd.user_id = auth.uid()
+    )
+  );
+
+-- Team members can view comments on team diffs
+CREATE POLICY "Team members can view team comments" ON public.diff_comments
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.saved_diffs sd
+      JOIN public.team_memberships tm ON tm.team_name = sd.team_name
+      WHERE sd.id = diff_comments.saved_diff_id
+      AND tm.user_id = auth.uid()
+    )
+  );
+
+-- Anyone can view comments on public diffs
+CREATE POLICY "Anyone can view comments on public diffs" ON public.diff_comments
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.saved_diffs sd
+      WHERE sd.id = diff_comments.saved_diff_id
+      AND sd.is_public = true
+    )
+  );
+
+-- Users can insert comments on accessible diffs
+CREATE POLICY "Users can comment on accessible diffs" ON public.diff_comments
+  FOR INSERT WITH CHECK (
+    auth.uid() = user_id AND (
+      EXISTS (
+        SELECT 1 FROM public.saved_diffs sd
+        WHERE sd.id = saved_diff_id
+        AND (sd.user_id = auth.uid() OR sd.is_public = true OR EXISTS (
+          SELECT 1 FROM public.team_memberships tm
+          WHERE tm.team_name = sd.team_name AND tm.user_id = auth.uid()
+        ))
+      )
+    )
+  );
+
+-- Users can delete their own comments
+CREATE POLICY "Users can delete own comments" ON public.diff_comments
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS idx_diff_comments_diff ON public.diff_comments(saved_diff_id, table_name);
+CREATE INDEX IF NOT EXISTS idx_diff_comments_created_at ON public.diff_comments(created_at DESC);
