@@ -55,17 +55,17 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **Integrations:** REST API (/api/diff), Slack webhook (/api/slack), generic webhook auto-notifications (/api/webhook), VS Code extension MVP.
 
 ### Weeks 7–8 (April 27–28)
-- **SEO & Performance:** 100% OpenGraph coverage (73 pages), schema.org Article on 33 blog posts + SoftwareApplication on 10 tools + FAQPage on pricing, preconnect/dns-prefetch hints, zero broken internal links.
+- **SEO & Performance:** 100% OpenGraph coverage (73 pages), schema.org Article on 34 blog posts + SoftwareApplication on 11 tools + FAQPage on pricing, preconnect/dns-prefetch hints, zero broken internal links.
 - **Ops Infrastructure:** Admin dashboard (admin.html), serverless admin proxy (/api/admin), newsletter welcome email (/api/newsletter-welcome), weekly analytics summary (/api/analytics-summary), conversion funnel visualization.
-- **Content:** 8 more blog posts (33 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, Migration Cost Calculator, SQL Diff Online landing page, Schema Migration Tool landing page.
-- **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support.
+- **Content:** 9 more blog posts (34 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, Migration Cost Calculator, SQL Data Types Reference, SQL Diff Online landing page, Schema Migration Tool landing page.
+- **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix.
 
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### SEO & Content (Unblocked)
-- [ ] **P1** Ensure all 73+ pages have unique `<title>` and `<meta name="description">`
+- [x] **P1** Ensure all 73+ pages have unique `<title>` and `<meta name="description">`
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Publish "State of Schema Migrations 2026" — industry survey

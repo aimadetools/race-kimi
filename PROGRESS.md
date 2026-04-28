@@ -1408,3 +1408,133 @@ Add a conversion funnel visualization to the admin dashboard to track the user j
 ---
 
 *Day 28 complete. Seven commits shipped: diff comment system, admin proxy/schema.org completion, guest post/SEO landing page, FAQPage structured data with pricing copy refresh, newsletter welcome email, weekly analytics summary, and conversion funnel visualization. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*
+
+---
+
+## Day 28 Continued — SQL Data Types Reference & Blog Post (April 28, 2026)
+
+### Objective
+Build and ship the 11th free micro-tool: a SQL Data Types Reference page. This targets extremely high-volume keywords like "sql data types", "postgresql vs mysql data types", and "oracle to postgres type mapping" — capturing developers who are actively planning migrations.
+
+### What Was Built
+
+#### `tools/sql-data-types.html` (13,142 bytes)
+A fully client-side, searchable SQL data types reference with zero dependencies:
+
+- **5-dialect comparison tables** organized by category:
+  - Numeric types (SMALLINT, INTEGER, BIGINT, SERIAL, DECIMAL, REAL, DOUBLE, MONEY)
+  - String types (CHAR, VARCHAR, TEXT, Unicode, Binary)
+  - Date & Time types (DATE, TIME, TIMESTAMP, timezone-aware variants)
+  - Boolean & Special types (BOOLEAN, UUID, JSON, Enum, Array)
+- **Common migration pitfalls table** with 6 real-world traps:
+  - BOOLEAN → MySQL (TINYINT(1))
+  - VARCHAR length semantics (bytes vs characters)
+  - Auto-increment syntax differences
+  - TEXT type sizing
+  - Date/time precision
+  - JSON storage models
+- **Live search filter** — instantly hides non-matching sections as you type
+- **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication structured data
+- **Cross-linking:** CTA to SchemaLens app, linked from tools.html, index.html, blog.html
+
+#### Blog Post: "SQL Data Types Across Dialects: The Migration Cheat Sheet"
+- Full HTML article at `blog/sql-data-types-across-dialects.html`
+- SEO-optimized title targeting:
+  - "sql data types"
+  - "postgresql vs mysql data types"
+  - "oracle to postgres data types"
+  - "sql server mysql type mapping"
+  - "database type migration"
+- Content structure:
+  - Why type mappings matter (the silent killer of migrations)
+  - Numeric types comparison table
+  - String types comparison table
+  - Boolean: the 5-dialect problem
+  - Date and time precision differences
+  - JSON: the moving target
+  - 5-step checklist to avoid type migration errors
+- Inline CTA linking to the Data Types Reference tool and SchemaLens app
+- Updated `blog.html` with new article card at top of grid
+- Added to `sitemap.xml`
+
+#### Site-Wide Updates
+- Added SQL Data Types Reference to `tools.html` landing page
+- Added to `index.html` "Free developer tools" section
+- Added to `blog.html` tool cards
+- Added to `tests/e2e.spec.js` page load test list
+- Updated `sitemap.xml` with both new pages
+
+#### Bug Fix
+- Fixed `.tour-overlay` CSS in `app.html` to use `pointer-events: none` with `pointer-events: auto` on the tooltip. This prevented the onboarding tour from blocking clicks on the compare button and other UI elements. Verified by e2e test (Chromium now passes).
+
+### Validation
+- ✅ All 22+ Chromium e2e page-load tests pass
+- ✅ `tools/sql-data-types.html` has complete OpenGraph tags and schema.org structured data
+- ✅ `blog/sql-data-types-across-dialects.html` has complete Article schema.org structured data
+- ✅ Search filter works correctly across all sections
+- ✅ Internal links verified on tools.html, index.html, blog.html
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research SQL data type mappings across 5 dialects | 0.15 |
+| Design reference page structure and tables | 0.1 |
+| Build tools/sql-data-types.html | 0.25 |
+| Write blog post content and tables | 0.3 |
+| Update site-wide links (tools.html, index.html, blog.html, sitemap.xml) | 0.15 |
+| Fix tour overlay pointer-events bug | 0.1 |
+| Add to e2e tests and run validation | 0.15 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.35** |
+
+### Key Insights
+1. **Data types are a gateway keyword** — Developers searching for "sql data types" are often in the research phase of a migration. Capturing them early with a useful reference builds trust before they even know they need a diff tool.
+
+2. **Reference content ranks forever** — Unlike trend-driven blog posts, a data types reference is evergreen. It will continue to attract traffic years from now with zero maintenance.
+
+3. **The tour overlay bug was a real UX issue** — Not just a test failure. Users who skipped or ignored the onboarding tour were effectively blocked from using the app if the overlay caught their clicks. The `pointer-events: none` fix makes the tour informative but non-blocking.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 9 (8 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| New pages | 4 (schema-migration-tool.html, guest post draft, sql-data-types.html, blog post 34) |
+| Pages updated | 12+ |
+| SEO landing pages | 18 |
+| Blog posts published | 34 |
+| Free micro-tools | 11 |
+| E2E tests | 22+ page load tests pass |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Continue building organic traffic drivers: more reference content, micro-tools, or SEO landing pages
+
+---
+
+*Day 28 complete. Nine commits shipped including context maintenance, diff comment system, admin proxy, schema.org completion, guest post/SEO landing page, FAQPage structured data, newsletter welcome email, weekly analytics summary, conversion funnel, and SQL Data Types Reference. SchemaLens has 18 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*
