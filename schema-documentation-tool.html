@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQL Schema Documentation Tool — Auto-Generate Database Docs</title>
+  <meta name="description" content="Generate beautiful database schema documentation from SQL automatically. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Export to Markdown or HTML. No signup.">
+  <meta property="og:title" content="SQL Schema Documentation Tool — Auto-Generate Database Docs">
+  <meta property="og:description" content="Turn CREATE TABLE statements into shareable schema documentation in seconds. Supports 5 SQL dialects. Export to Markdown or HTML. Free.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-documentation-tool.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — SQL Schema Documentation Tool",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Auto-generate schema docs from SQL CREATE TABLE statements",
+      "Support for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle",
+      "Export documentation to Markdown or HTML",
+      "Shareable documentation URLs",
+      "Privacy-first — no data leaves your browser",
+      "Detects columns, types, defaults, constraints, indexes, and foreign keys"
+    ],
+    "url": "https://schemalens.tech/schema-documentation-tool.html"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="api.html">API</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Free — no signup required
+      </div>
+      <h1>Turn SQL into<br><span>living documentation.</span></h1>
+      <p>Paste your CREATE TABLE statements and get beautiful, shareable schema documentation in seconds. No manual formatting. No copy-paste diagrams. Just paste, generate, and share the link with your team.</p>
+      <div class="hero-actions">
+        <a href="tools/schema-doc-generator.html" class="btn btn-primary btn-lg">Generate Docs Now</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Diff Schemas</a>
+      </div>
+      <p class="hero-note">Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Export to Markdown or HTML.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Why auto-generate schema docs?</h2>
+      <p class="section-subtitle text-center">Your schema is the single source of truth. Your documentation should be too.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">⚡</div>
+          <h3>Instant Documentation</h3>
+          <p>Paste your SQL dump and get formatted docs in under a second. No more hand-writing Notion pages or Confluence tables that go stale the moment someone runs a migration.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🗄️</div>
+          <h3>5 SQL Dialects</h3>
+          <p>PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. Our custom parser understands each dialect's unique syntax, from SERIAL to IDENTITY to AUTO_INCREMENT.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15);">📤</div>
+          <h3>Export to Markdown or HTML</h3>
+          <p>Download your docs as a Markdown file for GitHub or Notion, or as HTML for your internal wiki. One click, zero formatting headaches.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🔗</div>
+          <h3>Shareable Links</h3>
+          <p>Every generated doc gets a shareable URL. Send it to your team, paste it in a PR description, or embed it in your runbook. The docs stay in sync because they're generated from the SQL itself.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔍</div>
+          <h3>Complete Structure Detection</h3>
+          <p>Columns, data types, defaults, nullable flags, primary keys, foreign keys, unique constraints, indexes, and CHECK constraints — all extracted and formatted automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🔒</div>
+          <h3>Privacy First</h3>
+          <p>Your SQL never leaves your browser. All parsing happens client-side. Safe for proprietary schemas, financial data models, and healthcare databases.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">How it works</h2>
+      <p class="section-subtitle text-center">Three steps from raw SQL to shareable docs.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto;">
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">1</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Export Your Schema</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Run <code>pg_dump --schema-only</code>, <code>mysqldump -d</code>, or export from your ORM. Copy the CREATE TABLE statements.</p>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">2</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Paste & Generate</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Paste into the Schema Doc Generator. Choose your dialect. Click Generate. Docs appear instantly with tables, columns, and relationships.</p>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">3</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Export & Share</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Download as Markdown or HTML. Copy the shareable URL. Paste into Slack, Notion, GitHub, or your wiki. Done in 30 seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">What gets documented?</h2>
+      <div style="max-width: 800px; margin: 0 auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">Element</th>
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">Detected</th>
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">Shown In Docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Tables</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Table name, row count estimate</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Columns</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Name, type, nullable, default</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Primary Keys</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Key icon + column reference</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Foreign Keys</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Target table and column</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Indexes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Index name, type, columns</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Unique Constraints</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Constraint name + columns</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">CHECK Constraints</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Expression text</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 16px;">Triggers</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px;">Event, timing, action</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Documentation</span>
+            <h3><a href="blog/how-to-document-your-database-schema-in-30-seconds.html">How to Document Your Database Schema in 30 Seconds</a></h3>
+            <p>How to keep your database docs current, useful, and discoverable for new team members.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Tools</span>
+            <h3><a href="tools/schema-doc-generator.html">Schema Doc Generator</a></h3>
+            <p>The free micro-tool that powers this landing page. Paste SQL, get docs instantly.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Visualization</span>
+            <h3><a href="tools/schema-diagram.html">ER Diagram Generator</a></h3>
+            <p>Generate entity-relationship diagrams from your SQL automatically. Visualize table relationships.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Document your database in 30 seconds.</h2>
+      <p>Stop maintaining stale wiki pages. Generate living documentation from your actual SQL schema — and share it with your team in one click.</p>
+      <a href="tools/schema-doc-generator.html" class="btn btn-primary btn-lg">Generate Schema Docs</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. No data leaves your browser.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">Schema Diff App</a>
+          <a href="api.html">API Reference</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="schema-migration-tool.html">Migration Tool</a>
+          <a href="database-schema-sync.html">Schema Sync</a>
+          <a href="schema-documentation-tool.html">Schema Docs</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+          <a href="zapier-integration.html">Zapier Integration</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Doc Generator</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+          <a href="tools/sql-data-types.html">SQL Data Types</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
