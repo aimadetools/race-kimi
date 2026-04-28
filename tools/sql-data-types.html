@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Data Types Reference — PostgreSQL, MySQL, SQL Server, SQLite, Oracle | SchemaLens</title>
+  <meta name="description" content="Complete SQL data types reference across PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Compare equivalents, find migration mappings, and avoid type pitfalls.">
+  <meta property="og:title" content="SQL Data Types Reference — PostgreSQL, MySQL, SQL Server, SQLite, Oracle">
+  <meta property="og:description" content="Complete SQL data types reference across 5 dialects. Compare equivalents and avoid migration pitfalls.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-data-types.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <link rel="canonical" href="https://schemalens.tech/tools/sql-data-types.html">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL Data Types Reference",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+    "description": "Complete SQL data types reference across PostgreSQL, MySQL, SQL Server, SQLite, and Oracle."
+  }
+  </script>
+  <style>
+    .dtype-section { margin-bottom: 48px; }
+    .dtype-section h2 { font-size: 1.4rem; margin-bottom: 16px; color: var(--text); }
+    .dtype-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .dtype-table th, .dtype-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; }
+    .dtype-table th { background: var(--surface-2); font-weight: 600; color: var(--text); position: sticky; top: 0; }
+    .dtype-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .dtype-table td:first-child { font-weight: 600; color: var(--primary); }
+    .dtype-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+    .search-box { width: 100%; max-width: 480px; padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); margin-bottom: 32px; }
+    .search-box::placeholder { color: var(--text-muted); }
+    .hidden { display: none !important; }
+    .cta-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">SL <span>SchemaLens</span></a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html">App</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <h1>SQL Data Types Reference</h1>
+    <p style="color: var(--text-muted); margin-bottom: 24px;">Compare data types across PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Find the right equivalent when migrating schemas.</p>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Search types (e.g., boolean, varchar, timestamp)...">
+
+    <div class="dtype-section" data-category="numeric">
+      <h2>🔢 Numeric Types</h2>
+      <table class="dtype-table">
+        <thead>
+          <tr><th>Concept</th><th>PostgreSQL</th><th>MySQL</th><th>SQL Server</th><th>SQLite</th><th>Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>16-bit integer</td><td>SMALLINT</td><td>SMALLINT</td><td>SMALLINT</td><td>INTEGER</td><td>NUMBER(5)</td></tr>
+          <tr><td>32-bit integer</td><td>INTEGER / INT</td><td>INT</td><td>INT</td><td>INTEGER</td><td>NUMBER(10)</td></tr>
+          <tr><td>64-bit integer</td><td>BIGINT</td><td>BIGINT</td><td>BIGINT</td><td>INTEGER</td><td>NUMBER(19)</td></tr>
+          <tr><td>Auto-increment integer</td><td>SERIAL / BIGSERIAL</td><td>INT AUTO_INCREMENT</td><td>INT IDENTITY(1,1)</td><td>INTEGER PRIMARY KEY</td><td>NUMBER GENERATED ALWAYS AS IDENTITY</td></tr>
+          <tr><td>Fixed-point decimal</td><td>NUMERIC(p,s) / DECIMAL(p,s)</td><td>DECIMAL(p,s)</td><td>DECIMAL(p,s) / NUMERIC(p,s)</td><td>NUMERIC</td><td>NUMBER(p,s)</td></tr>
+          <tr><td>Single-precision float</td><td>REAL</td><td>FLOAT</td><td>REAL</td><td>REAL</td><td>BINARY_FLOAT</td></tr>
+          <tr><td>Double-precision float</td><td>DOUBLE PRECISION</td><td>DOUBLE</td><td>FLOAT</td><td>REAL</td><td>BINARY_DOUBLE</td></tr>
+          <tr><td>Money / currency</td><td>MONEY</td><td>DECIMAL(19,4)</td><td>MONEY / SMALLMONEY</td><td>NUMERIC</td><td>NUMBER(19,4)</td></tr>
+        </tbody>
+      </table>
+      <p class="dtype-note">⚠️ SQLite has no true BIGINT; it uses flexible typing. Oracle NUMBER without precision is a floating-point.</p>
+    </div>
+
+    <div class="dtype-section" data-category="string">
+      <h2>🔤 String Types</h2>
+      <table class="dtype-table">
+        <thead>
+          <tr><th>Concept</th><th>PostgreSQL</th><th>MySQL</th><th>SQL Server</th><th>SQLite</th><th>Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Fixed-length char</td><td>CHAR(n)</td><td>CHAR(n)</td><td>CHAR(n)</td><td>TEXT</td><td>CHAR(n)</td></tr>
+          <tr><td>Variable-length string</td><td>VARCHAR(n)</td><td>VARCHAR(n)</td><td>VARCHAR(n) / NVARCHAR(n)</td><td>TEXT</td><td>VARCHAR2(n)</td></tr>
+          <tr><td>Unlimited/long text</td><td>TEXT</td><td>LONGTEXT</td><td>VARCHAR(MAX) / TEXT</td><td>TEXT</td><td>CLOB</td></tr>
+          <tr><td>Unicode string</td><td>VARCHAR / TEXT (UTF-8 native)</td><td>NVARCHAR / VARCHAR with utf8mb4</td><td>NVARCHAR(n)</td><td>TEXT (UTF-8 native)</td><td>NVARCHAR2(n)</td></tr>
+          <tr><td>Binary data</td><td>BYTEA</td><td>BLOB / BINARY</td><td>VARBINARY(n)</td><td>BLOB</td><td>RAW / BLOB</td></tr>
+        </tbody>
+      </table>
+      <p class="dtype-note">⚠️ Oracle recommends VARCHAR2 over VARCHAR. SQLite uses dynamic typing; TEXT accepts any length. MySQL VARCHAR max is 65,535 bytes.</p>
+    </div>
+
+    <div class="dtype-section" data-category="datetime">
+      <h2>📅 Date & Time Types</h2>
+      <table class="dtype-table">
+        <thead>
+          <tr><th>Concept</th><th>PostgreSQL</th><th>MySQL</th><th>SQL Server</th><th>SQLite</th><th>Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Date only</td><td>DATE</td><td>DATE</td><td>DATE</td><td>TEXT / DATE affinity</td><td>DATE</td></tr>
+          <tr><td>Time only</td><td>TIME</td><td>TIME</td><td>TIME</td><td>TEXT / TIME affinity</td><td>DATE (with time component)</td></tr>
+          <tr><td>Date + time</td><td>TIMESTAMP</td><td>DATETIME</td><td>DATETIME2</td><td>TEXT / DATETIME affinity</td><td>TIMESTAMP (deprecated) / DATE</td></tr>
+          <tr><td>Date + time + timezone</td><td>TIMESTAMPTZ</td><td>TIMESTAMP</td><td>DATETIMEOFFSET</td><td>TEXT</td><td>TIMESTAMP WITH TIME ZONE</td></tr>
+          <tr><td>Auto now (current timestamp)</td><td>DEFAULT NOW()</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>DEFAULT GETDATE()</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>DEFAULT CURRENT_TIMESTAMP</td></tr>
+        </tbody>
+      </table>
+      <p class="dtype-note">⚠️ Oracle TIMESTAMP is deprecated for new designs; use DATE for seconds precision. SQLite stores datetimes as ISO-8601 text strings by default.</p>
+    </div>
+
+    <div class="dtype-section" data-category="boolean">
+      <h2>✅ Boolean & Special Types</h2>
+      <table class="dtype-table">
+        <thead>
+          <tr><th>Concept</th><th>PostgreSQL</th><th>MySQL</th><th>SQL Server</th><th>SQLite</th><th>Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Boolean</td><td>BOOLEAN</td><td>BOOLEAN / TINYINT(1)</td><td>BIT</td><td>INTEGER (0 or 1)</td><td>NUMBER(1)</td></tr>
+          <tr><td>UUID / GUID</td><td>UUID</td><td>BINARY(16) / CHAR(36)</td><td>UNIQUEIDENTIFIER</td><td>BLOB / TEXT</td><td>RAW(16) / VARCHAR2(36)</td></tr>
+          <tr><td>JSON</td><td>JSON / JSONB</td><td>JSON</td><td>NVARCHAR(MAX) / JSON (2016+)</td><td>TEXT / JSON affinity</td><td>CLOB / VARCHAR2 (with JSON constraint)</td></tr>
+          <tr><td>Enum</td><td>CREATE TYPE ... AS ENUM</td><td>ENUM(...)</td><td>VARCHAR + CHECK</td><td>TEXT + CHECK</td><td>VARCHAR2 + CHECK</td></tr>
+          <tr><td>Array</td><td>INTEGER[] / TEXT[]</td><td>Not native</td><td>Not native</td><td>Not native</td><td>VARRAY / Nested Table</td></tr>
+        </tbody>
+      </table>
+      <p class="dtype-note">⚠️ MySQL BOOLEAN is an alias for TINYINT(1). SQLite has no native Boolean; use INTEGER 0/1. Oracle added native JSON support in 12c.</p>
+    </div>
+
+    <div class="dtype-section" data-category="migration">
+      <h2>🔄 Common Migration Pitfalls</h2>
+      <table class="dtype-table">
+        <thead>
+          <tr><th>Pitfall</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>BOOLEAN → MySQL</td><td>PostgreSQL BOOLEAN becomes TINYINT(1) in MySQL. Your ORM may handle this, but raw SQL migrations need care.</td></tr>
+          <tr><td>VARCHAR length</td><td>MySQL VARCHAR(255) is bytes, not characters with utf8mb4. PostgreSQL VARCHAR(n) is characters.</td></tr>
+          <tr><td>Auto-increment</td><td>SERIAL (Postgres), AUTO_INCREMENT (MySQL), IDENTITY (SQL Server), GENERATED ALWAYS (Oracle). None are compatible.</td></tr>
+          <tr><td>TEXT types</td><td>SQLite TEXT is unlimited. Migrating to MySQL requires choosing TINYTEXT, TEXT, MEDIUMTEXT, or LONGTEXT.</td></tr>
+          <tr><td>Date/time precision</td><td>PostgreSQL TIMESTAMP has microsecond precision. SQL Server DATETIME2 has 100ns precision. Oracle DATE has second precision.</td></tr>
+          <tr><td>JSON storage</td><td>PostgreSQL JSONB is binary and indexable. MySQL JSON is binary but with different indexing rules. SQLite stores JSON as text.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cta-box">
+      <h3>Comparing schemas across dialects?</h3>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">SchemaLens compares two SQL schemas side by side and generates migration scripts in your target dialect — automatically handling type mappings, constraint differences, and breaking changes.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free →</a>
+    </div>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border); margin-top: 40px;">
+    <div class="container" style="padding: 40px 24px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; font-size: 0.9rem;">
+        <div>
+          <h4>Product</h4>
+          <p><a href="../index.html">Home</a></p>
+          <p><a href="../pricing.html">Pricing</a></p>
+          <p><a href="../about.html">About</a></p>
+          <p><a href="../blog.html">Blog</a></p>
+          <p><a href="../app.html">App</a></p>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <p><a href="../tools.html">All Tools</a></p>
+          <p><a href="sql-validator.html">SQL Validator</a></p>
+          <p><a href="sql-formatter.html">SQL Formatter</a></p>
+          <p><a href="schema-doc-generator.html">Schema Docs</a></p>
+          <p><a href="csv-to-sql.html">CSV to SQL</a></p>
+          <p><a href="json-to-sql.html">JSON to SQL</a></p>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <p><a href="../about.html">Contact</a></p>
+          <p>© 2026 SchemaLens</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+    // Search filter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.dtype-section').forEach(sec => {
+        const text = sec.innerText.toLowerCase();
+        sec.classList.toggle('hidden', q && !text.includes(q));
+      });
+    });
+
+    // Theme
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('schemalens-theme', next);
+    }
+    (function() {
+      const saved = localStorage.getItem('schemalens-theme');
+      const prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', saved || prefers);
+    })();
+  </script>
+</body>
+</html>

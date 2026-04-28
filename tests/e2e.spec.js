@@ -53,6 +53,7 @@ const pages = [
   { path: '/tools/create-table-generator.html', name: 'CREATE TABLE Generator' },
   { path: '/tools/schema-diagram.html', name: 'ER Diagram Generator' },
   { path: '/oracle-schema-diff.html', name: 'Oracle Diff Landing' },
+  { path: '/tools/sql-data-types.html', name: 'SQL Data Types Reference' },
 ];
 
 for (const { path, name } of pages) {

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Data Types Across Dialects: The Migration Cheat Sheet — SchemaLens</title>
+  <meta name="description" content="Compare SQL data types across PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Avoid migration pitfalls with this comprehensive cheat sheet.">
+  <meta property="og:title" content="SQL Data Types Across Dialects: The Migration Cheat Sheet">
+  <meta property="og:description" content="Compare SQL data types across 5 dialects. Avoid migration pitfalls with this comprehensive cheat sheet.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-data-types-across-dialects.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <link rel="canonical" href="https://schemalens.tech/blog/sql-data-types-across-dialects.html">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "SQL Data Types Across Dialects: The Migration Cheat Sheet",
+    "description": "Compare SQL data types across PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Avoid migration pitfalls with this comprehensive cheat sheet.",
+    "author": {"@type": "Organization", "name": "SchemaLens"},
+    "publisher": {"@type": "Organization", "name": "SchemaLens", "logo": {"@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg"}},
+    "datePublished": "2026-04-28",
+    "dateModified": "2026-04-28"
+  }
+  </script>
+</head>
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">SL <span>SchemaLens</span></a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html">App</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width: 800px; padding-top: 40px; padding-bottom: 60px;">
+    <article>
+      <header style="margin-bottom: 32px;">
+        <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 8px;">April 28, 2026 · Database Migrations</div>
+        <h1>SQL Data Types Across Dialects: The Migration Cheat Sheet</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">The most common source of migration errors isn't syntax — it's type mismatches. Here's the complete mapping.</p>
+      </header>
+
+      <p>When you're moving a database from PostgreSQL to MySQL, or from Oracle to SQL Server, the first thing that breaks is usually data types. Not <code>CREATE TABLE</code> syntax. Not constraint names. Types.</p>
+
+      <p>A <code>BOOLEAN</code> in PostgreSQL becomes <code>TINYINT(1)</code> in MySQL. A <code>TEXT</code> in SQLite has no length limit, but in MySQL you must choose between <code>TINYTEXT</code>, <code>TEXT</code>, <code>MEDIUMTEXT</code>, and <code>LONGTEXT</code>. Oracle doesn't have a native <code>BOOLEAN</code> at all — you use <code>NUMBER(1)</code> and pray your ORM understands the convention.</p>
+
+      <p>This guide maps the most common SQL data types across five major dialects, highlights the traps, and links to a free interactive reference you can use during your next migration.</p>
+
+      <h2>Why Type Mappings Matter</h2>
+      <p>Schema migration tools focus on structure: tables, columns, indexes, constraints. But the actual data inside those columns depends entirely on type compatibility. A migration that changes <code>NUMERIC(19,4)</code> to <code>MONEY</code> might look safe, but rounding behavior differs between SQL Server and PostgreSQL. A <code>UUID</code> stored as <code>CHAR(36)</code> in MySQL takes 36 bytes; in PostgreSQL as <code>UUID</code> it takes 16 bytes. These differences accumulate into performance problems and subtle data corruption.</p>
+
+      <h2>Numeric Types</h2>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <thead>
+          <tr style="background:var(--surface-2);"><th style="padding:8px;border:1px solid var(--border);">Concept</th><th style="padding:8px;border:1px solid var(--border);">PostgreSQL</th><th style="padding:8px;border:1px solid var(--border);">MySQL</th><th style="padding:8px;border:1px solid var(--border);">SQL Server</th><th style="padding:8px;border:1px solid var(--border);">SQLite</th><th style="padding:8px;border:1px solid var(--border);">Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid var(--border);">16-bit integer</td><td style="padding:8px;border:1px solid var(--border);">SMALLINT</td><td style="padding:8px;border:1px solid var(--border);">SMALLINT</td><td style="padding:8px;border:1px solid var(--border);">SMALLINT</td><td style="padding:8px;border:1px solid var(--border);">INTEGER</td><td style="padding:8px;border:1px solid var(--border);">NUMBER(5)</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">32-bit integer</td><td style="padding:8px;border:1px solid var(--border);">INTEGER</td><td style="padding:8px;border:1px solid var(--border);">INT</td><td style="padding:8px;border:1px solid var(--border);">INT</td><td style="padding:8px;border:1px solid var(--border);">INTEGER</td><td style="padding:8px;border:1px solid var(--border);">NUMBER(10)</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">64-bit integer</td><td style="padding:8px;border:1px solid var(--border);">BIGINT</td><td style="padding:8px;border:1px solid var(--border);">BIGINT</td><td style="padding:8px;border:1px solid var(--border);">BIGINT</td><td style="padding:8px;border:1px solid var(--border);">INTEGER</td><td style="padding:8px;border:1px solid var(--border);">NUMBER(19)</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">Auto-increment</td><td style="padding:8px;border:1px solid var(--border);">SERIAL</td><td style="padding:8px;border:1px solid var(--border);">AUTO_INCREMENT</td><td style="padding:8px;border:1px solid var(--border);">IDENTITY(1,1)</td><td style="padding:8px;border:1px solid var(--border);">INTEGER PK</td><td style="padding:8px;border:1px solid var(--border);">GENERATED ALWAYS AS IDENTITY</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">Decimal</td><td style="padding:8px;border:1px solid var(--border);">NUMERIC(p,s)</td><td style="padding:8px;border:1px solid var(--border);">DECIMAL(p,s)</td><td style="padding:8px;border:1px solid var(--border);">DECIMAL(p,s)</td><td style="padding:8px;border:1px solid var(--border);">NUMERIC</td><td style="padding:8px;border:1px solid var(--border);">NUMBER(p,s)</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Trap:</strong> SQLite has no dedicated BIGINT. It uses dynamic typing, so an INTEGER column can store a 64-bit value, but there's no enforced size limit. If your application relies on overflow behavior, SQLite will silently accept larger values.</p>
+
+      <h2>String Types</h2>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <thead>
+          <tr style="background:var(--surface-2);"><th style="padding:8px;border:1px solid var(--border);">Concept</th><th style="padding:8px;border:1px solid var(--border);">PostgreSQL</th><th style="padding:8px;border:1px solid var(--border);">MySQL</th><th style="padding:8px;border:1px solid var(--border);">SQL Server</th><th style="padding:8px;border:1px solid var(--border);">SQLite</th><th style="padding:8px;border:1px solid var(--border);">Oracle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid var(--border);">Variable string</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR(n)</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR(n)</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR(n)</td><td style="padding:8px;border:1px solid var(--border);">TEXT</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR2(n)</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">Long text</td><td style="padding:8px;border:1px solid var(--border);">TEXT</td><td style="padding:8px;border:1px solid var(--border);">LONGTEXT</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR(MAX)</td><td style="padding:8px;border:1px solid var(--border);">TEXT</td><td style="padding:8px;border:1px solid var(--border);">CLOB</td></tr>
+          <tr><td style="padding:8px;border:1px solid var(--border);">Unicode</td><td style="padding:8px;border:1px solid var(--border);">VARCHAR (UTF-8)</td><td style="padding:8px;border:1px solid var(--border);">NVARCHAR / utf8mb4</td><td style="padding:8px;border:1px solid var(--border);">NVARCHAR(n)</td><td style="padding:8px;border:1px solid var(--border);">TEXT (UTF-8)</td><td style="padding:8px;border:1px solid var(--border);">NVARCHAR2(n)</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Trap:</strong> MySQL's <code>VARCHAR(255)</code> with <code>utf8mb4</code> uses up to 4 bytes per character, so the actual character limit can be as low as 63 if you're using the maximum byte length. PostgreSQL's <code>VARCHAR(n)</code> is character-based, not byte-based.</p>
+
+      <h2>Boolean: Five Dialects, Five Answers</h2>
+      <p>There is no standard Boolean type across SQL dialects:</p>
+      <ul>
+        <li><strong>PostgreSQL:</strong> Native <code>BOOLEAN</code> with <code>true</code>/<code>false</code> literals.</li>
+        <li><strong>MySQL:</strong> <code>BOOLEAN</code> is an alias for <code>TINYINT(1)</code>. <code>true</code> becomes <code>1</code>, <code>false</code> becomes <code>0</code>.</li>
+        <li><strong>SQL Server:</strong> <code>BIT</code> (0, 1, or NULL). No native Boolean literals in standard T-SQL.</li>
+        <li><strong>SQLite:</strong> No Boolean type. Use <code>INTEGER</code> with 0 or 1.</li>
+        <li><strong>Oracle:</strong> No Boolean type. Convention is <code>NUMBER(1)</code> with CHECK constraint.</li>
+      </ul>
+      <p>If you're migrating from PostgreSQL to any other dialect and your ORM doesn't handle the mapping, every <code>WHERE is_active = true</code> query will break.</p>
+
+      <h2>Date and Time</h2>
+      <p>Temporal types are surprisingly consistent at the surface level — <code>DATE</code>, <code>TIME</code>, <code>TIMESTAMP</code> exist in most dialects — but precision and timezone handling differ:</p>
+      <ul>
+        <li><strong>PostgreSQL:</strong> <code>TIMESTAMP</code> has microsecond precision. <code>TIMESTAMPTZ</code> stores timezone-aware values.</li>
+        <li><strong>MySQL:</strong> <code>DATETIME</code> has microsecond precision (5.6+). <code>TIMESTAMP</code> is timezone-aware but limited to 2038 on 32-bit systems.</li>
+        <li><strong>SQL Server:</strong> <code>DATETIME2</code> has 100ns precision. <code>DATETIMEOFFSET</code> stores timezone.</li>
+        <li><strong>SQLite:</strong> Stores datetimes as ISO-8601 text strings. No native date arithmetic — use built-in functions.</li>
+        <li><strong>Oracle:</strong> <code>DATE</code> includes time to the second. <code>TIMESTAMP</code> is deprecated for new designs.</li>
+      </ul>
+
+      <h2>JSON: The Moving Target</h2>
+      <p>JSON support has been added to every major database in the last decade, but implementations vary wildly:</p>
+      <ul>
+        <li><strong>PostgreSQL:</strong> <code>JSONB</code> is binary, indexable, and the gold standard for SQL JSON.</li>
+        <li><strong>MySQL:</strong> Native <code>JSON</code> type (binary storage) with limited indexing via generated columns.</li>
+        <li><strong>SQL Server:</strong> JSON functions on <code>NVARCHAR(MAX)</code>. Native JSON type coming in future versions.</li>
+        <li><strong>SQLite:</strong> JSON stored as <code>TEXT</code>. JSON1 extension provides functions but no native type.</li>
+        <li><strong>Oracle:</strong> Native JSON support in 12c+ with <code>IS JSON</code> constraint on VARCHAR2/CLOB.</li>
+      </ul>
+
+      <h2>The Interactive Reference</h2>
+      <p>We've built a free, searchable SQL Data Types Reference that maps every common type across all five dialects. It's designed for the moment when you're staring at a <code>pg_dump</code> output and need to know what MySQL type to use.</p>
+      <p><a href="../tools/sql-data-types.html" class="btn btn-primary">Open SQL Data Types Reference →</a></p>
+
+      <h2>How to Avoid Type Migration Errors</h2>
+      <ol>
+        <li><strong>Audit every column type</strong> before writing migration scripts. Don't assume <code>INTEGER</code> means the same thing everywhere.</li>
+        <li><strong>Check precision and scale</strong> on DECIMAL/NUMERIC columns. Rounding behavior differs.</li>
+        <li><strong>Verify Boolean handling</strong> in your ORM or query builder. This is the #1 silent breakage.</li>
+        <li><strong>Test timezone behavior</strong> on TIMESTAMP columns. What PostgreSQL stores as UTC, MySQL might store as local time.</li>
+        <li><strong>Use a schema diff tool</strong> that understands dialect differences. SchemaLens compares schemas semantically, not just textually, and generates migration scripts in your target dialect.</li>
+      </ol>
+
+      <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 32px;">
+        <h3 style="margin-top: 0;">Compare schemas across dialects</h3>
+        <p style="color: var(--text-muted);">SchemaLens compares two SQL schemas side by side and generates migration scripts automatically. Paste your PostgreSQL dump and get MySQL-ready ALTER TABLE statements.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border); margin-top: 40px;">
+    <div class="container" style="padding: 40px 24px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; font-size: 0.9rem;">
+        <div>
+          <h4>Product</h4>
+          <p><a href="../index.html">Home</a></p>
+          <p><a href="../pricing.html">Pricing</a></p>
+          <p><a href="../about.html">About</a></p>
+          <p><a href="../blog.html">Blog</a></p>
+          <p><a href="../app.html">App</a></p>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <p><a href="../tools.html">All Tools</a></p>
+          <p><a href="../tools/sql-validator.html">SQL Validator</a></p>
+          <p><a href="../tools/sql-formatter.html">SQL Formatter</a></p>
+          <p><a href="../tools/sql-data-types.html">Data Types</a></p>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <p><a href="../about.html">Contact</a></p>
+          <p>© 2026 SchemaLens</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('schemalens-theme', next);
+    }
+    (function() {
+      const saved = localStorage.getItem('schemalens-theme');
+      const prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', saved || prefers);
+    })();
+  </script>
+</body>
+</html>
