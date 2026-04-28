@@ -68,5 +68,21 @@ export default async function handler(req, res) {
   // Async write to Supabase — don't block client
   await writeToSupabase(record);
 
+  // Fire welcome email asynchronously — never block subscription response
+  (async () => {
+    try {
+      const proto = req.headers["x-forwarded-proto"] || "https";
+      const host = req.headers.host || "schemalens.tech";
+      const welcomeUrl = `${proto}://${host}/api/newsletter-welcome`;
+      await fetch(welcomeUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: record.email }),
+      });
+    } catch (e) {
+      console.log(`WELCOME_EMAIL_ERROR: ${e.message}`);
+    }
+  })();
+
   return res.status(200).json({ success: true, message: "Subscribed" });
 }
