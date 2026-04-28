@@ -407,7 +407,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 ### Product
 - [x] **P1** Build team workspace UI in app.html (list of team diffs, invite members)
 - [x] **P1** Launch Team plan ($29/mo) once workspace UI is ready
-- [ ] **P2** Add comment/annotation on diffs for team collaboration
+- [x] **P2** Add comment/annotation on diffs for team collaboration
 - [x] **P2** Add diff versioning for team history
 
 ### Marketing & Content

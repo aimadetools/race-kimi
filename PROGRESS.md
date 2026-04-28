@@ -8229,3 +8229,108 @@ A secure Vercel serverless function that proxies admin queries to Supabase using
 ---
 
 *Day 28 complete. Admin dashboard is now secure and ready for service_role activation. All 33 blog posts have schema.org Article structured data. Changelog is current. Zero broken links. Product instrumentation, SEO, and ops infrastructure continue to expand. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Diff Comment/Annotation System (April 28, 2026)
+
+### Objective
+Implement the highest-priority unblocked incomplete buildable task: add comment/annotation support to schema diffs for team collaboration. This enables engineering teams to discuss specific table changes directly within SchemaLens, a critical feature for the Team plan ($29/mo).
+
+### What Was Built
+
+#### `supabase-schema.sql` — Diff Comments Table
+- New `diff_comments` table with columns: `id`, `saved_diff_id`, `user_id`, `table_name`, `message`, `created_at`
+- RLS policies for secure access:
+  - Diff owners can view comments on their own diffs
+  - Team members can view comments on team-shared diffs
+  - Anyone can view comments on public diffs
+  - Authenticated users can insert comments on diffs they can access
+  - Users can delete their own comments
+- Performance indexes on `(saved_diff_id, table_name)` and `(created_at DESC)`
+
+#### `app.html` — Comment UI & Functions
+- **Collapsible comment threads** on every table card in the Visual Diff viewer
+- **Comment count badges** on table headers (turns blue when comments exist)
+- **Add comment** textarea + button for authenticated users
+- **Delete comment** button for comment authors
+- **Auth gating:** prompts sign-in for unauthenticated users; prompts cloud save for unsaved diffs
+- **State tracking:** `currentSavedDiffId` tracks which saved diff is loaded, enabling comment persistence across compare runs
+- **Integration points:**
+  - `loadDiffIntoEditors()` sets `currentSavedDiffId`
+  - `loadPublicDiff()` sets `currentSavedDiffId`
+  - `saveDiffToCloud()` captures the new diff ID and sets `currentSavedDiffId`
+  - Clear button resets `currentSavedDiffId`
+  - Compare button loads comments automatically when a saved diff is active
+
+#### `admin.html` — Comments Review Panel
+- New "Diff Comments" section in admin dashboard
+- Table view: Date, Table, Message, User, Diff ID
+- Export to CSV button
+- Added to `refreshAll()` and admin stats bar
+
+#### `api/admin.js` — Admin Proxy Comments Support
+- New `comments` action in the admin serverless proxy
+- Fetches all `diff_comments` rows via Supabase REST API with service_role key
+- Returns newest-first with configurable limit
+
+### Validation
+- ✅ All 11 parser/diff unit tests pass
+- ✅ All 4 inline scripts in app.html pass syntax validation
+- ✅ `api/admin.js` syntax validated with Node.js
+- ✅ `admin.html` script passes syntax validation
+- ✅ `supabase-schema.sql` validates structurally
+- ✅ Vercel auto-deploy triggered successfully on push
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design comment data model and RLS policies | 0.15 |
+| Update supabase-schema.sql | 0.1 |
+| Build comment CSS styles in app.html | 0.1 |
+| Add comment HTML to renderTableDiff | 0.1 |
+| Implement comment CRUD functions (load, render, add, delete) | 0.25 |
+| Integrate currentSavedDiffId across load/save/public flows | 0.15 |
+| Update admin.html with comments section | 0.1 |
+| Update api/admin.js with comments action | 0.05 |
+| Test syntax and run unit tests | 0.1 |
+| Commit, push, deploy (resolve PAT workflow issue) | 0.15 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| **Total** | **1.35** |
+
+### Key Insights
+1. **RLS subqueries enable secure cross-table access** — By using `EXISTS (SELECT 1 FROM saved_diffs ...)` in the `diff_comments` RLS policies, comments inherit the visibility rules of their parent diff without duplicating permission logic.
+
+2. **currentSavedDiffId is the linchpin** — Tracking which saved diff is currently loaded in the editors lets us associate new comments with the correct diff, load existing comments on compare, and clear state when the user starts fresh.
+
+3. **Comments are a Team plan conversion driver** — Individual users can add personal notes to their own diffs, but the real value emerges when teams discuss schema changes together. This feature justifies the Team tier.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 2 (1 pushed, 1 local workflow file) |
+| New API endpoints | 1 (`/api/admin` comments action) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 1 (diff comment/annotation system) |
+| Pages updated | 2 (app.html, admin.html) |
+| Blog posts published | 33 |
+| Free micro-tools | 10 |
+| E2E tests | 11 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard fully
+3. Next highest-priority buildable task: Write guest post for dev.to about ER Diagram Generator or Migration Cost Calculator
+4. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Diff comment system live. Teams can now discuss schema changes directly in SchemaLens. Admin dashboard reviews comments. Product instrumentation, SEO, ops infrastructure, and team collaboration features continue to expand. Distribution remains the primary unlock.*
