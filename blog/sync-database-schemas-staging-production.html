@@ -297,7 +297,7 @@ sqlcmd -S prod.db.internal -U dbuser -d Production -Q "EXEC sp_msforeachtable 'S
       <ul>
         <li><strong>Backfill data</strong> — A new <code>NOT NULL</code> column needs a sensible default or a data migration script.</li>
         <li><strong>Rebuild tables</strong> — SQLite's limited <code>ALTER TABLE</code> support often requires creating a new table, copying data, and swapping names.</li>
-        <li><strong>Coordinate application deployments</code> — A schema change that renames a column must be paired with an application code change. Deploy them together using a blue-green or rolling deployment strategy.</li>
+        <li><strong>Coordinate application deployments</strong> — A schema change that renames a column must be paired with an application code change. Deploy them together using a blue-green or rolling deployment strategy.</li>
       </ul>
 
       <h2>Summary</h2>
