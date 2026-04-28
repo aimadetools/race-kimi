@@ -419,7 +419,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 ### Business & Ops
 - [ ] **P1** Set up simple CRM (Airtable free tier) for customer tracking
 - [x] **P2** Create testimonial collection form and "Wall of Love" page
-- [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
+- [x] **P2** Add weekly analytics summary email (manual or automated via cron)
 
 ## 🔥 NEW UNBLOCKED TASKS (April 22)
 

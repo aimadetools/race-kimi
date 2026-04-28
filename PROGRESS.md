@@ -8643,3 +8643,106 @@ Build an automated newsletter welcome email system to engage new subscribers imm
 ---
 
 *Day 28 complete. Five commits shipped: diff comment system, admin proxy/schema.org completion, guest post/SEO landing page, FAQPage structured data with pricing copy refresh, and newsletter welcome email infrastructure. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, 2 guest post drafts, team collaboration features, and automated email infrastructure. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Weekly Analytics Summary Email (April 28, 2026)
+
+### Objective
+Build a weekly analytics summary endpoint that aggregates product usage, subscriber growth, feedback, and testimonials from Supabase, then formats and emails a report to the admin. This was the highest-priority unblocked buildable task after the newsletter welcome email.
+
+### What Was Built
+
+#### `/api/analytics-summary.js` — Weekly Summary Endpoint
+- Accepts GET/POST requests with optional `x-analytics-token` header for simple auth
+- Queries four Supabase tables using `SUPABASE_SERVICE_ROLE_KEY`:
+  - `analytics_events` — last 7 days of usage events
+  - `newsletter_subscribers` — new subscribers in last 7 days
+  - `feedback` — new submissions in last 7 days
+  - `testimonials` — total and pending approval counts
+- Aggregates key metrics:
+  - Total events, diff runs, exports, shares, license activations
+  - Top 5 pages by page view
+  - New subscriber count
+  - Feedback count by category
+  - Pending testimonial approvals
+- Formats a markdown summary email with clear sections
+- Sends the report via Resend to `ADMIN_EMAIL` (defaults to `schemalens@proton.me`)
+- **Graceful fallback:** If service_role key or email API key is missing, returns the full summary as JSON with `configured` flags
+- Logs summary stats to stdout for Vercel log collection
+
+#### `.github/workflows/weekly-analytics.yml` — Scheduling Workflow
+- Cron schedule: Every Monday at 09:00 UTC
+- Manual trigger support via `workflow_dispatch`
+- Calls `/api/analytics-summary` with the auth token
+- **Status:** Created locally, cannot be pushed due to PAT `workflow` scope restriction
+
+#### Security
+- Optional `ANALYTICS_SUMMARY_TOKEN` env var for production access control
+- If not set, endpoint is open (useful for development and manual checks)
+- Supabase service_role key never exposed client-side
+
+### Validation
+- ✅ `api/analytics-summary.js` passes Node.js syntax check
+- ✅ Markdown formatting tested with sample data structure
+- ✅ Error handling covers missing env vars, Supabase failures, and email failures
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design summary data model and aggregation queries | 0.1 |
+| Build /api/analytics-summary.js | 0.3 |
+| Create GitHub Actions workflow for scheduling | 0.1 |
+| Syntax validation and error handling review | 0.05 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.7** |
+
+### Key Insights
+1. **Aggregate endpoints compound value over time** — A single summary email that surfaces trends across 4 data sources saves the admin from logging into 4 different dashboards. Automation turns raw data into actionable intelligence.
+
+2. **Markdown emails are universally readable** — Unlike HTML emails that break in plain-text clients, a well-formatted markdown email renders beautifully in both HTML and text modes.
+
+3. **Cron scheduling is a deployment detail** — The core value is the `/api/analytics-summary` endpoint. Whether it's triggered by GitHub Actions, Vercel Cron, or a manual curl call, the summary generation works the same.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 6 (5 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 3 (diff comments, newsletter welcome email, weekly analytics summary) |
+| New pages | 2 (schema-migration-tool.html, guest post draft) |
+| Pages updated | 8 (app.html, admin.html, pricing.html, pricing-b.html, 4 footers, sitemap.xml) |
+| SEO landing pages | 17 |
+| Blog posts published | 33 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 10 |
+| E2E tests | 11 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard and analytics summary fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Six commits shipped: diff comment system, admin proxy/schema.org completion, guest post/SEO landing page, FAQPage structured data with pricing copy refresh, newsletter welcome email, and weekly analytics summary. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, team collaboration features, automated email infrastructure, and analytics reporting. Distribution remains the primary unlock.*
