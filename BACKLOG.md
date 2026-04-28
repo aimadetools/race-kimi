@@ -73,7 +73,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 
 ### Product (Unblocked)
 - [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
-- [ ] **P1** Add column rename detection heuristic
+- [x] **P1** Add column rename detection heuristic — ✅ Already implemented (stale item)
 - [ ] **P2** Add Zapier integration guide
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Create video walkthrough of GitHub Actions setup
@@ -81,7 +81,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Business & Ops (Unblocked)
-- [ ] **P1** Track CI template adoption as conversion signal
+- [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page with analytics events live
 - [ ] **P1** Partner with CI/CD newsletter for mention
 - [ ] **P1** Reach out to churned free users with new features
 - [ ] **P2** Survey Pro users for next most-wanted feature

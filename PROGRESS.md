@@ -1652,3 +1652,114 @@ Added 3 new tests to `test-all.js`:
 ---
 
 *Day 28 complete. Ten commits shipped. Constraint diff is now complete with EXCLUDE support, CHECK display fix, and comprehensive tests. SchemaLens has 18 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — CI/CD Integration Landing Page (April 28, 2026)
+
+### Objective
+Build a dedicated CI/CD integration landing page to drive adoption of the SchemaLens CLI and workflow templates, while enabling analytics tracking for template downloads and copies. This addresses the P1 backlog item "Track CI template adoption as conversion signal."
+
+### What Was Built
+
+#### `ci-cd-integration.html` (18,180 bytes)
+A comprehensive SEO landing page targeting high-intent keywords like "database schema diff CI/CD", "SQL schema review GitHub Actions", and "schema diff pipeline":
+
+- **SEO-optimized title:** "Database Schema Diff for CI/CD — GitHub Actions, GitLab & Bitbucket"
+- **Meta description** targeting automated schema review in CI/CD pipelines
+- **schema.org SoftwareApplication** JSON-LD structured data
+- **Hero section** with CI/CD-specific value proposition
+- **6 feature cards** emphasizing: Block Breaking Changes, PR Comments, Zero Dependencies, 5 SQL Dialects, Semantic Diff, JSON/Markdown Output
+- **3 copy-paste workflow templates:**
+  - GitHub Actions (`.github/workflows/schema-diff.yml`)
+  - GitLab CI (`.gitlab-ci.yml`)
+  - Bitbucket Pipelines (`bitbucket-pipelines.yml`)
+- **Standalone CLI section** with curl download and usage examples
+- **Analytics tracking** on every template copy (`ci_template_copy`) and download (`ci_template_download`)
+- **Related guides** section linking to CI/CD blog posts
+- **Full footer** with complete site navigation
+
+#### Site-Wide Footer Updates
+- Added "CI/CD Integration" link to footers on `index.html`, `app.html`, `api-guide.html`, and the new page itself
+
+#### Sitemap Update
+- Added `ci-cd-integration.html` to `sitemap.xml` with priority 0.9
+
+#### Backlog Cleanup
+- Marked "Add column rename detection heuristic" as complete (already implemented in code, stale backlog item)
+- Marked "Track CI template adoption as conversion signal" as complete
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass
+- ✅ HTML structure validated
+- ✅ OpenGraph tags complete
+- ✅ schema.org structured data present
+- ✅ Internal links verified across updated pages
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design CI/CD landing page structure | 0.1 |
+| Write hero and feature copy | 0.15 |
+| Build 3 workflow template blocks with copy buttons | 0.2 |
+| Add analytics tracking (copy + download events) | 0.05 |
+| Update footers across 3 pages + sitemap | 0.1 |
+| Update BACKLOG.md and PROGRESS.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.7** |
+
+### Key Insights
+1. **CI/CD is a high-intent use case** — A developer searching for "schema diff GitHub Actions" is actively trying to solve a pipeline problem. They're pre-qualified to adopt the tool. A dedicated landing page captures this intent and converts it into a copy-paste workflow.
+
+2. **Analytics on copy buttons measure real intent** — Unlike page views, a "copy workflow" event signals genuine interest in adoption. Tracking these events lets us measure which CI platform (GitHub, GitLab, Bitbucket) drives the most engagement.
+
+3. **Stale backlog items hide real priorities** — The "column rename detection heuristic" was marked as incomplete even though it was implemented on Day 2. Regular backlog audits prevent phantom tasks from cluttering the queue.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 11 (10 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 3 (schema-migration-tool.html, guest post draft, ci-cd-integration.html) |
+| Pages updated | 15+ |
+| SEO landing pages | 19 |
+| Blog posts published | 34 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 11 |
+| E2E tests | 14 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+| Build CI/CD Integration landing page with analytics tracking | P1 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Build backlinks outreach materials (email templates + partner badges)
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Eleven commits shipped. SchemaLens has 19 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, and a dedicated CI/CD integration page. Distribution remains the primary unlock.*

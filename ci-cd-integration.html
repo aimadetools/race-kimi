@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab & Bitbucket</title>
+  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, and Bitbucket Pipelines.">
+  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab & Bitbucket">
+  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, and Bitbucket.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/ci-cd-integration.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — CI/CD Schema Diff",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Automated schema diff in GitHub Actions",
+      "GitLab CI pipeline integration",
+      "Bitbucket Pipelines support",
+      "Breaking change detection in CI",
+      "Markdown diff reports as PR comments",
+      "Zero dependencies — standalone Node.js script",
+      "Support for PostgreSQL, MySQL, SQLite, SQL Server, Oracle"
+    ],
+    "url": "https://schemalens.tech/ci-cd-integration.html"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="api.html">API</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Free CI/CD integration — no signup required
+      </div>
+      <h1>Catch schema migration risks<br><span>before they merge.</span></h1>
+      <p>Run SchemaLens in your CI/CD pipeline to automatically diff database schemas on every pull request. Get a markdown report of breaking changes, dropped columns, and missing indexes posted directly to your PR — before it reaches production.</p>
+      <div class="hero-actions">
+        <a href="#github-actions" class="btn btn-primary btn-lg">GitHub Actions Template</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Open App</a>
+      </div>
+      <p class="hero-note">No database connection required. Works with any SQL dump or migration file.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Why run schema diffs in CI/CD?</h2>
+      <p class="section-subtitle text-center">The cheapest place to fix a migration is before it ships.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🛡️</div>
+          <h3>Block Breaking Changes</h3>
+          <p>Automatically flag dropped tables, removed columns, NOT NULL without defaults, and type narrowing. Stop dangerous migrations at the PR gate.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15);">📝</div>
+          <h3>PR Comments with Diff Reports</h3>
+          <p>SchemaLens posts a formatted markdown diff report as a PR comment. Reviewers see exactly what changed — tables, columns, constraints, indexes — without leaving GitHub.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">⚡</div>
+          <h3>Zero Dependencies</h3>
+          <p>A single Node.js file with no npm install required. Drop <code>ci/schemalens-diff.js</code> into your repo and run it in any CI platform that supports Node 18+.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🗄️</div>
+          <h3>5 SQL Dialects</h3>
+          <p>PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. Pass <code>--dialect=postgres</code> (or mysql, sqlite, mssql, oracle) and get dialect-aware diff reports.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🔍</div>
+          <h3>Semantic Diff — Not Text Diff</h3>
+          <p>SchemaLens understands <code>CREATE TABLE</code> structure. It compares columns, types, defaults, constraints, indexes, triggers, and views — not just lines of text.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">📤</div>
+          <h3>JSON or Markdown Output</h3>
+          <p>Export diff reports as Markdown for human review or JSON for programmatic pipeline gates. Fail the build only when breaking changes are detected.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);" id="github-actions">
+    <div class="container">
+      <h2 class="section-title text-center">GitHub Actions Workflow</h2>
+      <p class="section-subtitle text-center">Add this workflow to <code>.github/workflows/schema-diff.yml</code> to diff schemas on every SQL-related PR.</p>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="github-workflow">name: Schema Diff
+
+on:
+  pull_request:
+    paths:
+      - 'db/schema.sql'
+      - 'migrations/*.sql'
+      - '**/*.sql'
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run SchemaLens Diff
+        id: diff
+        run: |
+          git show origin/\${{ github.base_ref }}:db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+          node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=/tmp/report.md
+          echo "report<<EOF" >> \$GITHUB_OUTPUT
+          cat /tmp/report.md >> \$GITHUB_OUTPUT
+          echo "EOF" >> \$GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = `\${{ steps.diff.outputs.report }}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## SchemaLens Diff Report\n\n' + report
+            });</code><button class="copy-btn" onclick="copyWorkflow(this,'github')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="gitlab-ci">
+    <div class="container">
+      <h2 class="section-title text-center">GitLab CI Template</h2>
+      <p class="section-subtitle text-center">Add this job to <code>.gitlab-ci.yml</code> to run schema diffs on merge requests.</p>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="gitlab-workflow">schema_diff:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - db/schema.sql
+        - migrations/*.sql
+  image: node:20-alpine
+  script:
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    - git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+    - node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=schema_diff_report.md
+  artifacts:
+    paths:
+      - schema_diff_report.md
+    expire_in: 1 week</code><button class="copy-btn" onclick="copyWorkflow(this,'gitlab')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);" id="bitbucket">
+    <div class="container">
+      <h2 class="section-title text-center">Bitbucket Pipelines</h2>
+      <p class="section-subtitle text-center">Copy <code>ci/bitbucket-pipelines.yml</code> from this repo or use the template below.</p>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="bitbucket-workflow">image: node:20
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Schema Diff
+          script:
+            - git fetch origin $BITBUCKET_PR_DESTINATION_BRANCH
+            - git show origin/$BITBUCKET_PR_DESTINATION_BRANCH:db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+            - node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=schema_diff_report.md
+          artifacts:
+            - schema_diff_report.md</code><button class="copy-btn" onclick="copyWorkflow(this,'bitbucket')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cli">
+    <div class="container">
+      <h2 class="section-title text-center">Standalone CLI</h2>
+      <p class="section-subtitle text-center">Use the same diff engine locally or in any CI platform.</p>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="cli-snippet"># Download the CLI
+curl -O https://schemalens.tech/ci/schemalens-diff.js
+
+# Basic usage
+node ci/schemalens-diff.js old_schema.sql new_schema.sql
+
+# With options
+node ci/schemalens-diff.js old_schema.sql new_schema.sql \
+  --dialect=postgres \
+  --format=markdown \
+  --output=diff_report.md
+
+# JSON output for programmatic gates
+node ci/schemalens-diff.js old_schema.sql new_schema.sql \
+  --dialect=mysql \
+  --format=json \
+  --output=diff.json</code><button class="copy-btn" onclick="copyWorkflow(this,'cli')">Copy</button></pre>
+      </div>
+      <p class="text-center" style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">
+        <a href="ci/schemalens-diff.js" download onclick="trackCIDownload('cli_script')">Download schemalens-diff.js</a> · 
+        <a href="ci/README.md" onclick="trackCIDownload('ci_readme')">View CI README</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">CI/CD</span>
+            <h3><a href="blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></h3>
+            <p>Step-by-step setup for GitHub Actions and GitLab CI. Catch migration risks before they merge.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Safety</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn how to catch dropped columns, missing indexes, and type changes before they cause incidents.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Workflow</span>
+            <h3><a href="blog/how-to-compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A practical guide to schema review workflows for teams of any size.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Add schema review to your pipeline today.</h2>
+      <p>Copy the workflow template, drop in the CLI script, and start catching migration risks before they hit production. Free forever for open source and small teams.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Try SchemaLens Free</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. No data leaves your browser.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+          <a href="api.html">API</a>
+          <a href="team.html">Team</a>
+          <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="schema-migration-tool.html">Migration Tool</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+function copyWorkflow(btn, platform) {
+  const map = {
+    github: 'github-workflow',
+    gitlab: 'gitlab-workflow',
+    bitbucket: 'bitbucket-workflow',
+    cli: 'cli-snippet'
+  };
+  const code = document.getElementById(map[platform]).textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('ci_template_copy', { platform });
+  }
+}
+function trackCIDownload(item) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('ci_template_download', { item });
+  }
+}
+</script>
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
