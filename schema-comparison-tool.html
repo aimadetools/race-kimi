@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQL Schema Comparison Tool — Compare Database Schemas Online</title>
+  <meta name="description" content="Compare two database schemas side-by-side online. Detect added tables, dropped columns, type changes, and breaking changes across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="SQL Schema Comparison Tool — Compare Database Schemas Online">
+  <meta property="og:description" content="Side-by-side schema comparison for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Detect breaking changes before they hit production.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-comparison-tool.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — SQL Schema Comparison Tool",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Side-by-side schema comparison",
+      "Breaking change detection",
+      "Support for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle",
+      "Semantic diff — not text diff",
+      "Migration script generation",
+      "Risk score calculation",
+      "Shareable comparison reports",
+      "Privacy-first — no data leaves your browser"
+    ],
+    "url": "https://schemalens.tech/schema-comparison-tool.html"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="api.html">API</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Free — no signup required
+      </div>
+      <h1>Compare database schemas<br><span>side-by-side.</span></h1>
+      <p>Paste two SQL schemas and see exactly what changed. Tables added, columns dropped, types narrowed, indexes missing — every difference highlighted with a semantic diff that understands SQL structure, not just text.</p>
+      <div class="hero-actions">
+        <a href="app.html" class="btn btn-primary btn-lg">Compare Schemas</a>
+        <a href="schema-migration-tool.html" class="btn btn-secondary btn-lg">Generate Migrations</a>
+      </div>
+      <p class="hero-note">Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. No data leaves your browser.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Why semantic schema comparison?</h2>
+      <p class="section-subtitle text-center">Text diffs break when SQL is reformatted. SchemaLens understands structure.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🔍</div>
+          <h3>Side-by-Side Visual Diff</h3>
+          <p>See every table, column, and constraint compared in a clean visual layout. Green for additions, red for removals, yellow for modifications. No more scrolling through thousand-line text diffs.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15);">🛡️</div>
+          <h3>Breaking Change Detection</h3>
+          <p>Automatically flags dropped tables, removed columns, NOT NULL without defaults, type narrowing, and missing indexes. Know what's dangerous before you deploy.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🗄️</div>
+          <h3>5 SQL Dialects</h3>
+          <p>PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. Our custom parser understands each dialect's unique syntax and compares them accurately.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📊</div>
+          <h3>Schema Change Risk Score</h3>
+          <p>Every comparison gets a 0–100 risk score based on the severity of changes. Low-risk diffs get a green light. High-risk diffs demand a second review.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">⚙️</div>
+          <h3>Auto-Generate Migration SQL</h3>
+          <p>Get ready-to-run ALTER TABLE scripts generated from the comparison. Copy, paste into your migration tool, and deploy with confidence.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🔗</div>
+          <h3>Shareable Comparison Links</h3>
+          <p>Share any schema comparison with your team via a URL. Perfect for code reviews, architecture decisions, and compliance audits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">What gets compared?</h2>
+      <div style="max-width: 800px; margin: 0 auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">Element</th>
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">Detected</th>
+              <th style="text-align: left; padding: 12px 16px; color: var(--text-muted); font-weight: 600;">In Migration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Tables (added/removed)</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Columns (added/removed/modified)</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Data types & defaults</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Primary & Foreign Keys</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Indexes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">CHECK & UNIQUE Constraints</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Triggers</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px 16px;">Views</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 16px;">Functions & Procedures</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+              <td style="padding: 12px 16px; color: var(--success);">✅ Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">4-step comparison workflow</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">1</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Export Both Schemas</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Run <code>pg_dump --schema-only</code> or export from your ORM for both the old and new schema versions.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">2</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Paste & Select Dialect</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Paste schema A and schema B into SchemaLens. Choose your SQL dialect. Click Compare.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">3</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Review the Diff</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Scan the visual diff for breaking changes. Check the risk score. Review each table's changes in detail.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 16px;">4</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Copy Migration SQL</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0;">Copy the generated ALTER TABLE scripts. Share the diff URL with your team. Deploy with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Comparison</span>
+            <h3><a href="sql-diff-online.html">SQL Diff Online</a></h3>
+            <p>A simpler, faster way to diff two SQL files without the full schema comparison features.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Migration</span>
+            <h3><a href="schema-migration-tool.html">Schema Migration Tool</a></h3>
+            <p>Generate ALTER TABLE scripts from any schema comparison. Ready to run in your migration framework.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Safety</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn what SchemaLens flags as breaking — and why catching them early saves production incidents.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Compare your schemas in seconds.</h2>
+      <p>Stop guessing what changed between schema versions. Paste both schemas into SchemaLens and get a semantic diff with breaking change detection and ready-to-run migration SQL.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Compare Schemas Now</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. No data leaves your browser.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">Schema Diff App</a>
+          <a href="api.html">API Reference</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="schema-migration-tool.html">Migration Tool</a>
+          <a href="database-schema-sync.html">Schema Sync</a>
+          <a href="schema-documentation-tool.html">Schema Docs</a>
+          <a href="schema-comparison-tool.html">Schema Comparison</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+          <a href="zapier-integration.html">Zapier Integration</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Doc Generator</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+          <a href="tools/sql-data-types.html">SQL Data Types</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

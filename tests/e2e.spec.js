@@ -60,6 +60,7 @@ const pages = [
   { path: '/ci-cd-integration.html', name: 'CI/CD Integration Landing' },
   { path: '/zapier-integration.html', name: 'Zapier Integration Landing' },
   { path: '/schema-documentation-tool.html', name: 'Schema Documentation Tool Landing' },
+  { path: '/schema-comparison-tool.html', name: 'Schema Comparison Tool Landing' },
 ];
 
 for (const { path, name } of pages) {
