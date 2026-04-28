@@ -54,6 +54,11 @@ const pages = [
   { path: '/tools/schema-diagram.html', name: 'ER Diagram Generator' },
   { path: '/oracle-schema-diff.html', name: 'Oracle Diff Landing' },
   { path: '/tools/sql-data-types.html', name: 'SQL Data Types Reference' },
+  { path: '/sql-diff-online.html', name: 'SQL Diff Online Landing' },
+  { path: '/schema-migration-tool.html', name: 'Schema Migration Tool Landing' },
+  { path: '/database-schema-sync.html', name: 'Database Schema Sync Landing' },
+  { path: '/ci-cd-integration.html', name: 'CI/CD Integration Landing' },
+  { path: '/zapier-integration.html', name: 'Zapier Integration Landing' },
 ];
 
 for (const { path, name } of pages) {

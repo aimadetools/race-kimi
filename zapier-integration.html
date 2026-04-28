@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SchemaLens + Zapier Integration — Automate Schema Diff Workflows</title>
+  <meta name="description" content="Connect SchemaLens to 5,000+ apps via Zapier. Auto-send schema diff results to Slack, email, Google Sheets, Jira, Notion, and more. No code required.">
+  <meta property="og:title" content="SchemaLens + Zapier Integration — Automate Schema Diff Workflows">
+  <meta property="og:description" content="Send schema diff alerts to Slack, email, Jira, Notion, and 5,000+ apps via Zapier. Set up in 5 minutes, no code required.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/zapier-integration.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — Zapier Integration",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Webhook triggers for schema diff completion",
+      "Auto-send diff results to 5000+ apps via Zapier",
+      "Slack, email, Jira, Notion, Google Sheets support",
+      "HMAC-SHA256 signed webhooks for security",
+      "Breaking change alerts with severity levels",
+      "No-code automation setup"
+    ],
+    "url": "https://schemalens.tech/zapier-integration.html"
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="api.html">API</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        No-code automation — connect 5,000+ apps
+      </div>
+      <h1>Automate schema diffs<br><span>with Zapier.</span></h1>
+      <p>Every time you run a schema diff in SchemaLens, automatically send the results to Slack, email, Jira, Notion, Google Sheets, or any of 5,000+ apps via Zapier. No code required — just paste a webhook URL and flip a switch.</p>
+      <div class="hero-actions">
+        <a href="#setup" class="btn btn-primary btn-lg">Set Up in 5 Minutes</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Open App</a>
+      </div>
+      <p class="hero-note">Works with Pro and Team plans. Free plan can test with manual webhook sends.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">What can you automate?</h2>
+      <p class="section-subtitle text-center">Turn every schema diff into a trigger for your team's workflow.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">💬</div>
+          <h3>Slack Alerts for Breaking Changes</h3>
+          <p>Instantly notify your team in Slack when a diff contains breaking changes. Include severity, affected tables, and a link to review the full diff.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">📧</div>
+          <h3>Email Reports to Stakeholders</h3>
+          <p>Send formatted diff summaries to PMs, QA, or compliance teams after every schema review. No need to copy-paste screenshots.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15);">📋</div>
+          <h3>Jira Tickets for Migration Tasks</h3>
+          <p>Auto-create Jira issues for each breaking change detected. Assign to the engineer who opened the PR and link back to the diff report.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
+          <h3>Notion Database of Schema Changes</h3>
+          <p>Append every schema diff to a Notion database. Build a searchable changelog of every table change across your organization's history.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">📊</div>
+          <h3>Google Sheets Audit Log</h3>
+          <p>Log every schema change to a shared Google Sheet. Track who changed what, when, and the risk score over time for compliance audits.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🔒</div>
+          <h3>Signed Webhooks for Security</h3>
+          <p>Every webhook includes an optional HMAC-SHA256 signature. Verify the payload came from SchemaLens, not an attacker, before acting on it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);" id="setup">
+    <div class="container">
+      <h2 class="section-title text-center">5-Minute Setup</h2>
+      <p class="section-subtitle text-center">Connect SchemaLens to Zapier in three steps.</p>
+
+      <div class="guide-section" style="max-width: 800px; margin: 0 auto 24px;">
+        <h2><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:0.9rem;font-weight:700;margin-right:10px;">1</span> Create a Zapier Webhook Trigger</h2>
+        <p>In Zapier, create a new Zap and choose <strong>Webhooks by Zapier</strong> as the trigger. Select <strong>Catch Hook</strong> and copy the webhook URL.</p>
+        <ul>
+          <li>Go to <a href="https://zapier.com" target="_blank" rel="noopener">zapier.com</a> → Create Zap</li>
+          <li>Trigger: Webhooks by Zapier → Catch Hook</li>
+          <li>Copy the Custom Webhook URL (looks like <code>https://hooks.zapier.com/hooks/catch/123456/abcdef/</code>)</li>
+        </ul>
+      </div>
+
+      <div class="guide-section" style="max-width: 800px; margin: 0 auto 24px;">
+        <h2><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:0.9rem;font-weight:700;margin-right:10px;">2</span> Paste the URL into SchemaLens</h2>
+        <p>Open SchemaLens, run any diff, then open <strong>Settings → Webhooks</strong> and paste your Zapier webhook URL.</p>
+        <ul>
+          <li>Open <a href="app.html">SchemaLens App</a></li>
+          <li>Click the ⚙️ <strong>Settings</strong> button in the toolbar</li>
+          <li>Paste the Zapier webhook URL into <strong>Webhook URL</strong></li>
+          <li>Optional: add a secret key for HMAC-SHA256 verification</li>
+          <li>Toggle <strong>Auto-send on every diff</strong> to ON</li>
+          <li>Click <strong>Test Webhook</strong> to verify the connection</li>
+        </ul>
+      </div>
+
+      <div class="guide-section" style="max-width: 800px; margin: 0 auto 24px;">
+        <h2><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:0.9rem;font-weight:700;margin-right:10px;">3</span> Add Your Action Step</h2>
+        <p>Back in Zapier, add any action app as the next step. Use the diff payload fields to customize your message, ticket, or record.</p>
+        <ul>
+          <li>Action: Slack → Send Channel Message (or Email, Jira, Notion, Sheets, etc.)</li>
+          <li>Use fields like <code>summary.breaking_count</code>, <code>summary.tables_modified</code>, and <code>migration_sql_preview</code></li>
+          <li>Turn the Zap ON</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Webhook Payload Reference</h2>
+      <p class="section-subtitle text-center">Every webhook sends a JSON payload you can map to any Zapier action.</p>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code>{
+  "event": "diff_completed",
+  "dialect": "postgres",
+  "timestamp": "2026-04-28T14:32:00.000Z",
+  "url": "https://schemalens.tech/app.html",
+  "summary": {
+    "tables_old": 12,
+    "tables_new": 14,
+    "tables_added": 2,
+    "tables_removed": 0,
+    "tables_modified": 3,
+    "breaking_changes": 1,
+    "risk_score": 42
+  },
+  "breaking_changes": [
+    {
+      "severity": "high",
+      "table": "users",
+      "change": "Dropped column 'email'"
+    }
+  ],
+  "migration_sql_preview": "ALTER TABLE users DROP COLUMN email;\nCREATE TABLE orders (...)"
+}</code><button class="copy-btn" onclick="copyPayload(this)">Copy</button></pre>
+      </div>
+      <div style="max-width: 800px; margin: 20px auto 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 6px;">summary.breaking_changes</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Number of breaking changes. Use this to conditionally alert only when &gt; 0.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 6px;">summary.risk_score</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">0–100 risk score. Use this to route low-risk diffs to a log and high-risk diffs to Slack.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 6px;">migration_sql_preview</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">First 2,000 characters of generated SQL. Use this to include a preview in emails or tickets.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 6px;">breaking_changes[]</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Array of individual breaking changes with severity, table, and description.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Popular Zaps</h2>
+      <p class="section-subtitle text-center">Copy these recipes for common schema diff automations.</p>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Alert</span>
+            <h3>Breaking Change → Slack #engineering</h3>
+            <p>When <code>breaking_changes &gt; 0</code>, post a message to Slack with the affected tables and a link to review the diff. Tag the on-call engineer.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Log</span>
+            <h3>Every Diff → Google Sheets Row</h3>
+            <p>Log timestamp, dialect, risk score, and table counts to a shared Google Sheet. Build charts showing schema churn over time.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Task</span>
+            <h3>High Risk → Jira Ticket</h3>
+            <p>When <code>risk_score &gt; 70</code>, create a Jira ticket in the "Database Review" project with the migration SQL attached.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Security & Privacy</h2>
+      <div class="features-grid" style="max-width: 900px; margin: 0 auto;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🔐</div>
+          <h3>HMAC-SHA256 Signatures</h3>
+          <p>Add a secret key in SchemaLens Settings. Every webhook includes an <code>X-Webhook-Signature</code> header. Verify it in Zapier with a Code step to prove the payload came from SchemaLens.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🚫</div>
+          <h3>No Payload Storage</h3>
+          <p>SchemaLens never stores your webhook payloads. They are forwarded directly from your browser to your endpoint. Stateless and private.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15);">🔇</div>
+          <h3>Silent Failures</h3>
+          <p>If your webhook server is down or Zapier errors, your diff still completes normally. Webhooks are fire-and-forget — they never block your workflow.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">API</span>
+            <h3><a href="api-guide.html">SchemaLens API Quick Start</a></h3>
+            <p>Generate schema diffs programmatically with curl, JavaScript, Python, and Go examples.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">CI/CD</span>
+            <h3><a href="ci-cd-integration.html">CI/CD Integration</a></h3>
+            <p>Run schema diffs in GitHub Actions, GitLab CI, and Bitbucket Pipelines. Catch breaking changes before they merge.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Safety</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn what triggers a breaking change alert and how to prevent production incidents.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Automate your schema workflow today.</h2>
+      <p>Set up your first Zapier webhook in under 5 minutes. Connect SchemaLens to the tools your team already uses and never miss a breaking change again.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. Webhook settings are in the app toolbar.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="app.html">Schema Diff App</a>
+          <a href="api.html">API Reference</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="schema-migration-tool.html">Migration Tool</a>
+          <a href="database-schema-sync.html">Schema Sync</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+          <a href="zapier-integration.html">Zapier Integration</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+          <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="tools/schema-diagram.html">ER Diagram Generator</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+          <a href="tools/sql-data-types.html">SQL Data Types</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+function copyPayload(btn) {
+  const code = btn.parentElement.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
