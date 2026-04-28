@@ -57,7 +57,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 ### Weeks 7–8 (April 27–28)
 - **SEO & Performance:** 100% OpenGraph coverage (73+ pages), schema.org Article on 35 blog posts + SoftwareApplication on 12 tools + FAQPage on pricing, preconnect/dns-prefetch hints, zero broken internal links, 23 SEO landing pages.
 - **Ops Infrastructure:** Admin dashboard (admin.html), serverless admin proxy (/api/admin), newsletter welcome email (/api/newsletter-welcome), weekly analytics summary (/api/analytics-summary), conversion funnel visualization.
-- **Content:** 10 more blog posts (35 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, Migration Cost Calculator, SQL Data Types Reference, SQL Diff Online, Schema Migration Tool, Database Schema Sync, Schema Documentation Tool, and Schema Comparison Tool landing pages.
+- **Content:** 10 more blog posts (35 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, ALTER TABLE Generator, Migration Cost Calculator, SQL Data Types Reference, SQL Diff Online, Schema Migration Tool, Database Schema Sync, Schema Documentation Tool, and Schema Comparison Tool landing pages.
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
@@ -78,6 +78,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
 - [x] **P2** Add Zapier integration guide — ✅ Live
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
+- [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
 - [ ] **P2** Create video walkthrough of GitHub Actions setup
 - [ ] **P2** Apply to speak at virtual meetup or podcast
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
@@ -98,3 +99,4 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 ---
 
 *Backlog reprioritized April 28, 2026. Highest-priority unblocked buildable tasks: Video walkthrough script for GitHub Actions, more SEO landing pages, or conversion optimization on app.html.*
+

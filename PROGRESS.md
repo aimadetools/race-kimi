@@ -1674,3 +1674,122 @@ A comprehensive SEO landing page:
 ---
 
 *Day 28 continues. Seventeen commits shipped. SchemaLens has 23 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD and Zapier integration pages, backlink outreach materials, and multiple schema-focused landing pages. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — SQL ALTER TABLE Generator Micro-Tool (April 28, 2026)
+
+### Objective
+Build the 12th free micro-tool: an interactive SQL ALTER TABLE Generator. This targets high-volume keywords like "alter table generator", "add column sql", "drop column sql", and "rename column sql" — capturing developers who are actively modifying database schemas.
+
+### What Was Built
+
+#### `tools/alter-table-generator.html` (35,107 bytes)
+A fully client-side, interactive ALTER TABLE statement builder with zero dependencies:
+
+- **8 operation types:**
+  1. **Add Column** — with type selector, default value, and nullable toggle
+  2. **Drop Column** — with dialect-aware notes (SQLite limitation handling)
+  3. **Modify Column Type** — generates correct syntax per dialect (ALTER TYPE, MODIFY, ALTER COLUMN)
+  4. **Rename Column** — handles PostgreSQL, MySQL CHANGE, SQLite RENAME COLUMN, SQL Server sp_rename, Oracle
+  5. **Add Constraint** — PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, NOT NULL with name and column inputs
+  6. **Drop Constraint** — dialect-specific syntax
+  7. **Add Index** — with unique toggle and multi-column support
+  8. **Drop Index** — dialect-specific syntax
+- **5-dialect support:** PostgreSQL, MySQL, SQLite, SQL Server, Oracle — each with accurate syntax
+- **Stackable operations:** Add multiple operations and generate a single SQL script
+- **Sample data:** One-click load sample with add column + foreign key + index
+- **Copy to clipboard:** One-click copy of generated SQL
+- **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication structured data
+- **PWA ready:** Service worker registration, manifest, theme-color
+
+#### Site-Wide Updates
+- Added ALTER TABLE Generator to `tools.html` landing page
+- Added to `index.html` "Free developer tools" section and footer
+- Added to `sitemap.xml` with priority 0.7
+- Added to `tests/e2e.spec.js` page load test list
+- Added to footer of `tools/alter-table-generator.html` itself
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass
+- ✅ All 57 Chromium e2e page-load tests pass (including new ALTER TABLE Generator)
+- ✅ `tools/alter-table-generator.html` has complete OpenGraph tags and schema.org structured data
+- ✅ Internal links verified on tools.html and index.html
+- ✅ Syntax validation passes for all inline JavaScript
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design ALTER TABLE Generator architecture and operations | 0.1 |
+| Build HTML/CSS/JS for the tool | 0.3 |
+| Add dialect-specific SQL generation for 8 operations × 5 dialects | 0.2 |
+| Update site-wide links (tools.html, index.html, sitemap.xml, e2e) | 0.1 |
+| Run tests and validation | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.9** |
+
+### Key Insights
+1. **ALTER TABLE is the most common schema change operation** — Adding a column, dropping a column, or adding an index are daily tasks for backend developers. A dedicated generator saves time and prevents syntax errors across dialects.
+
+2. **Dialect differences are the silent killer of migrations** — PostgreSQL uses `ALTER COLUMN ... TYPE`, MySQL uses `MODIFY COLUMN`, SQL Server uses `ALTER COLUMN`, and SQLite doesn't support many ALTER operations at all. The tool surfaces these differences explicitly.
+
+3. **Micro-tools compound into a traffic ecosystem** — Each new tool is another entry point to SchemaLens. A developer who finds the ALTER TABLE Generator today might return tomorrow for the schema diff. Twelve free tools create twelve independent SEO opportunities.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 18 (17 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 7 (schema-migration-tool.html, ci-cd-integration.html, database-schema-sync.html, guest post draft, zapier-integration.html, schema-documentation-tool.html, schema-comparison-tool.html) |
+| New micro-tools | 1 (ALTER TABLE Generator) |
+| Marketing materials | 1 (backlink outreach kit) |
+| Pages updated | 37+ |
+| SEO landing pages | 23 |
+| Blog posts published | 35 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 12 |
+| E2E tests | 57 page-load tests pass |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+| Build CI/CD Integration landing page with analytics tracking | P1 | ✅ Live |
+| Build backlink outreach materials | P1 | ✅ Ready |
+| Build Database Schema Sync SEO landing page | P1 | ✅ Live |
+| Write schema sync tutorial blog post | P1 | ✅ Published |
+| Add Zapier integration guide page | P2 | ✅ Live |
+| Build SQL Schema Documentation Tool SEO landing page | P2 | ✅ Live |
+| Build SQL Schema Comparison Tool SEO landing page | P2 | ✅ Live |
+| Build SQL ALTER TABLE Generator micro-tool | P1 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Create video walkthrough script for GitHub Actions setup
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 continues. Eighteen commits shipped. SchemaLens has 23 SEO landing pages, 35 blog posts, 12 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD and Zapier integration pages, backlink outreach materials, and multiple schema-focused landing pages. Distribution remains the primary unlock.*
