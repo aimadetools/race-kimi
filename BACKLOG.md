@@ -75,7 +75,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
 - [x] **P1** Add column rename detection heuristic — ✅ Already implemented
 - [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
-- [ ] **P2** Add Zapier integration guide
+- [x] **P2** Add Zapier integration guide — ✅ Live
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Create video walkthrough of GitHub Actions setup
 - [ ] **P2** Apply to speak at virtual meetup or podcast

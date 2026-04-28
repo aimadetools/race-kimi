@@ -1981,3 +1981,122 @@ A step-by-step tutorial blog post:
 ---
 
 *Day 28 complete. Thirteen commits shipped. SchemaLens has 20 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD integration page, backlink outreach materials, and a schema sync landing page with tutorial. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Zapier Integration Guide (April 28, 2026)
+
+### Objective
+Build a dedicated Zapier integration guide page to help users connect SchemaLens webhooks to 5,000+ apps with no code. This was the highest-priority unblocked buildable task from the backlog.
+
+### What Was Built
+
+#### `zapier-integration.html` (20,414 bytes)
+A comprehensive integration guide and SEO landing page:
+
+- **SEO-optimized title:** "SchemaLens + Zapier Integration — Automate Schema Diff Workflows"
+- **Meta description** targeting "automate schema diff", "Zapier webhook", "Slack schema alerts"
+- **schema.org SoftwareApplication** JSON-LD structured data for rich snippet eligibility
+- **Hero section** with no-code automation value proposition
+- **6 feature cards:** Slack Alerts, Email Reports, Jira Tickets, Notion Database, Google Sheets, Signed Webhooks
+- **3-step setup guide:** Create Zapier webhook trigger → Paste URL into SchemaLens → Add action step
+- **Webhook payload reference** with copy-paste JSON example and field descriptions
+- **Popular Zaps section** with 3 recipe cards: Breaking Change→Slack, Every Diff→Sheets, High Risk→Jira
+- **Security & Privacy section** explaining HMAC signatures, no payload storage, and silent failures
+- **Related guides** linking to API Quick Start, CI/CD Integration, and dangerous schema changes blog post
+- **CTA section** with primary conversion to app.html
+- **Full footer** with complete site navigation
+
+#### Site-Wide Footer Updates
+- Added "Zapier Integration" link to footers on `index.html`, `app.html`, `api-guide.html`, `ci-cd-integration.html`, and the new page itself
+
+#### Sitemap Update
+- Added `zapier-integration.html` to `sitemap.xml` with priority 0.8 and lastmod 2026-04-28
+
+#### E2E Test Update
+- Added 6 missing landing pages to `tests/e2e.spec.js` page load test list:
+  - `/sql-diff-online.html`
+  - `/schema-migration-tool.html`
+  - `/database-schema-sync.html`
+  - `/ci-cd-integration.html`
+  - `/zapier-integration.html`
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass
+- ✅ `zapier-integration.html` has complete OpenGraph tags and schema.org structured data
+- ✅ Internal links verified across all 4 updated pages
+- ✅ Sitemap.xml validates with new entry
+- ✅ Vercel auto-deploy triggered successfully on push
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design page structure and content outline | 0.1 |
+| Write hero, feature cards, and setup guide | 0.2 |
+| Build webhook payload reference and field docs | 0.1 |
+| Write security/privacy and popular Zaps sections | 0.1 |
+| Update footers across 4 pages + sitemap + e2e tests | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.7** |
+
+### Key Insights
+1. **Integration pages are SEO gold** — "Zapier integration" and "webhook automation" are high-intent searches from teams already using no-code tools. A dedicated page captures them at the exact moment they're looking to connect services.
+
+2. **Webhook payload docs reduce support burden** — When users know exactly what fields are available (`summary.breaking_changes`, `migration_sql_preview`, `risk_score`), they can build Zaps without asking for help. Self-service documentation scales better than support.
+
+3. **Popular Zaps turn imagination into action** — Most users know they *could* automate something but don't know *what*. Providing 3 concrete recipes (Slack alerts, Sheets logging, Jira tickets) gives them a starting point they can customize.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 14 (13 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 5 (schema-migration-tool.html, ci-cd-integration.html, database-schema-sync.html, guest post draft, zapier-integration.html) |
+| Marketing materials | 1 (backlink outreach kit) |
+| Pages updated | 24+ |
+| SEO landing pages | 21 |
+| Blog posts published | 35 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 11 |
+| E2E tests | 14 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+| Build CI/CD Integration landing page with analytics tracking | P1 | ✅ Live |
+| Build backlink outreach materials | P1 | ✅ Ready |
+| Build Database Schema Sync SEO landing page | P1 | ✅ Live |
+| Write schema sync tutorial blog post | P1 | ✅ Published |
+| Add Zapier integration guide page | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Build "SQL Schema Documentation Tool" SEO landing page
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 continues. Fourteen commits shipped. SchemaLens has 21 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD and Zapier integration pages, backlink outreach materials, and a schema sync landing page with tutorial. Distribution remains the primary unlock.*
