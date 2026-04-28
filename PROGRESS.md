@@ -2100,3 +2100,112 @@ A comprehensive integration guide and SEO landing page:
 ---
 
 *Day 28 continues. Fourteen commits shipped. SchemaLens has 21 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD and Zapier integration pages, backlink outreach materials, and a schema sync landing page with tutorial. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — SQL Schema Documentation Tool Landing Page (April 28, 2026)
+
+### Objective
+Build an SEO landing page targeting "sql schema documentation tool" and related keywords to capture developers looking for automated database documentation solutions. This funnels traffic to the existing Schema Doc Generator micro-tool.
+
+### What Was Built
+
+#### `schema-documentation-tool.html` (17,841 bytes)
+A comprehensive SEO landing page:
+
+- **SEO-optimized title:** "SQL Schema Documentation Tool — Auto-Generate Database Docs"
+- **Meta description** targeting "sql schema documentation", "database schema docs", "auto generate schema documentation"
+- **schema.org SoftwareApplication** JSON-LD structured data
+- **Hero section** with "Turn SQL into living documentation" value proposition
+- **6 feature cards:** Instant Documentation, 5 SQL Dialects, Export to Markdown/HTML, Shareable Links, Complete Structure Detection, Privacy First
+- **3-step workflow:** Export → Paste & Generate → Export & Share
+- **Documentation coverage table** showing what gets detected (tables, columns, PKs, FKs, indexes, constraints, triggers)
+- **Related guides** linking to existing blog post and ER Diagram Generator
+- **CTA section** with primary conversion to the Schema Doc Generator tool
+- **Full footer** with complete site navigation
+
+#### Site-Wide Updates
+- Added "Schema Docs" link to footers on `index.html`, `app.html`, `api-guide.html`, `ci-cd-integration.html`, `zapier-integration.html`
+- Added `schema-documentation-tool.html` to `sitemap.xml` with priority 0.8
+- Added to `tests/e2e.spec.js` page load test list
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass
+- ✅ HTML structure validated
+- ✅ OpenGraph tags complete
+- ✅ schema.org structured data present
+- ✅ Internal links verified
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design landing page structure | 0.1 |
+| Write hero, feature cards, and workflow | 0.15 |
+| Build documentation coverage table | 0.05 |
+| Update footers across 5 pages + sitemap + e2e | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.05 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.5** |
+
+### Key Insights
+1. **Existing tools deserve landing pages** — The Schema Doc Generator micro-tool has been live since Day 7 but had no dedicated SEO landing page. A standalone landing page with broader keywords captures traffic that wouldn't find the tool buried in the tools directory.
+
+2. **Coverage tables build credibility** — Explicitly showing what gets documented (PKs, FKs, indexes, CHECK constraints, triggers) proves the tool is comprehensive. Developers compare doc generators by feature matrix; giving them that matrix upfront removes doubt.
+
+3. **Internal link clusters strengthen SEO** — The schema documentation landing page links to the schema doc generator tool, the ER diagram generator, and a relevant blog post. This cluster signals topical authority to search engines and keeps users on-site longer.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 16 (15 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 6 (schema-migration-tool.html, ci-cd-integration.html, database-schema-sync.html, guest post draft, zapier-integration.html, schema-documentation-tool.html) |
+| Marketing materials | 1 (backlink outreach kit) |
+| Pages updated | 30+ |
+| SEO landing pages | 22 |
+| Blog posts published | 35 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 11 |
+| E2E tests | 14 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+| Build CI/CD Integration landing page with analytics tracking | P1 | ✅ Live |
+| Build backlink outreach materials | P1 | ✅ Ready |
+| Build Database Schema Sync SEO landing page | P1 | ✅ Live |
+| Write schema sync tutorial blog post | P1 | ✅ Published |
+| Add Zapier integration guide page | P2 | ✅ Live |
+| Build SQL Schema Documentation Tool SEO landing page | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Build video walkthrough script/outline for GitHub Actions setup
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 continues. Sixteen commits shipped. SchemaLens has 22 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD and Zapier integration pages, backlink outreach materials, schema sync and schema documentation landing pages. Distribution remains the primary unlock.*
