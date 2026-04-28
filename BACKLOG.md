@@ -65,15 +65,16 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 ## 📋 BACKLOG BY AREA
 
 ### SEO & Content (Unblocked)
-- [x] **P1** Ensure all 73+ pages have unique `<title>` and `<meta name="description">`
-- [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion
+- [x] **P1** Ensure all 73+ pages have unique `<title>` and `<meta name="description">` — ✅ Complete
+- [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Publish "State of Schema Migrations 2026" — industry survey
 - [ ] **P2** Create case study with first team customer
 
 ### Product (Unblocked)
 - [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
-- [x] **P1** Add column rename detection heuristic — ✅ Already implemented (stale item)
+- [x] **P1** Add column rename detection heuristic — ✅ Already implemented
+- [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
 - [ ] **P2** Add Zapier integration guide
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Create video walkthrough of GitHub Actions setup
@@ -81,7 +82,6 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Business & Ops (Unblocked)
-- [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page with analytics events live
 - [ ] **P1** Partner with CI/CD newsletter for mention
 - [ ] **P1** Reach out to churned free users with new features
 - [ ] **P2** Survey Pro users for next most-wanted feature
