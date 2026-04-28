@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL ALTER TABLE Generator — SchemaLens</title>
+  <meta name="description" content="Generate ALTER TABLE statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Add, drop, rename, and modify columns with a visual form. No signup required.">
+  <meta property="og:title" content="Free SQL ALTER TABLE Generator — SchemaLens">
+  <meta property="og:description" content="Build ALTER TABLE statements visually. Add columns, drop columns, rename columns, change types, add constraints. Supports all major SQL dialects.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/alter-table-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL ALTER TABLE Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Visual form-based builder for ALTER TABLE statements across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Add columns, drop columns, rename columns, modify types, add constraints, and manage indexes.",
+    "url": "https://schemalens.tech/tools/alter-table-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .generator-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0 16px;
+    }
+    .generator-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .generator-toolbar select, .generator-toolbar button, .generator-toolbar input {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+    }
+    .generator-toolbar button {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .generator-toolbar button:hover {
+      background: var(--primary-light);
+    }
+
+    .operation-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .operation-card-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .operation-card-header label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .operation-card-header select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      min-width: 180px;
+    }
+    .operation-card-header button {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .operation-card-header button:hover {
+      background: rgba(239,68,68,0.1);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .form-row:last-child { margin-bottom: 0; }
+    .form-row label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-width: 120px;
+    }
+    .form-row input, .form-row select {
+      flex: 1;
+      min-width: 180px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-family: var(--mono);
+    }
+    .form-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex: 0;
+      min-width: auto;
+    }
+    .form-row .hint {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      width: 100%;
+      margin-left: 132px;
+    }
+
+    .add-op-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--primary);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .add-op-btn:hover {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+    }
+
+    .output-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    .output-label {
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-label button {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .output-label button:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+    .output-wrap pre {
+      flex: 1;
+      width: 100%;
+      min-height: 160px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      margin: 0;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .cta-box h3 { margin-bottom: 8px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+
+    @media (max-width: 768px) {
+      .form-row label { min-width: 100%; }
+      .form-row .hint { margin-left: 0; }
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SQL ALTER TABLE Generator</h1>
+      <p>Generate ALTER TABLE statements visually. Add columns, drop columns, rename columns, change types, add constraints, and manage indexes across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="generator-toolbar">
+      <label for="dialect">Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <button id="generateBtn">Generate SQL</button>
+      <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear All</button>
+    </div>
+
+    <div class="operation-card">
+      <div class="form-row">
+        <label for="tableName">Table Name</label>
+        <input type="text" id="tableName" placeholder="e.g. users" value="users">
+      </div>
+    </div>
+
+    <div id="operationsContainer"></div>
+    <button class="add-op-btn" id="addOpBtn">+ Add Operation</button>
+
+    <div class="output-wrap">
+      <div class="output-label">
+        <span>Generated SQL</span>
+        <button id="copyBtn">Copy</button>
+      </div>
+      <pre id="sqlOutput"><code style="display:block;white-space:pre;"></code></pre>
+    </div>
+
+    <div class="cta-box">
+      <h3>Need to compare schemas before altering tables?</h3>
+      <p>SchemaLens diffs database schemas and generates migration scripts instantly. Catch breaking changes before they hit production.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="sql-validator.html">SQL Validator</a>
+          <a href="sql-formatter.html">SQL Formatter</a>
+          <a href="schema-doc-generator.html">Schema Docs</a>
+          <a href="csv-to-sql.html">CSV to SQL</a>
+          <a href="json-to-sql.html">JSON to SQL</a>
+          <a href="schema-health-check.html">Health Check</a>
+          <a href="sql-index-analyzer.html">Index Analyzer</a>
+          <a href="create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="alter-table-generator.html">ALTER TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+
+<script>
+(function() {
+  const container = document.getElementById('operationsContainer');
+  const dialectEl = document.getElementById('dialect');
+  const tableNameEl = document.getElementById('tableName');
+  const sqlOutput = document.getElementById('sqlOutput');
+  let opCounter = 0;
+
+  const commonTypes = {
+    postgres: ['SERIAL','INTEGER','BIGINT','SMALLINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','NUMERIC(10,2)','REAL','JSONB','UUID'],
+    mysql: ['INT','BIGINT','SMALLINT','TINYINT','BOOLEAN','VARCHAR(255)','TEXT','TIMESTAMP','DATE','DECIMAL(10,2)','FLOAT','JSON','CHAR(36)'],
+    sqlite: ['INTEGER','TEXT','REAL','NUMERIC','BLOB','DATETIME','DATE','BOOLEAN','JSON'],
+    mssql: ['INT','BIGINT','SMALLINT','TINYINT','BIT','NVARCHAR(255)','VARCHAR(MAX)','DATETIME2','DATE','DECIMAL(10,2)','FLOAT','UNIQUEIDENTIFIER'],
+    oracle: ['NUMBER','NUMBER(10,2)','INTEGER','VARCHAR2(255)','CLOB','NCLOB','BLOB','DATE','TIMESTAMP','RAW(16)','CHAR(36)']
+  };
+
+  const opLabels = {
+    addColumn: 'Add Column',
+    dropColumn: 'Drop Column',
+    modifyColumn: 'Modify Column Type',
+    renameColumn: 'Rename Column',
+    addConstraint: 'Add Constraint',
+    dropConstraint: 'Drop Constraint',
+    addIndex: 'Add Index',
+    dropIndex: 'Drop Index'
+  };
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+  }
+
+  function q(id) {
+    const dialect = dialectEl.value;
+    if (dialect === 'mssql') return '[' + id + ']';
+    if (dialect === 'mysql') return '`' + id + '`';
+    if (dialect === 'oracle') return '"' + id + '"';
+    return '"' + id + '"';
+  }
+
+  function createOperationCard(data) {
+    opCounter++;
+    const id = 'op_' + opCounter;
+    const div = document.createElement('div');
+    div.className = 'operation-card';
+    div.dataset.opId = id;
+
+    const types = commonTypes[dialectEl.value] || commonTypes.postgres;
+    const typeOptions = types.map(t => `<option value="${t}"${data.colType === t ? ' selected' : ''}>${t}</option>`).join('');
+
+    div.innerHTML = `
+      <div class="operation-card-header">
+        <label for="${id}_type">Operation</label>
+        <select id="${id}_type" class="op-type">
+          ${Object.entries(opLabels).map(([k,v]) => `<option value="${k}"${data.type === k ? ' selected' : ''}>${v}</option>`).join('')}
+        </select>
+        <button class="remove-op" title="Remove operation">Remove</button>
+      </div>
+      <div class="op-body" id="${id}_body"></div>
+    `;
+
+    div.querySelector('.remove-op').addEventListener('click', () => div.remove());
+    div.querySelector('.op-type').addEventListener('change', () => renderOpBody(div, data));
+    renderOpBody(div, data);
+    return div;
+  }
+
+  function renderOpBody(card, data) {
+    const type = card.querySelector('.op-type').value;
+    const body = card.querySelector('.op-body');
+    const types = commonTypes[dialectEl.value] || commonTypes.postgres;
+    const typeOptions = types.map(t => `<option value="${t}">${t}</option>`).join('');
+    const dialect = dialectEl.value;
+
+    let html = '';
+    if (type === 'addColumn') {
+      html = `
+        <div class="form-row"><label>Column Name</label><input type="text" class="op-colName" placeholder="e.g. status" value="${esc(data.colName || '')}"></div>
+        <div class="form-row"><label>Data Type</label><select class="op-colType">${typeOptions}<option value="custom">Custom…</option></select></div>
+        <div class="form-row"><label>Default Value</label><input type="text" class="op-default" placeholder="e.g. 'active' or 0 or NOW()"></div>
+        <div class="form-row"><label>Nullable</label><input type="checkbox" class="op-nullable" checked><span style="color:var(--text-muted);font-size:0.85rem;">Allow NULL values</span></div>
+      `;
+    } else if (type === 'dropColumn') {
+      html = `<div class="form-row"><label>Column Name</label><input type="text" class="op-colName" placeholder="e.g. old_column" value="${esc(data.colName || '')}"></div>`;
+    } else if (type === 'modifyColumn') {
+      html = `
+        <div class="form-row"><label>Column Name</label><input type="text" class="op-colName" placeholder="e.g. email" value="${esc(data.colName || '')}"></div>
+        <div class="form-row"><label>New Type</label><select class="op-colType">${typeOptions}<option value="custom">Custom…</option></select></div>
+        <div class="form-row"><label class="hint">Some dialects require extra syntax (e.g., USING in PostgreSQL, MODIFY in MySQL).</label></div>
+      `;
+    } else if (type === 'renameColumn') {
+      html = `
+        <div class="form-row"><label>Old Name</label><input type="text" class="op-oldName" placeholder="e.g. user_name" value="${esc(data.oldName || '')}"></div>
+        <div class="form-row"><label>New Name</label><input type="text" class="op-newName" placeholder="e.g. username" value="${esc(data.newName || '')}"></div>
+      `;
+    } else if (type === 'addConstraint') {
+      const constraintTypes = ['PRIMARY KEY','FOREIGN KEY','UNIQUE','CHECK','NOT NULL'];
+      const constraintOptions = constraintTypes.map(t => `<option value="${t}"${data.constraintType === t ? ' selected' : ''}>${t}</option>`).join('');
+      html = `
+        <div class="form-row"><label>Constraint Type</label><select class="op-constraintType">${constraintOptions}</select></div>
+        <div class="form-row"><label>Constraint Name</label><input type="text" class="op-constraintName" placeholder="e.g. pk_users_id" value="${esc(data.constraintName || '')}"></div>
+        <div class="form-row"><label>Column(s)</label><input type="text" class="op-columns" placeholder="e.g. id  or  team_id -> teams(id)" value="${esc(data.columns || '')}"></div>
+        <div class="form-row"><label class="hint">For FOREIGN KEY, use format: <code>column_name -> ref_table(ref_column)</code></span></div>
+      `;
+    } else if (type === 'dropConstraint') {
+      html = `
+        <div class="form-row"><label>Constraint Name</label><input type="text" class="op-constraintName" placeholder="e.g. fk_users_team" value="${esc(data.constraintName || '')}"></div>
+      `;
+    } else if (type === 'addIndex') {
+      html = `
+        <div class="form-row"><label>Index Name</label><input type="text" class="op-indexName" placeholder="e.g. idx_users_email" value="${esc(data.indexName || '')}"></div>
+        <div class="form-row"><label>Column(s)</label><input type="text" class="op-columns" placeholder="e.g. email  or  last_name, first_name" value="${esc(data.columns || '')}"></div>
+        <div class="form-row"><label>Unique</label><input type="checkbox" class="op-unique"><span style="color:var(--text-muted);font-size:0.85rem;">Create UNIQUE index</span></div>
+      `;
+    } else if (type === 'dropIndex') {
+      html = `
+        <div class="form-row"><label>Index Name</label><input type="text" class="op-indexName" placeholder="e.g. idx_users_email" value="${esc(data.indexName || '')}"></div>
+      `;
+    }
+
+    body.innerHTML = html;
+
+    // Custom type handler
+    const typeSelect = body.querySelector('.op-colType');
+    if (typeSelect) {
+      typeSelect.addEventListener('change', () => {
+        if (typeSelect.value === 'custom') {
+          const custom = prompt('Enter custom type:');
+          if (custom) {
+            const opt = document.createElement('option');
+            opt.value = custom; opt.textContent = custom;
+            typeSelect.insertBefore(opt, typeSelect.lastElementChild);
+            typeSelect.value = custom;
+          } else {
+            typeSelect.value = types[0];
+          }
+        }
+      });
+    }
+  }
+
+  function addOperation(data) {
+    container.appendChild(createOperationCard(data || { type: 'addColumn' }));
+  }
+
+  function generateSQL() {
+    const table = tableNameEl.value.trim() || 'my_table';
+    const dialect = dialectEl.value;
+    const cards = Array.from(container.querySelectorAll('.operation-card'));
+    if (!cards.length) {
+      sqlOutput.textContent = '-- Add at least one operation to generate SQL';
+      return;
+    }
+
+    const lines = [];
+
+    cards.forEach(card => {
+      const type = card.querySelector('.op-type').value;
+      const body = card.querySelector('.op-body');
+
+      if (type === 'addColumn') {
+        const col = body.querySelector('.op-colName').value.trim();
+        const colType = body.querySelector('.op-colType').value;
+        const defVal = body.querySelector('.op-default').value.trim();
+        const nullable = body.querySelector('.op-nullable').checked;
+        if (!col || !colType) return;
+        let sql = `ALTER TABLE ${q(table)} ADD COLUMN ${q(col)} ${colType}`;
+        if (!nullable) sql += ' NOT NULL';
+        if (defVal) sql += ' DEFAULT ' + defVal;
+        sql += ';';
+        if (dialect === 'mssql') {
+          sql = `ALTER TABLE ${q(table)} ADD ${q(col)} ${colType}`;
+          if (!nullable) sql += ' NOT NULL';
+          if (defVal) sql += ' DEFAULT ' + defVal;
+          sql += ';';
+        } else if (dialect === 'mysql') {
+          sql = `ALTER TABLE ${q(table)} ADD COLUMN ${q(col)} ${colType}`;
+          if (!nullable) sql += ' NOT NULL';
+          if (defVal) sql += ' DEFAULT ' + defVal;
+          sql += ';';
+        } else if (dialect === 'sqlite') {
+          // SQLite doesn't support ALTER TABLE ADD COLUMN with many features
+          sql = `ALTER TABLE ${q(table)} ADD COLUMN ${q(col)} ${colType}`;
+          if (!nullable) sql += ' NOT NULL';
+          if (defVal) sql += ' DEFAULT ' + defVal;
+          sql += ';';
+        } else if (dialect === 'oracle') {
+          sql = `ALTER TABLE ${q(table)} ADD (${q(col)} ${colType}`;
+          if (!nullable) sql += ' NOT NULL';
+          if (defVal) sql += ' DEFAULT ' + defVal;
+          sql += ');';
+        }
+        lines.push(sql);
+      }
+
+      else if (type === 'dropColumn') {
+        const col = body.querySelector('.op-colName').value.trim();
+        if (!col) return;
+        if (dialect === 'sqlite') {
+          lines.push(`-- SQLite does not support DROP COLUMN directly. Recreate the table instead.`);
+          lines.push(`-- 1. CREATE TABLE ${q(table + '_new')} (...)`);
+          lines.push(`-- 2. INSERT INTO ${q(table + '_new')} SELECT ... FROM ${q(table)};`);
+          lines.push(`-- 3. DROP TABLE ${q(table)};`);
+          lines.push(`-- 4. ALTER TABLE ${q(table + '_new')} RENAME TO ${q(table)};`);
+        } else if (dialect === 'oracle') {
+          lines.push(`ALTER TABLE ${q(table)} DROP COLUMN ${q(col)};`);
+        } else {
+          lines.push(`ALTER TABLE ${q(table)} DROP COLUMN ${q(col)};`);
+        }
+      }
+
+      else if (type === 'modifyColumn') {
+        const col = body.querySelector('.op-colName').value.trim();
+        const colType = body.querySelector('.op-colType').value;
+        if (!col || !colType) return;
+        if (dialect === 'postgres') {
+          lines.push(`ALTER TABLE ${q(table)} ALTER COLUMN ${q(col)} TYPE ${colType};`);
+        } else if (dialect === 'mysql') {
+          lines.push(`ALTER TABLE ${q(table)} MODIFY COLUMN ${q(col)} ${colType};`);
+        } else if (dialect === 'sqlite') {
+          lines.push(`-- SQLite does not support MODIFY COLUMN directly. Recreate the table instead.`);
+        } else if (dialect === 'mssql') {
+          lines.push(`ALTER TABLE ${q(table)} ALTER COLUMN ${q(col)} ${colType};`);
+        } else if (dialect === 'oracle') {
+          lines.push(`ALTER TABLE ${q(table)} MODIFY ${q(col)} ${colType};`);
+        }
+      }
+
+      else if (type === 'renameColumn') {
+        const oldName = body.querySelector('.op-oldName').value.trim();
+        const newName = body.querySelector('.op-newName').value.trim();
+        if (!oldName || !newName) return;
+        if (dialect === 'postgres') {
+          lines.push(`ALTER TABLE ${q(table)} RENAME COLUMN ${q(oldName)} TO ${q(newName)};`);
+        } else if (dialect === 'mysql') {
+          lines.push(`ALTER TABLE ${q(table)} CHANGE COLUMN ${q(oldName)} ${q(newName)};`);
+        } else if (dialect === 'sqlite') {
+          lines.push(`-- SQLite: use ALTER TABLE RENAME COLUMN (v3.25+) or recreate table`);
+          lines.push(`ALTER TABLE ${q(table)} RENAME COLUMN ${q(oldName)} TO ${q(newName)};`);
+        } else if (dialect === 'mssql') {
+          lines.push(`EXEC sp_rename '${table}.${oldName}', '${newName}', 'COLUMN';`);
+        } else if (dialect === 'oracle') {
+          lines.push(`ALTER TABLE ${q(table)} RENAME COLUMN ${q(oldName)} TO ${q(newName)};`);
+        }
+      }
+
+      else if (type === 'addConstraint') {
+        const cType = body.querySelector('.op-constraintType').value;
+        const cName = body.querySelector('.op-constraintName').value.trim();
+        const cols = body.querySelector('.op-columns').value.trim();
+        if (!cType || !cols) return;
+
+        if (cType === 'PRIMARY KEY') {
+          if (dialect === 'postgres') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'pk_' + table)} PRIMARY KEY (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'mysql') lines.push(`ALTER TABLE ${q(table)} ADD PRIMARY KEY (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'sqlite') lines.push(`-- SQLite: add PRIMARY KEY at table creation time`);
+          else if (dialect === 'mssql') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'PK_' + table)} PRIMARY KEY CLUSTERED (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'oracle') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'PK_' + table)} PRIMARY KEY (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        } else if (cType === 'FOREIGN KEY') {
+          const match = cols.match(/^(.+?)\s*->\s*(\w+)\s*\(\s*(\w+)\s*\)$/);
+          if (match) {
+            const col = match[1].trim();
+            const refTable = match[2].trim();
+            const refCol = match[3].trim();
+            if (dialect === 'postgres') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'fk_' + table + '_' + col)} FOREIGN KEY (${q(col)}) REFERENCES ${q(refTable)}(${q(refCol)});`);
+            else if (dialect === 'mysql') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'fk_' + col)} FOREIGN KEY (${q(col)}) REFERENCES ${q(refTable)}(${q(refCol)});`);
+            else if (dialect === 'sqlite') lines.push(`-- SQLite: add FOREIGN KEY at table creation time`);
+            else if (dialect === 'mssql') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'FK_' + table + '_' + col)} FOREIGN KEY (${q(col)}) REFERENCES ${q(refTable)}(${q(refCol)});`);
+            else if (dialect === 'oracle') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'FK_' + table + '_' + col)} FOREIGN KEY (${q(col)}) REFERENCES ${q(refTable)}(${q(refCol)});`);
+          } else {
+            lines.push(`-- Invalid FOREIGN KEY format. Use: column_name -> ref_table(ref_column)`);
+          }
+        } else if (cType === 'UNIQUE') {
+          if (dialect === 'postgres') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'uq_' + table + '_' + cols.trim())} UNIQUE (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'mysql') lines.push(`ALTER TABLE ${q(table)} ADD UNIQUE KEY ${q(cName || 'uq_' + cols.trim())} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'sqlite') lines.push(`-- SQLite: add UNIQUE at table creation or via CREATE UNIQUE INDEX`);
+          else if (dialect === 'mssql') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'UQ_' + table)} UNIQUE (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+          else if (dialect === 'oracle') lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'UQ_' + table)} UNIQUE (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        } else if (cType === 'CHECK') {
+          if (dialect === 'sqlite') lines.push(`-- SQLite: add CHECK at table creation time`);
+          else lines.push(`ALTER TABLE ${q(table)} ADD CONSTRAINT ${q(cName || 'chk_' + table)} CHECK (${cols});`);
+        } else if (cType === 'NOT NULL') {
+          if (dialect === 'postgres') lines.push(`ALTER TABLE ${q(table)} ALTER COLUMN ${q(cols)} SET NOT NULL;`);
+          else if (dialect === 'mysql') lines.push(`ALTER TABLE ${q(table)} MODIFY COLUMN ${q(cols)} <type> NOT NULL;`);
+          else if (dialect === 'sqlite') lines.push(`-- SQLite: NOT NULL can only be set at table creation`);
+          else if (dialect === 'mssql') lines.push(`ALTER TABLE ${q(table)} ALTER COLUMN ${q(cols)} <type> NOT NULL;`);
+          else if (dialect === 'oracle') lines.push(`ALTER TABLE ${q(table)} MODIFY ${q(cols)} NOT NULL;`);
+        }
+      }
+
+      else if (type === 'dropConstraint') {
+        const cName = body.querySelector('.op-constraintName').value.trim();
+        if (!cName) return;
+        if (dialect === 'mysql') lines.push(`ALTER TABLE ${q(table)} DROP FOREIGN KEY ${q(cName)};`);
+        else if (dialect === 'oracle') lines.push(`ALTER TABLE ${q(table)} DROP CONSTRAINT ${q(cName)};`);
+        else lines.push(`ALTER TABLE ${q(table)} DROP CONSTRAINT ${q(cName)};`);
+      }
+
+      else if (type === 'addIndex') {
+        const idxName = body.querySelector('.op-indexName').value.trim();
+        const cols = body.querySelector('.op-columns').value.trim();
+        const unique = body.querySelector('.op-unique').checked;
+        if (!idxName || !cols) return;
+        if (dialect === 'postgres') lines.push(`CREATE ${unique ? 'UNIQUE ' : ''}INDEX ${q(idxName)} ON ${q(table)} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        else if (dialect === 'mysql') lines.push(`CREATE ${unique ? 'UNIQUE ' : ''}INDEX ${q(idxName)} ON ${q(table)} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        else if (dialect === 'sqlite') lines.push(`CREATE ${unique ? 'UNIQUE ' : ''}INDEX ${q(idxName)} ON ${q(table)} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        else if (dialect === 'mssql') lines.push(`CREATE ${unique ? 'UNIQUE ' : ''}INDEX ${q(idxName)} ON ${q(table)} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+        else if (dialect === 'oracle') lines.push(`CREATE ${unique ? 'UNIQUE ' : ''}INDEX ${q(idxName)} ON ${q(table)} (${cols.split(',').map(c => q(c.trim())).join(', ')});`);
+      }
+
+      else if (type === 'dropIndex') {
+        const idxName = body.querySelector('.op-indexName').value.trim();
+        if (!idxName) return;
+        if (dialect === 'postgres') lines.push(`DROP INDEX ${q(idxName)};`);
+        else if (dialect === 'mysql') lines.push(`DROP INDEX ${q(idxName)} ON ${q(table)};`);
+        else if (dialect === 'sqlite') lines.push(`DROP INDEX ${q(idxName)};`);
+        else if (dialect === 'mssql') lines.push(`DROP INDEX ${q(idxName)} ON ${q(table)};`);
+        else if (dialect === 'oracle') lines.push(`DROP INDEX ${q(idxName)};`);
+      }
+    });
+
+    sqlOutput.textContent = lines.join('\n');
+  }
+
+  function loadSample() {
+    tableNameEl.value = 'users';
+    dialectEl.value = 'postgres';
+    container.innerHTML = '';
+    addOperation({ type: 'addColumn', colName: 'status', colType: 'VARCHAR(20)', default: "'active'" });
+    addOperation({ type: 'addConstraint', constraintType: 'FOREIGN KEY', constraintName: 'fk_users_team', columns: 'team_id -> teams(id)' });
+    addOperation({ type: 'addIndex', indexName: 'idx_users_email', columns: 'email' });
+    generateSQL();
+  }
+
+  document.getElementById('addOpBtn').addEventListener('click', () => addOperation());
+  document.getElementById('generateBtn').addEventListener('click', generateSQL);
+  document.getElementById('sampleBtn').addEventListener('click', loadSample);
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    container.innerHTML = '';
+    sqlOutput.textContent = '';
+    tableNameEl.value = '';
+  });
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(sqlOutput.textContent).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  });
+
+  dialectEl.addEventListener('change', () => {
+    // Update type dropdowns in existing operations
+    Array.from(container.querySelectorAll('.operation-card')).forEach(card => {
+      const type = card.querySelector('.op-type').value;
+      if (type === 'addColumn' || type === 'modifyColumn') {
+        const current = card.querySelector('.op-colType')?.value || '';
+        const types = commonTypes[dialectEl.value] || commonTypes.postgres;
+        const sel = document.createElement('select');
+        sel.className = 'op-colType';
+        sel.innerHTML = types.map(t => `<option value="${t}"${t === current ? ' selected' : ''}>${t}</option>`).join('') + '<option value="custom">Custom…</option>';
+        sel.addEventListener('change', () => {
+          if (sel.value === 'custom') {
+            const custom = prompt('Enter custom type:');
+            if (custom) {
+              const opt = document.createElement('option');
+              opt.value = custom; opt.textContent = custom;
+              sel.insertBefore(opt, sel.lastElementChild);
+              sel.value = custom;
+            } else { sel.value = types[0]; }
+          }
+        });
+        const old = card.querySelector('.op-colType');
+        if (old) old.replaceWith(sel);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') generateSQL();
+  });
+
+  // Start with one empty operation
+  addOperation();
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

@@ -271,6 +271,12 @@
   </url>
   <url>
     <loc>https://schemalens.tech/tools/create-table-generator.html</loc>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/alter-table-generator.html</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>

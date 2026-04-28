@@ -51,6 +51,7 @@ const pages = [
   { path: '/tools/schema-health-check.html', name: 'Schema Health Check' },
   { path: '/tools/sql-index-analyzer.html', name: 'SQL Index Analyzer' },
   { path: '/tools/create-table-generator.html', name: 'CREATE TABLE Generator' },
+  { path: '/tools/alter-table-generator.html', name: 'ALTER TABLE Generator' },
   { path: '/tools/schema-diagram.html', name: 'ER Diagram Generator' },
   { path: '/oracle-schema-diff.html', name: 'Oracle Diff Landing' },
   { path: '/tools/sql-data-types.html', name: 'SQL Data Types Reference' },
