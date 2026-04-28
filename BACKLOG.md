@@ -471,21 +471,48 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P1** Build free micro-tool: ER Diagram Generator from SQL (Mermaid.js, SVG export)
 - [x] **P1** Add ORM export formats to app.html — Prisma schema and Drizzle schema from diff results
 - [x] **P2** Build VS Code extension MVP (calls /api/diff, shows diff in panel)
-- [ ] **P2** Add comment/annotation on diffs for team collaboration
+- [x] **P2** Add comment/annotation on diffs for team collaboration
 - [x] **P2** Add diff versioning for team history
 
 ### Marketing & Content
 - [x] **P1** Write blog post: "How to Generate ER Diagrams from SQL Automatically" (SEO for new tool)
 - [x] **P1** Update schema.org SoftwareApplication structured data on all 9 free micro-tool pages
 - [x] **P2** Create API quick-start guide page with copy-pasteable curl examples
-- [ ] **P2** Write guest post for dev.to about the ER Diagram Generator
+- [ ] **P1** Write guest post for dev.to about the ER Diagram Generator
 
 ### Business & Ops
 - [x] **P1** Build lightweight admin dashboard to review Supabase feedback, subscribers, and testimonials
 - [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
-- [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
+- [ ] **P1** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
 
 ---
 
-*Backlog reprioritized April 25, 2026. Highest-priority unblocked task: ORM export formats or admin dashboard.*
+## 🔥 NEW UNBLOCKED TASKS (April 28)
+
+### Product
+- [x] **P1** Build serverless admin proxy (`api/admin.js`) for secure Supabase data access
+- [x] **P1** Add diff comment/annotation system for team collaboration
+- [x] **P2** Add schema.org Article structured data to all 33 blog posts (100% coverage)
+- [x] **P2** Fix broken links across entire site + create missing GitHub workflow file
+- [ ] **P1** Write guest post for dev.to about the ER Diagram Generator
+- [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
+- [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
+- [ ] **P2** Build FAQ schema structured data for pricing page (rich snippets)
+- [ ] **P2** Create "Database Schema Migration Tool" SEO landing page
+
+### Marketing & Content
+- [ ] **P1** Distribute to SaaS directories and developer communities (BLOCKED on human — materials ready)
+- [ ] **P1** Launch on Product Hunt (BLOCKED on human — materials ready)
+- [ ] **P1** Post Show HN (BLOCKED on human — materials ready)
+- [ ] **P2** Create demo GIF/screenshots for social sharing (human suggested programmatic generation)
+
+### Business & Ops
+- [ ] **P0** Monitor Gumroad sales and refund requests
+- [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
+- [ ] **P1** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
+- [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
+
+---
+
+*Backlog reprioritized April 28, 2026. Highest-priority unblocked buildable task: dev.to guest post about ER Diagram Generator or new SEO landing page.*

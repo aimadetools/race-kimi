@@ -13,6 +13,62 @@
   <meta property="og:url" content="https://schemalens.tech/pricing.html">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is my data safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. SchemaLens runs entirely in your browser. We built a custom SQL parser in vanilla JavaScript and never upload your schemas to any server. If you close the tab, your data is gone."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What SQL dialects do you support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. All dialects are available on every plan, including Free."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I cancel anytime?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Pro and Team plans are billed monthly or annually. Cancel anytime from your Gumroad account. Annual plans are refunded pro-rata within 14 days."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you offer refunds?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We offer a 14-day money-back guarantee on all paid plans. If SchemaLens doesn't save you time, email us and we'll refund you — no questions asked."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What can I do on the Free plan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Free plan lets you diff up to 10 tables at a time, view visual diffs, and use all 5 SQL dialects. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and breaking change detection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use this at work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Many Pro users are engineering leads who use SchemaLens for code review and staging-to-production checks. The Team plan adds shared workspaces, diff comments, and admin controls for organizations."
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script>
@@ -133,22 +189,22 @@
 
       <div class="about-content" style="margin-top: 32px;">
         <h2>Is my data safe?</h2>
-        <p>Yes. SchemaLens runs entirely in your browser. We use client-side parsing (node-sql-parser compiled for the browser) and never upload your schemas to any server. If you close the tab, your data is gone.</p>
+        <p>Yes. SchemaLens runs entirely in your browser. We built a custom SQL parser in vanilla JavaScript and never upload your schemas to any server. If you close the tab, your data is gone.</p>
 
         <h2>What SQL dialects do you support?</h2>
-        <p>Currently PostgreSQL, MySQL, MariaDB, and SQLite. We plan to add SQL Server and Oracle based on demand. Pro users get all dialects automatically.</p>
+        <p>PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. All dialects are available on every plan, including Free.</p>
 
         <h2>Can I cancel anytime?</h2>
-        <p>Yes. Pro and Team plans are billed monthly or annually. Cancel anytime from your account dashboard. Annual plans are refunded pro-rata within 14 days.</p>
+        <p>Yes. Pro and Team plans are billed monthly or annually. Cancel anytime from your Gumroad account. Annual plans are refunded pro-rata within 14 days.</p>
 
         <h2>Do you offer refunds?</h2>
         <p>We offer a 14-day money-back guarantee on all paid plans. If SchemaLens doesn't save you time, email us and we'll refund you — no questions asked.</p>
 
-        <h2>What's included in the free trial?</h2>
-        <p>You get full Pro features for 7 days. No credit card required. At the end of the trial, you can upgrade or continue with the Free plan.</p>
+        <h2>What can I do on the Free plan?</h2>
+        <p>The Free plan lets you diff up to 10 tables at a time, view visual diffs, and use all 5 SQL dialects. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and breaking change detection.</p>
 
         <h2>Can I use this at work?</h2>
-        <p>Absolutely. Many of our Pro users are engineering leads who use SchemaLens for code review and staging-to-production checks. The Team plan adds shared workspaces and admin controls for organizations.</p>
+        <p>Absolutely. Many Pro users are engineering leads who use SchemaLens for code review and staging-to-production checks. The Team plan adds shared workspaces, diff comments, and admin controls for organizations.</p>
       </div>
     </div>
   </section>

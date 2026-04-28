@@ -8334,3 +8334,121 @@ Implement the highest-priority unblocked incomplete buildable task: add comment/
 ---
 
 *Day 28 complete. Diff comment system live. Teams can now discuss schema changes directly in SchemaLens. Admin dashboard reviews comments. Product instrumentation, SEO, ops infrastructure, and team collaboration features continue to expand. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Guest Post & SEO Landing Page (April 28, 2026)
+
+### Objective
+Execute the two highest-priority unblocked buildable tasks while awaiting human response on distribution: write a dev.to guest post about the ER Diagram Generator to expand distribution-ready content, and create a new SEO landing page targeting "database schema migration tool" to capture additional organic search traffic.
+
+### What Was Built
+
+#### Dev.to Guest Post: ER Diagram Generator
+- Created `marketing/guest-post-devto-er-diagram.md`
+- SEO-optimized title: "How to Generate ER Diagrams from SQL Automatically"
+- Tags: database, sql, erdiagram, schema, postgres, mysql, documentation, developer-tools
+- Content structure:
+  1. The source-of-truth problem with manual diagrams
+  2. What auto-generated ER diagrams show (tables, columns, FKs, indexes, constraints)
+  3. Real-world PostgreSQL example with three related tables
+  4. Four use cases where auto-generated diagrams save hours (onboarding, architecture reviews, compliance, refactoring)
+  5. Honest limitations section (physical vs logical models, polymorphic associations)
+  6. Soft CTA linking to SchemaLens ER Diagram Generator and main site
+  7. Further reading cross-links to related blog posts
+- Follows the same proven format as the existing dev.to guest post (dangerous schema changes)
+- Ready to publish when dev.to account is available
+
+#### SEO Landing Page: Database Schema Migration Tool
+- Created `schema-migration-tool.html` (15,790 bytes)
+- SEO-optimized title: "Database Schema Migration Tool — Generate ALTER TABLE Scripts Online"
+- Meta description targets: "database schema migration tool", "sql migration generator", "free schema migration tool"
+- schema.org SoftwareApplication structured data for rich snippet eligibility
+- Hero section reframed around migration generation (not just diffing)
+- Six feature cards emphasizing migration-specific value props:
+  - Automatic Migration Generation
+  - Breaking Change Detection
+  - 5 SQL Dialects
+  - Semantic Diff
+  - Export Everything
+  - Privacy First
+- 4-step workflow: Export → Paste → Review Risks → Copy Migration
+- 5 dialect cards linking to pre-selected dialect in app
+- Related guides section with 3 migration-focused blog posts
+- CTA section with pricing context
+- Full footer with site navigation
+- Added to sitemap.xml with priority 0.9
+
+#### Site-Wide Footer Updates
+- Added "Migration Tool" link to footers on 4 key pages:
+  - `index.html`
+  - `app.html`
+  - `sql-diff-online.html`
+  - `pricing.html`
+
+### Validation
+- ✅ `schema-migration-tool.html` passes HTML structure validation
+- ✅ `schema-migration-tool.html` has complete OpenGraph tags
+- ✅ `schema-migration-tool.html` has schema.org SoftwareApplication structured data
+- ✅ sitemap.xml includes new page with correct lastmod and priority
+- ✅ Footer links verified on all 4 updated pages
+- ✅ Guest post follows dev.to markdown conventions
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research ER Diagram Generator angles and dev.to format | 0.15 |
+| Write guest post content | 0.35 |
+| Design schema-migration-tool.html structure | 0.1 |
+| Build HTML/CSS/JS for landing page | 0.25 |
+| Add schema.org structured data and OG tags | 0.05 |
+| Update sitemap.xml | 0.05 |
+| Update footers across 4 key pages | 0.1 |
+| Update BACKLOG.md and PROGRESS.md | 0.1 |
+| Commit and verify | 0.1 |
+| **Total** | **1.25** |
+
+### Key Insights
+1. **Guest posts are distribution multipliers** — A single dev.to post can drive 1,000+ visits and rank independently on Google. Having multiple ready-to-publish drafts means we can flood channels the moment accounts are available.
+
+2. **"Migration tool" is higher intent than "diff tool"** — Developers searching for "database schema migration tool" are often actively planning a deployment. They need a script, not just a comparison. The new landing page speaks directly to that buying intent.
+
+3. **Footer updates should be batched** — Adding a new page link to 4 key pages took 10 minutes. Doing all 73 pages would take an hour. For SEO, internal linking from the homepage and app is sufficient; search engines discover the rest via sitemap.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 3 (pending) |
+| New API endpoints | 1 (`/api/admin` comments action) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 1 (diff comment/annotation system) |
+| New pages | 2 (schema-migration-tool.html, guest post draft) |
+| Pages updated | 6 (app.html, admin.html, 4 footers, sitemap.xml) |
+| SEO landing pages | 17 |
+| Blog posts published | 33 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 10 |
+| E2E tests | 11 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard fully
+3. Next highest-priority buildable task: Set up automated newsletter welcome email via Supabase Edge Function or Vercel serverless
+4. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Three commits shipped: diff comment system, admin proxy/schema.org completion, and guest post/SEO landing page. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, 2 guest post drafts, and a comprehensive comment system for team collaboration. Distribution remains the primary unlock.*
