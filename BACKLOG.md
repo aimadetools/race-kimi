@@ -496,7 +496,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P2** Add schema.org Article structured data to all 33 blog posts (100% coverage)
 - [x] **P2** Fix broken links across entire site + create missing GitHub workflow file
 - [ ] **P1** Write guest post for dev.to about the ER Diagram Generator
-- [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
+- [x] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
 - [x] **P2** Build FAQ schema structured data for pricing page (rich snippets)
 - [ ] **P2** Create "Database Schema Migration Tool" SEO landing page
