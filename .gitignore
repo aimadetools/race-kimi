@@ -9,4 +9,8 @@ build/
 license-keys.txt
 logs/
 test-results/
-
+__pycache__/
+.venv/
+venv/
+marketing/screenshots/
+marketing/demo-assets/
