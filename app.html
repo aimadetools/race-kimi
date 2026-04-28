@@ -1469,7 +1469,7 @@ function parseCreateTable(stmt, dialect) {
 
     // Detect if it's a table-level constraint
     const firstUpper = tokens[0].toUpperCase();
-    if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK') {
+    if (firstUpper === 'CONSTRAINT' || firstUpper === 'PRIMARY' || firstUpper === 'UNIQUE' || firstUpper === 'FOREIGN' || firstUpper === 'CHECK' || firstUpper === 'EXCLUDE') {
       table.constraints.push(parseConstraint(tokens, dialect));
       continue;
     }
@@ -1677,6 +1677,36 @@ function parseConstraint(tokens, dialect) {
         i++;
       }
       con.expression = tokens.slice(start + 1, i).join(' ');
+    }
+  } else if (t === 'EXCLUDE') {
+    con.type = 'EXCLUDE';
+    i++;
+    if (tokens[i] && tokens[i].toUpperCase() === 'USING') {
+      i += 2; // skip USING method
+      con.using = tokens[i - 1];
+    }
+    if (tokens[i] === '(') {
+      const start = i;
+      let depth = 0;
+      while (i < tokens.length) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') { depth--; if (depth === 0) break; }
+        i++;
+      }
+      con.expression = tokens.slice(start + 1, i).join(' ');
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'WHERE') {
+      i++;
+      if (tokens[i] === '(') {
+        const start = i;
+        let depth = 0;
+        while (i < tokens.length) {
+          if (tokens[i] === '(') depth++;
+          else if (tokens[i] === ')') { depth--; if (depth === 0) break; }
+          i++;
+        }
+        con.where = tokens.slice(start + 1, i).join(' ');
+      }
     }
   }
   return con;
@@ -2243,7 +2273,7 @@ function detectBreakingChanges(diff) {
   for (const td of diff.tablesModified) {
     for (const con of td.constraintsRemoved) {
       const type = (con.type || '').toUpperCase();
-      if (type.includes('PRIMARY') || type.includes('UNIQUE') || type.includes('CHECK')) {
+      if (type.includes('PRIMARY') || type.includes('UNIQUE') || type.includes('CHECK') || type.includes('EXCLUDE')) {
         breaking.push({
           type: 'DROP_CONSTRAINT',
           severity: 'critical',
@@ -2460,6 +2490,8 @@ function generateMigration(diff, dialect) {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)};`);
       } else if (con.type === 'CHECK') {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)};`);
+      } else if (con.type === 'EXCLUDE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_exclude'), dialect)};`);
       }
     }
     if (td.constraintsRemoved.length) lines.push('');
@@ -2473,6 +2505,8 @@ function generateMigration(diff, dialect) {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)} FOREIGN KEY (${con.columns.map(c => quoteId(c, dialect)).join(', ')}) REFERENCES ${quoteId(con.refTable, dialect)}(${con.refColumns.map(c => quoteId(c, dialect)).join(', ')});`);
       } else if (con.type === 'CHECK') {
         lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)} CHECK (${con.expression});`);
+      } else if (con.type === 'EXCLUDE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_exclude'), dialect)} EXCLUDE${con.using ? ' USING ' + con.using : ''} (${con.expression});`);
       }
     }
     if (td.constraintsAdded.length) lines.push('');
@@ -2931,11 +2965,19 @@ function renderTableDiff(name, status, addedCols, removedCols, renamedCols, modi
     rows += `<tr class="row-modified"><td>${esc(mod.column.name)}</td><td>${esc(mod.column.type)}</td><td>${mod.column.nullable?'NULL':'NOT NULL'}</td><td>${changes}</td></tr>`;
   }
   for (const con of constraintsAdded || []) {
-    const details = con.type === 'FOREIGN KEY' ? `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})` : esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
+    let details;
+    if (con.type === 'FOREIGN KEY') details = `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})`;
+    else if (con.type === 'CHECK') details = `CHECK (${esc(con.expression)})`;
+    else if (con.type === 'EXCLUDE') details = `EXCLUDE${con.using ? ' USING ' + esc(con.using) : ''} (${esc(con.expression)})`;
+    else details = esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
     rows += `<tr class="row-added"><td colspan="4"><strong>+ Constraint:</strong> ${esc(con.name || 'unnamed')} — ${details}</td></tr>`;
   }
   for (const con of constraintsRemoved || []) {
-    const details = con.type === 'FOREIGN KEY' ? `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})` : esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
+    let details;
+    if (con.type === 'FOREIGN KEY') details = `FK → ${esc(con.refTable)}(${esc((con.refColumns||[]).join(', '))})`;
+    else if (con.type === 'CHECK') details = `CHECK (${esc(con.expression)})`;
+    else if (con.type === 'EXCLUDE') details = `EXCLUDE${con.using ? ' USING ' + esc(con.using) : ''} (${esc(con.expression)})`;
+    else details = esc(con.type) + (con.columns ? `(${esc(con.columns.join(', '))})` : '');
     rows += `<tr class="row-removed"><td colspan="4"><strong>− Constraint:</strong> ${esc(con.name || 'unnamed')} — ${details}</td></tr>`;
   }
 
@@ -3615,6 +3657,8 @@ function generateMarkdown(diff, migrationSQL, dialect) {
             md += `- ${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})\n`;
           } else if (con.type === 'CHECK') {
             md += `- ${con.name || 'unnamed'}: CHECK (${con.expression})\n`;
+          } else if (con.type === 'EXCLUDE') {
+            md += `- ${con.name || 'unnamed'}: EXCLUDE${con.using ? ' USING ' + con.using : ''} (${con.expression})\n`;
           } else {
             md += `- ${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})\n`;
           }
@@ -3629,6 +3673,8 @@ function generateMarkdown(diff, migrationSQL, dialect) {
             md += `- ${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})\n`;
           } else if (con.type === 'CHECK') {
             md += `- ${con.name || 'unnamed'}: CHECK (${con.expression})\n`;
+          } else if (con.type === 'EXCLUDE') {
+            md += `- ${con.name || 'unnamed'}: EXCLUDE${con.using ? ' USING ' + con.using : ''} (${con.expression})\n`;
           } else {
             md += `- ${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})\n`;
           }
@@ -4021,6 +4067,8 @@ function constraintText(con) {
     return `${con.name || 'unnamed'}: FOREIGN KEY (${con.columns.join(', ')}) REFERENCES ${con.refTable}(${(con.refColumns || []).join(', ')})`;
   } else if (con.type === 'CHECK') {
     return `${con.name || 'unnamed'}: CHECK (${con.expression})`;
+  } else if (con.type === 'EXCLUDE') {
+    return `${con.name || 'unnamed'}: EXCLUDE${con.using ? ' USING ' + con.using : ''} (${con.expression})`;
   } else {
     return `${con.name || 'unnamed'}: ${con.type} (${con.columns.join(', ')})`;
   }

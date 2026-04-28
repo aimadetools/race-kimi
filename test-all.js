@@ -177,5 +177,68 @@ if (schemaProc.functions && schemaProc.functions['archive_old_users'] && schemaP
   console.log('procedure: FAIL — expected 1 procedure parsed, keys:', Object.keys(schemaProc.functions || {}));
 }
 
-console.log('\n' + ok + '/11 tests passed');
-process.exit(ok === 11 ? 0 : 1);
+// Constraint parsing and diff test
+const constraintSQLA = `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  sku VARCHAR(50) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'active',
+  CONSTRAINT uq_sku UNIQUE (sku),
+  CONSTRAINT chk_price_positive CHECK (price > 0)
+);`;
+
+const constraintSQLB = `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  sku VARCHAR(50) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'active',
+  category_id INTEGER,
+  CONSTRAINT uq_sku UNIQUE (sku),
+  CONSTRAINT chk_price_positive CHECK (price > 0),
+  CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(id)
+);`;
+
+const schemaConsA = parseSQL(constraintSQLA, 'postgres');
+const schemaConsB = parseSQL(constraintSQLB, 'postgres');
+const consDiff = diffSchemas(schemaConsA, schemaConsB);
+
+if (consDiff.tablesModified.length === 1 &&
+    consDiff.tablesModified[0].constraintsAdded.length === 1 &&
+    consDiff.tablesModified[0].constraintsAdded[0].type === 'FOREIGN KEY' &&
+    consDiff.tablesModified[0].columnsAdded.length === 1) {
+  console.log('constraint-diff: OK — FK constraint added detected');
+  ok++;
+} else {
+  console.log('constraint-diff: FAIL — expected 1 FK added, got', consDiff.tablesModified[0]?.constraintsAdded?.length, 'constraints added');
+}
+
+// EXCLUDE constraint parsing test
+const excludeSQL = `CREATE TABLE room_reservations (
+  room_id INT NOT NULL,
+  during TSRANGE NOT NULL,
+  EXCLUDE USING gist (room_id WITH =, during WITH &&)
+);`;
+
+const schemaExclude = parseSQL(excludeSQL, 'postgres');
+const excludeTable = schemaExclude.tables['room_reservations'];
+if (excludeTable && excludeTable.constraints.length === 1 &&
+    excludeTable.constraints[0].type === 'EXCLUDE' &&
+    excludeTable.constraints[0].using === 'gist' &&
+    excludeTable.constraints[0].expression.includes('room_id')) {
+  console.log('exclude: OK — EXCLUDE constraint parsed');
+  ok++;
+} else {
+  console.log('exclude: FAIL — EXCLUDE constraint not parsed correctly, constraints:', excludeTable?.constraints);
+}
+
+// Constraint migration generation test
+const migration = generateMigration(consDiff, 'postgres');
+if (migration.includes('ADD CONSTRAINT') && migration.includes('FOREIGN KEY')) {
+  console.log('constraint-migration: OK — migration SQL includes constraint changes');
+  ok++;
+} else {
+  console.log('constraint-migration: FAIL — migration SQL missing constraint DDL');
+}
+
+console.log('\n' + ok + '/14 tests passed');
+process.exit(ok === 14 ? 0 : 1);
