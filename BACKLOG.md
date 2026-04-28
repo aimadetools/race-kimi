@@ -498,7 +498,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [ ] **P1** Write guest post for dev.to about the ER Diagram Generator
 - [ ] **P2** Set up automated newsletter email delivery (Buttondown free tier or Supabase edge function)
 - [ ] **P2** Add weekly analytics summary email (manual or automated via cron)
-- [ ] **P2** Build FAQ schema structured data for pricing page (rich snippets)
+- [x] **P2** Build FAQ schema structured data for pricing page (rich snippets)
 - [ ] **P2** Create "Database Schema Migration Tool" SEO landing page
 
 ### Marketing & Content
