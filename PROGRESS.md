@@ -1538,3 +1538,117 @@ A fully client-side, searchable SQL data types reference with zero dependencies:
 ---
 
 *Day 28 complete. Nine commits shipped including context maintenance, diff comment system, admin proxy, schema.org completion, guest post/SEO landing page, FAQPage structured data, newsletter welcome email, weekly analytics summary, conversion funnel, and SQL Data Types Reference. SchemaLens has 18 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Constraint Diff Completion (April 28, 2026)
+
+### Objective
+Complete the partially-implemented constraint diff system by adding EXCLUDE constraint support (PostgreSQL-specific), fixing the CHECK constraint display bug in the visual diff, and adding comprehensive tests.
+
+### What Was Built
+
+#### EXCLUDE Constraint Parsing
+Added EXCLUDE constraint parsing to `parseConstraint()` in `app.html`:
+- Detects `EXCLUDE [USING method] (expression)` syntax
+- Captures optional `USING` index method (e.g., gist, btree, hash)
+- Captures the exclude expression (e.g., `room_id WITH =, during WITH &&`)
+- Captures optional `WHERE (predicate)` clause
+- Added `EXCLUDE` to table-level constraint detection in `parseTable()`
+
+#### CHECK Constraint Display Fix
+Fixed a bug in `renderTableDiff()` where CHECK constraints displayed as `CHECK()` instead of `CHECK(expression)`:
+- The `details` variable only handled `con.columns`, which is undefined for CHECK constraints
+- Added explicit CHECK handling: `CHECK (${esc(con.expression)})`
+- Applied to both `constraintsAdded` and `constraintsRemoved` rows
+
+#### Migration Generator Updates
+- Added EXCLUDE to `DROP CONSTRAINT` generation
+- Added EXCLUDE to `ADD CONSTRAINT` generation with `USING` method support
+
+#### Breaking Change Detection
+- Added `EXCLUDE` to dropped constraint detection (dropping an EXCLUDE constraint is critical)
+
+#### Export Updates
+- Updated `constraintText()` for PDF/JSON exports
+- Updated Markdown export for both added and removed constraints
+
+#### Tests
+Added 3 new tests to `test-all.js`:
+1. **constraint-diff** — Parses tables with CHECK and UNIQUE, diffs to add a FK, verifies constraintsAdded
+2. **exclude** — Parses a PostgreSQL EXCLUDE USING gist constraint, verifies type/using/expression
+3. **constraint-migration** — Generates migration SQL and verifies ADD CONSTRAINT + FOREIGN KEY presence
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass (11 existing + 3 new)
+- ✅ HTML tag balance verified
+- ✅ Syntax validation passes for all modified inline scripts
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Audit current constraint diff implementation | 0.1 |
+| Add EXCLUDE parsing to parseConstraint | 0.15 |
+| Fix CHECK display bug in renderTableDiff | 0.05 |
+| Add EXCLUDE to migration generator | 0.05 |
+| Add EXCLUDE to breaking change detection | 0.03 |
+| Update constraintText and Markdown export | 0.05 |
+| Write and validate 3 new tests | 0.1 |
+| Commit, push, deploy | 0.05 |
+| Update PROGRESS.md and BACKLOG.md | 0.05 |
+| **Total** | **0.63** |
+
+### Key Insights
+1. **EXCLUDE constraints are high-signal for PostgreSQL teams** — EXCLUDE constraints (especially with gist for ranges) are a PostgreSQL superpower used by teams building scheduling, booking, and reservation systems. Supporting them differentiates SchemaLens from generic diff tools.
+
+2. **Display bugs erode trust** — A CHECK constraint showing as `CHECK()` looks broken. Users infer that if the display is wrong, the migration might be wrong too. Fixing visual bugs is as important as fixing logic bugs.
+
+3. **Test coverage for edge cases compounds confidence** — Constraint diff tests ensure that future parser changes don't silently break CHECK, UNIQUE, FOREIGN KEY, or EXCLUDE handling.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 10 (9 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 2 (schema-migration-tool.html, guest post draft) |
+| Pages updated | 12+ |
+| SEO landing pages | 18 |
+| Blog posts published | 34 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 11 |
+| E2E tests | 14 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Add column rename detection heuristic
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Ten commits shipped. Constraint diff is now complete with EXCLUDE support, CHECK display fix, and comprehensive tests. SchemaLens has 18 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*

@@ -72,7 +72,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Create case study with first team customer
 
 ### Product (Unblocked)
-- [ ] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — partial, needs completion
+- [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
 - [ ] **P1** Add column rename detection heuristic
 - [ ] **P2** Add Zapier integration guide
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
