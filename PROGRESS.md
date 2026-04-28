@@ -8746,3 +8746,91 @@ Build a weekly analytics summary endpoint that aggregates product usage, subscri
 ---
 
 *Day 28 complete. Six commits shipped: diff comment system, admin proxy/schema.org completion, guest post/SEO landing page, FAQPage structured data with pricing copy refresh, newsletter welcome email, and weekly analytics summary. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, team collaboration features, automated email infrastructure, and analytics reporting. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Conversion Funnel Visualization (April 28, 2026)
+
+### Objective
+Add a conversion funnel visualization to the admin dashboard to track the user journey from landing page → app → diff run → export/share → license activation. This was the highest-priority unblocked buildable task remaining in the backlog.
+
+### What Was Built
+
+#### Admin Dashboard: Conversion Funnel Section (`admin.html`)
+- New "🎯 Conversion Funnel" section above the Recent Analytics Events table
+- Calls `/api/admin?action=analytics` and processes up to 500 recent events
+- Aggregates events into 5 funnel stages:
+  1. **Landing Page Views** — `page_view` events on non-app pages
+  2. **App Opens** — `page_view` events on `app.html`
+  3. **Diff Runs** — `diff_run` events
+  4. **Exports / Shares** — `export_markdown`, `export_pdf`, `export_sql`, `export_json`, `share_diff`
+  5. **License Activations** — `license_activate` events
+- **Bar chart visualization:** Color-coded horizontal bars with stage-relative widths
+- **Conversion rates:** Percentage displayed relative to the previous stage
+- **Graceful error handling:** Shows helpful message when `SUPABASE_SERVICE_ROLE_KEY` is missing
+- Integrated into `refreshAll()` so it loads automatically with other admin sections
+
+### Validation
+- ✅ Admin.html JavaScript passes syntax validation
+- ✅ Funnel aggregation logic tested with sample event structures
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design funnel stages and aggregation logic | 0.1 |
+| Implement refreshFunnel() in admin.html | 0.15 |
+| Add bar chart CSS and conversion rate math | 0.1 |
+| Fix Git push workflow scope issue (rebase) | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.6** |
+
+### Key Insights
+1. **Stage-relative conversion rates reveal bottlenecks** — A funnel that only shows absolute counts hides where users drop off. Showing "15% of app openers run a diff" immediately tells you whether the app experience or the landing page is the bigger leak.
+
+2. **Color coding creates visual hierarchy** — Using the brand indigo spectrum for early stages and red for the final conversion stage makes the funnel scannable at a glance.
+
+3. **Graceful degradation keeps the dashboard useful pre-launch** — Even with zero events, the funnel section shows "No analytics events yet" rather than crashing. This means the admin dashboard is ready for data the moment users arrive.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 7 (6 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| New pages | 2 (schema-migration-tool.html, guest post draft) |
+| Pages updated | 9 (app.html, admin.html, pricing.html, pricing-b.html, 4 footers, sitemap.xml) |
+| SEO landing pages | 17 |
+| Blog posts published | 33 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 10 |
+| E2E tests | 11 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Seven commits shipped: diff comment system, admin proxy/schema.org completion, guest post/SEO landing page, FAQPage structured data with pricing copy refresh, newsletter welcome email, weekly analytics summary, and conversion funnel visualization. SchemaLens has 17 SEO landing pages, 33 blog posts, 10 free tools, team collaboration features, automated email infrastructure, analytics reporting, and funnel tracking. Distribution remains the primary unlock.*

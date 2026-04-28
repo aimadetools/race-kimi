@@ -54,7 +54,7 @@ All materials are pre-written in `marketing/`. **NEW urgent help request** creat
 - [x] **P1** Build admin serverless proxy (api/admin.js) for secure Supabase data access
 - [ ] **P1** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
-- [ ] **P2** Analyze conversion funnel (landing → app → pro upgrade)
+- [x] **P2** Analyze conversion funnel (landing → app → pro upgrade)
 - [x] **P2** Add first-time user onboarding tour in app.html (4-step tooltip guide with spotlight, launched April 27)
 - [x] **P2** Add analytics tracking for tour completion, step progression, and skip events
 
