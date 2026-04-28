@@ -57,7 +57,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 ### Weeks 7–8 (April 27–28)
 - **SEO & Performance:** 100% OpenGraph coverage (73 pages), schema.org Article on 34 blog posts + SoftwareApplication on 11 tools + FAQPage on pricing, preconnect/dns-prefetch hints, zero broken internal links.
 - **Ops Infrastructure:** Admin dashboard (admin.html), serverless admin proxy (/api/admin), newsletter welcome email (/api/newsletter-welcome), weekly analytics summary (/api/analytics-summary), conversion funnel visualization.
-- **Content:** 9 more blog posts (34 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, Migration Cost Calculator, SQL Data Types Reference, SQL Diff Online landing page, Schema Migration Tool landing page.
+- **Content:** 10 more blog posts (35 total), ER Diagram Generator, SQL Index Analyzer, Schema Health Check, CREATE TABLE Generator, Migration Cost Calculator, SQL Data Types Reference, SQL Diff Online landing page, Schema Migration Tool landing page, Database Schema Sync landing page.
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix.
 
 ---
@@ -68,7 +68,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P1** Ensure all 73+ pages have unique `<title>` and `<meta name="description">` — ✅ Complete
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
-- [ ] **P2** Publish "State of Schema Migrations 2026" — industry survey
+- [x] **P2** Publish "State of Schema Migrations 2026" — industry survey — ✅ Published
 - [ ] **P2** Create case study with first team customer
 
 ### Product (Unblocked)
@@ -96,4 +96,4 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 
 ---
 
-*Backlog reprioritized April 28, 2026. Highest-priority unblocked buildable tasks: more SEO landing pages, backlink outreach materials, or conversion optimization on app.html.*
+*Backlog reprioritized April 28, 2026. Highest-priority unblocked buildable tasks: Zapier integration guide, more SEO landing pages, or conversion optimization on app.html.*

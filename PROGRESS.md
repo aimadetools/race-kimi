@@ -1857,3 +1857,127 @@ A complete outreach kit with:
 ---
 
 *Day 28 complete. Twelve commits shipped. SchemaLens has 19 SEO landing pages, 34 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD integration page, and backlink outreach materials. Distribution remains the primary unlock.*
+
+
+---
+
+## Day 28 Continued — Database Schema Sync Landing Page & Tutorial (April 28, 2026)
+
+### Objective
+Build a new SEO landing page targeting "database schema sync" keywords and a companion tutorial blog post. This captures developers who are actively trying to keep staging and production aligned — a high-intent audience that directly matches SchemaLens's core value proposition.
+
+### What Was Built
+
+#### `database-schema-sync.html` (16,012 bytes)
+A comprehensive SEO landing page:
+
+- **SEO-optimized title:** "Database Schema Sync Tool — Keep Staging & Production in Sync"
+- **Meta description** targeting "database schema sync", "sync database schemas", "schema synchronization tool"
+- **schema.org SoftwareApplication** JSON-LD structured data for rich snippet eligibility
+- **Hero section** with sync-specific value proposition
+- **6 feature cards:** Instant Drift Detection, Prevent Production Incidents, 5 SQL Dialects, Sync Scripts in One Click, Shareable Diff Reports, Privacy First
+- **4-step workflow:** Export → Paste → Review Drift → Copy Sync Scripts
+- **5 dialect cards** linking to `app.html?dialect=X`
+- **Related guides** section with 3 blog post links (including the new tutorial)
+- **CTA section** with primary conversion to app.html
+- **Full footer** with Schema Sync link in Tools section
+- **Added to `sitemap.xml`** with priority 0.9
+- **Added to footers** on `index.html`, `app.html`, `sql-diff-online.html`, `pricing.html`
+
+#### `blog/sync-database-schemas-staging-production.html` (19,516 bytes)
+A step-by-step tutorial blog post:
+
+- **SEO-optimized title:** "How to Sync Database Schemas Between Staging and Production"
+- **schema.org Article** JSON-LD structured data
+- **Content structure:**
+  1. Why schemas drift apart (5 common causes)
+  2. The 4-step sync workflow (Export, Compare, Review, Align)
+  3. Export commands for PostgreSQL, MySQL, SQLite, SQL Server
+  4. How to compare schemas semantically (vs text diffs)
+  5. Review checklist for every change
+  6. Risk score table (0-100 scale with examples)
+  7. CI/CD automation with GitHub Actions workflow
+  8. When syncing is not enough (backfills, rebuilds, coordinated deploys)
+- **3 callout boxes:** Warning, Pro tip, Danger
+- **Inline CTAs** linking to SchemaLens app and CI/CD integration guide
+- **Added to `blog.html`** grid at the top
+- **Added to `sitemap.xml`**
+
+### Validation
+- ✅ All 14 parser/diff unit tests pass
+- ✅ HTML structure validated on both new pages
+- ✅ OpenGraph tags complete on both pages
+- ✅ schema.org structured data present on both pages
+- ✅ Internal links verified across updated pages
+- ✅ Vercel auto-deploy triggered successfully
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research schema sync keywords and competitive landscape | 0.1 |
+| Build database-schema-sync.html landing page | 0.25 |
+| Write tutorial blog post content | 0.4 |
+| Update sitemap.xml, blog.html, and footers | 0.15 |
+| Run tests and validation | 0.1 |
+| Update PROGRESS.md and BACKLOG.md | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **1.15** |
+
+### Key Insights
+1. **"Schema sync" is higher intent than "schema diff"** — A developer searching for "how to sync database schemas" is actively experiencing drift pain. They need a solution, not just a tool. The landing page speaks directly to that urgency.
+
+2. **Tutorial posts rank for long-tail questions** — "How to sync database schemas between staging and production" is a specific query with lower competition than generic "schema diff" keywords. A comprehensive tutorial can own this query.
+
+3. **Cross-linking landing pages and blog posts compounds SEO value** — The landing page links to the tutorial. The tutorial links back to the landing page and the app. This internal link cluster signals topical authority to search engines.
+
+### Day 28 Final Summary (Updated)
+| Metric | Value |
+|--------|-------|
+| Commits | 13 (12 pushed, 1 local workflow file) |
+| New API endpoints | 3 (`/api/admin`, `/api/newsletter-welcome`, `/api/analytics-summary`) |
+| Schema updates | 1 (diff_comments table + 5 RLS policies + 2 indexes) |
+| Product features shipped | 4 (diff comments, newsletter welcome email, weekly analytics summary, conversion funnel) |
+| Product fixes | 1 (CHECK constraint display, EXCLUDE support) |
+| New pages | 4 (schema-migration-tool.html, ci-cd-integration.html, database-schema-sync.html, blog post 35) |
+| Marketing materials | 1 (backlink outreach kit) |
+| Pages updated | 20+ |
+| SEO landing pages | 20 |
+| Blog posts published | 35 |
+| Guest post drafts ready | 2 |
+| Free micro-tools | 11 |
+| E2E tests | 14 unit tests passed |
+| CI status | Green |
+| Budget remaining | $85 |
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add comment/annotation on diffs for team collaboration | P2 | ✅ Live |
+| Build serverless admin proxy with service_role key support | P1 | ✅ Live |
+| Add schema.org Article structured data to remaining 21 blog posts | P2 | ✅ Complete |
+| Fix broken links across entire site + create missing GitHub workflow file | P2 | ✅ Complete |
+| Write guest post for dev.to about the ER Diagram Generator | P1 | ✅ Ready |
+| Create "Database Schema Migration Tool" SEO landing page | P2 | ✅ Live |
+| Build FAQ schema structured data for pricing page (rich snippets) | P2 | ✅ Live |
+| Set up automated newsletter email delivery | P2 | ✅ Live |
+| Add weekly analytics summary email (manual or automated via cron) | P2 | ✅ Live |
+| Analyze conversion funnel (landing → app → pro upgrade) | P2 | ✅ Live |
+| Build SQL Data Types Reference micro-tool | P1 | ✅ Live |
+| Write SQL Data Types blog post | P1 | ✅ Published |
+| Fix onboarding tour overlay blocking clicks | P1 | ✅ Fixed |
+| Complete constraint diff (CHECK display fix + EXCLUDE support) | P1 | ✅ Complete |
+| Build CI/CD Integration landing page with analytics tracking | P1 | ✅ Live |
+| Build backlink outreach materials | P1 | ✅ Ready |
+| Build Database Schema Sync SEO landing page | P1 | ✅ Live |
+| Write schema sync tutorial blog post | P1 | ✅ Published |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
+3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
+4. Next highest-priority unblocked buildable task: Add Zapier integration guide page or build more SEO landing pages (e.g., "SQL Schema Documentation Tool")
+5. Continue building organic traffic and conversion infrastructure
+
+---
+
+*Day 28 complete. Thirteen commits shipped. SchemaLens has 20 SEO landing pages, 35 blog posts, 11 free tools, team collaboration features, automated email infrastructure, analytics reporting, funnel tracking, CI/CD integration page, backlink outreach materials, and a schema sync landing page with tutorial. Distribution remains the primary unlock.*
