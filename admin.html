@@ -325,6 +325,18 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🎯 Conversion Funnel</h3>
+        </div>
+        <div class="admin-section-body" id="funnelBody">
+          <div class="admin-empty">Conversion funnel requires service_role access. Configure in Vercel environment variables.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshFunnel()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>📈 Recent Analytics Events</h3>
           <span class="admin-badge" id="badgeAnalytics">0</span>
         </div>
@@ -615,11 +627,82 @@
       }
     }
 
+    // Conversion Funnel
+    async function refreshFunnel() {
+      const body = document.getElementById('funnelBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('analytics', 500);
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No analytics events yet.</div>';
+          return;
+        }
+
+        const counts = {
+          landing: 0,
+          app: 0,
+          diff: 0,
+          export: 0,
+          license: 0,
+        };
+
+        for (const e of data) {
+          const type = e.event_type;
+          const path = e.page_path || '';
+          if (type === 'page_view') {
+            if (path.includes('app.html')) counts.app++;
+            else counts.landing++;
+          }
+          if (type === 'diff_run') counts.diff++;
+          if (type === 'export_markdown' || type === 'export_pdf' || type === 'export_sql' || type === 'export_json' || type === 'share_diff') counts.export++;
+          if (type === 'license_activate') counts.license++;
+        }
+
+        const stages = [
+          { label: 'Landing Page Views', count: counts.landing, color: '#6366f1' },
+          { label: 'App Opens', count: counts.app, color: '#818cf8' },
+          { label: 'Diff Runs', count: counts.diff, color: '#22c55e' },
+          { label: 'Exports / Shares', count: counts.export, color: '#f59e0b' },
+          { label: 'License Activations', count: counts.license, color: '#ef4444' },
+        ];
+
+        const maxCount = Math.max(...stages.map(s => s.count), 1);
+
+        const rows = stages.map((s, i) => {
+          const pct = i > 0 && stages[i-1].count > 0
+            ? ((s.count / stages[i-1].count) * 100).toFixed(1) + '%'
+            : '—';
+          const width = ((s.count / maxCount) * 100).toFixed(1);
+          return `
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-weight:600;font-size:0.9rem;">${s.label}</span>
+                <span style="font-size:0.85rem;color:var(--text-muted);">${s.count.toLocaleString()} <span style="color:var(--text-muted);font-size:0.75rem;">(${pct} prev)</span></span>
+              </div>
+              <div style="background:var(--surface-hover);border-radius:6px;height:28px;overflow:hidden;">
+                <div style="width:${width}%;background:${s.color};height:100%;border-radius:6px;transition:width 0.5s ease;"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        body.innerHTML = `
+          <div style="padding:12px;">
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;">Based on last 500 analytics events. Conversion rate shown relative to previous stage.</p>
+            ${rows}
+          </div>
+        `;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load funnel.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
       refreshTestimonials();
       refreshComments();
+      refreshFunnel();
       refreshAnalytics();
     }
   </script>
