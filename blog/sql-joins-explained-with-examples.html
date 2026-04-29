@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQL JOINs Explained with Examples — SchemaLens</title>
+  <meta name="description" content="Learn INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN with real examples. Interactive visual guide for PostgreSQL, MySQL, SQL Server, Oracle, and SQLite.">
+  <meta property="og:title" content="SQL JOINs Explained with Examples — SchemaLens">
+  <meta property="og:description" content="Visual guide to SQL JOINs: INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN with live examples and query generation.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-joins-explained-with-examples.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SQL JOINs Explained with Examples",
+  "description": "Learn INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN with real examples. Interactive visual guide for PostgreSQL, MySQL, SQL Server, Oracle, and SQLite.",
+  "url": "https://schemalens.tech/blog/sql-joins-explained-with-examples.html",
+  "datePublished": "2026-04-29",
+  "dateModified": "2026-04-29",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/sql-joins-explained-with-examples.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .join-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+    .join-table th, .join-table td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .join-table th {
+      background: rgba(255,255,255,0.04);
+      font-weight: 600;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>SQL JOINs Explained with Examples</h1>
+    <div class="meta">April 29, 2026 · 6 min read · SchemaLens Team</div>
+
+    <p>JOIN is the most important operation in SQL after SELECT. It is also the most misunderstood. Developers often guess between INNER and LEFT JOIN, hope for the best, and move on. When the row count is wrong or rows are mysteriously missing, they add DISTINCT or GROUP BY as a band-aid.</p>
+
+    <p>This post explains every major JOIN type with real data, clear rules, and the exact SQL you need. By the end, you will know which JOIN to reach for and why.</p>
+
+    <div class="cta-box">
+      <h3>See JOINs visually</h3>
+      <p>Interactive Venn diagrams, live sample data, and instant SQL generation for all six JOIN types. No signup required.</p>
+      <a href="../tools/sql-join-visualizer.html" class="btn btn-primary">Open SQL JOIN Visualizer</a>
+    </div>
+
+    <h2>Our sample data</h2>
+    <p>Every example in this post uses the same two tables so you can compare results directly.</p>
+
+    <h3>employees</h3>
+    <table class="join-table">
+      <tr><th>id</th><th>name</th><th>dept_id</th></tr>
+      <tr><td>1</td><td>Alice</td><td>10</td></tr>
+      <tr><td>2</td><td>Bob</td><td>20</td></tr>
+      <tr><td>3</td><td>Carol</td><td>10</td></tr>
+      <tr><td>4</td><td>David</td><td>NULL</td></tr>
+      <tr><td>5</td><td>Eve</td><td>50</td></tr>
+    </table>
+
+    <h3>departments</h3>
+    <table class="join-table">
+      <tr><th>id</th><th>dept_name</th></tr>
+      <tr><td>10</td><td>Engineering</td></tr>
+      <tr><td>20</td><td>Marketing</td></tr>
+      <tr><td>30</td><td>Sales</td></tr>
+    </table>
+
+    <p>David has no department. Eve references department 50, which does not exist. Sales exists but has no employees. These edge cases are where JOINs get interesting.</p>
+
+    <h2>INNER JOIN — only matching rows</h2>
+    <p>INNER JOIN returns rows where the join condition matches in <strong>both</strong> tables. If either side is missing, the row is dropped.</p>
+
+    <pre><code>SELECT e.name, d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.id;</code></pre>
+
+    <table class="join-table">
+      <tr><th>name</th><th>dept_name</th></tr>
+      <tr><td>Alice</td><td>Engineering</td></tr>
+      <tr><td>Bob</td><td>Marketing</td></tr>
+      <tr><td>Carol</td><td>Engineering</td></tr>
+    </table>
+
+    <p>David is excluded because his <code>dept_id</code> is NULL. Eve is excluded because department 50 does not exist. Sales is excluded because it has no matching employees. INNER JOIN is strict: no match, no row.</p>
+
+    <blockquote>
+      Use INNER JOIN when you only care about rows that exist in both tables.
+    </blockquote>
+
+    <h2>LEFT JOIN — all left rows, matched right data</h2>
+    <p>LEFT JOIN returns <strong>every row from the left table</strong>, plus matching data from the right. If there is no match, right-side columns become NULL.</p>
+
+    <pre><code>SELECT e.name, d.dept_name
+FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.id;</code></pre>
+
+    <table class="join-table">
+      <tr><th>name</th><th>dept_name</th></tr>
+      <tr><td>Alice</td><td>Engineering</td></tr>
+      <tr><td>Bob</td><td>Marketing</td></tr>
+      <tr><td>Carol</td><td>Engineering</td></tr>
+      <tr><td>David</td><td>NULL</td></tr>
+      <tr><td>Eve</td><td>NULL</td></tr>
+    </table>
+
+    <p>Now David and Eve appear because every employee is kept. Their department is NULL because there was no match. Sales still does not appear because it is on the right side and has no matching left row.</p>
+
+    <blockquote>
+      Use LEFT JOIN when you need all rows from the primary table, even if related data is missing.
+    </blockquote>
+
+    <h2>RIGHT JOIN — all right rows, matched left data</h2>
+    <p>RIGHT JOIN is the mirror of LEFT JOIN. It returns <strong>every row from the right table</strong>, plus matching data from the left.</p>
+
+    <pre><code>SELECT e.name, d.dept_name
+FROM employees e
+RIGHT JOIN departments d ON e.dept_id = d.id;</code></pre>
+
+    <table class="join-table">
+      <tr><th>name</th><th>dept_name</th></tr>
+      <tr><td>Alice</td><td>Engineering</td></tr>
+      <tr><td>Bob</td><td>Marketing</td></tr>
+      <tr><td>Carol</td><td>Engineering</td></tr>
+      <tr><td>NULL</td><td>Sales</td></tr>
+    </table>
+
+    <p>Sales appears because every department is kept. Alice, Bob, and Carol appear because they match. David and Eve are dropped because they are on the left and have no matching right row.</p>
+
+    <blockquote>
+      RIGHT JOIN is rare in practice. Most developers flip the table order and use LEFT JOIN instead, which is easier to reason about.
+    </blockquote>
+
+    <h2>FULL OUTER JOIN — everything from both sides</h2>
+    <p>FULL OUTER JOIN returns <strong>all rows from both tables</strong>. Where there is a match, columns are populated. Where there is no match, the missing side is NULL.</p>
+
+    <pre><code>SELECT e.name, d.dept_name
+FROM employees e
+FULL OUTER JOIN departments d ON e.dept_id = d.id;</code></pre>
+
+    <table class="join-table">
+      <tr><th>name</th><th>dept_name</th></tr>
+      <tr><td>Alice</td><td>Engineering</td></tr>
+      <tr><td>Bob</td><td>Marketing</td></tr>
+      <tr><td>Carol</td><td>Engineering</td></tr>
+      <tr><td>David</td><td>NULL</td></tr>
+      <tr><td>Eve</td><td>NULL</td></tr>
+      <tr><td>NULL</td><td>Sales</td></tr>
+    </table>
+
+    <p>This is the union of LEFT and RIGHT JOIN. Every employee appears. Every department appears. It is the most inclusive JOIN type.</p>
+
+    <blockquote>
+      Use FULL OUTER JOIN when you need a complete view of both datasets, including unmatched rows on either side.
+    </blockquote>
+
+    <h2>CROSS JOIN — every combination</h2>
+    <p>CROSS JOIN produces the <strong>Cartesian product</strong>: every row from the left table paired with every row from the right.</p>
+
+    <pre><code>SELECT e.name, d.dept_name
+FROM employees e
+CROSS JOIN departments d;</code></pre>
+
+    <p>With 5 employees and 3 departments, this returns 15 rows. Each employee appears three times, once per department. CROSS JOIN has no ON clause because it matches everything.</p>
+
+    <blockquote>
+      Use CROSS JOIN sparingly. It is useful for generating test data or when you genuinely need every combination.
+    </blockquote>
+
+    <h2>SELF JOIN — a table joined to itself</h2>
+    <p>A SELF JOIN is not a separate keyword. It is any JOIN where a table is joined to itself using aliases.</p>
+
+    <pre><code>SELECT e.name AS employee, m.name AS manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.id;</code></pre>
+
+    <p>This pattern is common for hierarchical data: managers who are also employees, categories with parent categories, or threaded comments.</p>
+
+    <h2>Common mistakes and how to avoid them</h2>
+    <ul>
+      <li><strong>Missing rows after INNER JOIN.</strong> If your count drops unexpectedly, switch to LEFT JOIN and look for NULLs. They reveal where your data is incomplete.</li>
+      <li><strong>Duplicate rows from JOINs.</strong> If the right table has multiple matches for one left row, the left row repeats. Use COUNT or DISTINCT if this is unexpected.</li>
+      <li><strong>Filtering in the WHERE clause instead of ON.</strong> <code>LEFT JOIN ... WHERE d.id = 10</code> turns your LEFT JOIN into an INNER JOIN because NULLs fail the filter. Move the condition to the ON clause or use IS NULL explicitly.</li>
+      <li><strong>Assuming NULLs match.</strong> NULL never equals NULL in SQL. A row with NULL in the join column will never match anything, even another NULL.</li>
+    </ul>
+
+    <h2>Performance tips</h2>
+    <ul>
+      <li><strong>Index join columns.</strong> The columns in your ON clause should be indexed. Without an index, the database may scan the entire right table for every left row.</li>
+      <li><strong>Join order matters.</strong> The query optimizer usually handles this, but on complex queries with many tables, the order you write JOINs can affect the execution plan.</li>
+      <li><strong>Avoid CROSS JOINs on large tables.</strong> Two tables with 10,000 rows each produce 100 million rows. This will hang most databases.</li>
+      <li><strong>Use EXPLAIN.</strong> Before optimizing, run EXPLAIN on your query to see if the database is using indexes or falling back to sequential scans.</li>
+    </ul>
+
+    <h2>From JOINs to schema changes</h2>
+    <p>JOINs help you query across tables. But what happens when the tables themselves change — columns are renamed, foreign keys are added, or tables are split? That is where SchemaLens helps.</p>
+
+    <p>Paste your old schema into Schema A, paste your updated schema into Schema B, and see every change instantly. SchemaLens highlights new columns, dropped tables, and type changes that could break your JOINs.</p>
+
+    <div class="cta-box">
+      <h3>Practice JOINs interactively</h3>
+      <p>Our free SQL JOIN Visualizer shows live data, animated Venn diagrams, and generated SQL for all six JOIN types.</p>
+      <a href="../tools/sql-join-visualizer.html" class="btn btn-primary">Open SQL JOIN Visualizer</a>
+    </div>
+
+    <hr style="border-color: var(--border); margin: 40px 0;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Related reading: <a href="sql-data-types-across-dialects.html">SQL Data Types Across Dialects</a> · <a href="how-to-design-a-schema-that-scales.html">How to Design a Schema That Scales</a> · <a href="complete-guide-to-database-indexing-for-schema-changes.html">Complete Guide to Database Indexing</a></p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="../tools/alter-table-generator.html">ALTER TABLE Generator</a>
+          <a href="../tools/sql-insert-generator.html">INSERT Generator</a>
+          <a href="../tools/sql-join-visualizer.html">JOIN Visualizer</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../api-guide.html">API Guide</a>
+          <a href="../ci-cd-integration.html">CI/CD Integration</a>
+          <a href="../zapier-integration.html">Zapier</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>SchemaLens — Built during the $100 AI Startup Race.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

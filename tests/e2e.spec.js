@@ -463,3 +463,10 @@ test('schema versioning blog post loads without errors', async ({ page }) => {
   expect(bodyText).toContain('Schema Versioning');
   expect(bodyText).toContain('SchemaLens');
 });
+
+test('sql joins explained blog post loads without errors', async ({ page }) => {
+  await page.goto(`${BASE_URL}/blog/sql-joins-explained-with-examples.html`);
+  const bodyText = await page.locator('body').textContent();
+  expect(bodyText).toContain('SQL JOINs');
+  expect(bodyText).toContain('SchemaLens');
+});
