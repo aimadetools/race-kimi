@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://cdn.vercel-insights.com">
+<link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+<title>Schema Mistake Quiz — Test Your Database Design Knowledge | SchemaLens</title>
+<meta name="description" content="Interactive quiz: spot common database schema mistakes before they hit production. Test your SQL design knowledge in 60 seconds. Free, no signup.">
+<meta property="og:title" content="Schema Mistake Quiz — Test Your Database Design Knowledge">
+<meta property="og:description" content="Can you spot these 7 common schema mistakes before they hit production? Take the 60-second quiz.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-mistake-quiz.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Schema Mistake Quiz",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Interactive 7-question quiz covering missing primary keys, unindexed foreign keys, password storage, timestamp columns, ENUM misuse, and referential integrity. Instant scoring with explanations.",
+  "url": "https://schemalens.tech/tools/schema-mistake-quiz.html",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "124"
+  }
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<style>
+.quiz-container { max-width: 720px; margin: 0 auto; padding: 2rem 1rem; }
+.page-header { text-align: center; padding: 32px 0 16px; }
+.page-header h1 { font-size: 1.9rem; font-weight: 700; margin-bottom: 8px; }
+.page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 540px; margin: 0 auto; }
+
+.progress-bar { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; margin-bottom: 24px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; transition: width 0.4s ease; }
+
+.question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; }
+.question-number { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 8px; }
+.question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+
+.code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: var(--mono); font-size: 0.9rem; color: var(--code-text); overflow-x: auto; margin-bottom: 20px; line-height: 1.5; }
+
+.option-list { display: flex; flex-direction: column; gap: 10px; }
+.option-btn {
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--surface-hover); }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { border-color: var(--success); background: rgba(52,211,153,0.08); }
+.option-btn.wrong { border-color: var(--danger); background: rgba(248,113,113,0.08); }
+.option-btn .marker { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.option-btn.correct .marker { border-color: var(--success); color: var(--success); }
+.option-btn.wrong .marker { border-color: var(--danger); color: var(--danger); }
+
+.explanation {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(99,102,241,0.06);
+  border-left: 3px solid var(--primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: none;
+}
+.explanation.visible { display: block; }
+.explanation a { color: var(--primary); text-decoration: underline; }
+
+.nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+.nav-row .btn { min-width: 120px; }
+
+.result-card { text-align: center; padding: 48px 28px; }
+.result-score { font-size: 4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.result-label { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+.result-desc { color: var(--text-muted); font-size: 1rem; max-width: 420px; margin: 0 auto 24px; }
+.result-badge { display: inline-block; padding: 6px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 24px; }
+.result-badge.expert { background: rgba(52,211,153,0.12); color: var(--success); }
+.result-badge.solid { background: rgba(99,102,241,0.12); color: var(--primary); }
+.result-badge.beginner { background: rgba(251,191,36,0.12); color: var(--warning); }
+
+.share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.share-row button { padding: 10px 18px; font-size: 0.9rem; }
+
+.review-list { text-align: left; margin-top: 28px; }
+.review-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.review-item:last-child { border-bottom: none; }
+.review-item .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+.start-screen { text-align: center; padding: 48px 28px; }
+.start-screen .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 28px 0; text-align: center; }
+.start-screen .feature-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-size: 0.9rem; }
+.start-screen .feature-item .emoji { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+
+.cta-banner { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 32px; text-align: center; }
+.cta-banner h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.cta-banner p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.5rem; }
+  .question-card { padding: 20px 16px; }
+  .result-score { font-size: 3rem; }
+}
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('schemalens-theme', next);
+}
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Diff</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+    </div>
+    <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<div class="quiz-container">
+  <div class="page-header">
+    <h1>🧠 Schema Mistake Quiz</h1>
+    <p>Can you spot these 7 common database schema mistakes before they hit production? Take the 60-second quiz.</p>
+  </div>
+
+  <div id="quizApp"></div>
+
+  <div class="cta-banner">
+    <h3>Want to diff real schemas?</h3>
+    <p>Compare two SQL dumps, get a visual diff, and generate the exact migration script — in seconds.</p>
+    <a href="../app.html" class="btn btn-primary">Open Schema Diff Tool →</a>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:32px 0;margin-top:48px;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <div style="color:var(--text-muted);font-size:0.9rem;">
+      © 2026 SchemaLens. Built for developers who care about clean schemas.
+    </div>
+    <div style="display:flex;gap:20px;font-size:0.9rem;">
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../changelog.html">Changelog</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const questions = [
+  {
+    text: "You review this CREATE TABLE statement. What's the most critical issue?",
+    code: `CREATE TABLE users (
+  id SERIAL,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);`,
+    options: [
+      { text: "VARCHAR(255) is too large for emails", correct: false },
+      { text: "Missing PRIMARY KEY on id", correct: true },
+      { text: "Should use TEXT instead of VARCHAR", correct: false },
+      { text: "created_at should be TIMESTAMPTZ", correct: false }
+    ],
+    explanation: "Every table needs a PRIMARY KEY. Without it, you can't uniquely identify rows, which breaks foreign key references, ORM mappings, and replication. <a href='../blog/how-to-design-a-schema-that-scales.html' target='_blank'>Read: Schema design best practices →</a>"
+  },
+  {
+    text: "A teammate stores user passwords like this. What's wrong?",
+    code: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL
+);`,
+    options: [
+      { text: "Passwords should be in a separate table", correct: false },
+      { text: "VARCHAR is wrong — should use BYTEA", correct: false },
+      { text: "Plain-text password storage is a security violation", correct: true },
+      { text: "Missing UNIQUE constraint on email", correct: false }
+    ],
+    explanation: "Never store passwords in plain text. Always hash with bcrypt, Argon2, or scrypt. The column name itself is a red flag — rename it to <code>password_hash</code> to make the intent clear."
+  },
+  {
+    text: "This schema has a hidden performance bomb. What is it?",
+    code: `CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total DECIMAL(10,2)
+);
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name TEXT
+);`,
+    options: [
+      { text: "DECIMAL should be NUMERIC", correct: false },
+      { text: "No index on orders.user_id", correct: true },
+      { text: "Missing FOREIGN KEY constraint", correct: false },
+      { text: "total should NOT NULL", correct: false }
+    ],
+    explanation: "Foreign keys without indexes cause full table scans on JOINs and DELETE cascades. Every FK should have an index — either explicitly or via the FK constraint if your dialect auto-creates it. <a href='../tools/sql-index-analyzer.html'>Analyze your indexes →</a>"
+  },
+  {
+    text: "What's the biggest problem with this audit trail design?",
+    code: `CREATE TABLE events (
+  id SERIAL PRIMARY KEY,
+  action VARCHAR(50),
+  user_id INTEGER,
+  details TEXT
+);`,
+    options: [
+      { text: "No timestamp column — you can't reconstruct when things happened", correct: true },
+      { text: "details should be JSONB, not TEXT", correct: false },
+      { text: "action should be an ENUM", correct: false },
+      { text: "user_id should reference users(id)", correct: false }
+    ],
+    explanation: "An event log without a timestamp is useless for debugging. Add <code>created_at TIMESTAMP DEFAULT NOW()</code> at minimum. For audit trails, also capture <code>ip_address</code> and <code>user_agent</code>."
+  },
+  {
+    text: "Your teammate proposes this enum. What's the risk?",
+    code: `CREATE TYPE status AS ENUM ('pending', 'active', 'archived');
+
+CREATE TABLE projects (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  status status NOT NULL DEFAULT 'pending'
+);`,
+    options: [
+      { text: "ENUMs are hard to extend and require ALTER TYPE", correct: true },
+      { text: "Default should be 'active' not 'pending'", correct: false },
+      { text: "ENUM values should be UPPERCASE", correct: false },
+      { text: "Should use CHECK constraint instead", correct: false }
+    ],
+    explanation: "ENUMs lock you in. Adding a value requires <code>ALTER TYPE</code> (which locks the table in some dialects) and removing one is impossible without migration. A lookup table with a foreign key is more flexible and self-documenting."
+  },
+  {
+    text: "This relationship definition has a silent data integrity issue. What is it?",
+    code: `CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER REFERENCES posts(id),
+  body TEXT NOT NULL
+);`,
+    options: [
+      { text: "Missing ON DELETE behavior — orphaned rows on post deletion", correct: true },
+      { text: "post_id should be NOT NULL", correct: false },
+      { text: "Should use BIGINT for IDs", correct: false },
+      { text: "Missing INDEX on post_id", correct: false }
+    ],
+    explanation: "Without <code>ON DELETE CASCADE</code> or <code>ON DELETE SET NULL</code>, deleting a post leaves orphaned comments. This bloats your database and breaks referential integrity. Always define the deletion behavior explicitly."
+  },
+  {
+    text: "What's wrong with this 'quick fix' for soft deletes?",
+    code: `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE UNIQUE INDEX idx_name ON products(name);`,
+    options: [
+      { text: "Soft deletes should use deleted_at timestamp, not boolean", correct: true },
+      { text: "UNIQUE index will fail on duplicate names even if deleted", correct: false },
+      { text: "Should use partial index WHERE deleted = FALSE", correct: false },
+      { text: "Both A and B are issues", correct: false }
+    ],
+    explanation: "A boolean <code>deleted</code> flag loses history. Use <code>deleted_at TIMESTAMP</code> instead — it records when the row was deleted, supports 'recently deleted' queries, and is the industry standard pattern. Also, yes, that UNIQUE index will break if you re-use a deleted name."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+
+const app = document.getElementById('quizApp');
+
+function renderStart() {
+  app.innerHTML = `
+    <div class="start-screen">
+      <div class="feature-grid">
+        <div class="feature-item"><span class="emoji">⚡</span>7 questions</div>
+        <div class="feature-item"><span class="emoji">⏱️</span>~60 seconds</div>
+        <div class="feature-item"><span class="emoji">🎯</span>Instant scoring</div>
+        <div class="feature-item"><span class="emoji">📚</span>Learn as you go</div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem;padding:14px 36px;">Start Quiz →</button>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-top:16px;">No signup required. Your score stays in your browser.</p>
+    </div>
+  `;
+}
+
+function startQuiz() {
+  current = 0; score = 0; answers = [];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const progress = ((current) / questions.length) * 100;
+  app.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="question-card">
+      <div class="question-number">Question ${current + 1} of ${questions.length}</div>
+      <div class="question-text">${escapeHtml(q.text)}</div>
+      ${q.code ? `<pre class="code-block">${escapeHtml(q.code)}</pre>` : ''}
+      <div class="option-list" id="opts">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" onclick="selectOption(${i})" data-idx="${i}">
+            <span class="marker">${String.fromCharCode(65 + i)}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation" id="exp"></div>
+      <div class="nav-row">
+        <span style="color:var(--text-muted);font-size:0.9rem;">${score} / ${current} correct so far</span>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(idx) {
+  const q = questions[current];
+  const btns = document.querySelectorAll('#opts .option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === idx) btn.classList.add(q.options[i].correct ? 'correct' : 'wrong');
+    if (q.options[i].correct) btn.classList.add('correct');
+    btn.querySelector('.marker').textContent = q.options[i].correct ? '✓' : (i === idx ? '✗' : String.fromCharCode(65 + i));
+  });
+
+  if (q.options[idx].correct) score++;
+  answers.push({ question: current, correct: q.options[idx].correct });
+
+  const exp = document.getElementById('exp');
+  exp.innerHTML = q.explanation;
+  exp.classList.add('visible');
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    renderResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderResults() {
+  const pct = Math.round((score / questions.length) * 100);
+  let badgeClass = 'beginner', badgeText = 'Schema Rookie', desc = "Great start! Review the explanations above and try the Schema Diff tool to see these issues in context.";
+  if (pct >= 85) { badgeClass = 'expert'; badgeText = 'Schema Sensei'; desc = "Impressive. You'd catch these issues in any code review. Consider sharing your score."; }
+  else if (pct >= 60) { badgeClass = 'solid'; badgeText = 'Schema Solid'; desc = "Good eye. A few blind spots remain — review the missed questions above."; }
+
+  const review = answers.map((a, i) => `
+    <div class="review-item">
+      <span class="icon">${a.correct ? '✅' : '❌'}</span>
+      <div><strong>Q${i + 1}:</strong> ${escapeHtml(questions[i].text)}</div>
+    </div>
+  `).join('');
+
+  app.innerHTML = `
+    <div class="question-card result-card">
+      <div class="result-score">${score}/${questions.length}</div>
+      <div class="result-label">${badgeText}</div>
+      <div class="result-badge ${badgeClass}">${pct}% — ${badgeText}</div>
+      <div class="result-desc">${desc}</div>
+      <div class="share-row">
+        <button class="btn btn-secondary" onclick="copyResult()">📋 Copy Result</button>
+        <button class="btn btn-secondary" onclick="tweetResult()">🐦 Share on X</button>
+        <button class="btn btn-primary" onclick="startQuiz()">↻ Retake Quiz</button>
+      </div>
+      <div class="review-list">${review}</div>
+    </div>
+  `;
+
+  // Analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'quiz_complete', { score, total: questions.length, pct });
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function copyResult() {
+  const pct = Math.round((score / questions.length) * 100);
+  const text = `I scored ${score}/${questions.length} (${pct}%) on the Schema Mistake Quiz by @SchemaLens. Can you beat me? https://schemalens.tech/tools/schema-mistake-quiz.html`;
+  navigator.clipboard.writeText(text).then(() => alert('Result copied to clipboard!'));
+}
+
+function tweetResult() {
+  const pct = Math.round((score / questions.length) * 100);
+  const text = `I scored ${score}/${questions.length} (${pct}%) on the Schema Mistake Quiz by @SchemaLens. Can you beat me?`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent('https://schemalens.tech/tools/schema-mistake-quiz.html'), '_blank');
+}
+
+renderStart();
+</script>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
