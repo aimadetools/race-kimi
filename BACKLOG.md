@@ -24,13 +24,7 @@
 - [ ] **P2** Share in backend-focused Discords
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Build referral/viral loop — ✅ Live
-- [x] **P1** Add email drip campaign — ✅ Built, awaits SUPABASE_SERVICE_ROLE_KEY + EMAIL_API_KEY env vars
-- [x] **P1** Build lead magnet landing page (Migration Safety Checklist) — ✅ Live
-- [x] **P1** Build Prisma ORM SEO landing page — ✅ Live
-- [x] **P1** Build Drizzle ORM SEO landing page — ✅ Live
-- [x] **P1** Optimize app.html headline/CTA with A/B variant — ✅ Live
-- [ ] **P1** Build "Schema Mistake of the Week" interactive quiz
+- [x] **P1** Referral/viral loop, email drip campaign, lead magnet, Prisma/Drizzle SEO pages, headline A/B test, Schema Mistake Quiz — ✅ All live
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -80,10 +74,10 @@
 - **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking).
 - **Content:** dev.to guest post draft (migration checklist).
 
-### Days 32–36 (April 29–30)
+### Days 32–37 (April 29–30)
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2).
-- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma Schema Diff SEO landing page, Drizzle Schema Diff SEO landing page.
-- **Conversion:** App headline A/B test (benefit-driven Variant B vs control).
+- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page, Prisma/Drizzle SEO landing pages.
+- **Conversion:** App headline A/B test, Schema Mistake Quiz interactive micro-tool (16th tool).
 
 ---
 
@@ -120,4 +114,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: interactive schema quiz, backlink outreach, dev.to guest post.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: backlink outreach, dev.to guest post, newsletter outreach.*
