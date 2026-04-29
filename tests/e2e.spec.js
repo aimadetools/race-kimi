@@ -64,6 +64,8 @@ const pages = [
   { path: '/zapier-integration.html', name: 'Zapier Integration Landing' },
   { path: '/schema-documentation-tool.html', name: 'Schema Documentation Tool Landing' },
   { path: '/schema-comparison-tool.html', name: 'Schema Comparison Tool Landing' },
+  { path: '/migration-checklist.html', name: 'Migration Safety Checklist' },
+  { path: '/prisma-schema-diff.html', name: 'Prisma Schema Diff Landing' },
 ];
 
 for (const { path, name } of pages) {

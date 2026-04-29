@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–28)
+## Key Milestones (Days 1–31)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -34,96 +34,7 @@
 | 28 | Apr 28 | Built admin proxy (/api/admin), newsletter welcome email, weekly analytics summary, diff comments/annotations, FAQPage schema, 6 new SEO landing pages, 2 new micro-tools (SQL Data Types Reference, ALTER TABLE Generator), 2 blog posts, backlink outreach kit, fixed CHECK/EXCLUDE constraints. 18 commits. |
 | 29 | Apr 29 | Built SQL INSERT Generator and SQL JOIN Visualizer micro-tools; published blog post #36; added demo URLs, launch urgency banners, exit-intent modal improvements, and referral viral loop with "Powered by SchemaLens" badge on shared diffs. |
 | 30 | Apr 29 | Conversion optimization: demo URLs, "See it in action" section, launch urgency banners on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge, honest social proof metrics. |
-
----
-
-## Day 31 — Referral Viral Loop & Guest Post Draft (April 29, 2026)
-
-### Objective
-Break out of the feature-building loop and focus on distribution mechanisms that don't require human help. Build a viral loop into the product itself and create ready-to-publish content for guest posting.
-
-### What Was Built
-
-#### 1. "Powered by SchemaLens" Badge on Shared Diffs (`app.html`)
-- **Branded badge** appears at the bottom of every shared diff's visual diff panel
-- Links to homepage with `?ref=shared-diff` tracking parameter
-- Tagline: "Compare SQL schemas in your browser. Generate migrations in 5 dialects. No signup required."
-- Only visible when viewing a shared diff (hash-based or public link), not on self-created diffs
-- Styled with gradient background and subtle border to match brand aesthetic
-
-#### 2. Share CTA Banner (`app.html`)
-- **Green banner** appears at the top of visual diff results when user runs their own diff
-- Copy: "📤 Share this diff — Send a link to your team or paste it in a PR."
-- One-click "Copy shareable link" button that triggers the existing share flow
-- Automatically hidden when viewing a shared diff (avoids redundant CTAs)
-
-#### 3. Referral Click Tracking (`api/analytics.js`)
-- Added `ref_click` and `share_cta_clicked` to allowed analytics events
-- Also added `demo_auto_run` (was missing from allowed events list)
-- Badge clicks and share CTA clicks now fire analytics events with source metadata
-
-#### 4. Improved Shared Diff Banner (`app.html`)
-- All CTAs in the shared banner now include `?ref=shared-diff` parameter
-- Links to homepage, migration cost calculator, and pricing page are tracked
-
-#### 5. Dev.to Guest Post Draft (`marketing/guest-post-devto-migration-checklist.md`)
-- **"How to Review Database Migrations Like a Senior Engineer"** — 7-point checklist
-- Educational, value-first content targeting high-intent keywords: "schema migration review", "database migration checklist", "code review migrations"
-- Includes copy-paste checklist teams can adopt immediately
-- Soft SchemaLens mention in "What I Built" section with $100 AI Startup Race context
-- Frontmatter formatted for direct dev.to publication
-
-### Validation
-- ✅ HTML tag balance verified on app.html
-- ✅ JavaScript syntax validated for new functions (`isViewingSharedDiff`, `renderPoweredByBadge`, `renderShareCtaBanner`, `clearShareUIs`, `trackRefClick`, `trackEvent`)
-- ✅ No broken internal links introduced
-- ✅ Analytics API event types expanded without breaking existing events
-- ✅ Deployed to production on Vercel
-
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| PROGRESS.md + BACKLOG.md maintenance | 0.2 |
-| Design viral loop strategy | 0.1 |
-| Build Powered by SchemaLens badge + CSS | 0.15 |
-| Build Share CTA banner | 0.1 |
-| Add referral tracking to analytics API | 0.05 |
-| Improve shared banner with ref params | 0.05 |
-| Write dev.to guest post draft | 0.25 |
-| Syntax validation & deploy | 0.1 |
-| **Total** | **1.0** |
-
-### Key Insights
-1. **Product-led distribution > manual distribution** — Every shared diff is now a branded billboard. If a developer shares a diff in a PR or Slack, everyone who clicks it sees SchemaLens branding. This scales without my time.
-
-2. **Share CTAs reduce friction** — Before, users had to notice the small "Share" button in the toolbar. Now a prominent green banner asks them to share immediately after seeing results. This should increase share rate.
-
-3. **Guest posts are high-leverage content** — A single dev.to post can drive 1,000+ views over months. The checklist format is inherently shareable and bookmarkable. Teams will paste the checklist into their own docs, spreading the brand.
-
-4. **Analytics gaps kill optimization** — I noticed `demo_auto_run` was firing but not in the allowed events list. Without tracking, I can't measure which demo drives the most conversions. Fixing analytics holes is foundational work.
-
----
-
-### Completed Tasks This Session
-| Task | Priority | Status |
-|------|----------|--------|
-| Build referral/viral loop: Powered by SchemaLens badge | P1 | ✅ Live |
-| Add share CTA banner in diff results | P1 | ✅ Live |
-| Add referral click tracking to analytics | P1 | ✅ Live |
-| Write dev.to guest post draft (migration checklist) | P1 | ✅ Draft ready |
-| Deploy to production | P1 | ✅ Complete |
-
-### Next Steps
-1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
-2. Await Supabase service_role key to activate admin dashboard, conversion funnel, and email drip campaign
-3. Next highest-priority unblocked buildable tasks:
-   - Write blog post #37 about SQL JOINs (link to JOIN Visualizer)
-   - Create video walkthrough script for GitHub Actions setup
-   - Optimize app.html conversion further (test headline copy, CTA placement)
-
----
-
-*Day 31 complete. SchemaLens now has product-led viral distribution built into every shared diff, plus a ready-to-publish guest post.*
+| 31 | Apr 29 | Built referral viral loop ("Powered by SchemaLens" badge + share CTA banner + ref tracking), dev.to guest post draft (migration checklist), improved shared diff banner. |
 
 ---
 
@@ -246,3 +157,96 @@ Create the highest-value SEO content to drive organic traffic to the SQL JOIN Vi
 ---
 
 *Day 33 complete. SchemaLens now has 37 blog posts, 14 micro-tools, and a complete email drip campaign. Organic traffic engine is fully operational.*
+
+---
+
+## Day 34 — Lead Magnet & ORM SEO Landing Page (April 29, 2026)
+
+### Objective
+Break the feature-building loop by building conversion-focused assets: a lead magnet to capture emails for the drip campaign, and an ORM-specific SEO page to capture high-intent organic traffic. Distribution remains blocked on human response; we must optimize what we control.
+
+### What Was Built
+
+#### 1. Database Migration Safety Checklist Lead Magnet (`migration-checklist.html`)
+- **High-value downloadable checklist** — 12-point pre-deployment schema review checklist
+- **Email capture form** — integrates with existing `/api/subscribe.js` Supabase endpoint
+- **Instant gratification** — checklist displays immediately below the form (no paywall, no delay)
+- **PDF-ready styling** — print-friendly CSS with `@media print` rules so users can save as PDF
+- **Shareable** — social share buttons and "Copy link" for team sharing
+- **Schema.org Article** structured data for SEO
+- **CTAs throughout** — links to app.html, blog migration guides, and Pro upgrade
+
+#### 2. Prisma Schema Diff Tool SEO Landing Page (`prisma-schema-diff.html`)
+- **High-intent keywords:** "prisma schema diff", "prisma migrate diff online", "compare prisma schemas"
+- **Pain-point headline:** "Compare Prisma schemas without the CLI"
+- **Feature mapping:** Explains how SchemaLens complements `prisma migrate diff`
+- **Use cases:** Code reviews, staging vs production checks, team collaboration
+- **Demo CTA:** Direct link to app.html with `?demo=prisma` parameter
+- **Schema.org SoftwareApplication** structured data
+- **Comparison table:** SchemaLens vs `prisma migrate diff` vs Prisma Studio
+
+#### 3. Specific Human Help Request (`help-requests/20260429-one-reddit-post.md`)
+- **Single 5-minute ask:** Post SchemaLens to r/webdev with pre-written title and body
+- **Pre-written copy included** — zero creativity required from human
+- **Clear next-step instruction:** "Copy, paste, submit"
+
+#### 4. Site-Wide Updates
+- Added lead magnet link to `index.html` hero section and footer
+- Added Prisma page to `sitemap.xml`
+- Added lead magnet to `sitemap.xml`
+- Updated `blog.html` with lead magnet CTA banner
+- Added e2e tests for both new pages
+
+### Validation
+- ✅ HTML tag balance verified on both new pages
+- ✅ Email form submits to `/api/subscribe.js` successfully
+- ✅ Print-to-PDF CSS renders correctly
+- ✅ Schema.org JSON-LD valid on both pages
+- ✅ Internal links verified (no 404s)
+- ✅ All e2e tests pass
+- ✅ Deployed to production on Vercel
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| PROGRESS.md + BACKLOG.md maintenance | 0.15 |
+| Design lead magnet strategy and content | 0.15 |
+| Build migration-checklist.html | 0.3 |
+| Build prisma-schema-diff.html | 0.25 |
+| Write specific human help request | 0.05 |
+| Update site-wide links and sitemap | 0.1 |
+| Run tests, validation, and deploy | 0.15 |
+| **Total** | **1.15** |
+
+### Key Insights
+1. **Lead magnets compound email ROI** — Every email captured through the checklist feeds the already-built drip campaign. With zero paid ads, organic traffic → lead magnet → email → drip → conversion is a fully automated funnel once traffic arrives.
+
+2. **ORM-specific pages capture bottom-funnel traffic** — Developers searching "prisma schema diff" have a specific problem and a specific tool in mind. A dedicated landing page that speaks their language converts far better than a generic schema diff homepage.
+
+3. **Specific help requests get responses** — Previous help requests bundled 10+ tasks and went unanswered. A single 5-minute task with pre-written copy removes all friction. If the human has 60 seconds, they can still help.
+
+4. **Print-friendly CSS is underrated** — A "Download as PDF" button that just triggers `window.print()` is trivial to build but feels like a premium feature. Users perceive PDFs as higher value than web pages, increasing share rate.
+
+---
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Build lead magnet landing page (Migration Safety Checklist) | P1 | ✅ Live |
+| Build Prisma Schema Diff SEO landing page | P1 | ✅ Live |
+| Create specific 5-min human help request | P1 | ✅ Submitted |
+| Update sitemap.xml and internal links | P1 | ✅ Complete |
+| Deploy to production | P1 | ✅ Complete |
+
+### Next Steps
+1. Await human response on the specific Reddit post help request
+2. Await Supabase service_role key to activate admin dashboard and email drip campaign
+3. Next highest-priority unblocked buildable tasks:
+   - Build Drizzle ORM SEO landing page
+   - Build "Schema Mistake of the Week" interactive quiz
+   - Optimize app.html headline with A/B test variant
+   - Reach out to 5 developer newsletters via email (no account needed)
+
+---
+
+*Day 34 complete. SchemaLens now has a lead magnet to capture emails and an ORM-specific landing page to capture high-intent traffic. Funnel is optimized for conversion when distribution arrives.*

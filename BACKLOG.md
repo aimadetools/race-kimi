@@ -7,31 +7,35 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS (April 29, 2026)
+## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Response
-All materials are pre-written in `marketing/`. **Urgent help request** at `help-requests/20260427-urgent-distribution-and-revenue.md`.
-- [ ] **P0** Launch on Product Hunt
+- [ ] **P0** Human posts SchemaLens to r/webdev (single 5-min task — `help-requests/20260429-one-reddit-post.md`)
+- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
-- [ ] **P0** Answer 3 Stack Overflow questions about schema comparison
-- [ ] **P0** Publish guest post on dev.to or Hashnode
-- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/webdev, r/SQL
+- [ ] **P1** Answer 3 Stack Overflow questions about schema comparison
+- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/SQL
+- [ ] **P1** Publish guest post on dev.to or Hashnode
 - [ ] **P1** Share on IndieHackers with open metrics
-- [ ] **P1** Create Twitter/X account for SchemaLens
-- [ ] **P1** Submit SQL Formatter + Validator to tiny-helpers.dev and tool directories
 - [ ] **P1** Reach out to 5 developer newsletter authors
 - [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists
+- [ ] **P2** Create Twitter/X account for SchemaLens
 - [ ] **P2** Share in backend-focused Discords
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs + referral param tracking — ✅ Live
-- [x] **P1** Add email drip campaign for newsletter subscribers (3-email welcome sequence) — ✅ Built, awaits SUPABASE_SERVICE_ROLE_KEY + EMAIL_API_KEY env vars
-- [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
+- [x] **P1** Build referral/viral loop — ✅ Live
+- [x] **P1** Add email drip campaign — ✅ Built, awaits SUPABASE_SERVICE_ROLE_KEY + EMAIL_API_KEY env vars
+- [x] **P1** Build lead magnet landing page (Migration Safety Checklist) — ✅ Live
+- [ ] **P1** Build Drizzle ORM SEO landing page
+- [ ] **P1** Optimize app.html headline/CTA with A/B variant
+- [ ] **P1** Build "Schema Mistake of the Week" interactive quiz
+- [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Write blog post #37 about SQL JOINs (link to JOIN Visualizer) — ✅ Live
+- [x] **P1** Write blog post #37 about SQL JOINs — ✅ Live
+- [x] **P1** Build Prisma Schema Diff SEO landing page — ✅ Live
 - [ ] **P1** Create video walkthrough script for GitHub Actions setup
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P1** Write guest post for dev.to about schema migration best practices
@@ -69,25 +73,14 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
-### Day 29 (April 29)
-- **New micro-tools:** SQL INSERT Statement Generator (13th free tool), SQL JOIN Visualizer (14th free tool)
-- **New blog post:** #36 — "How to Generate SQL INSERT Statements Faster"
-- **Site-wide updates:** tools.html, index.html, sitemap.xml, e2e tests
+### Days 29–31 (April 29)
+- **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th).
+- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking).
+- **Content:** dev.to guest post draft (migration checklist).
 
-### Day 30 (April 29)
-- **Conversion optimization:** Demo URLs (`?demo=dialect`), "See it in action" section on index.html, launch urgency banner on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge on pricing.html
-- **Honest marketing:** Removed fake "200+ developers" claim, replaced with real product metrics
-
-### Day 31 (April 29)
-- **Product-led distribution:** "Powered by SchemaLens" badge on shared diffs, share CTA banner, referral click tracking, improved shared diff banner with ref params.
-- **Content:** dev.to guest post draft — "How to Review Database Migrations Like a Senior Engineer".
-
-### Day 32 (April 29)
-- **Email automation:** 3-email drip campaign (`/api/newsletter-drip.js`) — welcome (exists) + Drip 1 (Day 1: schema mistakes) + Drip 2 (Day 3: schema review habit).
-- **Schema updates:** Added `welcome_sent_at`, `drip_1_sent_at`, `drip_2_sent_at` to `newsletter_subscribers`.
-
-### Day 33 (April 29)
-- **Content:** Blog post #37 — "SQL JOINs Explained with Examples" with interactive sample data, result tables, and links to JOIN Visualizer.
+### Days 32–34 (April 29)
+- **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2).
+- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma Schema Diff SEO landing page.
 
 ---
 
@@ -99,6 +92,8 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
 - [x] **P1** Build referral/viral loop — ✅ Live
 - [x] **P1** Add email drip campaign — ✅ Built, awaits env vars
+- [x] **P1** Build lead magnet landing page — ✅ Live
+- [x] **P1** Build Prisma Schema Diff SEO page — ✅ Live
 - [x] **P2** Add Zapier integration guide — ✅ Live
 - [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
 - [x] **P2** Build SQL INSERT Statement Generator micro-tool — ✅ Live
@@ -121,4 +116,4 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 
 ---
 
-*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: video walkthrough script for GitHub Actions, guest post drafts, app.html headline/CTA optimization.*
+*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: Drizzle ORM landing page, app.html A/B headline test, interactive schema quiz.*

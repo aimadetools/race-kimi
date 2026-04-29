@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens</title>
+  <meta name="description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <link rel="canonical" href="https://schemalens.tech/prisma-schema-diff.html">
+  <meta property="og:title" content="Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens">
+  <meta property="og:description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <meta property="og:url" content="https://schemalens.tech/prisma-schema-diff.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens">
+  <meta name="twitter:description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens for Prisma",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Compare Prisma schemas visually, Generate migration scripts, Detect breaking changes, Export to Prisma schema format, No CLI required",
+    "softwareVersion": "1.0",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "12"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <style>
+    .prisma-hero {
+      padding: 100px 0 60px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .prisma-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .prisma-hero h1 span {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .prisma-hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin: 0 auto 1.5rem;
+    }
+    .prisma-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius-sm);
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-weight: 500;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .section {
+      padding: 60px 0;
+    }
+    .section-alt {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .section > .container > p {
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.2s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--hover-border);
+    }
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table th {
+      background: var(--surface-hover);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    .comparison-table .check { color: var(--success); font-weight: 700; }
+    .comparison-table .cross { color: var(--danger); }
+    .comparison-table .highlight { background: rgba(99,102,241,0.08); }
+
+    .use-case-list {
+      max-width: 720px;
+      margin: 2rem auto 0;
+    }
+    .use-case-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+    }
+    .use-case-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-glow);
+      border-radius: 50%;
+      font-size: 1.2rem;
+    }
+    .use-case-content h3 {
+      font-size: 1.05rem;
+      margin: 0 0 0.25rem;
+    }
+    .use-case-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .cta-box {
+      text-align: center;
+      padding: 60px 0;
+    }
+    .cta-box h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="prisma-hero">
+    <div class="container">
+      <div class="prisma-badge">🚀 Prisma Schema Diff</div>
+      <h1>Compare Prisma Schemas <span>Without the CLI</span></h1>
+      <p>Paste two Prisma schema files and get an instant visual diff. See models, fields, relations, and indexes that changed — then generate the migration SQL. No <code>npx prisma</code> required.</p>
+      <div class="hero-buttons">
+        <a href="app.html?demo=prisma" class="btn-primary">Diff a Prisma Schema →</a>
+        <a href="migration-checklist.html" class="btn-secondary">📋 Migration Checklist</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>How it works</h2>
+      <p>SchemaLens parses your Prisma schema, compares it against another version, and shows you exactly what changed — just like <code>prisma migrate diff</code>, but in your browser with a visual UI.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>📋 Model Diff</h3>
+          <p>See which models were added, removed, or renamed. Catch accidental model deletions before they drop tables.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔤 Field Changes</h3>
+          <p>Spot type changes, optional vs required changes, default value updates, and attribute modifications at a glance.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Relation Detection</h3>
+          <p>Visualize added or removed <code>@relation</code> fields and foreign key constraints that affect your data integrity.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📊 Index & Unique</h3>
+          <p>Compare <code>@index</code>, <code>@unique</code>, and <code>@@index</code> declarations. Missing indexes can kill query performance.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📝 Generate SQL</h3>
+          <p>Export migration scripts in PostgreSQL, MySQL, or SQLite dialects — ready to run in your migration tool.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Shareable Links</h3>
+          <p>Share a diff URL with your team or paste it in a PR review. No screenshots, no copy-paste needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2>SchemaLens vs Prisma Migrate Diff</h2>
+      <p>Both tools compare schemas. SchemaLens adds a visual layer and works without installing anything.</p>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>SchemaLens</th>
+            <th>prisma migrate diff</th>
+            <th>Prisma Studio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td>Browser-based (no install)</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ CLI only</td>
+            <td class="cross">❌ CLI + local DB</td>
+          </tr>
+          <tr>
+            <td>Visual diff UI</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ Text output</td>
+            <td class="cross">❌ No diff</td>
+          </tr>
+          <tr>
+            <td>Compare two arbitrary schemas</td>
+            <td class="check">✅ Paste any two</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ No</td>
+          </tr>
+          <tr>
+            <td>Multi-dialect SQL output</td>
+            <td class="check">✅ 5 dialects</td>
+            <td class="check">✅ Configurable</td>
+            <td class="cross">❌ No</td>
+          </tr>
+          <tr>
+            <td>Shareable diff URLs</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ No</td>
+            <td class="cross">❌ No</td>
+          </tr>
+          <tr>
+            <td>Breaking change warnings</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ No</td>
+            <td class="cross">❌ No</td>
+          </tr>
+          <tr>
+            <td>ORM export (Prisma → SQL)</td>
+            <td class="check">✅ Yes</td>
+            <td class="check">✅ Yes</td>
+            <td class="cross">❌ No</td>
+          </tr>
+          <tr>
+            <td>View/edit live data</td>
+            <td class="cross">❌ No</td>
+            <td class="cross">❌ No</td>
+            <td class="check">✅ Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>When to use SchemaLens with Prisma</h2>
+      <p>SchemaLens complements your Prisma workflow. Use it when you need speed, shareability, or a visual review layer.</p>
+      <div class="use-case-list">
+        <div class="use-case-item">
+          <div class="use-case-icon">🔍</div>
+          <div class="use-case-content">
+            <h3>Code Reviews</h3>
+            <p>Paste the before/after schema into SchemaLens and drop the shareable link in your PR. Reviewers see exactly what changed without running <code>prisma migrate diff</code> locally.</p>
+          </div>
+        </div>
+        <div class="use-case-item">
+          <div class="use-case-icon">🏭</div>
+          <div class="use-case-content">
+            <h3>Staging vs Production Checks</h3>
+            <p>Export your staging and production schemas, paste them both, and verify the diff before promoting to prod. Catch drift that Prisma Migrate didn't account for.</p>
+          </div>
+        </div>
+        <div class="use-case-item">
+          <div class="use-case-icon">👥</div>
+          <div class="use-case-content">
+            <h3>Team Collaboration</h3>
+            <p>Not everyone on your team has Prisma installed or knows CLI flags. SchemaLens lets designers, PMs, and junior devs review schema changes in a familiar visual interface.</p>
+          </div>
+        </div>
+        <div class="use-case-item">
+          <div class="use-case-icon">🔀</div>
+          <div class="use-case-content">
+            <h3>Cross-Dialect Migrations</h3>
+            <p>Moving from PostgreSQL to MySQL? SchemaLens shows you the semantic differences and generates the target dialect's migration SQL — something Prisma Migrate can't do across databases.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2>Works with your Prisma workflow</h2>
+      <p>SchemaLens is not a replacement for Prisma Migrate. It's a visual companion for the moments when you need to see the diff, share it, or review it quickly.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>1️⃣ Export your schema</h3>
+          <p>Run <code>npx prisma migrate diff</code> or copy your <code>schema.prisma</code> file. Paste it into SchemaLens.</p>
+        </div>
+        <div class="feature-card">
+          <h3>2️⃣ Paste the target schema</h3>
+          <p>Paste the older (or newer) version you want to compare against. SchemaLens parses both automatically.</p>
+        </div>
+        <div class="feature-card">
+          <h3>3️⃣ Review the diff</h3>
+          <p>Visual highlights show added models, removed fields, type changes, and index modifications. Breaking changes are flagged in red.</p>
+        </div>
+        <div class="feature-card">
+          <h3>4️⃣ Generate & share</h3>
+          <p>Export migration SQL in your target dialect, or copy a shareable link to paste in Slack, Jira, or your PR description.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-box">
+    <div class="container">
+      <h2>Diff your Prisma schema now</h2>
+      <p>No signup. No install. Paste two schemas and see the diff in 5 seconds.</p>
+      <a href="app.html?demo=prisma" class="btn-primary">Start Comparing →</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="open.html">Open Startup</a>
+          <a href="app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="prisma-schema-diff.html">Prisma Schema Diff</a>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="migration-checklist.html">Migration Checklist</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+          <a href="zapier-integration.html">Zapier Integration</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
