@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens</title>
-  <meta name="description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
-  <link rel="canonical" href="https://schemalens.tech/prisma-schema-diff.html">
-  <meta property="og:title" content="Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens">
-  <meta property="og:description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
-  <meta property="og:url" content="https://schemalens.tech/prisma-schema-diff.html">
+  <title>Drizzle Schema Diff Tool — Compare Drizzle Schemas Online | SchemaLens</title>
+  <meta name="description" content="Compare Drizzle ORM schemas without the CLI. Paste two schema files and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <link rel="canonical" href="https://schemalens.tech/drizzle-schema-diff.html">
+  <meta property="og:title" content="Drizzle Schema Diff Tool — Compare Drizzle Schemas Online | SchemaLens">
+  <meta property="og:description" content="Compare Drizzle ORM schemas without the CLI. Paste two schema files and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <meta property="og:url" content="https://schemalens.tech/drizzle-schema-diff.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Prisma Schema Diff Tool — Compare Prisma Schemas Online | SchemaLens">
-  <meta name="twitter:description" content="Compare Prisma schemas without the CLI. Paste two Prisma schemas and get a visual diff with migration scripts. Free, browser-based, no signup required.">
+  <meta name="twitter:title" content="Drizzle Schema Diff Tool — Compare Drizzle Schemas Online | SchemaLens">
+  <meta name="twitter:description" content="Compare Drizzle ORM schemas without the CLI. Paste two schema files and get a visual diff with migration scripts. Free, browser-based, no signup required.">
   <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SchemaLens for Prisma",
+    "name": "SchemaLens for Drizzle",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -27,7 +27,7 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "Compare Prisma schemas visually, Generate migration scripts, Detect breaking changes, Export to Prisma schema format, No CLI required",
+    "featureList": "Compare Drizzle schemas visually, Generate migration scripts, Detect breaking changes, Export to SQL dialects, No CLI required",
     "softwareVersion": "1.0",
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -55,30 +55,30 @@
   <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   <script src="lib/analytics-client.js"></script>
   <style>
-    .prisma-hero {
+    .drizzle-hero {
       padding: 100px 0 60px;
       text-align: center;
       background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
       border-bottom: 1px solid var(--border);
     }
-    .prisma-hero h1 {
+    .drizzle-hero h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 1rem;
     }
-    .prisma-hero h1 span {
+    .drizzle-hero h1 span {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .prisma-hero p {
+    .drizzle-hero p {
       color: var(--text-muted);
       font-size: 1.15rem;
       max-width: 640px;
       margin: 0 auto 1.5rem;
     }
-    .prisma-badge {
+    .drizzle-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -262,6 +262,22 @@
       max-width: 520px;
       margin: 0 auto 1.5rem;
     }
+
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      color: var(--text);
+      margin-top: 1rem;
+    }
+    .code-block .kw { color: #c678dd; }
+    .code-block .fn { color: #61afef; }
+    .code-block .str { color: #98c379; }
+    .code-block .num { color: #d19a66; }
   </style>
 </head>
 <body>
@@ -284,13 +300,13 @@
     </div>
   </nav>
 
-  <section class="prisma-hero">
+  <section class="drizzle-hero">
     <div class="container">
-      <div class="prisma-badge">🚀 Prisma Schema Diff</div>
-      <h1>Compare Prisma Schemas <span>Without the CLI</span></h1>
-      <p>Paste two Prisma schema files and get an instant visual diff. See models, fields, relations, and indexes that changed — then generate the migration SQL. No <code>npx prisma</code> required.</p>
+      <div class="drizzle-badge">🚀 Drizzle Schema Diff</div>
+      <h1>Compare Drizzle Schemas <span>Without the CLI</span></h1>
+      <p>Paste two Drizzle ORM schema files and get an instant visual diff. See tables, columns, relations, and indexes that changed — then generate the migration SQL. No <code>drizzle-kit</code> required.</p>
       <div class="hero-buttons">
-        <a href="app.html?demo=prisma" class="btn-primary">Diff a Prisma Schema →</a>
+        <a href="app.html?demo=drizzle" class="btn-primary">Diff a Drizzle Schema →</a>
         <a href="migration-checklist.html" class="btn-secondary">📋 Migration Checklist</a>
       </div>
     </div>
@@ -299,27 +315,27 @@
   <section class="section">
     <div class="container">
       <h2>How it works</h2>
-      <p>SchemaLens parses your Prisma schema, compares it against another version, and shows you exactly what changed — just like <code>prisma migrate diff</code>, but in your browser with a visual UI.</p>
+      <p>SchemaLens parses your Drizzle schema (TypeScript or SQL output), compares it against another version, and shows you exactly what changed — just like <code>drizzle-kit generate</code>, but in your browser with a visual UI.</p>
       <div class="feature-grid">
         <div class="feature-card">
-          <h3>📋 Model Diff</h3>
-          <p>See which models were added, removed, or renamed. Catch accidental model deletions before they drop tables.</p>
+          <h3>📋 Table Diff</h3>
+          <p>See which tables were added, removed, or renamed. Catch accidental table deletions before they drop production data.</p>
         </div>
         <div class="feature-card">
-          <h3>🔤 Field Changes</h3>
-          <p>Spot type changes, optional vs required changes, default value updates, and attribute modifications at a glance.</p>
+          <h3>🔤 Column Changes</h3>
+          <p>Spot type changes, not-null vs nullable updates, default value changes, and <code>$defaultFn</code> modifications at a glance.</p>
         </div>
         <div class="feature-card">
           <h3>🔗 Relation Detection</h3>
-          <p>Visualize added or removed <code>@relation</code> fields and foreign key constraints that affect your data integrity.</p>
+          <p>Visualize added or removed <code>relations</code> and foreign key constraints that affect your data integrity.</p>
         </div>
         <div class="feature-card">
           <h3>📊 Index & Unique</h3>
-          <p>Compare <code>@index</code>, <code>@unique</code>, and <code>@@index</code> declarations. Missing indexes can kill query performance.</p>
+          <p>Compare <code>index</code>, <code>uniqueIndex</code>, and <code>primaryKey</code> declarations. Missing indexes can kill query performance.</p>
         </div>
         <div class="feature-card">
           <h3>📝 Generate SQL</h3>
-          <p>Export migration scripts in PostgreSQL, MySQL, or SQLite dialects — ready to run in your migration tool.</p>
+          <p>Export migration scripts in PostgreSQL, MySQL, SQLite, SQL Server, or Oracle dialects — ready to run with <code>drizzle-kit migrate</code>.</p>
         </div>
         <div class="feature-card">
           <h3>🔗 Shareable Links</h3>
@@ -331,15 +347,15 @@
 
   <section class="section section-alt">
     <div class="container">
-      <h2>SchemaLens vs Prisma Migrate Diff</h2>
+      <h2>SchemaLens vs drizzle-kit</h2>
       <p>Both tools compare schemas. SchemaLens adds a visual layer and works without installing anything.</p>
       <table class="comparison-table">
         <thead>
           <tr>
             <th>Feature</th>
             <th>SchemaLens</th>
-            <th>prisma migrate diff</th>
-            <th>Prisma Studio</th>
+            <th>drizzle-kit generate</th>
+            <th>Drizzle Studio</th>
           </tr>
         </thead>
         <tbody>
@@ -352,7 +368,7 @@
           <tr>
             <td>Visual diff UI</td>
             <td class="check">✅ Yes</td>
-            <td class="cross">❌ Text output</td>
+            <td class="cross">❌ SQL files</td>
             <td class="cross">❌ No diff</td>
           </tr>
           <tr>
@@ -364,7 +380,7 @@
           <tr>
             <td>Multi-dialect SQL output</td>
             <td class="check">✅ 5 dialects</td>
-            <td class="check">✅ Configurable</td>
+            <td class="cross">❌ Target only</td>
             <td class="cross">❌ No</td>
           </tr>
           <tr>
@@ -380,9 +396,9 @@
             <td class="cross">❌ No</td>
           </tr>
           <tr>
-            <td>ORM export (Prisma → SQL)</td>
+            <td>Cross-dialect migrations</td>
             <td class="check">✅ Yes</td>
-            <td class="check">✅ Yes</td>
+            <td class="cross">❌ No</td>
             <td class="cross">❌ No</td>
           </tr>
           <tr>
@@ -398,35 +414,35 @@
 
   <section class="section">
     <div class="container">
-      <h2>When to use SchemaLens with Prisma</h2>
-      <p>SchemaLens complements your Prisma workflow. Use it when you need speed, shareability, or a visual review layer.</p>
+      <h2>When to use SchemaLens with Drizzle</h2>
+      <p>SchemaLens complements your Drizzle workflow. Use it when you need speed, shareability, or a visual review layer.</p>
       <div class="use-case-list">
         <div class="use-case-item">
           <div class="use-case-icon">🔍</div>
           <div class="use-case-content">
             <h3>Code Reviews</h3>
-            <p>Paste the before/after schema into SchemaLens and drop the shareable link in your PR. Reviewers see exactly what changed without running <code>prisma migrate diff</code> locally.</p>
+            <p>Paste the before/after schema into SchemaLens and drop the shareable link in your PR. Reviewers see exactly what changed without running <code>drizzle-kit generate</code> locally.</p>
           </div>
         </div>
         <div class="use-case-item">
           <div class="use-case-icon">🏭</div>
           <div class="use-case-content">
             <h3>Staging vs Production Checks</h3>
-            <p>Export your staging and production schemas, paste them both, and verify the diff before promoting to prod. Catch drift that Prisma Migrate didn't account for.</p>
+            <p>Export your staging and production schemas, paste them both, and verify the diff before promoting to prod. Catch drift that <code>drizzle-kit push</code> didn't account for.</p>
           </div>
         </div>
         <div class="use-case-item">
           <div class="use-case-icon">👥</div>
           <div class="use-case-content">
             <h3>Team Collaboration</h3>
-            <p>Not everyone on your team has Prisma installed or knows CLI flags. SchemaLens lets designers, PMs, and junior devs review schema changes in a familiar visual interface.</p>
+            <p>Not everyone on your team has Drizzle installed or knows CLI flags. SchemaLens lets designers, PMs, and junior devs review schema changes in a familiar visual interface.</p>
           </div>
         </div>
         <div class="use-case-item">
           <div class="use-case-icon">🔀</div>
           <div class="use-case-content">
             <h3>Cross-Dialect Migrations</h3>
-            <p>Moving from PostgreSQL to MySQL? SchemaLens shows you the semantic differences and generates the target dialect's migration SQL — something Prisma Migrate can't do across databases.</p>
+            <p>Moving from PostgreSQL to MySQL? SchemaLens shows you the semantic differences and generates the target dialect's migration SQL — something Drizzle Kit can't do across databases.</p>
           </div>
         </div>
       </div>
@@ -435,12 +451,12 @@
 
   <section class="section section-alt">
     <div class="container">
-      <h2>Works with your Prisma workflow</h2>
-      <p>SchemaLens is not a replacement for Prisma Migrate. It's a visual companion for the moments when you need to see the diff, share it, or review it quickly.</p>
+      <h2>Works with your Drizzle workflow</h2>
+      <p>SchemaLens is not a replacement for Drizzle Kit. It's a visual companion for the moments when you need to see the diff, share it, or review it quickly.</p>
       <div class="feature-grid">
         <div class="feature-card">
           <h3>1️⃣ Export your schema</h3>
-          <p>Run <code>npx prisma migrate diff</code> or copy your <code>schema.prisma</code> file. Paste it into SchemaLens.</p>
+          <p>Copy your <code>schema.ts</code> file or run <code>drizzle-kit generate</code> and grab the generated SQL. Paste it into SchemaLens.</p>
         </div>
         <div class="feature-card">
           <h3>2️⃣ Paste the target schema</h3>
@@ -448,7 +464,7 @@
         </div>
         <div class="feature-card">
           <h3>3️⃣ Review the diff</h3>
-          <p>Visual highlights show added models, removed fields, type changes, and index modifications. Breaking changes are flagged in red.</p>
+          <p>Visual highlights show added tables, removed columns, type changes, and index modifications. Breaking changes are flagged in red.</p>
         </div>
         <div class="feature-card">
           <h3>4️⃣ Generate & share</h3>
@@ -460,9 +476,9 @@
 
   <section class="cta-box">
     <div class="container">
-      <h2>Diff your Prisma schema now</h2>
+      <h2>Diff your Drizzle schema now</h2>
       <p>No signup. No install. Paste two schemas and see the diff in 5 seconds.</p>
-      <a href="app.html?demo=prisma" class="btn-primary">Start Comparing →</a>
+      <a href="app.html?demo=drizzle" class="btn-primary">Start Comparing →</a>
     </div>
   </section>
 
@@ -493,7 +509,6 @@
           <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
           <a href="mysql-schema-diff.html">MySQL Diff</a>
           <a href="sqlite-schema-diff.html">SQLite Diff</a>
-          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
         </div>
         <div class="footer-col">
           <h4>Resources</h4>
