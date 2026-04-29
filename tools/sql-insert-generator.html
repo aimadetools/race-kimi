@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL INSERT Statement Generator — SchemaLens</title>
+  <meta name="description" content="Generate SQL INSERT statements visually. Add columns, fill rows, and get batch INSERT or UPSERT syntax for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. No signup required.">
+  <meta property="og:title" content="Free SQL INSERT Statement Generator — SchemaLens">
+  <meta property="og:description" content="Build INSERT statements visually with batch support and UPSERT syntax. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-insert-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL INSERT Statement Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Visual form-based builder for SQL INSERT statements across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Batch inserts, UPSERT/ON CONFLICT support, type-aware value quoting, and multi-row generation.",
+    "url": "https://schemalens.tech/tools/sql-insert-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .generator-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0 16px;
+    }
+    .generator-toolbar label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .generator-toolbar select, .generator-toolbar button, .generator-toolbar input {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.95rem;
+    }
+    .generator-toolbar button {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .generator-toolbar button:hover {
+      background: var(--primary-light);
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .panel h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cols-header {
+      display: grid;
+      grid-template-columns: 1fr 140px 80px 36px;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+    .col-def-row {
+      display: grid;
+      grid-template-columns: 1fr 140px 80px 36px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .col-def-row input, .col-def-row select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: 0.9rem;
+      font-family: var(--mono);
+      width: 100%;
+    }
+    .col-def-row button {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .col-def-row button:hover {
+      background: rgba(239,68,68,0.1);
+    }
+
+    .rows-panel {
+      overflow-x: auto;
+    }
+    .rows-grid {
+      display: grid;
+      gap: 8px;
+      min-width: max-content;
+    }
+    .row-header {
+      display: grid;
+      grid-template-columns: 50px repeat(var(--col-count), minmax(140px, 1fr)) 40px;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .row-header span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .data-row {
+      display: grid;
+      grid-template-columns: 50px repeat(var(--col-count), minmax(140px, 1fr)) 40px;
+      gap: 8px;
+      align-items: center;
+    }
+    .data-row input {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: 0.9rem;
+      font-family: var(--mono);
+      width: 100%;
+    }
+    .data-row .row-num {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .data-row button {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .data-row button:hover {
+      background: rgba(239,68,68,0.1);
+    }
+
+    .add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+    .add-btn:hover {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .option-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+    .option-item label {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .option-item select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+
+    .output-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    .output-label {
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-label button {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .output-label button:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+    .output-wrap pre {
+      flex: 1;
+      width: 100%;
+      min-height: 160px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      margin: 0;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .cta-box h3 { margin-bottom: 8px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+
+    @media (max-width: 768px) {
+      .cols-header, .col-def-row { grid-template-columns: 1fr 100px 70px 36px; }
+      .row-header, .data-row { grid-template-columns: 36px repeat(var(--col-count), minmax(100px, 1fr)) 36px; }
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>SQL INSERT Statement Generator</h1>
+      <p>Generate INSERT statements visually. Add columns, fill rows, and get batch INSERT or UPSERT syntax for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="generator-toolbar">
+      <label for="dialect">Dialect</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <button id="generateBtn">Generate SQL</button>
+      <button id="sampleBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Load Sample</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear All</button>
+    </div>
+
+    <div class="panel">
+      <div class="form-row" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+        <label for="tableName" style="color:var(--text-muted);font-size:0.9rem;font-weight:500;">Table Name</label>
+        <input type="text" id="tableName" placeholder="e.g. users" value="users" style="flex:1;min-width:180px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:0.95rem;font-family:var(--mono);">
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Columns</h3>
+      <div class="cols-header">
+        <span>Name</span>
+        <span>Type</span>
+        <span>PK</span>
+        <span></span>
+      </div>
+      <div id="colsContainer"></div>
+      <button class="add-btn" id="addColBtn">+ Add Column</button>
+    </div>
+
+    <div class="panel rows-panel">
+      <h3>Rows</h3>
+      <div id="rowsContainer"></div>
+      <button class="add-btn" id="addRowBtn">+ Add Row</button>
+    </div>
+
+    <div class="panel">
+      <h3>Options</h3>
+      <div class="options-grid">
+        <div class="option-item">
+          <input type="checkbox" id="batchInsert" checked>
+          <label for="batchInsert">Single INSERT with multiple VALUES</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="upsertCheck">
+          <label for="upsertCheck">Generate UPSERT / ON CONFLICT</label>
+        </div>
+        <div class="option-item" id="conflictColWrap" style="display:none;">
+          <label for="conflictCol">Conflict column:</label>
+          <select id="conflictCol"></select>
+        </div>
+        <div class="option-item" id="updateColsWrap" style="display:none;">
+          <input type="checkbox" id="updateAllCols" checked>
+          <label for="updateAllCols">Update all non-PK columns on conflict</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="output-wrap">
+      <div class="output-label">
+        <span>Generated SQL</span>
+        <button id="copyBtn">Copy</button>
+      </div>
+      <pre id="sqlOutput"><code style="display:block;white-space:pre;"></code></pre>
+    </div>
+
+    <div class="cta-box">
+      <h3>Need to compare schemas before inserting data?</h3>
+      <p>SchemaLens diffs database schemas and generates migration scripts instantly. Catch breaking changes before they hit production.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: 48px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../app.html">Schema Diff</a>
+          <a href="sql-validator.html">SQL Validator</a>
+          <a href="sql-formatter.html">SQL Formatter</a>
+          <a href="schema-doc-generator.html">Schema Docs</a>
+          <a href="csv-to-sql.html">CSV to SQL</a>
+          <a href="json-to-sql.html">JSON to SQL</a>
+          <a href="schema-health-check.html">Health Check</a>
+          <a href="sql-index-analyzer.html">Index Analyzer</a>
+          <a href="create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="alter-table-generator.html">ALTER TABLE Generator</a>
+          <a href="sql-insert-generator.html">INSERT Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+
+<script>
+(function() {
+  const dialectEl = document.getElementById('dialect');
+  const tableNameEl = document.getElementById('tableName');
+  const colsContainer = document.getElementById('colsContainer');
+  const rowsContainer = document.getElementById('rowsContainer');
+  const sqlOutput = document.getElementById('sqlOutput');
+  const upsertCheck = document.getElementById('upsertCheck');
+  const conflictColWrap = document.getElementById('conflictColWrap');
+  const conflictCol = document.getElementById('conflictCol');
+  const updateColsWrap = document.getElementById('updateColsWrap');
+  let colCounter = 0;
+  let rowCounter = 0;
+
+  const commonTypes = [
+    'INTEGER','BIGINT','SMALLINT','SERIAL','BIGSERIAL',
+    'VARCHAR(255)','TEXT','CHAR(36)',
+    'BOOLEAN','DATE','TIMESTAMP','NUMERIC(10,2)','REAL','JSONB','UUID'
+  ];
+
+  const numericTypes = ['INTEGER','BIGINT','SMALLINT','SERIAL','BIGSERIAL','INT','TINYINT','FLOAT','REAL','DOUBLE','NUMERIC','DECIMAL','NUMBER'];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+  }
+
+  function q(id) {
+    const dialect = dialectEl.value;
+    if (dialect === 'mssql') return '[' + id + ']';
+    if (dialect === 'mysql') return '`' + id + '`';
+    if (dialect === 'oracle') return '"' + id + '"';
+    return '"' + id + '"';
+  }
+
+  function isNumericType(type) {
+    const t = (type || '').toUpperCase();
+    return numericTypes.some(n => t.includes(n));
+  }
+
+  function formatValue(value, type) {
+    const v = (value || '').trim();
+    if (v.toUpperCase() === 'NULL') return 'NULL';
+    if (v.toUpperCase() === 'TRUE') {
+      const d = dialectEl.value;
+      if (d === 'sqlite' || d === 'mysql') return '1';
+      return 'TRUE';
+    }
+    if (v.toUpperCase() === 'FALSE') {
+      const d = dialectEl.value;
+      if (d === 'sqlite' || d === 'mysql') return '0';
+      return 'FALSE';
+    }
+    if (isNumericType(type)) return v;
+    // Detect numbers
+    if (/^-?\d+(\.\d+)?$/.test(v)) return v;
+    // Strings: quote and escape
+    const d = dialectEl.value;
+    const quote = d === 'mysql' || d === 'mssql' ? '\\\'' : '\'';
+    const escaped = v.replace(/'/g, quote);
+    return "'" + escaped + "'";
+  }
+
+  function getColumns() {
+    return Array.from(colsContainer.querySelectorAll('.col-def-row')).map(row => ({
+      id: row.dataset.colId,
+      name: row.querySelector('.col-name').value.trim(),
+      type: row.querySelector('.col-type').value,
+      pk: row.querySelector('.col-pk').checked
+    })).filter(c => c.name);
+  }
+
+  function addColumn(data) {
+    colCounter++;
+    const id = 'col_' + colCounter;
+    const div = document.createElement('div');
+    div.className = 'col-def-row';
+    div.dataset.colId = id;
+    const typeOpts = commonTypes.map(t => `<option value="${t}"${(data && data.type === t) ? ' selected' : ''}>${t}</option>`).join('');
+    div.innerHTML = `
+      <input type="text" class="col-name" placeholder="column_name" value="${esc(data && data.name || '')}">
+      <select class="col-type">${typeOpts}</select>
+      <input type="checkbox" class="col-pk" title="Primary Key" ${data && data.pk ? 'checked' : ''}>
+      <button class="remove-col" title="Remove column">×</button>
+    `;
+    div.querySelector('.remove-col').addEventListener('click', () => {
+      div.remove();
+      rebuildRows();
+    });
+    div.querySelector('.col-name').addEventListener('input', () => rebuildRows());
+    colsContainer.appendChild(div);
+    rebuildRows();
+    updateConflictOptions();
+  }
+
+  function rebuildRows() {
+    const cols = getColumns();
+    // Preserve existing data
+    const existing = [];
+    rowsContainer.querySelectorAll('.data-row').forEach(row => {
+      const values = [];
+      row.querySelectorAll('.row-val').forEach((input, i) => {
+        values[i] = input.value;
+      });
+      existing.push(values);
+    });
+
+    rowsContainer.innerHTML = '';
+    if (!cols.length) {
+      rowsContainer.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">Add columns first to enter row data.</p>';
+      return;
+    }
+
+    const colCount = cols.length;
+    rowsContainer.style.setProperty('--col-count', colCount);
+
+    const header = document.createElement('div');
+    header.className = 'row-header';
+    header.innerHTML = '<span>#</span>' + cols.map(c => `<span title="${esc(c.type)}">${esc(c.name)}</span>`).join('') + '<span></span>';
+    rowsContainer.appendChild(header);
+
+    existing.forEach((vals, ri) => {
+      addRowData(vals.slice(0, colCount));
+    });
+
+    if (!existing.length) {
+      addRowData(new Array(colCount).fill(''));
+    }
+  }
+
+  function addRowData(presetValues) {
+    const cols = getColumns();
+    if (!cols.length) return;
+    rowCounter++;
+    const div = document.createElement('div');
+    div.className = 'data-row';
+    const values = presetValues || cols.map(() => '');
+    div.innerHTML = `<span class="row-num">${rowCounter}</span>` + cols.map((c, i) =>
+      `<input type="text" class="row-val" data-col="${c.id}" placeholder="${esc(c.type)}" value="${esc(values[i] || '')}">`
+    ).join('') + '<button class="remove-row" title="Remove row">×</button>';
+    div.querySelector('.remove-row').addEventListener('click', () => {
+      div.remove();
+      renumberRows();
+    });
+    rowsContainer.appendChild(div);
+    renumberRows();
+  }
+
+  function renumberRows() {
+    rowsContainer.querySelectorAll('.data-row').forEach((row, i) => {
+      row.querySelector('.row-num').textContent = i + 1;
+    });
+  }
+
+  function updateConflictOptions() {
+    const cols = getColumns();
+    const pks = cols.filter(c => c.pk);
+    const opts = pks.length ? pks.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('') : cols.slice(0, 1).map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+    conflictCol.innerHTML = opts || '<option value="">—</option>';
+  }
+
+  function generateSQL() {
+    const table = tableNameEl.value.trim() || 'my_table';
+    const dialect = dialectEl.value;
+    const cols = getColumns();
+    const rows = [];
+    rowsContainer.querySelectorAll('.data-row').forEach(row => {
+      const vals = Array.from(row.querySelectorAll('.row-val')).map((input, i) => formatValue(input.value, cols[i] && cols[i].type));
+      rows.push(vals);
+    });
+
+    if (!cols.length) {
+      sqlOutput.textContent = '-- Add at least one column to generate SQL';
+      return;
+    }
+    if (!rows.length) {
+      sqlOutput.textContent = '-- Add at least one row to generate SQL';
+      return;
+    }
+
+    const colNames = cols.map(c => q(c.name)).join(', ');
+    const batch = document.getElementById('batchInsert').checked;
+    const upsert = upsertCheck.checked;
+    const conflictColumn = conflictCol.value;
+    const updateAll = document.getElementById('updateAllCols').checked;
+    const nonPkCols = cols.filter(c => !c.pk);
+
+    const lines = [];
+
+    if (batch) {
+      const valuesList = rows.map(vals => '(' + vals.join(', ') + ')').join(',\n  ');
+      lines.push(`INSERT INTO ${q(table)} (${colNames}) VALUES`);
+      lines.push(`  ${valuesList};`);
+
+      if (upsert) {
+        if (dialect === 'postgres') {
+          lines.push(`ON CONFLICT (${q(conflictColumn)}) DO UPDATE SET`);
+          if (updateAll && nonPkCols.length) {
+            const updates = nonPkCols.map(c => `  ${q(c.name)} = EXCLUDED.${q(c.name)}`).join(',\n');
+            lines.push(updates + ';');
+          } else {
+            lines.push(`  ${q(conflictColumn)} = EXCLUDED.${q(conflictColumn)};`);
+          }
+        } else if (dialect === 'mysql') {
+          lines.push(`ON DUPLICATE KEY UPDATE`);
+          if (updateAll && nonPkCols.length) {
+            const updates = nonPkCols.map(c => `  ${q(c.name)} = VALUES(${q(c.name)})`).join(',\n');
+            lines.push(updates + ';');
+          } else {
+            lines.push(`  ${q(conflictColumn)} = VALUES(${q(conflictColumn)});`);
+          }
+        } else if (dialect === 'sqlite') {
+          lines.push(`ON CONFLICT (${q(conflictColumn)}) DO UPDATE SET`);
+          if (updateAll && nonPkCols.length) {
+            const updates = nonPkCols.map(c => `  ${q(c.name)} = excluded.${q(c.name)}`).join(',\n');
+            lines.push(updates + ';');
+          } else {
+            lines.push(`  ${q(conflictColumn)} = excluded.${q(conflictColumn)};`);
+          }
+        } else if (dialect === 'mssql') {
+          // SQL Server uses MERGE for upsert
+          const targetCols = cols.map(c => q(c.name)).join(', ');
+          const sourceCols = cols.map(c => q(c.name)).join(', ');
+          lines.push(`\n-- SQL Server MERGE (UPSERT) equivalent:`);
+          lines.push(`MERGE ${q(table)} AS target`);
+          lines.push(`USING (VALUES`);
+          lines.push(rows.map(vals => `  (${vals.join(', ')})`).join(',\n'));
+          lines.push(`) AS source (${sourceCols})`);
+          lines.push(`ON target.${q(conflictColumn)} = source.${q(conflictColumn)}`);
+          if (updateAll && nonPkCols.length) {
+            lines.push(`WHEN MATCHED THEN UPDATE SET`);
+            lines.push(nonPkCols.map(c => `  target.${q(c.name)} = source.${q(c.name)}`).join(',\n'));
+          }
+          lines.push(`WHEN NOT MATCHED THEN`);
+          lines.push(`  INSERT (${targetCols})`);
+          lines.push(`  VALUES (${sourceCols});`);
+        } else if (dialect === 'oracle') {
+          const targetCols = cols.map(c => q(c.name)).join(', ');
+          const sourceCols = cols.map(c => q(c.name)).join(', ');
+          lines.push(`\n-- Oracle MERGE (UPSERT) equivalent:`);
+          lines.push(`MERGE INTO ${q(table)} target`);
+          lines.push(`USING (SELECT`);
+          rows.forEach((vals, i) => {
+            const prefix = i === 0 ? '  ' : '  UNION ALL SELECT ';
+            lines.push(`${prefix}${vals.join(', ')} FROM dual`);
+          });
+          lines.push(`) source (${sourceCols})`);
+          lines.push(`ON (target.${q(conflictColumn)} = source.${q(conflictColumn)})`);
+          if (updateAll && nonPkCols.length) {
+            lines.push(`WHEN MATCHED THEN UPDATE SET`);
+            lines.push(nonPkCols.map(c => `  target.${q(c.name)} = source.${q(c.name)}`).join(',\n'));
+          }
+          lines.push(`WHEN NOT MATCHED THEN`);
+          lines.push(`  INSERT (${targetCols})`);
+          lines.push(`  VALUES (${sourceCols});`);
+        }
+      }
+    } else {
+      // Individual INSERTs
+      rows.forEach(vals => {
+        lines.push(`INSERT INTO ${q(table)} (${colNames}) VALUES (${vals.join(', ')});`);
+      });
+
+      if (upsert) {
+        if (dialect === 'postgres') {
+          lines.push(`\n-- For UPSERT with individual inserts, use ON CONFLICT on each statement:`);
+          lines.push(`-- INSERT INTO ${q(table)} (...) VALUES (...) ON CONFLICT (${q(conflictColumn)}) DO UPDATE SET ...;`);
+        } else if (dialect === 'mysql') {
+          lines.push(`\n-- MySQL handles ON DUPLICATE KEY UPDATE automatically per insert.`);
+        } else if (dialect === 'sqlite') {
+          lines.push(`\n-- SQLite UPSERT: add ON CONFLICT (...) DO UPDATE SET ... to each INSERT.`);
+        } else if (dialect === 'mssql') {
+          lines.push(`\n-- SQL Server: use MERGE for UPSERT with individual rows.`);
+        } else if (dialect === 'oracle') {
+          lines.push(`\n-- Oracle: use MERGE for UPSERT with individual rows.`);
+        }
+      }
+    }
+
+    sqlOutput.textContent = lines.join('\n');
+  }
+
+  function loadSample() {
+    tableNameEl.value = 'users';
+    dialectEl.value = 'postgres';
+    colsContainer.innerHTML = '';
+    rowsContainer.innerHTML = '';
+    addColumn({ name: 'id', type: 'SERIAL', pk: true });
+    addColumn({ name: 'email', type: 'VARCHAR(255)' });
+    addColumn({ name: 'name', type: 'VARCHAR(255)' });
+    addColumn({ name: 'role', type: 'VARCHAR(50)' });
+    addColumn({ name: 'active', type: 'BOOLEAN' });
+
+    // Clear and add sample rows
+    rowsContainer.innerHTML = '';
+    addRowData(['', 'alice@example.com', 'Alice Johnson', 'admin', 'true']);
+    addRowData(['', 'bob@example.com', 'Bob Smith', 'user', 'true']);
+    addRowData(['', 'carol@example.com', 'Carol White', 'user', 'false']);
+
+    document.getElementById('batchInsert').checked = true;
+    upsertCheck.checked = false;
+    conflictColWrap.style.display = 'none';
+    updateColsWrap.style.display = 'none';
+    generateSQL();
+  }
+
+  document.getElementById('addColBtn').addEventListener('click', () => addColumn());
+  document.getElementById('addRowBtn').addEventListener('click', () => addRowData());
+  document.getElementById('generateBtn').addEventListener('click', generateSQL);
+  document.getElementById('sampleBtn').addEventListener('click', loadSample);
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    colsContainer.innerHTML = '';
+    rowsContainer.innerHTML = '';
+    sqlOutput.textContent = '';
+    tableNameEl.value = '';
+    rowCounter = 0;
+    colCounter = 0;
+  });
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(sqlOutput.textContent).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  });
+
+  upsertCheck.addEventListener('change', () => {
+    conflictColWrap.style.display = upsertCheck.checked ? 'flex' : 'none';
+    updateColsWrap.style.display = upsertCheck.checked ? 'flex' : 'none';
+    updateConflictOptions();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') generateSQL();
+  });
+
+  // Start with empty state
+  sqlOutput.textContent = '-- Add columns and rows, then click Generate SQL';
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
