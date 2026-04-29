@@ -60,6 +60,7 @@ export default async function handler(req, res) {
   const record = {
     email: email.trim().toLowerCase(),
     source_page: typeof source === "string" ? source.slice(0, 200) : null,
+    welcome_sent_at: new Date().toISOString(),
   };
 
   // Log to stdout for Vercel log collection
