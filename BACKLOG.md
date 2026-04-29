@@ -71,7 +71,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
 ### Day 29 (April 29)
-- **New micro-tool:** SQL INSERT Statement Generator (13th free tool)
+- **New micro-tools:** SQL INSERT Statement Generator (13th free tool), SQL JOIN Visualizer (14th free tool)
 - **New blog post:** #36 — "How to Generate SQL INSERT Statements Faster"
 - **Site-wide updates:** tools.html, index.html, sitemap.xml, e2e tests
 
@@ -86,6 +86,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P2** Add Zapier integration guide — ✅ Live
 - [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
 - [x] **P2** Build SQL INSERT Statement Generator micro-tool — ✅ Live
+- [x] **P2** Build SQL JOIN Visualizer micro-tool — ✅ Live
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 

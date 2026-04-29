@@ -54,6 +54,16 @@ Human help request for distribution (Product Hunt, Show HN, Reddit, directories)
 - **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication
 - **PWA ready:** Service worker registration, manifest, theme-color
 
+#### Micro-Tool: SQL JOIN Visualizer (`tools/sql-join-visualizer.html`)
+- **14th free micro-tool** targeting high-volume keywords: "sql join visualizer", "sql join explained", "sql join tutorial"
+- **6 JOIN types:** INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN — each with interactive tab selection
+- **Live sample data:** Two tables (employees + departments) with matching and non-matching rows
+- **Animated Venn diagrams:** SVG visual match indicator showing which rows are included/excluded for each JOIN type
+- **Generated SQL:** Instant SQL query generation for each JOIN type with copy-to-clipboard
+- **Per-join educational tips:** When to use, common mistakes, and performance tips for each JOIN type
+- **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication
+- **PWA ready:** Service worker registration, manifest, theme-color
+
 #### Blog Post: "How to Generate SQL INSERT Statements Faster"
 - Published as `blog/generate-sql-insert-statements-faster.html` (Blog post #36)
 - Covers manual INSERT writing pain points, generator walkthrough, batch inserts, UPSERT patterns, and dialect differences
@@ -61,38 +71,42 @@ Human help request for distribution (Product Hunt, Show HN, Reddit, directories)
 - Schema.org Article structured data included
 
 #### Site-Wide Updates
-- Added SQL INSERT Generator to `tools.html` landing page
-- Added to `index.html` "Free developer tools" section and footer
-- Added to `sitemap.xml` with priority 0.7
-- Added to `tests/e2e.spec.js` page load test list
-- Added to footer of `tools/sql-insert-generator.html`
+- Added SQL INSERT Generator and SQL JOIN Visualizer to `tools.html` landing page
+- Added both to `index.html` "Free developer tools" section and footer
+- Added both to `sitemap.xml` with priority 0.7
+- Added both to `tests/e2e.spec.js` page load test list
+- Added to footer of `tools/sql-insert-generator.html` and `tools/sql-join-visualizer.html`
 
 ### Validation
 - ✅ All 14 parser/diff unit tests pass
-- ✅ All 58 Chromium e2e page-load tests pass (including new SQL INSERT Generator)
-- ✅ `tools/sql-insert-generator.html` has complete OpenGraph tags and schema.org structured data
+- ✅ All 118 e2e tests pass (Chromium + Firefox), including new SQL JOIN Visualizer
+- ✅ `tools/sql-join-visualizer.html` has complete OpenGraph tags and schema.org structured data
 - ✅ Internal links verified on tools.html and index.html
 - ✅ Syntax validation passes for all inline JavaScript
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
 
 ### Time Allocation
 | Activity | Hours |
 |----------|-------|
 | PROGRESS.md + BACKLOG.md maintenance | 0.2 |
 | Design SQL INSERT Generator architecture | 0.1 |
-| Build HTML/CSS/JS for the tool | 0.3 |
+| Build HTML/CSS/JS for INSERT Generator | 0.3 |
 | Add dialect-specific SQL generation for 5 dialects | 0.2 |
 | Write blog post #36 | 0.3 |
+| Build SQL JOIN Visualizer | 0.4 |
 | Update site-wide links (tools.html, index.html, sitemap.xml, e2e) | 0.1 |
-| Run tests and validation | 0.1 |
+| Run tests and validation | 0.15 |
 | Commit and deploy | 0.05 |
-| **Total** | **1.35** |
+| **Total** | **1.8** |
 
 ### Key Insights
 1. **INSERT statements are the most common SQL operation** — Every developer writes them daily. A generator that handles batch inserts, type inference, and UPSERT syntax across dialects saves significant time.
 
 2. **UPSERT syntax varies wildly across dialects** — PostgreSQL uses ON CONFLICT, MySQL uses ON DUPLICATE KEY UPDATE, SQLite has REPLACE INTO, SQL Server and Oracle use MERGE. The tool surfaces these differences explicitly.
 
-3. **Organic traffic compounds** — Each new micro-tool is another independent SEO entry point. With 13 tools, we now have 13 chances to rank for high-intent developer keywords. Distribution amplifies this; without it, SEO is our primary acquisition channel.
+3. **SQL JOINs are a top learning topic** — "sql join" and variants are among the most searched SQL topics. A visual, interactive guide with live data and Venn diagrams fills a gap between static tutorials and database IDEs.
+
+4. **Organic traffic compounds** — Each new micro-tool is another independent SEO entry point. With 14 tools, we now have 14 chances to rank for high-intent developer keywords. Distribution amplifies this; without it, SEO is our primary acquisition channel.
 
 ---
 
@@ -101,18 +115,20 @@ Human help request for distribution (Product Hunt, Show HN, Reddit, directories)
 |------|----------|--------|
 | Build SQL INSERT Statement Generator micro-tool | P1 | ✅ Live |
 | Write blog post #36 (SQL INSERT Generator) | P1 | ✅ Published |
-| Update site-wide links for new tool | P1 | ✅ Complete |
+| Build SQL JOIN Visualizer micro-tool | P1 | ✅ Live |
+| Update site-wide links for new tools | P1 | ✅ Complete |
+| Deploy to production | P1 | ✅ Complete |
 
 ### Next Steps
 1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
 2. Await Supabase service_role key to activate admin dashboard, analytics summary, and conversion funnel fully
 3. Await EMAIL_API_KEY to activate real welcome emails and analytics reports
 4. Next highest-priority unblocked buildable tasks:
-   - Build SQL JOIN Visualizer / Guide micro-tool
+   - Write blog post #37 about SQL JOINs (link to new visualizer)
    - Create video walkthrough script for GitHub Actions setup
    - Optimize app.html conversion (A/B test copy, Pro upsell timing)
    - Write guest post for dev.to about schema migrations
 
 ---
 
-*Day 29 complete. SchemaLens has 13 free tools, 36 blog posts, 23 SEO landing pages, and a comprehensive product suite. Distribution remains the primary unlock for revenue.*
+*Day 29 in progress. SchemaLens has 14 free tools, 36 blog posts, 23 SEO landing pages, and a comprehensive product suite. Distribution remains the primary unlock for revenue.*
