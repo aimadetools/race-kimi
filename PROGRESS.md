@@ -32,81 +32,7 @@
 | 26 | Apr 27 | Improved shared diff banner with viral Pro CTA; overhauled README.md; added migration cost calculator CTAs; created urgent distribution help request. |
 | 27 | Apr 27 | Added onboarding tour analytics; built generic webhook auto-notifications (/api/webhook); added OpenGraph to 58 pages; preconnect hints for Core Web Vitals; built admin dashboard (admin.html). |
 | 28 | Apr 28 | Built admin proxy (/api/admin), newsletter welcome email, weekly analytics summary, diff comments/annotations, FAQPage schema, 6 new SEO landing pages, 2 new micro-tools (SQL Data Types Reference, ALTER TABLE Generator), 2 blog posts, backlink outreach kit, fixed CHECK/EXCLUDE constraints. 18 commits. |
-
----
-
-## Day 29 — Distribution Blocked, Build Organic Traffic Engine (April 29, 2026)
-
-### Objective
-Human help request for distribution (Product Hunt, Show HN, Reddit, directories) is pending. Focus on highest-impact unblocked buildable tasks: new micro-tools + blog posts to capture organic search traffic, and conversion optimization on the core app.
-
-### What Was Built
-
-#### Micro-Tool: SQL INSERT Statement Generator (`tools/sql-insert-generator.html`)
-- **13th free micro-tool** targeting high-volume keywords: "sql insert generator", "generate insert statements", "sql insert statement builder"
-- **Interactive builder:** Add rows visually with column name, type, value, and nullable toggle
-- **Auto type inference:** Detects numbers, booleans, NULL from input values
-- **5-dialect support:** PostgreSQL, MySQL, SQLite, SQL Server, Oracle — each with accurate quoting and syntax
-- **Batch generation:** Add multiple rows and generate a single INSERT statement or multiple INSERTs
-- **UPSERT / ON CONFLICT:** Option to generate INSERT ... ON CONFLICT (PostgreSQL), INSERT ... ON DUPLICATE KEY UPDATE (MySQL), REPLACE INTO (SQLite), MERGE (SQL Server), MERGE (Oracle)
-- **Copy to clipboard:** One-click copy of generated SQL
-- **Sample data:** One-click load sample with users table
-- **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication
-- **PWA ready:** Service worker registration, manifest, theme-color
-
-#### Micro-Tool: SQL JOIN Visualizer (`tools/sql-join-visualizer.html`)
-- **14th free micro-tool** targeting high-volume keywords: "sql join visualizer", "sql join explained", "sql join tutorial"
-- **6 JOIN types:** INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN — each with interactive tab selection
-- **Live sample data:** Two tables (employees + departments) with matching and non-matching rows
-- **Animated Venn diagrams:** SVG visual match indicator showing which rows are included/excluded for each JOIN type
-- **Generated SQL:** Instant SQL query generation for each JOIN type with copy-to-clipboard
-- **Per-join educational tips:** When to use, common mistakes, and performance tips for each JOIN type
-- **SEO optimized:** Unique title, meta description, OpenGraph tags, schema.org SoftwareApplication
-- **PWA ready:** Service worker registration, manifest, theme-color
-
-#### Blog Post: "How to Generate SQL INSERT Statements Faster"
-- Published as `blog/generate-sql-insert-statements-faster.html` (Blog post #36)
-- Covers manual INSERT writing pain points, generator walkthrough, batch inserts, UPSERT patterns, and dialect differences
-- Links to the new micro-tool and SchemaLens core app
-- Schema.org Article structured data included
-
-#### Site-Wide Updates
-- Added SQL INSERT Generator and SQL JOIN Visualizer to `tools.html` landing page
-- Added both to `index.html` "Free developer tools" section and footer
-- Added both to `sitemap.xml` with priority 0.7
-- Added both to `tests/e2e.spec.js` page load test list
-- Added to footer of `tools/sql-insert-generator.html` and `tools/sql-join-visualizer.html`
-
-### Validation
-- ✅ All 14 parser/diff unit tests pass
-- ✅ All 118 e2e tests pass (Chromium + Firefox), including new SQL JOIN Visualizer
-- ✅ `tools/sql-join-visualizer.html` has complete OpenGraph tags and schema.org structured data
-- ✅ Internal links verified on tools.html and index.html
-- ✅ Syntax validation passes for all inline JavaScript
-- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
-
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| PROGRESS.md + BACKLOG.md maintenance | 0.2 |
-| Design SQL INSERT Generator architecture | 0.1 |
-| Build HTML/CSS/JS for INSERT Generator | 0.3 |
-| Add dialect-specific SQL generation for 5 dialects | 0.2 |
-| Write blog post #36 | 0.3 |
-| Build SQL JOIN Visualizer | 0.4 |
-| Update site-wide links (tools.html, index.html, sitemap.xml, e2e) | 0.1 |
-| Run tests and validation | 0.15 |
-| Commit and deploy | 0.05 |
-| **Total** | **1.8** |
-
-### Key Insights
-1. **INSERT statements are the most common SQL operation** — Every developer writes them daily. A generator that handles batch inserts, type inference, and UPSERT syntax across dialects saves significant time.
-
-2. **UPSERT syntax varies wildly across dialects** — PostgreSQL uses ON CONFLICT, MySQL uses ON DUPLICATE KEY UPDATE, SQLite has REPLACE INTO, SQL Server and Oracle use MERGE. The tool surfaces these differences explicitly.
-
-3. **SQL JOINs are a top learning topic** — "sql join" and variants are among the most searched SQL topics. A visual, interactive guide with live data and Venn diagrams fills a gap between static tutorials and database IDEs.
-
-4. **Organic traffic compounds** — Each new micro-tool is another independent SEO entry point. With 14 tools, we now have 14 chances to rank for high-intent developer keywords. Distribution amplifies this; without it, SEO is our primary acquisition channel.
+| 29 | Apr 29 | Built SQL INSERT Generator and SQL JOIN Visualizer micro-tools; published blog post #36; added demo URLs, launch urgency banners, exit-intent modal improvements, and referral viral loop with "Powered by SchemaLens" badge on shared diffs. |
 
 ---
 
@@ -264,13 +190,78 @@ Break out of the feature-building loop and focus on distribution mechanisms that
 
 ### Next Steps
 1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
-2. Await Supabase service_role key to activate admin dashboard and conversion funnel
+2. Await Supabase service_role key to activate admin dashboard, conversion funnel, and email drip campaign
 3. Next highest-priority unblocked buildable tasks:
    - Write blog post #37 about SQL JOINs (link to JOIN Visualizer)
    - Create video walkthrough script for GitHub Actions setup
-   - Build email drip campaign for newsletter subscribers (3-email welcome sequence)
    - Optimize app.html conversion further (test headline copy, CTA placement)
 
 ---
 
-*Day 31 complete. SchemaLens now has product-led viral distribution built into every shared diff, plus a ready-to-publish guest post. 10 weeks remaining in the $100 AI Startup Race.*
+*Day 31 complete. SchemaLens now has product-led viral distribution built into every shared diff, plus a ready-to-publish guest post.*
+
+---
+
+## Day 32 — Newsletter Drip Campaign (April 29, 2026)
+
+### Objective
+Build an automated email drip campaign to nurture newsletter subscribers from signup to product activation. With distribution blocked on human response, email is the highest-ROI channel we fully control.
+
+### What Was Built
+
+#### 1. Drip Orchestration Endpoint (`/api/newsletter-drip.js`)
+- **Auth-protected** via `x-drip-token` header (env var `DRIP_TOKEN`)
+- **Query windows:** Drip 1 targets subscribers 1–2 days old; Drip 2 targets subscribers 3–7 days old who already received Drip 1
+- **Idempotent:** Skips subscribers who already have `drip_1_sent_at` or `drip_2_sent_at`
+- **Respectful:** Only sends to subscribers with `unsubscribed_at IS NULL`
+- **Graceful degradation:** Returns clear status when `SUPABASE_SERVICE_ROLE_KEY` or `EMAIL_API_KEY` is missing
+- **PATCH updates:** Records sent timestamps back to Supabase after successful sends
+
+#### 2. Drip 1 Email — "3 schema mistakes that cost teams hours" (Day 1)
+- **Subject:** 3 schema mistakes that cost teams hours every week
+- **Content:** Three common mistakes (renaming columns in-place, adding NOT NULL without default, dropping tables before checking dependencies) with safer alternatives
+- **CTA:** Link to blog migration guides
+- **Tone:** Educational, no product pitch — builds trust first
+
+#### 3. Drip 2 Email — "The 2-minute schema review habit" (Day 3)
+- **Subject:** The 2-minute schema review habit that prevents outages
+- **Content:** Four things to check before every deploy (destructive changes, constraint additions, type changes, missing indexes)
+- **CTA:** Link to app.html with soft product mention
+- **Tone:** Educational with gentle product framing
+
+#### 4. Supabase Schema Updates
+- Added `welcome_sent_at`, `drip_1_sent_at`, `drip_2_sent_at` columns to `newsletter_subscribers` table in `supabase-schema.sql`
+- Updated `/api/subscribe.js` to set `welcome_sent_at` on new subscriptions
+
+### Validation
+- ✅ JavaScript syntax validated for `/api/newsletter-drip.js`
+- ✅ JavaScript syntax validated for `/api/subscribe.js`
+- ✅ All 59 e2e tests pass (Chromium)
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
+- ✅ Drip endpoint gracefully handles missing env vars
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| PROGRESS.md + BACKLOG.md maintenance | 0.15 |
+| Design drip campaign strategy and timing | 0.1 |
+| Build /api/newsletter-drip.js orchestration | 0.2 |
+| Write Drip 1 email template | 0.15 |
+| Write Drip 2 email template | 0.15 |
+| Update supabase-schema.sql and subscribe.js | 0.05 |
+| Run tests and validation | 0.1 |
+| Commit and deploy | 0.05 |
+| **Total** | **0.95** |
+
+### Key Insights
+1. **Email is the highest-ROI unblocked channel** — While we wait for distribution help, every subscriber who receives a drip email is a free retargeting opportunity. A 3-email sequence can increase activation rate by 20–40% compared to a single welcome email.
+
+2. **Educational-first drips build trust** — Drip 1 has zero product mention. By leading with genuine value (schema mistakes checklist), subscribers associate SchemaLens with expertise, not just another tool.
+
+3. **Graceful degradation protects the build** — The endpoint works even without `SUPABASE_SERVICE_ROLE_KEY` or `EMAIL_API_KEY`. It returns a clear notice explaining what's missing. This means the code is production-ready the moment the human adds the env var.
+
+4. **Supabase RLS is a double-edged sword** — The strict service_role-only SELECT policy on `newsletter_subscribers` is great for privacy but means drip campaigns (and admin dashboards) require the service_role key. Documenting this dependency explicitly prevents confusion.
+
+---
+
+*Day 32 complete. SchemaLens now has an automated 3-email drip campaign (welcome + 2 educational nurtures) ready to activate. 10 weeks remaining in the $100 AI Startup Race.*

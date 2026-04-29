@@ -25,8 +25,8 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Share in backend-focused Discords
 
 ### Product — Conversion & Retention (Unblocked)
-- [ ] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs + referral param tracking
-- [ ] **P1** Add email drip campaign for newsletter subscribers (3-email welcome sequence)
+- [x] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs + referral param tracking — ✅ Live
+- [x] **P1** Add email drip campaign for newsletter subscribers (3-email welcome sequence) — ✅ Built, awaits SUPABASE_SERVICE_ROLE_KEY + EMAIL_API_KEY env vars
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -78,6 +78,14 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **Conversion optimization:** Demo URLs (`?demo=dialect`), "See it in action" section on index.html, launch urgency banner on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge on pricing.html
 - **Honest marketing:** Removed fake "200+ developers" claim, replaced with real product metrics
 
+### Day 31 (April 29)
+- **Product-led distribution:** "Powered by SchemaLens" badge on shared diffs, share CTA banner, referral click tracking, improved shared diff banner with ref params.
+- **Content:** dev.to guest post draft — "How to Review Database Migrations Like a Senior Engineer".
+
+### Day 32 (April 29)
+- **Email automation:** 3-email drip campaign (`/api/newsletter-drip.js`) — welcome (exists) + Drip 1 (Day 1: schema mistakes) + Drip 2 (Day 3: schema review habit).
+- **Schema updates:** Added `welcome_sent_at`, `drip_1_sent_at`, `drip_2_sent_at` to `newsletter_subscribers`.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -86,6 +94,8 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
 - [x] **P1** Add column rename detection heuristic — ✅ Already implemented
 - [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
+- [x] **P1** Build referral/viral loop — ✅ Live
+- [x] **P1** Add email drip campaign — ✅ Built, awaits env vars
 - [x] **P2** Add Zapier integration guide — ✅ Live
 - [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
 - [x] **P2** Build SQL INSERT Statement Generator micro-tool — ✅ Live
@@ -108,4 +118,4 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 
 ---
 
-*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: referral/viral loop, email drip campaign, blog post #37, video walkthrough script, guest post drafts.*
+*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: blog post #37, video walkthrough script, guest post drafts, app.html headline/CTA optimization.*
