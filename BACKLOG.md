@@ -27,7 +27,8 @@
 - [x] **P1** Build referral/viral loop — ✅ Live
 - [x] **P1** Add email drip campaign — ✅ Built, awaits SUPABASE_SERVICE_ROLE_KEY + EMAIL_API_KEY env vars
 - [x] **P1** Build lead magnet landing page (Migration Safety Checklist) — ✅ Live
-- [ ] **P1** Build Drizzle ORM SEO landing page
+- [x] **P1** Build Prisma ORM SEO landing page — ✅ Live
+- [x] **P1** Build Drizzle ORM SEO landing page — ✅ Live
 - [ ] **P1** Optimize app.html headline/CTA with A/B variant
 - [ ] **P1** Build "Schema Mistake of the Week" interactive quiz
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
@@ -36,6 +37,7 @@
 ### Content — SEO Engine (Unblocked)
 - [x] **P1** Write blog post #37 about SQL JOINs — ✅ Live
 - [x] **P1** Build Prisma Schema Diff SEO landing page — ✅ Live
+- [x] **P1** Build Drizzle Schema Diff SEO landing page — ✅ Live
 - [ ] **P1** Create video walkthrough script for GitHub Actions setup
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P1** Write guest post for dev.to about schema migration best practices
@@ -78,9 +80,9 @@
 - **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking).
 - **Content:** dev.to guest post draft (migration checklist).
 
-### Days 32–34 (April 29)
+### Days 32–35 (April 29–30)
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2).
-- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma Schema Diff SEO landing page.
+- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma Schema Diff SEO landing page, Drizzle Schema Diff SEO landing page.
 
 ---
 
@@ -94,6 +96,7 @@
 - [x] **P1** Add email drip campaign — ✅ Built, awaits env vars
 - [x] **P1** Build lead magnet landing page — ✅ Live
 - [x] **P1** Build Prisma Schema Diff SEO page — ✅ Live
+- [x] **P1** Build Drizzle Schema Diff SEO page — ✅ Live
 - [x] **P2** Add Zapier integration guide — ✅ Live
 - [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
 - [x] **P2** Build SQL INSERT Statement Generator micro-tool — ✅ Live
@@ -116,4 +119,4 @@
 
 ---
 
-*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: Drizzle ORM landing page, app.html A/B headline test, interactive schema quiz.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: app.html A/B headline test, interactive schema quiz.*
