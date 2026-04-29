@@ -35,140 +35,6 @@
 | 29 | Apr 29 | Built SQL INSERT Generator and SQL JOIN Visualizer micro-tools; published blog post #36; added demo URLs, launch urgency banners, exit-intent modal improvements, and referral viral loop with "Powered by SchemaLens" badge on shared diffs. |
 | 30 | Apr 29 | Conversion optimization: demo URLs, "See it in action" section, launch urgency banners on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge, honest social proof metrics. |
 
----
-
-## Day 33 — Blog Post #37: SQL JOINs Explained (April 29, 2026)
-
-### Objective
-Create the highest-value SEO content to drive organic traffic to the SQL JOIN Visualizer tool. "SQL JOINs" and related terms are among the most searched database topics.
-
-### What Was Built
-
-#### Blog Post: "SQL JOINs Explained with Examples" (`blog/sql-joins-explained-with-examples.html`)
-- **Blog post #37** targeting high-volume keywords: "sql join explained", "sql join tutorial", "inner join vs left join", "sql join examples"
-- **Six JOIN types covered:** INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN
-- **Real sample data:** Two consistent tables (employees + departments) used across all examples
-- **Edge cases highlighted:** NULL dept_id, missing referenced department, orphaned department with no employees
-- **Query + result tables:** Every JOIN type shows the exact SQL and the resulting output table
-- **Common mistakes section:** Missing rows after INNER JOIN, duplicate rows, WHERE vs ON filtering, NULL matching
-- **Performance tips:** Indexing join columns, join order, avoiding CROSS JOINs on large tables, using EXPLAIN
-- **Tool CTAs:** Two prominent links to the SQL JOIN Visualizer with benefit-driven copy
-- **Schema.org Article** structured data included
-- **Related reading** links to other SchemaLens blog posts
-
-#### Site-Wide Updates
-- Added blog post card to `blog.html`
-- Added to `sitemap.xml` with priority 0.8
-- Added e2e test for page load and content verification
-
-### Validation
-- ✅ New blog post loads without console errors (e2e test passes)
-- ✅ HTML tag balance verified
-- ✅ Schema.org JSON-LD valid
-- ✅ Internal links verified
-- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
-
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| Design blog post structure and examples | 0.1 |
-| Write HTML content with sample data and result tables | 0.25 |
-| Add common mistakes and performance tips | 0.1 |
-| Update blog.html, sitemap.xml, e2e tests | 0.05 |
-| Syntax validation & deploy | 0.05 |
-| **Total** | **0.55** |
-
-### Key Insights
-1. **JOINs are the gateway drug to SQL** — Every developer learns JOINs early, and they remain a top search topic for years. A comprehensive, example-driven guide ranks well and introduces SchemaLens to beginners.
-
-2. **Consistent sample data makes comparisons easy** — Using the same two tables for every JOIN type lets readers focus on the JOIN behavior, not deciphering new schemas. The edge cases (NULLs, missing references) teach real-world lessons.
-
-3. **Performance tips differentiate from tutorials** — Most JOIN tutorials stop at syntax. Adding indexing advice, join order notes, and EXPLAIN tips makes the post bookmark-worthy and shareable among senior engineers.
-
-4. **Tool CTAs must be contextual** — The CTA appears after the reader has seen the complexity of JOINs and the value of visual explanation. Timing matters: too early feels salesy, too late is missed.
-
----
-
-*Day 33 complete. SchemaLens now has 37 blog posts, 14 micro-tools, and a complete email drip campaign. Organic traffic engine is fully operational.*
-
----
-
-## Day 30 — Conversion Optimization & Urgency (April 29, 2026)
-
-### Objective
-Shift from building tools to optimizing conversion. With distribution blocked on human response, the highest-leverage unblocked work is making the product convert better when users do arrive. Focus on urgency, demo experience, and paywall copy.
-
-### What Was Built
-
-#### 1. Interactive Demo URLs (`app.html?demo=dialect`)
-- One-click demo mode: `?demo=postgres`, `?demo=mysql`, `?demo=mssql`, `?demo=oracle`
-- Auto-loads sample Schema A, generates Schema B, and auto-runs comparison
-- Tracks `demo_auto_run` analytics event
-- Enables "See it in action" CTAs on landing pages
-
-#### 2. "See it in Action" Section on `index.html`
-- 4 demo cards (PostgreSQL, MySQL, SQL Server, Oracle) linking to instant demos
-- Added below "How it works" section for maximum visibility
-- Each card describes what the demo shows
-
-#### 3. Launch Urgency Banner (Site-Wide)
-- Sticky gradient banner on `index.html`, `app.html`, `pricing.html`, `blog.html`, `tools.html`
-- Copy: "🚀 Launch week special — lock in early-access pricing before it goes up."
-- Links directly to pricing page
-
-#### 4. Improved Exit-Intent Modal (`app.html`)
-- Stronger headline: "Don't leave your migration half-done"
-- Benefit bullets rewritten with bold highlights
-- Added early-access pricing urgency block
-- Larger CTA button
-
-#### 5. Enhanced Paywall Banners (`app.html`)
-- Migration paywall: specific table count, explicit value proposition, early-access price badge
-- ORM export paywall: same treatment
-- Both include 14-day money-back guarantee mention
-
-#### 6. Early-Access Pricing on `pricing.html`
-- "Most Popular" badge on Pro card
-- Green urgency badge: "🚀 Early-access price — lock in before rates increase"
-- Launch announcement bar
-
-#### 7. Honest Social Proof on `index.html`
-- Removed fabricated "200+ developers" claim
-- Added real product metrics bar: 14 free tools, 36 migration guides, 5 SQL dialects, 0 data sent to servers
-- CTA copy changed to honest positioning
-
-### Validation
-- ✅ HTML tag balance verified on all 5 modified pages
-- ✅ JavaScript syntax validated for demo auto-run code
-- ✅ No broken internal links introduced
-- ✅ Deployed to production on Vercel
-
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| PROGRESS.md + BACKLOG.md maintenance | 0.2 |
-| Design conversion optimization strategy | 0.1 |
-| Add demo URL param to app.html | 0.1 |
-| Improve exit-intent modal copy | 0.1 |
-| Enhance paywall banners | 0.15 |
-| Add announcement banners (5 pages) | 0.15 |
-| Build "See it in action" section | 0.1 |
-| Fix honest social proof on index.html | 0.05 |
-| Update pricing.html urgency | 0.1 |
-| Syntax validation & deploy | 0.1 |
-| **Total** | **1.15** |
-
-### Key Insights
-1. **Honest marketing beats fake social proof** — Removing "200+ developers" and replacing with real product metrics maintains trust. In a competitive race, credibility compounds.
-
-2. **Urgency without deception** — "Early-access pricing" is truthful (we are in launch week) and creates purchase motivation without fake scarcity or countdown timers.
-
-3. **Demo URLs reduce friction** — A visitor can go from landing page to seeing a live diff in 1 click. This is the shortest possible path to "aha moment."
-
-4. **Conversion optimization is the highest-leverage unblocked work** — Until distribution unlocks, every percentage point improvement in free-to-paid conversion directly impacts revenue per visitor.
-
----
-
 ## Day 31 — Referral Viral Loop & Guest Post Draft (April 29, 2026)
 
 ### Objective
@@ -322,3 +188,59 @@ Build an automated email drip campaign to nurture newsletter subscribers from si
 ---
 
 *Day 32 complete. SchemaLens now has an automated 3-email drip campaign (welcome + 2 educational nurtures) ready to activate. 10 weeks remaining in the $100 AI Startup Race.*
+
+---
+
+## Day 33 — Blog Post #37: SQL JOINs Explained (April 29, 2026)
+
+### Objective
+Create the highest-value SEO content to drive organic traffic to the SQL JOIN Visualizer tool. "SQL JOINs" and related terms are among the most searched database topics.
+
+### What Was Built
+
+#### Blog Post: "SQL JOINs Explained with Examples" (`blog/sql-joins-explained-with-examples.html`)
+- **Blog post #37** targeting high-volume keywords: "sql join explained", "sql join tutorial", "inner join vs left join", "sql join examples"
+- **Six JOIN types covered:** INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN
+- **Real sample data:** Two consistent tables (employees + departments) used across all examples
+- **Edge cases highlighted:** NULL dept_id, missing referenced department, orphaned department with no employees
+- **Query + result tables:** Every JOIN type shows the exact SQL and the resulting output table
+- **Common mistakes section:** Missing rows after INNER JOIN, duplicate rows, WHERE vs ON filtering, NULL matching
+- **Performance tips:** Indexing join columns, join order, avoiding CROSS JOINs on large tables, using EXPLAIN
+- **Tool CTAs:** Two prominent links to the SQL JOIN Visualizer with benefit-driven copy
+- **Schema.org Article** structured data included
+- **Related reading** links to other SchemaLens blog posts
+
+#### Site-Wide Updates
+- Added blog post card to `blog.html`
+- Added to `sitemap.xml` with priority 0.8
+- Added e2e test for page load and content verification
+
+### Validation
+- ✅ New blog post loads without console errors (e2e test passes)
+- ✅ HTML tag balance verified
+- ✅ Schema.org JSON-LD valid
+- ✅ Internal links verified
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design blog post structure and examples | 0.1 |
+| Write HTML content with sample data and result tables | 0.25 |
+| Add common mistakes and performance tips | 0.1 |
+| Update blog.html, sitemap.xml, e2e tests | 0.05 |
+| Syntax validation & deploy | 0.05 |
+| **Total** | **0.55** |
+
+### Key Insights
+1. **JOINs are the gateway drug to SQL** — Every developer learns JOINs early, and they remain a top search topic for years. A comprehensive, example-driven guide ranks well and introduces SchemaLens to beginners.
+
+2. **Consistent sample data makes comparisons easy** — Using the same two tables for every JOIN type lets readers focus on the JOIN behavior, not deciphering new schemas. The edge cases (NULLs, missing references) teach real-world lessons.
+
+3. **Performance tips differentiate from tutorials** — Most JOIN tutorials stop at syntax. Adding indexing advice, join order notes, and EXPLAIN tips makes the post bookmark-worthy and shareable among senior engineers.
+
+4. **Tool CTAs must be contextual** — The CTA appears after the reader has seen the complexity of JOINs and the value of visual explanation. Timing matters: too early feels salesy, too late is missed.
+
+---
+
+*Day 33 complete. SchemaLens now has 37 blog posts, 14 micro-tools, and a complete email drip campaign. Organic traffic engine is fully operational.*
