@@ -894,6 +894,50 @@
       text-decoration: underline;
       font-weight: 700;
     }
+    .powered-by-badge {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .powered-by-badge a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .powered-by-badge a:hover {
+      text-decoration: underline;
+    }
+    .powered-by-badge .tagline {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .share-cta-banner {
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .share-cta-banner span {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .share-cta-banner button {
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -1005,7 +1049,9 @@ CREATE TABLE users (
       <div class="results-panel active" id="panel-visual">
         <div class="summary-bar" id="summaryBar"></div>
         <div id="warningContainer"></div>
+        <div id="shareCtaBanner"></div>
         <div id="visualDiff"></div>
+        <div id="poweredByBadge"></div>
       </div>
 
       <div class="results-panel" id="panel-migration">
@@ -4984,6 +5030,13 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderPDF();
   renderORM();
 
+  // Show share CTA or powered-by badge based on context
+  if (isViewingSharedDiff()) {
+    renderPoweredByBadge();
+  } else {
+    renderShareCtaBanner();
+  }
+
   // Load comments if this diff is associated with a saved diff
   if (currentSavedDiffId) {
     loadComments(currentSavedDiffId);
@@ -5025,6 +5078,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('welcomeHint').classList.remove('hidden');
   currentSavedDiffId = null;
   diffCommentsCache = [];
+  clearShareUIs();
   history.replaceState(null, '', location.pathname);
 });
 
@@ -5537,10 +5591,10 @@ async function loadPublicDiff(publicId) {
 function showSharedBanner(name, source) {
   const isLicensed = checkLicense();
   const container = document.getElementById('errorContainer');
-  let actions = `<a href="app.html" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
-  actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html" style="color:var(--primary);">Calculate migration cost</a>`;
+  let actions = `<a href="index.html?ref=shared-diff" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
+  actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html?ref=shared-diff" style="color:var(--primary);">Calculate migration cost</a>`;
   if (!isLicensed) {
-    actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html" style="color:var(--primary);">Upgrade to Pro</a>`;
+    actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html?ref=shared-diff" style="color:var(--primary);">Upgrade to Pro</a>`;
   }
   container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.35);color:var(--text);">
     <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
@@ -5556,6 +5610,55 @@ function showSharedBanner(name, source) {
     </div>
     <button class="close" onclick="this.parentElement.remove()" style="color:var(--text-muted);">×</button>
   </div>`;
+  renderPoweredByBadge();
+}
+
+function isViewingSharedDiff() {
+  const params = new URLSearchParams(location.search);
+  return !!(params.get('share') || location.hash.match(/#diff=/));
+}
+
+function renderPoweredByBadge() {
+  const container = document.getElementById('poweredByBadge');
+  if (!container) return;
+  container.innerHTML = `
+    <div class="powered-by-badge">
+      <div>🔍 <a href="index.html?ref=shared-diff" onclick="trackRefClick('shared-diff')">Powered by SchemaLens</a></div>
+      <div class="tagline">Compare SQL schemas in your browser. Generate migrations in 5 dialects. No signup required.</div>
+    </div>`;
+}
+
+function renderShareCtaBanner() {
+  const container = document.getElementById('shareCtaBanner');
+  if (!container) return;
+  if (isViewingSharedDiff()) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = `
+    <div class="share-cta-banner">
+      <span>📤 <strong>Share this diff</strong> — Send a link to your team or paste it in a PR.</span>
+      <button class="btn btn-primary" onclick="shareDiff(); trackEvent('share_cta_clicked')">Copy shareable link</button>
+    </div>`;
+}
+
+function clearShareUIs() {
+  const poweredBy = document.getElementById('poweredByBadge');
+  const shareCta = document.getElementById('shareCtaBanner');
+  if (poweredBy) poweredBy.innerHTML = '';
+  if (shareCta) shareCta.innerHTML = '';
+}
+
+function trackRefClick(source) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('ref_click', { source });
+  }
+}
+
+function trackEvent(eventType) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track(eventType);
+  }
 }
 
 async function loadDiffIntoEditors(id) {
@@ -5577,6 +5680,7 @@ async function loadDiffIntoEditors(id) {
     updateStats();
     document.getElementById('results').classList.remove('active');
     document.getElementById('welcomeHint').classList.remove('hidden');
+    clearShareUIs();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
     showError('Failed to load diff: ' + err.message);

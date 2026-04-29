@@ -122,7 +122,10 @@ module.exports = async (req, res) => {
     'license_activate',
     'tool_used',
     'sample_loaded',
-    'breaking_changes_viewed'
+    'breaking_changes_viewed',
+    'ref_click',
+    'share_cta_clicked',
+    'demo_auto_run'
   ]);
 
   if (!allowedEvents.has(event_type)) {

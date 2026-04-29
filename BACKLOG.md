@@ -25,19 +25,16 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Share in backend-focused Discords
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Optimize app.html Pro upsell timing and copy (exit-intent, banner, results CTA) — ✅ Done (Day 30)
-- [x] **P1** Add interactive demo URLs (`?demo=dialect`) — ✅ Done (Day 30)
-- [x] **P1** Add launch urgency banner site-wide — ✅ Done (Day 30)
-- [ ] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs
+- [ ] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs + referral param tracking
 - [ ] **P1** Add email drip campaign for newsletter subscribers (3-email welcome sequence)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [ ] **P1** Create video walkthrough script for GitHub Actions setup
-- [ ] **P1** Write guest post for dev.to about schema migration best practices
-- [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P1** Write blog post #37 about SQL JOINs (link to JOIN Visualizer)
+- [ ] **P1** Create video walkthrough script for GitHub Actions setup
+- [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
+- [ ] **P1** Write guest post for dev.to about schema migration best practices
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
