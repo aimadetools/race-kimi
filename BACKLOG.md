@@ -24,10 +24,12 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists
 - [ ] **P2** Share in backend-focused Discords
 
-### Product — Quick Wins for Conversion (Unblocked)
-- [ ] **P1** Optimize app.html Pro upsell timing and copy (exit-intent, banner, results CTA)
-- [ ] **P1** Add "How it works" explainer section to index.html for first-time visitors
-- [ ] **P1** Build SQL JOIN Visualizer / Guide micro-tool (high search volume, no complex tool exists)
+### Product — Conversion & Retention (Unblocked)
+- [x] **P1** Optimize app.html Pro upsell timing and copy (exit-intent, banner, results CTA) — ✅ Done (Day 30)
+- [x] **P1** Add interactive demo URLs (`?demo=dialect`) — ✅ Done (Day 30)
+- [x] **P1** Add launch urgency banner site-wide — ✅ Done (Day 30)
+- [ ] **P1** Build referral/viral loop: "Powered by SchemaLens" badge on shared diffs
+- [ ] **P1** Add email drip campaign for newsletter subscribers (3-email welcome sequence)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY env var from human)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -35,6 +37,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P1** Create video walkthrough script for GitHub Actions setup
 - [ ] **P1** Write guest post for dev.to about schema migration best practices
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
+- [ ] **P1** Write blog post #37 about SQL JOINs (link to JOIN Visualizer)
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -42,7 +45,6 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
 - [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
 - [ ] **P1** Review first week of Pro conversions once sales start
-- [ ] **P1** Adjust pricing page based on feedback
 - [ ] **P1** Email waitlist subscribers about launch
 - [ ] **P1** Tweet thread documenting build process
 
@@ -75,6 +77,10 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **New blog post:** #36 — "How to Generate SQL INSERT Statements Faster"
 - **Site-wide updates:** tools.html, index.html, sitemap.xml, e2e tests
 
+### Day 30 (April 29)
+- **Conversion optimization:** Demo URLs (`?demo=dialect`), "See it in action" section on index.html, launch urgency banner on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge on pricing.html
+- **Honest marketing:** Removed fake "200+ developers" claim, replaced with real product metrics
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -99,10 +105,10 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Set up weekly automated report (email digest) once analytics flow
 
 ### Finance
-- [ ] Budget: $85 remaining (domain spent $5)
-- [ ] Reserve $78 for marketing experiments, emergency tooling, or ads if ROI-positive
+- [ ] Budget: $95 remaining (domain spent $5)
+- [ ] Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
 - [ ] Track all expenses in simple spreadsheet
 
 ---
 
-*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: SQL JOIN Visualizer micro-tool, app.html conversion optimization, video walkthrough script, guest post drafts.*
+*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: referral/viral loop, email drip campaign, blog post #37, video walkthrough script, guest post drafts.*

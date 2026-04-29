@@ -152,9 +152,41 @@
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
     }
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .announcement-bar a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+    .pricing-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
+
+  <div class="announcement-bar">
+    🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
+  </div>
 
   <nav class="nav">
     <div class="container nav-inner">
@@ -210,6 +242,7 @@
           <p style="color: var(--text-muted); font-size: 0.9rem;">For professional developers</p>
           <div class="price">$12<span>/mo</span></div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">or $99/year (2 months free)</p>
+          <p style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--success); font-weight: 600; margin-bottom: 16px;">🚀 Early-access price — lock in before rates increase</p>
           <ul>
             <li>Unlimited tables per diff</li>
             <li>Full migration generation</li>

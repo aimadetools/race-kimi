@@ -104,8 +104,26 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
   <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .announcement-bar a { color: #fff; text-decoration: underline; font-weight: 700; }
+  </style>
 </head>
 <body>
+
+  <div class="announcement-bar">
+    🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
+  </div>
 
   <nav class="nav">
     <div class="container nav-inner">

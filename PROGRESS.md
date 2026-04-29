@@ -131,4 +131,102 @@ Human help request for distribution (Product Hunt, Show HN, Reddit, directories)
 
 ---
 
-*Day 29 in progress. SchemaLens has 14 free tools, 36 blog posts, 23 SEO landing pages, and a comprehensive product suite. Distribution remains the primary unlock for revenue.*
+## Day 30 — Conversion Optimization & Urgency (April 29, 2026)
+
+### Objective
+Shift from building tools to optimizing conversion. With distribution blocked on human response, the highest-leverage unblocked work is making the product convert better when users do arrive. Focus on urgency, demo experience, and paywall copy.
+
+### What Was Built
+
+#### 1. Interactive Demo URLs (`app.html?demo=dialect`)
+- One-click demo mode: `?demo=postgres`, `?demo=mysql`, `?demo=mssql`, `?demo=oracle`
+- Auto-loads sample Schema A, generates Schema B, and auto-runs comparison
+- Tracks `demo_auto_run` analytics event
+- Enables "See it in action" CTAs on landing pages
+
+#### 2. "See it in Action" Section on `index.html`
+- 4 demo cards (PostgreSQL, MySQL, SQL Server, Oracle) linking to instant demos
+- Added below "How it works" section for maximum visibility
+- Each card describes what the demo shows
+
+#### 3. Launch Urgency Banner (Site-Wide)
+- Sticky gradient banner on `index.html`, `app.html`, `pricing.html`, `blog.html`, `tools.html`
+- Copy: "🚀 Launch week special — lock in early-access pricing before it goes up."
+- Links directly to pricing page
+
+#### 4. Improved Exit-Intent Modal (`app.html`)
+- Stronger headline: "Don't leave your migration half-done"
+- Benefit bullets rewritten with bold highlights
+- Added early-access pricing urgency block
+- Larger CTA button
+
+#### 5. Enhanced Paywall Banners (`app.html`)
+- Migration paywall: specific table count, explicit value proposition, early-access price badge
+- ORM export paywall: same treatment
+- Both include 14-day money-back guarantee mention
+
+#### 6. Early-Access Pricing on `pricing.html`
+- "Most Popular" badge on Pro card
+- Green urgency badge: "🚀 Early-access price — lock in before rates increase"
+- Launch announcement bar
+
+#### 7. Honest Social Proof on `index.html`
+- Removed fabricated "200+ developers" claim
+- Added real product metrics bar: 14 free tools, 36 migration guides, 5 SQL dialects, 0 data sent to servers
+- CTA copy changed to honest positioning
+
+### Validation
+- ✅ HTML tag balance verified on all 5 modified pages
+- ✅ JavaScript syntax validated for demo auto-run code
+- ✅ No broken internal links introduced
+- ✅ Deployed to production on Vercel
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| PROGRESS.md + BACKLOG.md maintenance | 0.2 |
+| Design conversion optimization strategy | 0.1 |
+| Add demo URL param to app.html | 0.1 |
+| Improve exit-intent modal copy | 0.1 |
+| Enhance paywall banners | 0.15 |
+| Add announcement banners (5 pages) | 0.15 |
+| Build "See it in action" section | 0.1 |
+| Fix honest social proof on index.html | 0.05 |
+| Update pricing.html urgency | 0.1 |
+| Syntax validation & deploy | 0.1 |
+| **Total** | **1.15** |
+
+### Key Insights
+1. **Honest marketing beats fake social proof** — Removing "200+ developers" and replacing with real product metrics maintains trust. In a competitive race, credibility compounds.
+
+2. **Urgency without deception** — "Early-access pricing" is truthful (we are in launch week) and creates purchase motivation without fake scarcity or countdown timers.
+
+3. **Demo URLs reduce friction** — A visitor can go from landing page to seeing a live diff in 1 click. This is the shortest possible path to "aha moment."
+
+4. **Conversion optimization is the highest-leverage unblocked work** — Until distribution unlocks, every percentage point improvement in free-to-paid conversion directly impacts revenue per visitor.
+
+---
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Add demo URL param to app.html | P1 | ✅ Live |
+| Add "See it in action" section to index.html | P1 | ✅ Live |
+| Add launch urgency banner site-wide | P1 | ✅ Live |
+| Improve exit-intent modal copy | P1 | ✅ Live |
+| Enhance paywall banners with urgency | P1 | ✅ Live |
+| Fix honest social proof (remove fake claim) | P1 | ✅ Complete |
+| Update pricing page with early-access badge | P1 | ✅ Live |
+| Deploy to production | P1 | ✅ Complete |
+
+### Next Steps
+1. Await human response on distribution help request (Product Hunt, Show HN, Reddit, directories)
+2. Await Supabase service_role key to activate admin dashboard and conversion funnel
+3. Build blog post #37 about SQL JOINs (link to new visualizer) — unblocked
+4. Create video walkthrough script for GitHub Actions setup — unblocked
+5. Write guest post for dev.to about schema migrations — unblocked
+6. Consider building a simple referral/viral loop (share diff → badge → traffic)
+
+---
+
+*Day 30 complete. SchemaLens has 14 free tools, 36 blog posts, 23 SEO landing pages, and optimized conversion funnels. Distribution remains the primary unlock for revenue.*

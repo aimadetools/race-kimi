@@ -81,9 +81,63 @@
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
     }
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .announcement-bar a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+    .demo-section {
+      background: var(--surface);
+      padding: 80px 0;
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .demo-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .demo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .demo-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .demo-card p {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .demo-card .btn {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
+
+  <div class="announcement-bar">
+    🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
+  </div>
 
   <nav class="nav">
     <div class="container nav-inner">
@@ -158,6 +212,29 @@
     </div>
   </header>
 
+  <section class="section" style="padding: 32px 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center;">
+        <div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">14</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
+        </div>
+        <div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">36</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Migration guides</div>
+        </div>
+        <div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">5</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">SQL dialects</div>
+        </div>
+        <div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">0</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Data sent to servers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section reveal">
     <div class="container">
       <h2 class="section-title">Why developers love SchemaLens</h2>
@@ -213,6 +290,35 @@
         <div class="step">
           <h3>Review & Export</h3>
           <p>See every change highlighted. Generate migration SQL in your dialect. Export, share, or copy into your migration tool.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section demo-section reveal">
+    <div class="container">
+      <h2 class="section-title">See it in action</h2>
+      <p class="section-subtitle">Watch SchemaLens diff a real schema and generate the migration script — no setup required.</p>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h4>🐘 PostgreSQL Demo</h4>
+          <p>See a 3-table blog schema evolve with new columns, types, and tables.</p>
+          <a href="app.html?demo=postgres" class="btn btn-primary">Run PostgreSQL Demo</a>
+        </div>
+        <div class="demo-card">
+          <h4>🐬 MySQL Demo</h4>
+          <p>Watch auto-increment keys, foreign keys, and index changes get detected.</p>
+          <a href="app.html?demo=mysql" class="btn btn-primary">Run MySQL Demo</a>
+        </div>
+        <div class="demo-card">
+          <h4>🪟 SQL Server Demo</h4>
+          <p>Compare NVARCHAR schemas with IDENTITY columns and computed fields.</p>
+          <a href="app.html?demo=mssql" class="btn btn-primary">Run SQL Server Demo</a>
+        </div>
+        <div class="demo-card">
+          <h4>🗄️ Oracle Demo</h4>
+          <p>Detect VARCHAR2 changes, NUMBER precision shifts, and new constraints.</p>
+          <a href="app.html?demo=oracle" class="btn btn-primary">Run Oracle Demo</a>
         </div>
       </div>
     </div>
@@ -367,7 +473,7 @@
   <section class="cta-section reveal" id="early-access">
     <div class="container">
       <h2>Stop writing migrations by hand.</h2>
-      <p>Join 200+ developers who use SchemaLens to catch schema drift before it hits production.</p>
+      <p>Catch schema drift before it hits production. Built for developers who ship with confidence.</p>
       <a href="app.html" class="btn btn-primary btn-lg">Try SchemaLens Free</a>
       <p class="hero-note mt-16">Built for the $100 AI Startup Race. Follow our public journey.</p>
     </div>
