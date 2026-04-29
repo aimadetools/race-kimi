@@ -29,7 +29,7 @@
 - [x] **P1** Build lead magnet landing page (Migration Safety Checklist) — ✅ Live
 - [x] **P1** Build Prisma ORM SEO landing page — ✅ Live
 - [x] **P1** Build Drizzle ORM SEO landing page — ✅ Live
-- [ ] **P1** Optimize app.html headline/CTA with A/B variant
+- [x] **P1** Optimize app.html headline/CTA with A/B variant — ✅ Live
 - [ ] **P1** Build "Schema Mistake of the Week" interactive quiz
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -80,9 +80,10 @@
 - **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking).
 - **Content:** dev.to guest post draft (migration checklist).
 
-### Days 32–35 (April 29–30)
+### Days 32–36 (April 29–30)
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2).
 - **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma Schema Diff SEO landing page, Drizzle Schema Diff SEO landing page.
+- **Conversion:** App headline A/B test (benefit-driven Variant B vs control).
 
 ---
 
@@ -119,4 +120,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: app.html A/B headline test, interactive schema quiz.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: interactive schema quiz, backlink outreach, dev.to guest post.*

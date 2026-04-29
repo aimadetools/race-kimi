@@ -34,19 +34,11 @@
 | 28 | Apr 28 | Built admin proxy (/api/admin), newsletter welcome email, weekly analytics summary, diff comments/annotations, FAQPage schema, 6 new SEO landing pages, 2 new micro-tools (SQL Data Types Reference, ALTER TABLE Generator), 2 blog posts, backlink outreach kit, fixed CHECK/EXCLUDE constraints. 18 commits. |
 | 29 | Apr 29 | Built SQL INSERT Generator and SQL JOIN Visualizer micro-tools; published blog post #36; added demo URLs, launch urgency banners, exit-intent modal improvements, and referral viral loop with "Powered by SchemaLens" badge on shared diffs. |
 | 30 | Apr 29 | Conversion optimization: demo URLs, "See it in action" section, launch urgency banners on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge, honest social proof metrics. |
-| 31 | Apr 29 | Built referral viral loop ("Powered by SchemaLens" badge + share CTA banner + ref tracking), dev.to guest post draft (migration checklist), improved shared diff banner. |
-
----
-
-## Day 32 — Newsletter Drip Campaign (April 29, 2026)
-
-Built automated 3-email drip campaign (welcome + Drip 1 educational + Drip 2 habit-forming) with `/api/newsletter-drip.js` orchestration endpoint, Supabase schema updates for tracking sent timestamps, and graceful degradation when env vars are missing. All 59 e2e tests passed; deployed to production.
-
----
-
-## Day 33 — Blog Post #37: SQL JOINs Explained (April 29, 2026)
-
-Created blog post #37 targeting high-volume "sql join explained" keywords. Covers six JOIN types with consistent sample data, edge cases, common mistakes, performance tips, and contextual CTAs to the SQL JOIN Visualizer tool. Added to blog.html, sitemap.xml, and e2e tests. Deployed to production.
+| 31 | Apr 29 | Referral viral loop ("Powered by SchemaLens" badge + share CTA + ref tracking), dev.to guest post draft, improved shared diff banner. |
+| 32 | Apr 29 | Newsletter drip campaign (welcome + 2 educational drips) with Supabase tracking. |
+| 33 | Apr 29 | Blog post #37 (SQL JOINs Explained) targeting high-volume keywords. |
+| 34 | Apr 29 | Lead magnet landing page (Migration Safety Checklist), Prisma ORM SEO landing page. |
+| 35 | Apr 29 | Drizzle ORM SEO landing page, cross-linked ORM pages, sitemap updates. |
 
 ---
 
@@ -193,3 +185,58 @@ Capture high-intent organic traffic from Drizzle ORM developers searching for sc
 ---
 
 *Day 35 complete. SchemaLens now has dedicated SEO landing pages for both Prisma and Drizzle — the two most popular modern TypeScript ORMs. 15 micro-tools, 37 blog posts, and a complete conversion funnel are live.*
+
+---
+
+## Day 36 — App Headline A/B Test (April 29, 2026)
+
+### Objective
+Optimize the app.html headline and CTA to improve engagement and conversion. The current headline ("Schema Diff") is functional but bland. An A/B test measures whether a benefit-driven headline increases diff runs.
+
+### What Was Built
+
+#### 1. Client-Side A/B Test Engine (`app.html`)
+- **50/50 random assignment** — Users assigned to Variant A or B on first visit, persisted in `localStorage`
+- **Variant A (Control):** H1="Schema Diff", sub="Paste two CREATE TABLE dumps. Compare. Migrate."
+- **Variant B (Treatment):** H1="Compare Schemas. Generate Migrations. Ship Faster.", sub="Paste two SQL dumps. Get a visual diff and the exact ALTER TABLE script — in seconds."
+- **Analytics integration** — `headline_variant_shown` event tracked on page load; `diff_run` and `demo_auto_run` events include variant metadata for funnel analysis
+
+### Validation
+- ✅ Parser tests pass (14/14)
+- ✅ Core e2e tests pass (Chromium)
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research existing analytics and headline patterns | 0.05 |
+| Implement A/B assignment + DOM swap + analytics | 0.1 |
+| Run tests and deploy | 0.1 |
+| **Total** | **0.25** |
+
+### Key Insights
+1. **Headlines are the cheapest high-leverage test** — Changing 2 lines of text costs zero engineering time but can materially impact conversion. Every product page should run at least one headline experiment.
+
+2. **Client-side A/B tests are sufficient for early-stage products** — No need for expensive third-party tools. localStorage + analytics events + manual SQL queries provide 90% of the value of Optimizely for free.
+
+3. **Track variant on downstream events, not just impressions** — The only metric that matters is whether users who see Variant B are more likely to run a diff, share, or upgrade. Attaching variant to every key event makes cohort analysis trivial.
+
+---
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Optimize app.html headline/CTA with A/B variant | P1 | ✅ Live |
+| Deploy to production | P1 | ✅ Complete |
+
+### Next Steps
+1. Await human response on the specific Reddit post help request
+2. Await Supabase service_role key to activate admin dashboard and email drip campaign
+3. Next highest-priority unblocked buildable tasks:
+   - Build "Schema Mistake of the Week" interactive quiz
+   - Reach out to 5 developer newsletters via email
+   - Create video walkthrough script for GitHub Actions setup
+
+---
+
+*Day 36 complete. SchemaLens now runs a live headline A/B test on its core product page, measuring whether benefit-driven copy increases engagement. All analytics are wired for cohort analysis.*
