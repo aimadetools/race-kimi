@@ -31,7 +31,7 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [ ] **P1** Write blog post #37 about SQL JOINs (link to JOIN Visualizer)
+- [x] **P1** Write blog post #37 about SQL JOINs (link to JOIN Visualizer) — ✅ Live
 - [ ] **P1** Create video walkthrough script for GitHub Actions setup
 - [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
 - [ ] **P1** Write guest post for dev.to about schema migration best practices
@@ -86,6 +86,9 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 - **Email automation:** 3-email drip campaign (`/api/newsletter-drip.js`) — welcome (exists) + Drip 1 (Day 1: schema mistakes) + Drip 2 (Day 3: schema review habit).
 - **Schema updates:** Added `welcome_sent_at`, `drip_1_sent_at`, `drip_2_sent_at` to `newsletter_subscribers`.
 
+### Day 33 (April 29)
+- **Content:** Blog post #37 — "SQL JOINs Explained with Examples" with interactive sample data, result tables, and links to JOIN Visualizer.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -118,4 +121,4 @@ All materials are pre-written in `marketing/`. **Urgent help request** at `help-
 
 ---
 
-*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: blog post #37, video walkthrough script, guest post drafts, app.html headline/CTA optimization.*
+*Backlog reprioritized April 29, 2026. Highest-priority unblocked buildable tasks: video walkthrough script for GitHub Actions, guest post drafts, app.html headline/CTA optimization.*

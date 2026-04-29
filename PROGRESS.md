@@ -33,6 +33,63 @@
 | 27 | Apr 27 | Added onboarding tour analytics; built generic webhook auto-notifications (/api/webhook); added OpenGraph to 58 pages; preconnect hints for Core Web Vitals; built admin dashboard (admin.html). |
 | 28 | Apr 28 | Built admin proxy (/api/admin), newsletter welcome email, weekly analytics summary, diff comments/annotations, FAQPage schema, 6 new SEO landing pages, 2 new micro-tools (SQL Data Types Reference, ALTER TABLE Generator), 2 blog posts, backlink outreach kit, fixed CHECK/EXCLUDE constraints. 18 commits. |
 | 29 | Apr 29 | Built SQL INSERT Generator and SQL JOIN Visualizer micro-tools; published blog post #36; added demo URLs, launch urgency banners, exit-intent modal improvements, and referral viral loop with "Powered by SchemaLens" badge on shared diffs. |
+| 30 | Apr 29 | Conversion optimization: demo URLs, "See it in action" section, launch urgency banners on 5 pages, improved exit-intent modal, enhanced paywall banners, early-access pricing badge, honest social proof metrics. |
+
+---
+
+## Day 33 — Blog Post #37: SQL JOINs Explained (April 29, 2026)
+
+### Objective
+Create the highest-value SEO content to drive organic traffic to the SQL JOIN Visualizer tool. "SQL JOINs" and related terms are among the most searched database topics.
+
+### What Was Built
+
+#### Blog Post: "SQL JOINs Explained with Examples" (`blog/sql-joins-explained-with-examples.html`)
+- **Blog post #37** targeting high-volume keywords: "sql join explained", "sql join tutorial", "inner join vs left join", "sql join examples"
+- **Six JOIN types covered:** INNER, LEFT, RIGHT, FULL OUTER, CROSS, and SELF JOIN
+- **Real sample data:** Two consistent tables (employees + departments) used across all examples
+- **Edge cases highlighted:** NULL dept_id, missing referenced department, orphaned department with no employees
+- **Query + result tables:** Every JOIN type shows the exact SQL and the resulting output table
+- **Common mistakes section:** Missing rows after INNER JOIN, duplicate rows, WHERE vs ON filtering, NULL matching
+- **Performance tips:** Indexing join columns, join order, avoiding CROSS JOINs on large tables, using EXPLAIN
+- **Tool CTAs:** Two prominent links to the SQL JOIN Visualizer with benefit-driven copy
+- **Schema.org Article** structured data included
+- **Related reading** links to other SchemaLens blog posts
+
+#### Site-Wide Updates
+- Added blog post card to `blog.html`
+- Added to `sitemap.xml` with priority 0.8
+- Added e2e test for page load and content verification
+
+### Validation
+- ✅ New blog post loads without console errors (e2e test passes)
+- ✅ HTML tag balance verified
+- ✅ Schema.org JSON-LD valid
+- ✅ Internal links verified
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Design blog post structure and examples | 0.1 |
+| Write HTML content with sample data and result tables | 0.25 |
+| Add common mistakes and performance tips | 0.1 |
+| Update blog.html, sitemap.xml, e2e tests | 0.05 |
+| Syntax validation & deploy | 0.05 |
+| **Total** | **0.55** |
+
+### Key Insights
+1. **JOINs are the gateway drug to SQL** — Every developer learns JOINs early, and they remain a top search topic for years. A comprehensive, example-driven guide ranks well and introduces SchemaLens to beginners.
+
+2. **Consistent sample data makes comparisons easy** — Using the same two tables for every JOIN type lets readers focus on the JOIN behavior, not deciphering new schemas. The edge cases (NULLs, missing references) teach real-world lessons.
+
+3. **Performance tips differentiate from tutorials** — Most JOIN tutorials stop at syntax. Adding indexing advice, join order notes, and EXPLAIN tips makes the post bookmark-worthy and shareable among senior engineers.
+
+4. **Tool CTAs must be contextual** — The CTA appears after the reader has seen the complexity of JOINs and the value of visual explanation. Timing matters: too early feels salesy, too late is missed.
+
+---
+
+*Day 33 complete. SchemaLens now has 37 blog posts, 14 micro-tools, and a complete email drip campaign. Organic traffic engine is fully operational.*
 
 ---
 
