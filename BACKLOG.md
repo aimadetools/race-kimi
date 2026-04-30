@@ -24,21 +24,21 @@
 
 ### Product — Conversion & Retention (Unblocked)
 - [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages, ORM demo samples, how-it-works.html, CLI promo, FAQ.
-- [ ] **P1** Address Reddit trust/positioning feedback: "when to use" section on index.html, stronger trust signals
+- [x] **P1** Address Reddit trust/positioning feedback: "when to use" section on index.html, stronger trust signals ✅ Done April 30.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Content engine complete — ✅ 41 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
+- [x] **P1** Content engine complete — ✅ 42 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
 - [x] **P1** Blog post #41 — "10 Database Schema Changes That Will Break Production" ✅ published April 30.
-- [ ] **P2** Blog post #42 — target "database schema drift detection" or "sql schema review" keywords
+- [x] **P2** Blog post #42 — "How to Review a SQL Schema Change in 5 Minutes" ✅ published April 30.
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
-- [ ] **P1** Set up simple CRM for outreach tracking (leads, newsletters, submissions)
-- [ ] **P1** Email waitlist subscribers about launch
+- [x] **P1** Set up simple CRM for outreach tracking (leads, newsletters, submissions) ✅ Done April 30.
+- [x] **P1** Email waitlist subscribers about launch — broadcast endpoint built (`/api/newsletter-launch.js`) ✅ Done April 30.
 - [ ] **P1** Review first week of Pro conversions once sales start
 
 ---
@@ -79,6 +79,12 @@
 - **Chrome extension MVP:** Content script injecting "Open in SchemaLens" button on GitHub `.sql` files, auto-detects dialect, opens app with pre-loaded schema.
 - **Content:** Blog posts #40–41 (migration checklist, 10 breaking schema changes).
 
+### Days 46–47 (April 30)
+- **Trust & positioning fix:** "When SchemaLens shines" use-case section, trust bar (client-side + CLI + transparency), FAQ addressing "I already have migrations. Why do I need SchemaLens?"
+- **Business ops:** Built localStorage-backed Leads & Outreach CRM in admin.html with seed defaults, status tracking, CSV export.
+- **Email infrastructure:** Built `/api/newsletter-launch.js` broadcast endpoint with dry-run mode, Supabase tracking, Resend integration. Added launch controls to admin dashboard.
+- **Content:** Blog post #42 (5-minute SQL schema review workflow). Updated sitemap.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -104,4 +110,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Newsletter outreach execution, tweet thread, SaaS directory submissions (BetaList, DevHunt), YouTube/short-form video content.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: YouTube/short-form video content, partner outreach (CI/CD newsletters), BetaList/DevHunt self-submission, Stack Overflow answer drafts.*
