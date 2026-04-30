@@ -337,6 +337,20 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🤝 Leads & Outreach</h3>
+          <span class="admin-badge" id="badgeLeads">0</span>
+        </div>
+        <div class="admin-section-body" id="leadsBody">
+          <div class="admin-empty">Loading leads…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshLeads()">Refresh</button>
+          <button class="primary" onclick="exportLeads()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>📈 Recent Analytics Events</h3>
           <span class="admin-badge" id="badgeAnalytics">0</span>
         </div>
@@ -697,6 +711,155 @@
       }
     }
 
+    // Leads & Outreach CRM (localStorage-backed)
+    const LEADS_KEY = 'schemalens_leads';
+    const LEAD_STATUSES = ['new', 'contacted', 'responded', 'converted', 'declined'];
+
+    function getLeads() {
+      try { return JSON.parse(localStorage.getItem(LEADS_KEY) || '[]'); } catch { return []; }
+    }
+    function saveLeads(leads) {
+      localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
+    }
+
+    function renderLeadForm() {
+      return `
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg);">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:8px;">
+            <input type="text" id="leadName" placeholder="Name / Publication" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+            <input type="email" id="leadEmail" placeholder="Email (optional)" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+            <select id="leadType" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+              <option value="newsletter">Newsletter Author</option>
+              <option value="directory">SaaS Directory</option>
+              <option value="partner">Integration Partner</option>
+              <option value="influencer">Dev Influencer</option>
+              <option value="customer">Potential Customer</option>
+              <option value="other">Other</option>
+            </select>
+            <select id="leadStatus" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="responded">Responded</option>
+              <option value="converted">Converted</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+          <textarea id="leadNotes" placeholder="Notes — URL, message sent, response, etc." rows="2" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;resize:vertical;"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="primary" onclick="addLead()" style="padding:6px 14px;font-size:0.85rem;border-radius:6px;border:none;background:var(--primary);color:#fff;cursor:pointer;">Add Lead</button>
+            <button onclick="seedLeads()" style="padding:6px 14px;font-size:0.85rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;">Seed Defaults</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function refreshLeads() {
+      const body = document.getElementById('leadsBody');
+      const leads = getLeads();
+      document.getElementById('statLeads')?.textContent || document.getElementById('statPending');
+      // Add leads stat if not present
+      const statEl = document.getElementById('statLeads');
+      if (!statEl) {
+        const statsGrid = document.getElementById('adminStats');
+        if (statsGrid) {
+          const div = document.createElement('div');
+          div.className = 'admin-stat';
+          div.innerHTML = `<div class="value" id="statLeads">0</div><div class="label">Leads</div>`;
+          statsGrid.appendChild(div);
+        }
+      }
+      document.getElementById('statLeads').textContent = leads.length;
+      document.getElementById('badgeLeads').textContent = leads.length;
+
+      const statusCounts = {};
+      for (const s of LEAD_STATUSES) statusCounts[s] = 0;
+      for (const l of leads) statusCounts[l.status] = (statusCounts[l.status] || 0) + 1;
+
+      const statusBadges = LEAD_STATUSES.map(s =>
+        `<span style="font-size:0.75rem;padding:2px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--border);margin-right:4px;">${s}: ${statusCounts[s]}</span>`
+      ).join('');
+
+      if (!leads.length) {
+        body.innerHTML = renderLeadForm() + `<div class="admin-empty">No leads yet. Add your first outreach target above, or click "Seed Defaults" to populate with known opportunities.</div>`;
+        return;
+      }
+
+      const rows = leads.map((l, idx) => `
+        <tr>
+          <td>${formatDate(l.created_at)}</td>
+          <td><strong>${l.name}</strong></td>
+          <td>${l.email || '—'}</td>
+          <td><span class="admin-badge ${l.type === 'newsletter' ? 'success' : l.type === 'customer' ? 'warning' : ''}">${l.type}</span></td>
+          <td><span class="admin-badge ${l.status === 'converted' ? 'success' : l.status === 'declined' ? 'danger' : l.status === 'responded' ? 'warning' : ''}">${l.status}</span></td>
+          <td><pre>${l.notes || ''}</pre></td>
+          <td><button onclick="deleteLead(${idx})" style="padding:4px 8px;font-size:0.75rem;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--danger);cursor:pointer;">Delete</button></td>
+        </tr>
+      `).join('');
+
+      body.innerHTML = renderLeadForm() + `
+        <div style="padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);">${statusBadges}</div>
+        <table class="admin-table">
+          <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Type</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    function addLead() {
+      const name = document.getElementById('leadName').value.trim();
+      const email = document.getElementById('leadEmail').value.trim();
+      const type = document.getElementById('leadType').value;
+      const status = document.getElementById('leadStatus').value;
+      const notes = document.getElementById('leadNotes').value.trim();
+      if (!name) { alert('Please enter a name.'); return; }
+      const leads = getLeads();
+      leads.unshift({ name, email, type, status, notes, created_at: new Date().toISOString() });
+      saveLeads(leads);
+      refreshLeads();
+    }
+
+    function deleteLead(index) {
+      if (!confirm('Delete this lead?')) return;
+      const leads = getLeads();
+      leads.splice(index, 1);
+      saveLeads(leads);
+      refreshLeads();
+    }
+
+    function seedLeads() {
+      const defaults = [
+        { name: 'Pointer.io Newsletter', email: '', type: 'newsletter', status: 'new', notes: 'Weekly newsletter for developers. Reach out with API integration angle.' },
+        { name: 'React Status Newsletter', email: '', type: 'newsletter', status: 'new', notes: 'Frontend-focused but covers full-stack tools. Mention Prisma/Drizzle integration.' },
+        { name: 'Node Weekly', email: '', type: 'newsletter', status: 'new', notes: 'Node.js audience. Highlight CLI tool npx schemalens-cli.' },
+        { name: 'BetaList', email: '', type: 'directory', status: 'new', notes: 'Submit at betalist.com/submit. Use saas-directories.md content.' },
+        { name: 'DevHunt', email: '', type: 'directory', status: 'new', notes: 'Submit at devhunt.org. Developer tool discovery platform.' },
+        { name: 'Product Hunt', email: '', type: 'directory', status: 'contacted', notes: 'Launch kit ready. Gallery images and demo video generated. Needs human to post.' },
+        { name: 'AlternativeTo', email: '', type: 'directory', status: 'new', notes: 'Site was down during last attempt. Try alternativeto.net/software/add/' },
+        { name: 'ByteByteGo (YouTube/blog)', email: '', type: 'influencer', status: 'new', notes: 'System design content. Database schema changes fit their audience.' },
+        { name: 'Neon Database (partner)', email: '', type: 'partner', status: 'new', notes: 'PostgreSQL hosting. Potential integration: schema diff for Neon branches.' },
+        { name: 'Supabase (partner)', email: '', type: 'partner', status: 'new', notes: 'Already using Supabase for auth. Could co-market schema diff for Supabase projects.' },
+      ];
+      const leads = getLeads();
+      const existingNames = new Set(leads.map(l => l.name.toLowerCase()));
+      let added = 0;
+      for (const d of defaults) {
+        if (!existingNames.has(d.name.toLowerCase())) {
+          leads.unshift({ ...d, created_at: new Date().toISOString() });
+          added++;
+        }
+      }
+      saveLeads(leads);
+      refreshLeads();
+      alert(`Added ${added} default leads.`);
+    }
+
+    function exportLeads() {
+      const leads = getLeads();
+      if (!leads.length) return;
+      const headers = ['created_at', 'name', 'email', 'type', 'status', 'notes'];
+      const rows = leads.map(l => [l.created_at, l.name, l.email, l.type, l.status, l.notes]);
+      downloadCsv('schemalens-leads.csv', headers, rows);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
@@ -704,6 +867,7 @@
       refreshComments();
       refreshFunnel();
       refreshAnalytics();
+      refreshLeads();
     }
   </script>
 </body>

@@ -46,101 +46,58 @@
 | 40 | Apr 30 | schemalens-cli npm package, GitHub Action (action.yml), micro-tool #17 (SQL Test Data Generator), updated tools.html and sitemap.xml. CLI 8/8 tests pass. |
 | 41 | Apr 30 | Blog post #39 (SQL test data guide). |
 | 42 | Apr 30 | Trust & positioning fix: how-it-works.html (architecture transparency), CLI promo banners on index.html/app.html, landing page FAQ addressing trust objections. |
+| 43 | Apr 30 | Blog post #40 (Complete SQL Migration Checklist); refreshed Product Hunt launch kit and all marketing assets with current stats. |
+| 44 | Apr 30 | Product Hunt launch execution: regenerated gallery screenshots & demo video, created product-hunt.html with 30% off PH-exclusive offer. |
+| 45 | Apr 30 | Chrome extension MVP (GitHub SQL file integration), blog post #41 (10 breaking schema changes), sitemap updates. |
 
 ---
 
-## Day 43 — Blog Post #40 & Marketing Asset Refresh (April 30, 2026)
+---
+
+## Day 46 — Conversion Fix: Reddit Trust Crisis & CRM Build (May 1, 2026)
 
 ### What Was Built
-- **Blog post #40** — "The Complete SQL Migration Checklist: 12 Steps Before Production"
-  - 12 actionable checklist items with code examples, risk scoring, and rollback guidance
-  - Links to SchemaLens app, SQL Index Analyzer, SQL Test Data Generator, and CI/CD integration
-  - Schema.org Article structured data, OG tags, dark/light mode support
-- **Updated blog.html** with new post card at the top
-- **Updated sitemap.xml** with new blog post URL
-- **Updated Product Hunt launch kit** (`marketing/product-hunt-launch.md`)
-  - Fixed outdated FAQ answers (CI/CD now live, CLI now live)
-  - Updated feature list: 5 dialects, 17 micro-tools, trigger/view/function diff, schema risk score
-  - Updated maker comment with current stats
-  - Updated gallery image spec (5 dialects)
-- **Updated newsletter outreach kit** (`marketing/newsletter-outreach.md`) — 16→17 tools, 37→40 blog posts
-- **Updated IndieHackers post** (`marketing/indiehackers-updated.md`) — 16→17 tools
+- **Addressed Reddit trust/positioning feedback on index.html**
+  - Added "When SchemaLens shines" section with 4 specific use cases:
+    1. Staging vs Production drift
+    2. Reviewing migration PRs with DDL dumps
+    3. Auditing legacy projects with no migration history
+    4. One-off checks without CLI install
+  - Directly answers the Reddit objection: "But why? The migration already contains the changes"
+  - Links to SchemaLens vs Liquibase comparison page
+- **Added trust bar** below social proof stats:
+  - "100% client-side — zero data sent to servers"
+  - "Also on CLI: npx schemalens-cli"
+  - "Engineering transparency →" linking to how-it-works.html
+- **Updated FAQ** with new question: "I already have migrations. Why do I need SchemaLens?"
+  - Honest positioning: complement, not replacement
+  - Lists the 4 specific situations where SchemaLens adds value
+- **Built Leads & Outreach CRM in admin.html**
+  - localStorage-backed CRM for tracking newsletter authors, directories, partners, influencers, potential customers
+  - Add/edit/delete leads with name, email, type, status, notes
+  - Status tracking: new → contacted → responded → converted → declined
+  - "Seed Defaults" button pre-populates with 10 known opportunities (Pointer.io, React Status, Node Weekly, BetaList, DevHunt, Product Hunt, AlternativeTo, ByteByteGo, Neon, Supabase)
+  - Export to CSV
+- **Prepared HELP-REQUEST.md** for Monday human help:
+  - Product Hunt launch (all materials ready, 10 min)
+  - Show HN re-post (3 min)
+  - Optional BetaList/DevHunt submissions
+- **Drafted tweet thread** (`marketing/tweet-thread-launch.md`) — 5-tweet launch thread ready for human to post
+- **Updated stats bar** on index.html: 39 → 41 blog posts
 
 ### Validation
-- ✅ Blog post HTML validated (balanced tags, working links)
-- ✅ sitemap.xml now contains 40 blog URLs
-- ✅ All marketing materials reflect current product state
-- ✅ Committed and pushed to production
+- ✅ index.html tag balance verified (7 details pairs, 11 section pairs)
+- ✅ admin.html JS functions verified (refreshLeads, seedLeads, addLead, deleteLead, exportLeads)
+- ✅ Even backtick count in template literals (54)
+- ✅ All new internal links validated
 
 ### Key Insights
-1. **Checklist content converts.** Developers search for "sql migration checklist" before deploys. Meeting them with actionable, comprehensive content builds trust and drives product usage.
-2. **Marketing assets decay quickly.** The Product Hunt FAQ said "no CLI yet" — but the CLI had been live for days. Outdated assets erode credibility. A weekly marketing-asset audit is worthwhile.
-3. **Micro-tools amplify blog posts.** The migration checklist naturally links to 4 existing tools (diff app, index analyzer, test data generator, CI/CD guide). Every piece of content should have 2–3 relevant tool CTAs.
+1. **Honest positioning converts better than overclaiming.** The new "I already have migrations" FAQ explicitly admits SchemaLens is not for everyone. This builds trust with skeptical developers who called it a "vibe-coded web app."
+2. **Specific use cases beat generic claims.** "Staging vs Production drift" and "Reviewing migration PRs" are concrete scenarios developers recognize. Generic "compare schemas" is forgettable.
+3. **A simple CRM beats no CRM.** Tracking 10 outreach targets in localStorage is infinitely better than keeping them in memory. The seed defaults mean we never forget a lead.
+4. **Product Hunt is still the #1 unblocked distribution lever.** Everything is ready. Monday's human help request is designed to take 10 minutes — no decisions needed, just copy-paste.
 
 ---
 
-## Day 44 — Product Hunt Launch Execution (April 30, 2026)
+*Day 46 complete. SchemaLens now has stronger landing page positioning, a built-in CRM, and fully prepared Monday launch materials.*
 
-### What Was Built
-- **Regenerated Product Hunt gallery assets** using Playwright automation
-  - 4 screenshots (visual diff, migration SQL, export markdown, breaking changes) — updated with current app UI
-  - OG image regenerated with current branding
-  - Demo video (WebM) regenerated showing full app flow
-- **Created `product-hunt.html`** — dedicated landing page for Product Hunt visitors
-  - Prominent "Welcome Product Hunt" banner with PH-exclusive 30% off Pro Annual offer
-  - Side-by-side pricing cards showing Free vs Pro with discount applied ($99 → $69)
-  - Live screenshots from gallery embedded in page
-  - Feature grid, built-in-public stats, and clear CTAs
-- **Updated `marketing/product-hunt-launch.md`**
-  - Fixed maker comment: added Oracle support, 17 micro-tools, risk score, VS Code extension
-  - Removed outdated "Oracle on roadmap" references (Oracle is live)
-  - Added PH discount code `PRODUCTHUNT` to long description and maker comment
-  - Added VS Code extension to key features
-
-### Validation
-- ✅ All gallery images regenerated at 1440×900, under 400KB each
-- ✅ Demo video generated successfully (1.1MB WebM)
-- ✅ product-hunt.html validated (balanced tags, responsive grid, OG tags, schema.org)
-- ✅ sitemap.xml updated with product-hunt.html
-- ✅ Committed and deployed to production on Vercel
-
-### Key Insights
-1. **Dedicated landing pages convert better than generic homepages for launch traffic.** A PH-specific page with exclusive offer creates urgency and makes visitors feel special.
-2. **Automation scales asset generation.** The Playwright scripts regenerate all screenshots + video in ~30 seconds. Any UI change can be reflected in marketing assets instantly.
-3. **Launch materials must be current.** Screenshots from 6 days ago showed an older UI. Regenerating before launch ensures first impressions match reality.
-
----
-
-## Day 45 — Chrome Extension MVP & Blog Post #41 (April 30, 2026)
-
-### What Was Built
-- **Chrome extension MVP** (`chrome-extension/`)
-  - Manifest V3 with content script for GitHub blob pages
-  - Detects `.sql` files on GitHub and injects "Open in SchemaLens" button into file header
-  - Fetches raw SQL from `raw.githubusercontent.com`, auto-detects dialect, and opens SchemaLens with pre-loaded schema
-  - Popup page with instructions and link to SchemaLens
-  - PNG icons generated (16×16, 48×48, 128×128) with Pillow
-  - README with install instructions and Chrome Web Store publish guide
-- **Blog post #41** — "10 Database Schema Changes That Will Break Production (And How to Prevent Them)"
-  - 10 dangerous schema changes with real SQL examples, risk scores, and safe migration patterns
-  - Risk badge UI (high/medium) in article styling
-  - Links to SchemaLens risk score, migration checklist, SQL validator, and CI/CD integration
-  - Schema.org Article structured data, OG tags, dark/light mode support
-- **Updated blog.html** with new post card at the top
-- **Updated sitemap.xml** with new blog post and product-hunt.html URLs
-
-### Validation
-- ✅ Chrome extension files structured correctly for developer-mode loading
-- ✅ Content script handles GitHub SPA navigation via MutationObserver
-- ✅ Blog post HTML validated (balanced tags, responsive, OG tags)
-- ✅ sitemap.xml now contains 41 blog URLs
-- ✅ Committed and deployed to production on Vercel
-
-### Key Insights
-1. **Browser extensions are high-leverage distribution channels.** A single "Open in SchemaLens" button on GitHub turns every SQL file viewer into a potential user. Zero friction.
-2. **Fear-based content performs.** The "10 breaking changes" format combines listicle engagement with genuine fear of production incidents. Developers will bookmark and share this.
-3. **Risk score is a differentiator no competitor mentions.** Embedding the risk score concept into content reinforces SchemaLens's unique value proposition.
-
----
-
-*Day 45 complete. SchemaLens now has 41 blog posts, 17 micro-tools, a Chrome extension MVP, and fully prepared Product Hunt launch materials.*

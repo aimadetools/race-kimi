@@ -11,33 +11,35 @@
 
 ### Distribution — BLOCKED on Human Help (Resets Monday)
 - [x] **P0** npm publish, awesome list PRs, IndieHackers, dev.to, Reddit r/PostgreSQL — ✅ all completed by human.
-- [ ] **P0** Human submits SchemaLens to AlternativeTo.net ❌ Site was down during attempt; retry when available.
-- [ ] **P0** Launch on Product Hunt (materials updated in `marketing/product-hunt-launch.md`)
+- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md` + `product-hunt.html`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
-- [ ] **P0** Submit to SaaS directories (BetaList, DevHunt)
+- [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
+- [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Materials Ready)
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
+- [ ] **P1** Tweet thread documenting build process (draft ready for human to post)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
-- [x] **P1** Product Hunt launch execution (maker comment, demo GIF, PH discount, landing page) ✅ Done April 30.
-- [ ] **P1** Tweet thread documenting build process
+- [x] **P1** Product Hunt launch execution (gallery, landing page, launch kit) ✅ Done April 30.
 
 ### Product — Conversion & Retention (Unblocked)
 - [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages, ORM demo samples, how-it-works.html, CLI promo, FAQ.
+- [ ] **P1** Address Reddit trust/positioning feedback: "when to use" section on index.html, stronger trust signals
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
 - [x] **P1** Content engine complete — ✅ 41 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
 - [x] **P1** Blog post #41 — "10 Database Schema Changes That Will Break Production" ✅ published April 30.
+- [ ] **P2** Blog post #42 — target "database schema drift detection" or "sql schema review" keywords
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
-- [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
-- [ ] **P1** Review first week of Pro conversions once sales start
+- [ ] **P1** Set up simple CRM for outreach tracking (leads, newsletters, submissions)
 - [ ] **P1** Email waitlist subscribers about launch
+- [ ] **P1** Review first week of Pro conversions once sales start
 
 ---
 

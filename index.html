@@ -226,7 +226,7 @@
           <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
         </div>
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">39</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">41</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Migration guides</div>
         </div>
         <div>
@@ -236,6 +236,22 @@
         <div>
           <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">0</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Data sent to servers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding: 24px 0; background: var(--bg); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; align-items: center; text-align: center;">
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.85rem;">
+          <span style="font-size: 1.1rem;">🔒</span> 100% client-side — zero data sent to servers
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.85rem;">
+          <span style="font-size: 1.1rem;">⚙️</span> Also on CLI: <code>npx schemalens-cli</code>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.85rem;">
+          <span style="font-size: 1.1rem;">🏗️</span> <a href="how-it-works.html" style="color: var(--primary); text-decoration: none;">Engineering transparency →</a>
         </div>
       </div>
     </div>
@@ -297,6 +313,40 @@
           <h3>Review & Export</h3>
           <p>See every change highlighted. Generate migration SQL in your dialect. Export, share, or copy into your migration tool.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <h2 class="section-title">When SchemaLens shines</h2>
+      <p class="section-subtitle">Not a replacement for your migration framework. A precision tool for the moments when you need answers <em>now</em>.</p>
+      <div class="features-grid reveal">
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Staging vs Production Drift</h3>
+          <p>Your staging environment has drifted from production and you do not know why. Paste both schema dumps and see exactly what changed in 10 seconds. No CLI setup, no config files.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👀</div>
+          <h3>Reviewing Migration PRs</h3>
+          <p>A teammate opened a PR with schema changes but only included the DDL dumps. Instantly generate a visual diff and migration script to verify nothing was missed before approving.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏛️</div>
+          <h3>Auditing Legacy Projects</h3>
+          <p>Inherited a codebase with no migration history? Compare the current schema against a backup or another environment to document exactly what has drifted over time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>One-Off Checks Without the CLI</h3>
+          <p>You are on a machine without your usual toolchain. Or you are working with a database you do not own. Open a browser, paste the schemas, and get answers instantly — zero install.</p>
+        </div>
+      </div>
+      <div style="margin-top: 32px; text-align: center;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 600px; margin: 0 auto;">
+          Already have Liquibase or Flyway? <a href="schemalens-vs-liquibase-flyway.html" style="color: var(--primary);">See how we complement your existing workflow →</a>
+        </p>
       </div>
     </div>
   </section>
@@ -485,8 +535,12 @@
           <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">A text diff (like Git) compares lines of text. If you reformat whitespace or rename a column, a text diff shows noise. SchemaLens parses <code>CREATE TABLE</code> statements into structured objects and compares them semantically. It understands that <code>role_id INT</code> changing to <code>role_id BIGINT</code> is a type change—not a deleted line and an added line.</p>
         </details>
         <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">I already have migrations. Why do I need SchemaLens?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">If you already use a migration framework and trust your pipeline, you may not need SchemaLens for day-to-day work. SchemaLens shines in four specific situations: (1) comparing staging vs production schemas when drift has occurred, (2) reviewing migration PRs when you only have DDL dumps, (3) auditing legacy projects with no migration history, and (4) quick one-off checks on machines without your full toolchain. It is a complement to migration tools, not a replacement. <a href="how-it-works.html" style="color: var(--primary);">Read more about when to use SchemaLens →</a></p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
           <summary style="font-weight: 600; cursor: pointer; color: var(--text);">When should I use SchemaLens vs Liquibase or Flyway?</summary>
-          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">Use SchemaLens for quick ad-hoc comparisons when you have two DDL dumps and need answers in 10 seconds. Use Liquibase or Flyway for managed migration lifecycles in CI/CD. SchemaLens is a complement, not a replacement. <a href="how-it-works.html" style="color: var(--primary);">See the full comparison →</a></p>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">Use SchemaLens for quick ad-hoc comparisons when you have two DDL dumps and need answers in 10 seconds. Use Liquibase or Flyway for managed migration lifecycles in CI/CD. SchemaLens is a complement, not a replacement. <a href="schemalens-vs-liquibase-flyway.html" style="color: var(--primary);">See the full comparison →</a></p>
         </details>
         <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
           <summary style="font-weight: 600; cursor: pointer; color: var(--text);">Is there a command-line version?</summary>
