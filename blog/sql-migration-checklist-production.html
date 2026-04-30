@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>The Complete SQL Migration Checklist: 12 Steps Before Production — SchemaLens</title>
+  <meta name="description" content="A 12-step SQL migration checklist every developer should follow before deploying to production. Prevent outages, data loss, and rollback disasters.">
+  <meta property="og:title" content="The Complete SQL Migration Checklist: 12 Steps Before Production">
+  <meta property="og:description" content="Don't deploy database migrations blindly. Follow this 12-step checklist to prevent outages, data loss, and rollback disasters.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-migration-checklist-production.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Complete SQL Migration Checklist: 12 Steps Before Production",
+  "description": "A 12-step SQL migration checklist every developer should follow before deploying to production. Prevent outages, data loss, and rollback disasters.",
+  "url": "https://schemalens.tech/blog/sql-migration-checklist-production.html",
+  "datePublished": "2026-04-30",
+  "dateModified": "2026-04-30",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/sql-migration-checklist-production.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .risk-high { color: #ff7b72; font-weight: 600; }
+    .risk-medium { color: #ffa657; font-weight: 600; }
+    .risk-low { color: #7ee787; font-weight: 600; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>The Complete SQL Migration Checklist: 12 Steps Before Production</h1>
+    <div class="meta">April 30, 2026 · 9 min read · SchemaLens Team</div>
+
+    <p>At 11:47 AM on a Thursday, a team at a fintech company deployed what looked like a harmless migration: adding a <code>NOT NULL</code> column to a 200-million-row table. The migration locked the table for 14 minutes. Payment processing ground to a halt. The rollback failed because the column already existed. They spent six hours in incident response, lost $40,000 in transaction fees, and earned a permanent spot in the company's post-mortem hall of fame.</p>
+
+    <p>This wasn't a complex migration. It was a simple one that skipped a checklist. In this guide, we give you the 12-step checklist that prevents these disasters. Print it. Bookmark it. Run it before every deployment.</p>
+
+    <h2>Step 1: Diff your schemas visually</h2>
+
+    <p>Before you even look at the migration SQL, understand what changed at a structural level. A text diff of two schema dumps is noisy and error-prone. A <strong>semantic diff</strong> tells you exactly which tables, columns, constraints, and indexes changed.</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Export the old schema (pre-migration) and the new schema (post-migration).</li>
+        <li>Run both through a semantic diff tool to see added, removed, and modified objects.</li>
+        <li>Verify that every change in the diff was intentional.</li>
+        <li>Look for surprises: extra indexes, dropped constraints, or renamed columns you didn't expect.</li>
+      </ul>
+    </div>
+
+    <p>Tools like <a href="../app.html">SchemaLens</a> make this instant. Paste two schemas, get a color-coded visual diff, and generate the migration SQL — all in your browser.</p>
+
+    <h2>Step 2: Score the migration risk</h2>
+
+    <p>Not all migrations are equal. Some are zero-risk. Others are "page the CEO" territory. Classify every migration before it ships:</p>
+
+    <ul>
+      <li><span class="risk-high">HIGH RISK:</span> Dropping columns or tables, adding <code>NOT NULL</code> without defaults, narrowing column types, dropping indexes used by queries, removing foreign keys.</li>
+      <li><span class="risk-medium">MEDIUM RISK:</span> Adding indexes on large tables, adding foreign keys with <code>ON DELETE CASCADE</code>, renaming columns, changing default values.</li>
+      <li><span class="risk-low">LOW RISK:</span> Adding nullable columns, adding tables, creating non-unique indexes on small tables, adding comments or check constraints.</li>
+    </ul>
+
+    <p>High-risk migrations need a second reviewer, a tested rollback plan, and deployment during a scheduled maintenance window. Never ship high-risk changes in a Friday deploy.</p>
+
+    <h2>Step 3: Verify backward compatibility</h2>
+
+    <p>Your application code and your database schema rarely deploy in perfect lockstep. During a rolling deployment, old code runs against the new schema, and new code runs against the old schema. Both combinations must work.</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Adding a column? Make it <code>NULL</code> first, backfill data, then add <code>NOT NULL</code> in a follow-up migration.</li>
+        <li>Renaming a column? Don't. Add the new column, dual-write to both, migrate reads, then drop the old column.</li>
+        <li>Dropping a column? Verify zero queries reference it (check logs, ORM models, and raw SQL).</li>
+        <li>Changing a type? Ensure the old code can read and write the new type without casting errors.</li>
+      </ul>
+    </div>
+
+    <p>The golden rule: <strong>never break the version of the code that is currently running in production.</strong></p>
+
+    <h2>Step 4: Check for missing indexes</h2>
+
+    <p>New foreign keys, new query patterns, and new join conditions often need indexes that the migration author forgot to add. A missing index on a foreign key in a 50-million-row table turns a 5ms query into a 45-second table scan.</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Every new foreign key gets an index on the referencing column.</li>
+        <li>Every new column used in <code>WHERE</code>, <code>JOIN</code>, or <code>ORDER BY</code> clauses is evaluated for indexing.</li>
+        <li>Composite indexes are considered for multi-column filters.</li>
+        <li>Existing indexes are checked for redundancy — don't create a duplicate index.</li>
+      </ul>
+    </div>
+
+    <p>Use the <a href="../tools/sql-index-analyzer.html">SQL Index Analyzer</a> to audit your schema for missing indexes before deployment.</p>
+
+    <h2>Step 5: Estimate lock time and table size</h2>
+
+    <p>Some migrations are fast on development databases and catastrophically slow in production. The difference is data volume. Before deploying, estimate how long the migration will hold locks:</p>
+
+    <pre><code>-- PostgreSQL: check table size
+SELECT pg_size_pretty(pg_total_relation_size('users'));
+
+-- MySQL: check table size and row count
+SHOW TABLE STATUS LIKE 'users';
+
+-- Estimate: adding a column with DEFAULT on 100M rows
+-- PostgreSQL 11+: ~instant (metadata-only if not touched)
+-- PostgreSQL &lt;11: rewrite entire table, could be hours</code></pre>
+
+    <p>If the estimated lock time exceeds your tolerance, restructure the migration:</p>
+    <ul>
+      <li>Use <code>pt-online-schema-change</code> (Percona Toolkit) for MySQL</li>
+      <li>Use <code>pg_repack</code> or <code>pg_squeeze</code> for PostgreSQL</li>
+      <li>Split the migration into smaller, online-safe steps</li>
+    </ul>
+
+    <h2>Step 6: Write idempotent SQL</h2>
+
+    <p>Migrations fail. When they do, you don't want to spend 30 minutes manually cleaning up a half-applied state. Idempotent migrations can be retried safely:</p>
+
+    <pre><code>-- Instead of this:
+ALTER TABLE users ADD COLUMN phone VARCHAR(20);
+
+-- Do this:
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+
+-- For indexes:
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users(email);</code></pre>
+
+    <p>Not all dialects support <code>IF NOT EXISTS</code> for every operation. When they don't, wrap the migration in a transaction or use a migration framework (Flyway, Liquibase) that tracks applied migrations in a metadata table.</p>
+
+    <h2>Step 7: Test on production-like data</h2>
+
+    <p>A migration that takes 200ms on a 1,000-row development database might take 40 minutes on a 50-million-row production database. Test on realistic data:</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Restore a recent production backup to a staging environment.</li>
+        <li>Run the migration and measure wall-clock time.</li>
+        <li>Monitor CPU, disk I/O, and lock contention during the migration.</li>
+        <li>Run your application's slowest queries before and after to catch plan regressions.</li>
+      </ul>
+    </div>
+
+    <p>If you can't restore production data for compliance reasons, generate realistic test data with the <a href="../tools/sql-test-data-generator.html">SQL Test Data Generator</a> that matches your production row counts and cardinality.</p>
+
+    <h2>Step 8: Have a tested rollback plan</h2>
+
+    <p>Every migration is a one-way door unless you have a rollback plan. Before deploying, ask: "If this breaks production, how do I undo it in under 5 minutes?"</p>
+
+    <ul>
+      <li><strong>For additive changes</strong> (new columns, new tables): Rollback is usually a simple <code>DROP COLUMN</code> or <code>DROP TABLE</code>. Keep the SQL ready.</li>
+      <li><strong>For destructive changes</strong> (dropped columns, narrowed types): Rollback may require restoring from backup. Have a backup snapshot taken immediately before deploy.</li>
+      <li><strong>For data migrations</strong>: Run them in batches with checkpointing. If something fails, resume from the last checkpoint instead of starting over.</li>
+    </ul>
+
+    <blockquote>
+      "Hope is not a rollback strategy. If you can't undo a migration in five minutes, don't ship it during business hours."
+    </blockquote>
+
+    <h2>Step 9: Schedule during a low-traffic window</h2>
+
+    <p>Even low-risk migrations can cause brief locks. Schedule them when traffic is minimal:</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Identify your lowest-traffic window from monitoring dashboards.</li>
+        <li>Avoid deploys on Fridays, before holidays, or during peak business hours.</li>
+        <li>Notify stakeholders (customer support, ops, on-call) before the deploy window.</li>
+        <li>Have the on-call engineer aware and ready, even for "low-risk" changes.</li>
+      </ul>
+    </div>
+
+    <h2>Step 10: Monitor during and after deployment</h2>
+
+    <p>The deploy isn't done when the migration finishes. It's done when you've confirmed the system is healthy:</p>
+
+    <ul>
+      <li><strong>During:</strong> Watch database connection count, query latency, lock waits, and error rate. Set an alert if latency spikes above 2× baseline.</li>
+      <li><strong>Immediately after:</strong> Run your smoke tests and verify critical user flows.</li>
+      <li><strong>30 minutes after:</strong> Check slow query logs for new entries. A new index might have changed query plans in unexpected ways.</li>
+      <li><strong>24 hours after:</strong> Review resource utilization. Some migrations have delayed effects (e.g., autovacuum overhead after large table rewrites).</li>
+    </ul>
+
+    <h2>Step 11: Verify constraint integrity</h2>
+
+    <p>New constraints can fail if existing data violates them. Always validate before adding:</p>
+
+    <pre><code>-- Check for NULLs before adding NOT NULL
+SELECT COUNT(*) FROM users WHERE phone IS NULL;
+
+-- Check for duplicates before adding UNIQUE
+SELECT phone, COUNT(*) FROM users GROUP BY phone HAVING COUNT(*) > 1;
+
+-- Check for orphans before adding FOREIGN KEY
+SELECT COUNT(*) FROM orders WHERE user_id NOT IN (SELECT id FROM users);
+
+-- PostgreSQL: add constraint as NOT VALID, then validate
+ALTER TABLE users ADD CONSTRAINT chk_phone_format
+  CHECK (phone ~ '^\+?[0-9\- ]+$') NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT chk_phone_format;</code></pre>
+
+    <p>The <code>NOT VALID</code> → <code>VALIDATE</code> pattern in PostgreSQL lets you add a constraint without locking the table for validation. The validation step scans the table, but doesn't block reads or writes.</p>
+
+    <h2>Step 12: Update documentation and runbooks</h2>
+
+    <p>The final step is the most commonly skipped — and the one that saves your future self. After every migration:</p>
+
+    <div class="checklist">
+      <ul>
+        <li>Update your schema documentation (ER diagrams, data dictionaries).</li>
+        <li>Update runbooks that reference table structures or query patterns.</li>
+        <li>Notify the team in Slack/Teams with a summary of what changed and why.</li>
+        <li>Archive the old and new schema snapshots for future comparison.</li>
+      </ul>
+    </div>
+
+    <p>Future you — debugging a production issue at 2 AM — will thank present you for keeping the docs current.</p>
+
+    <h2>The 12-step checklist (printable)</h2>
+
+    <div class="checklist">
+      <ul>
+        <li><strong>1. Diff schemas visually</strong> — confirm every change is intentional</li>
+        <li><strong>2. Score migration risk</strong> — high-risk changes need extra review and scheduling</li>
+        <li><strong>3. Verify backward compatibility</strong> — old code must work with new schema</li>
+        <li><strong>4. Check for missing indexes</strong> — every FK and new filter column</li>
+        <li><strong>5. Estimate lock time</strong> — test on production-like data volume</li>
+        <li><strong>6. Write idempotent SQL</strong> — migrations should be safely retryable</li>
+        <li><strong>7. Test on realistic data</strong> — measure time, CPU, and I/O</li>
+        <li><strong>8. Have a tested rollback plan</strong> — know how to undo in under 5 minutes</li>
+        <li><strong>9. Schedule low-traffic deploy</strong> — avoid Fridays and peak hours</li>
+        <li><strong>10. Monitor during and after</strong> — latency, errors, slow queries</li>
+        <li><strong>11. Verify constraint integrity</strong> — existing data must satisfy new rules</li>
+        <li><strong>12. Update documentation</strong> — schema docs, runbooks, team notifications</li>
+      </ul>
+    </div>
+
+    <h2>Make it automatic</h2>
+
+    <p>Running this checklist manually for every migration is valuable but time-consuming. The teams that scale safely automate the checks:</p>
+
+    <ul>
+      <li><strong>CI/CD integration:</strong> Add schema diff checks to your pull request pipeline. The <a href="../ci-cd-integration.html">SchemaLens CLI</a> runs in GitHub Actions, GitLab CI, and Bitbucket Pipelines. It fails builds on breaking changes and generates migration reports as PR comments.</li>
+      <li><strong>Pre-deploy diff:</strong> Compare staging and production schemas before every deploy. If they don't match expectations, block the deploy.</li>
+      <li><strong>Breaking change alerts:</strong> Configure Slack or webhook notifications when high-risk migrations are detected.</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>✅ Run the checklist on your next migration</h3>
+      <p>Compare your schemas, detect breaking changes, and generate migration SQL — all in one tool.</p>
+      <a href="../app.html" class="btn btn-primary">Open SchemaLens →</a>
+    </div>
+
+    <h3>Related articles</h3>
+    <ul>
+      <li><a href="dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (And How to Avoid Them)</a></li>
+      <li><a href="database-schema-versioning-best-practices.html">Database Schema Versioning Best Practices</a></li>
+      <li><a href="schemalens-in-your-ci-cd-pipeline.html">How to Add Schema Diff Checks to Your CI/CD Pipeline</a></li>
+      <li><a href="sync-database-schemas-staging-production.html">How to Sync Database Schemas Between Staging and Production</a></li>
+    </ul>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../prisma-schema-diff.html">Prisma Schema Diff</a>
+          <a href="../drizzle-schema-diff.html">Drizzle Schema Diff</a>
+          <a href="../typeorm-schema-diff.html">TypeORM Schema Diff</a>
+          <a href="../sequelize-schema-diff.html">Sequelize Schema Diff</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../migration-checklist.html">Migration Checklist</a>
+          <a href="../api-guide.html">API Quick Start</a>
+          <a href="../ci-cd-integration.html">CI/CD Integration</a>
+          <a href="../zapier-integration.html">Zapier Integration</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
