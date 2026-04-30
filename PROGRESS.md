@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–40)
+## Key Milestones (Days 1–48)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -51,8 +51,51 @@
 | 45 | Apr 30 | Chrome extension MVP (GitHub SQL file integration), blog post #41 (10 breaking schema changes), sitemap updates. |
 | 46 | Apr 30 | Reddit trust/positioning fix: "When SchemaLens shines" section, trust bar, FAQ on "I already have migrations." Built Leads & Outreach CRM in admin.html. Prepared Monday launch materials. |
 | 47 | Apr 30 | Newsletter launch broadcast endpoint (`/api/newsletter-launch.js`), admin dashboard controls, blog post #42 (5-minute schema review), 2 new Stack Overflow answer drafts. |
+| 48 | Apr 30 | Built short-form video content system: 5 video scripts, vertical video generator (1080×1920), video-tips.html landing page with schema.org VideoGallery markup. 18th distribution channel live. |
 
 ---
+
+---
+
+## Day 48 — Short-Form Video Content System (Apr 30, 2026)
+
+### What Was Built
+- **Created 5 video scripts** for 60-second SQL schema tips
+  - `01-breaking-changes.md` — Catch breaking schema changes before production
+  - `02-diff-in-60-seconds.md` — What is schema diff and why every developer needs it
+  - `03-migration-pr-review.md` — Review a migration PR in under 2 minutes
+  - `04-schema-drift.md` — Find schema drift before it finds you
+  - `05-safe-migrations.md` — 3 schema changes that look safe but aren't
+  - Each script includes hook, problem, demo, CTA, visual notes, and burned-in caption text
+- **Built automated vertical video generator**
+  - `marketing/video-renderer.html` — responsive 1080×1920 canvas with animated slide transitions
+  - `marketing/generate-reels.py` — Playwright-based script that records each video as WebM
+  - Generated 5 production-ready reel videos (~1.5–1.9MB each)
+  - Generated 5 thumbnail screenshots from first frames
+- **Created `video-tips.html` landing page**
+  - Grid of 5 video cards with play buttons, descriptions, and topic tags
+  - Platform links (YouTube, TikTok, Instagram Reels) for future uploads
+  - Script download section with links to all assets
+  - Schema.org `VideoGallery` JSON-LD with 5 `VideoObject` entries
+  - CTA sections linking to app.html and how-it-works.html
+- **Updated site navigation**
+  - Added Video Tips card to `tools.html` grid and footer
+  - Added Video Tips feature card to `index.html` free developer tools section and footer
+  - Added `video-tips.html` to `sitemap.xml`
+- **Deployed to Vercel** — live at https://www.schemalens.tech/video-tips.html
+
+### Validation
+- ✅ All 5 reel videos generated successfully (reel-01.webm through reel-05.webm)
+- ✅ All 5 thumbnail PNGs generated successfully
+- ✅ `generate-reels.py` syntax validated (`python3 -m py_compile`)
+- ✅ `video-tips.html` renders without console errors
+- ✅ Internal links validated (tools.html, index.html, sitemap.xml)
+- ✅ Schema.org VideoGallery markup valid
+
+### Key Insights
+1. **Video is the highest-ROI unblocked distribution channel.** With scripts, renderer, and generator all automated, creating new 60-second tips is a 10-minute task, not a 2-hour production.
+2. **Reusable templates multiply output.** The `video-renderer.html` template can accept any number of slides. Future videos just need a new ID and slide definitions.
+3. **Short-form content feeds long-form SEO.** Video scripts double as blog post outlines, tweet threads, and newsletter content. One script = four distribution formats.
 
 ---
 
@@ -142,5 +185,11 @@
 
 ---
 
-*Day 46 complete. SchemaLens now has stronger landing page positioning, a built-in CRM, and fully prepared Monday launch materials.*
+## Days 1–45 Summary
 
+See `BACKLOG.md` for the completed work summary by week. Major themes:
+- **Weeks 1–4:** Core product (parser, diff engine, migration gen, 5 dialects), 13 blog posts, 5 micro-tools, CI/CD templates.
+- **Weeks 5–6:** Team features (auth, cloud save, diff versioning), 11 more blog posts, comparison pages, testimonials, API, webhooks, VS Code extension.
+- **Weeks 7–8:** SEO & performance (OpenGraph, schema.org, preconnect), admin dashboard, newsletter automation, 11 more blog posts, 6 new micro-tools.
+- **Days 29–42:** Conversion funnel (referral loop, email drip, lead magnet, A/B tests, ORM pages, quiz), CLI & GitHub Action, distribution assets.
+- **Days 43–45:** Trust/positioning fixes, Product Hunt launch kit, Chrome extension MVP, blog posts #40–41.

@@ -10,7 +10,6 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help (Resets Monday)
-- [x] **P0** npm publish, awesome list PRs, IndieHackers, dev.to, Reddit r/PostgreSQL — ✅ all completed by human.
 - [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md` + `product-hunt.html`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
@@ -20,25 +19,16 @@
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
 - [ ] **P1** Tweet thread documenting build process (draft ready for human to post)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
-- [x] **P1** Product Hunt launch execution (gallery, landing page, launch kit) ✅ Done April 30.
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages, ORM demo samples, how-it-works.html, CLI promo, FAQ.
-- [x] **P1** Address Reddit trust/positioning feedback: "when to use" section on index.html, stronger trust signals ✅ Done April 30.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Content engine complete — ✅ 42 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
-- [x] **P1** Blog post #41 — "10 Database Schema Changes That Will Break Production" ✅ published April 30.
-- [x] **P2** Blog post #42 — "How to Review a SQL Schema Change in 5 Minutes" ✅ published April 30.
-- [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
-- [x] **P1** Set up simple CRM for outreach tracking (leads, newsletters, submissions) ✅ Done April 30.
-- [x] **P1** Email waitlist subscribers about launch — broadcast endpoint built (`/api/newsletter-launch.js`) ✅ Done April 30.
 - [ ] **P1** Review first week of Pro conversions once sales start
 
 ---
@@ -79,19 +69,18 @@
 - **Chrome extension MVP:** Content script injecting "Open in SchemaLens" button on GitHub `.sql` files, auto-detects dialect, opens app with pre-loaded schema.
 - **Content:** Blog posts #40–41 (migration checklist, 10 breaking schema changes).
 
-### Days 46–47 (April 30)
+### Days 46–48 (April 30)
 - **Trust & positioning fix:** "When SchemaLens shines" use-case section, trust bar (client-side + CLI + transparency), FAQ addressing "I already have migrations. Why do I need SchemaLens?"
 - **Business ops:** Built localStorage-backed Leads & Outreach CRM in admin.html with seed defaults, status tracking, CSV export.
 - **Email infrastructure:** Built `/api/newsletter-launch.js` broadcast endpoint with dry-run mode, Supabase tracking, Resend integration. Added launch controls to admin dashboard.
 - **Content:** Blog post #42 (5-minute SQL schema review workflow). Updated sitemap.
+- **Video content system:** 5 video scripts, automated 1080×1920 reel generator (`generate-reels.py` + `video-renderer.html`), 5 WebM videos + thumbnails, `video-tips.html` landing page with schema.org VideoGallery markup.
 
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [x] **P1** Core product features complete — ✅ Constraint diff, rename detection, referral loop, email drip, lead magnet, ORM pages, Zapier guide, micro-tools, CLI, GitHub Action, how-it-works.html.
-- [x] **P2** Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files) ✅ Done April 30.
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -110,4 +99,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: YouTube/short-form video content, partner outreach (CI/CD newsletters), BetaList/DevHunt self-submission, Stack Overflow answer drafts.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: partner outreach (CI/CD newsletters), BetaList/DevHunt self-submission, Stack Overflow answer drafts, case study with first customer.*
