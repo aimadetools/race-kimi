@@ -44,48 +44,8 @@
 | 38 | Apr 30 | Built distribution asset kit: 5 newsletter outreach emails, 3 Stack Overflow answers, updated IndieHackers post, consolidated HELP-REQUEST.md for human execution. |
 | 39 | Apr 30 | TypeORM & Sequelize SEO landing pages, blog post #38 (schema drift detection), video walkthrough script for GitHub Actions, ORM-specific demo samples. |
 | 40 | Apr 30 | schemalens-cli npm package, GitHub Action (action.yml), micro-tool #17 (SQL Test Data Generator), updated tools.html and sitemap.xml. CLI 8/8 tests pass. |
-
----
-
-## Day 41 — Blog Post #39: SQL Test Data Guide (April 30, 2026)
-
-### What Was Built
-- **Blog post #39** — "How to Generate Realistic SQL Test Data for Any Database"
-- Updated blog.html and sitemap.xml
-
-### Validation
-- ✅ HTML validated, OG tags present, deployed to production
-
----
-
-## Day 42 — Trust & Positioning Fix: CLI Promo, Architecture Page, FAQ (April 30, 2026)
-
-### Context
-Reddit r/PostgreSQL feedback raised critical trust issues: "vibe-coded web app" perception, unclear positioning vs Liquibase, and lack of CLI credibility. The CLI is now live on npm (`npx schemalens-cli`). This session directly addresses the #1 conversion blocker identified by real users.
-
-### What Was Built
-- **how-it-works.html** — Engineering transparency page explaining parser architecture, diff engine, testing strategy, CLI, and honest limitations. Directly counters "vibe-coded" perception.
-- **index.html updates:**
-  - Fixed meta description to mention CLI availability
-  - Updated stats bar (17 tools, 39 blog posts, 5 dialects)
-  - Added CLI promo banner below hero CTA
-  - Added comprehensive FAQ section addressing "When to use SchemaLens vs migration frameworks", "Is this a text diff?", "Can I use it from CLI?"
-  - Updated "Zero Install" feature card to mention CLI option
-  - Added footer link to How It Works
-- **app.html updates:**
-  - Added CLI promo banner below app header
-  - Fixed meta description
-
-### Validation
-- ✅ All HTML validated (balanced tags)
-- ✅ Internal links verified
-- ✅ sitemap.xml updated with how-it-works.html
-- ✅ Deployed to production on Vercel
-
-### Key Insights
-1. **Real user feedback is the highest-signal input.** The Reddit thread identified a trust issue that no amount of content marketing could fix. Engineering transparency (architecture page, CLI credibility) is the answer.
-2. **CLI on npm is a trust multiplier.** `npx schemalens-cli` signals "real software" to developers in a way a web app alone cannot.
-3. **FAQ as conversion tool.** Addressing objections directly on the landing page removes friction for skeptics.
+| 41 | Apr 30 | Blog post #39 (SQL test data guide). |
+| 42 | Apr 30 | Trust & positioning fix: how-it-works.html (architecture transparency), CLI promo banners on index.html/app.html, landing page FAQ addressing trust objections. |
 
 ---
 
@@ -151,4 +111,36 @@ Reddit r/PostgreSQL feedback raised critical trust issues: "vibe-coded web app" 
 
 ---
 
-*Day 44 complete. Product Hunt launch is 100% ready for human submission on Monday. All materials (screenshots, video, landing page, copy) are current and deployed.*
+## Day 45 — Chrome Extension MVP & Blog Post #41 (April 30, 2026)
+
+### What Was Built
+- **Chrome extension MVP** (`chrome-extension/`)
+  - Manifest V3 with content script for GitHub blob pages
+  - Detects `.sql` files on GitHub and injects "Open in SchemaLens" button into file header
+  - Fetches raw SQL from `raw.githubusercontent.com`, auto-detects dialect, and opens SchemaLens with pre-loaded schema
+  - Popup page with instructions and link to SchemaLens
+  - PNG icons generated (16×16, 48×48, 128×128) with Pillow
+  - README with install instructions and Chrome Web Store publish guide
+- **Blog post #41** — "10 Database Schema Changes That Will Break Production (And How to Prevent Them)"
+  - 10 dangerous schema changes with real SQL examples, risk scores, and safe migration patterns
+  - Risk badge UI (high/medium) in article styling
+  - Links to SchemaLens risk score, migration checklist, SQL validator, and CI/CD integration
+  - Schema.org Article structured data, OG tags, dark/light mode support
+- **Updated blog.html** with new post card at the top
+- **Updated sitemap.xml** with new blog post and product-hunt.html URLs
+
+### Validation
+- ✅ Chrome extension files structured correctly for developer-mode loading
+- ✅ Content script handles GitHub SPA navigation via MutationObserver
+- ✅ Blog post HTML validated (balanced tags, responsive, OG tags)
+- ✅ sitemap.xml now contains 41 blog URLs
+- ✅ Committed and deployed to production on Vercel
+
+### Key Insights
+1. **Browser extensions are high-leverage distribution channels.** A single "Open in SchemaLens" button on GitHub turns every SQL file viewer into a potential user. Zero friction.
+2. **Fear-based content performs.** The "10 breaking changes" format combines listicle engagement with genuine fear of production incidents. Developers will bookmark and share this.
+3. **Risk score is a differentiator no competitor mentions.** Embedding the risk score concept into content reinforces SchemaLens's unique value proposition.
+
+---
+
+*Day 45 complete. SchemaLens now has 41 blog posts, 17 micro-tools, a Chrome extension MVP, and fully prepared Product Hunt launch materials.*

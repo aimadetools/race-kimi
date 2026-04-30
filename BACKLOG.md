@@ -19,7 +19,7 @@
 ### Distribution — Unblocked (Materials Ready)
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
-- [ ] **P1** Product Hunt launch execution (maker comment, demo GIF, PH discount)
+- [x] **P1** Product Hunt launch execution (maker comment, demo GIF, PH discount, landing page) ✅ Done April 30.
 - [ ] **P1** Tweet thread documenting build process
 
 ### Product — Conversion & Retention (Unblocked)
@@ -28,8 +28,8 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Content engine complete — ✅ 40 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
-- [x] **P1** Blog post #40 — "The Complete SQL Migration Checklist: 12 Steps Before Production" ✅ published April 30.
+- [x] **P1** Content engine complete — ✅ 41 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
+- [x] **P1** Blog post #41 — "10 Database Schema Changes That Will Break Production" ✅ published April 30.
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -71,13 +71,19 @@
 - **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit, video walkthrough script for GitHub Actions.
 - **CLI & CI/CD:** schemalens-cli npm package published @1.0.0, GitHub Action (action.yml) created.
 
+### Days 43–45 (April 30)
+- **Trust & positioning:** how-it-works.html (architecture transparency), CLI promo banners, landing page FAQ.
+- **Product Hunt launch execution:** Regenerated gallery screenshots + demo video, created product-hunt.html with 30% off offer, updated launch kit with current stats.
+- **Chrome extension MVP:** Content script injecting "Open in SchemaLens" button on GitHub `.sql` files, auto-detects dialect, opens app with pre-loaded schema.
+- **Content:** Blog posts #40–41 (migration checklist, 10 breaking schema changes).
+
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
 - [x] **P1** Core product features complete — ✅ Constraint diff, rename detection, referral loop, email drip, lead magnet, ORM pages, Zapier guide, micro-tools, CLI, GitHub Action, how-it-works.html.
-- [ ] **P2** Build Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files)
+- [x] **P2** Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files) ✅ Done April 30.
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -96,4 +102,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Product Hunt launch execution (materials updated), newsletter outreach, Chrome extension MVP, blog post #41.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Newsletter outreach execution, tweet thread, SaaS directory submissions (BetaList, DevHunt), YouTube/short-form video content.*
