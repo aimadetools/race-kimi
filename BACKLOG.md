@@ -38,8 +38,9 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Content engine complete — ✅ 38 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
-- [ ] **P1** Blog post #39 — target "sql test data generator" or "database schema versioning"
+- [x] **P1** Content engine complete — ✅ 39 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
+- [x] **P1** Blog post #39 — ✅ "How to Generate Realistic SQL Test Data for Any Database" targeting "sql test data generator"
+- [ ] **P1** Blog post #40 — target "database schema versioning best practices" or "sql migration checklist"
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -74,12 +75,12 @@
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
-### Days 29–40 (April 29–30)
+### Days 29–41 (April 29–30)
 - **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th), SQL Data Types Reference (15th), Schema Mistake Quiz (16th), SQL Test Data Generator (17th).
 - **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking), app headline A/B test.
-- **Content:** Blog post #37 (SQL JOINs Explained) + #38 (schema drift detection), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle/TypeORM/Sequelize ORM SEO landing pages, dev.to guest post draft.
+- **Content:** Blog posts #37–39 (SQL JOINs, schema drift detection, SQL test data), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle/TypeORM/Sequelize ORM SEO landing pages, dev.to guest post draft.
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2) with Supabase tracking.
-- **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit.
+- **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit, video walkthrough script for GitHub Actions.
 - **CLI & CI/CD:** schemalens-cli npm package built & tested, GitHub Action (action.yml) created.
 
 ---
@@ -107,4 +108,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: blog post #39, Chrome extension MVP, YouTube video script. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Chrome extension MVP, blog post #40, YouTube video script. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*

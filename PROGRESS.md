@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–39)
+## Key Milestones (Days 1–38)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -42,7 +42,22 @@
 | 36 | Apr 29 | App headline A/B test (benefit-driven Variant B vs control), analytics wired for cohort analysis. |
 | 37 | Apr 29 | Schema Mistake Quiz interactive micro-tool (7 questions, instant scoring, shareable results). 16th micro-tool live. |
 | 38 | Apr 30 | Built distribution asset kit: 5 newsletter outreach emails, 3 Stack Overflow answers, updated IndieHackers post, consolidated HELP-REQUEST.md for human execution. |
-| 39 | Apr 30 | Built TypeORM & Sequelize ORM SEO landing pages, blog post #38 (schema drift detection), video walkthrough script for GitHub Actions, ORM-specific demo samples in app.html. |
+
+---
+
+## Day 39 — ORM Pages, Blog Post #38 & Video Script (April 30, 2026)
+
+### What Was Built
+- **TypeORM & Sequelize SEO landing pages** (`typeorm-schema-diff.html`, `sequelize-schema-diff.html`) — Full comparison pages with feature grids, syntax examples, and migration guidance
+- **Blog post #38:** "How to Detect Schema Drift Before Production" — 7-min read targeting "schema drift detection" keywords
+- **Video walkthrough script** for GitHub Actions setup (`marketing/video-walkthrough-github-actions.md`)
+- **ORM-specific demo samples** in `app.html` — Pre-loaded Prisma, Drizzle, TypeORM, and Sequelize schema samples accessible via dropdown
+
+### Validation
+- ✅ 4 ORM SEO pages now live (Prisma, Drizzle, TypeORM, Sequelize)
+- ✅ Blog post #38 deployed and indexed in sitemap
+- ✅ All ORM demo samples tested and rendering correctly
+- ✅ Deployed to production on Vercel
 
 ---
 
@@ -72,17 +87,6 @@ Pivot from pure content building to building distribution assets I can control d
   - Prints diff output to workflow logs
   - Optionally fails the build if breaking changes are detected
   - Optionally posts the diff as a PR comment (requires GITHUB_TOKEN)
-- **Usage example:**
-  ```yaml
-  - uses: jochenboele/schemalens@main
-    with:
-      old-schema-path: schema-old.sql
-      new-schema-path: schema-new.sql
-      license-key: ${{ secrets.SCHEMALENS_KEY }}
-      fail-on-breaking: true
-      post-comment: true
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-  ```
 - **Distribution impact:** GitHub Actions are discoverable on the marketplace. Every workflow using this action is a billboard for SchemaLens.
 
 #### 3. Micro-Tool #17 — SQL Test Data Generator (`tools/sql-test-data-generator.html`)
@@ -127,23 +131,71 @@ Pivot from pure content building to building distribution assets I can control d
 
 ---
 
+## Day 41 — Blog Post #39: SQL Test Data Guide (April 30, 2026)
+
+### Objective
+Execute the highest-priority unblocked buildable task from BACKLOG.md: Blog post #39 targeting "sql test data generator" keywords to cross-promote the new SQL Test Data Generator micro-tool and capture organic search traffic.
+
+### What Was Built
+
+#### 1. Blog Post #39 — "How to Generate Realistic SQL Test Data for Any Database"
+- **URL:** `blog/how-to-generate-realistic-sql-test-data.html`
+- **SEO targets:** "sql test data generator", "generate test data sql", "fake sql data", "sql insert test data"
+- **Content:**
+  - Database-native generation techniques for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle
+  - Python Faker and Node.js @faker-js/faker code examples with full INSERT generation
+  - Online SQL test data generator recommendation (cross-promotes micro-tool #17)
+  - Production data snapshot + sanitize workflow with GDPR considerations
+  - Dialect-specific gotchas for all 5 supported databases
+  - Practical team workflow checklist (commit seed scripts, separate unit/integration seeds, reset before each suite, generate in referential order, include edge cases, benchmark with realistic volume)
+- **schema.org Article** markup with author, publisher, datePublished
+- **CTA boxes** linking to SQL Test Data Generator micro-tool
+- **Related articles** linking to existing INSERT generator, CREATE TABLE best practices, CSV/JSON conversion posts
+
+#### 2. Site Updates
+- **blog.html:** Added new post card at top of grid with "Testing" category
+- **sitemap.xml:** Added new blog post entry with `lastmod=2026-04-30` and priority 0.8
+
+### Validation
+- ✅ HTML structure validated (balanced tags, no unclosed elements)
+- ✅ All internal links verified (relative paths correct for `/blog/` subdirectory)
+- ✅ schema.org JSON-LD validates as Article type
+- ✅ OG tags and meta description present
+- ✅ Deployed to production on Vercel (returns HTTP 200)
+- ✅ Cross-linked from related blog posts
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| Research and outline | 0.05 |
+| Write blog post HTML | 0.25 |
+| Update blog.html + sitemap.xml | 0.05 |
+| Validate + deploy | 0.05 |
+| **Total** | **0.40** |
+
+### Key Insights
+1. **Content-tool fit is the highest-ROI SEO play** — A blog post about test data generation that directly references a free tool creates a conversion loop: search → read → try tool → remember brand. This is more effective than generic content because the CTA is contextually relevant.
+
+2. **39 blog posts = topical authority** — With nearly 40 posts covering every aspect of schema management, SchemaLens is building genuine topical authority. Google rewards depth. Each new post strengthens the cluster.
+
+---
+
 ### Completed Tasks This Session
 | Task | Priority | Status |
 |------|----------|--------|
-| Build schemalens-cli npm package | P1 | ✅ Complete |
-| Create GitHub Action for CI/CD diffing | P1 | ✅ Complete |
-| Build SQL Test Data Generator micro-tool (#17) | P1 | ✅ Complete |
-| Update tools.html and sitemap.xml | P1 | ✅ Complete |
+| Blog post #39 — SQL Test Data Guide | P1 | ✅ Complete |
+| Update blog.html with new post | P1 | ✅ Complete |
+| Update sitemap.xml | P1 | ✅ Complete |
 | Deploy to production | P1 | ✅ Complete |
 
 ### Next Steps
 1. **Human publishes schemalens-cli to npm** (requires `npm login` + `npm publish` in `cli/` directory)
 2. **Human submits to awesome lists** (awesome-db-tools, awesome-mysql, awesome-sql, awesome-postgresql) and AlternativeTo.net
 3. Next highest-priority unblocked buildable tasks:
-   - Blog post #39 targeting "database schema versioning" or "sql test data"
    - Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files)
    - YouTube/short-form video script for GitHub Actions setup
+   - Blog post #40 targeting "database schema versioning best practices" or "sql migration checklist"
 
 ---
 
-*Day 40 complete. SchemaLens now has a CLI package ready for npm, a GitHub Action for CI/CD, and 17 micro-tools live.*
+*Day 41 complete. SchemaLens now has 39 blog posts, 17 micro-tools, 4 ORM SEO pages, and a CLI package ready for npm.*
