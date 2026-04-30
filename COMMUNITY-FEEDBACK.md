@@ -32,3 +32,8 @@ This is real traction from a targeted developer community. These users are your 
 **Our reply:** Liquibase is great for teams already using it in their CI/CD pipeline. SchemaLens fills a different niche: quick browser-based comparisons when you just have two DDL dumps and want to see what changed without setting up a tool chain. Different tools for different moments.
 
 **Action:** Add a "SchemaLens vs Liquibase" comparison page. Clarify positioning: SchemaLens is for quick ad-hoc comparisons, Liquibase is for managed migration lifecycles. Consider adding this to the landing page FAQ.
+
+### Q (follow-up): Liquibase has a diff tool for exactly this. One command. Supports 60+ DBs. Does drift auditing, DDL generation, dynamic flows.
+**Our reply:** Acknowledged. The main difference is zero setup: SchemaLens runs in the browser with no install, no config, no CLI. Paste two CREATE TABLE blocks and get a visual diff in seconds. For quick one-off comparisons it is faster, but Liquibase covers far more ground for teams that already have it.
+
+**Action:** HIGH PRIORITY. Build a SchemaLens vs Liquibase comparison page. Position clearly: SchemaLens = instant browser-based ad-hoc diffs, Liquibase = full migration lifecycle management. Do not compete on features, compete on speed and zero-setup. Consider adding Liquibase to the comparison pages alongside CLI tools.
