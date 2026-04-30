@@ -45,6 +45,7 @@ Paste two CREATE TABLE dumps — old and new — and SchemaLens shows you a sema
 - `npx schemalens-cli` — run diffs locally, in CI, or in GitHub Actions
 - GitHub Action with PR comments and breaking-change build fails
 - GitLab CI and Bitbucket Pipelines templates included
+- VS Code extension for in-editor diffing
 
 **Why I built it:**
 I was tired of squinting at text diffs between schema dumps and manually writing ALTER TABLE statements. Existing tools were either CLI-only (pg_dump, migra) or required uploading schemas to a cloud service. SchemaLens fills the gap: zero setup, zero backend, instant results — and now with a full CLI for CI/CD pipelines.
@@ -52,6 +53,7 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 **Pricing:**
 - Free: 10 tables, visual diff, migration preview, 17 micro-tools
 - Pro: $12/mo or $99/yr — unlimited tables, full migrations, all exports, shareable links, diff annotations
+- **Product Hunt special:** 30% off Pro Annual with code `PRODUCTHUNT`
 
 ---
 
@@ -110,18 +112,21 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 >
 > **SchemaLens is different:**
 > - Runs entirely in your browser. No backend. Your schemas never leave your machine.
-> - Supports PostgreSQL, MySQL, SQLite, and SQL Server.
-> - Semantic diff: it understands tables, columns, types, defaults, constraints, and indexes — not just line-by-line text.
+> - Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
+> - Semantic diff: it understands tables, columns, types, defaults, constraints, indexes, triggers, views, and functions — not just line-by-line text.
 > - Generates ready-to-run ALTER TABLE scripts.
+> - Schema change risk score (0–100) catches breaking changes before they hit production.
 > - Share diffs via URL (base64-encoded). Paste into Slack, email, or PRs.
+> - 17 free micro-tools including SQL formatter, validator, JOIN visualizer, test data generator, and schema health check.
 >
 > **Built with:** Vanilla HTML/CSS/JS. No React, no build step, no dependencies. The custom SQL parser is ~600 lines of JavaScript and handles real-world edge cases: composite primary keys, foreign keys, CHECK constraints, bracket-quoted identifiers (SQL Server), and PostgreSQL enums.
 >
-> **Pricing:** Free for up to 10 tables. Pro is $12/mo for unlimited tables + exports.
+> **Pricing:** Free for up to 10 tables. Pro is $12/mo or $99/yr for unlimited tables + all exports.
+> **Product Hunt special:** 30% off Pro Annual with code `PRODUCTHUNT` at checkout.
 >
 > I'd love your feedback on:
 > 1. Edge cases the parser misses (real schemas are weird!)
-> 2. Which dialect or feature you'd want next (Oracle? DuckDB?)
+> 2. Which dialect or feature you'd want next (DuckDB? Snowflake?)
 > 3. Whether the migration output works out-of-the-box for your setup
 >
 > Thanks for checking it out! 🙏
@@ -134,7 +139,7 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 > Nope. SchemaLens is 100% client-side. The parser runs in your browser via JavaScript. Your SQL never hits a server. You can verify this by opening DevTools → Network — zero requests after the page loads.
 
 ### Q: What dialects are supported?
-> PostgreSQL, MySQL/MariaDB, SQLite, and SQL Server. Oracle and DuckDB are on the roadmap.
+> PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, and Oracle. DuckDB is on the roadmap.
 
 ### Q: How does the Pro license work?
 > It's a client-side license key. You buy on Gumroad, get a key like `SL-XXXX-XXXX-XXXX-XXXX`, paste it into the app, and Pro features unlock instantly. No accounts, no tracking.

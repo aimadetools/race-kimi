@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens — Special Offer for Product Hunt</title>
+  <meta name="description" content="SchemaLens is a free browser-based SQL schema diff tool. Compare PostgreSQL, MySQL, SQLite, SQL Server, and Oracle schemas instantly. Special offer for Product Hunt visitors.">
+  <meta property="og:title" content="SchemaLens — Special Offer for Product Hunt">
+  <meta property="og:description" content="Compare SQL schemas in your browser. Generate migrations instantly. 30% off Pro for Product Hunt visitors.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+        <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+      </svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="app.html">App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="blog.html">Blog</a>
+      <a href="tools.html">Tools</a>
+    </div>
+    <a href="app.html" class="btn btn-primary btn-sm">Open App</a>
+  </div>
+</nav>
+
+<section class="hero" style="padding-top: 48px; padding-bottom: 48px;">
+  <div class="container" style="text-align: center;">
+    <div class="hero-badge" style="margin-bottom: 16px;">
+      <span class="dot" style="background: #ff6154;"></span>
+      Welcome, Product Hunt! 🎉
+    </div>
+    <h1>Compare SQL schemas in your browser.<br><span>Generate migrations instantly.</span></h1>
+    <p style="max-width: 640px; margin: 0 auto 24px;">
+      SchemaLens is a privacy-first schema diff tool for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
+      Paste two CREATE TABLE dumps, get a visual semantic diff, and generate ready-to-run ALTER TABLE scripts.
+    </p>
+    <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08)); border: 1px solid var(--primary); border-radius: var(--radius); padding: 20px 28px; max-width: 520px; margin: 0 auto 28px;">
+      <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Product Hunt Exclusive: 30% Off Pro Annual</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem;">Use code <strong style="color: var(--text); font-family: var(--mono); background: var(--surface); padding: 2px 8px; border-radius: 4px;">PRODUCTHUNT</strong> at checkout</div>
+      <div style="margin-top: 12px; font-size: 0.85rem; color: var(--comment);">Pro Annual: <s style="color: var(--text-muted);">$99</s> <strong style="color: var(--success);">$69</strong> / year</div>
+    </div>
+    <div class="hero-actions" style="justify-content: center;">
+      <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
+      <a href="https://gumroad.com/l/schemalens-pro" class="btn btn-secondary btn-lg">Get Pro with Discount</a>
+    </div>
+    <p class="hero-note">100% client-side. Your schemas never leave your browser.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 32px;">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 class="section-title">See it in action</h2>
+      <p class="section-subtitle">Paste two schemas. Click Compare. Get the diff and migration SQL in seconds.</p>
+    </div>
+    <div style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+      <img src="marketing/gallery/01-visual-diff.png" alt="SchemaLens visual diff showing added, removed, and modified tables" loading="lazy" style="width: 100%;">
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+      <div style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);">
+        <img src="marketing/gallery/02-migration-sql.png" alt="Migration SQL output with syntax-highlighted ALTER TABLE statements" loading="lazy" style="width: 100%;">
+      </div>
+      <div style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);">
+        <img src="marketing/gallery/03-export-markdown.png" alt="Export diff report as Markdown for PRs and documentation" loading="lazy" style="width: 100%;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 class="section-title">Why developers choose SchemaLens</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Privacy First</h3>
+        <p>100% client-side. Your schema never hits a server. Verify it yourself in DevTools → Network.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Zero Setup</h3>
+        <p>Open the URL and diff in 10 seconds. No install, no signup, no backend.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Semantic Diff</h3>
+        <p>Understands tables, columns, types, defaults, constraints, indexes, triggers, views — not just text.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Breaking Change Detection</h3>
+        <p>Risk score (0–100) flags dangerous migrations before they hit production.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Shareable URLs</h3>
+        <p>Share diffs via base64-encoded URLs. Paste into Slack, email, or PR descriptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>CLI + CI/CD</h3>
+        <p>Run <code>npx schemalens-cli</code> locally or in GitHub Actions, GitLab CI, and Bitbucket Pipelines.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 class="section-title">What you get</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px;">
+        <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Free</h3>
+        <div style="font-size: 2rem; font-weight: 800; margin-bottom: 16px;">$0</div>
+        <ul style="list-style: none; padding: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 2;">
+          <li>✅ Up to 10 tables per diff</li>
+          <li>✅ Visual diff + migration preview</li>
+          <li>✅ 5 SQL dialects</li>
+          <li>✅ 17 free micro-tools</li>
+          <li>✅ Schema risk score</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 2px solid var(--primary); border-radius: var(--radius); padding: 28px; position: relative;">
+        <div style="position: absolute; top: -12px; right: 20px; background: var(--primary); color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px;">PH EXCLUSIVE</div>
+        <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Pro Annual</h3>
+        <div style="font-size: 2rem; font-weight: 800; margin-bottom: 4px;"><s style="color: var(--text-muted); font-size: 1.2rem; font-weight: 500;">$99</s> $69</div>
+        <div style="font-size: 0.85rem; color: var(--comment); margin-bottom: 16px;">per year with code PRODUCTHUNT</div>
+        <ul style="list-style: none; padding: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 2;">
+          <li>✅ Unlimited tables</li>
+          <li>✅ Full migration SQL generation</li>
+          <li>✅ All exports (Markdown, PDF, JSON, SQL, Prisma, Drizzle)</li>
+          <li>✅ Shareable diff links</li>
+          <li>✅ Diff comments & annotations</li>
+          <li>✅ VS Code extension</li>
+        </ul>
+        <a href="https://gumroad.com/l/schemalens-pro" class="btn btn-primary" style="width:100%; margin-top: 16px;">Get Pro — $69/yr</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 class="section-title">Built in public</h2>
+      <p class="section-subtitle">18 days. 40 blog posts. 17 micro-tools. One developer. One mission.</p>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 32px;">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong style="color: var(--text);">5</strong> SQL dialects
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong style="color: var(--text);">17</strong> micro-tools
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong style="color: var(--text);">40</strong> blog posts
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong style="color: var(--text);">100%</strong> client-side
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong style="color: var(--text);">$0</strong> infrastructure cost
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <a href="how-it-works.html" class="btn btn-secondary">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="text-align: center;">
+    <h2>Ready to diff your schema?</h2>
+    <p>No signup required. No data leaves your browser.</p>
+    <div class="hero-actions" style="justify-content: center; margin-top: 24px;">
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+      <a href="https://gumroad.com/l/schemalens-pro" class="btn btn-secondary btn-lg">Get Pro — $69/yr</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <div class="logo" style="margin-bottom: 8px;">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="7" fill="url(#logoGradF)"/>
+          <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <defs><linearGradient id="logoGradF" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+        </svg>
+        SchemaLens
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.875rem;">Privacy-first SQL schema diff. Built in public.</p>
+    </div>
+    <div class="footer-links">
+      <a href="app.html">App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="tools.html">Tools</a>
+      <a href="about.html">About</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
