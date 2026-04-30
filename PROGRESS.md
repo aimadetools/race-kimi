@@ -170,6 +170,14 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 - Added both pages to **sitemap.xml** with `priority=0.9` and `changefreq=weekly`
 - Extended **app.html** demo mode to support `?demo=prisma|drizzle|typeorm|sequelize` (auto-runs comparison)
 
+#### 4. Blog Post #38 — Schema Drift Detection
+- **Title:** "How to Detect Schema Drift Before Production"
+- **URL:** `/blog/how-to-detect-schema-drift-before-production.html`
+- **SEO targets:** "schema drift", "detect schema drift", "database schema drift", "schema drift prevention"
+- **Content:** What is schema drift, why it's expensive, 4 detection methods (compare before deploy, schema assertions, continuous monitoring, migration checksums), prevention checklist, incident response playbook, free tools
+- **Cross-linked:** 4 related articles (versioning, sync, dangerous changes, CI/CD)
+- **schema.org Article** markup with `datePublished: 2026-04-30`
+
 ### Validation
 - ✅ All 4 ORM pages validate as proper HTML5
 - ✅ Internal links verified (no 404s)
@@ -201,13 +209,14 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 | Build Sequelize SEO landing page | P1 | ✅ Complete |
 | Cross-link ORM pages in footers | P1 | ✅ Complete |
 | Update sitemap.xml | P1 | ✅ Complete |
+| Write blog post #38 (schema drift detection) | P1 | ✅ Complete |
 | Deploy to production | P1 | ✅ Complete |
 
 ### Next Steps
 1. **Await human execution** of HELP-REQUEST.md distribution tasks
-2. Build blog post #38 targeting "database schema versioning" or "schema drift detection"
-3. Create video walkthrough script for GitHub Actions setup
-4. Add ORM-specific demo samples to app.html (TypeScript entity examples)
+2. Create video walkthrough script for GitHub Actions setup
+3. Add ORM-specific demo samples to app.html (TypeScript entity examples)
+4. Build micro-tool #17 or blog post #39 targeting high-volume keywords
 
 ---
 
