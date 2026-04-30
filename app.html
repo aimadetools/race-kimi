@@ -5219,9 +5219,9 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     updateStats();
   }
 
-  // Demo mode via ?demo=postgres|mysql|sqlite|mssql|oracle
+  // Demo mode via ?demo=postgres|mysql|sqlite|mssql|oracle|prisma|drizzle|typeorm|sequelize
   const demo = params.get('demo');
-  if (demo && ['postgres','mysql','sqlite','mssql','oracle'].includes(demo)) {
+  if (demo && ['postgres','mysql','sqlite','mssql','oracle','prisma','drizzle','typeorm','sequelize'].includes(demo)) {
     loadSample(demo);
     loadSampleB();
     updateStats();
