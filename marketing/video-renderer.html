@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemaLens Short Video Renderer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+    color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px; height: 1920px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 60px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    text-align: center;
+  }
+  .slide.active { opacity: 1; }
+  .logo {
+    font-size: 42px;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 40px;
+    letter-spacing: -1px;
+  }
+  .logo span { color: #f8fafc; }
+  .headline {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 50px;
+    text-wrap: balance;
+  }
+  .headline .accent { color: #f87171; }
+  .headline .safe { color: #4ade80; }
+  .body-text {
+    font-size: 48px;
+    line-height: 1.5;
+    color: #cbd5e1;
+    max-width: 900px;
+    text-wrap: balance;
+  }
+  .screenshot {
+    width: 900px;
+    border-radius: 24px;
+    border: 4px solid #334155;
+    margin: 40px 0;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    object-fit: cover;
+  }
+  .code-block {
+    background: #0f172a;
+    border: 3px solid #334155;
+    border-radius: 20px;
+    padding: 40px 50px;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 38px;
+    color: #e2e8f0;
+    text-align: left;
+    width: 900px;
+    margin: 30px 0;
+    line-height: 1.6;
+  }
+  .code-block .keyword { color: #c084fc; }
+  .code-block .string { color: #4ade80; }
+  .code-block .danger { color: #f87171; font-weight: bold; }
+  .badge {
+    display: inline-block;
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 20px 0;
+  }
+  .badge-red { background: rgba(248,113,113,0.15); color: #f87171; border: 3px solid #f87171; }
+  .badge-green { background: rgba(74,222,128,0.15); color: #4ade80; border: 3px solid #4ade80; }
+  .badge-yellow { background: rgba(250,204,21,0.15); color: #facc15; border: 3px solid #facc15; }
+  .countdown {
+    font-size: 200px;
+    font-weight: 900;
+    color: #38bdf8;
+    line-height: 1;
+    margin-bottom: 30px;
+  }
+  .url-bar {
+    position: absolute;
+    bottom: 80px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 44px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 1px;
+  }
+  .url-bar .sub {
+    display: block;
+    font-size: 32px;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 12px;
+  }
+  .arrow {
+    font-size: 80px;
+    color: #38bdf8;
+    margin: 20px 0;
+    animation: bounce 1s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(20px); }
+  }
+  .brand-bar {
+    position: absolute;
+    top: 60px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div id="slides"></div>
+<div class="brand-bar">SchemaLens — Free Schema Diff Tool</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const videoId = params.get('id') || '01';
+
+const videos = {
+  '01': [
+    { type: 'text', headline: 'This migration looks <span class="safe">safe</span>.', body: "It's not.", delay: 2500 },
+    { type: 'code', code: '<span class="keyword">ALTER TABLE</span> users <span class="keyword">DROP COLUMN</span> <span class="danger">legacy_id</span>;', body: 'Dropping a column looks harmless...', delay: 3000 },
+    { type: 'text', headline: 'But if code still reads it...', body: '💥 CRASH. Production down.', delay: 2500 },
+    { type: 'screenshot', src: 'gallery/01-visual-diff.png', body: 'Paste both schemas. Hit Compare.', delay: 3000 },
+    { type: 'text', headline: 'Breaking change detected.', body: '<span class="badge badge-red">Risk Score: 95/100</span>', delay: 3000 },
+    { type: 'text', headline: '<span class="accent">SchemaLens</span>', body: 'Free. Browser-based. Zero setup.<br><br>Catch breaking changes before they catch you.', delay: 3500 },
+  ],
+  '02': [
+    { type: 'text', headline: 'What is <span class="accent">schema diff</span>?', body: 'And why should you care?', delay: 2500 },
+    { type: 'text', headline: 'Staging ≠ Production', body: 'That gap is <span class="accent">schema drift</span>.<br>Weird bugs. Late nights. 😰', delay: 3000 },
+    { type: 'screenshot', src: 'gallery/01-visual-diff.png', body: 'Paste two schemas. See changes instantly.', delay: 3000 },
+    { type: 'text', headline: '<span class="safe">New</span> • <span class="accent">Modified</span> • <span class="danger">Deleted</span>', body: 'Color-coded. Auto migration script.', delay: 3000 },
+    { type: 'text', headline: '<span class="accent">SchemaLens</span>', body: 'No signup. No install.<br>Paste and compare in 10 seconds.', delay: 3500 },
+  ],
+  '03': [
+    { type: 'text', headline: '300 lines of SQL<br>in a <span class="accent">PR</span>?', body: 'You reviewing this by hand?', delay: 2500 },
+    { type: 'text', headline: 'Miss one <span class="danger">dangerous</span> line...', body: 'Broken deploy. 😱', delay: 2500 },
+    { type: 'screenshot', src: 'gallery/01-visual-diff.png', body: 'Copy before + after. Paste. Compare.', delay: 3000 },
+    { type: 'text', headline: 'Visual diff + <span class="badge badge-red">Risk Score</span>', body: 'Approve or reject in 60 seconds.', delay: 3000 },
+    { type: 'text', headline: '<span class="accent">SchemaLens</span>', body: 'Add it to your review workflow.<br>Free. Zero setup.', delay: 3500 },
+  ],
+  '04': [
+    { type: 'text', headline: 'Your databases are <span class="accent">drifting</span>.', body: 'Right now.', delay: 2500 },
+    { type: 'text', headline: 'Hotfixes. Refactors.', body: 'Nobody wrote them down. 📉', delay: 2500 },
+    { type: 'code', code: 'pg_dump > schema.sql<br>npx schemalens-cli', body: 'Dump both. Compare.', delay: 3000 },
+    { type: 'screenshot', src: 'gallery/01-visual-diff.png', body: 'Every drift = color-coded.', delay: 3000 },
+    { type: 'text', headline: '<span class="accent">SchemaLens</span>', body: 'Browser or CLI.<br>Free tier. Link in bio.', delay: 3500 },
+  ],
+  '05': [
+    { type: 'text', headline: '3 changes that look <span class="safe">safe</span>...', body: 'but break production. 💥', delay: 2500 },
+    { type: 'text', headline: '<span class="countdown">1</span>', body: '<span class="code-block" style="display:inline-block;padding:20px 40px;font-size:36px;"><span class="keyword">NOT NULL</span> without <span class="string">DEFAULT</span></span>', delay: 2500 },
+    { type: 'text', headline: '<span class="countdown">2</span>', body: '<span class="code-block" style="display:inline-block;padding:20px 40px;font-size:36px;">Narrowing <span class="keyword">VARCHAR</span></span>', delay: 2500 },
+    { type: 'text', headline: '<span class="countdown">3</span>', body: '<span class="code-block" style="display:inline-block;padding:20px 40px;font-size:36px;">Dropping <span class="danger">referenced</span> columns</span>', delay: 2500 },
+    { type: 'screenshot', src: 'gallery/01-visual-diff.png', body: 'SchemaLens catches all 3 automatically.', delay: 3000 },
+    { type: 'text', headline: '<span class="accent">SchemaLens</span>', body: 'Free. No signup.<br>Find the traps before deploy.', delay: 3500 },
+  ],
+};
+
+const slidesData = videos[videoId] || videos['01'];
+const container = document.getElementById('slides');
+
+slidesData.forEach((slide, i) => {
+  const el = document.createElement('div');
+  el.className = 'slide';
+  el.dataset.delay = slide.delay;
+
+  let inner = '';
+  if (slide.type === 'text') {
+    inner = `<div class="logo">Schema<span>Lens</span></div><div class="headline">${slide.headline}</div><div class="body-text">${slide.body}</div>`;
+  } else if (slide.type === 'code') {
+    inner = `<div class="logo">Schema<span>Lens</span></div><div class="code-block">${slide.code}</div><div class="body-text" style="margin-top:30px;">${slide.body}</div>`;
+  } else if (slide.type === 'screenshot') {
+    inner = `<div class="logo">Schema<span>Lens</span></div><img class="screenshot" src="${slide.src}" alt="demo"><div class="body-text">${slide.body}</div>`;
+  }
+
+  el.innerHTML = inner + '<div class="url-bar">schemalens.tech<span class="sub">Free SQL Schema Diff Tool</span></div>';
+  container.appendChild(el);
+});
+
+async function play() {
+  const slides = document.querySelectorAll('.slide');
+  for (let i = 0; i < slides.length; i++) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[i].classList.add('active');
+    await new Promise(r => setTimeout(r, parseInt(slides[i].dataset.delay)));
+  }
+  // Hold on last frame
+  await new Promise(r => setTimeout(r, 2000));
+}
+
+// Auto-start after a brief pause for recording to initialize
+setTimeout(play, 800);
+</script>
+</body>
+</html>

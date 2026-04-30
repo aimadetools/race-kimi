@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemaLens Video Tips — 60-Second SQL Schema Guides</title>
+<meta name="description" content="Watch free 60-second video tips on SQL schema diff, breaking change detection, migration review, and safe database deployments.">
+<link rel="canonical" href="https://schemalens.tech/video-tips.html">
+<meta property="og:title" content="SchemaLens Video Tips — 60-Second SQL Schema Guides">
+<meta property="og:description" content="Free short-form videos: catch breaking changes, review migration PRs, detect schema drift, and ship safer database migrations.">
+<meta property="og:url" content="https://schemalens.tech/video-tips.html">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<style>
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 32px; }
+  .video-card { background: var(--card-bg, #fff); border-radius: 16px; overflow: hidden; border: 1px solid var(--border, #e2e8f0); transition: transform .2s, box-shadow .2s; cursor: pointer; text-decoration: none; color: inherit; }
+  .video-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+  .video-thumb { position: relative; width: 100%; aspect-ratio: 9/16; background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .play-btn { position: absolute; width: 64px; height: 64px; background: rgba(56,189,248,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform .2s; }
+  .play-btn::after { content: ''; width: 0; height: 0; border-left: 22px solid #fff; border-top: 14px solid transparent; border-bottom: 14px solid transparent; margin-left: 6px; }
+  .video-card:hover .play-btn { transform: scale(1.1); }
+  .video-info { padding: 20px; }
+  .video-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+  .video-info p { font-size: 14px; color: var(--muted, #64748b); line-height: 1.5; margin: 0; }
+  .video-meta { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted, #64748b); }
+  .tag { display: inline-block; padding: 4px 10px; border-radius: 100px; background: rgba(56,189,248,0.1); color: #0284c7; font-size: 12px; font-weight: 600; }
+  .page-hero { text-align: center; padding: 60px 20px 40px; }
+  .page-hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
+  .page-hero p { font-size: 18px; color: var(--muted, #64748b); max-width: 600px; margin: 0 auto; }
+  .platform-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+  .platform-links a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 100px; background: var(--card-bg, #fff); border: 1px solid var(--border, #e2e8f0); font-size: 14px; font-weight: 600; color: var(--text, #0f172a); text-decoration: none; transition: all .2s; }
+  .platform-links a:hover { background: #f1f5f9; }
+  .script-download { margin-top: 48px; padding: 24px; background: rgba(56,189,248,0.05); border-radius: 16px; border: 1px dashed rgba(56,189,248,0.3); text-align: center; }
+  .script-download h3 { font-size: 18px; margin-bottom: 8px; }
+  .script-download p { font-size: 14px; color: var(--muted, #64748b); margin-bottom: 16px; }
+  @media (max-width: 640px) {
+    .page-hero h1 { font-size: 28px; }
+    .video-grid { grid-template-columns: 1fr; }
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGallery",
+  "name": "SchemaLens Video Tips",
+  "description": "Free 60-second video guides on SQL schema diff, breaking changes, and safe migrations.",
+  "url": "https://schemalens.tech/video-tips.html",
+  "video": [
+    {
+      "@type": "VideoObject",
+      "name": "Catch Breaking Schema Changes in 60 Seconds",
+      "description": "How SchemaLens detects dangerous migrations before they hit production.",
+      "thumbnailUrl": "https://schemalens.tech/marketing/gallery/reel-01-thumb.png",
+      "uploadDate": "2026-04-30",
+      "duration": "PT55S",
+      "publisher": { "@type": "Organization", "name": "SchemaLens", "logo": { "@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg" } }
+    },
+    {
+      "@type": "VideoObject",
+      "name": "SQL Diff Explained in 60 Seconds",
+      "description": "What is schema diff and why every developer needs it.",
+      "thumbnailUrl": "https://schemalens.tech/marketing/gallery/reel-02-thumb.png",
+      "uploadDate": "2026-04-30",
+      "duration": "PT55S",
+      "publisher": { "@type": "Organization", "name": "SchemaLens" }
+    },
+    {
+      "@type": "VideoObject",
+      "name": "Review a Migration PR in Under 2 Minutes",
+      "description": "How to use SchemaLens in code review workflows.",
+      "thumbnailUrl": "https://schemalens.tech/marketing/gallery/reel-03-thumb.png",
+      "uploadDate": "2026-04-30",
+      "duration": "PT55S",
+      "publisher": { "@type": "Organization", "name": "SchemaLens" }
+    },
+    {
+      "@type": "VideoObject",
+      "name": "Find Schema Drift Before It Finds You",
+      "description": "Staging vs Production schema comparison.",
+      "thumbnailUrl": "https://schemalens.tech/marketing/gallery/reel-04-thumb.png",
+      "uploadDate": "2026-04-30",
+      "duration": "PT55S",
+      "publisher": { "@type": "Organization", "name": "SchemaLens" }
+    },
+    {
+      "@type": "VideoObject",
+      "name": "3 Schema Changes That Look Safe But Aren't",
+      "description": "Common dangerous migrations every developer should know.",
+      "thumbnailUrl": "https://schemalens.tech/marketing/gallery/reel-05-thumb.png",
+      "uploadDate": "2026-04-30",
+      "duration": "PT55S",
+      "publisher": { "@type": "Organization", "name": "SchemaLens" }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="index.html" class="logo">SchemaLens</a>
+    <ul>
+      <li><a href="app.html">App</a></li>
+      <li><a href="tools.html">Tools</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="page-hero">
+    <h1>🎬 SchemaLens Video Tips</h1>
+    <p>Free 60-second guides on SQL schema diff, breaking changes, migration review, and safe deployments. Watch, learn, share.</p>
+    <div class="platform-links">
+      <a href="https://youtube.com/@schemalens" target="_blank" rel="noopener">▶️ YouTube</a>
+      <a href="https://tiktok.com/@schemalens" target="_blank" rel="noopener">🎵 TikTok</a>
+      <a href="https://instagram.com/schemalens" target="_blank" rel="noopener">📸 Instagram Reels</a>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="video-grid">
+      <a class="video-card" href="marketing/video-scripts/01-breaking-changes.md" target="_blank">
+        <div class="video-thumb">
+          <img src="marketing/gallery/01-visual-diff.png" alt="Breaking changes demo" loading="lazy">
+          <div class="play-btn"></div>
+        </div>
+        <div class="video-info">
+          <h3>Catch Breaking Schema Changes in 60 Seconds</h3>
+          <p>How SchemaLens detects dangerous migrations before they hit production.</p>
+          <div class="video-meta">
+            <span class="tag">Breaking Changes</span>
+            <span>≈ 55 sec</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="video-card" href="marketing/video-scripts/02-diff-in-60-seconds.md" target="_blank">
+        <div class="video-thumb">
+          <img src="marketing/gallery/02-migration-sql.png" alt="Schema diff explained" loading="lazy">
+          <div class="play-btn"></div>
+        </div>
+        <div class="video-info">
+          <h3>SQL Diff Explained in 60 Seconds</h3>
+          <p>What is schema diff and why every developer needs it.</p>
+          <div class="video-meta">
+            <span class="tag">Beginner</span>
+            <span>≈ 55 sec</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="video-card" href="marketing/video-scripts/03-migration-pr-review.md" target="_blank">
+        <div class="video-thumb">
+          <img src="marketing/gallery/03-export-markdown.png" alt="Migration PR review" loading="lazy">
+          <div class="play-btn"></div>
+        </div>
+        <div class="video-info">
+          <h3>Review a Migration PR in Under 2 Minutes</h3>
+          <p>How to use SchemaLens in code review workflows.</p>
+          <div class="video-meta">
+            <span class="tag">Code Review</span>
+            <span>≈ 55 sec</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="video-card" href="marketing/video-scripts/04-schema-drift.md" target="_blank">
+        <div class="video-thumb">
+          <img src="marketing/gallery/04-breaking-changes.png" alt="Schema drift detection" loading="lazy">
+          <div class="play-btn"></div>
+        </div>
+        <div class="video-info">
+          <h3>Find Schema Drift Before It Finds You</h3>
+          <p>Staging vs Production schema comparison.</p>
+          <div class="video-meta">
+            <span class="tag">DevOps</span>
+            <span>≈ 55 sec</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="video-card" href="marketing/video-scripts/05-safe-migrations.md" target="_blank">
+        <div class="video-thumb">
+          <img src="marketing/gallery/demo-static.png" alt="Safe migrations" loading="lazy">
+          <div class="play-btn"></div>
+        </div>
+        <div class="video-info">
+          <h3>3 Schema Changes That Look Safe But Aren't</h3>
+          <p>Common dangerous migrations every developer should know.</p>
+          <div class="video-meta">
+            <span class="tag">Safety</span>
+            <span>≈ 55 sec</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="script-download">
+      <h3>📥 Download Video Scripts & Assets</h3>
+      <p>All scripts, captions, and generation templates are open source. Use them to create your own SchemaLens content.</p>
+      <a href="marketing/video-scripts/" class="btn btn-primary" target="_blank">Browse Scripts</a>
+      <a href="marketing/generate-reels.py" class="btn btn-secondary" target="_blank" download>Download Reel Generator</a>
+    </div>
+  </section>
+
+  <section class="container" style="margin-top: 48px; text-align: center;">
+    <h2>Ready to try SchemaLens?</h2>
+    <p style="color: var(--muted); margin-bottom: 20px;">Paste two schemas. Get a visual diff. Free — no signup required.</p>
+    <a href="app.html" class="btn btn-primary">Open the App</a>
+    <a href="how-it-works.html" class="btn btn-secondary">How It Works</a>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 SchemaLens. Built in public.</p>
+  <p><a href="index.html">Home</a> · <a href="app.html">App</a> · <a href="tools.html">Tools</a> · <a href="blog.html">Blog</a> · <a href="pricing.html">Pricing</a></p>
+</footer>
+</body>
+</html>
