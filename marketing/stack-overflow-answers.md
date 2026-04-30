@@ -222,6 +222,169 @@ Every migration should answer:
 
 ---
 
+## Answer 4: "How to compare two PostgreSQL database schemas?"
+
+**Target questions:**
+- https://stackoverflow.com/questions/219546 (40K+ views)
+- https://stackoverflow.com/questions/4821938 (25K+ views)
+- Search: "compare postgresql schemas"
+
+**Draft answer:**
+
+---
+
+Comparing two PostgreSQL schemas is a common task when syncing environments or validating migrations. Here are the approaches that work best:
+
+### Option 1: `pg_dump` + diff (CLI)
+The simplest approach is dumping both schemas and diffing them:
+
+```bash
+pg_dump -s -h prod_host -U user prod_db > prod.sql
+pg_dump -s -h staging_host -U user staging_db > staging.sql
+diff -u prod.sql staging.sql
+```
+
+Pros: Universal, no extra tools.  
+Cons: Text diffs are noisy — `pg_dump` output order can differ even for identical schemas. Hard to read for large schemas.
+
+### Option 2: `apgdiff` (Java CLI)
+A purpose-built PostgreSQL schema diff tool:
+
+```bash
+java -jar apgdiff.jar old_schema.sql new_schema.sql
+```
+
+Pros: Outputs `ALTER TABLE` statements directly.  
+Cons: Requires Java, limited active maintenance, doesn't handle all PostgreSQL-specific features (exclusion constraints, custom types).
+
+### Option 3: SchemaLens (Browser-based)
+For a quick visual diff without installing anything:
+
+1. Export schemas: `pg_dump -s database > schema.sql`
+2. Paste both into [SchemaLens](https://schemalens.tech), select "PostgreSQL"
+3. Get a semantic diff: tables, columns, indexes, constraints, triggers, views, functions
+4. Export the generated `ALTER TABLE` / `CREATE` migration script
+
+Pros: Zero install, visual, handles PostgreSQL-specific objects (triggers, functions, views), privacy-first (client-side).  
+Cons: Free tier limited to 10 tables.
+
+### Option 4: IDE Tools
+- **DataGrip / IntelliJ:** Database → Compare Schemas
+- **DBeaver:** Database → Compare/Migrate
+- **pgAdmin:** Limited built-in diff support
+
+### Option 5: `pg_dump --schema-only` + `migra` (Python)
+```bash
+pip install migra
+migra postgresql://user:pass@old_host/db postgresql://user:pass@new_host/db
+```
+
+Pros: Compares live databases directly, outputs SQL.  
+Cons: Requires Python, needs live DB connections (not dump files).
+
+**My recommendation:**
+- Quick one-off with dumps → SchemaLens (fastest, cleanest output)
+- Automated CI/CD pipeline → `migra` or custom script
+- Enterprise with 50+ tables → DataGrip or Redgate
+
+*Disclaimer: I built SchemaLens. I mention it because it's the fastest option for this exact workflow, but evaluate all tools for your constraints.*
+
+---
+
+## Answer 5: "How to find differences between production and staging database schemas?"
+
+**Target questions:**
+- https://stackoverflow.com/questions/225772 (related, 50K+ views)
+- https://stackoverflow.com/questions/356578 (related, 30K+ views)
+- Search: "difference between production staging database schema"
+
+**Draft answer:**
+
+---
+
+Finding differences between production and staging schemas is critical before deploying migrations. Here's a systematic approach:
+
+### Step 1: Export Both Schemas
+Don't compare live databases directly during business hours. Export schema-only dumps:
+
+**PostgreSQL:**
+```bash
+pg_dump -s -h prod.example.com -U deploy prod_db > prod_schema.sql
+pg_dump -s -h staging.example.com -U deploy staging_db > staging_schema.sql
+```
+
+**MySQL:**
+```bash
+mysqldump -d -h prod.example.com -u deploy -p prod_db > prod_schema.sql
+mysqldump -d -h staging.example.com -u deploy -p staging_db > staging_schema.sql
+```
+
+**SQL Server:**
+```bash
+sqlcmd -S prod.example.com -d prod_db -Q "EXEC sp_help" > prod_schema.txt
+```
+
+### Step 2: Run a Semantic Diff
+Text diffs (`diff`, `git diff`) on SQL dumps are painful. Schema dumps often reorder constraints or use different formatting.
+
+Use a **semantic diff tool** that understands database structure:
+
+**Browser-based (fastest for one-offs):**
+[SchemaLens](https://schemalens.tech) — paste both dumps, select your dialect, and see:
+- Tables added/removed
+- Columns added/removed/modified
+- Index changes
+- Constraint changes (CHECK, UNIQUE, FOREIGN KEY)
+- View and function differences
+
+It also generates the migration script to sync them.
+
+**CLI-based (best for automation):**
+```bash
+# PostgreSQL
+npx schemalens-cli diff --old prod_schema.sql --new staging_schema.sql --dialect postgres
+
+# MySQL
+npx schemalens-cli diff --old prod_schema.sql --new staging_schema.sql --dialect mysql
+```
+
+Add `--fail-on-breaking` to your CI pipeline to block deploys on dangerous changes.
+
+### Step 3: Investigate Unexpected Differences
+Not all differences are bad, but some are red flags:
+
+| Difference | Risk Level | Action |
+|------------|-----------|--------|
+| Staging has tables not in prod | LOW | Probably safe — test tables, feature branches |
+| Prod has tables not in staging | MEDIUM | Missing migration? Check if code references them |
+| Column type differs | HIGH | Data loss risk — verify truncation |
+| Missing index in prod | HIGH | Performance degradation imminent |
+| Extra FK constraint in staging | LOW | Likely upcoming migration |
+
+### Step 4: Document and Fix
+For every meaningful difference:
+1. Write the migration script to resolve it
+2. Test on a copy of production data
+3. Schedule during low-traffic window
+4. Have a rollback plan
+
+### Automation Tip
+Add this to your CI/CD pipeline to catch drift before deploy:
+
+```yaml
+- name: Detect Schema Drift
+  run: |
+    pg_dump -s $PROD_DATABASE_URL > prod.sql
+    pg_dump -s $STAGING_DATABASE_URL > staging.sql
+    npx schemalens-cli diff --old prod.sql --new staging.sql --fail-on-breaking
+```
+
+**Bottom line:** Don't rely on memory or manual checks. Schema drift is how production incidents start. Diff before every deploy.
+
+*Disclaimer: I built SchemaLens. I mention it because it automates the diff and migration generation steps above, but the workflow itself works with any comparison tool.*
+
+---
+
 ## Posting Guidelines
 
 1. **Read the question carefully** — only post if SchemaLens is genuinely relevant
