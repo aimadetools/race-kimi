@@ -1,0 +1,83 @@
+name: 'SchemaLens Schema Diff'
+branding:
+  icon: 'git-compare'
+  color: 'indigo'
+description: 'Compare SQL schemas and post diff comments on PRs using SchemaLens'
+inputs:
+  old-schema-path:
+    description: 'Path to the old schema SQL file'
+    required: true
+  new-schema-path:
+    description: 'Path to the new schema SQL file'
+    required: true
+  dialect:
+    description: 'SQL dialect: postgres | mysql | sqlite | mssql | oracle'
+    default: 'postgres'
+    required: false
+  license-key:
+    description: 'SchemaLens Pro license key for API access'
+    required: true
+  format:
+    description: 'Output format: json | markdown | sql'
+    default: 'markdown'
+    required: false
+  fail-on-breaking:
+    description: 'Fail the workflow if breaking changes are detected (true/false)'
+    default: 'false'
+    required: false
+  post-comment:
+    description: 'Post the diff as a PR comment (true/false). Requires GITHUB_TOKEN.'
+    default: 'false'
+    required: false
+  github-token:
+    description: 'GitHub token for posting PR comments'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Diff schemas with SchemaLens API
+      id: diff
+      shell: bash
+      run: |
+        set -e
+        OLD_SQL=$(cat "${{ inputs.old-schema-path }}" | jq -Rs .)
+        NEW_SQL=$(cat "${{ inputs.new-schema-path }}" | jq -Rs .)
+
+        RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/diff" \
+          -H "Content-Type: application/json" \
+          -H "X-License-Key: ${{ inputs.license-key }}" \
+          -d "{\"schemaA\":${OLD_SQL},\"schemaB\":${NEW_SQL},\"dialect\":\"${{ inputs.dialect }}\",\"format\":\"${{ inputs.format }}\"}")
+
+        echo "response=${RESPONSE}" >> "$GITHUB_OUTPUT"
+
+        # Extract breaking change count for conditional failing
+        BCOUNT=$(echo "$RESPONSE" | jq -r '.summary.breakingChangeCount // 0')
+        echo "breaking_count=${BCOUNT}" >> "$GITHUB_OUTPUT"
+
+        # Print markdown or sql output to logs
+        if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
+          echo "$RESPONSE" | jq -r '.markdown'
+        elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
+          echo "$RESPONSE" | jq -r '.migration'
+        fi
+
+    - name: Fail on breaking changes
+      if: inputs.fail-on-breaking == 'true' && steps.diff.outputs.breaking_count != '0'
+      shell: bash
+      run: |
+        echo "Breaking changes detected: ${{ steps.diff.outputs.breaking_count }}"
+        exit 1
+
+    - name: Post PR comment
+      if: inputs.post-comment == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        BODY=$(echo '${{ steps.diff.outputs.response }}' | jq -r '.markdown // .migration // "Schema diff completed."')
+        PAYLOAD=$(jq -n --arg body "$BODY" '{body: $body}')
+        curl -s -X POST \
+          -H "Authorization: token $GH_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "${{ github.event.pull_request.comments_url }}" \
+          -d "$PAYLOAD"

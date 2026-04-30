@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL Test Data Generator — SchemaLens</title>
+  <meta name="description" content="Generate realistic fake SQL test data instantly. Paste a CREATE TABLE statement or define columns manually, choose a dialect, and get INSERT statements. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="Free SQL Test Data Generator — SchemaLens">
+  <meta property="og:description" content="Generate realistic fake SQL test data instantly. Paste CREATE TABLE or define columns, pick a dialect, and get INSERT statements. No signup required.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-test-data-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL Test Data Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate realistic fake SQL INSERT statements from CREATE TABLE definitions or manual column specs. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Type-aware fake data: names, emails, addresses, dates, booleans, UUIDs, and more.",
+    "url": "https://schemalens.tech/tools/sql-test-data-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .panel h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+    .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0 16px; }
+    .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    .toolbar select, .toolbar button, .toolbar input {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem;
+    }
+    .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; cursor: pointer; }
+    .toolbar button:hover { background: var(--primary-light); }
+
+    textarea.code-input {
+      width: 100%; min-height: 160px; background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
+      font-family: var(--mono); font-size: 0.9rem; resize: vertical; box-sizing: border-box;
+    }
+
+    .cols-header { display: grid; grid-template-columns: 1fr 140px 140px 36px; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 0 4px; }
+    .col-def-row { display: grid; grid-template-columns: 1fr 140px 140px 36px; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .col-def-row input, .col-def-row select {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 7px 10px; font-size: 0.9rem; font-family: var(--mono); width: 100%;
+    }
+    .col-def-row button {
+      background: transparent; color: var(--danger); border: 1px solid var(--danger);
+      border-radius: var(--radius-sm); width: 32px; height: 32px; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+    }
+    .col-def-row button:hover { background: rgba(239,68,68,0.1); }
+
+    .add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: transparent;
+      color: var(--primary); border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
+      cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 8px; }
+    .add-btn:hover { border-color: var(--primary); background: rgba(99,102,241,0.05); }
+
+    .output-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; display: flex; flex-direction: column; margin-bottom: 20px; }
+    .output-label { padding: 10px 14px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+      border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .output-label button { background: transparent; color: var(--text-muted); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; }
+    .output-label button:hover { color: var(--primary); border-color: var(--primary); }
+    pre.output { margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+      overflow-x: auto; white-space: pre; background: var(--bg); color: var(--text); }
+
+    .hint { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } .cols-header, .col-def-row { grid-template-columns: 1fr 100px 100px 36px; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo" style="display:flex;align-items:center;gap:8px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        SchemaLens
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../pricing.html">Pricing</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>SQL Test Data Generator</h1>
+      <p>Generate realistic fake INSERT statements from your CREATE TABLE definition. Pick a dialect, set the row count, and copy the output.</p>
+    </div>
+
+    <div class="toolbar">
+      <label>SQL Dialect</label>
+      <select id="dialectSelect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <label>Rows</label>
+      <input type="number" id="rowCount" value="10" min="1" max="1000" style="width:80px;text-align:center;">
+      <button id="generateBtn">Generate INSERTs</button>
+      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <h3>📝 Paste CREATE TABLE</h3>
+        <textarea id="ddlInput" class="code-input" placeholder="Paste a CREATE TABLE statement and click Parse...
+
+Example:
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE,
+  created_at TIMESTAMP DEFAULT NOW()
+);"></textarea>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button id="parseBtn" class="add-btn" style="margin-top:0;background:var(--primary);color:#fff;border-style:solid;">Parse Columns</button>
+          <span class="hint">Auto-detects column names and types from your DDL.</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>⚙️ Columns</h3>
+        <div class="cols-header">
+          <span>Column</span>
+          <span>Type</span>
+          <span>Data Kind</span>
+          <span></span>
+        </div>
+        <div id="columnsList"></div>
+        <button id="addColBtn" class="add-btn">+ Add Column</button>
+      </div>
+    </div>
+
+    <div class="output-wrap">
+      <div class="output-label">
+        <span>Generated SQL</span>
+        <div style="display:flex;gap:8px;">
+          <button id="copyBtn">Copy</button>
+          <button id="downloadBtn">Download .sql</button>
+        </div>
+      </div>
+      <pre id="output" class="output">-- Click "Generate INSERTs" to create test data</pre>
+    </div>
+
+    <div class="panel" style="text-align:center;margin-bottom:40px;">
+      <p style="margin:0 0 10px;color:var(--text-muted);">Need to compare schemas after your data changes?</p>
+      <a href="../app.html" class="btn btn-primary">Open SchemaLens App</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>SchemaLens — SQL Schema Diff &amp; Migration Generator</p>
+      <p><a href="../index.html">Home</a> · <a href="../app.html">App</a> · <a href="../tools.html">Tools</a> · <a href="../blog.html">Blog</a> · <a href="../pricing.html">Pricing</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Inline lightweight fake data generator
+    const FIRST_NAMES = ["James","Mary","John","Patricia","Robert","Jennifer","Michael","Linda","William","Elizabeth","David","Barbara","Richard","Susan","Joseph","Jessica","Thomas","Sarah","Charles","Karen","Christopher","Nancy","Daniel","Lisa","Matthew","Betty","Anthony","Margaret","Mark","Sandra","Donald","Ashley","Steven","Kimberly","Paul","Emily","Andrew","Donna","Joshua","Michelle","Kenneth","Dorothy","Kevin","Carol","Brian","Amanda","George","Melissa","Edward","Deborah"];
+    const LAST_NAMES = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez","Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin","Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson","Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores","Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts"];
+    const DOMAINS = ["example.com","mail.com","test.org","demo.net","acme.io","foobar.dev","sample.co","lorem.biz","ipsum.info","dolor.app"];
+    const COMPANIES = ["Acme Corp","Globex","Initech","Hooli","Massive Dynamic","Wayne Enterprises","Stark Industries","Cyberdyne","Umbrella Corp","Soylent Corp","Aperture Science","Black Mesa","Tyrell Corp","Weyland-Yutani","Omni Consumer Products"];
+    const JOBS = ["Software Engineer","Product Manager","Data Analyst","DevOps Engineer","Designer","QA Engineer","CTO","CEO","Sales Rep","Marketing Manager","HR Specialist","Support Agent","Accountant","Consultant","Writer"];
+    const CITIES = ["New York","Los Angeles","Chicago","Houston","Phoenix","Philadelphia","San Antonio","San Diego","Dallas","San Jose","Austin","Jacksonville","Fort Worth","Columbus","Charlotte","San Francisco","Indianapolis","Seattle","Denver","Washington"];
+    const COUNTRIES = ["USA","UK","Canada","Germany","France","Australia","Japan","Brazil","India","Netherlands","Sweden","Italy","Spain","Mexico","South Korea"];
+    const STREETS = ["Main St","Broadway","Oak Ave","Maple Dr","Cedar Ln","Pine Rd","Elm St","Washington Ave","Lake Shore Dr","Hillcrest Rd","Sunset Blvd","Park Ave","River Rd","Highland Ave","Forest Dr"];
+    const LOREM = ["lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua","ut","enim","ad","minim","veniam","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat"];
+
+    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function randBool() { return Math.random() < 0.5; }
+    function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }); }
+    function dateStr() {
+      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
+      return d.toISOString().slice(0,10);
+    }
+    function datetimeStr() {
+      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
+      return d.toISOString().slice(0,19).replace('T',' ');
+    }
+    function tsStr() {
+      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
+      return d.toISOString();
+    }
+    function sentence(n=8) {
+      let words = [];
+      for (let i=0;i<n;i++) words.push(rand(LOREM));
+      words[0] = words[0][0].toUpperCase() + words[0].slice(1);
+      return words.join(' ') + '.';
+    }
+    function paragraph() { return sentence(6) + ' ' + sentence(10) + ' ' + sentence(8); }
+
+    const GENERATORS = {
+      first_name: () => rand(FIRST_NAMES),
+      last_name: () => rand(LAST_NAMES),
+      full_name: () => rand(FIRST_NAMES) + ' ' + rand(LAST_NAMES),
+      email: () => rand(FIRST_NAMES).toLowerCase() + '.' + rand(LAST_NAMES).toLowerCase() + '@' + rand(DOMAINS),
+      company: () => rand(COMPANIES),
+      job_title: () => rand(JOBS),
+      phone: () => `+1 (${randInt(200,999)}) ${randInt(200,999)}-${randInt(1000,9999)}`,
+      address: () => `${randInt(100,9999)} ${rand(STREETS)}, ${rand(CITIES)}`,
+      city: () => rand(CITIES),
+      country: () => rand(COUNTRIES),
+      username: () => rand(FIRST_NAMES).toLowerCase() + randInt(10,99),
+      password: () => Math.random().toString(36).slice(2,10) + randInt(10,99) + '!',
+      url: () => 'https://www.' + rand(DOMAINS),
+      sentence: () => sentence(),
+      paragraph: () => paragraph(),
+      uuid: () => uuid(),
+      boolean: () => randBool(),
+      date: () => dateStr(),
+      datetime: () => datetimeStr(),
+      timestamp: () => tsStr(),
+      integer: () => randInt(1,100000),
+      smallint: () => randInt(-32768,32767),
+      bigint: () => randInt(1000000,999999999),
+      decimal: () => (Math.random() * 10000).toFixed(2),
+      float: () => (Math.random() * 10000).toFixed(4),
+      text: () => paragraph(),
+      varchar: () => sentence(randInt(3,12)),
+      char: () => Math.random().toString(36).slice(2, randInt(3,8)).toUpperCase(),
+      enum: (vals) => rand(vals),
+      generic: () => 'value_' + randInt(1,9999)
+    };
+
+    // Map SQL types to generator keys
+    function typeToKind(type) {
+      const t = type.toLowerCase();
+      if (t.includes('int') && !t.includes('big')) return 'integer';
+      if (t.includes('bigint')) return 'bigint';
+      if (t.includes('smallint') || t.includes('tinyint')) return 'smallint';
+      if (t.includes('decimal') || t.includes('numeric') || t.includes('money')) return 'decimal';
+      if (t.includes('float') || t.includes('real') || t.includes('double')) return 'float';
+      if (t.includes('bool')) return 'boolean';
+      if (t.includes('date') && !t.includes('time')) return 'date';
+      if (t.includes('timestamp') || t.includes('datetime')) return 'timestamp';
+      if (t.includes('time') && !t.includes('timestamp')) return 'datetime';
+      if (t.includes('uuid') || t.includes('uniqueidentifier')) return 'uuid';
+      if (t.includes('text') || t.includes('clob') || t.includes('blob')) return 'text';
+      if (t.includes('char') || t.includes('string')) return 'varchar';
+      if (t.includes('enum')) return 'enum';
+      return 'generic';
+    }
+
+    const KINDS = Object.keys(GENERATORS);
+
+    // --- UI state ---
+    let columns = [];
+
+    function renderColumns() {
+      const list = document.getElementById('columnsList');
+      list.innerHTML = '';
+      columns.forEach((col, idx) => {
+        const row = document.createElement('div');
+        row.className = 'col-def-row';
+        row.innerHTML = `
+          <input type="text" value="${escapeHtml(col.name)}" placeholder="column_name" onchange="updateCol(${idx},'name',this.value)">
+          <input type="text" value="${escapeHtml(col.type)}" placeholder="VARCHAR(255)" onchange="updateCol(${idx},'type',this.value)">
+          <select onchange="updateCol(${idx},'kind',this.value)">
+            ${KINDS.map(k => `<option value="${k}" ${col.kind===k?'selected':''}>${k}</option>`).join('')}
+          </select>
+          <button onclick="removeCol(${idx})" title="Remove">×</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    window.updateCol = (idx, field, val) => { columns[idx][field] = val; };
+    window.removeCol = (idx) => { columns.splice(idx,1); renderColumns(); };
+
+    document.getElementById('addColBtn').onclick = () => {
+      columns.push({ name:'', type:'VARCHAR(255)', kind:'varchar' });
+      renderColumns();
+    };
+
+    document.getElementById('parseBtn').onclick = () => {
+      const sql = document.getElementById('ddlInput').value;
+      columns = parseColumnsFromDDL(sql);
+      renderColumns();
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      document.getElementById('ddlInput').value = '';
+      columns = [];
+      renderColumns();
+      document.getElementById('output').textContent = '-- Click "Generate INSERTs" to create test data';
+    };
+
+    document.getElementById('generateBtn').onclick = generate;
+    document.getElementById('copyBtn').onclick = () => {
+      const out = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(out).then(() => alert('Copied to clipboard'));
+    };
+    document.getElementById('downloadBtn').onclick = () => {
+      const out = document.getElementById('output').textContent;
+      const blob = new Blob([out], {type:'text/sql'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'test-data.sql';
+      a.click();
+    };
+
+    function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    function parseColumnsFromDDL(sql) {
+      const cols = [];
+      const match = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[\w"`\[\]]+\s*\((.*)\)\s*[^)]*$/is);
+      if (!match) return cols;
+      const body = match[1];
+      const parts = splitBody(body);
+      for (const part of parts) {
+        const p = part.trim();
+        if (!p) continue;
+        const upper = p.toUpperCase();
+        if (upper.startsWith('CONSTRAINT') || upper.startsWith('PRIMARY') || upper.startsWith('UNIQUE') || upper.startsWith('FOREIGN') || upper.startsWith('CHECK') || upper.startsWith('INDEX')) continue;
+        const tokens = tokenize(p);
+        if (tokens.length < 2) continue;
+        const name = tokens[0].replace(/["`\[\]]/g,'');
+        const typeTokens = [];
+        const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL','PERSISTED','TABLESPACE','STORAGE'];
+        let i = 1;
+        while (i < tokens.length) {
+          const t = tokens[i].toUpperCase();
+          if (stopWords.includes(t)) break;
+          typeTokens.push(tokens[i]);
+          i++;
+        }
+        const type = typeTokens.join(' ');
+        const kind = typeToKind(type);
+        let enumVals = null;
+        if (kind === 'enum') {
+          const enumMatch = p.match(/ENUM\s*\(([^)]+)\)/i);
+          if (enumMatch) {
+            enumVals = enumMatch[1].split(',').map(v => v.trim().replace(/^['"]|['"]$/g,''));
+          }
+        }
+        cols.push({ name, type, kind, enumVals });
+      }
+      return cols;
+    }
+
+    function splitBody(body) {
+      const parts = []; let current = ''; let depth = 0; let inString = false; let stringChar = '';
+      for (let i = 0; i < body.length; i++) {
+        const ch = body[i]; const prev = body[i-1];
+        if (!inString && (ch === "'" || ch === '"' || ch === '`')) { inString = true; stringChar = ch; }
+        else if (inString && ch === stringChar && prev !== '\\') { inString = false; }
+        if (!inString) { if (ch === '(') depth++; else if (ch === ')') depth--; else if (ch === ',' && depth === 0) { parts.push(current.trim()); current = ''; continue; } }
+        current += ch;
+      }
+      if (current.trim()) parts.push(current.trim());
+      return parts;
+    }
+
+    function tokenize(text) {
+      const tokens = []; let current = ''; let inString = false; let stringChar = '';
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i]; const prev = text[i-1];
+        if (!inString && (ch === "'" || ch === '"' || ch === '`')) { if (current.trim()) tokens.push(current.trim()); current = ch; inString = true; stringChar = ch; continue; }
+        if (inString) { current += ch; if (ch === stringChar && prev !== '\\') { inString = false; tokens.push(current); current = ''; } continue; }
+        if (/\s/.test(ch)) { if (current.trim()) tokens.push(current.trim()); current = ''; }
+        else if (ch === '(' || ch === ')' || ch === ',') { if (current.trim()) tokens.push(current.trim()); tokens.push(ch); current = ''; }
+        else { current += ch; }
+      }
+      if (current.trim()) tokens.push(current.trim());
+      return tokens;
+    }
+
+    function quoteId(name, dialect) {
+      if (dialect === 'postgres') return '"' + name + '"';
+      if (dialect === 'mysql') return '`' + name + '`';
+      if (dialect === 'mssql') return '[' + name + ']';
+      if (dialect === 'oracle') return '"' + name.toUpperCase() + '"';
+      return '"' + name + '"';
+    }
+
+    function quoteValue(val, type, dialect) {
+      if (val === true || val === false) {
+        if (dialect === 'postgres') return val ? 'TRUE' : 'FALSE';
+        if (dialect === 'sqlite') return val ? '1' : '0';
+        return val ? 'TRUE' : 'FALSE';
+      }
+      if (typeof val === 'number') return String(val);
+      const t = type.toLowerCase();
+      if (t.includes('int') || t.includes('serial') || t.includes('bool') || t.includes('float') || t.includes('double') || t.includes('decimal') || t.includes('numeric') || t.includes('real') || t.includes('money')) {
+        if (typeof val === 'string' && !isNaN(Number(val))) return val;
+      }
+      if (dialect === 'mssql' && t.includes('uniqueidentifier')) return "'" + val + "'";
+      return "'" + String(val).replace(/'/g, "''") + "'";
+    }
+
+    function generate() {
+      const dialect = document.getElementById('dialectSelect').value;
+      const rowCount = parseInt(document.getElementById('rowCount').value, 10) || 10;
+      if (columns.length === 0) { alert('Add at least one column.'); return; }
+      const tableName = detectTableName(document.getElementById('ddlInput').value) || 'test_table';
+      const lines = [];
+
+      for (let r = 0; r < rowCount; r++) {
+        const names = columns.map(c => quoteId(c.name, dialect));
+        const vals = columns.map(c => {
+          let v;
+          if (c.kind === 'enum' && c.enumVals && c.enumVals.length) v = GENERATORS.enum(c.enumVals);
+          else v = GENERATORS[c.kind] ? GENERATORS[c.kind]() : GENERATORS.generic();
+          return quoteValue(v, c.type, dialect);
+        });
+        lines.push(`INSERT INTO ${quoteId(tableName, dialect)} (${names.join(', ')}) VALUES (${vals.join(', ')});`);
+      }
+
+      document.getElementById('output').textContent = lines.join('\n');
+    }
+
+    function detectTableName(sql) {
+      const m = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)/i);
+      if (!m) return null;
+      return m[1].replace(/["`\[\]]/g,'');
+    }
+
+    // Seed with a default column
+    columns = [{name:'id', type:'SERIAL', kind:'integer'}, {name:'name', type:'VARCHAR(255)', kind:'full_name'}, {name:'email', type:'VARCHAR(255)', kind:'email'}];
+    renderColumns();
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "name": "schemalens-cli",
+  "version": "1.0.0",
+  "description": "CLI for SchemaLens — compare SQL schemas and generate migrations",
+  "main": "index.js",
+  "bin": {
+    "schemalens": "index.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "sql",
+    "schema",
+    "diff",
+    "migration",
+    "database",
+    "postgresql",
+    "mysql",
+    "sqlite",
+    "mssql",
+    "oracle",
+    "cli"
+  ],
+  "author": "SchemaLens",
+  "license": "MIT",
+  "homepage": "https://schemalens.tech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jochenboele/schemalens"
+  },
+  "bugs": {
+    "url": "https://github.com/jochenboele/schemalens/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
