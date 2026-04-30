@@ -49,12 +49,51 @@
 | 43 | Apr 30 | Blog post #40 (Complete SQL Migration Checklist); refreshed Product Hunt launch kit and all marketing assets with current stats. |
 | 44 | Apr 30 | Product Hunt launch execution: regenerated gallery screenshots & demo video, created product-hunt.html with 30% off PH-exclusive offer. |
 | 45 | Apr 30 | Chrome extension MVP (GitHub SQL file integration), blog post #41 (10 breaking schema changes), sitemap updates. |
+| 46 | Apr 30 | Reddit trust/positioning fix: "When SchemaLens shines" section, trust bar, FAQ on "I already have migrations." Built Leads & Outreach CRM in admin.html. Prepared Monday launch materials. |
 
 ---
 
 ---
 
-## Day 46 — Conversion Fix: Reddit Trust Crisis & CRM Build (May 1, 2026)
+## Day 47 — Newsletter Launch Email + Blog Post #42 (Apr 30, 2026)
+
+### What Was Built
+- **Built newsletter launch announcement email system**
+  - Created `/api/newsletter-launch.js` — one-time broadcast endpoint for launch announcements
+  - Sends to all subscribers where `launch_announcement_sent_at is null` and `unsubscribed_at is null`
+  - Tracks sends in Supabase with `launch_announcement_sent_at` timestamp
+  - Supports dry-run mode for previewing candidate count without sending
+  - Secured with `LAUNCH_TOKEN` env var or admin password auth
+  - Email template highlights Product Hunt launch, Chrome extension, CLI (`npx schemalens-cli`), 42 blog posts, 17 micro-tools
+- **Updated admin dashboard** with Launch Announcement controls
+  - "Preview (Dry Run)" button shows candidate count and config status
+  - "Send Launch Email" button with confirmation dialog
+  - Results displayed in formatted JSON block
+- **Added `launch_announcement_sent_at` column** to `newsletter_subscribers` table in `supabase-schema.sql`
+- **Integrated launch-email action into `/api/admin.js`** proxy
+  - Forwards authenticated requests to `/api/newsletter-launch` with server-side token
+- **Published blog post #42:** "How to Review a SQL Schema Change in 5 Minutes"
+  - Targets "sql schema review" and "review sql schema changes" SEO keywords
+  - Practical 5-step workflow: get schemas, check destructive changes, verify constraints, check indexes, estimate cost
+  - Includes risk tags (high/medium/low) and a one-question sanity test
+  - Added to blog.html grid and sitemap.xml
+- **Updated counts:** 41 → 42 blog posts in launch email and tweet thread
+
+### Validation
+- ✅ `api/newsletter-launch.js` syntax check passed (`node --check`)
+- ✅ `api/admin.js` syntax check passed
+- ✅ `supabase-schema.sql` migration statement valid
+- ✅ New blog post renders correctly with schema.org Article JSON-LD
+- ✅ Internal links and related articles verified
+
+### Key Insights
+1. **Infrastructure beats one-off tasks.** Building a reusable launch broadcast endpoint means future product launches can be announced to subscribers in minutes, not hours of manual copy-paste.
+2. **Dry-run mode prevents accidents.** Every broadcast email system should have a dry-run. Seeing "127 candidates" before hitting Send builds confidence and prevents mistakes.
+3. **SEO content compounds.** Blog post #42 targets a high-intent keyword ("sql schema review") with a practical angle. This fills the gap between "why review" and "checklist" content.
+
+---
+
+## Day 46 — Conversion Fix: Reddit Trust Crisis & CRM Build (Apr 30, 2026)
 
 ### What Was Built
 - **Addressed Reddit trust/positioning feedback on index.html**
