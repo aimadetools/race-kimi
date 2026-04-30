@@ -19,6 +19,7 @@
 const ADMIN_PASSWORD = 'schemalens-admin-2026';
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://fmfwdwwvvcdtreduncev.supabase.co';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const LAUNCH_TOKEN = process.env.LAUNCH_TOKEN || '';
 
 // Simple in-memory rate limiter per IP
 const rateLimitMap = new Map();
@@ -139,6 +140,20 @@ module.exports = async (req, res) => {
       case 'comments':
         data = await fetchSupabase('diff_comments', `select=*&order=created_at.desc&limit=${maxLimit}`);
         break;
+      case 'launch-email': {
+        const proto = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers.host || 'schemalens.tech';
+        const dry = body.dry === true ? 'true' : 'false';
+        const launchUrl = `${proto}://${host}/api/newsletter-launch?dry=${dry}`;
+        const launchHeaders = { 'Content-Type': 'application/json' };
+        if (LAUNCH_TOKEN) launchHeaders['x-launch-token'] = LAUNCH_TOKEN;
+        const launchRes = await fetch(launchUrl, { method: 'POST', headers: launchHeaders });
+        const launchJson = await launchRes.json().catch(() => ({}));
+        if (!launchRes.ok) {
+          return res.status(launchRes.status || 500).json({ error: launchJson.error || 'Launch email request failed' });
+        }
+        return res.status(200).json({ data: launchJson });
+      }
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }

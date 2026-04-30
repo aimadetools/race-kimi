@@ -121,7 +121,8 @@ CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
   unsubscribed_at TIMESTAMPTZ,
   welcome_sent_at TIMESTAMPTZ,
   drip_1_sent_at TIMESTAMPTZ,
-  drip_2_sent_at TIMESTAMPTZ
+  drip_2_sent_at TIMESTAMPTZ,
+  launch_announcement_sent_at TIMESTAMPTZ
 );
 
 ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;

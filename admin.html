@@ -297,6 +297,20 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🚀 Launch Announcement</h3>
+        </div>
+        <div class="admin-section-body" id="launchBody">
+          <div class="admin-empty">Send a one-time launch announcement email to all subscribers who haven't received it yet.</div>
+          <div style="margin-top:12px;">
+            <button onclick="previewLaunchEmail()">Preview (Dry Run)</button>
+            <button class="primary" onclick="sendLaunchEmail()" style="background:#dc2626;">Send Launch Email</button>
+          </div>
+          <pre id="launchResult" style="margin-top:12px;background:var(--surface);padding:12px;border-radius:6px;font-size:0.8rem;overflow:auto;max-height:300px;display:none;"></pre>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>⭐ Testimonials</h3>
           <span class="admin-badge warning" id="badgeTestimonials">0</span>
         </div>
@@ -525,6 +539,41 @@
         Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
       );
       downloadCsv('schemalens-subscribers.csv', headers, rows);
+    }
+
+    async function previewLaunchEmail() {
+      const result = document.getElementById('launchResult');
+      result.style.display = 'block';
+      result.textContent = 'Running dry run…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'launch-email', password: ADMIN_PASSWORD_HASH, dry: true })
+        });
+        const json = await res.json().catch(() => ({}));
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendLaunchEmail() {
+      if (!confirm('Send launch announcement to ALL unsubscribed subscribers? This cannot be undone.')) return;
+      const result = document.getElementById('launchResult');
+      result.style.display = 'block';
+      result.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'launch-email', password: ADMIN_PASSWORD_HASH, dry: false })
+        });
+        const json = await res.json().catch(() => ({}));
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
     }
 
     // Testimonials
