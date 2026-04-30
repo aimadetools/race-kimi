@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Generate Realistic SQL Test Data for Any Database — SchemaLens</title>
+  <meta name="description" content="Learn how to generate realistic SQL test data for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Covers faker libraries, manual techniques, and free online tools.">
+  <meta property="og:title" content="How to Generate Realistic SQL Test Data for Any Database — SchemaLens">
+  <meta property="og:description" content="Learn how to generate realistic SQL test data for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Covers faker libraries, manual techniques, and free online tools.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-generate-realistic-sql-test-data.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Generate Realistic SQL Test Data for Any Database",
+  "description": "Learn how to generate realistic SQL test data for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Covers faker libraries, manual techniques, and free online tools.",
+  "url": "https://schemalens.tech/blog/how-to-generate-realistic-sql-test-data.html",
+  "datePublished": "2026-04-30",
+  "dateModified": "2026-04-30",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/how-to-generate-realistic-sql-test-data.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>How to Generate Realistic SQL Test Data for Any Database</h1>
+    <div class="meta">April 30, 2026 · 8 min read · SchemaLens Team</div>
+
+    <p>Every developer has been there. You're building a new feature, writing tests, and suddenly you need realistic data. Not <code>test1@example.com</code> and <code>User A</code>. You need thousands of rows with real-looking names, plausible email addresses, dates that make sense, and foreign keys that actually reference valid records. Manually crafting INSERT statements is soul-crushing and error-prone.</p>
+
+    <p>Good test data matters more than most teams admit. Tests with unrealistic data pass when they should fail. Performance tests on 10 rows of data hide query problems that explode at 10,000 rows. Demo environments with placeholder text look unprofessional to stakeholders. And GDPR means you can't just copy production data anymore.</p>
+
+    <p>In this guide, we'll cover every practical approach to generating SQL test data — from quick one-liners to full synthetic data pipelines — and show you how to do it for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+
+    <h2>What makes test data "good"?</h2>
+
+    <p>Before we dive into tools, let's define what we're aiming for. Good test data has four properties:</p>
+
+    <ul>
+      <li><strong>Realistic shape:</strong> Names look like names, emails contain @ symbols and domains, dates fall within reasonable ranges. This catches validation bugs that garbage data misses.</li>
+      <li><strong>Referential integrity:</strong> Foreign keys point to real rows. If you have an <code>orders</code> table, every <code>user_id</code> should exist in the <code>users</code> table.</li>
+      <li><strong>Edge case coverage:</strong> Include nulls, empty strings, maximum-length values, Unicode characters, and boundary dates. Bugs love edge cases.</li>
+      <li><strong>Volume flexibility:</strong> Generate 10 rows for unit tests, 10,000 for load tests, and 1,000,000 for stress tests — without changing your approach.</li>
+    </ul>
+
+    <h2>Method 1: Database-native generation</h2>
+
+    <h3>PostgreSQL</h3>
+
+    <p>PostgreSQL has the richest built-in randomization functions. Use <code>random()</code>, <code>md5()</code>, and arrays to generate rows inline:</p>
+
+    <pre><code>INSERT INTO users (name, email, created_at)
+SELECT
+  'User ' || i,
+  'user' || i || '@example.com',
+  NOW() - (random() * 365 || ' days')::interval
+FROM generate_series(1, 1000) AS i;</code></pre>
+
+    <p>For more realistic names, install the <code>faker</code> extension if available, or use arrays of real names:</p>
+
+    <pre><code>WITH names(name) AS (
+  SELECT unnest(ARRAY['Alice','Bob','Charlie','Diana','Evan'])
+)
+INSERT INTO users (name, email)
+SELECT
+  n.name || ' ' || (ARRAY['Smith','Jones','Lee','Patel'])[ceil(random()*4)],
+  lower(regexp_replace(n.name, '[^a-zA-Z]', '', 'g')) || ceil(random()*999) || '@gmail.com'
+FROM generate_series(1, 1000) AS i
+CROSS JOIN LATERAL (SELECT name FROM names ORDER BY random() LIMIT 1) n;</code></pre>
+
+    <h3>MySQL</h3>
+
+    <p>MySQL is more limited for procedural generation, but you can use variables and stored procedures:</p>
+
+    <pre><code>DELIMITER $$
+CREATE PROCEDURE generate_users(IN count INT)
+BEGIN
+  DECLARE i INT DEFAULT 1;
+  WHILE i <= count DO
+    INSERT INTO users (name, email) VALUES (
+      CONCAT('User ', i),
+      CONCAT('user', i, '@example.com')
+    );
+    SET i = i + 1;
+  END WHILE;
+END$$
+DELIMITER ;
+
+CALL generate_users(1000);</code></pre>
+
+    <h3>SQLite</h3>
+
+    <p>SQLite has no procedural language, but you can use recursive CTEs:</p>
+
+    <pre><code>WITH RECURSIVE cnt(x) AS (
+  SELECT 1
+  UNION ALL
+  SELECT x+1 FROM cnt WHERE x < 1000
+)
+INSERT INTO users (name, email)
+SELECT
+  'User ' || x,
+  'user' || x || '@example.com'
+FROM cnt;</code></pre>
+
+    <h2>Method 2: Programming language + ORM</h2>
+
+    <p>For most teams, the cleanest approach is generating data in the same language as the application. This ensures data shape matches your validation logic.</p>
+
+    <h3>Python with Faker</h3>
+
+    <pre><code>from faker import Faker
+import psycopg2
+
+fake = Faker()
+conn = psycopg2.connect("dbname=test")
+cur = conn.cursor()
+
+users = [(fake.name(), fake.email(), fake.date_between('-2y'))
+         for _ in range(1000)]
+cur.executemany(
+    "INSERT INTO users (name, email, created_at) VALUES (%s, %s, %s)",
+    users
+)
+conn.commit()</code></pre>
+
+    <h3>Node.js with @faker-js/faker</h3>
+
+    <pre><code>import { faker } from '@faker-js/faker';
+import { db } from './db';
+
+const users = Array.from({ length: 1000 }, () => ({
+  name: faker.person.fullName(),
+  email: faker.internet.email(),
+  createdAt: faker.date.past({ years: 2 })
+}));
+
+await db.insertInto('users').values(users).execute();</code></pre>
+
+    <p>The advantage here is full control. You can ensure referential integrity by generating users first, collecting their IDs, then generating orders that reference those IDs. You can match your application's exact validation rules. And you can commit the seed script to version control.</p>
+
+    <h2>Method 3: Online SQL test data generators</h2>
+
+    <p>Sometimes you don't want to install anything. You just need a quick <code>.sql</code> file you can import. Online generators are perfect for this.</p>
+
+    <p>The best tools let you:</p>
+    <ul>
+      <li>Paste a <code>CREATE TABLE</code> statement and auto-detect columns</li>
+      <li>Choose data types per column (names, emails, dates, UUIDs, addresses, phone numbers)</li>
+      <li>Select row count (from a few rows up to thousands)</li>
+      <li>Export for your specific dialect (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)</li>
+      <li>Copy to clipboard or download as <code>.sql</code></li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>🎲 Generate SQL test data instantly</h3>
+      <p>Paste your CREATE TABLE statement and get realistic INSERT statements in seconds. Supports 5 SQL dialects and 20+ data types. No signup required.</p>
+      <a href="../tools/sql-test-data-generator.html" class="btn btn-primary">Try the SQL Test Data Generator →</a>
+    </div>
+
+    <h2>Method 4: Snapshot and sanitize production data</h2>
+
+    <p>If you have production data and need maximum realism, you can anonymize a subset:</p>
+
+    <ol>
+      <li>Export a random 1% sample of production rows</li>
+      <li>Scrub PII: replace names, emails, phone numbers, and addresses with fake equivalents</li>
+      <li>Hash or truncate sensitive identifiers (SSNs, credit card numbers)</li>
+      <li>Shuffle foreign key relationships to break real associations</li>
+      <li>Add synthetic edge cases that may not exist in production (nulls, empty strings, Unicode)</li>
+    </ol>
+
+    <p>This approach requires the most care — one mistake and you've leaked customer data in a test environment. Most teams should prefer fully synthetic generation.</p>
+
+    <h2>Dialect-specific gotchas</h2>
+
+    <h3>PostgreSQL</h3>
+    <ul>
+      <li>Use <code>gen_random_uuid()</code> for UUID columns (requires <code>pgcrypto</code>)</li>
+      <li><code>RETURNING id</code> is your friend for collecting generated primary keys</li>
+      <li>Array and JSONB columns need special formatting — generate valid JSON, not just strings</li>
+    </ul>
+
+    <h3>MySQL</h3>
+    <ul>
+      <li>Disable foreign key checks during bulk inserts: <code>SET foreign_key_checks = 0;</code></li>
+      <li>Use multi-row INSERT syntax for 10× speed: <code>INSERT INTO t (a,b) VALUES (1,2), (3,4), ...</code></li>
+      <li>Be careful with <code>ONLY_FULL_GROUP_BY</code> mode when testing aggregations</li>
+    </ul>
+
+    <h3>SQL Server</h3>
+    <ul>
+      <li>Use <code>NEWID()</code> for UUIDs and <code>ABS(CHECKSUM(NEWID()))</code> for random integers</li>
+      <li>Temporarily disable constraints with <code>ALTER TABLE ... NOCHECK CONSTRAINT ALL</code></li>
+      <li>Identity inserts require <code>SET IDENTITY_INSERT table_name ON</code></li>
+    </ul>
+
+    <h3>SQLite</h3>
+    <ul>
+      <li>Wrap large inserts in a transaction — SQLite is dramatically slower without one</li>
+      <li>Use <code>randomblob(16)</code> for UUID-like values</li>
+      <li>No stored procedures, so generate data externally or use recursive CTEs</li>
+    </ul>
+
+    <h3>Oracle</h3>
+    <ul>
+      <li>Use <code>SYS_GUID()</code> for UUID columns</li>
+      <li><code>DBMS_RANDOM</code> package provides string and numeric generation</li>
+      <li>Tablespace quotas may block large inserts — check with your DBA</li>
+    </ul>
+
+    <h2>A practical workflow for your team</h2>
+
+    <p>Here's a workflow that scales from solo developers to teams of fifty:</p>
+
+    <div class="checklist">
+      <ul>
+        <li><strong>Commit seed scripts:</strong> Store test data generation in <code>db/seeds/</code> or <code>tests/fixtures/</code>. Version control ensures everyone generates the same data.</li>
+        <li><strong>Separate unit and integration seeds:</strong> Unit tests need 10–50 rows. Integration tests need 1,000+. Use separate scripts or parameterized functions.</li>
+        <li><strong>Reset before each test suite:</strong> Truncate tables and re-seed for deterministic tests. Use transactions for speed if your framework supports it.</li>
+        <li><strong>Generate referential data in order:</strong> Users → Products → Orders → OrderItems. Never generate child rows before parents.</li>
+        <li><strong>Include deliberate edge cases:</strong> Every seed script should include at least one null, one empty string, one maximum-length value, one Unicode string, and one future date.</li>
+        <li><strong>Benchmark with realistic volume:</strong> Run your seed script to generate 100× your expected production volume. If queries slow down, you have a performance bug.</li>
+      </ul>
+    </div>
+
+    <h2>Summary</h2>
+
+    <p>Generating SQL test data doesn't have to be painful. For quick tasks, database-native functions or online generators get you there in seconds. For production applications, seed scripts in your application language with a library like Faker give you control, repeatability, and referential integrity.</p>
+
+    <p>The teams that move fastest aren't the ones with the most data — they're the ones with the most <em>realistic</em> data, generated on demand, checked into version control, and run in CI on every commit.</p>
+
+    <div class="cta-box">
+      <h3>🎲 Need test data right now?</h3>
+      <p>Paste your CREATE TABLE statement into our free SQL Test Data Generator and get realistic INSERT statements in seconds. No signup, no install, no data leaves your browser.</p>
+      <a href="../tools/sql-test-data-generator.html" class="btn btn-primary">Generate Test Data →</a>
+    </div>
+
+    <h3>Related articles</h3>
+    <ul>
+      <li><a href="generate-sql-insert-statements-faster.html">How to Generate SQL INSERT Statements Faster</a></li>
+      <li><a href="sql-create-table-best-practices-for-production.html">SQL CREATE TABLE Best Practices for Production Databases</a></li>
+      <li><a href="convert-csv-to-sql-in-seconds.html">Convert CSV to SQL in Seconds (No Upload Required)</a></li>
+      <li><a href="convert-json-to-sql-schema-in-seconds.html">Convert JSON to SQL Schema in Seconds (No Upload Required)</a></li>
+    </ul>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../prisma-schema-diff.html">Prisma Schema Diff</a>
+          <a href="../drizzle-schema-diff.html">Drizzle Schema Diff</a>
+          <a href="../typeorm-schema-diff.html">TypeORM Schema Diff</a>
+          <a href="../sequelize-schema-diff.html">Sequelize Schema Diff</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../migration-checklist.html">Migration Checklist</a>
+          <a href="../api-guide.html">API Quick Start</a>
+          <a href="../ci-cd-integration.html">CI/CD Integration</a>
+          <a href="../zapier-integration.html">Zapier Integration</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
