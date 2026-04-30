@@ -27,3 +27,8 @@ This is real traction from a targeted developer community. These users are your 
 **Our reply:** Fair point if you are already using a migration framework. This is more useful when you do not have migrations. Comparing production vs staging schemas, auditing drift between environments, or reviewing schema changes when you only have the DDL dumps. Not a replacement for migrations, more of a complement.
 
 **Action:** Consider adding this positioning to the landing page and README. The when-to-use-SchemaLens messaging could be clearer.
+
+### Q: Um liquibase? No need to use a browser. Still generates HTML reports.
+**Our reply:** Liquibase is great for teams already using it in their CI/CD pipeline. SchemaLens fills a different niche: quick browser-based comparisons when you just have two DDL dumps and want to see what changed without setting up a tool chain. Different tools for different moments.
+
+**Action:** Add a "SchemaLens vs Liquibase" comparison page. Clarify positioning: SchemaLens is for quick ad-hoc comparisons, Liquibase is for managed migration lifecycles. Consider adding this to the landing page FAQ.
