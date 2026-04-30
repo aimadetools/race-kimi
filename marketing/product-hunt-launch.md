@@ -24,27 +24,34 @@ Complete preparation kit for launching SchemaLens on Product Hunt.
 
 ## Long Description
 
-SchemaLens is a browser-based SQL schema diff tool for PostgreSQL, MySQL, SQLite, and SQL Server.
+SchemaLens is a browser-based SQL schema diff tool for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
 
-Paste two CREATE TABLE dumps — old and new — and SchemaLens shows you a semantic, visual diff at the table and column level. It highlights added, removed, and modified columns, constraints, and indexes. Then it generates ready-to-run ALTER TABLE migration scripts in the dialect you selected.
+Paste two CREATE TABLE dumps — old and new — and SchemaLens shows you a semantic, visual diff at the table and column level. It highlights added, removed, and modified columns, constraints, indexes, triggers, views, and functions. Then it generates ready-to-run ALTER TABLE migration scripts in the dialect you selected.
 
 **Key features:**
 - Semantic diff (not line-by-line text comparison)
-- Migration SQL generation for PostgreSQL, MySQL, SQLite, SQL Server
-- Support for constraints: PRIMARY KEY, UNIQUE, FOREIGN KEY, CHECK
+- Migration SQL generation for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle
+- Support for constraints: PRIMARY KEY, UNIQUE, FOREIGN KEY, CHECK, EXCLUDE
+- Trigger, view, and function/procedure diff support
 - Drag-and-drop .sql file upload
 - Share diffs via URL (base64-encoded, no backend)
-- Export results as Markdown, PDF, JSON, or raw SQL
+- Export results as Markdown, PDF, JSON, SQL, Prisma, or Drizzle
+- Schema change risk score (0–100) with breaking-change detection
 - Client-side only — your schemas never leave your machine
 - Free tier: 10 tables, visual diff + migration preview
-- Pro tier: unlimited tables, full migrations, exports
+- Pro tier: unlimited tables, full migrations, exports, diff comments
+
+**CLI & CI/CD:**
+- `npx schemalens-cli` — run diffs locally, in CI, or in GitHub Actions
+- GitHub Action with PR comments and breaking-change build fails
+- GitLab CI and Bitbucket Pipelines templates included
 
 **Why I built it:**
-I was tired of squinting at text diffs between schema dumps and manually writing ALTER TABLE statements. Existing tools were either CLI-only (pg_dump, migra) or required uploading schemas to a cloud service. SchemaLens fills the gap: zero setup, zero backend, instant results.
+I was tired of squinting at text diffs between schema dumps and manually writing ALTER TABLE statements. Existing tools were either CLI-only (pg_dump, migra) or required uploading schemas to a cloud service. SchemaLens fills the gap: zero setup, zero backend, instant results — and now with a full CLI for CI/CD pipelines.
 
 **Pricing:**
-- Free: 10 tables, visual diff, migration preview
-- Pro: $12/mo or $99/yr — unlimited tables, full migrations, Markdown/PDF/JSON exports, shareable links
+- Free: 10 tables, visual diff, migration preview, 17 micro-tools
+- Pro: $12/mo or $99/yr — unlimited tables, full migrations, all exports, shareable links, diff annotations
 
 ---
 
@@ -75,8 +82,8 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 ### Image 4: Supported Dialects
 **Spec:** Simple graphic or screenshot collage.
 **Content:**
-- PostgreSQL, MySQL, SQLite, SQL Server logos/names
-- "4 dialects. One tool."
+- PostgreSQL, MySQL, SQLite, SQL Server, Oracle logos/names
+- "5 dialects. One tool."
 
 ### Image 5: Privacy Promise
 **Spec:** Simple text graphic on dark background.
@@ -133,16 +140,16 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 > It's a client-side license key. You buy on Gumroad, get a key like `SL-XXXX-XXXX-XXXX-XXXX`, paste it into the app, and Pro features unlock instantly. No accounts, no tracking.
 
 ### Q: Can I use this in CI/CD?
-> Not yet, but it's on the roadmap (Week 8). We'll publish GitHub Actions and GitLab CI templates that call a lightweight API.
+> Yes. We publish a GitHub Action, GitLab CI template, and Bitbucket Pipelines template. You can also run `npx schemalens-cli` locally or in any CI system. It generates diffs, migration SQL, and exits with a non-zero code on breaking changes.
 
 ### Q: How accurate is the migration SQL?
 > It's generated from the semantic diff, so it's deterministic. That said, always review migrations in staging before production. SchemaLens handles most common cases; complex renames or data migrations still need human judgment.
 
 ### Q: Is there a CLI version?
-> Not yet. The API is planned for Week 10, followed by a CLI wrapper.
+> Yes. `npm install -g schemalens-cli` or run `npx schemalens-cli` without installing. It supports 5 dialects, 4 output formats (SQL, Markdown, JSON, HTML), and CI mode with exit codes.
 
 ### Q: How do you make money with a static site?
-> Gumroad license keys. The tool works without a backend, so hosting is free (Vercel). Revenue is 100% margin minus Gumroad's fee.
+> Gumroad license keys. The web tool works without a backend, so hosting is free (Vercel). The CLI is open-source on npm. Revenue is 100% margin minus Gumroad's fee.
 
 ---
 
@@ -159,6 +166,7 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 ### 1 Day Before
 - [ ] Verify app.html loads fast (< 2s)
 - [ ] Test Pro license flow end-to-end
+- [ ] Test `npx schemalens-cli` works on a fresh machine
 - [ ] Check all CTAs link correctly
 - [ ] Prepare "Show HN" post for same day
 - [ ] Notify email list / waitlist
@@ -212,4 +220,4 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 
 ---
 
-*Last updated: April 20, 2026*
+*Last updated: April 30, 2026*

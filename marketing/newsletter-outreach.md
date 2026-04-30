@@ -41,7 +41,7 @@ Why it fits Console:
 • 100% client-side — schemas never leave the browser (privacy-first)
 • Zero install, zero signup — open the URL and diff in 10 seconds
 • Free for schemas up to 10 tables; Pro at $12/mo for unlimited
-• 16 free micro-tools (SQL formatter, schema health check, JOIN visualizer, etc.)
+• 17 free micro-tools (SQL formatter, schema health check, JOIN visualizer, test data generator, etc.)
 
 I think it would fit well in your "Database Tools" or "Developer Utilities"
 section. Happy to provide screenshots, a demo video, or a guest post if helpful.
@@ -123,9 +123,9 @@ Thanks for considering!
 
 **Audience:** General developer newsletter (500K+ subscribers)
 **Contact:** Submit via https://tldr.tech/submit or tips@tldr.tech
-**Angle:** Free developer tool, 16 micro-tools, no signup required. Mass-appeal.
+**Angle:** Free developer tool, 17 micro-tools, no signup required. Mass-appeal.
 
-**Subject:** Free tool for the TLDR community: SchemaLens (SQL schema diff + 16 micro-tools)
+**Subject:** Free tool for the TLDR community: SchemaLens (SQL schema diff + 17 micro-tools)
 
 ```
 Hi TLDR team,
@@ -133,7 +133,7 @@ Hi TLDR team,
 TLDR is my daily scan for dev news — you consistently find the signal in
 the noise.
 
-I built SchemaLens (https://schemalens.tech), a collection of 16 free
+I built SchemaLens (https://schemalens.tech), a collection of 17 free
 browser-based database tools. The flagship is a schema diff tool that
 compares two SQL schemas and generates migration scripts for PostgreSQL,
 MySQL, SQL Server, SQLite, and Oracle.
@@ -177,7 +177,7 @@ generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite,
 and Oracle.
 
 Built in public as part of the $100 AI Startup Race. Zero infrastructure
-cost (Vercel free tier + vanilla JS). Open metrics. 37 blog posts, 16 free
+cost (Vercel free tier + vanilla JS). Open metrics. 40 blog posts, 17 free
 micro-tools, and a full conversion funnel built in 18 days.
 
 Would be honored by a mention. Happy to answer any questions.

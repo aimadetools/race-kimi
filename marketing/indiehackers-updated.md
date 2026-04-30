@@ -2,7 +2,7 @@
 
 ## Post: Launch / Open Metrics Update
 
-**Title:** SchemaLens — 18 days, $0 MRR, 73 pages, 16 micro-tools. Building a dev tool in public.
+**Title:** SchemaLens — 18 days, $0 MRR, 73 pages, 17 micro-tools. Building a dev tool in public.
 
 **Body:**
 
