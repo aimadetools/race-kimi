@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Review a SQL Schema Change in 5 Minutes — SchemaLens</title>
+  <meta name="description" content="A practical 5-minute workflow for reviewing SQL schema changes before deployment. Catch breaking changes, missing indexes, and data loss risks early.">
+  <meta property="og:title" content="How to Review a SQL Schema Change in 5 Minutes — SchemaLens">
+  <meta property="og:description" content="A practical 5-minute workflow for reviewing SQL schema changes before deployment. Catch breaking changes, missing indexes, and data loss risks early.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-review-sql-schema-changes.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Review a SQL Schema Change in 5 Minutes",
+  "description": "A practical 5-minute workflow for reviewing SQL schema changes before deployment. Catch breaking changes, missing indexes, and data loss risks early.",
+  "url": "https://schemalens.tech/blog/how-to-review-sql-schema-changes.html",
+  "datePublished": "2026-04-30",
+  "dateModified": "2026-04-30",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/how-to-review-sql-schema-changes.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>How to Review a SQL Schema Change in 5 Minutes</h1>
+    <div class="meta">April 30, 2026 · 6 min read · SchemaLens Team</div>
+
+    <p>Your pull request is approved. The migration looks simple — just adding a column and an index. You merge it. Ten minutes later, production is down.</p>
+
+    <p>The column was <code>NOT NULL</code> without a default. The index creation locked the table for 90 seconds. And nobody caught it because the schema change was "too small to review carefully."</p>
+
+    <p>This is why every engineering team needs a fast, repeatable SQL schema review process. Not a 45-page document. A <strong>5-minute checklist</strong> that catches the dangerous stuff before it ships.</p>
+
+    <p>In this guide, we'll walk through a practical workflow you can use today — whether you're reviewing a migration PR or sanity-checking your own changes before deploy.</p>
+
+    <h2>Why schema review matters</h2>
+
+    <p>Code review is standard practice. Schema review rarely is. Yet schema changes are <strong>more dangerous than code changes</strong> because:</p>
+
+    <ul>
+      <li>They're harder to roll back — altering a table with millions of rows is not instantaneous</li>
+      <li>They can lock tables, blocking writes and causing cascading timeouts</li>
+      <li>Application code can be deployed in seconds; schema changes can take minutes or hours</li>
+      <li>A bad schema change can corrupt data, not just break functionality</li>
+    </ul>
+
+    <p>The good news: most catastrophic schema changes are obvious <strong>if you know what to look for</strong>. You don't need to be a database expert. You need a checklist.</p>
+
+    <h2>The 5-minute schema review workflow</h2>
+
+    <h3>Step 1: Get the before and after schema <span class="risk-tag risk-low">1 min</span></h3>
+
+    <p>You can't review what you can't see. Start by generating the current schema and the proposed schema.</p>
+
+    <p><strong>If you're using a migration framework</strong> (Liquibase, Flyway, Alembic):</p>
+    <ul>
+      <li>Dump the current schema from your target environment (staging or production)</li>
+      <li>Apply the migration to a fresh database, then dump the resulting schema</li>
+    </ul>
+
+    <p><strong>If you're working with raw SQL:</strong></p>
+    <ul>
+      <li>Copy the current <code>CREATE TABLE</code> statements from your database</li>
+      <li>Apply the migration script manually to get the new schema</li>
+    </ul>
+
+    <p>Paste both schemas into a diff tool. Instantly, you'll see exactly what changed — not just the migration file, but the <strong>semantic difference</strong> in the resulting schema.</p>
+
+    <h3>Step 2: Look for destructive changes <span class="risk-tag risk-high">1 min</span></h3>
+
+    <p>These are the fastest way to break production. Scan for:</p>
+
+    <ul>
+      <li><strong>Dropped tables or columns</strong> — Is anything reading from them?</li>
+      <li><strong>Renamed columns</strong> — Do views, triggers, or application queries reference the old name?</li>
+      <li><strong>Dropped indexes</strong> — Are they used by critical queries?</li>
+      <li><strong>Changed column types</strong> — Will existing data fit? (e.g., <code>VARCHAR(100) → VARCHAR(50)</code>)</li>
+    </ul>
+
+    <blockquote>
+      "Dropped columns are the easiest change to approve and the hardest mistake to undo."
+    </blockquote>
+
+    <h3>Step 3: Check constraint safety <span class="risk-tag risk-high">1 min</span></h3>
+
+    <p>Constraints are silent killers on large tables:</p>
+
+    <ul>
+      <li><strong>NOT NULL without DEFAULT</strong> — On PostgreSQL, this rewrites the entire table. On large tables, it can lock for minutes.</li>
+      <li><strong>UNIQUE constraints</strong> — Adding these requires a full table scan and can fail if duplicates exist.</li>
+      <li><strong>CHECK constraints</strong> — These validate all existing rows. If any row violates the new rule, the migration fails.</li>
+      <li><strong>Foreign keys</strong> — Adding a FK on a large table creates an index and validates every row. Both operations are expensive.</li>
+    </ul>
+
+    <p><strong>Safe pattern for NOT NULL:</strong></p>
+    <ol>
+      <li>Add the column as nullable</li>
+      <li>Backfill with a script or batch update</li>
+      <li>Add the NOT NULL constraint in a separate, small migration</li>
+    </ol>
+
+    <h3>Step 4: Verify index coverage <span class="risk-tag risk-medium">1 min</span></h3>
+
+    <p>New foreign keys need backing indexes. Missing indexes on FK columns cause full table scans on joins — and those get expensive fast as tables grow.</p>
+
+    <p>Ask yourself:</p>
+    <ul>
+      <li>Does every new foreign key have an index?</li>
+      <li>Are any indexes being dropped that queries depend on?</li>
+      <li>Are new indexes on columns that will have high cardinality?</li>
+    </ul>
+
+    <h3>Step 5: Estimate the migration cost <span class="risk-tag risk-medium">1 min</span></h3>
+
+    <p>Not all migrations are equal. A column rename on a 10-row table is instant. On a 10-million-row table, it can take hours.</p>
+
+    <p>Before approving, estimate:</p>
+    <ul>
+      <li><strong>Table size</strong> — How many rows? What's the row width?</li>
+      <li><strong>Lock duration</strong> — Will the migration lock the table? For how long?</li>
+      <li><strong>Rollback complexity</strong> — Can you undo this if something goes wrong?</li>
+    </ul>
+
+    <p>If a migration is high-risk and high-duration, break it into smaller steps or run it during a maintenance window.</p>
+
+    <h2>Make it automatic</h2>
+
+    <p>The best schema review processes don't rely on human memory. They use automation:</p>
+
+    <ul>
+      <li><strong>CI/CD gating:</strong> Run a schema diff on every migration PR. Fail the build if destructive changes are detected.</li>
+      <li><strong>Breaking change detection:</strong> Use a tool that scores migration risk and flags dangerous patterns automatically.</li>
+      <li><strong>Pre-deploy diffs:</strong> Compare staging vs production schemas before every release to catch drift.</li>
+    </ul>
+
+    <p>SchemaLens can do all three. It runs in your browser for quick checks, in your terminal via <code>npx schemalens-cli</code>, and in CI via GitHub Actions or GitLab CI.</p>
+
+    <div class="cta-box">
+      <h3>⚡ Review your next schema change in 5 minutes</h3>
+      <p>Paste your before and after schemas into SchemaLens and catch breaking changes before they reach production.</p>
+      <a href="../app.html" class="btn btn-primary">Start Reviewing →</a>
+    </div>
+
+    <h2>The one-question test</h2>
+
+    <p>If you only have time for one question before approving a schema change, make it this:</p>
+
+    <blockquote>
+      "If this migration fails halfway through, what's the worst-case state of the database?"
+    </blockquote>
+
+    <p>If the answer makes you uncomfortable, the migration needs more review.</p>
+
+    <h3>Related articles</h3>
+    <ul>
+      <li><a href="schema-review-checklist.html">The Schema Review Checklist Every Engineering Team Needs</a></li>
+      <li><a href="why-your-team-needs-a-schema-review-process.html">Why Your Team Needs a Schema Review Process</a></li>
+      <li><a href="dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes (And How to Avoid Them)</a></li>
+      <li><a href="schemalens-in-your-ci-cd-pipeline.html">How to Add Schema Diff Checks to Your CI/CD Pipeline</a></li>
+    </ul>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+          <a href="../changelog.html">Changelog</a>
+          <a href="../app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../prisma-schema-diff.html">Prisma Schema Diff</a>
+          <a href="../drizzle-schema-diff.html">Drizzle Schema Diff</a>
+          <a href="../typeorm-schema-diff.html">TypeORM Schema Diff</a>
+          <a href="../sequelize-schema-diff.html">Sequelize Schema Diff</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="../migration-checklist.html">Migration Checklist</a>
+          <a href="../api-guide.html">API Quick Start</a>
+          <a href="../ci-cd-integration.html">CI/CD Integration</a>
+          <a href="../zapier-integration.html">Zapier Integration</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

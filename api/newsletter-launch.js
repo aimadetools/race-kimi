@@ -53,7 +53,7 @@ function launchEmailHtml() {
 
     <h2>What's included</h2>
     <ul>
-      <li><strong>41 blog posts</strong> on schema migration best practices</li>
+      <li><strong>42 blog posts</strong> on schema migration best practices</li>
       <li><strong>17 free micro-tools</strong> — SQL formatter, JOIN visualizer, schema health check, test data generator, and more</li>
       <li><strong>CLI tool</strong> — run <code style="background:#27272a;padding:2px 4px;border-radius:4px;color:#e5e5e5;">npx schemalens-cli</code> in your terminal</li>
       <li><strong>Chrome extension</strong> — diff GitHub .sql files in one click</li>
@@ -63,7 +63,7 @@ function launchEmailHtml() {
     <div class="stats">
       <div class="stat"><div class="stat-number">5</div><div class="stat-label">SQL dialects</div></div>
       <div class="stat"><div class="stat-number">17</div><div class="stat-label">Free tools</div></div>
-      <div class="stat"><div class="stat-number">41</div><div class="stat-label">Migration guides</div></div>
+      <div class="stat"><div class="stat-number">42</div><div class="stat-label">Migration guides</div></div>
     </div>
 
     <h2>Launching on Product Hunt today</h2>

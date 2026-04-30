@@ -43,6 +43,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/blog/how-to-review-sql-schema-changes.html</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/blog/how-to-generate-realistic-sql-test-data.html</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
