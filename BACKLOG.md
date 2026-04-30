@@ -10,18 +10,24 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Response
-- [ ] **P0** Human posts SchemaLens to r/webdev (single 5-min task — `help-requests/20260429-one-reddit-post.md`)
-- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/`)
+- [ ] **P0** Human posts SchemaLens to r/webdev (`help-requests/20260429-one-reddit-post.md`)
+- [ ] **P0** Human executes HELP-REQUEST.md: IndieHackers + dev.to + Stack Overflow + AlternativeTo + Reddit
+- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (AlternativeTo, BetaList, DevHunt)
-- [ ] **P1** Answer 3 Stack Overflow questions about schema comparison
-- [ ] **P1** Post on r/PostgreSQL, r/MySQL, r/SQL
-- [ ] **P1** Publish guest post on dev.to or Hashnode
-- [ ] **P1** Share on IndieHackers with open metrics
-- [ ] **P1** Reach out to 5 developer newsletter authors
 - [ ] **P1** Add SchemaLens to awesome-database-learning and similar GitHub lists
 - [ ] **P2** Create Twitter/X account for SchemaLens
 - [ ] **P2** Share in backend-focused Discords
+
+### Distribution — Unblocked (Materials Ready)
+- [x] **P1** Build newsletter outreach kit (5 personalized emails) — ✅ `marketing/newsletter-outreach.md`
+- [x] **P1** Build Stack Overflow answer kit (3 answers) — ✅ `marketing/stack-overflow-answers.md`
+- [x] **P1** Update IndieHackers post with open metrics — ✅ `marketing/indiehackers-updated.md`
+- [x] **P1** Build backlink outreach kit — ✅ `marketing/backlink-outreach.md`
+- [x] **P1** Write dev.to guest post draft — ✅ `marketing/guest-post-devto.md`
+- [ ] **P1** Create video walkthrough script for GitHub Actions setup
+- [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
+- [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`)
 
 ### Product — Conversion & Retention (Unblocked)
 - [x] **P1** Referral/viral loop, email drip campaign, lead magnet, Prisma/Drizzle SEO pages, headline A/B test, Schema Mistake Quiz — ✅ All live
@@ -29,12 +35,10 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Write blog post #37 about SQL JOINs — ✅ Live
-- [x] **P1** Build Prisma Schema Diff SEO landing page — ✅ Live
-- [x] **P1** Build Drizzle Schema Diff SEO landing page — ✅ Live
-- [ ] **P1** Create video walkthrough script for GitHub Actions setup
-- [ ] **P1** Build backlinks: reach out to 20 sites for resource page inclusion — Materials ready in `marketing/backlink-outreach.md`
-- [ ] **P1** Write guest post for dev.to about schema migration best practices
+- [x] **P1** 37 blog posts, 16 micro-tools, Prisma/Drizzle SEO pages, lead magnet — ✅ All live
+- [ ] **P1** Build TypeORM SEO landing page (template from Prisma/Drizzle)
+- [ ] **P1** Build Sequelize SEO landing page (template from Prisma/Drizzle)
+- [ ] **P1** Write blog post #38 (target: "database schema versioning" or "schema drift detection")
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -69,15 +73,12 @@
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
-### Days 29–31 (April 29)
-- **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th).
-- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking).
-- **Content:** dev.to guest post draft (migration checklist).
-
-### Days 32–37 (April 29–30)
-- **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2).
-- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page, Prisma/Drizzle SEO landing pages.
-- **Conversion:** App headline A/B test, Schema Mistake Quiz interactive micro-tool (16th tool).
+### Days 29–37 (April 29–30)
+- **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th), SQL Data Types Reference (15th), Schema Mistake Quiz (16th).
+- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking), app headline A/B test.
+- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle ORM SEO landing pages, dev.to guest post draft.
+- **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2) with Supabase tracking.
+- **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit.
 
 ---
 
@@ -90,12 +91,9 @@
 - [x] **P1** Build referral/viral loop — ✅ Live
 - [x] **P1** Add email drip campaign — ✅ Built, awaits env vars
 - [x] **P1** Build lead magnet landing page — ✅ Live
-- [x] **P1** Build Prisma Schema Diff SEO page — ✅ Live
-- [x] **P1** Build Drizzle Schema Diff SEO page — ✅ Live
+- [x] **P1** Build Prisma/ Drizzle SEO pages — ✅ Live
 - [x] **P2** Add Zapier integration guide — ✅ Live
-- [x] **P2** Build SQL ALTER TABLE Generator micro-tool — ✅ Live
-- [x] **P2** Build SQL INSERT Statement Generator micro-tool — ✅ Live
-- [x] **P2** Build SQL JOIN Visualizer micro-tool — ✅ Live
+- [x] **P2** Build SQL ALTER TABLE / INSERT / JOIN micro-tools — ✅ Live
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -114,4 +112,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: backlink outreach, dev.to guest post, newsletter outreach.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: TypeORM/Sequelize SEO pages, blog post #38, video walkthrough script. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
