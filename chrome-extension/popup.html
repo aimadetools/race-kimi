@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 280px;
+      padding: 16px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      color: #1f2937;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    .header h1 {
+      font-size: 16px;
+      margin: 0;
+    }
+    p {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #4f46e5;
+    }
+    .tip {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icons/icon-48.png" alt="SchemaLens">
+    <h1>SchemaLens</h1>
+  </div>
+  <p>Open any <code>.sql</code> file on GitHub and click <strong>Open in SchemaLens</strong> to diff schemas instantly.</p>
+  <a class="btn" href="https://schemalens.tech" target="_blank">Open SchemaLens</a>
+  <div class="tip">💡 Tip: Works on public repos. Private repos require a GitHub token.</div>
+</body>
+</html>
