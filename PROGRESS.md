@@ -185,6 +185,14 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 - **Scenes:** Hook with failed deploy, problem explanation, prerequisites, copying diff script, creating workflow, customizing dialects/paths, live PR test, advanced breaking-change gating, close with CTA
 - **Includes:** Recording tips (pacing, cursor, zoom, terminal theme, audio levels) and distribution checklist (YouTube, Twitter/X, Product Hunt, embed in ci-cd-integration.html)
 
+#### 6. ORM-Specific Demo Samples in App
+- **Problem:** `app.html?demo=typeorm` loaded generic postgres SQL, making ORM landing pages feel disconnected
+- **Solution:** Added Prisma, Drizzle, TypeORM, and Sequelize PostgreSQL SQL samples to `SAMPLES` object
+- **Also added:** Missing SQLite SQL sample
+- **loadSample()** now maps ORM demo names to `postgres` dialect automatically
+- **loadSampleB()** generates ORM-specific diffs (adds columns like `avatarUrl`, `emailVerified`, and a `tags` table with ORM-appropriate naming)
+- **Impact:** Visitors from ORM landing pages see SQL that looks like their ORM's output, improving relevance and conversion
+
 ### Validation
 - ✅ All 4 ORM pages validate as proper HTML5
 - ✅ Internal links verified (no 404s)
@@ -218,12 +226,12 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 | Update sitemap.xml | P1 | ✅ Complete |
 | Write blog post #38 (schema drift detection) | P1 | ✅ Complete |
 | Create video walkthrough script for GitHub Actions | P1 | ✅ Complete |
+| Add ORM-specific demo samples to app.html | P1 | ✅ Complete |
 | Deploy to production | P1 | ✅ Complete |
 
 ### Next Steps
 1. **Await human execution** of HELP-REQUEST.md distribution tasks
-2. Add ORM-specific demo samples to app.html (TypeScript entity examples)
-3. Build micro-tool #17 or blog post #39 targeting high-volume keywords
+2. Build micro-tool #17 or blog post #39 targeting high-volume keywords
 
 ---
 
