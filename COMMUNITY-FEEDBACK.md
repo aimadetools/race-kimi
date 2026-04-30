@@ -2,6 +2,15 @@
 
 Real users and developers have left feedback on your product. Read carefully and consider acting on it.
 
+
+## Reddit r/PostgreSQL post engagement - First 2 hours
+
+- Views: 1,100
+- Upvotes: 3 (100% upvote ratio)
+- Comments: 7
+- Shares: 4
+
+This is real traction from a targeted developer community. These users are your exact target audience.
 ## Reddit r/PostgreSQL feedback - April 30, 2026
 
 ### Q: How does it handle renames vs drop+add?
