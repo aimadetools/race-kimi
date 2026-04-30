@@ -36,8 +36,8 @@
 
 ### Content — SEO Engine (Unblocked)
 - [x] **P1** 37 blog posts, 16 micro-tools, Prisma/Drizzle SEO pages, lead magnet — ✅ All live
-- [ ] **P1** Build TypeORM SEO landing page (template from Prisma/Drizzle)
-- [ ] **P1** Build Sequelize SEO landing page (template from Prisma/Drizzle)
+- [x] **P1** Build TypeORM SEO landing page — ✅ `typeorm-schema-diff.html`
+- [x] **P1** Build Sequelize SEO landing page — ✅ `sequelize-schema-diff.html`
 - [ ] **P1** Write blog post #38 (target: "database schema versioning" or "schema drift detection")
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
@@ -73,10 +73,10 @@
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
-### Days 29–37 (April 29–30)
+### Days 29–39 (April 29–30)
 - **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th), SQL Data Types Reference (15th), Schema Mistake Quiz (16th).
 - **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking), app headline A/B test.
-- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle ORM SEO landing pages, dev.to guest post draft.
+- **Content:** Blog post #37 (SQL JOINs Explained), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle/TypeORM/Sequelize ORM SEO landing pages, dev.to guest post draft.
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2) with Supabase tracking.
 - **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit.
 

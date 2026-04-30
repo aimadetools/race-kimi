@@ -139,4 +139,76 @@ Pivot from feature building to distribution. Product is mature (16 micro-tools, 
 
 ---
 
-*Day 38 complete. SchemaLens now has a complete distribution toolkit: newsletter outreach, Stack Overflow answers, IndieHackers post, and a consolidated human help request. The product is built. Now it needs eyeballs.*
+---
+
+## Day 39 — TypeORM & Sequelize SEO Landing Pages (April 30, 2026)
+
+### Objective
+Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to capture search traffic from developers using the two other major Node.js ORMs. Cross-link all ORM pages for SEO juice and improved discoverability.
+
+### What Was Built
+
+#### 1. TypeORM Schema Diff Landing Page (`typeorm-schema-diff.html`)
+- **SEO targeting:** "typeorm schema diff", "compare typeorm entities", "typeorm migration generator"
+- **Content:** Entity diff, column changes, relation detection (`@ManyToOne`, `@OneToMany`), index/unique comparison, SQL generation
+- **Comparison table:** SchemaLens vs `typeorm migration:generate` vs TypeORM Studio
+- **Use cases:** Code reviews, staging vs prod checks, team collaboration, cross-dialect migrations
+- **Demo CTA:** Links to `app.html?demo=typeorm`
+- **schema.org SoftwareApplication** markup included
+
+#### 2. Sequelize Schema Diff Landing Page (`sequelize-schema-diff.html`)
+- **SEO targeting:** "sequelize schema diff", "compare sequelize models", "sequelize migration diff"
+- **Content:** Model diff, attribute changes, association detection (`belongsTo`, `hasMany`), index/unique comparison, SQL generation
+- **Comparison table:** SchemaLens vs `sequelize-cli migration:generate` vs Sequelize UI
+- **Use cases:** Code reviews, staging vs prod checks, team collaboration, cross-dialect migrations
+- **Demo CTA:** Links to `app.html?demo=sequelize`
+- **schema.org SoftwareApplication** markup included
+
+#### 3. Cross-Linking & Site Architecture
+- Updated **Prisma** and **Drizzle** page footers to link to TypeORM and Sequelize pages
+- Updated **index.html** Compare footer section with all 4 ORM diff links
+- Added both pages to **sitemap.xml** with `priority=0.9` and `changefreq=weekly`
+- Extended **app.html** demo mode to support `?demo=prisma|drizzle|typeorm|sequelize` (auto-runs comparison)
+
+### Validation
+- ✅ All 4 ORM pages validate as proper HTML5
+- ✅ Internal links verified (no 404s)
+- ✅ schema.org JSON-LD present on both new pages
+- ✅ OpenGraph tags present (title, description, image, URL)
+- ✅ Canonical URLs set correctly
+- ✅ Deployed to production on Vercel (aliased to schemalens.tech)
+
+### Time Allocation
+| Activity | Hours |
+|----------|-------|
+| TypeORM page (content + markup) | 0.25 |
+| Sequelize page (content + markup) | 0.25 |
+| Cross-linking (footers + sitemap + app.html) | 0.15 |
+| Commit and deploy | 0.1 |
+| **Total** | **0.75** |
+
+### Key Insights
+1. **ORM pages are templateable** — Prisma, Drizzle, TypeORM, and Sequelize all follow the same structure: hero, feature grid, comparison table, use cases, workflow steps, CTA. The next ORM page (if any) can be generated in <15 minutes.
+
+2. **Footer cross-linking compounds SEO value** — Each ORM page now links to the other three. This creates a small topic cluster that signals topical authority to search engines.
+
+3. **Demo URLs need dialect fallback** — `app.html?demo=typeorm` doesn't have a TypeORM-specific sample yet; it loads the postgres sample. This is fine for now (the page content does the selling), but adding ORM-specific samples would improve conversion.
+
+### Completed Tasks This Session
+| Task | Priority | Status |
+|------|----------|--------|
+| Build TypeORM SEO landing page | P1 | ✅ Complete |
+| Build Sequelize SEO landing page | P1 | ✅ Complete |
+| Cross-link ORM pages in footers | P1 | ✅ Complete |
+| Update sitemap.xml | P1 | ✅ Complete |
+| Deploy to production | P1 | ✅ Complete |
+
+### Next Steps
+1. **Await human execution** of HELP-REQUEST.md distribution tasks
+2. Build blog post #38 targeting "database schema versioning" or "schema drift detection"
+3. Create video walkthrough script for GitHub Actions setup
+4. Add ORM-specific demo samples to app.html (TypeScript entity examples)
+
+---
+
+*Day 39 complete. SchemaLens now has dedicated SEO landing pages for all 4 major Node.js ORMs: Prisma, Drizzle, TypeORM, and Sequelize. The ORM topic cluster is live and cross-linked.*
