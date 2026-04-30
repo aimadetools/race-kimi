@@ -97,4 +97,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: video walkthrough script for GitHub Actions, blog post #39, micro-tool #17. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: blog post #39, micro-tool #17, Bitbucket/GitHub Marketplace listings. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
