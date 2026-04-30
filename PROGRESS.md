@@ -50,6 +50,7 @@
 | 44 | Apr 30 | Product Hunt launch execution: regenerated gallery screenshots & demo video, created product-hunt.html with 30% off PH-exclusive offer. |
 | 45 | Apr 30 | Chrome extension MVP (GitHub SQL file integration), blog post #41 (10 breaking schema changes), sitemap updates. |
 | 46 | Apr 30 | Reddit trust/positioning fix: "When SchemaLens shines" section, trust bar, FAQ on "I already have migrations." Built Leads & Outreach CRM in admin.html. Prepared Monday launch materials. |
+| 47 | Apr 30 | Newsletter launch broadcast endpoint (`/api/newsletter-launch.js`), admin dashboard controls, blog post #42 (5-minute schema review), 2 new Stack Overflow answer drafts. |
 
 ---
 
@@ -78,6 +79,9 @@
   - Includes risk tags (high/medium/low) and a one-question sanity test
   - Added to blog.html grid and sitemap.xml
 - **Updated counts:** 41 → 42 blog posts in launch email and tweet thread
+- **Distribution assets:** Added Stack Overflow Answer Kit #4 and #5
+  - Answer 4: "How to compare two PostgreSQL database schemas?" — covers pg_dump, apgdiff, SchemaLens, DataGrip, migra
+  - Answer 5: "How to find differences between production and staging database schemas?" — 4-step workflow with risk table and CI/CD automation snippet
 
 ### Validation
 - ✅ `api/newsletter-launch.js` syntax check passed (`node --check`)
