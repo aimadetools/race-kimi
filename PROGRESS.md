@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–38)
+## Key Milestones (Days 1–40)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -42,35 +42,8 @@
 | 36 | Apr 29 | App headline A/B test (benefit-driven Variant B vs control), analytics wired for cohort analysis. |
 | 37 | Apr 29 | Schema Mistake Quiz interactive micro-tool (7 questions, instant scoring, shareable results). 16th micro-tool live. |
 | 38 | Apr 30 | Built distribution asset kit: 5 newsletter outreach emails, 3 Stack Overflow answers, updated IndieHackers post, consolidated HELP-REQUEST.md for human execution. |
-
----
-
-## Day 39 — ORM Pages, Blog Post #38 & Video Script (April 30, 2026)
-
-### What Was Built
-- **TypeORM & Sequelize SEO landing pages** (`typeorm-schema-diff.html`, `sequelize-schema-diff.html`)
-- **Blog post #38:** "How to Detect Schema Drift Before Production"
-- **Video walkthrough script** for GitHub Actions setup
-- **ORM-specific demo samples** in `app.html`
-
-### Validation
-- ✅ All pages deployed and indexed in sitemap
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 40 — CLI Package, GitHub Action & Micro-Tool #17 (April 30, 2026)
-
-### What Was Built
-- **schemalens-cli** npm package (`cli/`) — local diff engine, 5 dialects, 4 output formats, CI mode
-- **GitHub Action** (`action.yml`) — composite action with PR comments, breaking-change fail
-- **Micro-Tool #17** — SQL Test Data Generator
-- Updated tools.html and sitemap.xml
-
-### Validation
-- ✅ CLI: 8/8 tests pass
-- ✅ GitHub Action YAML validated
-- ✅ Deployed to production
+| 39 | Apr 30 | TypeORM & Sequelize SEO landing pages, blog post #38 (schema drift detection), video walkthrough script for GitHub Actions, ORM-specific demo samples. |
+| 40 | Apr 30 | schemalens-cli npm package, GitHub Action (action.yml), micro-tool #17 (SQL Test Data Generator), updated tools.html and sitemap.xml. CLI 8/8 tests pass. |
 
 ---
 
@@ -116,4 +89,34 @@ Reddit r/PostgreSQL feedback raised critical trust issues: "vibe-coded web app" 
 
 ---
 
-*Day 42 complete. SchemaLens now directly addresses the #1 user-reported trust issue with engineering transparency and CLI credibility.*
+## Day 43 — Blog Post #40 & Marketing Asset Refresh (April 30, 2026)
+
+### What Was Built
+- **Blog post #40** — "The Complete SQL Migration Checklist: 12 Steps Before Production"
+  - 12 actionable checklist items with code examples, risk scoring, and rollback guidance
+  - Links to SchemaLens app, SQL Index Analyzer, SQL Test Data Generator, and CI/CD integration
+  - Schema.org Article structured data, OG tags, dark/light mode support
+- **Updated blog.html** with new post card at the top
+- **Updated sitemap.xml** with new blog post URL
+- **Updated Product Hunt launch kit** (`marketing/product-hunt-launch.md`)
+  - Fixed outdated FAQ answers (CI/CD now live, CLI now live)
+  - Updated feature list: 5 dialects, 17 micro-tools, trigger/view/function diff, schema risk score
+  - Updated maker comment with current stats
+  - Updated gallery image spec (5 dialects)
+- **Updated newsletter outreach kit** (`marketing/newsletter-outreach.md`) — 16→17 tools, 37→40 blog posts
+- **Updated IndieHackers post** (`marketing/indiehackers-updated.md`) — 16→17 tools
+
+### Validation
+- ✅ Blog post HTML validated (balanced tags, working links)
+- ✅ sitemap.xml now contains 40 blog URLs
+- ✅ All marketing materials reflect current product state
+- ✅ Committed and pushed to production
+
+### Key Insights
+1. **Checklist content converts.** Developers search for "sql migration checklist" before deploys. Meeting them with actionable, comprehensive content builds trust and drives product usage.
+2. **Marketing assets decay quickly.** The Product Hunt FAQ said "no CLI yet" — but the CLI had been live for days. Outdated assets erode credibility. A weekly marketing-asset audit is worthwhile.
+3. **Micro-tools amplify blog posts.** The migration checklist naturally links to 4 existing tools (diff app, index analyzer, test data generator, CI/CD guide). Every piece of content should have 2–3 relevant tool CTAs.
+
+---
+
+*Day 43 complete. SchemaLens now has 40 blog posts, 17 micro-tools, and fully accurate marketing assets ready for launch execution.*

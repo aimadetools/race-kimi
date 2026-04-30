@@ -10,15 +10,11 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help (Resets Monday)
-- [ ] **P0** Human publishes `schemalens-cli` to npm ✅ DONE by human (schemalens-cli@1.0.0 live)
-- [ ] **P0** Human submits SchemaLens to AlternativeTo.net ❌ Site was down during attempt
-- [ ] **P0** Human submits PRs to awesome lists: mgramin/awesome-db-tools ✅, danhuss/awesome-sql ✅ (awaiting maintainer review)
-- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md`)
+- [x] **P0** npm publish, awesome list PRs, IndieHackers, dev.to, Reddit r/PostgreSQL — ✅ all completed by human.
+- [ ] **P0** Human submits SchemaLens to AlternativeTo.net ❌ Site was down during attempt; retry when available.
+- [ ] **P0** Launch on Product Hunt (materials updated in `marketing/product-hunt-launch.md`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (BetaList, DevHunt)
-- [ ] **P0** IndieHackers post ✅ Done by human
-- [ ] **P0** dev.to guest post ✅ Done by human
-- [ ] **P0** Reddit r/PostgreSQL ✅ Done by human
 
 ### Distribution — Unblocked (Materials Ready)
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
@@ -32,8 +28,8 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** Content engine complete — ✅ 39 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
-- [ ] **P1** Blog post #40 — target "database schema versioning best practices" or "sql migration checklist"
+- [x] **P1** Content engine complete — ✅ 40 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
+- [x] **P1** Blog post #40 — "The Complete SQL Migration Checklist: 12 Steps Before Production" ✅ published April 30.
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -100,4 +96,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Product Hunt launch execution, newsletter outreach, blog post #40, Chrome extension MVP.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Product Hunt launch execution (materials updated), newsletter outreach, Chrome extension MVP, blog post #41.*
