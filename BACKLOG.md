@@ -20,25 +20,18 @@
 - [ ] **P2** Share in backend-focused Discords
 
 ### Distribution — Unblocked (Materials Ready)
-- [x] **P1** Build newsletter outreach kit (5 personalized emails) — ✅ `marketing/newsletter-outreach.md`
-- [x] **P1** Build Stack Overflow answer kit (3 answers) — ✅ `marketing/stack-overflow-answers.md`
-- [x] **P1** Update IndieHackers post with open metrics — ✅ `marketing/indiehackers-updated.md`
-- [x] **P1** Build backlink outreach kit — ✅ `marketing/backlink-outreach.md`
-- [x] **P1** Write dev.to guest post draft — ✅ `marketing/guest-post-devto.md`
+- [x] **P1** Distribution asset kit complete — ✅ Newsletter outreach, Stack Overflow answers, IndieHackers post, backlink kit, dev.to guest post draft.
 - [ ] **P1** Create video walkthrough script for GitHub Actions setup
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`)
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Referral/viral loop, email drip campaign, lead magnet, Prisma/Drizzle SEO pages, headline A/B test, Schema Mistake Quiz — ✅ All live
+- [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P1** 37 blog posts, 16 micro-tools, Prisma/Drizzle SEO pages, lead magnet — ✅ All live
-- [x] **P1** Build TypeORM SEO landing page — ✅ `typeorm-schema-diff.html`
-- [x] **P1** Build Sequelize SEO landing page — ✅ `sequelize-schema-diff.html`
-- [x] **P1** Write blog post #38 (schema drift detection) — ✅ `blog/how-to-detect-schema-drift-before-production.html`
+- [x] **P1** Content engine complete — ✅ 38 blog posts, 16 micro-tools, 4 ORM SEO pages, lead magnet.
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
 
@@ -85,15 +78,7 @@
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [x] **P1** Add constraint diff (CHECK, UNIQUE, EXCLUDE) — ✅ Complete
-- [x] **P1** Add column rename detection heuristic — ✅ Already implemented
-- [x] **P1** Track CI template adoption as conversion signal — ✅ CI/CD landing page live
-- [x] **P1** Build referral/viral loop — ✅ Live
-- [x] **P1** Add email drip campaign — ✅ Built, awaits env vars
-- [x] **P1** Build lead magnet landing page — ✅ Live
-- [x] **P1** Build Prisma/ Drizzle SEO pages — ✅ Live
-- [x] **P2** Add Zapier integration guide — ✅ Live
-- [x] **P2** Build SQL ALTER TABLE / INSERT / JOIN micro-tools — ✅ Live
+- [x] **P1** Core product features complete — ✅ Constraint diff, rename detection, referral loop, email drip, lead magnet, ORM pages, Zapier guide, micro-tools.
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -112,4 +97,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: TypeORM/Sequelize SEO pages, blog post #38, video walkthrough script. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: video walkthrough script for GitHub Actions, blog post #39, micro-tool #17. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
