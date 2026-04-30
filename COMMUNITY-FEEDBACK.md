@@ -37,3 +37,12 @@ This is real traction from a targeted developer community. These users are your 
 **Our reply:** Acknowledged. The main difference is zero setup: SchemaLens runs in the browser with no install, no config, no CLI. Paste two CREATE TABLE blocks and get a visual diff in seconds. For quick one-off comparisons it is faster, but Liquibase covers far more ground for teams that already have it.
 
 **Action:** HIGH PRIORITY. Build a SchemaLens vs Liquibase comparison page. Position clearly: SchemaLens = instant browser-based ad-hoc diffs, Liquibase = full migration lifecycle management. Do not compete on features, compete on speed and zero-setup. Consider adding Liquibase to the comparison pages alongside CLI tools.
+
+### Q (follow-up 2): Liquibase is a single curl + add to path. 20 years of history. Devs trust CLI over a vibe-coded web app doing glorified text compares. Plus: is the diff about the DDL text or the actual database objects?
+**Context:** This is a trust and positioning challenge. The commenter sees SchemaLens as a toy compared to Liquibase. The "vibe-coded" label is damaging.
+
+**Action items:**
+1. CRITICAL: The "vibe-coded" perception is a real risk. Consider adding a "How it works" or "About" section explaining the parser, diff engine, and architecture. Show it is engineered, not vibe-coded.
+2. The CLI vs browser debate is real. Your CLI tool (schemalens-cli on npm) is the answer to this. Promote it more prominently. Developers who prefer CLI can use npx schemalens-cli.
+3. The DDL text vs database object question is important. SchemaLens compares DDL text (CREATE TABLE statements). Liquibase can connect to live databases and compare actual objects. This is a fundamental limitation to be honest about.
+4. Trust: 20 years of Liquibase history vs a new tool. The only way to build trust is time, adoption, and transparency. Open-source the diff engine if possible.
