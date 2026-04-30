@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How SchemaLens Works — Architecture, Parser & Diff Engine</title>
+  <meta name="description" content="SchemaLens is engineered software, not a wrapper. Learn how our custom SQL parser, semantic diff engine, and migration generator work. Available in browser and via CLI.">
+  <meta property="og:title" content="How SchemaLens Works — Architecture & Engineering">
+  <meta property="og:description" content="A technical deep dive into SchemaLens: custom SQL parser, semantic diff engine, CLI tool, and testing strategy.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/how-it-works.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How SchemaLens Works — Architecture, Parser & Diff Engine",
+  "description": "SchemaLens is engineered software, not a wrapper. Learn how our custom SQL parser, semantic diff engine, and migration generator work.",
+  "url": "https://schemalens.tech/how-it-works.html",
+  "datePublished": "2026-04-30",
+  "dateModified": "2026-04-30",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/how-it-works.html"
+  },
+  "dependencies": "Vanilla JavaScript, zero external runtime dependencies",
+  "proficiencyLevel": "Expert"
+}
+</script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .hw-page { max-width: 800px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .hw-page h1 { font-size: 2.4rem; margin-bottom: 0.5rem; line-height: 1.2; }
+    .hw-page .lead { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 2.5rem; line-height: 1.7; }
+    .hw-page h2 { font-size: 1.5rem; margin-top: 3rem; margin-bottom: 1rem; color: var(--text); }
+    .hw-page h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .hw-page p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--text); }
+    .hw-page ul, .hw-page ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .hw-page li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
+    .hw-page pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .hw-page code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .hw-page pre code { background: none; padding: 0; color: var(--text); }
+    .hw-page .keyword { color: #ff7b72; }
+    .hw-page .string { color: #a5d6ff; }
+    .hw-page .comment { color: #8b949e; }
+    .hw-page .callout {
+      background: var(--code-bg);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .hw-page .callout p { margin-bottom: 0; }
+    .hw-page .callout.good { border-left-color: #22c55e; }
+    .hw-page .callout.warn { border-left-color: #f59e0b; }
+    .hw-page .cta-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .hw-page .cta-box h3 { margin-top: 0; color: var(--text); }
+    .hw-page .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .hw-page .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .hw-page .stat-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .hw-page .stat-item .num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .hw-page .stat-item .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .hw-page .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .hw-page .compare-table th, .hw-page .compare-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    .hw-page .compare-table th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+    .hw-page .compare-table td:first-child { font-weight: 500; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+    .cli-banner {
+      background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cli-banner code {
+      background: #0f0f1a;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      color: #a5d6ff;
+      font-family: var(--mono);
+    }
+    .cli-banner .cli-info { flex: 1; min-width: 220px; }
+    .cli-banner .cli-info h3 { margin: 0 0 0.25rem; }
+    .cli-banner .cli-info p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="btn btn-primary">Try Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container hw-page">
+    <a href="index.html" class="back-link">← Home</a>
+    <h1>How SchemaLens Works</h1>
+    <p class="lead">SchemaLens is engineered software with a custom SQL parser, semantic diff engine, and migration generator. It runs entirely in your browser <em>and</em> from the command line. Here is exactly how it works.</p>
+
+    <div class="cli-banner">
+      <div class="cli-info">
+        <h3>Prefer the terminal?</h3>
+        <p>The same engine runs locally via npm. No browser required.</p>
+      </div>
+      <code>npx schemalens-cli diff old.sql new.sql</code>
+      <a href="cli/" class="btn btn-secondary">CLI Docs</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item"><div class="num">~400</div><div class="label">Lines of parser code</div></div>
+      <div class="stat-item"><div class="num">0</div><div class="label">Runtime dependencies</div></div>
+      <div class="stat-item"><div class="num">&lt;10ms</div><div class="label">Parse 1,000 lines of SQL</div></div>
+      <div class="stat-item"><div class="num">5</div><div class="label">Supported dialects</div></div>
+      <div class="stat-item"><div class="num">8</div><div class="label">Test suites</div></div>
+    </div>
+
+    <h2>Architecture Overview</h2>
+    <p>SchemaLens has three layers:</p>
+    <ol>
+      <li><strong>Parser</strong> — Turns <code>CREATE TABLE</code> text into structured JavaScript objects.</li>
+      <li><strong>Diff Engine</strong> — Compares two object trees and produces a semantic change list.</li>
+      <li><strong>Migration Generator</strong> — Converts changes into dialect-specific <code>ALTER TABLE</code> scripts.</li>
+    </ol>
+    <p>All three layers run client-side in the browser. The same code is packaged as <code>schemalens-cli</code> for terminal use.</p>
+
+    <div class="callout">
+      <p><strong>Privacy by architecture:</strong> Because parsing and diffing happen in your browser, your schema dumps never touch our servers. We cannot see your data even if we wanted to.</p>
+    </div>
+
+    <h2>Why we wrote a custom parser</h2>
+    <p>Our first instinct was to use <code>node-sql-parser</code>. It is mature and well-tested. Then we fed it a real production schema and watched it choke on:</p>
+    <ul>
+      <li>Composite primary keys with <code>CLUSTERED</code> hints</li>
+      <li>Inline <code>FOREIGN KEY</code> references with <code>ON DELETE CASCADE</code></li>
+      <li>PostgreSQL <code>CREATE TYPE ... AS ENUM</code></li>
+      <li>MySQL <code>TINYINT(1)</code> rewritten from <code>BOOLEAN</code></li>
+      <li>SQL Server bracket-quoted identifiers like <code>[User Name]</code></li>
+    </ul>
+    <p>Each failure meant either patching the library (slow, fragile) or preprocessing the SQL (error-prone). Worse, the minified build was ~500 KB. For a tool whose value is "paste and see results in 2 seconds," a 500 KB parser felt absurd.</p>
+
+    <div class="callout good">
+      <p><strong>Constraint:</strong> We only need to parse <code>CREATE TABLE</code>, <code>CREATE INDEX</code>, <code>CREATE TYPE</code>, <code>CREATE VIEW</code>, <code>CREATE TRIGGER</code>, and <code>CREATE FUNCTION</code>. We do not need <code>SELECT</code>, <code>JOIN</code>, or DML. A full SQL grammar is overkill.</p>
+    </div>
+
+    <p>So we wrote a custom parser. It is ~400 lines of vanilla JavaScript, zero dependencies, and handles everything we need.</p>
+
+    <h2>The pipeline: from text to objects</h2>
+    <p>Every schema dump goes through four stages:</p>
+    <ol>
+      <li><strong>Strip comments</strong> — Remove <code>--</code> and <code>/* */</code> blocks so they do not confuse the tokenizer.</li>
+      <li><strong>Split statements</strong> — Break on semicolons, but respect semicolons inside string literals.</li>
+      <li><strong>Parse each statement</strong> — Turn a <code>CREATE TABLE</code> string into a structured table object.</li>
+      <li><strong>Normalize identifiers</strong> — Strip dialect-specific quotes so <code>`users`</code>, <code>"users"</code>, and <code>[users]</code> all become <code>users</code>.</li>
+    </ol>
+
+    <h3>Stage 1: Strip comments</h3>
+    <p>A naive regex like <code>/--.*$/gm</code> breaks if a line contains a string with <code>'--'</code> inside it. Our approach is character-by-character:</p>
+    <pre><code><span class="keyword">function</span> <span class="string">stripComments</span>(sql) {
+  <span class="keyword">let</span> out = <span class="string">''</span>, i = <span class="string">0</span>;
+  <span class="keyword">while</span> (i &lt; sql.length) {
+    <span class="keyword">if</span> (sql[i] === <span class="string">'-'</span> && sql[i+<span class="string">1</span>] === <span class="string">'-'</span>) {
+      <span class="keyword">while</span> (i &lt; sql.length && sql[i] !== <span class="string">'\n'</span>) i++;
+    } <span class="keyword">else if</span> (sql[i] === <span class="string">'/'</span> && sql[i+<span class="string">1</span>] === <span class="string">'*'</span>) {
+      i += <span class="string">2</span>;
+      <span class="keyword">while</span> (i &lt; sql.length && !(sql[i] === <span class="string">'*'</span> && sql[i+<span class="string">1</span>] === <span class="string">'/'</span>)) i++;
+      i += <span class="string">2</span>;
+    } <span class="keyword">else</span> {
+      out += sql[i++];
+    }
+  }
+  <span class="keyword">return</span> out;
+}</code></pre>
+
+    <h3>Stage 2: Split statements</h3>
+    <p>Splitting on semicolons is naive—what if a default value is a string containing a semicolon? We track whether we are inside a quoted string and only split when we are not:</p>
+    <pre><code><span class="keyword">function</span> <span class="string">splitStatements</span>(sql) {
+  <span class="keyword">const</span> stmts = [];
+  <span class="keyword">let</span> current = <span class="string">''</span>, inString = <span class="keyword">false</span>, stringChar = <span class="keyword">null</span>;
+  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i &lt; sql.length; i++) {
+    <span class="keyword">const</span> ch = sql[i];
+    <span class="keyword">if</span> (!inString && (ch === <span class="string">"'"</span> || ch === <span class="string">'"'</span>)) {
+      inString = <span class="keyword">true</span>; stringChar = ch;
+    } <span class="keyword">else if</span> (inString && ch === stringChar) {
+      inString = <span class="keyword">false</span>;
+    } <span class="keyword">else if</span> (!inString && ch === <span class="string">';'</span>) {
+      stmts.push(current.trim());
+      current = <span class="string">''</span>; <span class="keyword">continue</span>;
+    }
+    current += ch;
+  }
+  <span class="keyword">if</span> (current.trim()) stmts.push(current.trim());
+  <span class="keyword">return</span> stmts;
+}</code></pre>
+
+    <h3>Stage 3: Parse CREATE TABLE</h3>
+    <p>The hardest part is splitting the body into individual columns. Commas inside default values or type definitions must not be treated as column separators. Our solution tracks parentheses nesting depth and only splits on commas at depth zero.</p>
+    <pre><code><span class="keyword">function</span> <span class="string">parseCreateTable</span>(stmt, dialect) {
+  <span class="keyword">const</span> match = stmt.match(
+    <span class="string">/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)\s*\((.*)\)\s*[^)]*$/is</span>
+  );
+  <span class="keyword">if</span> (!match) <span class="keyword">return</span> <span class="keyword">null</span>;
+
+  <span class="keyword">const</span> tableName = match[<span class="string">1</span>].replace(<span class="string">/["`\[\]]/g</span>, <span class="string">''</span>);
+  <span class="keyword">const</span> body = match[<span class="string">2</span>];
+  <span class="comment">// ... split body by comma at depth 0, parse columns, parse constraints</span>
+}</code></pre>
+
+    <h2>Handling dialect quirks</h2>
+    <p>Each database has its own syntax for the same concept. Rather than five separate parsers, we use a single parser with dialect-aware branches:</p>
+    <ul>
+      <li><strong>PostgreSQL:</strong> <code>SERIAL</code>, <code>"quoted"</code> identifiers, <code>CREATE TYPE ... AS ENUM</code>, <code>EXCLUDE</code> constraints</li>
+      <li><strong>MySQL:</strong> <code>AUTO_INCREMENT</code>, <code>`backtick`</code> quotes, <code>TINYINT(1)</code> as boolean</li>
+      <li><strong>SQLite:</strong> <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, limited <code>ALTER TABLE</code> (requires table recreation)</li>
+      <li><strong>SQL Server:</strong> <code>IDENTITY(1,1)</code>, <code>[bracket]</code> quotes, <code>CLUSTERED</code> hints, <code>NVARCHAR</code></li>
+      <li><strong>Oracle:</strong> <code>VARCHAR2</code>, <code>NUMBER(p,s)</code>, tablespace clauses</li>
+    </ul>
+    <p>The parser stores dialect on every parsed object, so the diff engine and migration generator can produce the correct output for the target database.</p>
+
+    <h2>Diff engine: from objects to semantics</h2>
+    <p>Once both schemas are parsed into object trees, diffing is straightforward:</p>
+    <ol>
+      <li>Compare table names. Any table in A but not B is "removed." Any table in B but not A is "added."</li>
+      <li>For tables present in both, compare columns by name. Added columns, removed columns, and modified columns (type change, nullability change, default change) are flagged individually.</li>
+      <li>Compare constraints structurally. A <code>PRIMARY KEY (id, org_id)</code> is parsed into <code>{ type: 'PRIMARY KEY', columns: ['id', 'org_id'] }</code>, so two constraints with different whitespace or ordering are still recognized as identical.</li>
+      <li>Compare indexes, views, triggers, and functions/procedures using the same structural approach.</li>
+    </ol>
+    <p>This structural diff is why SchemaLens beats a text diff. A line-based diff would scream at you for reformatting whitespace. A semantic diff tells you that <code>role_id</code> changed from <code>INT</code> to <code>BIGINT</code>—the thing that actually matters.</p>
+
+    <h2>Migration generation</h2>
+    <p>The migration generator is a deterministic switch statement. For every detected change, it outputs the appropriate <code>ALTER TABLE</code> (or table recreation script for SQLite):</p>
+    <pre><code><span class="comment">// PostgreSQL</span>
+<span class="keyword">ALTER TABLE</span> <span class="string">"users"</span> <span class="keyword">ALTER COLUMN</span> <span class="string">"role_id"</span> <span class="keyword">TYPE</span> <span class="keyword">BIGINT</span>;
+
+<span class="comment">// MySQL</span>
+<span class="keyword">ALTER TABLE</span> <span class="string">`users`</span> <span class="keyword">MODIFY COLUMN</span> <span class="string">`role_id`</span> <span class="keyword">BIGINT</span> <span class="keyword">NULL</span>;
+
+<span class="comment">// SQL Server</span>
+<span class="keyword">ALTER TABLE</span> [users] <span class="keyword">ALTER COLUMN</span> [role_id] <span class="keyword">BIGINT</span>;
+
+<span class="comment">// SQLite (not supported — must recreate table)</span>
+<span class="comment">-- SQLite does not support ALTER COLUMN. Recreate table with new schema.</span></code></pre>
+
+    <h2>The CLI: same engine, terminal interface</h2>
+    <p><code>schemalens-cli</code> packages the exact same parser and diff engine into an npm module. There is no API call. There is no network dependency. Your schemas stay on your machine.</p>
+    <pre><code><span class="comment"># Install globally</span>
+npm install -g schemalens-cli
+
+<span class="comment"># Or run without installing</span>
+npx schemalens-cli diff old.sql new.sql --dialect postgres --format sql
+
+<span class="comment"># Pipe from stdin</span>
+cat new.sql | npx schemalens-cli diff old.sql -
+
+<span class="comment"># CI mode — fail on breaking changes</span>
+SCHEMALENS_STRICT=1 npx schemalens-cli diff old.sql new.sql</code></pre>
+
+    <h2>Testing strategy</h2>
+    <p>We test the parser headlessly by extracting the script from <code>app.html</code> and running it in Node.js:</p>
+    <pre><code><span class="keyword">const</span> fs = require(<span class="string">'fs'</span>);
+<span class="keyword">const</span> html = fs.readFileSync(<span class="string">'app.html'</span>, <span class="string">'utf8'</span>);
+<span class="keyword">const</span> script = html.match(<span class="string">/&lt;script&gt;([\s\S]*)&lt;\/script&gt;/</span>)[<span class="string">1</span>];
+<span class="keyword">const</span> fn = <span class="keyword">new</span> Function(script + <span class="string">'; return { parseSQL, diffSchemas };'</span>);
+<span class="keyword">const</span> { parseSQL, diffSchemas } = fn();
+
+<span class="comment">// Now we can unit-test the parser headlessly</span>
+<span class="keyword">const</span> schema = parseSQL(<span class="string">'CREATE TABLE users (id INT PRIMARY KEY);'</span>, <span class="string">'postgres'</span>);
+console.assert(Object.keys(schema.tables).length === <span class="string">1</span>);</code></pre>
+    <p>This lets us run CI-style tests without a browser environment. We validate parsing, diffing, and migration generation for all five supported dialects on every commit.</p>
+
+    <h2>Performance</h2>
+    <p>The parser processes ~1,000 lines of SQL in under 10 milliseconds on a modern laptop. For a tool that parses two schemas and diffs them, the total runtime is typically under 50 ms. There is no perceptible delay between clicking "Compare" and seeing results.</p>
+    <p>Because there are no network round trips, the entire experience—from paste to diff to migration copy—feels instantaneous.</p>
+
+    <h2>Honest limitations</h2>
+    <p>Our parser is intentionally narrow. It does not handle:</p>
+    <ul>
+      <li>Partitioned tables</li>
+      <li>Complex <code>CHECK</code> constraints with subqueries</li>
+      <li>Stored procedures or PL/pgSQL blocks (basic <code>CREATE FUNCTION</code> signature parsing is supported)</li>
+      <li>Live database connections — we compare DDL text, not actual database objects</li>
+    </ul>
+    <p>For 95% of schema diff use cases, <code>CREATE TABLE</code> + <code>CREATE INDEX</code> + constraints is enough. When we hit the other 5%, we add support incrementally.</p>
+
+    <div class="callout warn">
+      <p><strong>SchemaLens vs Liquibase:</strong> Liquibase is a full migration lifecycle framework. SchemaLens is for quick ad-hoc comparisons when you have two DDL dumps and want to see what changed without setting up a toolchain. If you already have Liquibase in your CI pipeline, keep using it. Use SchemaLens when you need answers in 10 seconds.</p>
+    </div>
+
+    <h2>When should you use SchemaLens?</h2>
+    <table class="compare-table">
+      <tr><th>Scenario</th><th>SchemaLens</th><th>Liquibase / Flyway</th><th>Redgate</th></tr>
+      <tr><td>Quick ad-hoc comparison of two DDL dumps</td><td>✅ Perfect</td><td>Possible but heavy</td><td>Overkill</td></tr>
+      <tr><td>Managed migration lifecycle in CI/CD</td><td>Complement</td><td>✅ Designed for this</td><td>✅ Designed for this</td></tr>
+      <tr><td>No install, browser-based, shareable link</td><td>✅ Native</td><td>❌ CLI only</td><td>❌ Desktop only</td></tr>
+      <tr><td>Connect to live database and diff objects</td><td>❌ Not supported</td><td>✅ Supported</td><td>✅ Supported</td></tr>
+      <tr><td>Generate ALTER TABLE scripts</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+      <tr><td>Zero cost for basic use</td><td>✅ Free tier</td><td>✅ Open source</td><td>❌ $369+/user</td></tr>
+      <tr><td>Command-line usage</td><td>✅ <code>npx schemalens-cli</code></td><td>✅ Native CLI</td><td>✅ Native CLI</td></tr>
+    </table>
+
+    <div class="cta-box">
+      <h3>See the engine in action</h3>
+      <p>Paste two SQL schemas and watch the diff engine work in real time. No install, no signup, no data leaves your browser.</p>
+      <a href="app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      <p style="margin-top: 12px; font-size: 0.85rem;">Or run <code style="color:#a5d6ff;">npx schemalens-cli</code> in your terminal.</p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #333; margin: 3rem 0;">
+    <p style="font-size: 0.9rem; color: var(--text-muted);">
+      Built for the $100 AI Startup Race. Read the <a href="blog/how-we-parse-sql-in-the-browser.html" style="color: var(--text-muted);">original deep dive →</a>
+    </p>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong><br>
+        Compare SQL schemas. Spot changes instantly. Generate migrations.
+      </div>
+      <div class="footer-links">
+        <a href="tools.html">All Tools</a>
+        <a href="app.html">App</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="how-it-works.html">How It Works</a>
+      </div>
+    </div>
+  </footer>
+
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

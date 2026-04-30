@@ -6,9 +6,9 @@
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
   <title>SchemaLens — Compare SQL Schemas & Generate Migrations</title>
-  <meta name="description" content="SchemaLens compares two SQL database schemas in your browser and instantly generates migration scripts. No CLI, no connection, no data leaves your machine.">
+  <meta name="description" content="SchemaLens compares two SQL database schemas in your browser and instantly generates migration scripts. Also available as CLI: npx schemalens-cli. No data leaves your machine.">
   <meta property="og:title" content="SchemaLens — Compare SQL Schemas & Generate Migrations">
-  <meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts.">
+  <meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts. Browser + CLI.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
@@ -176,6 +176,11 @@
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
       <p class="hero-note" style="margin-top:8px;font-size:0.85rem;">🛡️ Reviewing a migration? Use our <a href="migration-checklist.html">Database Migration Safety Checklist</a></p>
+      <div style="margin-top:20px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+        <span style="font-size:0.85rem;color:var(--text-muted);">⚡ Also on CLI:</span>
+        <code style="background:var(--code-bg);padding:4px 10px;border-radius:6px;font-size:0.85rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
+        <a href="cli/" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Docs →</a>
+      </div>
 
       <div class="demo-card">
         <div class="demo-header">
@@ -217,11 +222,11 @@
     <div class="container">
       <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center;">
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">14</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">17</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
         </div>
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">36</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">39</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Migration guides</div>
         </div>
         <div>
@@ -269,7 +274,7 @@
         <div class="feature-card">
           <div class="feature-icon">🛠️</div>
           <h3>Zero Install</h3>
-          <p>No CLI to learn. No dependencies to install. No Docker image to pull. Open your browser and go.</p>
+          <p>No CLI to learn. No dependencies to install. No Docker image to pull. Open your browser and go. Or use <code>npx schemalens-cli</code> if you prefer the terminal.</p>
         </div>
       </div>
     </div>
@@ -471,6 +476,38 @@
     </div>
   </section>
 
+  <section class="section reveal" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title">Frequently asked questions</h2>
+      <div style="max-width: 720px; margin: 0 auto;">
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">How is SchemaLens different from a text diff?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">A text diff (like Git) compares lines of text. If you reformat whitespace or rename a column, a text diff shows noise. SchemaLens parses <code>CREATE TABLE</code> statements into structured objects and compares them semantically. It understands that <code>role_id INT</code> changing to <code>role_id BIGINT</code> is a type change—not a deleted line and an added line.</p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">When should I use SchemaLens vs Liquibase or Flyway?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">Use SchemaLens for quick ad-hoc comparisons when you have two DDL dumps and need answers in 10 seconds. Use Liquibase or Flyway for managed migration lifecycles in CI/CD. SchemaLens is a complement, not a replacement. <a href="how-it-works.html" style="color: var(--primary);">See the full comparison →</a></p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">Is there a command-line version?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">Yes. <code>schemalens-cli</code> is available on npm and runs the exact same engine locally. No API calls, no data leaves your machine. <code>npx schemalens-cli diff old.sql new.sql --dialect postgres</code>. <a href="cli/" style="color: var(--primary);">CLI documentation →</a></p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">Does SchemaLens connect to my live database?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">No. SchemaLens compares DDL text (CREATE TABLE statements), not live database objects. Paste your schema dumps from <code>pg_dump</code>, <code>mysqldump</code>, or your ORM. This is intentional: it means zero configuration, zero credentials, and zero risk.</p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">Is my schema data private?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">Yes. All parsing and diffing happens in your browser. Your schemas never touch our servers. We use no tracking cookies. We cannot see your data even if we wanted to. <a href="how-it-works.html" style="color: var(--primary);">Read about our architecture →</a></p>
+        </details>
+        <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
+          <summary style="font-weight: 600; cursor: pointer; color: var(--text);">How does rename detection work?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">SchemaLens currently treats renames as drop+add because it compares two static snapshots. There is no way to infer intent from just the before/after state. If you need rename detection, you can annotate the generated migration manually. We are exploring a heuristic (same type + similar name = likely rename) for a future release.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
   <section class="cta-section reveal" id="early-access">
     <div class="container">
       <h2>Stop writing migrations by hand.</h2>
@@ -596,6 +633,7 @@
 
         <div class="footer-col">
           <h4>Company</h4>
+          <a href="how-it-works.html">How It Works</a>
           <a href="about.html">Our Story</a>
           <a href="about.html">Roadmap</a>
           <a href="about.html">Contact</a>

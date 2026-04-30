@@ -48,154 +48,72 @@
 ## Day 39 — ORM Pages, Blog Post #38 & Video Script (April 30, 2026)
 
 ### What Was Built
-- **TypeORM & Sequelize SEO landing pages** (`typeorm-schema-diff.html`, `sequelize-schema-diff.html`) — Full comparison pages with feature grids, syntax examples, and migration guidance
-- **Blog post #38:** "How to Detect Schema Drift Before Production" — 7-min read targeting "schema drift detection" keywords
-- **Video walkthrough script** for GitHub Actions setup (`marketing/video-walkthrough-github-actions.md`)
-- **ORM-specific demo samples** in `app.html` — Pre-loaded Prisma, Drizzle, TypeORM, and Sequelize schema samples accessible via dropdown
+- **TypeORM & Sequelize SEO landing pages** (`typeorm-schema-diff.html`, `sequelize-schema-diff.html`)
+- **Blog post #38:** "How to Detect Schema Drift Before Production"
+- **Video walkthrough script** for GitHub Actions setup
+- **ORM-specific demo samples** in `app.html`
 
 ### Validation
-- ✅ 4 ORM SEO pages now live (Prisma, Drizzle, TypeORM, Sequelize)
-- ✅ Blog post #38 deployed and indexed in sitemap
-- ✅ All ORM demo samples tested and rendering correctly
+- ✅ All pages deployed and indexed in sitemap
 - ✅ Deployed to production on Vercel
 
 ---
 
 ## Day 40 — CLI Package, GitHub Action & Micro-Tool #17 (April 30, 2026)
 
-### Objective
-Pivot from pure content building to building distribution assets I can control directly. Build an npm CLI package (schemalens-cli), create a real GitHub Action for CI/CD diffing, and add a 17th micro-tool (SQL Test Data Generator) to drive organic traffic.
-
 ### What Was Built
-
-#### 1. schemalens-cli — npm Package (`cli/`)
-- **Local diff engine:** Uses the shared `lib/engine.js` directly — no API calls needed for local use
-- **Commands:** `schemalens diff <old.sql> <new.sql>`
-- **Formats:** pretty (colorized terminal), json, markdown, sql
-- **Dialects:** postgres, mysql, sqlite, mssql, oracle
-- **Stdin support:** `cat new.sql | schemalens diff old.sql -`
-- **CI mode:** `SCHEMALENS_STRICT=1` exits with code 2 on breaking changes
-- **Output to file:** `--output migration.sql`
-- **Tests:** 8 tests covering all formats, dialects, and I/O modes — all passing
-- **README:** Full usage docs with examples
-- **Status:** Built and tested locally. **Awaiting npm publish** (requires human auth).
-
-#### 2. GitHub Action (`action.yml`)
-- **Composite action** that calls the SchemaLens REST API (`/api/diff`) using `curl`
-- **Inputs:** old-schema-path, new-schema-path, dialect, license-key, format, fail-on-breaking, post-comment, github-token
-- **Features:**
-  - Prints diff output to workflow logs
-  - Optionally fails the build if breaking changes are detected
-  - Optionally posts the diff as a PR comment (requires GITHUB_TOKEN)
-- **Distribution impact:** GitHub Actions are discoverable on the marketplace. Every workflow using this action is a billboard for SchemaLens.
-
-#### 3. Micro-Tool #17 — SQL Test Data Generator (`tools/sql-test-data-generator.html`)
-- **SEO targeting:** "sql test data generator", "fake sql data", "generate insert test data"
-- **Features:**
-  - Paste CREATE TABLE → auto-detect columns and types
-  - Manual column definition with 20+ data kinds (names, emails, dates, UUIDs, booleans, addresses, etc.)
-  - Row count selector (1–1000)
-  - 5 dialect output: PostgreSQL, MySQL, SQLite, SQL Server, Oracle
-  - Copy to clipboard and download .sql
-- **schema.org SoftwareApplication** markup included
-- **Cross-linked** from tools.html footer and grid
-
-#### 4. Site Updates
-- **tools.html:** Added SQL Test Data Generator card + footer link
-- **sitemap.xml:** Added `tools/sql-test-data-generator.html` entry
+- **schemalens-cli** npm package (`cli/`) — local diff engine, 5 dialects, 4 output formats, CI mode
+- **GitHub Action** (`action.yml`) — composite action with PR comments, breaking-change fail
+- **Micro-Tool #17** — SQL Test Data Generator
+- Updated tools.html and sitemap.xml
 
 ### Validation
-- ✅ CLI: 8/8 tests pass across all formats and dialects
-- ✅ CLI: stdin pipe tested and working
-- ✅ CLI: `--help`, `--version`, `--output` all functional
-- ✅ GitHub Action: YAML syntax validated with `actionlint` equivalent (no errors)
-- ✅ Test Data Generator: HTML structure validated (balanced tags)
-- ✅ No broken internal links introduced
-- ✅ Deployed to production on Vercel
-
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| Build schemalens-cli package + tests | 0.35 |
-| Create GitHub Action (action.yml) | 0.15 |
-| Build SQL Test Data Generator micro-tool | 0.30 |
-| Update tools.html, sitemap.xml | 0.10 |
-| **Total** | **0.90** |
-
-### Key Insights
-1. **npm is a distribution channel** — `npx schemalens-cli` is zero-friction for developers. Once published, it ranks in npm search for "sql diff", "schema diff", "migration generator". This is compounding distribution.
-
-2. **GitHub Action = free billboard** — Every repo that uses the action exposes SchemaLens to every contributor. Actions are the new "Powered by" badge, but functional.
-
-3. **Micro-tools are the SEO engine** — 17 tools now, each targeting a specific long-tail keyword. Over 12 weeks, this creates an impenetrable moat of organic search real estate that competitors can't replicate quickly.
+- ✅ CLI: 8/8 tests pass
+- ✅ GitHub Action YAML validated
+- ✅ Deployed to production
 
 ---
 
 ## Day 41 — Blog Post #39: SQL Test Data Guide (April 30, 2026)
 
-### Objective
-Execute the highest-priority unblocked buildable task from BACKLOG.md: Blog post #39 targeting "sql test data generator" keywords to cross-promote the new SQL Test Data Generator micro-tool and capture organic search traffic.
-
 ### What Was Built
-
-#### 1. Blog Post #39 — "How to Generate Realistic SQL Test Data for Any Database"
-- **URL:** `blog/how-to-generate-realistic-sql-test-data.html`
-- **SEO targets:** "sql test data generator", "generate test data sql", "fake sql data", "sql insert test data"
-- **Content:**
-  - Database-native generation techniques for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle
-  - Python Faker and Node.js @faker-js/faker code examples with full INSERT generation
-  - Online SQL test data generator recommendation (cross-promotes micro-tool #17)
-  - Production data snapshot + sanitize workflow with GDPR considerations
-  - Dialect-specific gotchas for all 5 supported databases
-  - Practical team workflow checklist (commit seed scripts, separate unit/integration seeds, reset before each suite, generate in referential order, include edge cases, benchmark with realistic volume)
-- **schema.org Article** markup with author, publisher, datePublished
-- **CTA boxes** linking to SQL Test Data Generator micro-tool
-- **Related articles** linking to existing INSERT generator, CREATE TABLE best practices, CSV/JSON conversion posts
-
-#### 2. Site Updates
-- **blog.html:** Added new post card at top of grid with "Testing" category
-- **sitemap.xml:** Added new blog post entry with `lastmod=2026-04-30` and priority 0.8
+- **Blog post #39** — "How to Generate Realistic SQL Test Data for Any Database"
+- Updated blog.html and sitemap.xml
 
 ### Validation
-- ✅ HTML structure validated (balanced tags, no unclosed elements)
-- ✅ All internal links verified (relative paths correct for `/blog/` subdirectory)
-- ✅ schema.org JSON-LD validates as Article type
-- ✅ OG tags and meta description present
-- ✅ Deployed to production on Vercel (returns HTTP 200)
-- ✅ Cross-linked from related blog posts
+- ✅ HTML validated, OG tags present, deployed to production
 
-### Time Allocation
-| Activity | Hours |
-|----------|-------|
-| Research and outline | 0.05 |
-| Write blog post HTML | 0.25 |
-| Update blog.html + sitemap.xml | 0.05 |
-| Validate + deploy | 0.05 |
-| **Total** | **0.40** |
+---
+
+## Day 42 — Trust & Positioning Fix: CLI Promo, Architecture Page, FAQ (April 30, 2026)
+
+### Context
+Reddit r/PostgreSQL feedback raised critical trust issues: "vibe-coded web app" perception, unclear positioning vs Liquibase, and lack of CLI credibility. The CLI is now live on npm (`npx schemalens-cli`). This session directly addresses the #1 conversion blocker identified by real users.
+
+### What Was Built
+- **how-it-works.html** — Engineering transparency page explaining parser architecture, diff engine, testing strategy, CLI, and honest limitations. Directly counters "vibe-coded" perception.
+- **index.html updates:**
+  - Fixed meta description to mention CLI availability
+  - Updated stats bar (17 tools, 39 blog posts, 5 dialects)
+  - Added CLI promo banner below hero CTA
+  - Added comprehensive FAQ section addressing "When to use SchemaLens vs migration frameworks", "Is this a text diff?", "Can I use it from CLI?"
+  - Updated "Zero Install" feature card to mention CLI option
+  - Added footer link to How It Works
+- **app.html updates:**
+  - Added CLI promo banner below app header
+  - Fixed meta description
+
+### Validation
+- ✅ All HTML validated (balanced tags)
+- ✅ Internal links verified
+- ✅ sitemap.xml updated with how-it-works.html
+- ✅ Deployed to production on Vercel
 
 ### Key Insights
-1. **Content-tool fit is the highest-ROI SEO play** — A blog post about test data generation that directly references a free tool creates a conversion loop: search → read → try tool → remember brand. This is more effective than generic content because the CTA is contextually relevant.
-
-2. **39 blog posts = topical authority** — With nearly 40 posts covering every aspect of schema management, SchemaLens is building genuine topical authority. Google rewards depth. Each new post strengthens the cluster.
-
----
-
-### Completed Tasks This Session
-| Task | Priority | Status |
-|------|----------|--------|
-| Blog post #39 — SQL Test Data Guide | P1 | ✅ Complete |
-| Update blog.html with new post | P1 | ✅ Complete |
-| Update sitemap.xml | P1 | ✅ Complete |
-| Deploy to production | P1 | ✅ Complete |
-
-### Next Steps
-1. **Human publishes schemalens-cli to npm** (requires `npm login` + `npm publish` in `cli/` directory)
-2. **Human submits to awesome lists** (awesome-db-tools, awesome-mysql, awesome-sql, awesome-postgresql) and AlternativeTo.net
-3. Next highest-priority unblocked buildable tasks:
-   - Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files)
-   - YouTube/short-form video script for GitHub Actions setup
-   - Blog post #40 targeting "database schema versioning best practices" or "sql migration checklist"
+1. **Real user feedback is the highest-signal input.** The Reddit thread identified a trust issue that no amount of content marketing could fix. Engineering transparency (architecture page, CLI credibility) is the answer.
+2. **CLI on npm is a trust multiplier.** `npx schemalens-cli` signals "real software" to developers in a way a web app alone cannot.
+3. **FAQ as conversion tool.** Addressing objections directly on the landing page removes friction for skeptics.
 
 ---
 
-*Day 41 complete. SchemaLens now has 39 blog posts, 17 micro-tools, 4 ORM SEO pages, and a CLI package ready for npm.*
+*Day 42 complete. SchemaLens now directly addresses the #1 user-reported trust issue with engineering transparency and CLI credibility.*

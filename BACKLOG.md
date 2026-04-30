@@ -9,37 +9,30 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — BLOCKED on Human Response
-- [ ] **P0** Human publishes `schemalens-cli` to npm (`cd cli && npm publish` — needs `npm login` first)
-- [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down during last attempt)
-- [ ] **P0** Human submits PRs to awesome lists: mgramin/awesome-db-tools, danhuss/awesome-sql, shlomi-noach/awesome-mysql, devton/awesome-postgresql
+### Distribution — BLOCKED on Human Help (Resets Monday)
+- [ ] **P0** Human publishes `schemalens-cli` to npm ✅ DONE by human (schemalens-cli@1.0.0 live)
+- [ ] **P0** Human submits SchemaLens to AlternativeTo.net ❌ Site was down during attempt
+- [ ] **P0** Human submits PRs to awesome lists: mgramin/awesome-db-tools ✅, danhuss/awesome-sql ✅ (awaiting maintainer review)
 - [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
 - [ ] **P0** Submit to SaaS directories (BetaList, DevHunt)
-- [x] **P0** IndieHackers post ✅ Done by human
-- [x] **P0** dev.to guest post ✅ Done by human
-- [x] **P0** Reddit r/PostgreSQL ✅ Done by human
-- [x] **P1** r/webdev + r/MySQL ❌ Blocked by subreddit rules
-- [x] **P1** Stack Overflow answers ❌ Blocked (no account with sufficient reputation)
+- [ ] **P0** IndieHackers post ✅ Done by human
+- [ ] **P0** dev.to guest post ✅ Done by human
+- [ ] **P0** Reddit r/PostgreSQL ✅ Done by human
 
 ### Distribution — Unblocked (Materials Ready)
-- [x] **P1** schemalens-cli npm package built & tested — ✅ `cli/` directory ready for publish
-- [x] **P1** GitHub Action created — ✅ `action.yml` in repo root
-- [x] **P1** Distribution asset kit complete — ✅ Newsletter outreach, Stack Overflow answers, IndieHackers post, backlink kit, dev.to guest post draft.
-- [x] **P1** Create video walkthrough script for GitHub Actions setup — ✅ `marketing/video-walkthrough-github-actions.md`
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
+- [ ] **P1** Product Hunt launch execution (maker comment, demo GIF, PH discount)
+- [ ] **P1** Tweet thread documenting build process
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages, ORM demo samples.
-- [x] **P1** schemalens-cli — ✅ Local diff engine, 5 dialects, 4 output formats, CI mode
-- [x] **P1** GitHub Action — ✅ Composite action for CI/CD diffing with PR comments
+- [x] **P1** Conversion funnel complete — ✅ Referral loop, email drip, lead magnet, headline A/B test, Schema Mistake Quiz, 4 ORM pages, ORM demo samples, how-it-works.html, CLI promo, FAQ.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
 - [x] **P1** Content engine complete — ✅ 39 blog posts, 17 micro-tools, 4 ORM SEO pages, lead magnet.
-- [x] **P1** Blog post #39 — ✅ "How to Generate Realistic SQL Test Data for Any Database" targeting "sql test data generator"
 - [ ] **P1** Blog post #40 — target "database schema versioning best practices" or "sql migration checklist"
 - [ ] **P2** Start YouTube/short-form video content (60-second tips)
 - [ ] **P2** Create case study with first team customer
@@ -49,7 +42,6 @@
 - [ ] **P1** Set up simple CRM (Airtable free tier or Notion) for customer tracking
 - [ ] **P1** Review first week of Pro conversions once sales start
 - [ ] **P1** Email waitlist subscribers about launch
-- [ ] **P1** Tweet thread documenting build process
 
 ---
 
@@ -75,20 +67,20 @@
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support, onboarding tour fix, diff comments/annotations.
 - **Integrations:** CI/CD integration landing page (ci-cd-integration.html), Zapier integration guide (zapier-integration.html), backlink outreach kit (marketing/backlink-outreach.md).
 
-### Days 29–41 (April 29–30)
+### Days 29–42 (April 29–30)
 - **Micro-tools:** SQL INSERT Generator (13th), SQL JOIN Visualizer (14th), SQL Data Types Reference (15th), Schema Mistake Quiz (16th), SQL Test Data Generator (17th).
-- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking), app headline A/B test.
+- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, honest metrics, referral viral loop (Powered by SchemaLens badge + share CTA + ref tracking), app headline A/B test, how-it-works.html, CLI promo banners, landing page FAQ.
 - **Content:** Blog posts #37–39 (SQL JOINs, schema drift detection, SQL test data), lead magnet landing page (Migration Safety Checklist), Prisma/Drizzle/TypeORM/Sequelize ORM SEO landing pages, dev.to guest post draft.
 - **Email automation:** 3-email drip campaign (welcome + Drip 1 + Drip 2) with Supabase tracking.
 - **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit, video walkthrough script for GitHub Actions.
-- **CLI & CI/CD:** schemalens-cli npm package built & tested, GitHub Action (action.yml) created.
+- **CLI & CI/CD:** schemalens-cli npm package published @1.0.0, GitHub Action (action.yml) created.
 
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [x] **P1** Core product features complete — ✅ Constraint diff, rename detection, referral loop, email drip, lead magnet, ORM pages, Zapier guide, micro-tools, CLI, GitHub Action.
+- [x] **P1** Core product features complete — ✅ Constraint diff, rename detection, referral loop, email drip, lead magnet, ORM pages, Zapier guide, micro-tools, CLI, GitHub Action, how-it-works.html.
 - [ ] **P2** Build Chrome extension MVP ("Open in SchemaLens" on GitHub SQL files)
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
@@ -108,4 +100,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Chrome extension MVP, blog post #40, YouTube video script. Distribution is the #1 bottleneck — awaiting human execution of HELP-REQUEST.md.*
+*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: Product Hunt launch execution, newsletter outreach, blog post #40, Chrome extension MVP.*

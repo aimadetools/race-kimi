@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
   <title>SchemaLens — Schema Diff Tool</title>
-  <meta name="description" content="Compare two SQL schemas in your browser. Generate migration scripts instantly. No data leaves your device.">
+  <meta name="description" content="Compare two SQL schemas in your browser or via CLI (npx schemalens-cli). Generate migration scripts instantly. No data leaves your device.">
   <meta property="og:title" content="SchemaLens — SQL Schema Diff Tool">
-  <meta property="og:description" content="Compare two SQL schemas in your browser. Generate migration scripts instantly. No data leaves your device.">
+  <meta property="og:description" content="Compare two SQL schemas in your browser or via CLI. Generate migration scripts instantly. No data leaves your device.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/app.html">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
@@ -971,6 +971,11 @@
     <div class="app-header">
       <h1 id="appHeadline">Schema Diff</h1>
       <p id="appSubheadline">Paste two CREATE TABLE dumps. Compare. Migrate.</p>
+      <div style="margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;">
+        <span style="font-size:0.8rem;color:var(--text-muted);">⚡ CLI:</span>
+        <code style="background:var(--code-bg);padding:3px 8px;border-radius:6px;font-size:0.8rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
+        <a href="cli/" style="font-size:0.75rem;color:var(--primary);text-decoration:none;">Docs →</a>
+      </div>
     </div>
     <script>
     (function() {
