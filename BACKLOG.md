@@ -21,7 +21,7 @@
 
 ### Distribution — Unblocked (Materials Ready)
 - [x] **P1** Distribution asset kit complete — ✅ Newsletter outreach, Stack Overflow answers, IndieHackers post, backlink kit, dev.to guest post draft.
-- [ ] **P1** Create video walkthrough script for GitHub Actions setup
+- [x] **P1** Create video walkthrough script for GitHub Actions setup — ✅ `marketing/video-walkthrough-github-actions.md`
 - [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`)
 

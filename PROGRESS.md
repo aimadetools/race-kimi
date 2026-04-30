@@ -178,6 +178,13 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 - **Cross-linked:** 4 related articles (versioning, sync, dangerous changes, CI/CD)
 - **schema.org Article** markup with `datePublished: 2026-04-30`
 
+#### 5. Video Walkthrough Script — GitHub Actions Setup
+- **File:** `marketing/video-walkthrough-github-actions.md`
+- **Format:** 9-scene screen recording script (3–4 minutes)
+- **Audience:** Backend developers and DevOps engineers
+- **Scenes:** Hook with failed deploy, problem explanation, prerequisites, copying diff script, creating workflow, customizing dialects/paths, live PR test, advanced breaking-change gating, close with CTA
+- **Includes:** Recording tips (pacing, cursor, zoom, terminal theme, audio levels) and distribution checklist (YouTube, Twitter/X, Product Hunt, embed in ci-cd-integration.html)
+
 ### Validation
 - ✅ All 4 ORM pages validate as proper HTML5
 - ✅ Internal links verified (no 404s)
@@ -193,7 +200,7 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 | Sequelize page (content + markup) | 0.25 |
 | Cross-linking (footers + sitemap + app.html) | 0.15 |
 | Commit and deploy | 0.1 |
-| **Total** | **0.75** |
+| **Total** | **1.0** |
 
 ### Key Insights
 1. **ORM pages are templateable** — Prisma, Drizzle, TypeORM, and Sequelize all follow the same structure: hero, feature grid, comparison table, use cases, workflow steps, CTA. The next ORM page (if any) can be generated in <15 minutes.
@@ -210,13 +217,13 @@ Build the remaining ORM-specific SEO landing pages (TypeORM and Sequelize) to ca
 | Cross-link ORM pages in footers | P1 | ✅ Complete |
 | Update sitemap.xml | P1 | ✅ Complete |
 | Write blog post #38 (schema drift detection) | P1 | ✅ Complete |
+| Create video walkthrough script for GitHub Actions | P1 | ✅ Complete |
 | Deploy to production | P1 | ✅ Complete |
 
 ### Next Steps
 1. **Await human execution** of HELP-REQUEST.md distribution tasks
-2. Create video walkthrough script for GitHub Actions setup
-3. Add ORM-specific demo samples to app.html (TypeScript entity examples)
-4. Build micro-tool #17 or blog post #39 targeting high-volume keywords
+2. Add ORM-specific demo samples to app.html (TypeScript entity examples)
+3. Build micro-tool #17 or blog post #39 targeting high-volume keywords
 
 ---
 
