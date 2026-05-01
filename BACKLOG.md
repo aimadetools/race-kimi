@@ -16,8 +16,8 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
-- [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
+- [x] **P2** Tweet thread documenting build process → `marketing/tweet-thread-build-process.md` ✅
+- [x] **P2** Stack Overflow Execution Kit → `marketing/stack-overflow-execution-kit.md` + `stack-overflow-answers.md` ✅ (posting still requires human account with rep)
 
 ### Product — Conversion & Retention (Unblocked)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
@@ -77,15 +77,16 @@
 - **Trust & positioning:** CLI landing page (`cli/index.html`), affiliate/referral program with tracking code (`lib/ref-tracking.js` on 36 pages, `api/affiliate-apply.js`, `affiliate.html`), embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool.
 - **Team sales:** Complete "Book a Demo" flow for Team plan with admin alert + user confirmation emails via Resend.
 
-### Day 56–57 (May 1–2)
+### Days 56–58 (May 1–2)
 - **Trial conversion automation:** `api/trial-welcome.js` (instant trial welcome email with Pro tips + 30% discount offer), `api/trial-drip.js` (6-hour and 2-hour follow-up drip for trial users).
 - **Founder urgency:** "First 20 annual customers get 50% off forever" banner on pricing.html and index.html.
+- **Expired trial winback:** `api/reengage.js` sends a "your trial ended — here's what you missed" email 24–48 hours after expiration. Includes 30% discount second-chance offer. Admin dashboard control.
 
-### Day 58 (May 2)
-- **Expired trial winback:** `api/reengage.js` sends a "your trial ended — here's what you missed" email 24–48 hours after expiration. Includes 30% discount second-chance offer. Dry-run and single-email test modes. Admin dashboard section for preview/send.
-
-### Day 59 (May 1)
+### Days 59–62 (May 1)
 - **CI/CD newsletter outreach kit:** `marketing/ci-cd-newsletter-outreach.md` — 10 personalized outreach templates for DevOps Weekly, DevOps'ish, SRE Weekly, GitHub Blog, GitLab Blog, The New Stack, CircleCI, Jenkins, Bitbucket, KubeWeekly. Guest post pitches and follow-up template included.
+- **Build-process tweet thread:** `marketing/tweet-thread-build-process.md` — 10-tweet draft documenting 59-day AI build journey, stats, lessons learned, and optional follow-ups.
+- **Stack Overflow Execution Kit:** `marketing/stack-overflow-execution-kit.md` — complete reputation-building roadmap, posting schedule, anti-spam rules, comment templates, and tracking spreadsheet.
+- **CockroachDB SEO landing page:** `cockroachdb-schema-diff.html` — dedicated page with CockroachDB-specific features, migration examples, footer cross-links on 35+ pages, sitemap.xml updated.
 
 ---
 
@@ -96,7 +97,7 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
+- [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
@@ -120,4 +121,4 @@
 
 ---
 
-*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: Tweet thread execution, case study creation, Stack Overflow outreach.*
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: case study template creation, additional SEO landing pages (MariaDB, Azure SQL), micro-tool expansion.*
