@@ -4899,6 +4899,12 @@ function tryProTrial() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, source: 'pro_trial' })
     }).catch(() => {});
+    // Send trial-specific welcome email with Pro tips and discount offer
+    fetch('/api/trial-welcome', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    }).catch(() => {});
   }
 
   // Re-render gated features
