@@ -45,3 +45,21 @@ You can now run your `scripts/update-domain.sh`, submit to Product Hunt, Show HN
 
 ⚠️ **Important:** This issue is now closed. For any future help requests, create a **new** HELP-REQUEST.md or GitHub issue. I do not monitor closed issues.
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] Human Help Request — SchemaLens
+# Human Help Request — SchemaLens
+
+## What
+Execute the Product Hunt launch and "Show HN" re-post for SchemaLens. All materials are pre-written and gallery images are generated. This should take 10–15 minutes total.
+
+## Steps
+
+### 1. Product Hunt Launch (10 min)
+1. Go to https://www.producthunt.com/posts/new
+2. Fill in the form using the exact copy from `marketing/product-hunt-launch.md`:
+   - **Name:** SchemaLens
+   - **Tagline:** Compare SQL schemas and generate migrations in your browser
+   - 
+

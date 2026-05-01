@@ -423,6 +423,63 @@
       margin-bottom: 16px;
     }
 
+    .migration-preview-wrap {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .migration-preview-wrap .sql-output {
+      max-height: 380px;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .migration-preview-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, var(--bg) 85%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .migration-preview-cta {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .migration-preview-cta .btn {
+      min-width: 240px;
+    }
+    .trial-used-notice {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .trial-active-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #f59e0b;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -1053,7 +1110,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 10 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links.</span>
+      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 10 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -3233,11 +3290,13 @@ async function deleteComment(commentId, tableName) {
 function renderMigration(sql, diff) {
   const container = document.getElementById('migrationContainer');
   const totalTables = diff.totalTablesNew;
-  const hasLicense = checkLicense();
-  const isLimited = totalTables > 10 && !hasLicense;
+  const unlocked = isProUnlocked();
+  const isLimited = totalTables > 10 && !unlocked;
 
   let html = '';
   if (isLimited) {
+    const trialExpired = isTrialClaimed();
+    const trialAvailable = !trialExpired;
     html += `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
@@ -3250,9 +3309,20 @@ function renderMigration(sql, diff) {
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
       </div>
     `;
-  }
-
-  if (!isLimited) {
+    // Show preview with blur overlay so users can see the value before buying
+    html += `<div class="migration-preview-wrap">`;
+    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(sql)}</div>`;
+    html += `<div class="migration-preview-fade"></div>`;
+    html += `<div class="migration-preview-cta">`;
+    if (trialAvailable) {
+      html += `<button class="btn btn-primary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>`;
+      html += `<div style="font-size:0.8rem;color:var(--text-muted);">No email required. Unlock copy, download & export for 24 hours.</div>`;
+    } else {
+      html += `<div class="trial-used-notice">🎁 Pro trial expired</div>`;
+    }
+    html += `<button class="btn btn-secondary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>`;
+    html += `</div></div>`;
+  } else {
     html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button><button class="copy-btn" style="right:164px" onclick="runMigrationValidation()">Validate</button>${highlightSQL(sql)}</div>`;
     html += `<div id="validationResults"></div>`;
   }
@@ -4530,11 +4600,13 @@ function renderORM() {
   }
   const schema = lastDiff.schemaB;
   const totalTables = schema.tables ? schema.tables.length : 0;
-  const hasLicense = checkLicense();
-  const isLimited = totalTables > 10 && !hasLicense;
+  const unlocked = isProUnlocked();
+  const isLimited = totalTables > 10 && !unlocked;
   const dialect = document.getElementById('dialect').value;
 
   if (isLimited) {
+    const trialExpired = isTrialClaimed();
+    const trialAvailable = !trialExpired;
     container.innerHTML = `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks full ORM export</h3>
@@ -4545,6 +4617,9 @@ function renderORM() {
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
         <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a> · 14-day money-back guarantee</p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        ${trialAvailable ? `<button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>` : `<div class="trial-used-notice" style="display:inline-block;">🎁 Pro trial expired</div>`}
       </div>
     `;
     return;
@@ -4623,6 +4698,35 @@ function validateLicenseKey(key) {
   return check === expected;
 }
 
+function isTrialClaimed() {
+  return localStorage.getItem('schemalens_trial_claimed') === '1';
+}
+
+function hasUsedTrial() {
+  const usedAt = localStorage.getItem('schemalens_trial_used_at');
+  if (!usedAt) return false;
+  const elapsed = Date.now() - parseInt(usedAt, 10);
+  return elapsed < 24 * 60 * 60 * 1000; // 24 hours
+}
+
+function isProUnlocked() {
+  const key = localStorage.getItem('schemalens_license');
+  const hasLicense = !!(key && validateLicenseKey(key));
+  return hasLicense || hasUsedTrial();
+}
+
+function tryProTrial() {
+  localStorage.setItem('schemalens_trial_claimed', '1');
+  localStorage.setItem('schemalens_trial_used_at', Date.now().toString());
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated');
+  // Re-render gated features
+  if (lastDiff) {
+    renderMigration(lastMigrationSQL, lastDiff);
+    renderORM();
+  }
+  showError('✓ Pro trial activated! Copy, download, and export are unlocked for 24 hours.');
+}
+
 function checkLicense() {
   const key = localStorage.getItem('schemalens_license');
   const statusEl = document.getElementById('licenseStatus');
@@ -4631,6 +4735,12 @@ function checkLicense() {
   if (valid) {
     if (statusEl) {
       statusEl.textContent = '✓ Pro';
+      statusEl.classList.remove('locked');
+    }
+    if (hintEl) hintEl.classList.add('hidden');
+  } else if (hasUsedTrial()) {
+    if (statusEl) {
+      statusEl.innerHTML = '🔓 Trial <span class="trial-active-badge">Active</span>';
       statusEl.classList.remove('locked');
     }
     if (hintEl) hintEl.classList.add('hidden');
@@ -5743,7 +5853,7 @@ async function createPublicLink(id) {
 }
 
 function copyPublicLink(publicId) {
-  const url = location.origin + location.pathname + '?share=' + publicId;
+  const url = location.origin + '/share?id=' + publicId;
   navigator.clipboard.writeText(url).then(() => {
     showError('✓ Public link copied to clipboard!');
   });
@@ -5783,11 +5893,11 @@ async function loadPublicDiff(publicId) {
 }
 
 function showSharedBanner(name, source) {
-  const isLicensed = checkLicense();
+  const unlocked = isProUnlocked();
   const container = document.getElementById('errorContainer');
   let actions = `<a href="index.html?ref=shared-diff" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
   actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html?ref=shared-diff" style="color:var(--primary);">Calculate migration cost</a>`;
-  if (!isLicensed) {
+  if (!unlocked) {
     actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html?ref=shared-diff" style="color:var(--primary);">Upgrade to Pro</a>`;
   }
   container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.35);color:var(--text);">
