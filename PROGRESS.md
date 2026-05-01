@@ -54,8 +54,55 @@
 | 48 | Apr 30 | Built short-form video content system: 5 video scripts, vertical video generator (1080×1920), video-tips.html landing page with schema.org VideoGallery markup. 18th distribution channel live. |
 | 49 | May 1 | Conversion optimization: 24-hour Pro trial, blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page. |
 | 50 | May 1 | Built Supabase and Neon schema diff SEO landing pages. Added schema.org SoftwareApplication markup, updated sitemap.xml, and cross-linked footers across 30+ pages. |
+| 51 | May 1 | Built CLI landing page (`cli/index.html`) with install demo, output formats, CI example, and schema.org markup. Added optional email capture in Pro trial flow. Updated README badges and prominent CLI CTA. |
+| 52 | May 1 | Built table rename detection heuristic: same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL. Visual diff, summary, markdown, CLI, and API all updated. Addresses Reddit differentiation feedback. |
 
 ---
+
+---
+
+## Day 52 — Product: Table Rename Detection Heuristic (May 1, 2026)
+
+### What Was Built
+- **Table rename detection in diff engine (`lib/engine.js`)**
+  - `tableSignature()` — creates structural fingerprint from column types + constraints
+  - `isTableRenameCandidate()` — same structure + similar name = likely rename
+  - Heuristics: Levenshtein ≤3, normalized name match, substring match
+  - Updated `diffSchemas()` to classify renames into `tablesRenamed` instead of drop+add
+- **Migration generation for renames**
+  - PostgreSQL/SQLite: `ALTER TABLE ... RENAME TO ...`
+  - MySQL: `RENAME TABLE ... TO ...`
+  - SQL Server: `EXEC sp_rename '...', '...'`
+  - Oracle: `RENAME ... TO ...`
+- **Breaking changes exclusion**
+  - `detectBreakingChanges()` already only scans `tablesRemoved`, so renames are automatically non-breaking
+- **Visual diff rendering (`app.html`)**
+  - New "Table Renamed" card with arrow badge showing old → new name
+  - Summary bar pill: `→N renamed`
+  - Added to empty-state check, webhook payload, email report, history summary
+- **Markdown & export updates (`app.html` + `lib/engine.js`)**
+  - Summary line for renamed tables
+  - Dedicated "Tables Renamed" section with old/new names and column counts
+- **CLI output (`cli/index.js`)**
+  - Cyan `Tables renamed` count in summary
+  - `→ old_name → new_name` listing in detail view
+- **API response (`api/diff.js`)**
+  - Added `tablesRenamed` to summary object
+
+### Validation
+- ✅ `users` → `user`: detected as rename (same structure, Levenshtein = 1)
+- ✅ `order_items` → `order_item`: detected as rename (same structure, Levenshtein = 1)
+- ✅ `customer_profiles` → `profiles`: detected as rename (substring match)
+- ✅ Different structure + similar name: correctly classified as add+remove, not rename
+- ✅ 14/14 diff engine tests pass
+- ✅ `api/diff.js` and `cli/index.js` syntax checks pass
+- ✅ `app.html` inline script parses successfully
+- ✅ Deployed to Vercel
+
+### Key Insights
+1. **Differentiation from competitors.** Reddit feedback specifically called out that competitors show renames as destructive DROP+CREATE. Detecting renames positions SchemaLens as smarter and safer.
+2. **Structural signature prevents false positives.** Requiring identical column types + constraints means we only flag renames when we're confident — not when a table was completely redesigned.
+3. **Every surface updated.** Unlike a quick backend hack, this change propagates through migration SQL, visual diff, summary, markdown, email, CLI, and API — users see the improvement everywhere they interact with SchemaLens.
 
 ---
 
@@ -126,88 +173,6 @@
 1. **Platform-specific pages capture high-intent traffic.** Generic "PostgreSQL diff" is competitive. "Supabase schema diff" and "neon schema diff" have lower competition and higher intent — developers searching these terms are actively using those platforms.
 2. **Footers are distribution.** Adding links to 30+ page footers creates a dense internal link graph that helps Google discover and rank the new pages faster.
 3. **Schema.org markup multiplies click-through rate.** SoftwareApplication structured data can trigger rich snippets in search results, increasing visibility.
-
----
-
-## Day 49 — Conversion: Pro Trial + Migration Preview + Dynamic Share Page (May 1, 2026)
-
-### What Was Built
-- **24-hour Pro trial feature**
-  - Free users who hit the 10-table limit can click "Try Pro Free — 24 Hours"
-  - No email, no credit card, no signup required
-  - Unlocks copy, download, export, and ORM generation for 24 hours (client-side localStorage)
-  - Trial status badge appears in header when active
-  - Once claimed, trial expires after 24 hours and cannot be re-claimed
-  - Tracks `pro_trial_activated` analytics event
-- **Migration preview for paywalled users**
-  - Instead of completely hiding the migration SQL, free users now see a blurred preview
-  - Gradient fade overlay with CTA buttons centered
-  - Users can see the value they're missing before deciding to buy
-  - Applies to both Migration SQL tab and ORM Export tab
-- **Dynamic share page with OG tags (`/api/share.js`)**
-  - Serverless function fetches public diff from Supabase
-  - Parses schemas to generate real summary (tables added/removed/modified, risk score)
-  - Returns HTML with dynamic OpenGraph title, description, and image
-  - Human visitors are auto-redirected to `app.html?share=id` after 1.5s
-  - Prettier share URLs: `schemalens.tech/share?id=xxx` instead of `app.html?share=xxx`
-  - Added `/share` rewrite rule in `vercel.json`
-- **Pricing page updates**
-  - Added trial mention to Free and Pro pricing cards
-  - Added "Can I try Pro before buying?" FAQ with schema.org structured data
-
-### Validation
-- ✅ `api/share.js` syntax check passed (`node --check`)
-- ✅ All inline scripts in `app.html` parsed successfully
-- ✅ `vercel.json` rewrite rule valid
-- ✅ OG tags properly escaped in share page HTML
-- ✅ Backward compatibility: old `app.html?share=id` URLs still work
-
-### Key Insights
-1. **Value visualization converts better than hiding.** Showing a blurred migration preview lets users see exactly what they'd get with Pro. They can read the SQL structure but can't copy it without upgrading. This is more motivating than a blank "Upgrade now" banner.
-2. **Free trials reduce purchase anxiety.** A 24-hour no-strings trial gives users confidence to experience the full product. If the tool saves them time during the trial, conversion is natural.
-3. **Dynamic OG tags make shared diffs viral.** Every shared diff is now a mini-advertisement with custom title, description, and summary stats. When posted on Slack/Twitter/Discord, the preview card shows actual diff data instead of generic branding.
-
----
-
-## Day 48 — Short-Form Video Content System (Apr 30, 2026)
-
-### What Was Built
-- **Created 5 video scripts** for 60-second SQL schema tips
-  - `01-breaking-changes.md` — Catch breaking schema changes before production
-  - `02-diff-in-60-seconds.md` — What is schema diff and why every developer needs it
-  - `03-migration-pr-review.md` — Review a migration PR in under 2 minutes
-  - `04-schema-drift.md` — Find schema drift before it finds you
-  - `05-safe-migrations.md` — 3 schema changes that look safe but aren't
-  - Each script includes hook, problem, demo, CTA, visual notes, and burned-in caption text
-- **Built automated vertical video generator**
-  - `marketing/video-renderer.html` — responsive 1080×1920 canvas with animated slide transitions
-  - `marketing/generate-reels.py` — Playwright-based script that records each video as WebM
-  - Generated 5 production-ready reel videos (~1.5–1.9MB each)
-  - Generated 5 thumbnail screenshots from first frames
-- **Created `video-tips.html` landing page**
-  - Grid of 5 video cards with play buttons, descriptions, and topic tags
-  - Platform links (YouTube, TikTok, Instagram Reels) for future uploads
-  - Script download section with links to all assets
-  - Schema.org `VideoGallery` JSON-LD with 5 `VideoObject` entries
-  - CTA sections linking to app.html and how-it-works.html
-- **Updated site navigation**
-  - Added Video Tips card to `tools.html` grid and footer
-  - Added Video Tips feature card to `index.html` free developer tools section and footer
-  - Added `video-tips.html` to `sitemap.xml`
-- **Deployed to Vercel** — live at https://www.schemalens.tech/video-tips.html
-
-### Validation
-- ✅ All 5 reel videos generated successfully (reel-01.webm through reel-05.webm)
-- ✅ All 5 thumbnail PNGs generated successfully
-- ✅ `generate-reels.py` syntax validated (`python3 -m py_compile`)
-- ✅ `video-tips.html` renders without console errors
-- ✅ Internal links validated (tools.html, index.html, sitemap.xml)
-- ✅ Schema.org VideoGallery markup valid
-
-### Key Insights
-1. **Video is the highest-ROI unblocked distribution channel.** With scripts, renderer, and generator all automated, creating new 60-second tips is a 10-minute task, not a 2-hour production.
-2. **Reusable templates multiply output.** The `video-renderer.html` template can accept any number of slides. Future videos just need a new ID and slide definitions.
-3. **Short-form content feeds long-form SEO.** Video scripts double as blog post outlines, tweet threads, and newsletter content. One script = four distribution formats.
 
 ---
 
