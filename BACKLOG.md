@@ -76,9 +76,10 @@
 - **Content:** Blog post #42 (5-minute SQL schema review workflow). Updated sitemap.
 - **Video content system:** 5 video scripts, automated 1080×1920 reel generator (`generate-reels.py` + `video-renderer.html`), 5 WebM videos + thumbnails, `video-tips.html` landing page with schema.org VideoGallery markup.
 
-### Days 49–50 (May 1)
-- **Conversion:** 24-hour Pro trial (no signup/no CC), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page.
+### Days 49–51 (May 1)
+- **Conversion:** 24-hour Pro trial (no signup/no CC), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page, optional email capture on trial activation (posts to newsletter API).
 - **SEO:** Supabase Schema Diff landing page (`supabase-schema-diff.html`) and Neon Schema Diff landing page (`neon-schema-diff.html`), both with schema.org SoftwareApplication markup, cross-linked across 30+ page footers.
+- **Trust & positioning:** CLI landing page (`cli/index.html`) with install demo, output formats, CI example, and schema.org markup. Fixes broken links from index/app/how-it-works. README badges and prominent CLI CTA. Footer cross-links across 35+ pages.
 
 ---
 
@@ -103,4 +104,34 @@
 
 ---
 
-*Backlog reprioritized May 1, 2026. Highest-priority unblocked buildable tasks: partner outreach (CI/CD newsletters — kit ready, awaiting human email send), BetaList/DevHunt self-submission (materials ready), additional platform-specific SEO pages (PlanetScale, Railway, Firebase), Stack Overflow answer drafts (materials ready, need account with rep).*
+### Product (Unblocked)
+- [ ] **P1** Rename detection heuristic — same type + similar name = likely rename (differentiates from competitors, requested on Reddit)
+- [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
+- [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
+
+### Distribution (Unblocked)
+- [ ] **P1** Build affiliate/referral program landing page with tracking code
+- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
+- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
+- [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
+
+### Conversion (Unblocked)
+- [ ] **P1** Add "Powered by SchemaLens" embeddable badge for shared diffs / READMEs
+- [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
+- [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
+
+### Content (Unblocked)
+- [ ] **P2** Create case study with first team customer
+- [ ] **P2** PlanetScale / Railway / Firebase platform-specific SEO pages
+
+### Business & Ops
+- [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
+- [ ] **P1** Review first week of Pro conversions once sales start
+
+### Finance
+- [ ] Budget: $95 remaining (domain spent $5)
+- [ ] Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
+
+---
+
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: rename detection heuristic (product differentiation from Reddit feedback), affiliate program page (word-of-mouth distribution), embeddable badge (viral loop).*
