@@ -25,7 +25,7 @@
 - [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
 ### Product — Conversion & Retention (Unblocked)
-- [ ] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV)
+- [x] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV) — DONE May 1
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -100,9 +100,9 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [ ] **P1** Build PlanetScale Schema Diff SEO landing page
-- [ ] **P1** Build Railway Schema Diff SEO landing page
-- [ ] **P1** Build Firebase Schema Diff SEO landing page
+- [x] **P1** Build PlanetScale Schema Diff SEO landing page — DONE May 1
+- [x] **P1** Build Railway Schema Diff SEO landing page — DONE May 1
+- [x] **P1** Build Firebase Schema Diff SEO landing page — DONE May 1
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
 - [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)

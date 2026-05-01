@@ -11,11 +11,33 @@
 | 26–32 | Apr 27–29 | OpenGraph on 73 pages, 23 SEO landing pages, FAQPage schema, backlink kit, migration cost calculator, referral viral loop, app headline A/B test, Schema Mistake Quiz, 4 blog posts. |
 | 33–42 | Apr 29–30 | 5 micro-tools, ORM SEO pages (Prisma/Drizzle/TypeORM/Sequelize), lead magnet, email drip campaign, newsletter outreach kit, Stack Overflow kit, dev.to guest post, schemalens-cli npm package, GitHub Action, 4 blog posts. |
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
-| 49–50 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. |
-| 51 | May 1 | CLI landing page (cli/index.html) with install demo, output formats, CI example. README badges. Optional email capture on Pro trial activation. Fixed broken CLI links. |
-| 52 | May 1 | Table rename detection heuristic — same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL across all 5 dialects. Visual diff, summary, markdown, CLI, API all updated. |
-| 53 | May 1 | Affiliate/referral program with tracking code (lib/ref-tracking.js on 36 pages, api/affiliate-apply.js, affiliate.html with real form + link generator, admin dashboard section). 30% recurring commission. |
-| 54 | May 1 | Embeddable SVG badge generator (api/badge.js with 4 styles), Badge Generator micro-tool (tools/badge-generator.html), share modal in app.html now has Link + Badge tabs. sitemap.xml and tools.html updated. |
+| 49–53 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
+| 54–55 | May 1 | Embeddable SVG badge generator + Badge Generator micro-tool + share modal Badge tab. PlanetScale, Railway, Firebase Schema Diff SEO landing pages with cross-linked footers. |
+
+---
+
+---
+
+## Day 56 — Product: Complete Team Plan "Book a Demo" Sales Flow (May 1, 2026)
+
+### What Was Built
+- **`api/demo-request.js`** — Enhanced demo request endpoint with full email automation
+  - **Admin notification email** — Sends instant email to `schemalens@proton.me` via Resend whenever a demo request is submitted, including name, email, company, team size, message, and a direct link to the admin dashboard
+  - **User confirmation auto-reply** — Sends a professional HTML confirmation email to the requester setting expectations (1 business day response) and summarizing what the demo will cover
+  - Graceful degradation when `EMAIL_API_KEY` is not configured (logs only, no hard failures)
+- **`index.html`** — Team plan pricing card CTA now links directly to `book-demo.html` instead of `pricing.html`
+- **`pricing.html`** — Fixed affiliate commission mention from 20% → 30% (consistent with affiliate.html)
+
+### Validation
+- ✅ `api/demo-request.js` Node syntax check passes
+- ✅ 14/14 diff engine tests pass
+- ✅ All 3 modified files validated (structure, links, closing tags)
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Every high-ACV lead needs immediate human attention.** The admin notification email ensures a $29/mo Team plan demo request never sits unnoticed in a database table.
+2. **Confirmation emails reduce anxiety and no-shows.** When someone requests a demo, an immediate "we got it" email with next steps increases trust and reply rates.
+3. **Direct CTAs beat indirect ones.** Changing index.html's Team card from "pricing.html" to "book-demo.html" removes a click and gets high-intent buyers to the form faster.
 
 ---
 
@@ -110,95 +132,6 @@
 1. **Every shared diff is now a billboard.** When users share diffs in PRs or Slack, the badge tab makes it trivial to embed a "Powered by SchemaLens" badge — turning every share into a backlink.
 2. **Contextual badges convert better.** A badge that says "5 changes" is more compelling than a generic "Schema Diff" badge because it proves the tool did real work.
 3. **Ref codes in badges close the attribution loop.** Affiliates can embed badges in their READMEs and blog posts, earning 30% commission on every click-through conversion.
-
----
-
-## Day 53 — Distribution: Affiliate/Referral Program with Tracking Code (May 1, 2026)
-
-### What Was Built
-- **`lib/ref-tracking.js`** — Lightweight referral tracking script deployed on 36 pages
-  - Reads `?ref=` from URL on page load, validates format (`[a-zA-Z0-9_-]{1,40}`)
-  - Persists ref code to `localStorage` and `sessionStorage`
-  - Automatically appends ref to all Gumroad purchase links (`gumroad.com/l/schemalens-pro`)
-  - Tracks `ref_visit` and `ref_click_gumroad` events to analytics
-  - Handles dynamically injected Gumroad links (modals, etc.)
-- **`api/affiliate-apply.js`** — Serverless endpoint for affiliate applications
-  - Validates name, email, website, and plan fields
-  - Stores applications in Supabase `affiliate_applications` table
-  - Returns friendly success/error messages
-- **`supabase-schema.sql`** — New `affiliate_applications` table
-  - Columns: name, email, website, plan, status, ref_code, notes, timestamps
-  - RLS: anonymous insert allowed, service_role read/update only
-- **`affiliate.html`** — Fully rewritten landing page
-  - Real application form that POSTs to `/api/affiliate-apply` with loading/success/error states
-  - Link generator: affiliates enter their code and get a copyable `schemalens.tech/?ref=CODE` link
-  - Updated commission from 20% → 30% (competitive standard for SaaS)
-  - FAQ section with cookie duration, payout schedule, minimums
-- **`api/admin.js`** — Added `affiliate-applications` action to admin proxy
-- **`admin.html`** — New "Affiliate Applications" section in dashboard
-  - Shows pending/approved/rejected status, ref codes, notes
-  - Refresh and Export CSV buttons
-- **`app.html`** — Shared diff badge now uses stored ref code
-  - `Powered by SchemaLens` badge link includes the visitor's ref code if set
-  - Share modal CTAs also propagate ref code
-- **`api/analytics.js`** — Added `ref_visit` to allowed events list
-
-### Validation
-- ✅ 14/14 diff engine tests pass
-- ✅ `lib/ref-tracking.js`, `api/affiliate-apply.js`, `api/admin.js`, `api/analytics.js` syntax checks pass
-- ✅ `affiliate.html` form and link generator tested locally
-- ✅ 36 pages include ref-tracking script (verified with grep)
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Word-of-mouth is the only scalable distribution channel we control.** With $0 ad budget, affiliates who write blog posts or tweet threads can drive high-intent traffic indefinitely.
-2. **30% recurring is competitive.** Most SaaS affiliate programs pay 20–30%. At 30%, we signal seriousness and attract quality promoters.
-3. **Ref persistence across pages matters.** A visitor might click an affiliate link on the blog, browse tools, and buy later from the pricing page. LocalStorage ensures the ref survives the journey.
-
----
-
-## Day 52 — Product: Table Rename Detection Heuristic (May 1, 2026)
-
-### What Was Built
-- **Table rename detection in diff engine (`lib/engine.js`)**
-  - `tableSignature()` — creates structural fingerprint from column types + constraints
-  - `isTableRenameCandidate()` — same structure + similar name = likely rename
-  - Heuristics: Levenshtein ≤3, normalized name match, substring match
-  - Updated `diffSchemas()` to classify renames into `tablesRenamed` instead of drop+add
-- **Migration generation for renames**
-  - PostgreSQL/SQLite: `ALTER TABLE ... RENAME TO ...`
-  - MySQL: `RENAME TABLE ... TO ...`
-  - SQL Server: `EXEC sp_rename '...', '...'`
-  - Oracle: `RENAME ... TO ...`
-- **Breaking changes exclusion**
-  - `detectBreakingChanges()` already only scans `tablesRemoved`, so renames are automatically non-breaking
-- **Visual diff rendering (`app.html`)**
-  - New "Table Renamed" card with arrow badge showing old → new name
-  - Summary bar pill: `→N renamed`
-  - Added to empty-state check, webhook payload, email report, history summary
-- **Markdown & export updates (`app.html` + `lib/engine.js`)**
-  - Summary line for renamed tables
-  - Dedicated "Tables Renamed" section with old/new names and column counts
-- **CLI output (`cli/index.js`)**
-  - Cyan `Tables renamed` count in summary
-  - `→ old_name → new_name` listing in detail view
-- **API response (`api/diff.js`)**
-  - Added `tablesRenamed` to summary object
-
-### Validation
-- ✅ `users` → `user`: detected as rename (same structure, Levenshtein = 1)
-- ✅ `order_items` → `order_item`: detected as rename (same structure, Levenshtein = 1)
-- ✅ `customer_profiles` → `profiles`: detected as rename (substring match)
-- ✅ Different structure + similar name: correctly classified as add+remove, not rename
-- ✅ 14/14 diff engine tests pass
-- ✅ `api/diff.js` and `cli/index.js` syntax checks pass
-- ✅ `app.html` inline script parses successfully
-- ✅ Deployed to Vercel
-
-### Key Insights
-1. **Differentiation from competitors.** Reddit feedback specifically called out that competitors show renames as destructive DROP+CREATE. Detecting renames positions SchemaLens as smarter and safer.
-2. **Structural signature prevents false positives.** Requiring identical column types + constraints means we only flag renames when we're confident — not when a table was completely redesigned.
-3. **Every surface updated.** Unlike a quick backend hack, this change propagates through migration SQL, visual diff, summary, markdown, email, CLI, and API — users see the improvement everywhere they interact with SchemaLens.
 
 ---
 
