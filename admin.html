@@ -319,6 +319,21 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🔄 Re-engagement (Expired Trials)</h3>
+          <span class="admin-badge" id="badgeReengage">0</span>
+        </div>
+        <div class="admin-section-body" id="reengageBody">
+          <div class="admin-empty">Send a winback email to Pro trial users whose trial expired 24–48 hours ago.</div>
+          <div style="margin-top:12px;">
+            <button onclick="previewReengageEmail()">Preview (Dry Run)</button>
+            <button class="primary" onclick="sendReengageEmail()" style="background:#dc2626;">Send Re-engagement Emails</button>
+          </div>
+          <pre id="reengageResult" style="margin-top:12px;background:var(--surface);padding:12px;border-radius:6px;font-size:0.8rem;overflow:auto;max-height:300px;display:none;"></pre>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>⭐ Testimonials</h3>
           <span class="admin-badge warning" id="badgeTestimonials">0</span>
         </div>
@@ -607,6 +622,35 @@
         });
         const json = await res.json().catch(() => ({}));
         result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function previewReengageEmail() {
+      const result = document.getElementById('reengageResult');
+      result.style.display = 'block';
+      result.textContent = 'Running dry run…';
+      try {
+        const res = await fetch('/api/reengage?dry=true', { method: 'POST' });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeReengage').textContent = json.eligible || 0;
+        result.textContent = JSON.stringify(json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendReengageEmail() {
+      if (!confirm('Send winback email to ALL expired trial users? This cannot be undone.')) return;
+      const result = document.getElementById('reengageResult');
+      result.style.display = 'block';
+      result.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/reengage', { method: 'POST' });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeReengage').textContent = json.summary?.sent ?? 0;
+        result.textContent = JSON.stringify(json, null, 2);
       } catch (e) {
         result.textContent = 'Error: ' + e.message;
       }

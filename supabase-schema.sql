@@ -158,6 +158,13 @@ CREATE POLICY "Only service role can read feedback" ON public.feedback
   FOR SELECT TO service_role USING (true);
 
 -- ============================================
+-- newsletter_subscribers: trial drip tracking
+-- ============================================
+ALTER TABLE public.newsletter_subscribers ADD COLUMN IF NOT EXISTS trial_drip_6_sent_at TIMESTAMPTZ;
+ALTER TABLE public.newsletter_subscribers ADD COLUMN IF NOT EXISTS trial_drip_final_sent_at TIMESTAMPTZ;
+ALTER TABLE public.newsletter_subscribers ADD COLUMN IF NOT EXISTS reengage_sent_at TIMESTAMPTZ;
+
+-- ============================================
 -- Indexes for performance
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_saved_diffs_user_id ON public.saved_diffs(user_id);

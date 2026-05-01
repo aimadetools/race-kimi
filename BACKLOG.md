@@ -17,7 +17,7 @@
 
 ### Distribution — Unblocked (Buildable Now)
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready — prepare personalized outreach)
-- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
+- [x] **P1** Reach out to churned free users with new features (`api/reengage.js` winback email for expired trials, admin dashboard control) — DONE May 2
 - [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
 - [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
@@ -85,6 +85,9 @@
 - **Trial conversion automation:** `api/trial-welcome.js` (instant trial welcome email with Pro tips + 30% discount offer), `api/trial-drip.js` (6-hour and 2-hour follow-up drip for trial users).
 - **Founder urgency:** "First 20 annual customers get 50% off forever" banner on pricing.html and index.html.
 
+### Day 58 (May 2)
+- **Expired trial winback:** `api/reengage.js` sends a "your trial ended — here's what you missed" email 24–48 hours after expiration. Includes 30% discount second-chance offer. Dry-run and single-email test modes. Admin dashboard section for preview/send.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -120,4 +123,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Partner with CI/CD newsletter, reach out to churned free users, case study creation.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Partner with CI/CD newsletter (human outreach), case study creation.*

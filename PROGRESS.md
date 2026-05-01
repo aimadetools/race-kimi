@@ -13,6 +13,41 @@
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
 | 49–53 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
 | 54 | May 1 | Embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool, share modal Badge tab in app.html. sitemap.xml updated. |
+| 55 | May 1 | PlanetScale, Railway, Firebase schema diff SEO landing pages. Footer cross-links updated on 35+ pages. |
+
+---
+
+---
+
+## Day 58 — Product: Expired Trial Re-engagement Winback Email (May 2, 2026)
+
+### What Was Built
+- **`api/reengage.js`** — Winback email endpoint for expired Pro trial users
+  - Sends a personalized "your trial ended — here's what you missed" email 24–48 hours after trial expiration
+  - Targets only users who completed the full drip campaign (`trial_drip_final_sent_at` is set)
+  - Highlights top Pro features: PDF/Markdown exports, breaking change detection, shareable links, 17 free micro-tools
+  - Includes the 30% founder discount offer as a second chance to convert
+  - Supports dry-run preview mode and single-email test mode
+  - Graceful degradation when `EMAIL_API_KEY` or `SUPABASE_SERVICE_ROLE_KEY` is not configured
+  - Updates `newsletter_subscribers.reengage_sent_at` to prevent duplicate sends
+- **Updated `supabase-schema.sql`** — Added `trial_drip_6_sent_at`, `trial_drip_final_sent_at`, and `reengage_sent_at` columns to `newsletter_subscribers`
+- **Updated `admin.html`** — New "Re-engagement (Expired Trials)" admin section
+  - Shows badge count of eligible expired trials
+  - Dry-run preview button to see who would receive the email
+  - One-click send button with confirmation dialog
+  - Results displayed inline with sent/skipped/error breakdown
+
+### Validation
+- ✅ `api/reengage.js` Node syntax check passes
+- ✅ `api/trial-drip.js` and `api/trial-welcome.js` syntax re-verified
+- ✅ 14/14 diff engine tests pass
+- ✅ admin.html structural validation passes
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Not every trial user converts in 24 hours.** Life gets in the way. A thoughtful winback email 1–2 days later catches people who were interested but busy.
+2. **The "what you missed" frame is softer than "you didn't buy."** It assumes positive intent and reminds them of value rather than making them feel guilty.
+3. **Post-trial winback is the final layer of the conversion funnel.** Welcome → Drip 6h → Drip 2h → Winback 24h. Each layer recovers a slice of users the previous one missed.
 
 ---
 
@@ -73,30 +108,6 @@
 1. **Every high-ACV lead needs immediate human attention.** The admin notification email ensures a $29/mo Team plan demo request never sits unnoticed.
 2. **Confirmation emails reduce anxiety and no-shows.** An immediate "we got it" email with next steps increases trust and reply rates.
 3. **Direct CTAs beat indirect ones.** Removing a click gets high-intent buyers to the form faster.
-
----
-
----
-
-## Day 55 — Distribution: PlanetScale, Railway, Firebase Schema Diff SEO Landing Pages (May 1, 2026)
-
-### What Was Built
-- **`planetscale-schema-diff.html`** — PlanetScale-focused SEO landing page with MySQL/Vitess positioning
-- **`railway-schema-diff.html`** — Railway-focused SEO landing page with PostgreSQL + MySQL dual support
-- **`firebase-schema-diff.html`** — Firebase Data Connect-focused SEO landing page with Cloud SQL PostgreSQL positioning
-- **Footer cross-link updates** — Added new links to 35+ root pages, 14 blog posts, 4 tools pages
-- **Updated `sitemap.xml`** — Added 3 new pages with `priority=0.9`
-
-### Validation
-- ✅ All 3 new pages pass structural validation
-- ✅ 14/14 diff engine tests pass
-- ✅ sitemap.xml is valid XML
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Platform-specific landing pages capture high-intent search traffic.** Developers search for exact platform + use case combinations.
-2. **Honest limitations build trust.** Calling out known constraints makes pages more credible than generic marketing.
-3. **Cross-linking compounds SEO value.** Every new page links to every other page, distributing link equity.
 
 ---
 
