@@ -143,6 +143,9 @@ module.exports = async (req, res) => {
       case 'affiliate-applications':
         data = await fetchSupabase('affiliate_applications', `select=*&order=created_at.desc&limit=${maxLimit}`);
         break;
+      case 'demo-requests':
+        data = await fetchSupabase('demo_requests', `select=*&order=created_at.desc&limit=${maxLimit}`);
+        break;
       case 'launch-email': {
         const proto = req.headers['x-forwarded-proto'] || 'https';
         const host = req.headers.host || 'schemalens.tech';

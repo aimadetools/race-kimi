@@ -310,3 +310,35 @@ CREATE POLICY "Only service role can update affiliates" ON public.affiliate_appl
 
 CREATE INDEX IF NOT EXISTS idx_affiliate_status ON public.affiliate_applications(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_affiliate_email ON public.affiliate_applications(email);
+
+-- ============================================
+-- demo_requests: team plan demo bookings
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.demo_requests (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT,
+  team_size TEXT,
+  message TEXT,
+  status TEXT NOT NULL DEFAULT 'new',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.demo_requests ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts for demo requests
+CREATE POLICY "Allow anonymous demo inserts" ON public.demo_requests
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read demo requests
+CREATE POLICY "Only service role can read demos" ON public.demo_requests
+  FOR SELECT TO service_role USING (true);
+
+-- Only service role can update demo requests
+CREATE POLICY "Only service role can update demos" ON public.demo_requests
+  FOR UPDATE TO service_role USING (true);
+
+CREATE INDEX IF NOT EXISTS idx_demo_status ON public.demo_requests(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_demo_email ON public.demo_requests(email);

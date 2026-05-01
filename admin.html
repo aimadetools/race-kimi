@@ -269,6 +269,10 @@
           <div class="value" id="statAffiliates">—</div>
           <div class="label">Affiliates</div>
         </div>
+        <div class="admin-stat">
+          <div class="value" id="statDemos">—</div>
+          <div class="label">Demos</div>
+        </div>
       </div>
 
       <div class="admin-section">
@@ -378,6 +382,20 @@
         <div class="admin-actions-bar">
           <button onclick="refreshAffiliates()">Refresh</button>
           <button class="primary" onclick="exportAffiliates()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>📅 Demo Requests</h3>
+          <span class="admin-badge" id="badgeDemos">0</span>
+        </div>
+        <div class="admin-section-body" id="demosBody">
+          <div class="admin-empty">Loading demo requests…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshDemos()">Refresh</button>
+          <button class="primary" onclick="exportDemos()">Export CSV</button>
         </div>
       </div>
 
@@ -970,6 +988,48 @@
       downloadCsv('schemalens-affiliate-applications.csv', headers, rows);
     }
 
+
+    async function refreshDemos() {
+      const body = document.getElementById('demosBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('demo-requests');
+        document.getElementById('statDemos').textContent = data.length;
+        document.getElementById('badgeDemos').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No demo requests yet.</div>';
+          return;
+        }
+        const rows = data.map(d => `
+          <tr>
+            <td>${escapeHtml(d.name)}</td>
+            <td>${escapeHtml(d.email)}</td>
+            <td>${escapeHtml(d.company || '')}</td>
+            <td>${escapeHtml(d.team_size || '')}</td>
+            <td><span class="admin-badge" style="background:${d.status==='new'?'rgba(251,191,36,0.2)':d.status==='contacted'?'rgba(99,102,241,0.2)':d.status==='scheduled'?'rgba(34,197,94,0.2)':'rgba(148,163,184,0.2)'};color:${d.status==='new'?'#fbbf24':d.status==='contacted'?'#818cf8':d.status==='scheduled'?'#22c55e':'#94a3b8'}">${d.status}</span></td>
+            <td>${formatDate(d.created_at)}</td>
+            <td>${escapeHtml((d.message || '').slice(0, 60))}${(d.message || '').length > 60 ? '...' : ''}</td>
+          </tr>`).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Team Size</th><th>Status</th><th>Date</th><th>Message</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (err) {
+        body.innerHTML = `<div class="admin-empty" style="color:#ef4444">Error loading demos: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function exportDemos() {
+      const table = document.querySelector('#demosBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-demo-requests.csv', headers, rows);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
@@ -979,6 +1039,7 @@
       refreshAnalytics();
       refreshLeads();
       refreshAffiliates();
+      refreshDemos();
     }
   </script>
 </body>

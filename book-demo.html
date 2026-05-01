@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Book a Demo — SchemaLens Team</title>
+  <meta name="description" content="Book a personalized demo of SchemaLens Team. See how shared schema reviews, Slack alerts, and org-wide billing work for your engineering team. No commitment required.">
+  <link rel="canonical" href="https://schemalens.tech/book-demo.html">
+  <meta property="og:title" content="Book a Demo — SchemaLens Team">
+  <meta property="og:description" content="Book a personalized demo of SchemaLens Team. See how shared schema reviews work for your engineering team.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/book-demo.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Book a SchemaLens Team Demo",
+    "description": "Schedule a personalized demo of SchemaLens Team for engineering teams.",
+    "url": "https://schemalens.tech/book-demo.html",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "SchemaLens",
+      "email": "schemalens@proton.me"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+    .demo-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .form-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .demo-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .demo-benefit {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .demo-benefit .icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-glow);
+      border-radius: var(--radius-sm);
+    }
+    .demo-benefit h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .demo-benefit p {
+      font-size: 0.9rem;
+      color: #c7c7c7;
+      line-height: 1.5;
+    }
+    .form-status {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .form-status.success {
+      display: block;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #22c55e;
+    }
+    .form-status.error {
+      display: block;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        For teams of 3 or more
+      </div>
+      <h1>See SchemaLens Team<br><span>in action.</span></h1>
+      <p>Get a 15-minute walkthrough tailored to your team's workflow. We'll show you shared workspaces, Slack alerts, breaking change detection, and how to integrate SchemaLens into your CI/CD pipeline.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="demo-grid">
+        <div class="demo-form">
+          <h2 style="margin-bottom: 8px;">Request your demo</h2>
+          <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.95rem;">Fill out the form below and we'll reply within 1 business day.</p>
+
+          <div id="formStatus" class="form-status"></div>
+
+          <form id="demoForm" onsubmit="submitDemo(event)">
+            <div class="form-group">
+              <label for="dName">Full name *</label>
+              <input type="text" id="dName" name="name" required placeholder="Jane Smith">
+            </div>
+            <div class="form-group">
+              <label for="dEmail">Work email *</label>
+              <input type="email" id="dEmail" name="email" required placeholder="jane@company.com">
+            </div>
+            <div class="form-group">
+              <label for="dCompany">Company</label>
+              <input type="text" id="dCompany" name="company" placeholder="Acme Inc.">
+            </div>
+            <div class="form-group">
+              <label for="dTeamSize">Team size</label>
+              <select id="dTeamSize" name="team_size">
+                <option value="">Select team size</option>
+                <option value="1-5">1–5 engineers</option>
+                <option value="6-15">6–15 engineers</option>
+                <option value="16-50">16–50 engineers</option>
+                <option value="50+">50+ engineers</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dMessage">What would you like to see? <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+              <textarea id="dMessage" name="message" placeholder="e.g. How does the Slack integration work? Can we diff against our staging database automatically?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%" id="demoSubmitBtn">Request Demo</button>
+            <p class="form-note">No spam, ever. We use your email only to schedule the demo.</p>
+          </form>
+        </div>
+
+        <div class="demo-benefits">
+          <div class="demo-benefit">
+            <div class="icon">☁️</div>
+            <div>
+              <h4>Shared Cloud Workspace</h4>
+              <p>See how diffs are saved, shared, and commented on by your entire team — no more SQL files in Slack.</p>
+            </div>
+          </div>
+          <div class="demo-benefit">
+            <div class="icon">🔔</div>
+            <div>
+              <h4>Slack &amp; Webhook Alerts</h4>
+              <p>Watch breaking changes trigger real-time notifications. Route critical alerts to #engineering automatically.</p>
+            </div>
+          </div>
+          <div class="demo-benefit">
+            <div class="icon">🔄</div>
+            <div>
+              <h4>CI/CD Integration</h4>
+              <p>Learn how to run SchemaLens in GitHub Actions, GitLab CI, or Bitbucket Pipelines for every schema change.</p>
+            </div>
+          </div>
+          <div class="demo-benefit">
+            <div class="icon">📊</div>
+            <div>
+              <h4>Admin Controls &amp; Billing</h4>
+              <p>One dashboard to manage seats, view activity, and export audit trails for compliance.</p>
+            </div>
+          </div>
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 8px;">
+            <p style="font-size: 0.9rem; color: #c7c7c7; line-height: 1.6; margin: 0;">
+              <strong style="color: var(--text);">Prefer to self-serve?</strong><br>
+              You can start a Team workspace instantly in the app. No demo required — just sign in, create a team, and invite members.
+            </p>
+            <a href="app.html" class="btn btn-secondary" style="margin-top: 16px; width: 100%;">Open the App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Questions before booking?</h2>
+      <p class="mb-24">Email us directly at <a href="mailto:schemalens@proton.me" style="color: var(--primary);">schemalens@proton.me</a>. We typically reply within a few hours.</p>
+      <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="supabase-schema-diff.html">Supabase Diff</a>
+          <a href="neon-schema-diff.html">Neon Diff</a>
+          <a href="planetscale-schema-diff.html">PlanetScale Diff</a>
+          <a href="railway-schema-diff.html">Railway Diff</a>
+          <a href="firebase-schema-diff.html">Firebase Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+      <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+
+async function submitDemo(e) {
+  e.preventDefault();
+  const btn = document.getElementById('demoSubmitBtn');
+  const status = document.getElementById('formStatus');
+  const name = document.getElementById('dName').value.trim();
+  const email = document.getElementById('dEmail').value.trim();
+  const company = document.getElementById('dCompany').value.trim();
+  const team_size = document.getElementById('dTeamSize').value;
+  const message = document.getElementById('dMessage').value.trim();
+
+  if (!name || name.length < 2) {
+    status.className = 'form-status error';
+    status.textContent = 'Please enter your full name.';
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    status.className = 'form-status error';
+    status.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  status.className = 'form-status';
+  status.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/demo-request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, company, team_size, message })
+    });
+    const json = await res.json().catch(() => ({}));
+    if (res.ok && json.success) {
+      status.className = 'form-status success';
+      status.textContent = json.message;
+      document.getElementById('demoForm').reset();
+    } else {
+      status.className = 'form-status error';
+      status.textContent = json.error || 'Something went wrong. Please try again.';
+    }
+  } catch (err) {
+    status.className = 'form-status error';
+    status.textContent = 'Network error. Please check your connection and try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Request Demo';
+  }
+}
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>
