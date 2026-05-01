@@ -149,6 +149,7 @@ module.exports = (req, res) => {
       summary: {
         tablesAdded: diff.tablesAdded.length,
         tablesRemoved: diff.tablesRemoved.length,
+        tablesRenamed: diff.tablesRenamed.length,
         tablesModified: diff.tablesModified.length,
         enumsAdded: diff.enumsAdded.length,
         enumsRemoved: diff.enumsRemoved.length,

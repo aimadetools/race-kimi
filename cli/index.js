@@ -125,6 +125,7 @@ function formatPretty(diff, breakingChanges, riskScore, migration, dialect) {
   const totalChanges =
     (s.tablesAdded?.length || 0) +
     (s.tablesRemoved?.length || 0) +
+    (s.tablesRenamed?.length || 0) +
     (s.tablesModified?.length || 0) +
     (s.enumsAdded?.length || 0) +
     (s.enumsRemoved?.length || 0) +
@@ -141,6 +142,7 @@ function formatPretty(diff, breakingChanges, riskScore, migration, dialect) {
   lines.push(`${C.bold}Summary:${C.reset} ${totalChanges} change(s) detected`);
   lines.push(`  ${C.green}Tables added:${C.reset}    ${s.tablesAdded?.length || 0}`);
   lines.push(`  ${C.red}Tables removed:${C.reset}  ${s.tablesRemoved?.length || 0}`);
+  lines.push(`  ${C.cyan}Tables renamed:${C.reset}   ${s.tablesRenamed?.length || 0}`);
   lines.push(`  ${C.yellow}Tables modified:${C.reset} ${s.tablesModified?.length || 0}`);
   if (s.enumsAdded?.length || s.enumsRemoved?.length) {
     lines.push(`  Enums added:     ${s.enumsAdded?.length || 0}`);
@@ -177,6 +179,15 @@ function formatPretty(diff, breakingChanges, riskScore, migration, dialect) {
     lines.push(`${C.bold}${C.red}Tables Removed:${C.reset}`);
     for (const t of s.tablesRemoved) {
       lines.push(`  − ${t.name}`);
+    }
+    lines.push('');
+  }
+
+  // Tables renamed
+  if (s.tablesRenamed?.length) {
+    lines.push(`${C.bold}${C.cyan}Tables Renamed:${C.reset}`);
+    for (const ren of s.tablesRenamed) {
+      lines.push(`  → ${ren.oldTable.name} → ${ren.newTable.name}`);
     }
     lines.push('');
   }

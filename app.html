@@ -2101,6 +2101,7 @@ function diffSchemas(oldSchema, newSchema) {
   const diff = {
     tablesAdded: [],
     tablesRemoved: [],
+    tablesRenamed: [],
     tablesModified: [],
     enumsAdded: [],
     enumsRemoved: [],
@@ -2120,11 +2121,41 @@ function diffSchemas(oldSchema, newSchema) {
   const oldNames = new Set(Object.keys(oldSchema.tables));
   const newNames = new Set(Object.keys(newSchema.tables));
 
+  const added = [];
+  const removed = [];
+
   for (const name of newNames) {
-    if (!oldNames.has(name)) diff.tablesAdded.push(newSchema.tables[name]);
+    if (!oldNames.has(name)) added.push(newSchema.tables[name]);
   }
   for (const name of oldNames) {
-    if (!newNames.has(name)) diff.tablesRemoved.push(oldSchema.tables[name]);
+    if (!newNames.has(name)) removed.push(oldSchema.tables[name]);
+  }
+
+  const renameMatches = new Set();
+  for (const oldTable of removed) {
+    let bestMatch = null;
+    let bestScore = Infinity;
+    for (const newTable of added) {
+      if (renameMatches.has(newTable.name)) continue;
+      if (isTableRenameCandidate(oldTable, newTable)) {
+        const score = levenshteinDistance(oldTable.name.toLowerCase(), newTable.name.toLowerCase());
+        if (score < bestScore) {
+          bestScore = score;
+          bestMatch = newTable;
+        }
+      }
+    }
+    if (bestMatch) {
+      diff.tablesRenamed.push({ oldTable, newTable: bestMatch });
+      renameMatches.add(bestMatch.name);
+    } else {
+      diff.tablesRemoved.push(oldTable);
+    }
+  }
+  for (const newTable of added) {
+    if (!renameMatches.has(newTable.name)) {
+      diff.tablesAdded.push(newTable);
+    }
   }
 
   for (const name of oldNames) {
@@ -2240,6 +2271,25 @@ function isRenameCandidate(oldCol, newCol) {
   // Substring match (e.g., "name" → "full_name")
   const o = oldCol.name.toLowerCase();
   const n = newCol.name.toLowerCase();
+  if (o.includes(n) || n.includes(o)) return true;
+  return false;
+}
+
+function tableSignature(table) {
+  const colSig = table.columns.map(c => c.type.toUpperCase()).join('|');
+  const conSig = (table.constraints || []).map(c => (c.type || '') + ':' + (c.columns ? c.columns.join(',') : '')).join('|');
+  return colSig + '##' + conSig;
+}
+
+function isTableRenameCandidate(oldTable, newTable) {
+  const oldSig = tableSignature(oldTable);
+  const newSig = tableSignature(newTable);
+  if (oldSig !== newSig) return false;
+  const dist = levenshteinDistance(oldTable.name.toLowerCase(), newTable.name.toLowerCase());
+  if (dist <= 3) return true;
+  if (normalizeName(oldTable.name) === normalizeName(newTable.name)) return true;
+  const o = oldTable.name.toLowerCase();
+  const n = newTable.name.toLowerCase();
   if (o.includes(n) || n.includes(o)) return true;
   return false;
 }
@@ -2510,6 +2560,19 @@ function generateMigration(diff, dialect) {
     lines.push(`DROP TABLE ${quoteId(table.name, dialect)};`);
     lines.push('');
   }
+
+  for (const ren of diff.tablesRenamed || []) {
+    if (dialect === 'postgres' || dialect === 'sqlite') {
+      lines.push(`ALTER TABLE ${quoteId(ren.oldTable.name, dialect)} RENAME TO ${quoteId(ren.newTable.name, dialect)};`);
+    } else if (dialect === 'mysql') {
+      lines.push(`RENAME TABLE ${quoteId(ren.oldTable.name, dialect)} TO ${quoteId(ren.newTable.name, dialect)};`);
+    } else if (dialect === 'mssql') {
+      lines.push(`EXEC sp_rename '${quoteId(ren.oldTable.name, dialect).replace(/[[\]]/g, '')}', '${ren.newTable.name}';`);
+    } else if (dialect === 'oracle') {
+      lines.push(`RENAME ${quoteId(ren.oldTable.name, dialect)} TO ${quoteId(ren.newTable.name, dialect)};`);
+    }
+  }
+  if (diff.tablesRenamed && diff.tablesRenamed.length) lines.push('');
 
   for (const table of diff.tablesAdded) {
     lines.push(`-- New table: ${table.name}`);
@@ -2805,7 +2868,7 @@ function columnDefSQL(col, dialect) {
 // -----------------------------
 function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScore) {
   const bar = document.getElementById('summaryBar');
-  const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length;
+  const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
 
   const allWarnings = [];
   if (confidenceA && confidenceA.warnings) allWarnings.push(...confidenceA.warnings.map(w => 'Schema A: ' + w));
@@ -2845,6 +2908,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
     <div class="summary-pill added"><span class="num">+${diff.tablesAdded.length}</span> added</div>
     <div class="summary-pill removed"><span class="num">−${diff.tablesRemoved.length}</span> removed</div>
+    ${diff.tablesRenamed.length ? `<div class="summary-pill modified"><span class="num">→${diff.tablesRenamed.length}</span> renamed</div>` : ''}
     <div class="summary-pill modified"><span class="num">~${diff.tablesModified.length}</span> modified</div>
     ${(diff.enumsAdded.length || diff.enumsRemoved.length) ? `<div class="summary-pill modified"><span class="num">◈${diff.enumsAdded.length + diff.enumsRemoved.length}</span> enums</div>` : ''}
     ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
@@ -2891,7 +2955,7 @@ function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
 
-  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length && !diff.viewsAdded.length && !diff.viewsRemoved.length && !diff.viewsModified.length && !diff.functionsAdded.length && !diff.functionsRemoved.length && !diff.functionsModified.length) {
+  if (!diff.tablesAdded.length && !diff.tablesRemoved.length && !diff.tablesRenamed.length && !diff.tablesModified.length && !diff.enumsAdded.length && !diff.enumsRemoved.length && !diff.triggersAdded.length && !diff.triggersRemoved.length && !diff.triggersModified.length && !diff.viewsAdded.length && !diff.viewsRemoved.length && !diff.viewsModified.length && !diff.functionsAdded.length && !diff.functionsRemoved.length && !diff.functionsModified.length) {
     html += `<div class="empty-state"><h3>No differences found</h3><p>The two schemas appear to be identical (within what SchemaLens can parse).</p></div>`;
     container.innerHTML = html;
     return;
@@ -2908,6 +2972,19 @@ function renderVisualDiff(diff, breakingChanges) {
   }
   for (const table of diff.tablesRemoved) {
     html += renderTableDiff(table.name, 'removed', [], table.columns, [], [], [], [], tableBreaking.get(table.name) || []);
+  }
+  for (const ren of diff.tablesRenamed || []) {
+    html += `
+      <div class="diff-table">
+        <div class="diff-table-header">
+          <h4>${esc(ren.oldTable.name)} <span style="color:var(--text-muted);">→</span> ${esc(ren.newTable.name)} <span class="badge badge-modified">Table Renamed</span></h4>
+        </div>
+        <div class="diff-table-body">
+          <table><tbody>
+            <tr class="row-modified"><td colspan="4"><strong>${ren.newTable.columns.length} columns</strong> (structure unchanged)</td></tr>
+          </tbody></table>
+        </div>
+      </div>`;
   }
   for (const td of diff.tablesModified) {
     html += renderTableDiff(td.name, 'modified', td.columnsAdded, td.columnsRemoved, td.columnsRenamed, td.columnsModified, td.constraintsAdded, td.constraintsRemoved, tableBreaking.get(td.name) || []);
@@ -3673,6 +3750,7 @@ async function maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect) {
 
   const added = diff.tablesAdded?.length || 0;
   const removed = diff.tablesRemoved?.length || 0;
+  const renamed = diff.tablesRenamed?.length || 0;
   const modified = diff.tablesModified?.length || 0;
 
   const payload = {
@@ -3685,6 +3763,7 @@ async function maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect) {
       tables_new: diff.totalTablesNew || 0,
       tables_added: added,
       tables_removed: removed,
+      tables_renamed: renamed,
       tables_modified: modified,
       breaking_changes: breakingChanges?.length || 0
     },
@@ -3751,6 +3830,7 @@ function generateMarkdown(diff, migrationSQL, dialect) {
   md += `- Tables in new schema: ${diff.totalTablesNew}\n`;
   md += `- Tables added: ${diff.tablesAdded.length}\n`;
   md += `- Tables removed: ${diff.tablesRemoved.length}\n`;
+  md += `- Tables renamed: ${diff.tablesRenamed.length}\n`;
   md += `- Tables modified: ${diff.tablesModified.length}\n`;
   if (window.lastRiskScore) {
     md += `- **Risk Score:** ${window.lastRiskScore.score}/100 — ${window.lastRiskScore.label}\n`;
@@ -3781,6 +3861,16 @@ function generateMarkdown(diff, migrationSQL, dialect) {
       }
       md += `\n`;
     }
+  }
+
+  if (diff.tablesRenamed && diff.tablesRenamed.length) {
+    md += `## Tables Renamed\n\n`;
+    md += `| Old Name | New Name | Columns |\n`;
+    md += `|----------|----------|---------|\n`;
+    for (const ren of diff.tablesRenamed) {
+      md += `| ${ren.oldTable.name} | ${ren.newTable.name} | ${ren.newTable.columns.length} |\n`;
+    }
+    md += `\n`;
   }
 
   if (diff.tablesModified.length) {
@@ -4023,6 +4113,7 @@ function renderPDF() {
   html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables in new schema</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.totalTablesNew}</td></tr>`;
   html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables added</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesAdded.length}</td></tr>`;
   html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables removed</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesRemoved.length}</td></tr>`;
+  html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables renamed</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesRenamed?.length || 0}</td></tr>`;
   html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">Tables modified</td><td style="border:1px solid #ccc;padding:6px 10px;">${diff.tablesModified.length}</td></tr>`;
   html += `</table>`;
 
@@ -4050,6 +4141,16 @@ function renderPDF() {
       }
       html += `</tbody></table>`;
     }
+  }
+
+  if (diff.tablesRenamed && diff.tablesRenamed.length) {
+    html += `<h3>Tables Renamed</h3>`;
+    html += `<table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:16px;">`;
+    html += `<thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Old Name</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">New Name</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;">Columns</th></tr></thead><tbody>`;
+    for (const ren of diff.tablesRenamed) {
+      html += `<tr><td style="border:1px solid #ccc;padding:6px 10px;">${esc(ren.oldTable.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${esc(ren.newTable.name)}</td><td style="border:1px solid #ccc;padding:6px 10px;">${ren.newTable.columns.length}</td></tr>`;
+    }
+    html += `</tbody></table>`;
   }
 
   if (diff.tablesModified.length) {
@@ -5375,7 +5476,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
       dialect,
       tables_old: diff.totalTablesOld,
       tables_new: diff.totalTablesNew,
-      changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesModified.length,
+      changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length,
       variant: window.SchemaLensHeadlineVariant || 'A'
     });
   }
@@ -6494,6 +6595,7 @@ function saveDiffHistory(sqlA, sqlB, dialect, diff) {
     const summary = [];
     if (diff.tablesAdded && diff.tablesAdded.length) summary.push(`${diff.tablesAdded.length} added`);
     if (diff.tablesRemoved && diff.tablesRemoved.length) summary.push(`${diff.tablesRemoved.length} removed`);
+    if (diff.tablesRenamed && diff.tablesRenamed.length) summary.push(`${diff.tablesRenamed.length} renamed`);
     if (diff.tablesModified && diff.tablesModified.length) summary.push(`${diff.tablesModified.length} modified`);
     const entry = {
       id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
