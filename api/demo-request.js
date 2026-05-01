@@ -130,9 +130,60 @@ export default async function handler(req, res) {
 
   const emailResult = await notifyAdmin(record);
 
+  // Send confirmation email to the requester
+  const confirmResult = await notifyRequester(record);
+
   return res.status(200).json({
     success: true,
     message: "Demo request received. We'll be in touch within 1 business day to schedule your call.",
     notified: emailResult.sent,
+    confirmed: confirmResult.sent,
   });
+}
+
+async function notifyRequester(record) {
+  if (!EMAIL_API_KEY) return { sent: false, reason: "EMAIL_API_KEY not configured" };
+  try {
+    const html = `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:0 auto;color:#111;">
+        <h2 style="color:#0f0f0f;">Hi ${record.name},</h2>
+        <p>Thanks for requesting a demo of <strong>SchemaLens Team</strong>. We've received your request and will be in touch within 1 business day to schedule your 15-minute walkthrough.</p>
+        <p style="background:#f3f4f6;border-radius:8px;padding:16px;">
+          <strong>What we'll cover:</strong><br>
+          • Shared cloud workspace & team diffs<br>
+          • Slack & webhook alerts for breaking changes<br>
+          • CI/CD integration (GitHub Actions, GitLab CI, Bitbucket)<br>
+          • Admin controls, billing, and audit trails
+        </p>
+        <p>In the meantime, you can <a href="https://schemalens.tech/app.html" style="color:#6366f1;">open the app</a> and explore the free tier — no signup required.</p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+        <p style="font-size:0.85rem;color:#6b7280;">SchemaLens — Compare SQL schemas and generate migrations in your browser.<br>
+        <a href="https://schemalens.tech">schemalens.tech</a> · <a href="mailto:schemalens@proton.me">schemalens@proton.me</a></p>
+      </div>
+    `;
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${EMAIL_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: EMAIL_FROM,
+        to: record.email,
+        subject: `Your SchemaLens Team demo request — we'll be in touch soon`,
+        html,
+      }),
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error(`DEMO_CONFIRM_ERROR: ${res.status} ${text}`);
+      return { sent: false, reason: text };
+    }
+    const data = await res.json().catch(() => ({}));
+    console.log(`DEMO_CONFIRM_SENT: ${data.id || "unknown"} to ${record.email}`);
+    return { sent: true, id: data.id };
+  } catch (err) {
+    console.error(`DEMO_CONFIRM_EXCEPTION: ${err.message}`);
+    return { sent: false, reason: err.message };
+  }
 }
