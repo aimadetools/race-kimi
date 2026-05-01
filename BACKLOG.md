@@ -16,14 +16,10 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready — prepare personalized outreach)
-- [x] **P1** Reach out to churned free users with new features (`api/reengage.js` winback email for expired trials, admin dashboard control) — DONE May 2
 - [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
 - [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Pro trial welcome email + drip campaign (`api/trial-welcome.js`, `api/trial-drip.js`) — DONE May 2
-- [x] **P1** Founder Deal urgency on pricing page (first 20 annual customers get 50% off) — DONE May 2
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -88,6 +84,9 @@
 ### Day 58 (May 2)
 - **Expired trial winback:** `api/reengage.js` sends a "your trial ended — here's what you missed" email 24–48 hours after expiration. Includes 30% discount second-chance offer. Dry-run and single-email test modes. Admin dashboard section for preview/send.
 
+### Day 59 (May 1)
+- **CI/CD newsletter outreach kit:** `marketing/ci-cd-newsletter-outreach.md` — 10 personalized outreach templates for DevOps Weekly, DevOps'ish, SRE Weekly, GitHub Blog, GitLab Blog, The New Stack, CircleCI, Jenkins, Bitbucket, KubeWeekly. Guest post pitches and follow-up template included.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -97,8 +96,6 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
-- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
 
 ### Conversion (Unblocked)
@@ -123,4 +120,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Partner with CI/CD newsletter (human outreach), case study creation.*
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: Tweet thread execution, case study creation, Stack Overflow outreach.*
