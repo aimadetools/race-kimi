@@ -16,16 +16,14 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [x] **P1** Build PlanetScale Schema Diff SEO landing page (template: neon-schema-diff.html) — DONE May 1
-- [x] **P1** Build Railway Schema Diff SEO landing page — DONE May 1
-- [x] **P1** Build Firebase Schema Diff SEO landing page — DONE May 1
+- [x] **P1** PlanetScale, Railway, Firebase Schema Diff SEO landing pages — DONE May 1
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready — prepare personalized outreach)
 - [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
 - [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV) — DONE May 1
+- [x] **P1** "Book a demo" / contact sales flow for Team plan with admin alerts + user confirmation emails — DONE May 1
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -95,14 +93,12 @@
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [ ] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV)
+- [x] **P1** "Book a demo" / contact sales flow for Team plan — DONE May 1
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [x] **P1** Build PlanetScale Schema Diff SEO landing page — DONE May 1
-- [x] **P1** Build Railway Schema Diff SEO landing page — DONE May 1
-- [x] **P1** Build Firebase Schema Diff SEO landing page — DONE May 1
+- [x] **P1** PlanetScale, Railway, Firebase Schema Diff SEO landing pages — DONE May 1
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
 - [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
@@ -129,4 +125,4 @@
 
 ---
 
-*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: PlanetScale/Railway/Firebase SEO pages, Team plan demo/contact flow, partner with CI/CD newsletter.*
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: Partner with CI/CD newsletter, reach out to churned free users, case study creation.*
