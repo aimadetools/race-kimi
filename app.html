@@ -1016,6 +1016,7 @@
         <a href="blog.html">Blog</a>
         <a href="open.html">Open Startup</a>
       <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
           <a href="team.html">Team</a>
         <a href="testimonials.html">Wall of Love</a>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
@@ -1433,6 +1434,7 @@ CREATE TABLE users (
           <a href="affiliate.html">Affiliate</a>
           <a href="open.html">Open Startup</a>
       <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
           <a href="team.html">Team</a>
         <a href="testimonials.html">Wall of Love</a>
         </div>
@@ -3317,8 +3319,9 @@ function renderMigration(sql, diff) {
     html += `<div class="migration-preview-fade"></div>`;
     html += `<div class="migration-preview-cta">`;
     if (trialAvailable) {
+      html += `<div style="margin-bottom:10px;"><input type="email" id="trialEmail" placeholder="Your email (optional) — get migration tips" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:0.85rem;width:280px;max-width:100%;"></div>`;
       html += `<button class="btn btn-primary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>`;
-      html += `<div style="font-size:0.8rem;color:var(--text-muted);">No email required. Unlock copy, download & export for 24 hours.</div>`;
+      html += `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">No credit card required. Unlock copy, download & export for 24 hours.</div>`;
     } else {
       html += `<div class="trial-used-notice">🎁 Pro trial expired</div>`;
     }
@@ -4621,7 +4624,7 @@ function renderORM() {
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
       </div>
       <div style="text-align:center;margin-top:16px;">
-        ${trialAvailable ? `<button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>` : `<div class="trial-used-notice" style="display:inline-block;">🎁 Pro trial expired</div>`}
+        ${trialAvailable ? `<div style="margin-bottom:10px;"><input type="email" id="trialEmailOrm" placeholder="Your email (optional) — get migration tips" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:0.85rem;width:280px;max-width:100%;"></div><button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>` : `<div class="trial-used-notice" style="display:inline-block;">🎁 Pro trial expired</div>`}
       </div>
     `;
     return;
@@ -4721,6 +4724,19 @@ function tryProTrial() {
   localStorage.setItem('schemalens_trial_claimed', '1');
   localStorage.setItem('schemalens_trial_used_at', Date.now().toString());
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated');
+
+  // Capture optional email for newsletter follow-up
+  const emailInput = document.getElementById('trialEmail') || document.getElementById('trialEmailOrm');
+  const email = emailInput ? emailInput.value.trim() : '';
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    localStorage.setItem('schemalens_trial_email', email);
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'pro_trial' })
+    }).catch(() => {});
+  }
+
   // Re-render gated features
   if (lastDiff) {
     renderMigration(lastMigrationSQL, lastDiff);

@@ -59,6 +59,43 @@
 
 ---
 
+## Day 51 — Trust & Conversion: CLI Landing Page + Trial Email Capture (May 1, 2026)
+
+### What Was Built
+- **`cli/index.html`** — Comprehensive CLI landing page (fixes broken links from index/app/how-it-works)
+  - Hero with `npx schemalens-cli` install command + copy button
+  - Feature grid: instant, private, CI-ready, multi-format, breaking change guard, risk scoring
+  - Terminal demo with syntax-highlighted sample output
+  - Output format showcase (pretty, JSON, Markdown, SQL)
+  - Supported dialects grid (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+  - CLI vs Web App comparison table
+  - CI/CD workflow example with GitHub Actions
+  - Schema.org SoftwareApplication JSON-LD markup
+  - CTA box linking to Pro purchase and web app
+- **Optional email capture in Pro trial flow (`app.html`)**
+  - Added email input field next to trial buttons in both Migration and ORM tabs
+  - When trial is activated with an email, sends to `/api/subscribe` with source="pro_trial"
+  - Stores email in localStorage for future reference
+  - Enables newsletter follow-up for highest-intent users
+- **Root `README.md` optimization**
+  - Added npm version badge, license badge, Vercel deploy badge
+  - Added direct links to Web App, CLI, API Docs, and Pricing
+  - Prominent `npx schemalens-cli` mention above the fold
+- **Sitemap update** — added `cli/index.html` with priority 0.8
+
+### Validation
+- ✅ `cli/index.html` HTML structure validated
+- ✅ `app.html` trial function bracket balance checked
+- ✅ 14/14 diff engine tests pass
+- ✅ All internal links verified (index.html, app.html, how-it-works.html already linked to `cli/`)
+
+### Key Insights
+1. **Broken links were hurting trust.** Index.html, app.html, and how-it-works.html all linked to `cli/` which returned 404. Fixing this removes friction for CLI-curious developers.
+2. **Email capture on trial is high-leverage.** Users who start a trial are our highest-intent audience. Capturing even 10% of their emails gives us a warm list to announce new features and offers to.
+3. **CLI is a trust signal.** The Reddit "vibe-coded" criticism stings because developers trust CLI tools more than web apps. A dedicated CLI page with install instructions and CI examples positions SchemaLens as a real engineering tool.
+
+---
+
 ## Day 50 — SEO: Supabase & Neon Schema Diff Landing Pages (May 1, 2026)
 
 ### What Was Built
@@ -171,18 +208,6 @@
 1. **Video is the highest-ROI unblocked distribution channel.** With scripts, renderer, and generator all automated, creating new 60-second tips is a 10-minute task, not a 2-hour production.
 2. **Reusable templates multiply output.** The `video-renderer.html` template can accept any number of slides. Future videos just need a new ID and slide definitions.
 3. **Short-form content feeds long-form SEO.** Video scripts double as blog post outlines, tweet threads, and newsletter content. One script = four distribution formats.
-
----
-
-## Day 47 — Newsletter Launch Email + Blog Post #42 (Apr 30, 2026)
-
-Built `/api/newsletter-launch.js` broadcast endpoint with dry-run mode and Supabase tracking; added launch controls to admin dashboard; published blog post #42 ("How to Review a SQL Schema Change in 5 Minutes"); added Stack Overflow Answer Kits #4 and #5.
-
----
-
-## Day 46 — Conversion Fix: Reddit Trust Crisis & CRM Build (Apr 30, 2026)
-
-Added "When SchemaLens shines" use-case section and trust bar to index.html; built honest FAQ addressing "I already have migrations"; created localStorage-backed Leads & Outreach CRM in admin.html with seed defaults and CSV export; prepared Monday launch materials.
 
 ---
 

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SchemaLens CLI — SQL Schema Diff from Your Terminal</title>
+  <meta name="description" content="Diff SQL schemas from the command line. npx schemalens-cli compares CREATE TABLE dumps and generates ALTER TABLE migrations for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="SchemaLens CLI — SQL Schema Diff from Your Terminal">
+  <meta property="og:description" content="Zero-install CLI for SQL schema diffing. Generate migration scripts locally. No data leaves your machine.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/cli/">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SchemaLens CLI",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "ratingCount": "1"
+  },
+  "featureList": "Semantic schema diff, migration generation, breaking change detection, risk scoring, JSON/Markdown/SQL export, CI/CD integration",
+  "softwareVersion": "1.0.0",
+  "downloadUrl": "https://www.npmjs.com/package/schemalens-cli",
+  "url": "https://schemalens.tech/cli/"
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .cli-hero {
+      text-align: center;
+      padding: 5rem 1rem 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .cli-hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cli-hero .lead {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .install-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      color: var(--code-text);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .install-box code {
+      color: var(--secondary);
+    }
+    .copy-btn {
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+    .hero-badges {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1rem;
+    }
+    .section h2 {
+      font-size: 1.7rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .section .sub {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: var(--hover-border);
+      transform: translateY(-2px);
+    }
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .terminal {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .terminal-header {
+      background: var(--surface);
+      padding: 0.6rem 1rem;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #f87171; }
+    .dot-yellow { background: #fbbf24; }
+    .dot-green { background: #34d399; }
+    .terminal-title { font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem; }
+    .terminal-body {
+      padding: 1.25rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--code-text);
+      overflow-x: auto;
+    }
+    .terminal-body .comment { color: var(--comment); }
+    .terminal-body .keyword { color: #c678dd; }
+    .terminal-body .string { color: #98c379; }
+    .terminal-body .number { color: #d19a66; }
+    .terminal-body .cmd { color: #61afef; }
+    .terminal-body .success { color: var(--success); }
+    .terminal-body .warn { color: var(--warning); }
+    .terminal-body .danger { color: var(--danger); }
+    .terminal-body .label { color: var(--secondary); font-weight: 600; }
+    .output-formats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .format-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: center;
+    }
+    .format-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .format-card h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .format-card p { font-size: 0.85rem; color: var(--text-muted); }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+    .compare-table th, .compare-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    .compare-table th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+    .compare-table td { color: var(--text-muted); }
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(34,211,238,0.08) 100%);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3rem auto;
+      max-width: 700px;
+    }
+    .cta-box h3 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-buttons .btn { min-width: 180px; }
+    .dialect-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .dialect-badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .dialect-badge span { display: block; font-size: 1.4rem; margin-bottom: 0.25rem; }
+    @media (max-width: 600px) {
+      .cli-hero h1 { font-size: 2rem; }
+      .cli-hero { padding-top: 3rem; }
+      .install-box { font-size: 0.9rem; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner container">
+      <a href="../index.html" class="nav-logo">SchemaLens</a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../api.html">API</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cli-hero">
+    <h1>SchemaLens CLI</h1>
+    <p class="lead">Diff SQL schemas and generate migrations from your terminal. Zero install with <code>npx</code>. The exact same engine as the web app — locally, offline, and scriptable.</p>
+    <div class="install-box">
+      <code>npx schemalens-cli diff old.sql new.sql</code>
+      <button class="copy-btn" onclick="copyInstall()">Copy</button>
+    </div>
+    <div class="hero-badges">
+      <span class="badge">📦 1.0.0</span>
+      <span class="badge">⚡ Zero dependencies</span>
+      <span class="badge">🔒 100% offline</span>
+      <span class="badge">🐧 Linux / Mac / Windows</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Why use the CLI?</h2>
+    <p class="sub">Some developers prefer the terminal. We get it. The CLI runs the same custom parser and diff engine as the browser — no network, no API keys for basic usage.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>⚡ Instant</h3>
+        <p>No install required. Run <code>npx schemalens-cli</code> and diff schemas immediately. Perfect for one-off checks.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 Private</h3>
+        <p>Your SQL never leaves your machine. The CLI runs entirely locally with zero network calls for parsing and diffing.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🤖 CI-Ready</h3>
+        <p>JSON output and strict mode make it easy to integrate into GitHub Actions, GitLab CI, or any CI/CD pipeline.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📄 Multiple Formats</h3>
+        <p>Pretty-printed terminal output, JSON for machines, Markdown for PRs, and raw SQL for immediate execution.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🛡️ Breaking Change Guard</h3>
+        <p>Set <code>SCHEMALENS_STRICT=1</code> to exit with code 2 when breaking changes are detected. Block dangerous migrations automatically.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🎯 Risk Scoring</h3>
+        <p>Every diff gets a risk score (0-100) based on change severity. Surface high-risk schema changes before they hit production.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>See it in action</h2>
+    <p class="sub">Diff two schemas and get a colorized report with breaking changes, risk score, and migration preview.</p>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="terminal-title">bash — schemalens-cli</span>
+      </div>
+      <div class="terminal-body">
+<span class="cmd">$</span> npx schemalens-cli diff schema-v1.sql schema-v2.sql --dialect postgres<br><br>
+<span class="label">SchemaLens Diff Report</span><br>
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span><br><br>
+<span class="success">✓</span> Tables added: <span class="number">2</span><br>
+<span class="danger">✗</span> Tables removed: <span class="number">0</span><br>
+<span class="warn">~</span> Tables modified: <span class="number">3</span><br><br>
+<span class="label">Risk Score:</span> <span class="warn">42 / 100</span> (Medium)<br>
+<span class="label">Breaking Changes:</span> <span class="number">1</span><br><br>
+<span class="comment"># Migration Preview (first 5 lines)</span><br>
+<span class="keyword">ALTER TABLE</span> users <span class="keyword">DROP COLUMN</span> phone;<br>
+<span class="keyword">ALTER TABLE</span> orders <span class="keyword">ADD COLUMN</span> tracking_id <span class="string">VARCHAR</span>(64);<br>
+<span class="keyword">CREATE TABLE</span> audit_log (...);<br><br>
+<span class="comment"># Export full migration with Pro</span><br>
+<span class="cmd">$</span> npx schemalens-cli diff schema-v1.sql schema-v2.sql --format sql --output migration.sql
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Output formats</h2>
+    <p class="sub">Choose the format that fits your workflow. All formats are available in the free CLI.</p>
+    <div class="output-formats">
+      <div class="format-card">
+        <div class="icon">🎨</div>
+        <h4>Pretty</h4>
+        <p>Colorized terminal output with summary, risk score, and migration preview. Default.</p>
+      </div>
+      <div class="format-card">
+        <div class="icon">🤖</div>
+        <h4>JSON</h4>
+        <p>Machine-readable output for CI/CD pipelines, custom scripts, and automation.</p>
+      </div>
+      <div class="format-card">
+        <div class="icon">📝</div>
+        <h4>Markdown</h4>
+        <p>Human-readable report perfect for PR descriptions and team documentation.</p>
+      </div>
+      <div class="format-card">
+        <div class="icon">⚙️</div>
+        <h4>SQL</h4>
+        <p>Ready-to-run ALTER TABLE and CREATE TABLE script for your target dialect.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Supported dialects</h2>
+    <p class="sub">One CLI. Five SQL dialects. Switch with a single flag.</p>
+    <div class="dialect-grid">
+      <div class="dialect-badge"><span>🐘</span>PostgreSQL</div>
+      <div class="dialect-badge"><span>🐬</span>MySQL / MariaDB</div>
+      <div class="dialect-badge"><span>🪶</span>SQLite</div>
+      <div class="dialect-badge"><span>🟦</span>SQL Server</div>
+      <div class="dialect-badge"><span>🔶</span>Oracle</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>CLI vs Web App</h2>
+    <p class="sub">Same engine. Different interfaces. Pick what fits your workflow.</p>
+    <table class="compare-table">
+      <tr><th>Feature</th><th>CLI</th><th>Web App</th></tr>
+      <tr><td>Install required</td><td>❌ No (npx)</td><td>❌ No (browser)</td></tr>
+      <tr><td>Internet required</td><td>❌ No</td><td>⚠️ For page load only</td></tr>
+      <tr><td>Visual diff viewer</td><td>❌ Terminal only</td><td>✅ Interactive UI</td></tr>
+      <tr><td>Shareable links</td><td>❌ No</td><td>✅ Yes</td></tr>
+      <tr><td>CI/CD integration</td><td>✅ Native</td><td>✅ Via API</td></tr>
+      <tr><td>Export formats</td><td>JSON / Markdown / SQL</td><td>Markdown / PDF / SQL / JSON / Prisma / Drizzle</td></tr>
+      <tr><td>Breaking change guard</td><td>✅ Exit code 2</td><td>✅ Visual warning</td></tr>
+      <tr><td>Free tier limit</td><td>10 tables</td><td>10 tables</td></tr>
+      <tr><td>Pro unlock</td><td>License key</td><td>License key</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Use it in CI/CD</h2>
+    <p class="sub">Fail the build when breaking schema changes are detected.</p>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="terminal-title">.github/workflows/schema-diff.yml</span>
+      </div>
+      <div class="terminal-body">
+<span class="keyword">-</span> <span class="string">name:</span> Diff schemas<br>
+&nbsp;&nbsp;<span class="string">run:</span> |<br>
+&nbsp;&nbsp;&nbsp;&nbsp;npx schemalens-cli diff \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schemas/production.sql \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schemas/staging.sql \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--dialect postgres \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--format markdown \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--output diff-report.md<br>
+&nbsp;&nbsp;<span class="string">env:</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="label">SCHEMALENS_STRICT:</span> <span class="number">1</span><br><br>
+<span class="comment"># This step fails (exit code 2) if breaking changes are found</span>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:1.5rem;"><a href="../ci-cd-integration.html" class="btn btn-secondary">Full CI/CD Guide →</a></p>
+  </div>
+
+  <div class="cta-box">
+    <h3>Upgrade to Pro for unlimited diffs</h3>
+    <p>The CLI free tier handles up to 10 tables per diff. Pro unlocks unlimited schemas, full SQL export, and all future CLI updates.</p>
+    <div class="cta-buttons">
+      <a href="https://gumroad.com/l/schemalens-pro" class="btn btn-primary">Get Pro — $12/mo</a>
+      <a href="../app.html" class="btn btn-secondary">Try the Web App</a>
+    </div>
+    <p style="margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">Or run <code style="color:var(--secondary);">npx schemalens-cli</code> right now — no signup needed.</p>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong><br>
+        Compare SQL schemas. Spot changes instantly. Generate migrations.
+      </div>
+      <div class="footer-links">
+        <a href="../tools.html">All Tools</a>
+        <a href="../app.html">App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../api.html">API</a>
+        <a href="../how-it-works.html">How It Works</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyInstall() {
+      const text = 'npx schemalens-cli diff old.sql new.sql';
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+  </script>
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
