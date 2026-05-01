@@ -124,6 +124,7 @@ module.exports = async (req, res) => {
     'sample_loaded',
     'breaking_changes_viewed',
     'ref_click',
+    'ref_visit',
     'share_cta_clicked',
     'demo_auto_run'
   ]);

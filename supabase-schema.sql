@@ -277,3 +277,36 @@ CREATE POLICY "Users can delete own comments" ON public.diff_comments
 
 CREATE INDEX IF NOT EXISTS idx_diff_comments_diff ON public.diff_comments(saved_diff_id, table_name);
 CREATE INDEX IF NOT EXISTS idx_diff_comments_created_at ON public.diff_comments(created_at DESC);
+
+-- ============================================
+-- affiliate_applications: referral program applicants
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.affiliate_applications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  website TEXT NOT NULL,
+  plan TEXT NOT NULL DEFAULT 'blog',
+  status TEXT NOT NULL DEFAULT 'pending',
+  ref_code TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.affiliate_applications ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts for affiliate applications
+CREATE POLICY "Allow anonymous affiliate inserts" ON public.affiliate_applications
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read applications
+CREATE POLICY "Only service role can read affiliates" ON public.affiliate_applications
+  FOR SELECT TO service_role USING (true);
+
+-- Only service role can update applications
+CREATE POLICY "Only service role can update affiliates" ON public.affiliate_applications
+  FOR UPDATE TO service_role USING (true);
+
+CREATE INDEX IF NOT EXISTS idx_affiliate_status ON public.affiliate_applications(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_affiliate_email ON public.affiliate_applications(email);

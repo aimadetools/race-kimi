@@ -6014,10 +6014,11 @@ async function loadPublicDiff(publicId) {
 function showSharedBanner(name, source) {
   const unlocked = isProUnlocked();
   const container = document.getElementById('errorContainer');
-  let actions = `<a href="index.html?ref=shared-diff" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
-  actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html?ref=shared-diff" style="color:var(--primary);">Calculate migration cost</a>`;
+  const refCode = (() => { try { return localStorage.getItem('schemalens_ref') || 'shared-diff'; } catch(e) { return 'shared-diff'; } })();
+  let actions = `<a href="index.html?ref=${encodeURIComponent(refCode)}" style="color:var(--primary);font-weight:600;">Start your own diff →</a>`;
+  actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="tools/migration-cost-calculator.html?ref=${encodeURIComponent(refCode)}" style="color:var(--primary);">Calculate migration cost</a>`;
   if (!unlocked) {
-    actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html?ref=shared-diff" style="color:var(--primary);">Upgrade to Pro</a>`;
+    actions += ` <span style="color:var(--text-muted);margin:0 8px;">|</span> <a href="pricing.html?ref=${encodeURIComponent(refCode)}" style="color:var(--primary);">Upgrade to Pro</a>`;
   }
   container.innerHTML = `<div class="error-banner" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.35);color:var(--text);">
     <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
@@ -6044,9 +6045,10 @@ function isViewingSharedDiff() {
 function renderPoweredByBadge() {
   const container = document.getElementById('poweredByBadge');
   if (!container) return;
+  const refCode = (() => { try { return localStorage.getItem('schemalens_ref') || 'shared-diff'; } catch(e) { return 'shared-diff'; } })();
   container.innerHTML = `
     <div class="powered-by-badge">
-      <div>🔍 <a href="index.html?ref=shared-diff" onclick="trackRefClick('shared-diff')">Powered by SchemaLens</a></div>
+      <div>🔍 <a href="index.html?ref=${encodeURIComponent(refCode)}" onclick="trackRefClick('${refCode}')">Powered by SchemaLens</a></div>
       <div class="tagline">Compare SQL schemas in your browser. Generate migrations in 5 dialects. No signup required.</div>
     </div>`;
 }
@@ -6680,5 +6682,6 @@ function escapeHtml(text) {
 renderDiffHistory();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
 </body>
 </html>

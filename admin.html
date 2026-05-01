@@ -265,6 +265,10 @@
           <div class="value" id="statPending">—</div>
           <div class="label">Pending</div>
         </div>
+        <div class="admin-stat">
+          <div class="value" id="statAffiliates">—</div>
+          <div class="label">Affiliates</div>
+        </div>
       </div>
 
       <div class="admin-section">
@@ -360,6 +364,20 @@
         <div class="admin-actions-bar">
           <button onclick="refreshLeads()">Refresh</button>
           <button class="primary" onclick="exportLeads()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>🤝 Affiliate Applications</h3>
+          <span class="admin-badge" id="badgeAffiliates">0</span>
+        </div>
+        <div class="admin-section-body" id="affiliatesBody">
+          <div class="admin-empty">Loading affiliate applications…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshAffiliates()">Refresh</button>
+          <button class="primary" onclick="exportAffiliates()">Export CSV</button>
         </div>
       </div>
 
@@ -909,6 +927,49 @@
       downloadCsv('schemalens-leads.csv', headers, rows);
     }
 
+    async function refreshAffiliates() {
+      const body = document.getElementById('affiliatesBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('affiliate-applications');
+        const pending = data.filter(a => a.status === 'pending').length;
+        document.getElementById('statAffiliates').textContent = data.length;
+        document.getElementById('badgeAffiliates').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No affiliate applications yet.</div>';
+          return;
+        }
+        const rows = data.map(a => `
+          <tr>
+            <td>${formatDate(a.created_at)}</td>
+            <td>${a.name}</td>
+            <td>${a.email}</td>
+            <td>${a.website || '—'}</td>
+            <td><span class="admin-badge ${a.status === 'approved' ? 'success' : a.status === 'rejected' ? 'danger' : 'warning'}">${a.status}</span></td>
+            <td>${a.ref_code || '—'}</td>
+            <td><pre>${a.notes || ''}</pre></td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Website</th><th>Status</th><th>Ref Code</th><th>Notes</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load affiliates.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
+    function exportAffiliates() {
+      const table = document.querySelector('#affiliatesBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-affiliate-applications.csv', headers, rows);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
@@ -917,6 +978,7 @@
       refreshFunnel();
       refreshAnalytics();
       refreshLeads();
+      refreshAffiliates();
     }
   </script>
 </body>
