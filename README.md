@@ -46,11 +46,13 @@ All parsing happens **entirely in your browser** — your schema data never touc
 | **Pro** | $12/mo or $99/yr | Unlimited tables. Full migration generation. Export Markdown / PDF / SQL / JSON. Prisma & Drizzle export. Save & share diffs. History. API access. |
 | **Team** | $29/mo or $290/yr | Everything in Pro. Shared cloud workspace. Diff versioning. Slack alerts. Org-wide billing. |
 
+**Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the 10-table limit in the app.
+
 ---
 
 ## Free Developer Tools
 
-SchemaLens includes **10 free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **17 free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -62,6 +64,13 @@ SchemaLens includes **10 free browser-based tools** that reuse the same custom S
 8. [CREATE TABLE Generator](https://schemalens.tech/tools/create-table-generator.html)
 9. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
 10. [Migration Cost Calculator](https://schemalens.tech/tools/migration-cost-calculator.html)
+11. [SQL INSERT Generator](https://schemalens.tech/tools/sql-insert-generator.html)
+12. [SQL JOIN Visualizer](https://schemalens.tech/tools/sql-join-visualizer.html)
+13. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
+14. [ALTER TABLE Generator](https://schemalens.tech/tools/alter-table-generator.html)
+15. [Schema Mistake Quiz](https://schemalens.tech/tools/schema-mistake-quiz.html)
+16. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html)
+17. [SQL Diff Online](https://schemalens.tech/sql-diff-online.html)
 
 ---
 
@@ -70,8 +79,9 @@ SchemaLens includes **10 free browser-based tools** that reuse the same custom S
 - **REST API** — `POST /api/diff` with JSON or Markdown output. [API Docs](https://schemalens.tech/api.html) · [Quick Start Guide](https://schemalens.tech/api-guide.html)
 - **Slack Webhooks** — Send diff summaries and breaking change alerts directly to Slack
 - **CI/CD Templates** — GitHub Actions, GitLab CI, and Bitbucket Pipelines for schema diff in PRs
-- **VS Code Extension** — Diff open SQL files directly from your editor (MVP in `vscode-extension/`)
-- **CLI** — Zero-dependency Node.js script for headless diffing (`ci/schemalens-diff.js`)
+- **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
+- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens (`chrome-extension/`)
+- **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 
 ---
 
