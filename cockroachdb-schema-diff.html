@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>SQL Server Schema Diff Online — Compare & Migrate MSSQL Databases</title>
-  <meta name="description" content="Compare two SQL Server schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
-  <meta property="og:title" content="SQL Server Schema Diff Online — Compare & Migrate MSSQL Databases">
-  <meta property="og:description" content="Compare two SQL Server schemas side by side. Generate ALTER TABLE migration scripts instantly.">
+  <title>CockroachDB Schema Diff Online — Compare & Migrate CockroachDB Schemas</title>
+  <meta name="description" content="Compare two CockroachDB schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
+  <meta property="og:title" content="CockroachDB Schema Diff Online — Compare & Migrate CockroachDB Schemas">
+  <meta property="og:description" content="Compare two CockroachDB schemas side by side. Generate ALTER TABLE migration scripts instantly.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/sql-server-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/cockroachdb-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -63,12 +63,12 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        SQL Server schema diff — free to use
+        CockroachDB schema diff — free to use
       </div>
-      <h1>SQL Server Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two SQL Server schema scripts. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for SQL Server — all in your browser.</p>
+      <h1>CockroachDB Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code> cockroachdb dump --dump-mode=schema </code> outputs. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for CockroachDB — all in your browser.</p>
       <div class="hero-actions">
-        <a href="app.html?dialect=mssql" class="btn btn-primary btn-lg">Diff SQL Server Schemas</a>
+        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff CockroachDB Schemas</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -77,38 +77,38 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Built for SQL Server workflows</h2>
-      <p class="section-subtitle text-center">SchemaLens understands SQL Server-specific syntax that generic diff tools miss.</p>
+      <h2 class="section-title text-center">Built for CockroachDB workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands CockroachDB-specific syntax that generic diff tools miss.</p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🪟</div>
-          <h3>IDENTITY &amp; Sequences</h3>
-          <p>Correctly detects <code>IDENTITY(1,1)</code> columns, seed changes, and increment modifications across schema versions.</p>
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🪳</div>
+          <h3>SERIAL &amp; UUID Primary Keys</h3>
+          <p>Correctly detects <code>SERIAL</code>, <code>UUID</code>, and <code>ROWID</code> primary key changes across schema versions.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📦</div>
-          <h3>Bracket-Quoted Identifiers</h3>
-          <p>Handles bracket-quoted identifiers (<code>[table name]</code>) exactly like SQL Server does, preserving spaces and reserved words.</p>
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🌍</div>
+          <h3>GEOGRAPHY &amp; GEOMETRY</h3>
+          <p>Recognizes <code>GEOGRAPHY</code> and <code>GEOMETRY</code> spatial types, plus <code>GEOMETRYCOLLECTION</code> and related SRID constraints.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
           <h3>Constraints &amp; Indexes</h3>
-          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and CLUSTERED/NONCLUSTERED indexes — all compared semantically.</p>
+          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and inverted indexes — all compared semantically, not by raw text.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
-          <h3>Named Default Constraints</h3>
-          <p>Generates <code>DF_table_column</code> convention names for default constraints, saving you from manual lookup.</p>
+          <h3>Quoted Identifiers</h3>
+          <p>Handles double-quoted identifiers (<code>"User"</code>) and mixed-case table names exactly like CockroachDB does.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
-          <h3>NVARCHAR &amp; Unicode</h3>
-          <p>Preserves <code>NVARCHAR</code>, <code>NCHAR</code>, and <code>NTEXT</code> types with length specifications so your migrations stay exact.</p>
+          <h3>Array &amp; JSONB Columns</h3>
+          <p>Recognizes <code>INTEGER[]</code>, <code>TEXT[]</code>, <code>JSONB</code>, and warns when these advanced types appear so nothing slips through.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
           <h3>Privacy First</h3>
-          <p>Your schema never leaves the browser. Compare production SQL Server schemas safely without uploading to any third-party server.</p>
+          <p>Your schema never leaves the browser. Compare production schemas safely without uploading sensitive table structures to a third-party server.</p>
         </div>
       </div>
     </div>
@@ -121,12 +121,12 @@
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
           <h3>Export your schemas</h3>
-          <p>Use SQL Server Management Studio or <code>sqlcmd</code> to script the database schema from both databases.</p>
+          <p>Run <code>cockroachdb dump --dump-mode=schema old_db > old.sql</code> on both databases.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
           <h3>Paste into SchemaLens</h3>
-          <p>Copy the SQL into the two editor panes. Dialect is automatically set to SQL Server.</p>
+          <p>Copy the SQL into the two editor panes. Select PostgreSQL dialect — CockroachDB is PostgreSQL-wire compatible.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
@@ -144,30 +144,29 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">SQL Server migration examples</h2>
+      <h2 class="section-title text-center">CockroachDB migration examples</h2>
       <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
       <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
         <div class="feature-card">
           <h3>Column type change</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [users]
-  ALTER COLUMN [bio] NVARCHAR(500);</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "users"
+  ALTER COLUMN "bio" TYPE VARCHAR(500);</code></pre>
         </div>
         <div class="feature-card">
           <h3>Add a new column</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [orders]
-  ADD [shipped_at] DATETIME;</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "orders"
+  ADD COLUMN "shipped_at" TIMESTAMP;</code></pre>
         </div>
         <div class="feature-card">
           <h3>Add a foreign key</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [comments]
-  ADD CONSTRAINT [fk_comments_post]
-  FOREIGN KEY ([post_id]) REFERENCES [posts]([id]);</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "comments"
+  ADD CONSTRAINT "fk_comments_post"
+  FOREIGN KEY ("post_id") REFERENCES "posts"("id");</code></pre>
         </div>
         <div class="feature-card">
           <h3>Set a default value</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [tasks]
-  ADD CONSTRAINT [DF_tasks_status]
-  DEFAULT 'pending' FOR [status];</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "tasks"
+  ALTER COLUMN "status" SET DEFAULT 'pending';</code></pre>
         </div>
       </div>
     </div>
@@ -179,16 +178,16 @@
       <div class="blog-grid">
         <article class="blog-card">
           <div class="blog-content">
-            <span class="blog-meta">SQL Server</span>
-            <h3><a href="blog/sql-server-schema-migrations.html">SQL Server Schema Migrations: A Practical Guide</a></h3>
-            <p>Learn ALTER TABLE syntax, identity columns, bracket quoting, and how to diff MSSQL schemas safely.</p>
+            <span class="blog-meta">PostgreSQL</span>
+            <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step workflow for catching schema drift between staging and production.</p>
           </div>
         </article>
         <article class="blog-card">
           <div class="blog-content">
             <span class="blog-meta">Migration</span>
             <h3><a href="blog/postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></h3>
-            <p>8 practical differences that trip up developers switching between databases.</p>
+            <p>8 practical differences that trip up developers switching between the two databases.</p>
           </div>
         </article>
         <article class="blog-card">
@@ -204,9 +203,9 @@
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Ready to diff your SQL Server schemas?</h2>
+      <h2>Ready to diff your CockroachDB schemas?</h2>
       <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
-      <a href="app.html?dialect=mssql" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Start Comparing Free</a>
       <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
     </div>
   </section>
