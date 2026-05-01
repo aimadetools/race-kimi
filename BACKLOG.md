@@ -79,6 +79,10 @@
 - **Content:** Blog post #42 (5-minute SQL schema review workflow). Updated sitemap.
 - **Video content system:** 5 video scripts, automated 1080×1920 reel generator (`generate-reels.py` + `video-renderer.html`), 5 WebM videos + thumbnails, `video-tips.html` landing page with schema.org VideoGallery markup.
 
+### Days 49–50 (May 1)
+- **Conversion:** 24-hour Pro trial (no signup/no CC), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page.
+- **SEO:** Supabase Schema Diff landing page (`supabase-schema-diff.html`) and Neon Schema Diff landing page (`neon-schema-diff.html`), both with schema.org SoftwareApplication markup, cross-linked across 30+ page footers.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -102,4 +106,4 @@
 
 ---
 
-*Backlog reprioritized April 30, 2026. Highest-priority unblocked buildable tasks: partner outreach (CI/CD newsletters), BetaList/DevHunt self-submission, Stack Overflow answer drafts, case study with first customer.*
+*Backlog reprioritized May 1, 2026. Highest-priority unblocked buildable tasks: partner outreach (CI/CD newsletters — kit ready, awaiting human email send), BetaList/DevHunt self-submission (materials ready), additional platform-specific SEO pages (PlanetScale, Railway, Firebase), Stack Overflow answer drafts (materials ready, need account with rep).*
