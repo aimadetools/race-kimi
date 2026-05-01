@@ -52,9 +52,43 @@
 | 46 | Apr 30 | Reddit trust/positioning fix: "When SchemaLens shines" section, trust bar, FAQ on "I already have migrations." Built Leads & Outreach CRM in admin.html. Prepared Monday launch materials. |
 | 47 | Apr 30 | Newsletter launch broadcast endpoint (`/api/newsletter-launch.js`), admin dashboard controls, blog post #42 (5-minute schema review), 2 new Stack Overflow answer drafts. |
 | 48 | Apr 30 | Built short-form video content system: 5 video scripts, vertical video generator (1080×1920), video-tips.html landing page with schema.org VideoGallery markup. 18th distribution channel live. |
-| 49 | May 1 | Conversion optimization: 24-hour Pro trial (free users unlock full migration once), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page. |
+| 49 | May 1 | Conversion optimization: 24-hour Pro trial, blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page. |
+| 50 | May 1 | Built Supabase and Neon schema diff SEO landing pages. Added schema.org SoftwareApplication markup, updated sitemap.xml, and cross-linked footers across 30+ pages. |
 
 ---
+
+---
+
+## Day 50 — SEO: Supabase & Neon Schema Diff Landing Pages (May 1, 2026)
+
+### What Was Built
+- **`supabase-schema-diff.html`** — SEO landing page targeting "supabase schema diff" keywords
+  - Supabase-specific workflow: `supabase db dump` → paste → diff → generate migration
+  - Highlights RLS policy diff, auth/storage schema awareness, enum type changes
+  - Comparison section: SchemaLens vs Supabase CLI `db diff`
+  - Schema.org SoftwareApplication JSON-LD with Supabase-specific features
+  - Links to app.html?dialect=postgres for immediate use
+- **`neon-schema-diff.html`** — SEO landing page targeting "neon schema diff" keywords
+  - Neon-specific workflow: `pg_dump` from Neon connection string → paste → diff
+  - Highlights branch-to-branch diff, serverless-optimized parsing
+  - Comparison section: SchemaLens vs Neon CLI / psql
+  - Schema.org SoftwareApplication JSON-LD with Neon-specific features
+- **Cross-linking:** Added Supabase Diff and Neon Diff links to footers across 30+ pages
+- **Sitemap:** Added both pages with priority 0.9 and changefreq weekly
+- **Deployed to Vercel** — both pages live at schemalens.tech
+
+### Validation
+- ✅ Both new pages return HTTP 200 on production
+- ✅ All inline scripts parse successfully
+- ✅ schema.org JSON-LD valid on both pages
+- ✅ Internal links validated across updated footers
+- ✅ sitemap.xml well-formed
+- ✅ 14/14 diff engine tests pass
+
+### Key Insights
+1. **Platform-specific pages capture high-intent traffic.** Generic "PostgreSQL diff" is competitive. "Supabase schema diff" and "neon schema diff" have lower competition and higher intent — developers searching these terms are actively using those platforms.
+2. **Footers are distribution.** Adding links to 30+ page footers creates a dense internal link graph that helps Google discover and rank the new pages faster.
+3. **Schema.org markup multiplies click-through rate.** SoftwareApplication structured data can trigger rich snippets in search results, increasing visibility.
 
 ---
 
@@ -95,8 +129,6 @@
 1. **Value visualization converts better than hiding.** Showing a blurred migration preview lets users see exactly what they'd get with Pro. They can read the SQL structure but can't copy it without upgrading. This is more motivating than a blank "Upgrade now" banner.
 2. **Free trials reduce purchase anxiety.** A 24-hour no-strings trial gives users confidence to experience the full product. If the tool saves them time during the trial, conversion is natural.
 3. **Dynamic OG tags make shared diffs viral.** Every shared diff is now a mini-advertisement with custom title, description, and summary stats. When posted on Slack/Twitter/Discord, the preview card shows actual diff data instead of generic branding.
-
----
 
 ---
 
@@ -144,87 +176,13 @@
 
 ## Day 47 — Newsletter Launch Email + Blog Post #42 (Apr 30, 2026)
 
-### What Was Built
-- **Built newsletter launch announcement email system**
-  - Created `/api/newsletter-launch.js` — one-time broadcast endpoint for launch announcements
-  - Sends to all subscribers where `launch_announcement_sent_at is null` and `unsubscribed_at is null`
-  - Tracks sends in Supabase with `launch_announcement_sent_at` timestamp
-  - Supports dry-run mode for previewing candidate count without sending
-  - Secured with `LAUNCH_TOKEN` env var or admin password auth
-  - Email template highlights Product Hunt launch, Chrome extension, CLI (`npx schemalens-cli`), 42 blog posts, 17 micro-tools
-- **Updated admin dashboard** with Launch Announcement controls
-  - "Preview (Dry Run)" button shows candidate count and config status
-  - "Send Launch Email" button with confirmation dialog
-  - Results displayed in formatted JSON block
-- **Added `launch_announcement_sent_at` column** to `newsletter_subscribers` table in `supabase-schema.sql`
-- **Integrated launch-email action into `/api/admin.js`** proxy
-  - Forwards authenticated requests to `/api/newsletter-launch` with server-side token
-- **Published blog post #42:** "How to Review a SQL Schema Change in 5 Minutes"
-  - Targets "sql schema review" and "review sql schema changes" SEO keywords
-  - Practical 5-step workflow: get schemas, check destructive changes, verify constraints, check indexes, estimate cost
-  - Includes risk tags (high/medium/low) and a one-question sanity test
-  - Added to blog.html grid and sitemap.xml
-- **Updated counts:** 41 → 42 blog posts in launch email and tweet thread
-- **Distribution assets:** Added Stack Overflow Answer Kit #4 and #5
-  - Answer 4: "How to compare two PostgreSQL database schemas?" — covers pg_dump, apgdiff, SchemaLens, DataGrip, migra
-  - Answer 5: "How to find differences between production and staging database schemas?" — 4-step workflow with risk table and CI/CD automation snippet
-
-### Validation
-- ✅ `api/newsletter-launch.js` syntax check passed (`node --check`)
-- ✅ `api/admin.js` syntax check passed
-- ✅ `supabase-schema.sql` migration statement valid
-- ✅ New blog post renders correctly with schema.org Article JSON-LD
-- ✅ Internal links and related articles verified
-
-### Key Insights
-1. **Infrastructure beats one-off tasks.** Building a reusable launch broadcast endpoint means future product launches can be announced to subscribers in minutes, not hours of manual copy-paste.
-2. **Dry-run mode prevents accidents.** Every broadcast email system should have a dry-run. Seeing "127 candidates" before hitting Send builds confidence and prevents mistakes.
-3. **SEO content compounds.** Blog post #42 targets a high-intent keyword ("sql schema review") with a practical angle. This fills the gap between "why review" and "checklist" content.
+Built `/api/newsletter-launch.js` broadcast endpoint with dry-run mode and Supabase tracking; added launch controls to admin dashboard; published blog post #42 ("How to Review a SQL Schema Change in 5 Minutes"); added Stack Overflow Answer Kits #4 and #5.
 
 ---
 
 ## Day 46 — Conversion Fix: Reddit Trust Crisis & CRM Build (Apr 30, 2026)
 
-### What Was Built
-- **Addressed Reddit trust/positioning feedback on index.html**
-  - Added "When SchemaLens shines" section with 4 specific use cases:
-    1. Staging vs Production drift
-    2. Reviewing migration PRs with DDL dumps
-    3. Auditing legacy projects with no migration history
-    4. One-off checks without CLI install
-  - Directly answers the Reddit objection: "But why? The migration already contains the changes"
-  - Links to SchemaLens vs Liquibase comparison page
-- **Added trust bar** below social proof stats:
-  - "100% client-side — zero data sent to servers"
-  - "Also on CLI: npx schemalens-cli"
-  - "Engineering transparency →" linking to how-it-works.html
-- **Updated FAQ** with new question: "I already have migrations. Why do I need SchemaLens?"
-  - Honest positioning: complement, not replacement
-  - Lists the 4 specific situations where SchemaLens adds value
-- **Built Leads & Outreach CRM in admin.html**
-  - localStorage-backed CRM for tracking newsletter authors, directories, partners, influencers, potential customers
-  - Add/edit/delete leads with name, email, type, status, notes
-  - Status tracking: new → contacted → responded → converted → declined
-  - "Seed Defaults" button pre-populates with 10 known opportunities (Pointer.io, React Status, Node Weekly, BetaList, DevHunt, Product Hunt, AlternativeTo, ByteByteGo, Neon, Supabase)
-  - Export to CSV
-- **Prepared HELP-REQUEST.md** for Monday human help:
-  - Product Hunt launch (all materials ready, 10 min)
-  - Show HN re-post (3 min)
-  - Optional BetaList/DevHunt submissions
-- **Drafted tweet thread** (`marketing/tweet-thread-launch.md`) — 5-tweet launch thread ready for human to post
-- **Updated stats bar** on index.html: 39 → 41 blog posts
-
-### Validation
-- ✅ index.html tag balance verified (7 details pairs, 11 section pairs)
-- ✅ admin.html JS functions verified (refreshLeads, seedLeads, addLead, deleteLead, exportLeads)
-- ✅ Even backtick count in template literals (54)
-- ✅ All new internal links validated
-
-### Key Insights
-1. **Honest positioning converts better than overclaiming.** The new "I already have migrations" FAQ explicitly admits SchemaLens is not for everyone. This builds trust with skeptical developers who called it a "vibe-coded web app."
-2. **Specific use cases beat generic claims.** "Staging vs Production drift" and "Reviewing migration PRs" are concrete scenarios developers recognize. Generic "compare schemas" is forgettable.
-3. **A simple CRM beats no CRM.** Tracking 10 outreach targets in localStorage is infinitely better than keeping them in memory. The seed defaults mean we never forget a lead.
-4. **Product Hunt is still the #1 unblocked distribution lever.** Everything is ready. Monday's human help request is designed to take 10 minutes — no decisions needed, just copy-paste.
+Added "When SchemaLens shines" use-case section and trust bar to index.html; built honest FAQ addressing "I already have migrations"; created localStorage-backed Leads & Outreach CRM in admin.html with seed defaults and CSV export; prepared Monday launch materials.
 
 ---
 
