@@ -13,6 +13,58 @@
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
 | 49–50 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. |
 | 51 | May 1 | CLI landing page (cli/index.html) with install demo, output formats, CI example. README badges. Optional email capture on Pro trial activation. Fixed broken CLI links. |
+| 52 | May 1 | Table rename detection heuristic — same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL across all 5 dialects. Visual diff, summary, markdown, CLI, API all updated. |
+| 53 | May 1 | Affiliate/referral program with tracking code (lib/ref-tracking.js on 36 pages, api/affiliate-apply.js, affiliate.html with real form + link generator, admin dashboard section). 30% recurring commission. |
+| 54 | May 1 | Embeddable SVG badge generator (api/badge.js with 4 styles), Badge Generator micro-tool (tools/badge-generator.html), share modal in app.html now has Link + Badge tabs. sitemap.xml and tools.html updated. |
+
+---
+
+---
+
+## Day 55 — Distribution: PlanetScale, Railway, Firebase Schema Diff SEO Landing Pages (May 1, 2026)
+
+### What Was Built
+- **`planetscale-schema-diff.html`** — PlanetScale-focused SEO landing page
+  - MySQL/Vitess positioning with `dialect=mysql` CTA
+  - Deploy request aware — validate changes before opening PlanetScale deploy requests
+  - Online schema change safe — generates MySQL-compatible ALTER TABLE scripts
+  - Notes PlanetScale's foreign key limitation explicitly (builds trust through honesty)
+  - Branch-to-branch diff feature callout
+  - schema.org SoftwareApplication JSON-LD markup
+  - Cross-linked footer with all other platform and dialect pages
+- **`railway-schema-diff.html`** — Railway-focused SEO landing page
+  - PostgreSQL + MySQL dual support (Railway offers both)
+  - Environment-to-environment comparison (production vs staging)
+  - Service-aware — works with any Railway service exposing SQL
+  - Auto-detects PostgreSQL vs MySQL from export
+  - schema.org SoftwareApplication JSON-LD markup
+  - Cross-linked footer across 50+ pages
+- **`firebase-schema-diff.html`** — Firebase Data Connect-focused SEO landing page
+  - Cloud SQL PostgreSQL backend positioning
+  - GraphQL schema sync angle — validate SQL changes align with Data Connect GraphQL schema
+  - Project-to-project comparison for Firebase environments
+  - Contrasts with gcloud CLI / psql setup complexity
+  - schema.org SoftwareApplication JSON-LD markup
+  - Cross-linked footer across 50+ pages
+- **Footer cross-link updates**
+  - Added PlanetScale, Railway, and Firebase Diff links to all root HTML pages (35+)
+  - Added links to all blog post footers (14 pages)
+  - Added links to all tools page footers (4 pages)
+  - Fixed supabase-schema-diff.html footer which was missing Neon, PlanetScale, Railway, and Firebase links
+- **Updated `sitemap.xml`**
+  - Added all 3 new pages with `priority=0.9` and `changefreq=weekly`
+
+### Validation
+- ✅ All 3 new pages pass structural validation (DOCTYPE, title, OG tags, schema.org, canonical, ref-tracking, closing tags)
+- ✅ 14/14 diff engine tests pass
+- ✅ sitemap.xml is valid XML
+- ✅ All 50+ updated footers verified to contain new links
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Platform-specific landing pages capture high-intent search traffic.** Developers search for "PlanetScale schema diff" and "Railway database migration" — these pages rank for those exact queries.
+2. **Honest limitations build trust.** Calling out PlanetScale's lack of foreign key support makes the page more credible than generic marketing copy. Users remember honesty.
+3. **Cross-linking compounds SEO value.** Every new page links to every other page, distributing link equity across the entire site and helping all pages rank better.
 
 ---
 

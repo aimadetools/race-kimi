@@ -16,9 +16,9 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [ ] **P1** Build PlanetScale Schema Diff SEO landing page (template: neon-schema-diff.html)
-- [ ] **P1** Build Railway Schema Diff SEO landing page
-- [ ] **P1** Build Firebase Schema Diff SEO landing page
+- [x] **P1** Build PlanetScale Schema Diff SEO landing page (template: neon-schema-diff.html) — DONE May 1
+- [x] **P1** Build Railway Schema Diff SEO landing page — DONE May 1
+- [x] **P1** Build Firebase Schema Diff SEO landing page — DONE May 1
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready — prepare personalized outreach)
 - [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
@@ -86,6 +86,9 @@
 
 ### Day 54 (May 1)
 - **Distribution / Viral loop:** Embeddable SVG badge generator (`api/badge.js` with 4 styles), Badge Generator micro-tool (`tools/badge-generator.html`), share modal in app.html now has Link + Badge tabs. sitemap.xml and tools.html updated.
+
+### Day 55 (May 1)
+- **SEO / Distribution:** PlanetScale, Railway, and Firebase Schema Diff SEO landing pages with schema.org markup, platform-specific feature callouts, and cross-linked footers across 50+ pages. sitemap.xml updated.
 
 ---
 
