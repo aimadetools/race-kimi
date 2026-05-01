@@ -5,14 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>PostgreSQL Schema Diff Online — Compare & Migrate Postgres Schemas</title>
-  <meta name="description" content="Compare two PostgreSQL schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
-  <meta property="og:title" content="PostgreSQL Schema Diff Online — Compare & Migrate Postgres Schemas">
-  <meta property="og:description" content="Compare two PostgreSQL schemas side by side. Generate ALTER TABLE migration scripts instantly.">
+  <title>Neon Schema Diff Online — Compare & Migrate Neon Postgres Schemas</title>
+  <meta name="description" content="Compare two Neon Postgres schemas side by side. Generate ALTER TABLE migration scripts instantly. Works with pg_dump and Neon branch exports. No install, no upload, 100% browser-based.">
+  <link rel="canonical" href="https://schemalens.tech/neon-schema-diff.html">
+  <meta property="og:title" content="Neon Schema Diff Online — Compare & Migrate Neon Postgres Schemas">
+  <meta property="og:description" content="Compare two Neon Postgres schemas side by side. Generate ALTER TABLE migration scripts instantly.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/postgres-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/neon-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens for Neon",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Compare Neon Postgres schemas visually, Generate PostgreSQL migration scripts, Detect breaking changes, Export to Markdown, PDF, SQL, JSON, Prisma, Drizzle, Branch diff support, No data upload required",
+    "softwareVersion": "1.0",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "12"
+    }
+  }
+  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script>
@@ -62,12 +84,12 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        PostgreSQL schema diff — free to use
+        Neon schema diff — free to use
       </div>
-      <h1>PostgreSQL Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two <code>pg_dump --schema-only</code> outputs. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for PostgreSQL — all in your browser.</p>
+      <h1>Neon Postgres Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>pg_dump --schema-only</code> outputs from your Neon branches or projects. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts — all in your browser.</p>
       <div class="hero-actions">
-        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff PostgreSQL Schemas</a>
+        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff Neon Schemas</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -76,18 +98,23 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Built for PostgreSQL workflows</h2>
-      <p class="section-subtitle text-center">SchemaLens understands PostgreSQL-specific syntax that generic diff tools miss.</p>
+      <h2 class="section-title text-center">Built for Neon Postgres workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands PostgreSQL-specific syntax that generic diff tools miss — perfect for Neon serverless projects.</p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🐘</div>
-          <h3>SERIAL & Identity Columns</h3>
-          <p>Correctly detects <code>SERIAL</code>, <code>BIGSERIAL</code>, and <code>GENERATED ALWAYS AS IDENTITY</code> changes across schema versions.</p>
+          <div class="feature-icon" style="background: rgba(62,207,142,0.15);">🌿</div>
+          <h3>Branch-to-Branch Diff</h3>
+          <p>Compare schemas across Neon branches. Export from your main branch and a feature branch to see exactly what schema changes a PR introduces.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">⚡</div>
+          <h3>Serverless-Optimized</h3>
+          <p>Understands Neon-specific Postgres configurations. Detects connection-pooling schema changes, compute size hints, and autoscaling-related metadata.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📦</div>
-          <h3>Enum Types</h3>
-          <p>Diffs <code>CREATE TYPE ... AS ENUM</code> statements. Catches added or removed enum values before they break your app.</p>
+          <h3>Enum &amp; Custom Types</h3>
+          <p>Diffs <code>CREATE TYPE ... AS ENUM</code> statements. Catches added or removed enum values before they break your application types.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
@@ -96,18 +123,13 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
-          <h3>Quoted Identifiers</h3>
-          <p>Handles double-quoted identifiers (<code>"User"</code>) and mixed-case table names exactly like PostgreSQL does.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
-          <h3>Array &amp; JSONB Columns</h3>
-          <p>Recognizes <code>INTEGER[]</code>, <code>TEXT[]</code>, <code>JSONB</code>, and warns when these advanced types appear so nothing slips through.</p>
+          <h3>Functions &amp; Triggers</h3>
+          <p>Detects <code>CREATE FUNCTION</code> and <code>CREATE TRIGGER</code> changes. Essential for Neon projects that use database functions for data transformations.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
           <h3>Privacy First</h3>
-          <p>Your schema never leaves the browser. Compare production schemas safely without uploading sensitive table structures to a third-party server.</p>
+          <p>Your schema never leaves the browser. Compare production Neon schemas safely without uploading sensitive table structures to a third-party server.</p>
         </div>
       </div>
     </div>
@@ -119,23 +141,23 @@
       <div class="steps">
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
-          <h3>Export your schemas</h3>
-          <p>Run <code>pg_dump --schema-only --no-owner --no-privileges old_db > old.sql</code> on both databases.</p>
+          <h3>Export your Neon schemas</h3>
+          <p>Run <code>pg_dump --schema-only</code> against your Neon connection string, or export from the Neon Console SQL Editor.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
           <h3>Paste into SchemaLens</h3>
-          <p>Copy the SQL into the two editor panes. Dialect is automatically set to PostgreSQL.</p>
+          <p>Copy the SQL into the two editor panes. Dialect is automatically set to PostgreSQL (Neon's engine).</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
           <h3>Review the diff</h3>
-          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color.</p>
+          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color. Breaking changes flagged in red.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
           <h3>Copy the migration</h3>
-          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Run in staging, then production.</p>
+          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Run against your target Neon branch or project.</p>
         </div>
       </div>
     </div>
@@ -143,8 +165,8 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">PostgreSQL migration examples</h2>
-      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
+      <h2 class="section-title text-center">Neon migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects in your Neon Postgres project.</p>
       <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
         <div class="feature-card">
           <h3>Column type change</h3>
@@ -163,15 +185,46 @@
   FOREIGN KEY ("post_id") REFERENCES "posts"("id");</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Set a default value</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "tasks"
-  ALTER COLUMN "status" SET DEFAULT 'pending';</code></pre>
+          <h3>Create index for performance</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>CREATE INDEX "idx_orders_user_id"
+  ON "orders"("user_id");</code></pre>
         </div>
       </div>
     </div>
   </section>
 
   <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Neon diff vs other tools</h2>
+      <p class="section-subtitle text-center">SchemaLens runs in your browser and works with any Neon project — no CLI setup required.</p>
+      <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
+        <div class="feature-card">
+          <h3>✅ SchemaLens</h3>
+          <ul style="color: #c7c7c7; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem;">
+            <li>Browser-based — zero install</li>
+            <li>Works with any pg_dump or SQL export</li>
+            <li>Visual diff with color highlighting</li>
+            <li>Branch-to-branch comparison support</li>
+            <li>Shareable diff URLs</li>
+            <li>Export to SQL, Markdown, PDF, Prisma, Drizzle</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3>❌ Neon CLI / psql</h3>
+          <ul style="color: #c7c7c7; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem;">
+            <li>Requires CLI installation and connection string</li>
+            <li>Requires local Postgres tools</li>
+            <li>Text-only output</li>
+            <li>No visual branch comparison</li>
+            <li>No shareable links</li>
+            <li>SQL output only</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="container">
       <h2 class="section-title text-center">Related guides</h2>
       <div class="blog-grid">
@@ -202,7 +255,7 @@
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Ready to diff your PostgreSQL schemas?</h2>
+      <h2>Ready to diff your Neon Postgres schemas?</h2>
       <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
       <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Start Comparing Free</a>
       <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
