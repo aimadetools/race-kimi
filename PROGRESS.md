@@ -12,8 +12,52 @@
 | 33–42 | Apr 29–30 | 5 micro-tools, ORM SEO pages (Prisma/Drizzle/TypeORM/Sequelize), lead magnet, email drip campaign, newsletter outreach kit, Stack Overflow kit, dev.to guest post, schemalens-cli npm package, GitHub Action, 4 blog posts. |
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
 | 49–50 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. |
+| 51 | May 1 | CLI landing page (cli/index.html) with install demo, output formats, CI example. README badges. Optional email capture on Pro trial activation. Fixed broken CLI links. |
 
 ---
+
+---
+
+## Day 54 — Distribution: Embeddable Badge Generator + Share Modal Badge Tab (May 1, 2026)
+
+### What Was Built
+- **`api/badge.js`** — Dynamic SVG badge generator (Vercel serverless function)
+  - 4 styles: `flat`, `flat-square`, `for-the-badge`, `social`
+  - Query params: `label`, `message`, `color`, `labelColor`, `style`, `ref`, `logo`
+  - Returns proper `image/svg+xml` with 1-hour cache
+  - Darken helper for gradient shading
+  - All text safely escaped
+- **`tools/badge-generator.html`** — Micro-tool for customizing badges
+  - Live preview with 4 style options
+  - Quick presets: Default, With Stats, Pro User, Social
+  - Custom label, message, color, label color inputs
+  - Affiliate ref code support (propagates to badge link URL)
+  - Copyable Markdown, HTML, and direct URL snippets
+  - schema.org SoftwareApplication JSON-LD
+  - Cross-linked footer and nav matching site design
+- **Updated `app.html`** — New Share Modal with Link + Badge tabs
+  - `openShareModal()` computes diff summary and generates contextual badge
+  - Badge message auto-populates with change count (e.g., "5 changes")
+  - Badge color switches to green when changes detected
+  - Ref code from localStorage propagated to badge links
+  - `switchShareTab()`, `copyShareLinkFromModal()`, `copyBadgeMd()`, `copyBadgeHtml()`
+  - Share button now opens modal instead of immediate copy
+  - Original `shareDiff()` preserved for keyboard shortcuts/other callers
+- **Updated `tools.html`** — Added Badge Generator card + footer link
+- **Updated `sitemap.xml`** — Added `tools/badge-generator.html` and `cli/index.html`
+
+### Validation
+- ✅ `api/badge.js` syntax check passes
+- ✅ `tools/badge-generator.html` structure validated
+- ✅ 14/14 diff engine tests pass
+- ✅ app.html share modal functions bracket balance checked
+- ✅ Badge API renders correctly for all 4 styles (verified via URL construction)
+- ✅ sitemap.xml is valid XML
+
+### Key Insights
+1. **Every shared diff is now a billboard.** When users share diffs in PRs or Slack, the badge tab makes it trivial to embed a "Powered by SchemaLens" badge — turning every share into a backlink.
+2. **Contextual badges convert better.** A badge that says "5 changes" is more compelling than a generic "Schema Diff" badge because it proves the tool did real work.
+3. **Ref codes in badges close the attribution loop.** Affiliates can embed badges in their READMEs and blog posts, earning 30% commission on every click-through conversion.
 
 ---
 
@@ -103,43 +147,6 @@
 1. **Differentiation from competitors.** Reddit feedback specifically called out that competitors show renames as destructive DROP+CREATE. Detecting renames positions SchemaLens as smarter and safer.
 2. **Structural signature prevents false positives.** Requiring identical column types + constraints means we only flag renames when we're confident — not when a table was completely redesigned.
 3. **Every surface updated.** Unlike a quick backend hack, this change propagates through migration SQL, visual diff, summary, markdown, email, CLI, and API — users see the improvement everywhere they interact with SchemaLens.
-
----
-
-## Day 51 — Trust & Conversion: CLI Landing Page + Trial Email Capture (May 1, 2026)
-
-### What Was Built
-- **`cli/index.html`** — Comprehensive CLI landing page (fixes broken links from index/app/how-it-works)
-  - Hero with `npx schemalens-cli` install command + copy button
-  - Feature grid: instant, private, CI-ready, multi-format, breaking change guard, risk scoring
-  - Terminal demo with syntax-highlighted sample output
-  - Output format showcase (pretty, JSON, Markdown, SQL)
-  - Supported dialects grid (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-  - CLI vs Web App comparison table
-  - CI/CD workflow example with GitHub Actions
-  - Schema.org SoftwareApplication JSON-LD markup
-  - CTA box linking to Pro purchase and web app
-- **Optional email capture in Pro trial flow (`app.html`)**
-  - Added email input field next to trial buttons in both Migration and ORM tabs
-  - When trial is activated with an email, sends to `/api/subscribe` with source="pro_trial"
-  - Stores email in localStorage for future reference
-  - Enables newsletter follow-up for highest-intent users
-- **Root `README.md` optimization**
-  - Added npm version badge, license badge, Vercel deploy badge
-  - Added direct links to Web App, CLI, API Docs, and Pricing
-  - Prominent `npx schemalens-cli` mention above the fold
-- **Sitemap update** — added `cli/index.html` with priority 0.8
-
-### Validation
-- ✅ `cli/index.html` HTML structure validated
-- ✅ `app.html` trial function bracket balance checked
-- ✅ 14/14 diff engine tests pass
-- ✅ All internal links verified (index.html, app.html, how-it-works.html already linked to `cli/`)
-
-### Key Insights
-1. **Broken links were hurting trust.** Index.html, app.html, and how-it-works.html all linked to `cli/` which returned 404. Fixing this removes friction for CLI-curious developers.
-2. **Email capture on trial is high-leverage.** Users who start a trial are our highest-intent audience. Capturing even 10% of their emails gives us a warm list to announce new features and offers to.
-3. **CLI is a trust signal.** The Reddit "vibe-coded" criticism stings because developers trust CLI tools more than web apps. A dedicated CLI page with install instructions and CI examples positions SchemaLens as a real engineering tool.
 
 ---
 

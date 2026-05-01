@@ -15,12 +15,17 @@
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
-### Distribution — Unblocked (Materials Ready)
-- [ ] **P1** Reach out to 5 developer newsletter authors (use `marketing/newsletter-outreach.md`)
-- [ ] **P1** Tweet thread documenting build process (draft ready for human to post)
-- [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
+### Distribution — Unblocked (Buildable Now)
+- [ ] **P1** Build PlanetScale Schema Diff SEO landing page (template: neon-schema-diff.html)
+- [ ] **P1** Build Railway Schema Diff SEO landing page
+- [ ] **P1** Build Firebase Schema Diff SEO landing page
+- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready — prepare personalized outreach)
+- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
+- [ ] **P2** Tweet thread documenting build process (draft ready for human to post)
+- [ ] **P2** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
 ### Product — Conversion & Retention (Unblocked)
+- [ ] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -79,16 +84,22 @@
 - **Product:** Table rename detection heuristic — same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL across all 5 dialects. Visual diff, summary, markdown, CLI, API all updated.
 - **Distribution:** Affiliate/referral program with tracking code (`lib/ref-tracking.js` on 36 pages, `api/affiliate-apply.js`, `affiliate.html` with real form + link generator, admin dashboard section). 30% recurring commission. Addresses word-of-mouth distribution gap.
 
+### Day 54 (May 1)
+- **Distribution / Viral loop:** Embeddable SVG badge generator (`api/badge.js` with 4 styles), Badge Generator micro-tool (`tools/badge-generator.html`), share modal in app.html now has Link + Badge tabs. sitemap.xml and tools.html updated.
+
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [ ] **P1** Add "Powered by SchemaLens" embeddable badge for shared diffs / READMEs
+- [ ] **P1** Add "Book a demo" / contact sales flow for Team plan ($29/mo = higher ACV)
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
+- [ ] **P1** Build PlanetScale Schema Diff SEO landing page
+- [ ] **P1** Build Railway Schema Diff SEO landing page
+- [ ] **P1** Build Firebase Schema Diff SEO landing page
 - [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
 - [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
@@ -99,7 +110,6 @@
 
 ### Content (Unblocked)
 - [ ] **P2** Create case study with first team customer
-- [ ] **P2** PlanetScale / Railway / Firebase platform-specific SEO pages
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
@@ -116,4 +126,4 @@
 
 ---
 
-*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: embeddable badge (viral loop), PlanetScale/Railway/Firebase SEO pages, partner with CI/CD newsletter.*
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: PlanetScale/Railway/Firebase SEO pages, Team plan demo/contact flow, partner with CI/CD newsletter.*

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free Badge Generator for READMEs — SchemaLens</title>
+  <meta name="description" content="Generate custom SVG badges for your GitHub READMEs, blog posts, and shared schema diffs. Free, no signup required.">
+  <meta property="og:title" content="Free Badge Generator for READMEs — SchemaLens">
+  <meta property="og:description" content="Create custom SVG badges for GitHub, blogs, and docs. Multiple styles, instant preview, copy-ready Markdown.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/badge-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Badge Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate SVG badges for READMEs and blogs, Multiple styles including flat, flat-square, for-the-badge, and social, Live preview with copyable Markdown and HTML",
+    "url": "https://schemalens.tech/tools/badge-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .badge-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    @media (max-width: 768px) {
+      .badge-workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .panel h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+    }
+    .form-row label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .form-row input,
+    .form-row select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .form-row input:focus,
+    .form-row select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .form-row small {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .color-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .preview-box {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 40px 20px;
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .preview-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-block {
+      position: relative;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .code-block pre {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .copy-btn.copied {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .style-option {
+      padding: 10px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.15s;
+    }
+    .style-option:hover,
+    .style-option.active {
+      border-color: var(--primary);
+    }
+    .style-option img {
+      display: block;
+      margin: 0 auto 6px;
+      height: 20px;
+    }
+
+    .quick-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .quick-presets button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .quick-presets button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" style="border-bottom:1px solid var(--border);">
+  <div class="nav-inner container">
+    <a href="../index.html" class="logo" aria-label="SchemaLens home">🔍 SchemaLens</a>
+    <div class="nav-links">
+      <a href="../app.html">App</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../tools.html">Tools</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>🔖 Badge Generator</h1>
+    <p>Create beautiful SVG badges for your README, blog, or shared schema diffs. Copy-paste ready Markdown and HTML.</p>
+  </div>
+
+  <div class="badge-workspace">
+    <div class="panel">
+      <h2>Customize</h2>
+
+      <div class="quick-presets">
+        <button onclick="loadPreset('default')">Default</button>
+        <button onclick="loadPreset('stats')">With Stats</button>
+        <button onclick="loadPreset('pro')">Pro User</button>
+        <button onclick="loadPreset('social')">Social</button>
+      </div>
+
+      <div class="form-row">
+        <label>Badge Style</label>
+        <div class="style-grid" id="styleGrid">
+          <div class="style-option active" data-style="flat" onclick="setStyle('flat')">
+            <img src="../api/badge?style=flat&label=Flat&message=Style" alt="Flat">
+            Flat
+          </div>
+          <div class="style-option" data-style="flat-square" onclick="setStyle('flat-square')">
+            <img src="../api/badge?style=flat-square&label=Square&message=Style" alt="Flat Square">
+            Flat Square
+          </div>
+          <div class="style-option" data-style="for-the-badge" onclick="setStyle('for-the-badge')">
+            <img src="../api/badge?style=for-the-badge&label=Bold&message=Style" alt="For The Badge">
+            For The Badge
+          </div>
+          <div class="style-option" data-style="social" onclick="setStyle('social')">
+            <img src="../api/badge?style=social&label=Social&message=Style" alt="Social">
+            Social
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="labelInput">Left Label</label>
+        <input type="text" id="labelInput" value="SchemaLens" maxlength="40" oninput="updatePreview()">
+      </div>
+
+      <div class="form-row">
+        <label for="messageInput">Right Message</label>
+        <input type="text" id="messageInput" value="Schema Diff" maxlength="60" oninput="updatePreview()">
+      </div>
+
+      <div class="form-row color-row">
+        <div>
+          <label for="colorInput">Message Color</label>
+          <input type="text" id="colorInput" value="6366f1" maxlength="6" oninput="updatePreview()">
+        </div>
+        <div>
+          <label for="labelColorInput">Label Color (optional)</label>
+          <input type="text" id="labelColorInput" value="" maxlength="6" placeholder="1e293b" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="refInput">Affiliate Ref Code (optional)</label>
+        <input type="text" id="refInput" value="" maxlength="40" placeholder="your-code" oninput="updatePreview()">
+        <small>If you have a SchemaLens affiliate code, enter it here to earn 30% commission on referrals.</small>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Preview & Embed</h2>
+      <div class="preview-box">
+        <span class="preview-label">Live Preview</span>
+        <img id="previewImg" src="../api/badge?style=flat&label=SchemaLens&message=Schema+Diff" alt="Badge preview">
+      </div>
+
+      <div style="margin-top: 20px;">
+        <label style="font-size:0.85rem;font-weight:500;color:var(--text-muted);display:block;margin-bottom:6px;">Markdown</label>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode('mdOutput', this)">Copy</button>
+          <pre id="mdOutput">[![SchemaLens](https://schemalens.tech/api/badge?style=flat&label=SchemaLens&message=Schema+Diff)](https://schemalens.tech)</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <label style="font-size:0.85rem;font-weight:500;color:var(--text-muted);display:block;margin-bottom:6px;">HTML</label>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode('htmlOutput', this)">Copy</button>
+          <pre id="htmlOutput">&lt;a href="https://schemalens.tech"&gt;&lt;img src="https://schemalens.tech/api/badge?style=flat&label=SchemaLens&message=Schema+Diff" alt="SchemaLens"&gt;&lt;/a&gt;</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <label style="font-size:0.85rem;font-weight:500;color:var(--text-muted);display:block;margin-bottom:6px;">Direct Image URL</label>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode('urlOutput', this)">Copy</button>
+          <pre id="urlOutput">https://schemalens.tech/api/badge?style=flat&label=SchemaLens&message=Schema+Diff</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom: 48px;">
+    <h2>💡 Popular Use Cases</h2>
+    <ul style="color: var(--text-muted); line-height: 1.8; padding-left: 1.2rem;">
+      <li><strong>GitHub READMEs:</strong> Add a "Schema diff powered by SchemaLens" badge to your database tool repos.</li>
+      <li><strong>Blog posts:</strong> Embed a badge in migration tutorials to send readers to a live diff tool.</li>
+      <li><strong>Shared diffs:</strong> Include a badge when posting schema comparison results in PRs or Slack.</li>
+      <li><strong>Affiliate earnings:</strong> Use your ref code in the badge URL to earn 30% recurring commission.</li>
+    </ul>
+    <p style="margin-top: 16px;">
+      <a href="../affiliate.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;">Join Affiliate Program →</a>
+    </p>
+  </div>
+</div>
+
+<footer class="footer" style="border-top:1px solid var(--border);padding:32px 0;margin-top:auto;">
+  <div class="container footer-inner">
+    <div>
+      <strong>🔍 SchemaLens</strong><br>
+      <span style="color:var(--text-muted);">Compare SQL schemas. Generate migrations. No signup.</span>
+    </div>
+    <div class="footer-links">
+      <a href="../app.html">App</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../affiliate.html">Affiliate</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../lib/ref-tracking.js" defer></script>
+<script>
+let currentStyle = 'flat';
+
+function setStyle(style) {
+  currentStyle = style;
+  document.querySelectorAll('.style-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.style === style);
+  });
+  updatePreview();
+}
+
+function getInputs() {
+  return {
+    style: currentStyle,
+    label: document.getElementById('labelInput').value.trim() || 'SchemaLens',
+    message: document.getElementById('messageInput').value.trim() || 'Schema Diff',
+    color: document.getElementById('colorInput').value.trim() || '6366f1',
+    labelColor: document.getElementById('labelColorInput').value.trim(),
+    ref: document.getElementById('refInput').value.trim()
+  };
+}
+
+function buildUrl(inputs, absolute) {
+  const base = absolute ? 'https://schemalens.tech' : '..';
+  const params = new URLSearchParams();
+  params.set('style', inputs.style);
+  params.set('label', inputs.label);
+  params.set('message', inputs.message);
+  if (inputs.color && inputs.color !== '6366f1') params.set('color', inputs.color);
+  if (inputs.labelColor) params.set('labelColor', inputs.labelColor);
+  if (inputs.ref) params.set('ref', inputs.ref);
+  return `${base}/api/badge?${params.toString()}`;
+}
+
+function buildLinkUrl(inputs, absolute) {
+  const base = absolute ? 'https://schemalens.tech' : '..';
+  return inputs.ref ? `${base}/index.html?ref=${encodeURIComponent(inputs.ref)}` : `${base}/index.html`;
+}
+
+function updatePreview() {
+  const inputs = getInputs();
+  const imgUrl = buildUrl(inputs, true);
+  const linkUrl = buildLinkUrl(inputs, true);
+
+  document.getElementById('previewImg').src = imgUrl;
+
+  const md = `[![${esc(inputs.label)}](${imgUrl})](${linkUrl})`;
+  document.getElementById('mdOutput').textContent = md;
+
+  const html = `<a href="${esc(linkUrl)}"><img src="${esc(imgUrl)}" alt="${esc(inputs.label)}"></a>`;
+  document.getElementById('htmlOutput').textContent = html;
+
+  document.getElementById('urlOutput').textContent = imgUrl;
+}
+
+function loadPreset(name) {
+  const presets = {
+    default: { label: 'SchemaLens', message: 'Schema Diff', color: '6366f1', style: 'flat' },
+    stats: { label: 'SchemaLens', message: '5 tables changed', color: '10b981', style: 'flat' },
+    pro: { label: 'SchemaLens', message: 'Pro', color: 'f59e0b', style: 'for-the-badge' },
+    social: { label: 'SchemaLens', message: 'Diff', color: '6366f1', style: 'social' }
+  };
+  const p = presets[name];
+  if (!p) return;
+  document.getElementById('labelInput').value = p.label;
+  document.getElementById('messageInput').value = p.message;
+  document.getElementById('colorInput').value = p.color;
+  setStyle(p.style);
+}
+
+function copyCode(elementId, btn) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+function esc(text) {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Update style grid images on load
+window.addEventListener('DOMContentLoaded', () => {
+  updatePreview();
+  document.querySelectorAll('.style-option img').forEach(img => {
+    const style = img.closest('.style-option').dataset.style;
+    const label = style === 'social' ? 'Social' : (style === 'for-the-badge' ? 'Bold' : 'Style');
+    img.src = `../api/badge?style=${style}&label=${label}&message=Style`;
+  });
+});
+</script>
+
+</body>
+</html>

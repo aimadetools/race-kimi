@@ -1322,6 +1322,66 @@ CREATE TABLE users (
     </div>
   </div>
 
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal" style="max-width:480px;">
+      <h3>📤 Share This Diff</h3>
+      <div class="share-tabs" style="display:flex;gap:4px;margin:16px 0;border-bottom:1px solid var(--border);">
+        <button class="share-tab active" data-tab="link" onclick="switchShareTab('link')">🔗 Link</button>
+        <button class="share-tab" data-tab="badge" onclick="switchShareTab('badge')">🔖 Badge</button>
+      </div>
+      <div id="shareTabLink" class="share-tab-panel active">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Copy a shareable URL that opens this exact diff in SchemaLens.</p>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="shareLinkInput" readonly style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:inherit;font-size:0.9rem;">
+          <button class="btn btn-primary" onclick="copyShareLinkFromModal()">Copy</button>
+        </div>
+      </div>
+      <div id="shareTabBadge" class="share-tab-panel" style="display:none;">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Embed a SchemaLens badge in your README, blog, or PR.</p>
+        <div style="text-align:center;padding:16px;background:var(--bg);border-radius:8px;border:1px dashed var(--border);margin-bottom:12px;">
+          <img id="shareBadgePreview" src="" alt="Badge preview" style="max-width:100%;">
+        </div>
+        <div style="margin-bottom:8px;">
+          <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">Markdown</label>
+          <div style="position:relative;">
+            <pre id="shareBadgeMd" style="margin:4px 0 0;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;font-size:0.8rem;color:#e2e8f0;overflow-x:auto;white-space:pre-wrap;word-break:break-all;"></pre>
+            <button onclick="copyBadgeMd()" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.1);color:#e2e8f0;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Copy</button>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">HTML</label>
+          <div style="position:relative;">
+            <pre id="shareBadgeHtml" style="margin:4px 0 0;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;font-size:0.8rem;color:#e2e8f0;overflow-x:auto;white-space:pre-wrap;word-break:break-all;"></pre>
+            <button onclick="copyBadgeHtml()" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.1);color:#e2e8f0;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Copy</button>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Want a custom badge? <a href="tools/badge-generator.html" target="_blank">Use the Badge Generator →</a></p>
+      </div>
+      <div class="modal-actions" style="margin-top:20px;">
+        <button class="btn btn-secondary" onclick="closeShareModal()">Close</button>
+      </div>
+    </div>
+  </div>
+  <style>
+    .share-tabs { padding-bottom: 0; }
+    .share-tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 8px 14px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .share-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+  </style>
+
   <!-- Feedback FAB -->
   <button class="feedback-fab" onclick="openFeedbackModal()" title="Send feedback" aria-label="Send feedback">💬</button>
 
@@ -5213,6 +5273,99 @@ function shareDiff() {
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_diff');
 }
 
+// -------------------------------
+// Share Modal (Link + Badge tabs)
+// -------------------------------
+function openShareModal() {
+  const a = document.getElementById('schemaA').value;
+  const b = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+  if (!a.trim() && !b.trim()) {
+    alert('Paste schemas to share first.');
+    return;
+  }
+
+  const hash = encodeState(a, b, dialect);
+  const url = location.origin + location.pathname + '#diff=' + hash;
+  document.getElementById('shareLinkInput').value = url;
+
+  // Compute diff summary for badge
+  let added = 0, removed = 0, modified = 0;
+  try {
+    const oldSchema = parseSQL(a, dialect);
+    const newSchema = parseSQL(b, dialect);
+    const diff = diffSchemas(oldSchema, newSchema);
+    added = diff.tablesAdded?.length || 0;
+    removed = diff.tablesRemoved?.length || 0;
+    modified = diff.tablesModified?.length || 0;
+  } catch (e) {
+    // ignore parse errors for badge
+  }
+
+  const totalChanges = added + removed + modified;
+  const badgeMessage = totalChanges > 0 ? `${totalChanges} change${totalChanges > 1 ? 's' : ''}` : 'Schema Diff';
+  const badgeColor = totalChanges > 0 ? '10b981' : '6366f1';
+  const refCode = (() => { try { return localStorage.getItem('schemalens_ref') || ''; } catch(e) { return ''; } })();
+
+  const badgeUrl = `https://schemalens.tech/api/badge?style=flat&label=SchemaLens&message=${encodeURIComponent(badgeMessage)}&color=${badgeColor}${refCode ? '&ref=' + encodeURIComponent(refCode) : ''}`;
+  const linkUrl = refCode ? `https://schemalens.tech/index.html?ref=${encodeURIComponent(refCode)}` : 'https://schemalens.tech';
+
+  document.getElementById('shareBadgePreview').src = badgeUrl;
+  document.getElementById('shareBadgeMd').textContent = `[![SchemaLens](${badgeUrl})](${linkUrl})`;
+  document.getElementById('shareBadgeHtml').textContent = `<a href="${linkUrl}"><img src="${badgeUrl}" alt="SchemaLens"></a>`;
+
+  // Reset to link tab
+  switchShareTab('link');
+
+  document.getElementById('shareModal').classList.add('active');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_modal_open');
+}
+
+function closeShareModal() {
+  document.getElementById('shareModal').classList.remove('active');
+}
+
+function switchShareTab(tab) {
+  document.querySelectorAll('.share-tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.getElementById('shareTabLink').style.display = tab === 'link' ? 'block' : 'none';
+  document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
+}
+
+function copyShareLinkFromModal() {
+  const input = document.getElementById('shareLinkInput');
+  navigator.clipboard.writeText(input.value).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_link_copied');
+}
+
+function copyBadgeMd() {
+  const text = document.getElementById('shareBadgeMd').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_badge_copied');
+}
+
+function copyBadgeHtml() {
+  const text = document.getElementById('shareBadgeHtml').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_badge_html_copied');
+}
+
 function copyTableLink(tableName) {
   const hashMatch = location.hash.match(/#diff=([A-Za-z0-9+/=_-]+)/);
   let url;
@@ -5505,7 +5658,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   history.replaceState(null, '', location.pathname);
 });
 
-document.getElementById('shareBtn').addEventListener('click', shareDiff);
+document.getElementById('shareBtn').addEventListener('click', openShareModal);
 
 document.querySelectorAll('.results-tab').forEach(tab => {
   tab.addEventListener('click', () => {
