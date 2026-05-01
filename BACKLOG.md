@@ -63,57 +63,34 @@
 - **Distribution assets:** Newsletter outreach kit, Stack Overflow answer kit, updated IndieHackers post, backlink outreach kit, video walkthrough script for GitHub Actions.
 - **CLI & CI/CD:** schemalens-cli npm package published @1.0.0, GitHub Action (action.yml) created.
 
-### Days 43–45 (April 30)
-- **Trust & positioning:** how-it-works.html (architecture transparency), CLI promo banners, landing page FAQ.
+### Days 43–48 (April 30)
+- **Trust & positioning:** how-it-works.html, CLI promo banners, landing page FAQ.
 - **Product Hunt launch execution:** Regenerated gallery screenshots + demo video, created product-hunt.html with 30% off offer, updated launch kit with current stats.
 - **Chrome extension MVP:** Content script injecting "Open in SchemaLens" button on GitHub `.sql` files, auto-detects dialect, opens app with pre-loaded schema.
 - **Content:** Blog posts #40–41 (migration checklist, 10 breaking schema changes).
+- **Business ops:** Leads & Outreach CRM in admin.html with seed defaults, status tracking, CSV export.
+- **Email infrastructure:** `/api/newsletter-launch.js` broadcast endpoint with dry-run mode, Supabase tracking, Resend integration.
+- **Video content system:** 5 video scripts, automated 1080×1920 reel generator, 5 WebM videos + thumbnails, `video-tips.html` landing page with schema.org VideoGallery markup.
 
-### Days 46–48 (April 30)
-- **Trust & positioning fix:** "When SchemaLens shines" use-case section, trust bar (client-side + CLI + transparency), FAQ addressing "I already have migrations. Why do I need SchemaLens?"
-- **Business ops:** Built localStorage-backed Leads & Outreach CRM in admin.html with seed defaults, status tracking, CSV export.
-- **Email infrastructure:** Built `/api/newsletter-launch.js` broadcast endpoint with dry-run mode, Supabase tracking, Resend integration. Added launch controls to admin dashboard.
-- **Content:** Blog post #42 (5-minute SQL schema review workflow). Updated sitemap.
-- **Video content system:** 5 video scripts, automated 1080×1920 reel generator (`generate-reels.py` + `video-renderer.html`), 5 WebM videos + thumbnails, `video-tips.html` landing page with schema.org VideoGallery markup.
-
-### Days 49–52 (May 1)
-- **Conversion:** 24-hour Pro trial (no signup/no CC), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page, optional email capture on trial activation (posts to newsletter API).
-- **SEO:** Supabase Schema Diff landing page (`supabase-schema-diff.html`) and Neon Schema Diff landing page (`neon-schema-diff.html`), both with schema.org SoftwareApplication markup, cross-linked across 30+ page footers.
-- **Trust & positioning:** CLI landing page (`cli/index.html`) with install demo, output formats, CI example, and schema.org markup. Fixes broken links from index/app/how-it-works. README badges and prominent CLI CTA. Footer cross-links across 35+ pages.
-- **Product:** Table rename detection heuristic — same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL across all 5 dialects. Visual diff, summary, markdown, CLI, API all updated. Addresses Reddit differentiation feedback.
+### Days 49–53 (May 1)
+- **Conversion:** 24-hour Pro trial (no signup/no CC), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page, optional email capture on trial activation.
+- **SEO:** Supabase Schema Diff and Neon Schema Diff landing pages with schema.org markup, cross-linked across 30+ page footers.
+- **Trust & positioning:** CLI landing page (`cli/index.html`) with install demo, output formats, CI example, schema.org markup. README badges and prominent CLI CTA. Footer cross-links across 35+ pages.
+- **Product:** Table rename detection heuristic — same structure + similar name = rename (not drop+add). Generates proper RENAME TABLE migration SQL across all 5 dialects. Visual diff, summary, markdown, CLI, API all updated.
+- **Distribution:** Affiliate/referral program with tracking code (`lib/ref-tracking.js` on 36 pages, `api/affiliate-apply.js`, `affiliate.html` with real form + link generator, admin dashboard section). 30% recurring commission. Addresses word-of-mouth distribution gap.
 
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
-- [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
-
-### Business & Ops (Unblocked)
-- [ ] **P1** Partner with CI/CD newsletter for mention
-- [ ] **P1** Reach out to churned free users with new features
-- [ ] **P2** Survey Pro users for next most-wanted feature
-- [ ] **P2** Plan API pricing tier for future
-- [ ] **P2** Consider raising prices for new customers (grandfather existing)
-- [ ] **P2** Set up weekly automated report (email digest) once analytics flow
-
-### Finance
-- [ ] Budget: $95 remaining (domain spent $5)
-- [ ] Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- [ ] Track all expenses in simple spreadsheet
-
----
-
-### Product (Unblocked)
-- [ ] **P1** Build affiliate/referral program landing page with tracking code
-- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
-- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
+- [ ] **P1** Add "Powered by SchemaLens" embeddable badge for shared diffs / READMEs
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [ ] **P1** Add "Powered by SchemaLens" embeddable badge for shared diffs / READMEs
+- [ ] **P1** Partner with CI/CD newsletter for mention (kit ready)
+- [ ] **P1** Reach out to churned free users with new features (now possible with trial email capture)
 - [ ] **P2** Answer 3 Stack Overflow questions (materials ready, need account with rep)
 
 ### Conversion (Unblocked)
@@ -127,11 +104,16 @@
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
 - [ ] **P1** Review first week of Pro conversions once sales start
+- [ ] **P2** Survey Pro users for next most-wanted feature
+- [ ] **P2** Plan API pricing tier for future
+- [ ] **P2** Consider raising prices for new customers (grandfather existing)
+- [ ] **P2** Set up weekly automated report (email digest) once analytics flow
 
 ### Finance
 - [ ] Budget: $95 remaining (domain spent $5)
 - [ ] Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
+- [ ] Track all expenses in simple spreadsheet
 
 ---
 
-*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: affiliate/referral program page (word-of-mouth distribution), embeddable badge (viral loop), PlanetScale/Railway/Firebase SEO pages.*
+*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: embeddable badge (viral loop), PlanetScale/Railway/Firebase SEO pages, partner with CI/CD newsletter.*
