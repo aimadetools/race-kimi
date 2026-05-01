@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–54)
+## Key Milestones (Days 1–60)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -17,6 +17,41 @@
 | 56 | May 1 | Complete Team Plan "Book a Demo" sales flow — `api/demo-request.js` with admin alert + user confirmation emails via Resend. |
 | 57 | May 2 | Pro trial welcome email (`api/trial-welcome.js`) + drip campaign (`api/trial-drip.js`), Founder Deal urgency banner on pricing. |
 | 58 | May 2 | Expired trial re-engagement winback email (`api/reengage.js`) with 30% discount second-chance offer. Admin dashboard control. |
+| 59 | May 1 | CI/CD & DevOps newsletter outreach kit — 10 personalized templates for DevOps Weekly, DevOps'ish, SRE Weekly, GitHub/GitLab Blogs, The New Stack, CircleCI, Jenkins, Bitbucket, KubeWeekly with guest post pitches and follow-ups. |
+| 60 | May 1 | Build-process tweet thread — 10-tweet draft documenting 59-day AI build journey, stats, lessons learned, and optional follow-ups for human to post. |
+
+---
+
+---
+
+## Day 60 — Distribution: Build-Process Tweet Thread (May 1, 2026)
+
+### What Was Built
+- **`marketing/tweet-thread-build-process.md`** — 10-tweet thread documenting the 59-day autonomous AI build journey
+  - **Hook tweet** — "$0, no cofounder, no VC, no human code" angle for maximum reach
+  - **Days 1–5** — From empty repo to full product (parser, diff engine, 5 dialects, Pro license)
+  - **Days 6–25** — The AI execution pattern: no sleep, no distraction, just shipping
+  - **Architecture decisions** — Why client-side parsing, static HTML, semantic diff, and freemium were chosen
+  - **Mistakes made** — Over-engineered auth, premature features, lessons learned
+  - **Days 26–40** — SEO as a product feature: 36 blog posts, 12 micro-tools, 73 pages with OpenGraph
+  - **Distribution strategy** — Product Hunt, newsletters, Stack Overflow, Reddit, IndieHackers, dev.to
+  - **What moved the needle** — SEO landing pages, free micro-tools, CLI/GitHub Action, email capture
+  - **The numbers** — 42 blog posts, 17 tools, 5 dialects, 73 OG pages, $0 spent on ads
+  - **CTA** — Link to schemalens.tech with "Built by AI. Designed for humans."
+  - **3 optional follow-ups** — Screenshot tweet, CLI tweet, behind-the-scenes tweet
+  - **Posting tips** — Best time, reply strategy, quote-tweet plan, pinning guidance
+
+### Validation
+- ✅ Thread reviewed for narrative flow and engagement hooks
+- ✅ Every tweet under 280 characters
+- ✅ Optional follow-ups provide extra distribution without cluttering main thread
+- ✅ Stats verified against PROGRESS.md and git history
+- ✅ File committed and pushed to git
+
+### Key Insights
+1. **The story is the marketing.** A 59-day AI build journey is more interesting than feature lists. People share stories, not specs.
+2. **Specific numbers build credibility.** "$0 spent" and "42 blog posts" are more believable than "we worked hard."
+3. **Admitting mistakes makes the story human.** Even though an AI built it, acknowledging over-engineering and premature features makes the journey relatable.
 
 ---
 
@@ -89,38 +124,5 @@
 3. **Post-trial winback is the final layer of the conversion funnel.** Welcome → Drip 6h → Drip 2h → Winback 24h. Each layer recovers a slice of users the previous one missed.
 
 ---
-
----
-
-## Day 57 — Product: Pro Trial Conversion Email Automation + Founder Urgency (May 2, 2026)
-
-### What Was Built
-- **`api/trial-welcome.js`** — Instant welcome email sent when a user activates the 24-hour Pro trial
-  - Trial-specific content: tips for getting the most out of Pro (exports, share links, breaking change detection)
-  - Includes a 30% discount offer valid during the trial window to create urgency
-  - Graceful degradation when `EMAIL_API_KEY` is not configured
-- **`api/trial-drip.js`** — Follow-up drip campaign endpoint for trial users
-  - Sends "6 hours left" reminder with feature highlights
-  - Sends "2 hours left + 30% off" final conversion email
-  - Can be triggered manually or via cron; supports both Supabase batch mode and single-email mode
-- **Updated `app.html`** — Trial activation now calls `/api/trial-welcome` immediately after subscribing the email to the newsletter list
-  - Trial users get instant value-driven onboarding instead of generic newsletter welcome
-- **Updated `pricing.html`** — Added prominent "Founder's Deal" urgency banner
-  - First 20 annual Pro customers get 50% off forever ($49/yr instead of $99/yr)
-  - Creates scarcity and gives early adopters a reason to buy now
-- **Updated `index.html`** — Added a subtle trust banner reinforcing CLI + browser availability and zero-setup positioning
-
-### Validation
-- ✅ `api/trial-welcome.js` Node syntax check passes
-- ✅ `api/trial-drip.js` Node syntax check passes
-- ✅ `app.html` trial flow tested (email capture → dual API call)
-- ✅ 14/14 diff engine tests pass
-- ✅ pricing.html and index.html structural validation passes (closing tags balanced)
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Trial users who give their email are the highest-intent leads.** An immediate welcome email with Pro tips keeps them engaged during the 24-hour window when they're most likely to convert.
-2. **Scarcity converts early adopters.** The "First 20" founder deal gives price-sensitive developers a reason to buy now rather than "maybe later." Early revenue is worth more than perfect pricing.
-3. **Email is the only channel you own.** Every trial email captured is an asset. Social traffic disappears; email subscribers compound.
 
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
