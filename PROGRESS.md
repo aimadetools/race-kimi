@@ -52,6 +52,49 @@
 | 46 | Apr 30 | Reddit trust/positioning fix: "When SchemaLens shines" section, trust bar, FAQ on "I already have migrations." Built Leads & Outreach CRM in admin.html. Prepared Monday launch materials. |
 | 47 | Apr 30 | Newsletter launch broadcast endpoint (`/api/newsletter-launch.js`), admin dashboard controls, blog post #42 (5-minute schema review), 2 new Stack Overflow answer drafts. |
 | 48 | Apr 30 | Built short-form video content system: 5 video scripts, vertical video generator (1080×1920), video-tips.html landing page with schema.org VideoGallery markup. 18th distribution channel live. |
+| 49 | May 1 | Conversion optimization: 24-hour Pro trial (free users unlock full migration once), blurred migration preview for paywalled users, dynamic share page with OG tags (`/api/share.js`), trial FAQ on pricing page. |
+
+---
+
+---
+
+## Day 49 — Conversion: Pro Trial + Migration Preview + Dynamic Share Page (May 1, 2026)
+
+### What Was Built
+- **24-hour Pro trial feature**
+  - Free users who hit the 10-table limit can click "Try Pro Free — 24 Hours"
+  - No email, no credit card, no signup required
+  - Unlocks copy, download, export, and ORM generation for 24 hours (client-side localStorage)
+  - Trial status badge appears in header when active
+  - Once claimed, trial expires after 24 hours and cannot be re-claimed
+  - Tracks `pro_trial_activated` analytics event
+- **Migration preview for paywalled users**
+  - Instead of completely hiding the migration SQL, free users now see a blurred preview
+  - Gradient fade overlay with CTA buttons centered
+  - Users can see the value they're missing before deciding to buy
+  - Applies to both Migration SQL tab and ORM Export tab
+- **Dynamic share page with OG tags (`/api/share.js`)**
+  - Serverless function fetches public diff from Supabase
+  - Parses schemas to generate real summary (tables added/removed/modified, risk score)
+  - Returns HTML with dynamic OpenGraph title, description, and image
+  - Human visitors are auto-redirected to `app.html?share=id` after 1.5s
+  - Prettier share URLs: `schemalens.tech/share?id=xxx` instead of `app.html?share=xxx`
+  - Added `/share` rewrite rule in `vercel.json`
+- **Pricing page updates**
+  - Added trial mention to Free and Pro pricing cards
+  - Added "Can I try Pro before buying?" FAQ with schema.org structured data
+
+### Validation
+- ✅ `api/share.js` syntax check passed (`node --check`)
+- ✅ All inline scripts in `app.html` parsed successfully
+- ✅ `vercel.json` rewrite rule valid
+- ✅ OG tags properly escaped in share page HTML
+- ✅ Backward compatibility: old `app.html?share=id` URLs still work
+
+### Key Insights
+1. **Value visualization converts better than hiding.** Showing a blurred migration preview lets users see exactly what they'd get with Pro. They can read the SQL structure but can't copy it without upgrading. This is more motivating than a blank "Upgrade now" banner.
+2. **Free trials reduce purchase anxiety.** A 24-hour no-strings trial gives users confidence to experience the full product. If the tool saves them time during the trial, conversion is natural.
+3. **Dynamic OG tags make shared diffs viral.** Every shared diff is now a mini-advertisement with custom title, description, and summary stats. When posted on Slack/Twitter/Discord, the preview card shows actual diff data instead of generic branding.
 
 ---
 

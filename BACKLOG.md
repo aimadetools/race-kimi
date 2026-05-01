@@ -21,8 +21,9 @@
 - [ ] **P1** Answer 3 Stack Overflow questions (use `marketing/stack-overflow-answers.md`) — blocked on reputation, create account?
 
 ### Product — Conversion & Retention (Unblocked)
-- [ ] **P1** Show migration SQL preview for free users (teaser with blur/watermark + unlock CTA) — IN PROGRESS Day 49
-- [ ] **P1** One-time Pro trial: let free users unlock full migration once per browser (experience value before buying)
+- [x] **P1** Show migration SQL preview for free users (teaser with blur/watermark + unlock CTA) — DONE Day 49
+- [x] **P1** 24-hour Pro trial: free users unlock full migration once (experience value before buying) — DONE Day 49
+- [x] **P1** Dynamic share page with OG tags (`/api/share.js`) — DONE Day 49
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
