@@ -289,6 +289,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/mariadb-schema-diff.html</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/sqlite-schema-diff.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>monthly</changefreq>
@@ -297,6 +303,12 @@
   <url>
     <loc>https://schemalens.tech/sql-server-schema-diff.html</loc>
     <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/azure-sql-schema-diff.html</loc>
+    <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
