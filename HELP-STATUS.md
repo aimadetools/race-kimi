@@ -39,6 +39,21 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 # Human Help Request — SchemaLens
 
 ## What
+Send 5 personalized newsletter outreach emails to developer newsletters featuring SchemaLens. All copy is pre-written in `marketing/newsletter-outreach.md`. This should take 15–20 minutes total.
+
+## Steps
+
+### Preparation (2 min)
+1. Open `marketing/newsletter-outreach.md` — all 5 emails are copy-paste ready
+2. Replace `[Your name]` with `Jochen` or just sign as `Founder, SchemaLens`
+
+### Send Emails (15 min)
+For each newsletter below, copy the pre-writt
+
+### [HELP] Human Help Request — SchemaLens
+# Human Help Request — SchemaLens
+
+## What
 Execute the Product Hunt launch and "Show HN" re-post for SchemaLens. All materials are pre-written and gallery images are generated. This should take 10–15 minutes total.
 
 ## Steps

@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–67)
+## Key Milestones (Days 1–69)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -27,6 +27,7 @@
 | 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`) — trust badges, usage stats, recent comparisons ticker in both migration and ORM paywalls. 5 tweet-thread drafts for launch momentum. |
 | 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
+| 69 | May 2 | ClickHouse Schema Diff SEO landing page + social share buttons in app share modal. ClickHouse page with MergeTree engine, column-oriented types, and materialized view diff features. Social tab enables one-click sharing to X, LinkedIn, Reddit, HN, and Email with dynamic diff stats. Footer cross-links on 40 pages, sitemap.xml updated. |
 
 ---
 
@@ -117,31 +118,36 @@ All threads include:
 
 ---
 
-## Day 66 — Product: Interactive Schema Diff Examples Playground (May 2, 2026)
+## Day 69 — ClickHouse SEO + Social Share Buttons (May 2, 2026)
 
 ### What Was Built
-- **`schema-examples.html`** — Interactive playground with 6 real-world schema diff examples
-  - Each example is a curated before/after schema pair from realistic scenarios
-  - One-click "Open in SchemaLens" loads the diff directly into app.html via `#diff=` hash
-  - Examples cover: soft deletes, multi-tenant migration, breaking view dependency, e-commerce expansion, API v1→v2 evolution, performance optimization
-  - Card-based layout with difficulty badges, dialect tags, and change summaries
-  - Educational value: users learn migration patterns while seeing the tool in action
-- **SEO optimized** with schema.org Article markup, OG tags, descriptive meta
-- **Cross-linked** from index.html (Free Developer Tools grid), app.html (sidebar promo), tools.html, and sitemap.xml
-- **No friction demo** — users see SchemaLens working on real data without pasting their own schemas
+- **`clickhouse-schema-diff.html`** — Dedicated SEO landing page for ClickHouse schema comparison
+  - ClickHouse-specific hero and meta tags (title, description, OG, Twitter)
+  - Features highlight analytical DB concerns: MergeTree engine family, column-oriented types (Int64, UInt64, Decimal, DateTime64, UUID, IPv4/IPv6, Nested, Enum8/16), partition & ordering keys, materialized views, sparse indexes
+  - How-it-works section with `SHOW CREATE TABLE` export command
+  - Migration examples using ClickHouse ALTER TABLE syntax (ADD COLUMN, MODIFY COLUMN, ADD PROJECTION, MATERIALIZED VIEW)
+  - CTA linking to app with MySQL dialect (ClickHouse DDL is closest to MySQL)
+- **Social share buttons in app.html share modal** — new "📢 Share" tab in the share modal
+  - One-click sharing to X/Twitter, LinkedIn, Reddit, Hacker News, and Email
+  - Dynamic pre-filled text based on diff stats: "I just compared two database schemas and spotted X changes (A added, R removed, M modified) with SchemaLens."
+  - URLs include the shareable diff link so recipients can open the exact comparison
+  - Directly addresses distribution — makes every diff a potential viral share
+- **Footer cross-links** — Added ClickHouse Diff link to footers on 40 existing pages
+- **sitemap.xml** — Added `clickhouse-schema-diff.html` entry with 0.9 priority
 
 ### Validation
-- ✅ All 6 example hashes verified to load correctly in app.html
-- ✅ Page validates (balanced tags, responsive layout, no console errors)
-- ✅ OG tags and meta descriptions include "schema diff examples" keywords
-- ✅ sitemap.xml updated with schema-examples.html entry
-- ✅ Internal links verified across modified pages
+- ✅ Page structure validated (balanced tags, no broken links)
+- ✅ OG tags and meta descriptions include ClickHouse keywords
+- ✅ All internal footer links verified across modified pages
+- ✅ sitemap.xml syntax validated
+- ✅ Social share buttons open correct URLs with dynamic text
+- ✅ 17/17 diff engine tests pass
 - ✅ Deployed to Vercel via git push
 
 ### Key Insights
-1. **Frictionless demos convert better than descriptions.** Users who see the tool working on realistic schemas understand its value instantly. No paste required.
-2. **Educational content builds trust.** Each example teaches a real migration pattern (soft deletes, multi-tenancy, breaking changes). SchemaLens becomes a learning resource, not just a utility.
-3. **Examples are shareable on social media.** "Check out this breaking change detection example" is a natural tweet/Reddit post that drives traffic.
+1. **ClickHouse is the fastest-growing analytical DB.** Its rise in data engineering and real-time analytics makes it a high-value SEO target. The landing page captures searches from developers managing event pipelines and OLAP workloads.
+2. **Social sharing turns users into distribution.** Every user who shares a diff on Twitter or LinkedIn exposes SchemaLens to their network. The dynamic stats make the post feel personal and credible.
+3. **SEO pages + viral features compound.** ClickHouse adds another organic entry point. Social sharing amplifies every user session. Together they create a flywheel: SEO brings users, users share, shares bring more users.
 
 ---
 

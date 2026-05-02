@@ -5,36 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Railway Schema Diff Online — Compare & Migrate Railway Database Schemas</title>
-  <meta name="description" content="Compare two Railway database schemas side by side. Generate PostgreSQL and MySQL migration scripts instantly. Works with Railway CLI exports, pg_dump, and mysqldump. No install, no upload, 100% browser-based.">
-  <link rel="canonical" href="https://schemalens.tech/railway-schema-diff.html">
-  <meta property="og:title" content="Railway Schema Diff Online — Compare & Migrate Railway Database Schemas">
-  <meta property="og:description" content="Compare two Railway database schemas side by side. Generate PostgreSQL and MySQL migration scripts instantly.">
+  <title>ClickHouse Schema Diff Online — Compare & Migrate ClickHouse Schemas</title>
+  <meta name="description" content="Compare two ClickHouse schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
+  <meta property="og:title" content="ClickHouse Schema Diff Online — Compare & Migrate ClickHouse Schemas">
+  <meta property="og:description" content="Compare two ClickHouse schemas side by side. Generate ALTER TABLE migration scripts instantly.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/railway-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/clickhouse-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SchemaLens for Railway",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": "Compare Railway schemas visually, Generate PostgreSQL and MySQL migration scripts, Detect breaking changes, Export to Markdown, PDF, SQL, JSON, Prisma, Drizzle, No data upload required",
-    "softwareVersion": "1.0",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "12"
-    }
-  }
-  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script>
@@ -85,12 +63,12 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        Railway schema diff — free to use
+        ClickHouse schema diff — free to use
       </div>
-      <h1>Railway Database Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two schema exports from your Railway PostgreSQL or MySQL databases. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts — all in your browser.</p>
+      <h1>ClickHouse Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>SHOW CREATE TABLE</code> outputs or <code>system.tables</code> DDL dumps. Spot every MergeTree column, partition key, ordering key, and materialized view change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for ClickHouse — all in your browser.</p>
       <div class="hero-actions">
-        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff Railway Schemas</a>
+        <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Diff ClickHouse Schemas</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -99,38 +77,38 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Built for Railway workflows</h2>
-      <p class="section-subtitle text-center">SchemaLens understands PostgreSQL and MySQL syntax that generic diff tools miss — perfect for Railway's managed database deployments.</p>
+      <h2 class="section-title text-center">Built for column-oriented analytics</h2>
+      <p class="section-subtitle text-center">SchemaLens understands ClickHouse-specific syntax that generic diff tools miss.</p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(62,207,142,0.15);">🚂</div>
-          <h3>Railway Postgres &amp; MySQL</h3>
-          <p>Diff schemas from Railway-managed PostgreSQL and MySQL databases. Auto-detects dialect from your <code>pg_dump</code> or <code>mysqldump</code> export.</p>
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">📊</div>
+          <h3>MergeTree Engine Family</h3>
+          <p>Compares <code>MergeTree</code>, <code>ReplacingMergeTree</code>, <code>SummingMergeTree</code>, <code>AggregatingMergeTree</code>, and <code>ReplicatedMergeTree</code> engine definitions across schema versions.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">⚡</div>
-          <h3>Environment-to-Environment</h3>
-          <p>Compare schemas between Railway production and staging environments. Export from each environment's database connection and diff them instantly.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📦</div>
-          <h3>Service-Aware</h3>
-          <p>Works with any Railway service that exposes a SQL connection. PostgreSQL, MySQL, or even self-hosted databases connected via Railway TCP proxying.</p>
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">🔢</div>
+          <h3>ClickHouse Native Types</h3>
+          <p>Correctly handles <code>Int8/16/32/64</code>, <code>UInt8/16/32/64</code>, <code>Float32/64</code>, <code>Decimal</code>, <code>DateTime64</code>, <code>UUID</code>, <code>IPv4/IPv6</code>, <code>Nested</code>, and <code>Enum8/16</code> types.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
-          <h3>Constraints &amp; Indexes</h3>
-          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and partial indexes — all compared semantically, not by raw text.</p>
+          <h3>Partition &amp; Ordering Keys</h3>
+          <p>Detects changes to <code>PARTITION BY</code>, <code>ORDER BY</code>, and <code>PRIMARY KEY</code> expressions that control data distribution and query performance.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
-          <h3>Functions &amp; Triggers</h3>
-          <p>Detects <code>CREATE FUNCTION</code> and <code>CREATE TRIGGER</code> changes. Critical for Railway projects that use database functions for data transformations.</p>
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">👁️</div>
+          <h3>Materialized Views</h3>
+          <p>Spots changes in <code>CREATE MATERIALIZED VIEW</code> definitions, <code>TO</code> target tables, and populates clauses that power real-time analytics pipelines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
+          <h3>Sparse Index Awareness</h3>
+          <p>Understands ClickHouse's sparse primary index model. Compares <code>INDEX</code> declarations, projection definitions, and skip indexes for query optimization.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
           <h3>Privacy First</h3>
-          <p>Your schema never leaves the browser. Compare production Railway schemas safely without uploading sensitive table structures to a third-party server.</p>
+          <p>Your schema never leaves the browser. Compare production ClickHouse schemas safely without uploading sensitive table structures to a third-party server.</p>
         </div>
       </div>
     </div>
@@ -142,23 +120,23 @@
       <div class="steps">
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
-          <h3>Export your Railway schemas</h3>
-          <p>Run <code>pg_dump --schema-only</code> or <code>mysqldump --no-data</code> against your Railway database connection string, or use the Railway CLI.</p>
+          <h3>Export your schemas</h3>
+          <p>Run <code>SHOW CREATE TABLE db.table</code> or query <code>system.tables</code> on both ClickHouse clusters.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
           <h3>Paste into SchemaLens</h3>
-          <p>Copy the SQL into the two editor panes. Auto-detects PostgreSQL or MySQL dialect from your Railway database export.</p>
+          <p>Copy the SQL into the two editor panes. Select MySQL dialect — ClickHouse DDL is closest to MySQL syntax.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
           <h3>Review the diff</h3>
-          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color. Breaking changes flagged in red.</p>
+          <p>See added tables, dropped columns, type changes, engine modifications, and partition key changes highlighted in color.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
           <h3>Copy the migration</h3>
-          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Apply via your Railway project's migration workflow.</p>
+          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Apply to staging, then production.</p>
         </div>
       </div>
     </div>
@@ -166,29 +144,30 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Railway migration examples</h2>
-      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects in your Railway database.</p>
+      <h2 class="section-title text-center">ClickHouse migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
       <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
         <div class="feature-card">
-          <h3>Column type change (PostgreSQL)</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "users"
-  ALTER COLUMN "bio" TYPE VARCHAR(500);</code></pre>
+          <h3>Add a metric column to an analytics table</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE events
+  ADD COLUMN revenue Decimal(18, 2);</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Add a new column (MySQL)</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `orders`
-  ADD COLUMN `shipped_at` DATETIME;</code></pre>
+          <h3>Change a column type</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE events
+  MODIFY COLUMN event_time DateTime64(3);</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Add a foreign key (PostgreSQL)</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "comments"
-  ADD CONSTRAINT "fk_comments_post"
-  FOREIGN KEY ("post_id") REFERENCES "posts"("id");</code></pre>
+          <h3>Add a projection for faster queries</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE events
+  ADD PROJECTION proj_daily
+  ( SELECT toStartOfDay(event_time), count() GROUP BY day );</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Create index for performance (MySQL)</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>CREATE INDEX `idx_orders_user_id`
-  ON `orders`(`user_id`);</code></pre>
+          <h3>Update a materialized view target</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>CREATE MATERIALIZED VIEW events_mv
+  TO events_summary
+  AS SELECT ...</code></pre>
         </div>
       </div>
     </div>
@@ -196,42 +175,11 @@
 
   <section class="section" style="background: var(--surface);">
     <div class="container">
-      <h2 class="section-title text-center">Railway diff vs other tools</h2>
-      <p class="section-subtitle text-center">SchemaLens runs in your browser and works with any Railway database — no CLI setup required.</p>
-      <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
-        <div class="feature-card">
-          <h3>✅ SchemaLens</h3>
-          <ul style="color: #c7c7c7; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem;">
-            <li>Browser-based — zero install</li>
-            <li>Works with any pg_dump or SQL export</li>
-            <li>Visual diff with color highlighting</li>
-            <li>Auto-detects PostgreSQL vs MySQL</li>
-            <li>Shareable diff URLs</li>
-            <li>Export to SQL, Markdown, PDF, Prisma, Drizzle</li>
-          </ul>
-        </div>
-        <div class="feature-card">
-          <h3>❌ Railway CLI / psql</h3>
-          <ul style="color: #c7c7c7; font-size: 0.95rem; line-height: 1.7; padding-left: 1.2rem;">
-            <li>Requires CLI installation and connection string</li>
-            <li>Requires local database tools</li>
-            <li>Text-only output</li>
-            <li>No visual comparison</li>
-            <li>No shareable links</li>
-            <li>SQL output only</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
       <h2 class="section-title text-center">Related guides</h2>
       <div class="blog-grid">
         <article class="blog-card">
           <div class="blog-content">
-            <span class="blog-meta">PostgreSQL</span>
+            <span class="blog-meta">ClickHouse</span>
             <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
             <p>A step-by-step workflow for catching schema drift between staging and production.</p>
           </div>
@@ -239,8 +187,8 @@
         <article class="blog-card">
           <div class="blog-content">
             <span class="blog-meta">Migration</span>
-            <h3><a href="blog/postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></h3>
-            <p>8 practical differences that trip up developers switching between the two databases.</p>
+            <h3><a href="blog/how-to-detect-schema-drift-before-production.html">How to Detect Schema Drift Before Production</a></h3>
+            <p>Automated checks and manual review processes to prevent broken deployments.</p>
           </div>
         </article>
         <article class="blog-card">
@@ -256,9 +204,9 @@
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Ready to diff your Railway database schemas?</h2>
+      <h2>Ready to diff your ClickHouse schemas?</h2>
       <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
-      <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Start Comparing Free</a>
       <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
     </div>
   </section>

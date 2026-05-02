@@ -1387,6 +1387,7 @@ CREATE TABLE users (
       <h3>📤 Share This Diff</h3>
       <div class="share-tabs" style="display:flex;gap:4px;margin:16px 0;border-bottom:1px solid var(--border);">
         <button class="share-tab active" data-tab="link" onclick="switchShareTab('link')">🔗 Link</button>
+        <button class="share-tab" data-tab="social" onclick="switchShareTab('social')">📢 Share</button>
         <button class="share-tab" data-tab="badge" onclick="switchShareTab('badge')">🔖 Badge</button>
       </div>
       <div id="shareTabLink" class="share-tab-panel active">
@@ -1394,6 +1395,26 @@ CREATE TABLE users (
         <div style="display:flex;gap:8px;">
           <input type="text" id="shareLinkInput" readonly style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:inherit;font-size:0.9rem;">
           <button class="btn btn-primary" onclick="copyShareLinkFromModal()">Copy</button>
+        </div>
+      </div>
+      <div id="shareTabSocial" class="share-tab-panel" style="display:none;">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Share this diff with your team or community.</p>
+        <div id="socialShareButtons" style="display:flex;flex-direction:column;gap:10px;">
+          <a id="shareTwitter" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">𝕏</span> Share on X / Twitter
+          </a>
+          <a id="shareLinkedIn" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">💼</span> Share on LinkedIn
+          </a>
+          <a id="shareReddit" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">🤖</span> Share on Reddit
+          </a>
+          <a id="shareHN" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">🟧</span> Share on Hacker News
+          </a>
+          <a id="shareEmail" href="#" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">✉️</span> Share via Email
+          </a>
         </div>
       </div>
       <div id="shareTabBadge" class="share-tab-panel" style="display:none;">
@@ -1576,6 +1597,7 @@ CREATE TABLE users (
           <a href="cockroachdb-schema-diff.html">CockroachDB Diff</a>
           <a href="timescaledb-schema-diff.html">TimescaleDB Diff</a>
           <a href="duckdb-schema-diff.html">DuckDB Diff</a>
+          <a href="clickhouse-schema-diff.html">ClickHouse Diff</a>
           <a href="bigquery-schema-diff.html">BigQuery Diff</a>
           <a href="snowflake-schema-diff.html">Snowflake Diff</a>
           <a href="supabase-schema-diff.html">Supabase Diff</a>
@@ -5585,6 +5607,18 @@ function openShareModal() {
   document.getElementById('shareBadgeMd').textContent = `[![SchemaLens](${badgeUrl})](${linkUrl})`;
   document.getElementById('shareBadgeHtml').textContent = `<a href="${linkUrl}"><img src="${badgeUrl}" alt="SchemaLens"></a>`;
 
+  // Populate social share links
+  const shareText = totalChanges > 0
+    ? `I just compared two database schemas and spotted ${totalChanges} change${totalChanges > 1 ? 's' : ''} (${added} added, ${removed} removed, ${modified} modified) with SchemaLens.`
+    : 'I just compared two database schemas side by side with SchemaLens.';
+  const encodedText = encodeURIComponent(shareText);
+  const encodedUrl = encodeURIComponent(url);
+  document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+  document.getElementById('shareLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+  document.getElementById('shareReddit').href = `https://www.reddit.com/submit?title=${encodedText}&url=${encodedUrl}`;
+  document.getElementById('shareHN').href = `https://news.ycombinator.com/submitlink?t=${encodedText}&u=${encodedUrl}`;
+  document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('Schema comparison result')}&body=${encodedText}%0A%0A${encodedUrl}`;
+
   // Reset to link tab
   switchShareTab('link');
 
@@ -5601,6 +5635,7 @@ function switchShareTab(tab) {
     el.classList.toggle('active', el.dataset.tab === tab);
   });
   document.getElementById('shareTabLink').style.display = tab === 'link' ? 'block' : 'none';
+  document.getElementById('shareTabSocial').style.display = tab === 'social' ? 'block' : 'none';
   document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
 }
 

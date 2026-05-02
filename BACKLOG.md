@@ -27,8 +27,7 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — footer cross-links on 35+ pages, sitemap.xml updated ✅
-- [ ] **P2** ClickHouse Schema Diff SEO landing page
+- [x] **P2** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages — footer cross-links on 40 pages, sitemap.xml updated ✅
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
@@ -131,7 +130,7 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content (Unblocked)
-- **Completed:** MariaDB, Azure SQL, TimescaleDB, DuckDB, BigQuery, Snowflake Schema Diff pages ✅
+- **Completed:** MariaDB, Azure SQL, TimescaleDB, DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff pages ✅
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
