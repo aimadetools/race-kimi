@@ -121,11 +121,14 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit ✅
+- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, social share buttons ✅
+- [ ] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall (`getSocialProofHTML()`) ✅
+- **Completed:** Social proof in app paywall (`getSocialProofHTML()`), social share buttons ✅
+- [ ] **P1** Improve app.html empty state for first-time visitors — animated demo or guided tour to reduce bounce
+- [ ] **P1** Build Product Hunt post-launch landing page with PH-exclusive offer, social proof, and urgency
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -148,4 +151,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: BigQuery, Snowflake, or ClickHouse Schema Diff SEO landing pages.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Improve app empty state / first-time onboarding to reduce bounce, (2) Build PH post-launch landing page to maximize conversion from launch traffic, (3) Embeddable schema diff widget for docs/blogs.*
