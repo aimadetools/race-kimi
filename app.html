@@ -2463,8 +2463,31 @@ function diffTable(oldTable, newTable) {
   return result;
 }
 
+// ─── View dependency helpers ───
+function extractViewTables(query) {
+  const tables = [];
+  // Match FROM table [alias] and JOIN table [alias]
+  const re = /\b(FROM|JOIN)\s+(["`\[\w]+(?:\.["`\[\w]+)?)/gi;
+  let m;
+  while ((m = re.exec(query)) !== null) {
+    const name = m[2].replace(/["`\[\]]/g, '');
+    if (name) tables.push(name);
+  }
+  return tables;
+}
+
+function viewMightReferenceColumn(query, column) {
+  const col = column.toLowerCase();
+  const q = query.toLowerCase();
+  // Simple heuristic: column name appears in query and is not part of another word
+  const re = new RegExp('\\b' + col + '\\b');
+  return re.test(q);
+}
+
 function detectBreakingChanges(diff) {
   const breaking = [];
+  const oldSchema = diff.schemaA || {};
+  const newSchema = diff.schemaB || {};
 
   // 1. Dropped tables
   for (const table of diff.tablesRemoved) {
@@ -2582,6 +2605,54 @@ function detectBreakingChanges(diff) {
     }
   }
 
+  // 7. View dependencies — dropped or modified columns/tables referenced by views
+  const oldViews = oldSchema.views || {};
+  for (const table of diff.tablesRemoved) {
+    for (const [viewName, view] of Object.entries(oldViews)) {
+      const refs = extractViewTables(view.query);
+      if (refs.includes(table.name)) {
+        breaking.push({
+          type: 'VIEW_DEPENDENCY',
+          severity: 'warning',
+          table: table.name,
+          details: `Table "${table.name}" is referenced by view "${viewName}". Dropping it will break the view.`
+        });
+      }
+    }
+  }
+  for (const td of diff.tablesModified) {
+    for (const col of td.columnsRemoved) {
+      for (const [viewName, view] of Object.entries(oldViews)) {
+        const refs = extractViewTables(view.query);
+        if (refs.includes(td.name) && viewMightReferenceColumn(view.query, col.name)) {
+          breaking.push({
+            type: 'VIEW_DEPENDENCY',
+            severity: 'warning',
+            table: td.name,
+            column: col.name,
+            details: `Column "${col.name}" in "${td.name}" may be referenced by view "${viewName}". Dropping it could break the view.`
+          });
+        }
+      }
+    }
+    for (const mod of td.columnsModified) {
+      const typeChange = mod.changes.find(c => c.field === 'type');
+      if (!typeChange) continue;
+      for (const [viewName, view] of Object.entries(oldViews)) {
+        const refs = extractViewTables(view.query);
+        if (refs.includes(td.name) && viewMightReferenceColumn(view.query, mod.column.name)) {
+          breaking.push({
+            type: 'VIEW_DEPENDENCY',
+            severity: 'warning',
+            table: td.name,
+            column: mod.column.name,
+            details: `Column "${mod.column.name}" in "${td.name}" changed type (${typeChange.old} → ${typeChange.new}) and may be referenced by view "${viewName}".`
+          });
+        }
+      }
+    }
+  }
+
   return breaking;
 }
 
@@ -2594,7 +2665,8 @@ function calculateRiskScore(diff) {
     'ADD_NOT_NULL_NO_DEFAULT': 20,
     'DROP_CONSTRAINT': 15,
     'NARROW_TYPE': 10,
-    'ADD_FK_NO_INDEX': 10
+    'ADD_FK_NO_INDEX': 10,
+    'VIEW_DEPENDENCY': 8
   };
   for (const b of breaking) {
     score += weights[b.type] || 10;
@@ -2982,6 +3054,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     ${confidenceHTML}
     ${breakingHTML}
     <div style="flex:1"></div>
+    <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="copyPRSummary()">📋 Copy PR Summary</button>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="sendToSlack()">Send to Slack</button>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="downloadJSON()">Download JSON</button>
   `;
@@ -3869,6 +3942,99 @@ function downloadMarkdown() {
   const md = generateMarkdown(lastDiff, lastMigrationSQL, document.getElementById('dialect').value);
   downloadFile(md, 'schemalens_diff.md', 'text/markdown');
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_markdown');
+}
+
+function generatePRSummary(diff, breakingChanges, riskScore) {
+  const lines = [];
+  lines.push('## Schema Changes Summary');
+  lines.push('');
+
+  const totalChanged = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
+  lines.push(`**${totalChanged}** table(s) changed · **${diff.totalTablesOld}** → **${diff.totalTablesNew}** tables total`);
+  if (riskScore) {
+    lines.push(`**Risk Score:** ${riskScore.score}/100 — ${riskScore.label}`);
+  }
+  lines.push('');
+
+  if (diff.tablesAdded.length) {
+    lines.push(`### 🆕 Tables Added (${diff.tablesAdded.length})`);
+    for (const t of diff.tablesAdded) {
+      lines.push(`- **${t.name}** — ${t.columns.length} columns`);
+    }
+    lines.push('');
+  }
+
+  if (diff.tablesRemoved.length) {
+    lines.push(`### 🗑️ Tables Removed (${diff.tablesRemoved.length})`);
+    for (const t of diff.tablesRemoved) {
+      lines.push(`- **${t.name}**`);
+    }
+    lines.push('');
+  }
+
+  if (diff.tablesRenamed.length) {
+    lines.push(`### 📝 Tables Renamed (${diff.tablesRenamed.length})`);
+    for (const t of diff.tablesRenamed) {
+      lines.push(`- **${t.oldTable.name}** → **${t.newTable.name}**`);
+    }
+    lines.push('');
+  }
+
+  if (diff.tablesModified.length) {
+    lines.push(`### 🔄 Tables Modified (${diff.tablesModified.length})`);
+    for (const td of diff.tablesModified) {
+      const changes = [];
+      if (td.columnsAdded.length) changes.push(`+${td.columnsAdded.length} cols`);
+      if (td.columnsRemoved.length) changes.push(`−${td.columnsRemoved.length} cols`);
+      if (td.columnsModified.length) changes.push(`~${td.columnsModified.length} cols`);
+      if (td.constraintsAdded.length || td.constraintsRemoved.length) changes.push(`${td.constraintsAdded.length + td.constraintsRemoved.length} constraints`);
+      if (td.indexesAdded.length || td.indexesRemoved.length) changes.push(`${td.indexesAdded.length + td.indexesRemoved.length} indexes`);
+      lines.push(`- **${td.name}** — ${changes.join(', ')}`);
+      for (const col of td.columnsAdded) {
+        lines.push(`  - ➕ \`${col.name}\` ${col.type}${col.nullable ? '' : ' NOT NULL'}`);
+      }
+      for (const col of td.columnsRemoved) {
+        lines.push(`  - ➖ \`${col.name}\``);
+      }
+      for (const mod of td.columnsModified) {
+        const desc = mod.changes.map(c => `\`${c.field}\` ${c.old} → ${c.new}`).join(', ');
+        lines.push(`  - ✏️ \`${mod.column.name}\`: ${desc}`);
+      }
+    }
+    lines.push('');
+  }
+
+  if (breakingChanges && breakingChanges.length) {
+    const critical = breakingChanges.filter(b => b.severity === 'critical');
+    const warnings = breakingChanges.filter(b => b.severity === 'warning');
+    lines.push(`### ⚠️ Breaking Changes (${breakingChanges.length})`);
+    if (critical.length) {
+      lines.push(`**Critical:**`);
+      for (const b of critical) lines.push(`- ${b.details}`);
+    }
+    if (warnings.length) {
+      lines.push(`**Warnings:**`);
+      for (const b of warnings) lines.push(`- ${b.details}`);
+    }
+    lines.push('');
+  }
+
+  lines.push('---');
+  lines.push('*Generated by [SchemaLens](https://schemalens.tech)*');
+  return lines.join('\n');
+}
+
+function copyPRSummary() {
+  if (!lastDiff) return;
+  const summary = generatePRSummary(lastDiff, window.lastBreakingChanges, window.lastRiskScore);
+  navigator.clipboard.writeText(summary).then(() => {
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('copy_pr_summary');
+    const btn = document.querySelector('button[onclick="copyPRSummary()"]');
+    if (btn) { const old = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = old, 2000); }
+  }).catch(() => {
+    const btn = document.querySelector('button[onclick="copyPRSummary()"]');
+    if (btn) { const old = btn.textContent; btn.textContent = '✗ Failed'; setTimeout(() => btn.textContent = old, 2000); }
+  });
 }
 
 function downloadFile(content, filename, mimeType) {

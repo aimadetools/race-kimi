@@ -88,23 +88,31 @@
 - **Stack Overflow Execution Kit:** `marketing/stack-overflow-execution-kit.md` — complete reputation-building roadmap, posting schedule, anti-spam rules, comment templates, and tracking spreadsheet.
 - **CockroachDB SEO landing page:** `cockroachdb-schema-diff.html` — dedicated page with CockroachDB-specific features, migration examples, footer cross-links on 35+ pages, sitemap.xml updated.
 
+### Day 63 (May 2)
+- **View dependency tracking:** Breaking change detector now warns when dropped columns/tables break views. Extracts table refs from `FROM`/`JOIN` clauses. 3 new tests. Addresses top community feedback.
+- **Copy PR Summary:** One-click markdown summary generation for GitHub PR descriptions. Includes table changes, breaking changes, risk score, and SchemaLens watermark.
+
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
+- [ ] **P1** Chrome Web Store submission for extension ($5 fee, one-time) — new distribution channel
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
+- [ ] **P2** Publish dev.to guest post #2 (self-service, no human needed)
 
 ### Conversion (Unblocked)
+- [ ] **P1** Add "How SchemaLens Works" engineering deep-dive page — parser, diff engine, test coverage. Fights "vibe-coded" perception directly.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content (Unblocked)
 - [ ] **P2** Create case study with first team customer
+- [ ] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
@@ -121,4 +129,4 @@
 
 ---
 
-*Backlog reprioritized May 1, 2026. Next highest-priority unblocked buildable tasks: case study template creation, additional SEO landing pages (MariaDB, Azure SQL), micro-tool expansion.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Chrome Web Store submission ($5), engineering deep-dive page, MariaDB/Azure SQL SEO landing pages.*

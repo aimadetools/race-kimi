@@ -26,8 +26,8 @@ const fs = require('fs');
 const html = fs.readFileSync('app.html', 'utf8');
 const scripts = [...html.matchAll(/<script>(?!.*src)([\s\S]*?)<\/script>/g)].map(m => m[1]);
 const script = scripts.find(s => s.includes('function parseSQL')) || scripts[scripts.length - 1];
-const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, quoteId };');
-const { parseSQL, diffSchemas, generateMigration, quoteId } = fn();
+const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, quoteId, detectBreakingChanges };');
+const { parseSQL, diffSchemas, generateMigration, quoteId, detectBreakingChanges } = fn();
 
 function testDialect(name, sql) {
   try {
@@ -240,5 +240,57 @@ if (migration.includes('ADD CONSTRAINT') && migration.includes('FOREIGN KEY')) {
   console.log('constraint-migration: FAIL — migration SQL missing constraint DDL');
 }
 
-console.log('\n' + ok + '/14 tests passed');
-process.exit(ok === 14 ? 0 : 1);
+// View parsing test
+const viewSQL = `CREATE TABLE users (id SERIAL PRIMARY KEY, email VARCHAR(255));
+CREATE VIEW active_users AS SELECT id, email FROM users WHERE email IS NOT NULL;
+`;
+const schemaView = parseSQL(viewSQL, 'postgres');
+if (schemaView.views && schemaView.views['active_users'] && schemaView.views['active_users'].query.includes('SELECT')) {
+  console.log('view-parse: OK — 1 view parsed');
+  ok++;
+} else {
+  console.log('view-parse: FAIL — view not parsed correctly, views:', Object.keys(schemaView.views || {}));
+}
+
+// View dependency breaking change test — dropped table referenced by view
+const viewDepSQLA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email VARCHAR(255));
+CREATE VIEW active_users AS SELECT id, email FROM users WHERE email IS NOT NULL;
+`;
+const viewDepSQLB = `CREATE TABLE orders (id SERIAL PRIMARY KEY, total DECIMAL(10,2));
+CREATE VIEW active_users AS SELECT id, email FROM users WHERE email IS NOT NULL;
+`;
+const schemaViewDepA = parseSQL(viewDepSQLA, 'postgres');
+const schemaViewDepB = parseSQL(viewDepSQLB, 'postgres');
+const viewDepDiff = diffSchemas(schemaViewDepA, schemaViewDepB);
+viewDepDiff.schemaA = schemaViewDepA;
+viewDepDiff.schemaB = schemaViewDepB;
+const viewDepBreaking = detectBreakingChanges(viewDepDiff);
+if (viewDepBreaking.some(b => b.type === 'VIEW_DEPENDENCY' && b.table === 'users')) {
+  console.log('view-dep-table: OK — breaking change detected for dropped table referenced by view');
+  ok++;
+} else {
+  console.log('view-dep-table: FAIL — expected VIEW_DEPENDENCY breaking change for dropped table, got:', viewDepBreaking);
+}
+
+// View dependency breaking change test — dropped column referenced by view
+const viewColSQLA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email VARCHAR(255), name VARCHAR(100));
+CREATE VIEW user_emails AS SELECT id, email, name FROM users;
+`;
+const viewColSQLB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email VARCHAR(255));
+CREATE VIEW user_emails AS SELECT id, email, name FROM users;
+`;
+const schemaViewColA = parseSQL(viewColSQLA, 'postgres');
+const schemaViewColB = parseSQL(viewColSQLB, 'postgres');
+const viewColDiff = diffSchemas(schemaViewColA, schemaViewColB);
+viewColDiff.schemaA = schemaViewColA;
+viewColDiff.schemaB = schemaViewColB;
+const viewColBreaking = detectBreakingChanges(viewColDiff);
+if (viewColBreaking.some(b => b.type === 'VIEW_DEPENDENCY' && b.column === 'name')) {
+  console.log('view-dep-column: OK — breaking change detected for dropped column referenced by view');
+  ok++;
+} else {
+  console.log('view-dep-column: FAIL — expected VIEW_DEPENDENCY breaking change for dropped column, got:', viewColBreaking);
+}
+
+console.log('\n' + ok + '/17 tests passed');
+process.exit(ok === 17 ? 0 : 1);
