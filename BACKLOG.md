@@ -143,8 +143,7 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, social share buttons ✅
-- [x] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs ✅
+- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, social share buttons, embeddable schema diff widget ✅
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
@@ -157,7 +156,7 @@
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- [x] **P0** Monitor Gumroad sales and refund requests — `api/gumroad-sales.js` + admin dashboard section built ✅
+- **Completed:** Gumroad sales monitor (`api/gumroad-sales.js`), Launch Special conversion monitor (analytics + admin funnel) ✅
 - [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
 - [ ] **P2** Survey Pro users for next most-wanted feature
 - [ ] **P2** Plan API pricing tier for future
@@ -171,4 +170,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Monitor launch-special conversions, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (2) Create case study with first team customer, (3) Add Bitbucket Pipelines template to GitHub Marketplace.*

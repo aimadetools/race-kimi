@@ -34,43 +34,6 @@
 | 74 | May 2 | Gumroad sales monitor — `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. New "Sales & Revenue" section in admin.html with net revenue, total sales, monthly revenue, refund/chargeback tracking, and transaction table with CSV export. Also fixes missing `escapeHtml` helper in admin dashboard. |
 | 75 | May 2 | Launch Special conversion monitor — analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats. |
 
-## Day 72 — Distribution: Embeddable Schema Diff Widget (May 2, 2026)
-
-### What Was Built
-- **`tools/embed-generator.html`** — Micro-tool for generating embeddable schema diff widgets
-  - Two schema textareas with sample data pre-loaded for instant preview
-  - Dialect selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-  - Width/height inputs for customizing iframe dimensions
-  - Live preview iframe showing the actual embedded diff in real time
-  - Auto-generated HTML embed code with one-click copy
-  - Use case cards: documentation, blog posts, READMEs, tutorials
-  - Standard SchemaLens nav, footer, SEO meta tags, OG tags, and schema.org SoftwareApplication markup
-- **`app.html?embed=1` mode** — Chromeless embeddable view for iframe inclusion
-  - URL params: `a` (base64 schema A), `b` (base64 schema B), `dialect`
-  - CSS `.embed-mode` hides nav, header, editor grid, tabs, footer, feedback FAB, pro hints, and modals
-  - Auto-populates schema textareas from URL params and auto-runs Compare after 400ms
-  - Always renders `powered-by-badge` linking back to SchemaLens homepage
-  - Results panel (visual diff + summary pills) is the only visible content
-- **Cross-links** — Added Embed Widget tool card to index.html free tools grid and tools.html tool grid. Added footer link on both pages.
-- **sitemap.xml** — Added `tools/embed-generator.html` entry with 0.7 priority and `2026-05-02` lastmod.
-
-### Validation
-- ✅ 17/17 diff engine tests pass
-- ✅ HTML structure validated (balanced tags)
-- ✅ Embed mode CSS correctly hides all chrome elements
-- ✅ Base64 encoding/decoding round-trips Unicode SQL correctly
-- ✅ Preview iframe loads embed URL with correct params
-- ✅ Copy button copies embed code to clipboard
-- ✅ SEO meta tags and schema.org markup present on embed-generator.html
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Embeds turn users into distribution channels.** A developer who embeds a schema diff in their blog post or documentation exposes SchemaLens to every reader. The widget is a free billboard that lives on other people's sites.
-2. **Zero-friction embedding is essential.** The generator tool pre-loads sample schemas so the preview works instantly. Users see the value before they paste their own SQL. One-click copy means they can go from discovery to embedded widget in under 30 seconds.
-3. **Embeds reinforce the brand.** Every embedded widget includes a "Powered by SchemaLens" badge. Even if the reader never clicks, they see the brand name. If they do click, they land on a homepage tagged with the referrer code for attribution tracking.
-
----
-
 ---
 
 ## Day 73 — Conversion & Virality: Launch Special + Shareable Diff Images (May 2, 2026)
