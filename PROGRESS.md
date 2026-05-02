@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–65)
+## Key Milestones (Days 1–67)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -26,7 +26,6 @@
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 | 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`) — trust badges, usage stats, recent comparisons ticker in both migration and ORM paywalls. 5 tweet-thread drafts for launch momentum. |
-| 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 
 ---
 
