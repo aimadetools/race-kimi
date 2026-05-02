@@ -26,6 +26,37 @@
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 | 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`) — trust badges, usage stats, recent comparisons ticker in both migration and ORM paywalls. 5 tweet-thread drafts for launch momentum. |
+| 68 | May 2 | DuckDB Schema Diff SEO landing page — dedicated page for analytical database schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
+
+---
+
+---
+
+## Day 68 — SEO: DuckDB Schema Diff Landing Page (May 2, 2026)
+
+### What Was Built
+- **`duckdb-schema-diff.html`** — Dedicated SEO landing page for DuckDB schema comparison
+  - DuckDB-specific hero and meta tags (title, description, OG, Twitter)
+  - Features highlight analytical workload concerns: in-process schemas, STRUCT/LIST/MAP/ENUM types, ART indexes, external tables for Parquet/CSV/JSON
+  - How-it-works section with `duckdb my.db ".schema"` export command
+  - Migration examples using PostgreSQL-compatible ALTER TABLE syntax
+  - CTA linking to app with PostgreSQL dialect (DuckDB is PostgreSQL-compatible)
+- **Footer cross-links** — Added DuckDB Diff link to footers on 35+ existing pages
+- **sitemap.xml** — Added `duckdb-schema-diff.html` entry with 0.9 priority
+- **Bug fix** — Removed pre-existing `<a>` tags inside `<head>` of `oracle-schema-diff.html` and removed duplicate footer link block
+
+### Validation
+- ✅ Page structure validated (balanced tags, no broken links)
+- ✅ OG tags and meta descriptions include DuckDB keywords
+- ✅ All internal footer links verified across modified pages
+- ✅ sitemap.xml syntax validated
+- ✅ 17/17 diff engine tests pass
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **DuckDB is the SQLite of analytics.** It's in-process, serverless, and developer-friendly — a perfect audience match for SchemaLens's zero-setup philosophy. The landing page emphasizes this alignment.
+2. **Analytical databases need schema diff too.** Data pipelines evolve, Parquet schemas change, and ETL jobs break when columns are renamed. DuckDB users managing these pipelines need the same safety net as transactional DB users.
+3. **SEO pages compound.** Each new database-specific page adds another entry point for organic search. DuckDB + the 19 existing diff pages create a comprehensive "schema diff for every database" moat.
 
 ---
 

@@ -27,6 +27,10 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
+- [x] **P2** DuckDB Schema Diff SEO landing page (`duckdb-schema-diff.html`) — footer cross-links on 35+ pages, sitemap.xml updated ✅
+- [ ] **P2** BigQuery Schema Diff SEO landing page
+- [ ] **P2** Snowflake Schema Diff SEO landing page
+- [ ] **P2** ClickHouse Schema Diff SEO landing page
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
@@ -107,6 +111,9 @@
 - **Social proof in app paywall:** `getSocialProofHTML()` helper with trust badges (100% private, zero setup, custom parser, money-back guarantee), usage stats, and recent comparisons ticker in both migration and ORM paywalls. Addresses "vibe-coded" perception from Reddit feedback.
 - **5 tweet-thread drafts:** migration mistakes, review like a senior engineer, CLI vs browser, hidden cost of manual migrations, breaking changes that should never reach production. All copy-paste ready in `marketing/tweet-thread-*.md`.
 
+### Day 68 (May 2)
+- **DuckDB SEO landing page:** `duckdb-schema-diff.html` — dedicated page for analytical database schema comparison with DuckDB-specific features (STRUCT/LIST/MAP/ENUM types, ART indexes, external tables). Footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in `oracle-schema-diff.html`.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -146,4 +153,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: dev.to guest post #2, tweet thread drafts, social proof in app paywall.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: BigQuery, Snowflake, or ClickHouse Schema Diff SEO landing pages.*
