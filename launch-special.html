@@ -274,6 +274,7 @@
   </div>
 </footer>
 
+<script src="lib/analytics-client.js"></script>
 <script src="lib/ref-tracking.js"></script>
 <script>
 (function initCountdown() {
@@ -330,6 +331,23 @@
   document.getElementById('spotsLeft').textContent = spots;
   const spotsLeft2 = document.getElementById('spotsLeft2');
   if (spotsLeft2) spotsLeft2.textContent = spots;
+
+  // Track CTA clicks on both buy buttons
+  function trackCta(buttonId, position) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+        window.SchemaLensAnalytics.track('launch_special_cta_click', {
+          position: position,
+          spots_left: spots,
+          referrer: document.referrer || 'direct'
+        });
+      }
+    });
+  }
+  trackCta('buyBtn', 'hero');
+  trackCta('buyBtn2', 'bottom');
 })();
 </script>
 </body>

@@ -382,6 +382,19 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🚀 Launch Special Monitor</h3>
+          <span class="admin-badge" id="badgeLaunchSpecial">Live</span>
+        </div>
+        <div class="admin-section-body" id="launchSpecialBody">
+          <div class="admin-empty">Loading launch special data…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshLaunchSpecial()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>🤝 Leads & Outreach</h3>
           <span class="admin-badge" id="badgeLeads">0</span>
         </div>
@@ -862,6 +875,146 @@
       }
     }
 
+    // Launch Special Monitor
+    async function refreshLaunchSpecial() {
+      const body = document.getElementById('launchSpecialBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+
+      let analyticsData = [];
+      let analyticsError = null;
+      try {
+        analyticsData = await adminFetch('analytics', 500);
+      } catch (e) {
+        analyticsError = e.message;
+      }
+
+      let salesData = { sales: [], summary: {} };
+      let salesError = null;
+      try {
+        const gumroad = await adminFetch('gumroad-sales');
+        salesData = gumroad || { sales: [], summary: {} };
+      } catch (e) {
+        salesError = e.message;
+      }
+
+      const launchEvents = analyticsData.filter(e =>
+        (e.page_path || '').includes('launch-special') ||
+        e.event_type === 'launch_special_cta_click'
+      );
+
+      const pageViews = launchEvents.filter(e => e.event_type === 'page_view').length;
+      const ctaClicks = launchEvents.filter(e => e.event_type === 'launch_special_cta_click').length;
+      const ctr = pageViews > 0 ? ((ctaClicks / pageViews) * 100).toFixed(1) : '0.0';
+
+      const sales = salesData.sales || [];
+      const salesCount = sales.length;
+      const conversionRate = pageViews > 0 ? ((salesCount / pageViews) * 100).toFixed(2) : '0.00';
+      const netRevenue = salesData.summary?.net_revenue || 0;
+
+      const heroClicks = launchEvents.filter(e =>
+        e.event_type === 'launch_special_cta_click' &&
+        (e.metadata || {}).position === 'hero'
+      ).length;
+      const bottomClicks = launchEvents.filter(e =>
+        e.event_type === 'launch_special_cta_click' &&
+        (e.metadata || {}).position === 'bottom'
+      ).length;
+
+      // Referrer breakdown
+      const referrerCounts = {};
+      for (const e of launchEvents.filter(e => e.event_type === 'page_view')) {
+        const ref = (e.referrer || e.metadata?.referrer || 'direct').replace(/^https?:\/\//, '').split('/')[0];
+        referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+      }
+      const referrerRows = Object.entries(referrerCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([ref, count]) => `<tr><td>${escapeHtml(ref)}</td><td>${count}</td></tr>`)
+        .join('');
+
+      const analyticsStatus = analyticsError
+        ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">Analytics unavailable: ${escapeHtml(analyticsError)}</div>`
+        : `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">Based on last 500 analytics events.</div>`;
+
+      body.innerHTML = `
+        <div style="padding:12px;">
+          <div class="admin-stats" style="margin-bottom:16px;">
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">${pageViews.toLocaleString()}</div>
+              <div class="label">Page Views</div>
+            </div>
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">${ctaClicks.toLocaleString()}</div>
+              <div class="label">CTA Clicks</div>
+            </div>
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">${ctr}%</div>
+              <div class="label">CTR</div>
+            </div>
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">${salesCount.toLocaleString()}</div>
+              <div class="label">Sales</div>
+            </div>
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">${conversionRate}%</div>
+              <div class="label">Conv. Rate</div>
+            </div>
+            <div class="admin-stat">
+              <div class="value" style="font-size:1.4rem;">$${Number(netRevenue).toFixed(2)}</div>
+              <div class="label">Net Revenue</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px;margin-bottom:16px;">
+            <div style="background:var(--surface-hover);border-radius:var(--radius-sm);padding:14px;">
+              <h4 style="margin:0 0 10px;font-size:0.9rem;">CTA Breakdown</h4>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.85rem;">
+                <span>Hero button</span><strong>${heroClicks}</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                <span>Bottom button</span><strong>${bottomClicks}</strong>
+              </div>
+            </div>
+            <div style="background:var(--surface-hover);border-radius:var(--radius-sm);padding:14px;">
+              <h4 style="margin:0 0 10px;font-size:0.9rem;">Top Referrers</h4>
+              ${referrerRows ? `<table style="width:100%;font-size:0.8rem;"><tbody>${referrerRows}</tbody></table>` : '<div style="font-size:0.8rem;color:var(--text-muted);">No referrer data yet.</div>'}
+            </div>
+          </div>
+
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+            <h4 style="margin:0 0 10px;font-size:0.9rem;">Launch Special Funnel</h4>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.85rem;">
+                <span>Page View</span><span>${pageViews.toLocaleString()}</span>
+              </div>
+              <div style="background:var(--surface-hover);border-radius:6px;height:24px;overflow:hidden;">
+                <div style="width:100%;background:#6366f1;height:100%;border-radius:6px;"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.85rem;">
+                <span>CTA Click</span><span>${ctaClicks.toLocaleString()} ${pageViews > 0 ? '(' + ctr + '%)' : ''}</span>
+              </div>
+              <div style="background:var(--surface-hover);border-radius:6px;height:24px;overflow:hidden;">
+                <div style="width:${Math.max(pageViews > 0 ? (ctaClicks / pageViews) * 100 : 0, 1)}%;background:#8b5cf6;height:100%;border-radius:6px;"></div>
+              </div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.85rem;">
+                <span>Purchase</span><span>${salesCount.toLocaleString()} ${pageViews > 0 ? '(' + conversionRate + '%)' : ''}</span>
+              </div>
+              <div style="background:var(--surface-hover);border-radius:6px;height:24px;overflow:hidden;">
+                <div style="width:${Math.max(pageViews > 0 ? (salesCount / pageViews) * 100 : 0, 1)}%;background:#22c55e;height:100%;border-radius:6px;"></div>
+              </div>
+            </div>
+          </div>
+
+          ${analyticsStatus}
+          ${salesError ? `<div style="font-size:0.8rem;color:var(--danger);margin-top:4px;">Sales data error: ${escapeHtml(salesError)}</div>` : ''}
+        </div>
+      `;
+    }
+
     // Leads & Outreach CRM (localStorage-backed)
     const LEADS_KEY = 'schemalens_leads';
     const LEAD_STATUSES = ['new', 'contacted', 'responded', 'converted', 'declined'];
@@ -1171,6 +1324,7 @@
       refreshTestimonials();
       refreshComments();
       refreshFunnel();
+      refreshLaunchSpecial();
       refreshAnalytics();
       refreshLeads();
       refreshAffiliates();

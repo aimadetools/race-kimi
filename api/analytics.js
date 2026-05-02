@@ -126,7 +126,8 @@ module.exports = async (req, res) => {
     'ref_click',
     'ref_visit',
     'share_cta_clicked',
-    'demo_auto_run'
+    'demo_auto_run',
+    'launch_special_cta_click'
   ]);
 
   if (!allowedEvents.has(event_type)) {
