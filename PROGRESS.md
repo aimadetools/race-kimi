@@ -57,6 +57,9 @@
 - ✅ app.html scripts parse without syntax errors
 - ✅ schema-templates.html validates (balanced tags, no console errors)
 - ✅ sitemap.xml updated with schema-templates.html entry
+- ✅ privacy-policy.html created for Chrome Web Store compliance
+- ✅ Chrome Web Store package prepared (`chrome-extension.zip` + listing doc)
+- ✅ Privacy links added to index.html, app.html, pricing.html footers
 - ✅ Deployed to Vercel via git push
 
 ### Key Insights

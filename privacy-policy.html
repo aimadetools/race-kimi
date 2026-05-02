@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — SchemaLens</title>
+  <meta name="description" content="SchemaLens privacy policy. We do not collect, store, or process your SQL schemas. All diffing happens in your browser.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .pp-page { max-width: 720px; margin: 0 auto; padding: 3rem 1rem 4rem; line-height: 1.7; }
+    .pp-page h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .pp-page .lead { color: var(--text-muted); margin-bottom: 2rem; }
+    .pp-page h2 { font-size: 1.2rem; margin: 2rem 0 0.5rem; }
+    .pp-page p { margin-bottom: 1rem; }
+    .pp-page ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .pp-page li { margin-bottom: 0.35rem; }
+    .highlight-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin: 1.5rem 0; }
+    .highlight-box strong { color: var(--success); }
+  </style>
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+  </script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container pp-page">
+  <h1>Privacy Policy</h1>
+  <p class="lead">Last updated: May 2, 2026</p>
+
+  <div class="highlight-box">
+    <strong>TL;DR:</strong> SchemaLens is a privacy-first tool. Your SQL schemas are parsed and diffed entirely in your browser. We cannot see your data, and we do not want to.
+  </div>
+
+  <h2>1. Information We Do Not Collect</h2>
+  <p>SchemaLens does <strong>not</strong> collect, store, or transmit your SQL schemas, database dumps, or migration scripts to our servers. All processing happens locally in your web browser using JavaScript.</p>
+  <ul>
+    <li>We do not see your schema contents.</li>
+    <li>We do not store your schema contents.</li>
+    <li>We do not log your schema contents.</li>
+  </ul>
+
+  <h2>2. Information We Do Collect</h2>
+  <p>We collect only the minimum data needed to operate the service:</p>
+  <ul>
+    <li><strong>Analytics:</strong> Anonymous page views and feature usage via Vercel Analytics (privacy-friendly, no cookies, no personal data).</li>
+    <li><strong>Local storage:</strong> Your browser stores your theme preference, diff history, and saved diffs locally. This never leaves your device.</li>
+    <li><strong>Email addresses:</strong> If you voluntarily subscribe to our newsletter or request a Team demo, we store your email via Supabase and Resend to send you the content you requested.</li>
+    <li><strong>License keys:</strong> If you purchase Pro, your license key is validated client-side. We do not track which schemas you diff.</li>
+  </ul>
+
+  <h2>3. Chrome Extension</h2>
+  <p>The SchemaLens Chrome extension:</p>
+  <ul>
+    <li>Reads the current GitHub page URL to detect <code>.sql</code> files.</li>
+    <li>Fetches raw SQL content from <code>raw.githubusercontent.com</code> when you click "Open in SchemaLens."</li>
+    <li>Does not collect, store, or transmit any data to SchemaLens servers.</li>
+    <li>Does not inject tracking scripts or advertisements.</li>
+  </ul>
+
+  <h2>4. Third-Party Services</h2>
+  <p>We use the following third-party services:</p>
+  <ul>
+    <li><strong>Vercel:</strong> Hosting and anonymous analytics. Vercel may process IP addresses for routing purposes.</li>
+    <li><strong>Supabase:</strong> Authentication and cloud save (only if you explicitly create an account and opt in).</li>
+    <li><strong>Resend:</strong> Email delivery for newsletter subscriptions and demo requests.</li>
+    <li><strong>Gumroad:</strong> Payment processing for Pro license keys. Gumroad handles all payment data; we never see your credit card.</li>
+  </ul>
+
+  <h2>5. Cookies</h2>
+  <p>SchemaLens does not use tracking cookies. We use <code>localStorage</code> to remember your theme preference and diff history. This data stays in your browser.</p>
+
+  <h2>6. Data Retention</h2>
+  <p>Since we do not collect your schemas, there is no schema data to retain. Analytics data is retained by Vercel for 30 days. Email addresses are retained until you unsubscribe.</p>
+
+  <h2>7. Your Rights</h2>
+  <p>You have the right to:</p>
+  <ul>
+    <li>Request deletion of your email from our newsletter list.</li>
+    <li>Export or delete your saved diffs from localStorage at any time.</li>
+    <li>Use SchemaLens without creating an account or providing any personal information.</li>
+  </ul>
+
+  <h2>8. Changes to This Policy</h2>
+  <p>We may update this privacy policy from time to time. Changes will be posted on this page with an updated date.</p>
+
+  <h2>9. Contact</h2>
+  <p>If you have questions about this privacy policy, please contact us at <a href="mailto:hello@schemalens.tech">hello@schemalens.tech</a>.</p>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div class="container">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="index.html">Home</a>
+      <a href="app.html">Schema Diff</a>
+      <a href="tools.html">All Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="lib/analytics-client.js"></script>
+</body>
+</html>

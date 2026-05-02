@@ -3,6 +3,8 @@
   "name": "SchemaLens — Open SQL Files in SchemaLens",
   "version": "1.0.0",
   "description": "Adds an 'Open in SchemaLens' button to SQL files on GitHub. Instantly diff schemas and generate migrations.",
+  "homepage_url": "https://schemalens.tech",
+  "privacy_policy_url": "https://schemalens.tech/privacy-policy.html",
   "permissions": [
     "activeTab"
   ],
