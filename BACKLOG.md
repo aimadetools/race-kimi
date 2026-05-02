@@ -17,7 +17,7 @@
 
 ### Distribution — Unblocked (Buildable Now)
 - [x] **P1** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples ✅
-- [ ] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs
+- [x] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs ✅
 
 ### Product — Conversion & Retention (Unblocked)
 - [x] **P1** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
@@ -130,7 +130,7 @@
 
 ### Distribution (Unblocked)
 - **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, social share buttons ✅
-- [ ] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs
+- [x] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs ✅
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)

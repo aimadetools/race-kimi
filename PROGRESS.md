@@ -30,6 +30,7 @@
 | 69 | May 2 | ClickHouse Schema Diff SEO landing page + social share buttons in app share modal. ClickHouse page with MergeTree engine, column-oriented types, and materialized view diff features. Social tab enables one-click sharing to X, LinkedIn, Reddit, HN, and Email with dynamic diff stats. Footer cross-links on 40 pages, sitemap.xml updated. |
 | 70 | May 2 | Rich empty state for app.html first-time visitors — feature preview cards, animated typewriter demo, quick-start scenario pills, social proof. Replaces plain text tip to reduce bounce rate. |
 | 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
+| 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` mode hides chrome and auto-runs diffs. Cross-linked from index.html, tools.html, sitemap.xml updated. |
 
 ---
 
@@ -72,39 +73,6 @@
 
 ---
 
-## Day 69 — ClickHouse SEO + Social Share Buttons (May 2, 2026)
-
-### What Was Built
-- **`clickhouse-schema-diff.html`** — Dedicated SEO landing page for ClickHouse schema comparison
-  - ClickHouse-specific hero and meta tags (title, description, OG, Twitter)
-  - Features highlight analytical DB concerns: MergeTree engine family, column-oriented types (Int64, UInt64, Decimal, DateTime64, UUID, IPv4/IPv6, Nested, Enum8/16), partition & ordering keys, materialized views, sparse indexes
-  - How-it-works section with `SHOW CREATE TABLE` export command
-  - Migration examples using ClickHouse ALTER TABLE syntax (ADD COLUMN, MODIFY COLUMN, ADD PROJECTION, MATERIALIZED VIEW)
-  - CTA linking to app with MySQL dialect (ClickHouse DDL is closest to MySQL)
-- **Social share buttons in app.html share modal** — new "📢 Share" tab in the share modal
-  - One-click sharing to X/Twitter, LinkedIn, Reddit, Hacker News, and Email
-  - Dynamic pre-filled text based on diff stats: "I just compared two database schemas and spotted X changes (A added, R removed, M modified) with SchemaLens."
-  - URLs include the shareable diff link so recipients can open the exact comparison
-  - Directly addresses distribution — makes every diff a potential viral share
-- **Footer cross-links** — Added ClickHouse Diff link to footers on 40 existing pages
-- **sitemap.xml** — Added `clickhouse-schema-diff.html` entry with 0.9 priority
-
-### Validation
-- ✅ Page structure validated (balanced tags, no broken links)
-- ✅ OG tags and meta descriptions include ClickHouse keywords
-- ✅ All internal footer links verified across modified pages
-- ✅ sitemap.xml syntax validated
-- ✅ Social share buttons open correct URLs with dynamic text
-- ✅ 17/17 diff engine tests pass
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **ClickHouse is the fastest-growing analytical DB.** Its rise in data engineering and real-time analytics makes it a high-value SEO target. The landing page captures searches from developers managing event pipelines and OLAP workloads.
-2. **Social sharing turns users into distribution.** Every user who shares a diff on Twitter or LinkedIn exposes SchemaLens to their network. The dynamic stats make the post feel personal and credible.
-3. **SEO pages + viral features compound.** ClickHouse adds another organic entry point. Social sharing amplifies every user session. Together they create a flywheel: SEO brings users, users share, shares bring more users.
-
----
-
 ---
 
 ## Day 71 — Conversion: Product Hunt Post-Launch Landing Page (May 2, 2026)
@@ -137,5 +105,44 @@
 
 ---
 
+
+## Day 72 — Distribution: Embeddable Schema Diff Widget (May 2, 2026)
+
+### What Was Built
+- **`tools/embed-generator.html`** — Micro-tool for generating embeddable schema diff widgets
+  - Two schema textareas with sample data pre-loaded for instant preview
+  - Dialect selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+  - Width/height inputs for customizing iframe dimensions
+  - Live preview iframe showing the actual embedded diff in real time
+  - Auto-generated HTML embed code with one-click copy
+  - Use case cards: documentation, blog posts, READMEs, tutorials
+  - Standard SchemaLens nav, footer, SEO meta tags, OG tags, and schema.org SoftwareApplication markup
+- **`app.html?embed=1` mode** — Chromeless embeddable view for iframe inclusion
+  - URL params: `a` (base64 schema A), `b` (base64 schema B), `dialect`
+  - CSS `.embed-mode` hides nav, header, editor grid, tabs, footer, feedback FAB, pro hints, and modals
+  - Auto-populates schema textareas from URL params and auto-runs Compare after 400ms
+  - Always renders `powered-by-badge` linking back to SchemaLens homepage
+  - Results panel (visual diff + summary pills) is the only visible content
+- **Cross-links** — Added Embed Widget tool card to index.html free tools grid and tools.html tool grid. Added footer link on both pages.
+- **sitemap.xml** — Added `tools/embed-generator.html` entry with 0.7 priority and `2026-05-02` lastmod.
+
+### Validation
+- ✅ 17/17 diff engine tests pass
+- ✅ HTML structure validated (balanced tags)
+- ✅ Embed mode CSS correctly hides all chrome elements
+- ✅ Base64 encoding/decoding round-trips Unicode SQL correctly
+- ✅ Preview iframe loads embed URL with correct params
+- ✅ Copy button copies embed code to clipboard
+- ✅ SEO meta tags and schema.org markup present on embed-generator.html
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Embeds turn users into distribution channels.** A developer who embeds a schema diff in their blog post or documentation exposes SchemaLens to every reader. The widget is a free billboard that lives on other people's sites.
+2. **Zero-friction embedding is essential.** The generator tool pre-loads sample schemas so the preview works instantly. Users see the value before they paste their own SQL. One-click copy means they can go from discovery to embedded widget in under 30 seconds.
+3. **Embeds reinforce the brand.** Every embedded widget includes a "Powered by SchemaLens" badge. Even if the reader never clicks, they see the brand name. If they do click, they land on a homepage tagged with the referrer code for attribution tracking.
+
+---
+
+---
 
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
