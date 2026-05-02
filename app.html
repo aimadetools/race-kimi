@@ -1598,6 +1598,7 @@ CREATE TABLE users (
         <button class="share-tab active" data-tab="link" onclick="switchShareTab('link')">🔗 Link</button>
         <button class="share-tab" data-tab="social" onclick="switchShareTab('social')">📢 Share</button>
         <button class="share-tab" data-tab="badge" onclick="switchShareTab('badge')">🔖 Badge</button>
+        <button class="share-tab" data-tab="image" onclick="switchShareTab('image')">🖼️ Image</button>
       </div>
       <div id="shareTabLink" class="share-tab-panel active">
         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Copy a shareable URL that opens this exact diff in SchemaLens.</p>
@@ -1646,6 +1647,17 @@ CREATE TABLE users (
           </div>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Want a custom badge? <a href="tools/badge-generator.html" target="_blank">Use the Badge Generator →</a></p>
+      </div>
+      <div id="shareTabImage" class="share-tab-panel" style="display:none;">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Download a shareable image of your diff summary. Perfect for Twitter, LinkedIn, or Slack.</p>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;border:1px dashed var(--border);margin-bottom:12px;">
+          <canvas id="shareImageCanvas" width="1200" height="630" style="max-width:100%;height:auto;border-radius:6px;"></canvas>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <a id="shareImageDownload" href="#" download="schemalens-diff.png" class="btn btn-primary" style="flex:1;text-align:center;text-decoration:none;">Download PNG</a>
+          <button class="btn btn-secondary" onclick="copyShareImageToClipboard()">Copy Image</button>
+        </div>
+        <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Tip: Right-click the preview and select "Copy image" for quick pasting into Slack or Discord.</p>
       </div>
       <div class="modal-actions" style="margin-top:20px;">
         <button class="btn btn-secondary" onclick="closeShareModal()">Close</button>
@@ -5828,6 +5840,26 @@ function openShareModal() {
   document.getElementById('shareHN').href = `https://news.ycombinator.com/submitlink?t=${encodedText}&u=${encodedUrl}`;
   document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('Schema comparison result')}&body=${encodedText}%0A%0A${encodedUrl}`;
 
+  // Generate share image preview
+  let imageSummary = { added: 0, removed: 0, modified: 0, renamed: 0, breaking: 0, riskScore: 0, riskLabel: 'Low' };
+  try {
+    const oldSchema = parseSQL(a, dialect);
+    const newSchema = parseSQL(b, dialect);
+    const diff = diffSchemas(oldSchema, newSchema);
+    imageSummary.added = diff.tablesAdded?.length || 0;
+    imageSummary.removed = diff.tablesRemoved?.length || 0;
+    imageSummary.modified = diff.tablesModified?.length || 0;
+    imageSummary.renamed = diff.tablesRenamed?.length || 0;
+    const bc = detectBreakingChanges(diff);
+    imageSummary.breaking = bc.length;
+    const rs = calculateRiskScore(diff, bc);
+    if (rs) {
+      imageSummary.riskScore = rs.score;
+      imageSummary.riskLabel = rs.label;
+    }
+  } catch (e) {}
+  generateShareImage(imageSummary);
+
   // Reset to link tab
   switchShareTab('link');
 
@@ -5846,6 +5878,7 @@ function switchShareTab(tab) {
   document.getElementById('shareTabLink').style.display = tab === 'link' ? 'block' : 'none';
   document.getElementById('shareTabSocial').style.display = tab === 'social' ? 'block' : 'none';
   document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
+  document.getElementById('shareTabImage').style.display = tab === 'image' ? 'block' : 'none';
 }
 
 function copyShareLinkFromModal() {
@@ -5857,6 +5890,141 @@ function copyShareLinkFromModal() {
     setTimeout(() => btn.textContent = old, 2000);
   });
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_link_copied');
+}
+
+function generateShareImage(diffSummary) {
+  const canvas = document.getElementById('shareImageCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1200, H = 630;
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0f172a');
+  grad.addColorStop(1, '#1e1b4b');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid pattern
+  ctx.strokeStyle = 'rgba(99,102,241,0.06)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Top accent bar
+  const barGrad = ctx.createLinearGradient(0, 0, W, 0);
+  barGrad.addColorStop(0, '#6366f1');
+  barGrad.addColorStop(1, '#8b5cf6');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, 0, W, 6);
+
+  // Logo / Brand
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText('SchemaLens', 60, 60);
+  ctx.fillStyle = '#818cf8';
+  ctx.font = '500 18px sans-serif';
+  ctx.fillText('Schema Diff Result', 60, 90);
+
+  // Summary stats
+  const stats = diffSummary || { added: 0, removed: 0, modified: 0, renamed: 0, breaking: 0, riskScore: 0, riskLabel: 'Low' };
+  const statY = 180;
+  const statGap = 220;
+  const statXStart = 80;
+
+  const drawStat = (x, y, label, value, color) => {
+    ctx.fillStyle = color;
+    ctx.font = 'bold 64px sans-serif';
+    ctx.fillText(String(value), x, y);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '500 18px sans-serif';
+    ctx.fillText(label, x, y + 28);
+  };
+
+  drawStat(statXStart, statY, 'Tables Added', stats.added, '#34d399');
+  drawStat(statXStart + statGap, statY, 'Tables Removed', stats.removed, '#f87171');
+  drawStat(statXStart + statGap * 2, statY, 'Tables Modified', stats.modified, '#fbbf24');
+  drawStat(statXStart + statGap * 3, statY, 'Renamed', stats.renamed, '#818cf8');
+
+  // Breaking changes banner
+  if (stats.breaking > 0) {
+    ctx.fillStyle = 'rgba(248,113,113,0.12)';
+    ctx.strokeStyle = 'rgba(248,113,113,0.4)';
+    ctx.lineWidth = 2;
+    roundRect(ctx, 60, 300, W - 120, 70, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#f87171';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText(`🔴 ${stats.breaking} Breaking change${stats.breaking > 1 ? 's' : ''} detected`, 90, 345);
+  } else {
+    ctx.fillStyle = 'rgba(52,211,153,0.12)';
+    ctx.strokeStyle = 'rgba(52,211,153,0.4)';
+    ctx.lineWidth = 2;
+    roundRect(ctx, 60, 300, W - 120, 70, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText('✓ No breaking changes detected', 90, 345);
+  }
+
+  // Risk score pill
+  const riskColors = { Low: '#34d399', Medium: '#fbbf24', High: '#f87171' };
+  const riskColor = riskColors[stats.riskLabel] || '#94a3b8';
+  ctx.fillStyle = 'rgba(15,23,42,0.7)';
+  roundRect(ctx, 60, 400, 280, 56, 28);
+  ctx.fill();
+  ctx.strokeStyle = riskColor;
+  ctx.lineWidth = 2;
+  roundRect(ctx, 60, 400, 280, 56, 28);
+  ctx.stroke();
+  ctx.fillStyle = riskColor;
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText(`Risk: ${stats.riskScore}/100 ${stats.riskLabel}`, 84, 436);
+
+  // Bottom branding
+  ctx.fillStyle = '#475569';
+  ctx.font = '500 16px sans-serif';
+  ctx.fillText('Compare SQL schemas instantly at schemalens.tech', 60, H - 40);
+
+  // Update download link
+  const link = document.getElementById('shareImageDownload');
+  if (link) {
+    try {
+      link.href = canvas.toDataURL('image/png');
+    } catch (e) {}
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+async function copyShareImageToClipboard() {
+  const canvas = document.getElementById('shareImageCanvas');
+  if (!canvas) return;
+  try {
+    canvas.toBlob(async (blob) => {
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      const btn = event.target;
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 2000);
+    });
+  } catch (e) {
+    alert('Could not copy image. Try downloading instead.');
+  }
 }
 
 function copyBadgeMd() {

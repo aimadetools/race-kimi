@@ -18,6 +18,10 @@
 ### Distribution — Unblocked (Buildable Now)
 - [x] **P1** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples ✅
 - [x] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs ✅
+- [x] **P1** Share Diff as Image — canvas-based viral cards for social sharing ✅
+
+### Conversion — Unblocked (Buildable Now)
+- [x] **P1** Launch Special landing page ($19/first year, scarcity, countdown, FAQ) ✅
 
 ### Product — Conversion & Retention (Unblocked)
 - [x] **P1** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
@@ -134,7 +138,7 @@
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -157,4 +161,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Embeddable schema diff widget for docs/blogs, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Monitor launch-special conversions, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
