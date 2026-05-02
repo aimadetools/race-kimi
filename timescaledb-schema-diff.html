@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>TimescaleDB Schema Diff Online — Compare & Migrate TimescaleDB Schemas</title>
+  <meta name="description" content="Compare two TimescaleDB schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
+  <meta property="og:title" content="TimescaleDB Schema Diff Online — Compare & Migrate TimescaleDB Schemas">
+  <meta property="og:description" content="Compare two TimescaleDB schemas side by side. Generate ALTER TABLE migration scripts instantly.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/timescaledb-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        TimescaleDB schema diff — free to use
+      </div>
+      <h1>TimescaleDB Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>pg_dump --schema-only</code> outputs from your TimescaleDB instances. Spot every hypertable, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for TimescaleDB — all in your browser.</p>
+      <div class="hero-actions">
+        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff TimescaleDB Schemas</a>
+        <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Built for time-series workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands TimescaleDB-specific syntax that generic diff tools miss.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">⏱️</div>
+          <h3>Hypertable Schema Comparison</h3>
+          <p>Compares <code>CREATE TABLE</code> definitions for hypertables, including time-series columns, partition keys, and space dimensions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📊</div>
+          <h3>TIMESTAMPTZ &amp; Time-Series Types</h3>
+          <p>Correctly handles <code>TIMESTAMPTZ</code>, <code>TIMESTAMP</code>, <code>INTERVAL</code>, and custom time-series types across schema versions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
+          <h3>Indexes &amp; Constraints</h3>
+          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and time-optimized indexes — all compared semantically, not by raw text.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">👁️</div>
+          <h3>Continuous Aggregate Views</h3>
+          <p>Detects changes in <code>CREATE MATERIALIZED VIEW</code> definitions for continuous aggregates, including column additions and filter modifications.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
+          <h3>PostgreSQL-Native Parser</h3>
+          <p>Because TimescaleDB is PostgreSQL under the hood, SchemaLens parses every hypertable, index, and constraint with full accuracy.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
+          <h3>Privacy First</h3>
+          <p>Your schema never leaves the browser. Compare production time-series schemas safely without uploading sensitive table structures to a third-party server.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
+          <h3>Export your schemas</h3>
+          <p>Run <code>pg_dump --schema-only old_db > old.sql</code> on both TimescaleDB databases.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
+          <h3>Paste into SchemaLens</h3>
+          <p>Copy the SQL into the two editor panes. Select PostgreSQL dialect — TimescaleDB is PostgreSQL-native.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
+          <h3>Review the diff</h3>
+          <p>See added hypertables, dropped columns, type changes, and constraint modifications highlighted in color.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
+          <h3>Copy the migration</h3>
+          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown, PDF, or raw SQL. Run in staging, then production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">TimescaleDB migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
+      <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
+        <div class="feature-card">
+          <h3>Add a metric column to a hypertable</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "metrics"
+  ADD COLUMN "cpu_temp" DOUBLE PRECISION;</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Change a column type</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "events"
+  ALTER COLUMN "metadata" TYPE JSONB;</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Add a time-series index</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>CREATE INDEX "idx_metrics_device_time"
+  ON "metrics" ("device_id", "time" DESC);</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Add a foreign key</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE "sensor_readings"
+  ADD CONSTRAINT "fk_sensor_device"
+  FOREIGN KEY ("device_id") REFERENCES "devices"("id");</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">PostgreSQL</span>
+            <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step workflow for catching schema drift between staging and production.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Migration</span>
+            <h3><a href="blog/how-to-detect-schema-drift-before-production.html">How to Detect Schema Drift Before Production</a></h3>
+            <p>Automated checks and manual review processes to prevent broken deployments.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Safety</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn how to catch dropped columns, missing indexes, and type changes before they cause incidents.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Ready to diff your TimescaleDB schemas?</h2>
+      <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
+      <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="mariadb-schema-diff.html">MariaDB Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="azure-sql-schema-diff.html">Azure SQL Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="cockroachdb-schema-diff.html">CockroachDB Diff</a>
+          <a href="timescaledb-schema-diff.html">TimescaleDB Diff</a>
+          <a href="supabase-schema-diff.html">Supabase Diff</a>
+          <a href="neon-schema-diff.html">Neon Diff</a>
+          <a href="planetscale-schema-diff.html">PlanetScale Diff</a>
+          <a href="railway-schema-diff.html">Railway Diff</a>
+          <a href="firebase-schema-diff.html">Firebase Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+      <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>
