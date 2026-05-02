@@ -578,6 +578,141 @@
       font-size: 0.95rem;
     }
     .welcome-hint.hidden { display: none; }
+
+    .welcome-state {
+      text-align: center;
+      padding: 48px 20px 40px;
+      color: var(--text-muted);
+    }
+    .welcome-state.hidden { display: none; }
+    .welcome-state h2 {
+      color: var(--text);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .welcome-state .subtitle {
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.55;
+    }
+    .welcome-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 640px;
+      margin: 0 auto 28px;
+    }
+    .welcome-feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 14px;
+      text-align: center;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .welcome-feature:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .welcome-feature .icon {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .welcome-feature h4 {
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+    .welcome-feature p {
+      font-size: 0.82rem;
+      margin: 0;
+      line-height: 1.45;
+    }
+    .welcome-cta {
+      margin-bottom: 24px;
+    }
+    .welcome-cta .btn-watch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    }
+    .welcome-cta .btn-watch:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.45);
+    }
+    .welcome-cta .btn-watch:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .welcome-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      max-width: 560px;
+      margin: 0 auto 20px;
+    }
+    .welcome-pills span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-right: 4px;
+      align-self: center;
+    }
+    .welcome-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .welcome-pill:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+    }
+    .welcome-social {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .welcome-social strong {
+      color: var(--text);
+    }
+    .welcome-links {
+      font-size: 0.9rem;
+    }
+    .welcome-links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .welcome-links a:hover { text-decoration: underline; }
+    @media (max-width: 640px) {
+      .welcome-features { grid-template-columns: 1fr; }
+      .welcome-state h2 { font-size: 1.35rem; }
+    }
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -1176,8 +1311,44 @@ CREATE TABLE users (
 
     <div id="errorContainer"></div>
 
-    <div class="welcome-hint" id="welcomeHint">
-      <p>💡 <strong>Tip:</strong> Paste your old schema in <strong>Schema A</strong> and your new schema in <strong>Schema B</strong>, then click <strong>Compare Schemas</strong>.<br>You can also drag and drop <code>.sql</code> files directly onto either panel.<br><a href="schema-examples.html" style="color:var(--primary);">Not sure what to compare? Try a real-world example →</a></p>
+    <div class="welcome-state" id="welcomeHint">
+      <h2>Compare database schemas in seconds</h2>
+      <p class="subtitle">Paste two CREATE TABLE dumps, click Compare, and get a visual diff plus ready-to-run migration SQL.</p>
+
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <span class="icon">🔍</span>
+          <h4>Visual Diff</h4>
+          <p>See exactly what changed — added, removed, and modified tables at a glance.</p>
+        </div>
+        <div class="welcome-feature">
+          <span class="icon">🚀</span>
+          <h4>Migration SQL</h4>
+          <p>Generate ALTER TABLE scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+        </div>
+        <div class="welcome-feature">
+          <span class="icon">⚠️</span>
+          <h4>Breaking Changes</h4>
+          <p>Spot dangerous drops and renames before they break production.</p>
+        </div>
+      </div>
+
+      <div class="welcome-cta">
+        <button class="btn-watch" id="watchDemoBtn" onclick="runAnimatedDemo()">
+          <span>▶</span> Watch 10-sec demo
+        </button>
+      </div>
+
+      <div class="welcome-pills">
+        <span>Or try:</span>
+        <button class="welcome-pill" onclick="loadQuickExample('add-column')">➕ Add a column</button>
+        <button class="welcome-pill" onclick="loadQuickExample('add-table')">📋 New table</button>
+        <button class="welcome-pill" onclick="loadQuickExample('rename-index')">🏷️ Rename + index</button>
+        <button class="welcome-pill" onclick="loadQuickExample('breaking')">💥 Breaking change</button>
+      </div>
+
+      <p class="welcome-social">Join <strong>thousands of developers</strong> who diff schemas before every deploy.</p>
+      <p class="welcome-links"><a href="schema-examples.html">Browse 6 real-world examples →</a> · <a href="how-it-works.html">How it works →</a></p>
     </div>
 
     <div class="results" id="results">
@@ -5763,6 +5934,209 @@ function loadSampleB() {
   updateStats();
 }
 
+// Quick inline examples for empty-state pills
+const QUICK_EXAMPLES = {
+  'add-column': {
+    dialect: 'postgres',
+    a: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT now()
+);`,
+    b: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  avatar_url VARCHAR(500),
+  bio TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);`
+  },
+  'add-table': {
+    dialect: 'postgres',
+    a: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  title VARCHAR(255) NOT NULL
+);`,
+    b: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  title VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(100) NOT NULL UNIQUE
+);`
+  },
+  'rename-index': {
+    dialect: 'mysql',
+    a: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL
+);`,
+    b: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  handle VARCHAR(50) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL,
+  email_verified_at TIMESTAMP
+);
+
+CREATE INDEX idx_email ON users(email);`
+  },
+  'breaking': {
+    dialect: 'postgres',
+    a: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  legacy_user_id VARCHAR(50),
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE VIEW active_users AS
+SELECT id, legacy_user_id, email
+FROM users
+WHERE email IS NOT NULL;`,
+    b: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE VIEW active_users AS
+SELECT id, legacy_user_id, email
+FROM users
+WHERE email IS NOT NULL;`
+  }
+};
+
+function loadQuickExample(type) {
+  const ex = QUICK_EXAMPLES[type];
+  if (!ex) return;
+  document.getElementById('schemaA').value = ex.a;
+  document.getElementById('schemaB').value = ex.b;
+  document.getElementById('dialect').value = ex.dialect;
+  updateStats();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('quick_example_loaded', { type });
+  // Small delay so user sees the schema load before results jump
+  setTimeout(() => {
+    document.getElementById('compareBtn').click();
+  }, 300);
+}
+
+// Animated typing demo for empty state
+let demoTypingActive = false;
+function runAnimatedDemo() {
+  if (demoTypingActive) return;
+  demoTypingActive = true;
+  const btn = document.getElementById('watchDemoBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> Running demo…'; }
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('demo_started', { source: 'empty_state' });
+
+  const schemaA = document.getElementById('schemaA');
+  const schemaB = document.getElementById('schemaB');
+  const dialect = document.getElementById('dialect');
+
+  // Short compelling demo schema
+  const textA = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  role VARCHAR(50) DEFAULT 'user'
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255),
+  body TEXT
+);`;
+
+  const textB = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  role VARCHAR(50) DEFAULT 'user',
+  avatar_url VARCHAR(500),
+  bio TEXT
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255),
+  body TEXT,
+  published BOOLEAN DEFAULT false,
+  slug VARCHAR(300) UNIQUE
+);
+
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL
+);`;
+
+  dialect.value = 'postgres';
+  schemaA.value = '';
+  schemaB.value = '';
+  updateStats();
+
+  // Smooth scroll to editors so user sees the typing
+  document.querySelector('.editor-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  function typeText(el, text, speed, onDone) {
+    let i = 0;
+    function step() {
+      if (!demoTypingActive) { if (onDone) onDone(); return; }
+      if (i < text.length) {
+        el.value += text.charAt(i);
+        i++;
+        // Speed up whitespace/newlines so demo isn't too slow
+        const char = text.charAt(i - 1);
+        const delay = (char === '\n' || char === ' ') ? Math.max(4, speed * 0.3) : speed;
+        setTimeout(step, delay);
+      } else {
+        if (onDone) onDone();
+      }
+    }
+    step();
+  }
+
+  typeText(schemaA, textA, 10, () => {
+    updateStats();
+    // Brief pause between A and B
+    setTimeout(() => {
+      typeText(schemaB, textB, 10, () => {
+        updateStats();
+        if (!demoTypingActive) return;
+        setTimeout(() => {
+          document.getElementById('compareBtn').click();
+          demoTypingActive = false;
+          if (btn) { btn.disabled = false; btn.innerHTML = '<span>▶</span> Watch 10-sec demo'; }
+          if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('demo_completed', { source: 'empty_state' });
+        }, 400);
+      });
+    }, 300);
+  });
+}
+
+// Allow user interaction to abort demo typing
+['schemaA','schemaB','dialect','compareBtn'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => { demoTypingActive = false; });
+});
+
 // -----------------------------
 // Stats
 // -----------------------------
@@ -5958,6 +6332,9 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('schemaAStats').textContent = '';
   document.getElementById('schemaBStats').textContent = '';
   document.getElementById('welcomeHint').classList.remove('hidden');
+  demoTypingActive = false;
+  const watchBtn = document.getElementById('watchDemoBtn');
+  if (watchBtn) { watchBtn.disabled = false; watchBtn.innerHTML = '<span>▶</span> Watch 10-sec demo'; }
   currentSavedDiffId = null;
   diffCommentsCache = [];
   clearShareUIs();
