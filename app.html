@@ -1189,6 +1189,44 @@
       padding: 6px 14px;
       white-space: nowrap;
     }
+
+    /* Embeddable widget mode */
+    body.embed-mode .announcement-bar,
+    body.embed-mode .nav,
+    body.embed-mode .app-header,
+    body.embed-mode .app-toolbar,
+    body.embed-mode .editor-grid,
+    body.embed-mode .results-tabs,
+    body.embed-mode .pro-hint,
+    body.embed-mode #diffHistoryPanel,
+    body.embed-mode #savedDiffsPanel,
+    body.embed-mode #teamDiffsPanel,
+    body.embed-mode .feedback-fab,
+    body.embed-mode footer,
+    body.embed-mode .welcome-state,
+    body.embed-mode .welcome-hint,
+    body.embed-mode .modal-overlay,
+    body.embed-mode #shareCtaBanner,
+    body.embed-mode .error-banner { display: none !important; }
+    body.embed-mode {
+      background: var(--bg);
+    }
+    body.embed-mode .container {
+      max-width: 100%;
+      padding: 12px 16px;
+    }
+    body.embed-mode .results {
+      display: block !important;
+      margin-top: 0;
+    }
+    body.embed-mode #panel-visual {
+      display: block !important;
+    }
+    body.embed-mode .powered-by-badge {
+      margin-top: 20px;
+      padding: 14px 16px;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
@@ -7410,6 +7448,55 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   modal.addEventListener('click', (e) => {
     if (e.target.id === 'exitIntentModal') closeExitIntentModal();
   });
+})();
+
+// Embed mode initialization
+(function() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('embed') !== '1') return;
+
+  document.body.classList.add('embed-mode');
+
+  const schemaA = params.get('a');
+  const schemaB = params.get('b');
+  const dialect = params.get('dialect') || 'postgres';
+
+  if (schemaA) {
+    try { document.getElementById('schemaA').value = decodeURIComponent(atob(schemaA)); } catch(e) {}
+  }
+  if (schemaB) {
+    try { document.getElementById('schemaB').value = decodeURIComponent(atob(schemaB)); } catch(e) {}
+  }
+  const dialectSelect = document.getElementById('dialect');
+  if (dialectSelect) {
+    dialectSelect.value = dialect;
+  }
+
+  // Hide welcome states
+  const welcomeState = document.querySelector('.welcome-state');
+  if (welcomeState) welcomeState.classList.add('hidden');
+  const welcomeHint = document.querySelector('.welcome-hint');
+  if (welcomeHint) welcomeHint.classList.add('hidden');
+
+  // Ensure results panel is visible
+  const results = document.querySelector('.results');
+  if (results) results.classList.add('active');
+  const panelVisual = document.getElementById('panel-visual');
+  if (panelVisual) panelVisual.classList.add('active');
+
+  // Override share CTA to always show powered-by badge in embeds
+  window._originalRenderShareCta = window.renderShareCtaBanner;
+  window.renderShareCtaBanner = function() {
+    renderPoweredByBadge();
+  };
+
+  // Auto-run comparison after brief delay to let DOM settle
+  if (schemaA && schemaB) {
+    setTimeout(() => {
+      const btn = document.getElementById('compareBtn');
+      if (btn) btn.click();
+    }, 400);
+  }
 })();
 
 // Init Supabase when DOM is ready
