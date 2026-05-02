@@ -22,6 +22,41 @@
 | 61 | May 1 | Stack Overflow Execution Kit — complete reputation-building roadmap, posting schedule, anti-spam rules, and tracking spreadsheet. |
 | 62 | May 1 | CockroachDB Schema Diff SEO landing page — dedicated page with CockroachDB-specific features, footer cross-links, sitemap.xml updated. |
 | 63 | May 2 | View dependency tracking + PR Summary — breaking change detection now warns when dropped columns/tables break views. New "Copy PR Summary" button generates markdown for PR descriptions. Schema Templates gallery page with 8 production-ready SQL designs. |
+| 64 | May 2 | MariaDB + Azure SQL Schema Diff SEO landing pages — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated. |
+
+---
+
+---
+
+## Day 64 — SEO: MariaDB + Azure SQL Schema Diff Landing Pages (May 2, 2026)
+
+### What Was Built
+- **`mariadb-schema-diff.html`** — Dedicated SEO landing page for MariaDB schema comparison
+  - MariaDB-specific hero and meta tags (title, description, OG, Twitter)
+  - Features highlight MariaDB-specific syntax: AUTO_INCREMENT, CHARACTER SET/COLLATE, backtick identifiers, virtual/persistent generated columns
+  - How-it-works section with `mariadb-dump --no-data` export command
+  - Migration examples using MariaDB-compatible ALTER TABLE syntax
+  - CTA linking to app with MySQL dialect (MariaDB is MySQL-compatible)
+- **`azure-sql-schema-diff.html`** — Dedicated SEO landing page for Azure SQL Database schema comparison
+  - Azure SQL-specific hero and meta tags
+  - Features highlight Azure SQL syntax: IDENTITY, bracket-quoted identifiers, CLUSTERED/NONCLUSTERED indexes, NVARCHAR/Unicode, named default constraints
+  - How-it-works section with Azure Data Studio / `sqlpackage` export instructions
+  - Migration examples using Azure SQL-compatible T-SQL syntax
+  - CTA linking to app with MSSQL dialect (Azure SQL is SQL Server-compatible)
+- **Footer cross-links** — Added MariaDB Diff and Azure SQL Diff links to footers on 35+ existing pages
+- **sitemap.xml** — Added both new entries with 0.9 priority and current lastmod
+
+### Validation
+- ✅ Page structure validated (balanced tags, no broken links)
+- ✅ OG tags and meta descriptions include MariaDB and Azure SQL keywords
+- ✅ All internal footer links verified across modified pages
+- ✅ sitemap.xml syntax validated
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **MySQL-compatible databases need their own landing pages.** MariaDB users search for "MariaDB schema diff," not "MySQL schema diff." A dedicated page captures that intent even though the underlying dialect is the same.
+2. **Cloud database variants are high-intent searches.** Azure SQL Database is one of the most popular cloud SQL offerings. Developers specifically search for "Azure SQL schema diff" when working in Microsoft environments.
+3. **Footer cross-links compound with every new page.** Each new SEO page gets linked from 35+ existing pages immediately, passing internal link equity and helping with crawlability.
 
 ---
 
@@ -99,33 +134,6 @@
 3. **Spatial types are a differentiator.** Mentioning GEOGRAPHY and GEOMETRY support signals that SchemaLens handles modern CockroachDB workloads, not just basic CRUD schemas.
 
 ---
-
----
-
-## Day 61 — Distribution: Stack Overflow Execution Kit (May 1, 2026)
-
-### What Was Built
-- **`marketing/stack-overflow-execution-kit.md`** — Complete playbook for high-intent Stack Overflow distribution
-  - **Phase 1: Account warm-up** — Step-by-step guide to creating a trustworthy SO account and earning 100+ rep in 4 days
-  - **Phase 2: Target questions** — Exact 3 questions to answer (MySQL schema comparison 50K+ views, ALTER TABLE scripts 30K+ views, PostgreSQL schema comparison 40K+ views)
-  - **Phase 3: Posting schedule** — Day-by-day calendar from account creation to final answer, with rep targets
-  - **Anti-spam rules** — Exact DOs and DON'Ts to avoid flagging, including the 60/40 rule (60% of answer useful without clicking link)
-  - **Comment response templates** — Pre-written replies for common objections ("Does it support X?", "Is it really free?", "This seems like an ad")
-  - **Backup questions** — Alternative targets if primary questions are locked
-  - **Success metrics** — Weekly tracking table for rep, upvotes, referral traffic, conversions
-  - **Emergency plan** — What to do if an answer gets flagged or deleted
-
-### Validation
-- ✅ All 3 target questions verified as open and high-traffic
-- ✅ Pre-written answers from `stack-overflow-answers.md` reviewed for compliance with SO guidelines
-- ✅ Reputation roadmap is realistic (2–3 accepted answers = 30–45 rep in Day 1)
-- ✅ Anti-spam rules align with Stack Overflow's promotion policy
-- ✅ File committed and pushed to git
-
-### Key Insights
-1. **Stack Overflow is the highest-intent traffic source for developer tools.** People searching "how to compare schemas" are actively experiencing the pain. They're 10x more likely to convert than casual Twitter scrollers.
-2. **Reputation is the moat.** You can't post promotional answers on Day 1. The 4-day warm-up is non-negotiable. But once you have 100+ rep and a history of helpful answers, one promotional answer per week is accepted.
-3. **The 60/40 rule protects everyone.** When 60% of the answer is genuinely useful independent of the tool, the reader wins, Stack Overflow wins, and SchemaLens wins. Everyone loses when answers are pure ads.
 
 ---
 
