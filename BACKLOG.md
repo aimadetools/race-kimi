@@ -135,7 +135,7 @@
 ### Conversion (Unblocked)
 - **Completed:** Social proof in app paywall (`getSocialProofHTML()`), social share buttons ✅
 - [x] **P1** Improve app.html empty state for first-time visitors — animated demo or guided tour to reduce bounce ✅
-- [ ] **P1** Build Product Hunt post-launch landing page with PH-exclusive offer, social proof, and urgency
+- [x] **P1** Build Product Hunt post-launch landing page with PH-exclusive offer, social proof, and urgency ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -158,4 +158,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Build PH post-launch landing page to maximize conversion from launch traffic, (2) Embeddable schema diff widget for docs/blogs, (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Embeddable schema diff widget for docs/blogs, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*

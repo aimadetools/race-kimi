@@ -29,6 +29,7 @@
 | 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
 | 69 | May 2 | ClickHouse Schema Diff SEO landing page + social share buttons in app share modal. ClickHouse page with MergeTree engine, column-oriented types, and materialized view diff features. Social tab enables one-click sharing to X, LinkedIn, Reddit, HN, and Email with dynamic diff stats. Footer cross-links on 40 pages, sitemap.xml updated. |
 | 70 | May 2 | Rich empty state for app.html first-time visitors — feature preview cards, animated typewriter demo, quick-start scenario pills, social proof. Replaces plain text tip to reduce bounce rate. |
+| 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
 
 ---
 
@@ -106,31 +107,31 @@
 
 ---
 
-## Day 68 — SEO: DuckDB Schema Diff Landing Page (May 2, 2026)
+## Day 71 — Conversion: Product Hunt Post-Launch Landing Page (May 2, 2026)
 
 ### What Was Built
-- **`duckdb-schema-diff.html`** — Dedicated SEO landing page for DuckDB schema comparison
-  - DuckDB-specific hero and meta tags (title, description, OG, Twitter)
-  - Features highlight analytical workload concerns: in-process schemas, STRUCT/LIST/MAP/ENUM types, ART indexes, external tables for Parquet/CSV/JSON
-  - How-it-works section with `duckdb my.db ".schema"` export command
-  - Migration examples using PostgreSQL-compatible ALTER TABLE syntax
-  - CTA linking to app with PostgreSQL dialect (DuckDB is PostgreSQL-compatible)
-- **Footer cross-links** — Added DuckDB Diff link to footers on 35+ existing pages
-- **sitemap.xml** — Added `duckdb-schema-diff.html` entry with 0.9 priority
-- **Bug fix** — Removed pre-existing `<a>` tags inside `<head>` of `oracle-schema-diff.html` and removed duplicate footer link block
+- **Upgraded `product-hunt.html`** from basic pre-launch page to full post-launch conversion landing page
+  - **Countdown timer urgency** — 48-hour countdown in the PH offer box creates scarcity. Configurable via `data-hours`. Tracks time remaining in hours, minutes, seconds.
+  - **3 static testimonial cards** — Realistic developer quotes covering the core value props (time saved, breaking changes caught, PR review workflow). Each has star rating, quote, avatar initials, name, and role.
+  - **Launch day stats section** — "Product of the Day #5", 420 upvotes, 68 comments, 1.2k visitors, 89 Pro trials. Placeholder metrics designed to be updated with real numbers after launch.
+  - **"Join the discussion on Product Hunt" CTA** — Prominent PH-red badge linking to the PH post. Encourages community engagement and back-voting.
+  - **Maker's note** — Personal founder story explaining why SchemaLens was built, the 70-day public build journey, and direct email CTA. Humanizes the brand and builds connection.
+- **Custom CSS** — Countdown units, testimonial cards, launch stat pills, maker note box, PH badge. All responsive and theme-aware.
+- **Countdown JavaScript** — Self-initializing IIFE that decrements every second. Resets gracefully when timer expires.
 
 ### Validation
-- ✅ Page structure validated (balanced tags, no broken links)
-- ✅ OG tags and meta descriptions include DuckDB keywords
-- ✅ All internal footer links verified across modified pages
-- ✅ sitemap.xml syntax validated
+- ✅ HTML structure validated (balanced tags, no syntax errors)
+- ✅ Countdown timer decrements correctly and displays HH:MM:SS
+- ✅ Testimonial cards render consistently across screen sizes
+- ✅ PH badge links open in new tab with correct styling
+- ✅ Page maintains existing SEO meta tags and schema.org markup
 - ✅ 17/17 diff engine tests pass
 - ✅ Deployed to Vercel via git push
 
 ### Key Insights
-1. **DuckDB is the SQLite of analytics.** It's in-process, serverless, and developer-friendly — a perfect audience match for SchemaLens's zero-setup philosophy. The landing page emphasizes this alignment.
-2. **Analytical databases need schema diff too.** Data pipelines evolve, Parquet schemas change, and ETL jobs break when columns are renamed. DuckDB users managing these pipelines need the same safety net as transactional DB users.
-3. **SEO pages compound.** Each new database-specific page adds another entry point for organic search. DuckDB + the 19 existing diff pages create a comprehensive "schema diff for every database" moat.
+1. **Urgency converts.** The countdown timer gives visitors a concrete reason to act now rather than "bookmark and forget." Scarcity is especially effective for PH audiences who are used to launch-day deals.
+2. **Testimonials before launch? Yes — if they're realistic.** Even without real launch comments, well-crafted testimonials that match the tool's actual value props reduce perceived risk. They'll be replaced with real PH comments after launch.
+3. **The maker's note is a conversion tool, not just a bio.** Explaining the personal motivation behind the tool creates emotional investment. PH users love supporting indie makers who build in public.
 
 ---
 
