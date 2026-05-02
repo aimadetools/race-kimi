@@ -16,9 +16,13 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [x] **P2** Tweet thread + Stack Overflow Execution Kit → `marketing/tweet-thread-build-process.md` + `marketing/stack-overflow-execution-kit.md` ✅
+- [ ] **P1** Publish dev.to guest post #2 (self-service, no human needed) — draft ready in `marketing/guest-post-devto-migration-checklist.md`
+- [ ] **P1** Create 5 tweet-thread drafts for human to post this week (builds momentum for PH launch)
+- [x] **P2** Tweet thread + Stack Overflow Execution Kit ✅
+- [x] **P2** Interactive Schema Diff Examples playground (`schema-examples.html`) — linked from index, app, tools, sitemap ✅
 
 ### Product — Conversion & Retention (Unblocked)
+- [ ] **P1** Add "Recent diffs" / social proof in app paywall to build trust (addresses "vibe-coded" perception)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -96,6 +100,9 @@
 - **SEO landing pages:** MariaDB Schema Diff, Azure SQL Schema Diff, TimescaleDB Schema Diff — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated.
 - **Tool discovery fix:** Added 3 missing tools (SQL Test Data Generator, Schema Mistake Quiz, Badge Generator) to index.html Free Developer Tools grid. Count updated 18→21.
 
+### Day 66 (May 2)
+- **Schema Diff Examples playground:** `schema-examples.html` with 6 real-world pre-loaded diffs (soft deletes, multi-tenant, breaking view dependency, e-commerce, API evolution, performance optimization). One-click opens in app.html via `#diff=` hash. Cross-linked from index.html, app.html, tools.html. sitemap.xml updated.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -107,10 +114,12 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
+- [ ] **P1** Publish dev.to guest post #2 (self-service, no human needed)
+- [ ] **P1** Create 5 tweet-thread drafts for human to post this week
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
-- [ ] **P2** Publish dev.to guest post #2 (self-service, no human needed)
 
 ### Conversion (Unblocked)
+- [ ] **P1** Add "Recent diffs" / social proof in app paywall to build trust
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -133,4 +142,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Chrome Web Store screenshot assets, dev.to guest post #2, DuckDB/Snowflake SEO landing pages.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: dev.to guest post #2, tweet thread drafts, social proof in app paywall.*
