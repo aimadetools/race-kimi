@@ -26,7 +26,7 @@
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 | 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`) — trust badges, usage stats, recent comparisons ticker in both migration and ORM paywalls. 5 tweet-thread drafts for launch momentum. |
-| 68 | May 2 | DuckDB Schema Diff SEO landing page — dedicated page for analytical database schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
+| 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
 
 ---
 
@@ -147,37 +147,5 @@ All threads include:
 
 ---
 
-## Day 65 — SEO: TimescaleDB Schema Diff Landing Page + Tool Discovery Fix (May 2, 2026)
 
-### What Was Built
-- **`timescaledb-schema-diff.html`** — Dedicated SEO landing page for TimescaleDB schema comparison
-  - TimescaleDB-specific hero and meta tags (title, description, OG, Twitter)
-  - Features highlight time-series schema concerns: hypertables, TIMESTAMPTZ, continuous aggregate views, PostgreSQL-native parser, time-series indexes
-  - How-it-works section with `pg_dump --schema-only` export command
-  - Migration examples using PostgreSQL-compatible ALTER TABLE syntax
-  - CTA linking to app with PostgreSQL dialect (TimescaleDB is PostgreSQL-native)
-- **Footer cross-links** — Added TimescaleDB Diff link to footers on 35+ existing pages
-- **sitemap.xml** — Added `timescaledb-schema-diff.html` entry with 0.9 priority
-- **index.html tool discovery fix** — Added 3 existing tools that were missing from the Free Developer Tools grid:
-  - SQL Test Data Generator
-  - Schema Mistake Quiz
-  - Badge Generator
-  - Updated tool count from 18 → 21
-
-### Validation
-- ✅ Page structure validated (balanced tags, no broken links)
-- ✅ OG tags and meta descriptions include TimescaleDB keywords
-- ✅ All internal footer links verified across modified pages
-- ✅ sitemap.xml syntax validated
-- ✅ 17/17 diff engine tests pass
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Time-series databases are a high-value niche.** TimescaleDB users manage complex hypertable schemas with specific time-column requirements. A dedicated page signals that SchemaLens handles their workloads, not just basic CRUD.
-2. **Tool discovery matters as much as building tools.** Three existing tools (Badge Generator, Schema Quiz, Test Data Generator) were live but invisible from the homepage. surfacing them increases engagement without writing new code.
-3. **Footer cross-links continue to compound.** Every new SEO page gets linked from 35+ existing pages immediately, passing internal link equity and helping with crawlability.
-
----
-
----
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*

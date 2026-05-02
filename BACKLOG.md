@@ -27,9 +27,7 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** DuckDB Schema Diff SEO landing page (`duckdb-schema-diff.html`) — footer cross-links on 35+ pages, sitemap.xml updated ✅
-- [ ] **P2** BigQuery Schema Diff SEO landing page
-- [ ] **P2** Snowflake Schema Diff SEO landing page
+- [x] **P2** DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — footer cross-links on 35+ pages, sitemap.xml updated ✅
 - [ ] **P2** ClickHouse Schema Diff SEO landing page
 - [ ] **P2** Create case study with first team customer
 
@@ -119,24 +117,22 @@
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [x] **P1** Chrome Web Store submission for extension ($5 fee, one-time) — materials ready, awaiting human payment + submit ✅
-- [x] **P1** Add "How SchemaLens Works" engineering deep-dive page — `how-it-works.html` live with parser, diff engine, test coverage, performance, limitations ✅
+- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live ✅
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [x] **P1** dev.to guest post #2 draft ready — awaiting human to publish ✅
-- [x] **P1** 5 tweet-thread drafts created for human to post this week ✅
+- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit ✅
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- [x] **P1** Social proof & trust badges in app paywall (`getSocialProofHTML()`) — addresses "vibe-coded" perception ✅
+- **Completed:** Social proof in app paywall (`getSocialProofHTML()`) ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content (Unblocked)
+- **Completed:** MariaDB, Azure SQL, TimescaleDB, DuckDB, BigQuery, Snowflake Schema Diff pages ✅
 - [ ] **P2** Create case study with first team customer
-- [x] **P2** Additional SEO landing pages: MariaDB, Azure SQL, TimescaleDB Schema Diff ✅
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
