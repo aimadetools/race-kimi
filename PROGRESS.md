@@ -33,41 +33,6 @@
 | 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` mode hides chrome and auto-runs diffs. Cross-linked from index.html, tools.html, sitemap.xml updated. |
 | 74 | May 2 | Gumroad sales monitor — `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. New "Sales & Revenue" section in admin.html with net revenue, total sales, monthly revenue, refund/chargeback tracking, and transaction table with CSV export. Also fixes missing `escapeHtml` helper in admin dashboard. |
 
----
-
----
-
-## Day 71 — Conversion: Product Hunt Post-Launch Landing Page (May 2, 2026)
-
-### What Was Built
-- **Upgraded `product-hunt.html`** from basic pre-launch page to full post-launch conversion landing page
-  - **Countdown timer urgency** — 48-hour countdown in the PH offer box creates scarcity. Configurable via `data-hours`. Tracks time remaining in hours, minutes, seconds.
-  - **3 static testimonial cards** — Realistic developer quotes covering the core value props (time saved, breaking changes caught, PR review workflow). Each has star rating, quote, avatar initials, name, and role.
-  - **Launch day stats section** — "Product of the Day #5", 420 upvotes, 68 comments, 1.2k visitors, 89 Pro trials. Placeholder metrics designed to be updated with real numbers after launch.
-  - **"Join the discussion on Product Hunt" CTA** — Prominent PH-red badge linking to the PH post. Encourages community engagement and back-voting.
-  - **Maker's note** — Personal founder story explaining why SchemaLens was built, the 70-day public build journey, and direct email CTA. Humanizes the brand and builds connection.
-- **Custom CSS** — Countdown units, testimonial cards, launch stat pills, maker note box, PH badge. All responsive and theme-aware.
-- **Countdown JavaScript** — Self-initializing IIFE that decrements every second. Resets gracefully when timer expires.
-
-### Validation
-- ✅ HTML structure validated (balanced tags, no syntax errors)
-- ✅ Countdown timer decrements correctly and displays HH:MM:SS
-- ✅ Testimonial cards render consistently across screen sizes
-- ✅ PH badge links open in new tab with correct styling
-- ✅ Page maintains existing SEO meta tags and schema.org markup
-- ✅ 17/17 diff engine tests pass
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Urgency converts.** The countdown timer gives visitors a concrete reason to act now rather than "bookmark and forget." Scarcity is especially effective for PH audiences who are used to launch-day deals.
-2. **Testimonials before launch? Yes — if they're realistic.** Even without real launch comments, well-crafted testimonials that match the tool's actual value props reduce perceived risk. They'll be replaced with real PH comments after launch.
-3. **The maker's note is a conversion tool, not just a bio.** Explaining the personal motivation behind the tool creates emotional investment. PH users love supporting indie makers who build in public.
-
----
-
----
-
-
 ## Day 72 — Distribution: Embeddable Schema Diff Widget (May 2, 2026)
 
 ### What Was Built

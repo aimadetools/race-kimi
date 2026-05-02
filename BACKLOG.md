@@ -33,8 +33,8 @@
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
-- [ ] **P1** Review first week of Pro conversions once sales start
+- [x] **P0** Monitor Gumroad sales and refund requests — `api/gumroad-sales.js` + admin dashboard section built ✅
+- [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
 
 ---
 
@@ -123,6 +123,16 @@
 ### Day 71 (May 2)
 - **Product Hunt post-launch landing page:** Upgraded `product-hunt.html` with countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, and PH discussion CTA. Works pre- and post-launch.
 
+### Day 72 (May 2)
+- **Embeddable schema diff widget:** `tools/embed-generator.html` with live preview, iframe code generation, `app.html?embed=1` chromeless mode. Cross-linked and sitemap.xml updated.
+
+### Day 73 (May 2)
+- **Launch Special landing page:** `launch-special.html` with $19/first-year offer, 20-spot scarcity counter, 72-hour countdown, FAQ, schema.org Product markup.
+- **Share Diff as Image:** Canvas-based 1200×630 PNG generator in app.html share modal with stats, breaking change banner, risk score, one-click download/copy.
+
+### Day 74 (May 2)
+- **Gumroad sales monitor:** `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. Admin dashboard "Sales & Revenue" section with net revenue, refund/chargeback tracking, transaction table, CSV export. Fixed missing `escapeHtml` helper.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -147,8 +157,8 @@
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
-- [ ] **P1** Review first week of Pro conversions once sales start
+- [x] **P0** Monitor Gumroad sales and refund requests — `api/gumroad-sales.js` + admin dashboard section built ✅
+- [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
 - [ ] **P2** Survey Pro users for next most-wanted feature
 - [ ] **P2** Plan API pricing tier for future
 - [ ] **P2** Consider raising prices for new customers (grandfather existing)
