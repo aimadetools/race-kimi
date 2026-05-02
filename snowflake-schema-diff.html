@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>SQL Server Schema Diff Online — Compare & Migrate MSSQL Databases</title>
-  <meta name="description" content="Compare two SQL Server schemas side by side. Generate ALTER TABLE migration scripts instantly. No install, no upload, 100% browser-based.">
-  <meta property="og:title" content="SQL Server Schema Diff Online — Compare & Migrate MSSQL Databases">
-  <meta property="og:description" content="Compare two SQL Server schemas side by side. Generate ALTER TABLE migration scripts instantly.">
+  <title>Snowflake Schema Diff Online — Compare & Migrate Snowflake Schemas</title>
+  <meta name="description" content="Compare two Snowflake schemas side by side. Generate migration scripts for VARIANT, semi-structured data, streams, and tasks. No install, no upload, 100% browser-based.">
+  <meta property="og:title" content="Snowflake Schema Diff Online — Compare & Migrate Snowflake Schemas">
+  <meta property="og:description" content="Compare two Snowflake schemas side by side. Generate migration scripts for VARIANT, semi-structured data, streams, and tasks.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/sql-server-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/snowflake-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -63,12 +63,12 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        SQL Server schema diff — free to use
+        Snowflake schema diff — free to use
       </div>
-      <h1>SQL Server Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two SQL Server schema scripts. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for SQL Server — all in your browser.</p>
+      <h1>Snowflake Schema Diff.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>GET_DDL('TABLE', 'schema.table')</code> outputs or <code>DESCRIBE TABLE</code> results. Spot every VARIANT column, stream, task, and semi-structured change instantly. Get ready-to-run migration scripts for Snowflake — all in your browser.</p>
       <div class="hero-actions">
-        <a href="app.html?dialect=mssql" class="btn btn-primary btn-lg">Diff SQL Server Schemas</a>
+        <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Diff Snowflake Schemas</a>
         <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
@@ -77,38 +77,38 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Built for SQL Server workflows</h2>
-      <p class="section-subtitle text-center">SchemaLens understands SQL Server-specific syntax that generic diff tools miss.</p>
+      <h2 class="section-title text-center">Built for cloud data warehouse workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands Snowflake-specific syntax that generic diff tools miss.</p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🪟</div>
-          <h3>IDENTITY &amp; Sequences</h3>
-          <p>Correctly detects <code>IDENTITY(1,1)</code> columns, seed changes, and increment modifications across schema versions.</p>
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">❄️</div>
+          <h3>Semi-Structured Data Comparison</h3>
+          <p>Compares <code>VARIANT</code>, <code>OBJECT</code>, and <code>ARRAY</code> column definitions, including nested JSON paths and automatic type inference changes.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📦</div>
-          <h3>Bracket-Quoted Identifiers</h3>
-          <p>Handles bracket-quoted identifiers (<code>[table name]</code>) exactly like SQL Server does, preserving spaces and reserved words.</p>
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📊</div>
+          <h3>Streams &amp; Tasks</h3>
+          <p>Detects changes in <code>STREAM</code> and <code>TASK</code> definitions that depend on table schemas, preventing broken CDC and scheduled pipelines.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔑</div>
-          <h3>Constraints &amp; Indexes</h3>
-          <p>Primary keys, unique constraints, foreign keys, CHECK constraints, and CLUSTERED/NONCLUSTERED indexes — all compared semantically.</p>
+          <h3>Constraints &amp; Clustering Keys</h3>
+          <p>Primary keys, unique constraints, foreign keys, and clustering key changes — all compared semantically across schema versions.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📝</div>
-          <h3>Named Default Constraints</h3>
-          <p>Generates <code>DF_table_column</code> convention names for default constraints, saving you from manual lookup.</p>
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📁</div>
+          <h3>External Stage Schemas</h3>
+          <p>Compares external table definitions for S3, Azure Blob, and GCS stages, including file format and copy options.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(248,113,113,0.15);">⚡</div>
-          <h3>NVARCHAR &amp; Unicode</h3>
-          <p>Preserves <code>NVARCHAR</code>, <code>NCHAR</code>, and <code>NTEXT</code> types with length specifications so your migrations stay exact.</p>
+          <h3>Standard SQL Parser</h3>
+          <p>SchemaLens parses Snowflake Standard SQL dialect with full accuracy — every VARCHAR, NUMBER, TIMESTAMP_NTZ, and GEOGRAPHY type.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
           <h3>Privacy First</h3>
-          <p>Your schema never leaves the browser. Compare production SQL Server schemas safely without uploading to any third-party server.</p>
+          <p>Your schema never leaves the browser. Compare production Snowflake schemas safely without uploading sensitive table structures to a third-party server.</p>
         </div>
       </div>
     </div>
@@ -121,17 +121,17 @@
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
           <h3>Export your schemas</h3>
-          <p>Use SQL Server Management Studio or <code>sqlcmd</code> to script the database schema from both databases.</p>
+          <p>Run <code>SELECT GET_DDL('TABLE', 'schema.table')</code> or <code>DESCRIBE TABLE schema.table</code> on both databases.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
           <h3>Paste into SchemaLens</h3>
-          <p>Copy the SQL into the two editor panes. Dialect is automatically set to SQL Server.</p>
+          <p>Copy the SQL into the two editor panes. Select the appropriate dialect for accurate parsing.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
           <h3>Review the diff</h3>
-          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color.</p>
+          <p>See added tables, dropped columns, VARIANT changes, stream modifications, and clustering key differences highlighted in color.</p>
         </div>
         <div class="step">
           <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
@@ -144,30 +144,29 @@
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">SQL Server migration examples</h2>
-      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
+      <h2 class="section-title text-center">Snowflake migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates production-ready migration scripts for every change it detects.</p>
       <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
         <div class="feature-card">
-          <h3>Column type change</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [users]
-  ALTER COLUMN [bio] NVARCHAR(500);</code></pre>
+          <h3>Add a VARIANT column for JSON data</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE analytics.events
+  ADD COLUMN payload VARIANT;</code></pre>
         </div>
         <div class="feature-card">
-          <h3>Add a new column</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [orders]
-  ADD [shipped_at] DATETIME;</code></pre>
+          <h3>Change a column type with precision</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE analytics.orders
+  ALTER COLUMN total TYPE NUMBER(18, 4);</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Add a clustering key</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE analytics.events
+  CLUSTER BY (event_date, user_id);</code></pre>
         </div>
         <div class="feature-card">
           <h3>Add a foreign key</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [comments]
-  ADD CONSTRAINT [fk_comments_post]
-  FOREIGN KEY ([post_id]) REFERENCES [posts]([id]);</code></pre>
-        </div>
-        <div class="feature-card">
-          <h3>Set a default value</h3>
-          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE [tasks]
-  ADD CONSTRAINT [DF_tasks_status]
-  DEFAULT 'pending' FOR [status];</code></pre>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE analytics.orders
+  ADD CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id) REFERENCES analytics.users(id);</code></pre>
         </div>
       </div>
     </div>
@@ -179,16 +178,16 @@
       <div class="blog-grid">
         <article class="blog-card">
           <div class="blog-content">
-            <span class="blog-meta">SQL Server</span>
-            <h3><a href="blog/sql-server-schema-migrations.html">SQL Server Schema Migrations: A Practical Guide</a></h3>
-            <p>Learn ALTER TABLE syntax, identity columns, bracket quoting, and how to diff MSSQL schemas safely.</p>
+            <span class="blog-meta">Data Warehouse</span>
+            <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step workflow for catching schema drift between staging and production.</p>
           </div>
         </article>
         <article class="blog-card">
           <div class="blog-content">
             <span class="blog-meta">Migration</span>
-            <h3><a href="blog/postgresql-vs-mysql-schema-migration-gotchas.html">PostgreSQL vs MySQL: Schema Migration Gotchas</a></h3>
-            <p>8 practical differences that trip up developers switching between databases.</p>
+            <h3><a href="blog/how-to-detect-schema-drift-before-production.html">How to Detect Schema Drift Before Production</a></h3>
+            <p>Automated checks and manual review processes to prevent broken deployments.</p>
           </div>
         </article>
         <article class="blog-card">
@@ -204,9 +203,9 @@
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Ready to diff your SQL Server schemas?</h2>
+      <h2>Ready to diff your Snowflake schemas?</h2>
       <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
-      <a href="app.html?dialect=mssql" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <a href="app.html?dialect=postgres" class="btn btn-primary btn-lg">Start Comparing Free</a>
       <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
     </div>
   </section>
