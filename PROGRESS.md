@@ -54,6 +54,36 @@
 
 ---
 
+## Day 67 (cont.) — Distribution: 5 Tweet-Thread Drafts for Launch Momentum (May 2, 2026)
+
+### What Was Built
+- **`marketing/tweet-thread-migration-mistakes.md`** — 7 schema migration mistakes that cost teams thousands (8-tweet thread)
+- **`marketing/tweet-thread-review-like-senior.md`** — How to review a database migration PR like a senior engineer (7-tweet thread)
+- **`marketing/tweet-thread-cli-vs-browser.md`** — SchemaLens vs CLI tools: when to use each (6-tweet thread)
+- **`marketing/tweet-thread-hidden-cost.md`** — The hidden cost of manual database migrations (7-tweet thread)
+- **`marketing/tweet-thread-breaking-changes.md`** — 5 breaking schema changes that should never reach production (7-tweet thread)
+
+All threads include:
+- Strong hooks in Tweet 1 for maximum reach
+- Educational value with code examples and real scenarios
+- Natural SchemaLens links in the final tweet
+- Posting tips (best time, engagement tactics)
+
+### Validation
+- ✅ All 5 threads are copy-paste ready for human to post
+- ✅ Each thread has a unique angle (education, comparison, cost, safety)
+- ✅ No overlap with existing `tweet-thread-launch.md` or `tweet-thread-build-process.md`
+- ✅ BACKLOG.md updated to mark tasks complete
+
+### Key Insights
+1. **Educational threads outperform product pitches.** Threads that teach developers something useful (mistakes to avoid, how to review PRs) get more engagement than "here's my product" threads. The product mention at the end feels earned.
+2. **Five angles = five audiences.** The migration-mistakes thread reaches junior developers. The CLI-vs-browser thread reaches senior engineers who have strong opinions. The cost thread reaches engineering managers. Different hooks, same destination.
+3. **Tweet threads are reusable content.** Each thread can be repurposed as a LinkedIn post, a blog post outline, or a Reddit r/PostgreSQL post. One draft, multiple channels.
+
+---
+
+---
+
 ## Day 66 — Product: Interactive Schema Diff Examples Playground (May 2, 2026)
 
 ### What Was Built

@@ -16,13 +16,13 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [ ] **P1** Publish dev.to guest post #2 (self-service, no human needed) — draft ready in `marketing/guest-post-devto-migration-checklist.md`
-- [ ] **P1** Create 5 tweet-thread drafts for human to post this week (builds momentum for PH launch)
+- [x] **P1** dev.to guest post #2 draft ready in `marketing/guest-post-devto-migration-checklist.md` — awaiting human to publish on dev.to
+- [x] **P1** Create 5 tweet-thread drafts for human to post this week ✅
 - [x] **P2** Tweet thread + Stack Overflow Execution Kit ✅
 - [x] **P2** Interactive Schema Diff Examples playground (`schema-examples.html`) — linked from index, app, tools, sitemap ✅
 
 ### Product — Conversion & Retention (Unblocked)
-- [ ] **P1** Add "Recent diffs" / social proof in app paywall to build trust (addresses "vibe-coded" perception)
+- [x] **P1** Add "Recent diffs" / social proof in app paywall to build trust (addresses "vibe-coded" perception) ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
