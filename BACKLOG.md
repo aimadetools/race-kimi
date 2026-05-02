@@ -103,6 +103,10 @@
 ### Day 66 (May 2)
 - **Schema Diff Examples playground:** `schema-examples.html` with 6 real-world pre-loaded diffs (soft deletes, multi-tenant, breaking view dependency, e-commerce, API evolution, performance optimization). One-click opens in app.html via `#diff=` hash. Cross-linked from index.html, app.html, tools.html. sitemap.xml updated.
 
+### Day 67 (May 2)
+- **Social proof in app paywall:** `getSocialProofHTML()` helper with trust badges (100% private, zero setup, custom parser, money-back guarantee), usage stats, and recent comparisons ticker in both migration and ORM paywalls. Addresses "vibe-coded" perception from Reddit feedback.
+- **5 tweet-thread drafts:** migration mistakes, review like a senior engineer, CLI vs browser, hidden cost of manual migrations, breaking changes that should never reach production. All copy-paste ready in `marketing/tweet-thread-*.md`.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -114,18 +118,18 @@
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
 ### Distribution (Unblocked)
-- [ ] **P1** Publish dev.to guest post #2 (self-service, no human needed)
-- [ ] **P1** Create 5 tweet-thread drafts for human to post this week
+- [x] **P1** dev.to guest post #2 draft ready — awaiting human to publish ✅
+- [x] **P1** 5 tweet-thread drafts created for human to post this week ✅
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- [ ] **P1** Add "Recent diffs" / social proof in app paywall to build trust
+- [x] **P1** Social proof & trust badges in app paywall (`getSocialProofHTML()`) — addresses "vibe-coded" perception ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content (Unblocked)
 - [ ] **P2** Create case study with first team customer
-- [x] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff, TimescaleDB Schema Diff ✅
+- [x] **P2** Additional SEO landing pages: MariaDB, Azure SQL, TimescaleDB Schema Diff ✅
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)

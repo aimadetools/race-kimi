@@ -24,6 +24,9 @@
 | 63 | May 2 | View dependency tracking + PR Summary — breaking change detection now warns when dropped columns/tables break views. New "Copy PR Summary" button generates markdown for PR descriptions. Schema Templates gallery page with 8 production-ready SQL designs. |
 | 64 | May 2 | MariaDB + Azure SQL Schema Diff SEO landing pages — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated. |
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
+| 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
+| 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`) — trust badges, usage stats, recent comparisons ticker in both migration and ORM paywalls. 5 tweet-thread drafts for launch momentum. |
+| 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 
 ---
 
@@ -147,39 +150,4 @@ All threads include:
 ---
 
 ---
-
-## Day 64 — SEO: MariaDB + Azure SQL Schema Diff Landing Pages (May 2, 2026)
-
-### What Was Built
-- **`mariadb-schema-diff.html`** — Dedicated SEO landing page for MariaDB schema comparison
-  - MariaDB-specific hero and meta tags (title, description, OG, Twitter)
-  - Features highlight MariaDB-specific syntax: AUTO_INCREMENT, CHARACTER SET/COLLATE, backtick identifiers, virtual/persistent generated columns
-  - How-it-works section with `mariadb-dump --no-data` export command
-  - Migration examples using MariaDB-compatible ALTER TABLE syntax
-  - CTA linking to app with MySQL dialect (MariaDB is MySQL-compatible)
-- **`azure-sql-schema-diff.html`** — Dedicated SEO landing page for Azure SQL Database schema comparison
-  - Azure SQL-specific hero and meta tags
-  - Features highlight Azure SQL syntax: IDENTITY, bracket-quoted identifiers, CLUSTERED/NONCLUSTERED indexes, NVARCHAR/Unicode, named default constraints
-  - How-it-works section with Azure Data Studio / `sqlpackage` export instructions
-  - Migration examples using Azure SQL-compatible T-SQL syntax
-  - CTA linking to app with MSSQL dialect (Azure SQL is SQL Server-compatible)
-- **Footer cross-links** — Added MariaDB Diff and Azure SQL Diff links to footers on 35+ existing pages
-- **sitemap.xml** — Added both new entries with 0.9 priority and current lastmod
-
-### Validation
-- ✅ Page structure validated (balanced tags, no broken links)
-- ✅ OG tags and meta descriptions include MariaDB and Azure SQL keywords
-- ✅ All internal footer links verified across modified pages
-- ✅ sitemap.xml syntax validated
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **MySQL-compatible databases need their own landing pages.** MariaDB users search for "MariaDB schema diff," not "MySQL schema diff." A dedicated page captures that intent even though the underlying dialect is the same.
-2. **Cloud database variants are high-intent searches.** Azure SQL Database is one of the most popular cloud SQL offerings. Developers specifically search for "Azure SQL schema diff" when working in Microsoft environments.
-3. **Footer cross-links compound with every new page.** Each new SEO page gets linked from 35+ existing pages immediately, passing internal link equity and helping with crawlability.
-
----
-
----
-
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
