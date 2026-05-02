@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free Embeddable Schema Diff Widget — SchemaLens</title>
+  <meta name="description" content="Generate an embeddable iframe widget to display schema diffs in your documentation, blog, or README. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="Free Embeddable Schema Diff Widget — SchemaLens">
+  <meta property="og:description" content="Embed live schema comparisons in your docs or blog. Auto-generated iframe code. No signup required.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/embed-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Embeddable Schema Diff Widget",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Embeddable iframe widget for schema diffs, Live preview, Auto-generated HTML embed code, Supports PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/tools/embed-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    @media (max-width: 900px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .panel h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+    }
+    .form-row label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .form-row textarea,
+    .form-row input,
+    .form-row select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .form-row textarea {
+      min-height: 140px;
+      resize: vertical;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .form-row textarea:focus,
+    .form-row input:focus,
+    .form-row select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .form-row small {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .dimension-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .preview-box {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .preview-box iframe {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+    }
+
+    .code-output {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      position: relative;
+    }
+    .copy-btn-inline {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .copy-btn-inline:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .use-cases {
+      margin-top: 32px;
+    }
+    .use-cases h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .use-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .use-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .use-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    .use-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Embeddable Schema Diff Widget</h1>
+      <p>Add a live schema comparison to your documentation, blog, or README. No backend required — just paste two schemas and copy the iframe code.</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="workspace">
+      <div class="panel">
+        <h2>🔧 Configuration</h2>
+        <div class="form-row">
+          <label for="schemaA">Schema A (old)</label>
+          <textarea id="schemaA" placeholder="Paste CREATE TABLE statements..."></textarea>
+        </div>
+        <div class="form-row">
+          <label for="schemaB">Schema B (new)</label>
+          <textarea id="schemaB" placeholder="Paste updated CREATE TABLE statements..."></textarea>
+        </div>
+        <div class="form-row">
+          <label for="dialect">SQL Dialect</label>
+          <select id="dialect">
+            <option value="postgres">PostgreSQL</option>
+            <option value="mysql">MySQL</option>
+            <option value="sqlite">SQLite</option>
+            <option value="mssql">SQL Server</option>
+            <option value="oracle">Oracle</option>
+          </select>
+        </div>
+        <div class="dimension-row">
+          <div class="form-row">
+            <label for="width">Width</label>
+            <input id="width" type="text" value="100%">
+          </div>
+          <div class="form-row">
+            <label for="height">Height</label>
+            <input id="height" type="text" value="520px">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="updatePreview()" style="width:100%">Update Preview</button>
+      </div>
+
+      <div class="panel">
+        <h2>👁️ Preview</h2>
+        <div class="preview-box">
+          <iframe id="previewFrame" style="height: 400px;"></iframe>
+        </div>
+        <h2>📋 Embed Code</h2>
+        <div class="code-output">
+          <button class="copy-btn-inline" onclick="copyCode('embedCode', this)">Copy</button>
+          <code id="embedCode"></code>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-cases">
+      <h2>Popular Use Cases</h2>
+      <div class="use-grid">
+        <div class="use-card">
+          <h4>📚 Documentation</h4>
+          <p>Show migration examples inline in your docs without screenshots that go stale.</p>
+        </div>
+        <div class="use-card">
+          <h4>📝 Blog Posts</h4>
+          <p>Illustrate schema design decisions with an interactive, live diff readers can explore.</p>
+        </div>
+        <div class="use-card">
+          <h4>🔧 READMEs</h4>
+          <p>Embed a before/after schema comparison directly in your GitHub repo's README.</p>
+        </div>
+        <div class="use-card">
+          <h4>🎓 Tutorials</h4>
+          <p>Let students see exactly what changed between lesson steps with zero setup.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:60px">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="logo-mark">SL</span>SchemaLens</div>
+          <p>Compare SQL schemas and generate migrations in your browser.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <a href="../app.html">Schema Diff</a>
+          <a href="../schema-examples.html">Examples</a>
+          <a href="../how-it-works.html">How it Works</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/badge-generator.html">Badge Generator</a>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <a href="../postgres-schema-diff.html">PostgreSQL</a>
+          <a href="../mysql-schema-diff.html">MySQL</a>
+          <a href="../sqlite-schema-diff.html">SQLite</a>
+          <a href="../sql-server-schema-diff.html">SQL Server</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens</span>
+        <a href="../privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+const SAMPLE_A = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  published BOOLEAN DEFAULT FALSE
+);`;
+
+const SAMPLE_B = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  avatar_url VARCHAR(500),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  body TEXT,
+  published BOOLEAN DEFAULT FALSE,
+  published_at TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);`;
+
+function encodeForEmbed(text) {
+  try {
+    return btoa(encodeURIComponent(text));
+  } catch (e) {
+    return '';
+  }
+}
+
+function buildEmbedUrl() {
+  const a = document.getElementById('schemaA').value.trim();
+  const b = document.getElementById('schemaB').value.trim();
+  const dialect = document.getElementById('dialect').value;
+  const base = 'https://schemalens.tech/app.html';
+  const params = new URLSearchParams();
+  params.set('embed', '1');
+  params.set('dialect', dialect);
+  if (a) params.set('a', encodeForEmbed(a));
+  if (b) params.set('b', encodeForEmbed(b));
+  return `${base}?${params.toString()}`;
+}
+
+function updatePreview() {
+  const url = buildEmbedUrl();
+  const width = document.getElementById('width').value || '100%';
+  const height = document.getElementById('height').value || '520px';
+
+  const iframe = document.getElementById('previewFrame');
+  iframe.style.height = height.endsWith('px') ? height : '400px';
+  iframe.src = url;
+
+  const code = `<iframe\n  src="${url}"\n  width="${width}"\n  height="${height}"\n  style="border:1px solid var(--border); border-radius:8px;"\n  title="Schema diff powered by SchemaLens"\n></iframe>`;
+  document.getElementById('embedCode').textContent = code;
+}
+
+function copyCode(elementId, btn) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+// Load samples on first visit
+window.addEventListener('DOMContentLoaded', () => {
+  const aEl = document.getElementById('schemaA');
+  const bEl = document.getElementById('schemaB');
+  if (!aEl.value && !bEl.value) {
+    aEl.value = SAMPLE_A;
+    bEl.value = SAMPLE_B;
+  }
+  updatePreview();
+});
+</script>
+
+</body>
+</html>
