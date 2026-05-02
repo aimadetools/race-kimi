@@ -111,6 +111,13 @@
 ### Day 68 (May 2)
 - **DuckDB SEO landing page:** `duckdb-schema-diff.html` — dedicated page for analytical database schema comparison with DuckDB-specific features (STRUCT/LIST/MAP/ENUM types, ART indexes, external tables). Footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in `oracle-schema-diff.html`.
 
+### Day 69 (May 2)
+- **ClickHouse SEO landing page:** `clickhouse-schema-diff.html` — dedicated page for ClickHouse schema comparison with MergeTree engine, column-oriented types, materialized view diff features. Footer cross-links on 40 pages, sitemap.xml updated.
+- **Social share buttons in app.html share modal:** One-click sharing to X/Twitter, LinkedIn, Reddit, Hacker News, and Email with dynamic diff stats. URLs include shareable diff link.
+
+### Day 70 (May 2)
+- **Rich empty state for app.html:** Replaced plain text welcome hint with engaging panel featuring feature preview cards, animated typewriter demo, quick-start scenario pills, and social proof. Tracks demo_started / demo_completed analytics events.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -127,7 +134,7 @@
 
 ### Conversion (Unblocked)
 - **Completed:** Social proof in app paywall (`getSocialProofHTML()`), social share buttons ✅
-- [ ] **P1** Improve app.html empty state for first-time visitors — animated demo or guided tour to reduce bounce
+- [x] **P1** Improve app.html empty state for first-time visitors — animated demo or guided tour to reduce bounce ✅
 - [ ] **P1** Build Product Hunt post-launch landing page with PH-exclusive offer, social proof, and urgency
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -151,4 +158,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Improve app empty state / first-time onboarding to reduce bounce, (2) Build PH post-launch landing page to maximize conversion from launch traffic, (3) Embeddable schema diff widget for docs/blogs.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Build PH post-launch landing page to maximize conversion from launch traffic, (2) Embeddable schema diff widget for docs/blogs, (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*
