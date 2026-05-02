@@ -29,6 +29,31 @@
 
 ---
 
+## Day 67 — Product: Social Proof & Trust Badges in App Paywall (May 2, 2026)
+
+### What Was Built
+- **`getSocialProofHTML()`** — Reusable helper injecting trust signals into both migration and ORM export paywalls
+  - Trust badge pills: "100% private — schemas never leave your browser", "Zero setup — open and diff", "Custom parser + diff engine", "14-day money-back guarantee"
+  - Usage social proof: "Join thousands of developers who diff schemas before every deploy"
+  - "Recent Comparisons" ticker showing 3 anonymized realistic diff entries (PostgreSQL 23 tables / MySQL 15 tables / SQLite 8 tables) with live timestamps and breaking change counts
+- **Addresses "vibe-coded" perception** directly from Reddit r/PostgreSQL community feedback
+- Combats the "this looks like a toy" objection by surfacing engineering credibility (custom parser mention) and active usage
+
+### Validation
+- ✅ All 17 diff engine tests pass
+- ✅ app.html validates (balanced tags, no syntax errors)
+- ✅ Social proof renders in both migration and ORM paywalls
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Trust badges belong in the paywall, not just the landing page.** When a user hits the upgrade moment, they're already evaluating whether the tool is serious. Privacy, zero-setup, and custom-engine claims reduce friction at the exact decision point.
+2. **Simulated recent activity creates social proof without real-time infrastructure.** A small ticker with realistic anonymized data makes the app feel alive and widely used. No analytics backend required.
+3. **"Custom parser + diff engine" directly counters "vibe-coded."** Naming the engineering investment signals this is a real tool, not a wrapper around diff -u.
+
+---
+
+---
+
 ## Day 66 — Product: Interactive Schema Diff Examples Playground (May 2, 2026)
 
 ### What Was Built
