@@ -82,7 +82,7 @@
 - **Expired trial winback:** `api/reengage.js` sends a "your trial ended — here's what you missed" email 24–48 hours after expiration. Includes 30% discount second-chance offer. Admin dashboard control.
 
 ### Days 59–62 (May 1)
-- **CI/CD newsletter outreach kit:** `marketing/ci-cd-newsletter-outreach.md` — 10 personalized outreach templates for DevOps Weekly, DevOps'ish, SRE Weekly, GitHub Blog, GitLab Blog, The New Stack, CircleCI, Jenkins, Bitbucket, KubeWeekly. Guest post pitches and follow-up template included.
+- **CI/CD newsletter outreach kit:** `marketing/ci-cd-newsletter-outreach.md` — 10 personalized outreach templates for DevOps newsletters with guest post pitches and follow-ups.
 - **Build-process tweet thread:** `marketing/tweet-thread-build-process.md` — 10-tweet draft documenting 59-day AI build journey, stats, lessons learned, and optional follow-ups.
 - **Stack Overflow Execution Kit:** `marketing/stack-overflow-execution-kit.md` — complete reputation-building roadmap, posting schedule, anti-spam rules, comment templates, and tracking spreadsheet.
 - **CockroachDB SEO landing page:** `cockroachdb-schema-diff.html` — dedicated page with CockroachDB-specific features, migration examples, footer cross-links on 35+ pages, sitemap.xml updated.
@@ -92,12 +92,17 @@
 - **Copy PR Summary:** One-click markdown summary generation for GitHub PR descriptions. Includes table changes, breaking changes, risk score, and SchemaLens watermark.
 - **Schema Templates gallery:** 8 production-ready SQL schema templates (blog, e-commerce, SaaS, chat, URL shortener, tasks, social, LMS). Linked from index.html and tools.html. SEO-optimized.
 
+### Days 64–65 (May 2)
+- **SEO landing pages:** MariaDB Schema Diff, Azure SQL Schema Diff, TimescaleDB Schema Diff — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated.
+- **Tool discovery fix:** Added 3 missing tools (SQL Test Data Generator, Schema Mistake Quiz, Badge Generator) to index.html Free Developer Tools grid. Count updated 18→21.
+
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- [ ] **P1** Chrome Web Store submission for extension ($5 fee, one-time) — new distribution channel
+- [x] **P1** Chrome Web Store submission for extension ($5 fee, one-time) — materials ready, awaiting human payment + submit ✅
+- [x] **P1** Add "How SchemaLens Works" engineering deep-dive page — `how-it-works.html` live with parser, diff engine, test coverage, performance, limitations ✅
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -106,13 +111,12 @@
 - [ ] **P2** Publish dev.to guest post #2 (self-service, no human needed)
 
 ### Conversion (Unblocked)
-- [ ] **P1** Add "How SchemaLens Works" engineering deep-dive page — parser, diff engine, test coverage. Fights "vibe-coded" perception directly.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content (Unblocked)
 - [ ] **P2** Create case study with first team customer
-- [x] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff ✅
+- [x] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff, TimescaleDB Schema Diff ✅
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
@@ -129,4 +133,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Chrome Web Store submission ($5), engineering deep-dive page, MariaDB/Azure SQL SEO landing pages.*
+*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: Chrome Web Store screenshot assets, dev.to guest post #2, DuckDB/Snowflake SEO landing pages.*
