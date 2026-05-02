@@ -16,18 +16,16 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [x] **P1** dev.to guest post #2 draft ready in `marketing/guest-post-devto-migration-checklist.md` — awaiting human to publish on dev.to
-- [x] **P1** Create 5 tweet-thread drafts for human to post this week ✅
-- [x] **P2** Tweet thread + Stack Overflow Execution Kit ✅
-- [x] **P2** Interactive Schema Diff Examples playground (`schema-examples.html`) — linked from index, app, tools, sitemap ✅
+- [x] **P1** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples ✅
+- [ ] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Add "Recent diffs" / social proof in app paywall to build trust (addresses "vibe-coded" perception) ✅
+- [x] **P1** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages — footer cross-links on 40 pages, sitemap.xml updated ✅
+- [x] **P2** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages ✅
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
@@ -118,6 +116,9 @@
 ### Day 70 (May 2)
 - **Rich empty state for app.html:** Replaced plain text welcome hint with engaging panel featuring feature preview cards, animated typewriter demo, quick-start scenario pills, and social proof. Tracks demo_started / demo_completed analytics events.
 
+### Day 71 (May 2)
+- **Product Hunt post-launch landing page:** Upgraded `product-hunt.html` with countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, and PH discussion CTA. Works pre- and post-launch.
+
 ---
 
 ## 📋 BACKLOG BY AREA
@@ -133,9 +134,7 @@
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall (`getSocialProofHTML()`), social share buttons ✅
-- [x] **P1** Improve app.html empty state for first-time visitors — animated demo or guided tour to reduce bounce ✅
-- [x] **P1** Build Product Hunt post-launch landing page with PH-exclusive offer, social proof, and urgency ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
