@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL Schema Templates — Copy-Paste Database Designs | SchemaLens</title>
+  <meta name="description" content="Production-ready SQL schema templates for blogs, e-commerce, SaaS, chat, and more. Copy-paste CREATE TABLE scripts for PostgreSQL, MySQL, and SQLite.">
+  <meta property="og:title" content="Free SQL Schema Templates — Copy-Paste Database Designs">
+  <meta property="og:description" content="8 production-ready SQL schema templates. Blog, e-commerce, SaaS, chat, URL shortener, tasks, social network, LMS.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-templates.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL Schema Templates",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Production-ready SQL schema templates for blogs, e-commerce, SaaS, chat, URL shortener, tasks, social networks, and LMS. PostgreSQL, MySQL, SQLite support.",
+    "url": "https://schemalens.tech/schema-templates.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .templates-hero { padding: 64px 0 32px; text-align: center; }
+    .templates-hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .templates-hero p { color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem; }
+    .filter-bar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 32px 0 24px; }
+    .filter-bar button { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: 0.9rem; transition: all 0.15s ease; }
+    .filter-bar button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .filter-bar button:hover:not(.active) { border-color: var(--primary); }
+    .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .template-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+    .template-card-header { padding: 20px 20px 12px; }
+    .template-card-header h3 { margin: 0 0 6px; font-size: 1.15rem; }
+    .template-card-header p { margin: 0; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+    .template-meta { display: flex; gap: 10px; flex-wrap: wrap; padding: 0 20px 14px; }
+    .template-tag { font-size: 0.75rem; padding: 3px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); }
+    .template-sql { background: var(--code-bg); border-top: 1px solid var(--border); padding: 16px 20px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.55; color: var(--code-text); overflow-x: auto; max-height: 220px; overflow-y: auto; flex: 1; }
+    .template-sql .kw { color: #c678dd; }
+    .template-sql .st { color: #98c379; }
+    .template-sql .cm { color: #5c6370; font-style: italic; }
+    .template-sql .num { color: #d19a66; }
+    .template-actions { display: flex; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); background: var(--bg); }
+    .template-actions .btn { font-size: 0.8rem; padding: 8px 14px; flex: 1; }
+    .template-actions .btn-secondary { white-space: nowrap; }
+    .cta-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-section h2 { margin-bottom: 8px; }
+    .cta-section p { color: var(--text-muted); margin-bottom: 20px; }
+    .hidden-card { display: none !important; }
+    @media (max-width: 768px) {
+      .template-grid { grid-template-columns: 1fr; }
+      .templates-hero h1 { font-size: 1.7rem; }
+    }
+  </style>
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="templates-hero">
+    <h1>SQL Schema Templates</h1>
+    <p>Production-ready <code>CREATE TABLE</code> designs for common applications. Copy, paste, and customize for PostgreSQL, MySQL, or SQLite.</p>
+  </div>
+
+  <div class="filter-bar">
+    <button class="active" onclick="filterTemplates('all')">All</button>
+    <button onclick="filterTemplates('postgres')">PostgreSQL</button>
+    <button onclick="filterTemplates('mysql')">MySQL</button>
+    <button onclick="filterTemplates('sqlite')">SQLite</button>
+  </div>
+
+  <div class="template-grid" id="templateGrid">
+
+    <!-- Blog / CMS -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>📝 Blog / CMS</h3>
+        <p>Posts, categories, tags, comments, and authors. A complete content management schema with slug-based URLs and publish states.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">5 tables</span>
+        <span class="template-tag">Posts</span>
+        <span class="template-tag">Comments</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- Blog Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> authors (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">UNIQUE NOT NULL</span>,
+  bio <span class="kw">TEXT</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> categories (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  slug <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> posts (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  author_id <span class="kw">INTEGER REFERENCES</span> authors(id) <span class="kw">ON DELETE SET NULL</span>,
+  category_id <span class="kw">INTEGER REFERENCES</span> categories(id) <span class="kw">ON DELETE SET NULL</span>,
+  slug <span class="kw">VARCHAR</span>(100) <span class="kw">UNIQUE NOT NULL</span>,
+  title <span class="kw">VARCHAR</span>(200) <span class="kw">NOT NULL</span>,
+  excerpt <span class="kw">TEXT</span>,
+  body <span class="kw">TEXT NOT NULL</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'draft'</span>,
+  published_at <span class="kw">TIMESTAMP</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  updated_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> tags (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  slug <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(50) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> post_tags (
+  post_id <span class="kw">INTEGER REFERENCES</span> posts(id) <span class="kw">ON DELETE CASCADE</span>,
+  tag_id <span class="kw">INTEGER REFERENCES</span> tags(id) <span class="kw">ON DELETE CASCADE</span>,
+  <span class="kw">PRIMARY KEY</span> (post_id, tag_id)
+);
+
+<span class="kw">CREATE TABLE</span> comments (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  post_id <span class="kw">INTEGER REFERENCES</span> posts(id) <span class="kw">ON DELETE CASCADE</span>,
+  author_name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  author_email <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL</span>,
+  body <span class="kw">TEXT NOT NULL</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- E-commerce -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>🛒 E-commerce</h3>
+        <p>Products, variants, categories, customers, orders, and order items. Inventory-aware with SKU tracking and order statuses.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">7 tables</span>
+        <span class="template-tag">Orders</span>
+        <span class="template-tag">Inventory</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- E-commerce Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> customers (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  phone <span class="kw">VARCHAR</span>(20),
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> categories (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  parent_id <span class="kw">INTEGER REFERENCES</span> categories(id),
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  slug <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> products (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  category_id <span class="kw">INTEGER REFERENCES</span> categories(id),
+  sku <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(200) <span class="kw">NOT NULL</span>,
+  description <span class="kw">TEXT</span>,
+  price <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  stock <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> product_variants (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  product_id <span class="kw">INTEGER REFERENCES</span> products(id) <span class="kw">ON DELETE CASCADE</span>,
+  variant_name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  sku <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  price_adjustment <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  stock <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>
+);
+
+<span class="kw">CREATE TABLE</span> orders (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  customer_id <span class="kw">INTEGER REFERENCES</span> customers(id),
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'pending'</span>,
+  total <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  shipping_address <span class="kw">TEXT</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> order_items (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  order_id <span class="kw">INTEGER REFERENCES</span> orders(id) <span class="kw">ON DELETE CASCADE</span>,
+  product_id <span class="kw">INTEGER REFERENCES</span> products(id),
+  variant_id <span class="kw">INTEGER REFERENCES</span> product_variants(id),
+  quantity <span class="kw">INTEGER NOT NULL</span>,
+  unit_price <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> reviews (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  product_id <span class="kw">INTEGER REFERENCES</span> products(id) <span class="kw">ON DELETE CASCADE</span>,
+  customer_id <span class="kw">INTEGER REFERENCES</span> customers(id) <span class="kw">ON DELETE SET NULL</span>,
+  rating <span class="kw">INTEGER NOT NULL CHECK</span> (rating <span class="kw">BETWEEN</span> <span class="num">1</span> <span class="kw">AND</span> <span class="num">5</span>),
+  comment <span class="kw">TEXT</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- SaaS Multi-Tenant -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>🏢 SaaS Multi-Tenant</h3>
+        <p>Teams, users, roles, permissions, invitations, and audit logs. Row-level security ready with tenant isolation.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">6 tables</span>
+        <span class="template-tag">RBAC</span>
+        <span class="template-tag">Audit</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- SaaS Multi-Tenant Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> teams (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  slug <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  plan <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'free'</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  password_hash <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL</span>,
+  email_verified_at <span class="kw">TIMESTAMP</span>,
+  last_login_at <span class="kw">TIMESTAMP</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> team_members (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  team_id <span class="kw">INTEGER REFERENCES</span> teams(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  role <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'member'</span>,
+  joined_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">UNIQUE</span> (team_id, user_id)
+);
+
+<span class="kw">CREATE TABLE</span> invitations (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  team_id <span class="kw">INTEGER REFERENCES</span> teams(id) <span class="kw">ON DELETE CASCADE</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL</span>,
+  role <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'member'</span>,
+  token <span class="kw">VARCHAR</span>(64) <span class="kw">UNIQUE NOT NULL</span>,
+  expires_at <span class="kw">TIMESTAMP NOT NULL</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> permissions (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  code <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> role_permissions (
+  role <span class="kw">VARCHAR</span>(20) <span class="kw">NOT NULL</span>,
+  permission_id <span class="kw">INTEGER REFERENCES</span> permissions(id) <span class="kw">ON DELETE CASCADE</span>,
+  <span class="kw">PRIMARY KEY</span> (role, permission_id)
+);
+
+<span class="kw">CREATE TABLE</span> audit_logs (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  team_id <span class="kw">INTEGER REFERENCES</span> teams(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE SET NULL</span>,
+  action <span class="kw">VARCHAR</span>(50) <span class="kw">NOT NULL</span>,
+  entity_type <span class="kw">VARCHAR</span>(50),
+  entity_id <span class="kw">INTEGER</span>,
+  meta <span class="kw">JSONB</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- Chat / Messaging -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>💬 Chat / Messaging</h3>
+        <p>Conversations, participants, messages, read receipts, and attachments. Supports group chats and DMs.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">5 tables</span>
+        <span class="template-tag">Groups</span>
+        <span class="template-tag">DMs</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- Chat Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  username <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  display_name <span class="kw">VARCHAR</span>(100),
+  avatar_url <span class="kw">TEXT</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'offline'</span>,
+  last_seen_at <span class="kw">TIMESTAMP</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> conversations (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  title <span class="kw">VARCHAR</span>(100),
+  is_group <span class="kw">BOOLEAN DEFAULT</span> <span class="kw">FALSE</span>,
+  created_by <span class="kw">INTEGER REFERENCES</span> users(id),
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> conversation_members (
+  conversation_id <span class="kw">INTEGER REFERENCES</span> conversations(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  joined_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (conversation_id, user_id)
+);
+
+<span class="kw">CREATE TABLE</span> messages (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  conversation_id <span class="kw">INTEGER REFERENCES</span> conversations(id) <span class="kw">ON DELETE CASCADE</span>,
+  sender_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE SET NULL</span>,
+  content <span class="kw">TEXT NOT NULL</span>,
+  message_type <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'text'</span>,
+  edited_at <span class="kw">TIMESTAMP</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> message_reads (
+  message_id <span class="kw">INTEGER REFERENCES</span> messages(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  read_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (message_id, user_id)
+);
+
+<span class="kw">CREATE TABLE</span> attachments (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  message_id <span class="kw">INTEGER REFERENCES</span> messages(id) <span class="kw">ON DELETE CASCADE</span>,
+  file_name <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL</span>,
+  file_url <span class="kw">TEXT NOT NULL</span>,
+  file_size <span class="kw">INTEGER</span>,
+  mime_type <span class="kw">VARCHAR</span>(100),
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- URL Shortener -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>🔗 URL Shortener</h3>
+        <p>Short links, click analytics, custom aliases, and expiration dates. Minimal and fast.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">2 tables</span>
+        <span class="template-tag">Analytics</span>
+        <span class="template-tag">Expires</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- URL Shortener Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> links (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  short_code <span class="kw">VARCHAR</span>(20) <span class="kw">UNIQUE NOT NULL</span>,
+  original_url <span class="kw">TEXT NOT NULL</span>,
+  custom_alias <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE</span>,
+  click_count <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  expires_at <span class="kw">TIMESTAMP</span>,
+  created_by <span class="kw">INTEGER</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> link_clicks (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  link_id <span class="kw">INTEGER REFERENCES</span> links(id) <span class="kw">ON DELETE CASCADE</span>,
+  ip_address <span class="kw">INET</span>,
+  user_agent <span class="kw">TEXT</span>,
+  referrer <span class="kw">TEXT</span>,
+  country <span class="kw">VARCHAR</span>(2),
+  clicked_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- Task / Project Management -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>✅ Task / Project Management</h3>
+        <p>Projects, tasks, labels, assignees, comments, and time tracking. Kanban-ready with status columns.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">6 tables</span>
+        <span class="template-tag">Kanban</span>
+        <span class="template-tag">Time Tracking</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- Task Manager Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> projects (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  description <span class="kw">TEXT</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> labels (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  project_id <span class="kw">INTEGER REFERENCES</span> projects(id) <span class="kw">ON DELETE CASCADE</span>,
+  name <span class="kw">VARCHAR</span>(50) <span class="kw">NOT NULL</span>,
+  color <span class="kw">VARCHAR</span>(7) <span class="kw">DEFAULT</span> <span class="st">'#6366f1'</span>
+);
+
+<span class="kw">CREATE TABLE</span> tasks (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  project_id <span class="kw">INTEGER REFERENCES</span> projects(id) <span class="kw">ON DELETE CASCADE</span>,
+  title <span class="kw">VARCHAR</span>(200) <span class="kw">NOT NULL</span>,
+  description <span class="kw">TEXT</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'todo'</span>,
+  priority <span class="kw">VARCHAR</span>(10) <span class="kw">DEFAULT</span> <span class="st">'medium'</span>,
+  assignee_id <span class="kw">INTEGER</span>,
+  due_date <span class="kw">DATE</span>,
+  position <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  updated_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> task_labels (
+  task_id <span class="kw">INTEGER REFERENCES</span> tasks(id) <span class="kw">ON DELETE CASCADE</span>,
+  label_id <span class="kw">INTEGER REFERENCES</span> labels(id) <span class="kw">ON DELETE CASCADE</span>,
+  <span class="kw">PRIMARY KEY</span> (task_id, label_id)
+);
+
+<span class="kw">CREATE TABLE</span> time_entries (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  task_id <span class="kw">INTEGER REFERENCES</span> tasks(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER</span>,
+  description <span class="kw">TEXT</span>,
+  started_at <span class="kw">TIMESTAMP NOT NULL</span>,
+  ended_at <span class="kw">TIMESTAMP</span>,
+  duration_minutes <span class="kw">INTEGER</span>
+);
+
+<span class="kw">CREATE TABLE</span> task_comments (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  task_id <span class="kw">INTEGER REFERENCES</span> tasks(id) <span class="kw">ON DELETE CASCADE</span>,
+  user_id <span class="kw">INTEGER</span>,
+  body <span class="kw">TEXT NOT NULL</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- Social Network (Light) -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>🌐 Social Network</h3>
+        <p>Users, profiles, follows, posts, likes, and notifications. A lightweight Twitter-style schema.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">6 tables</span>
+        <span class="template-tag">Follows</span>
+        <span class="template-tag">Feed</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- Social Network Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  username <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  display_name <span class="kw">VARCHAR</span>(100),
+  bio <span class="kw">TEXT</span>,
+  avatar_url <span class="kw">TEXT</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> follows (
+  follower_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  following_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (follower_id, following_id)
+);
+
+<span class="kw">CREATE TABLE</span> posts (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  content <span class="kw">TEXT NOT NULL</span>,
+  reply_to_id <span class="kw">INTEGER REFERENCES</span> posts(id),
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> likes (
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  post_id <span class="kw">INTEGER REFERENCES</span> posts(id) <span class="kw">ON DELETE CASCADE</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (user_id, post_id)
+);
+
+<span class="kw">CREATE TABLE</span> bookmarks (
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  post_id <span class="kw">INTEGER REFERENCES</span> posts(id) <span class="kw">ON DELETE CASCADE</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (user_id, post_id)
+);
+
+<span class="kw">CREATE TABLE</span> notifications (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  user_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  actor_id <span class="kw">INTEGER REFERENCES</span> users(id) <span class="kw">ON DELETE SET NULL</span>,
+  type <span class="kw">VARCHAR</span>(20) <span class="kw">NOT NULL</span>,
+  post_id <span class="kw">INTEGER REFERENCES</span> posts(id) <span class="kw">ON DELETE CASCADE</span>,
+  is_read <span class="kw">BOOLEAN DEFAULT</span> <span class="kw">FALSE</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+    <!-- LMS -->
+    <div class="template-card" data-dialects="postgres mysql sqlite">
+      <div class="template-card-header">
+        <h3>🎓 Learning Management System</h3>
+        <p>Courses, lessons, enrollments, progress tracking, quizzes, and certificates.</p>
+      </div>
+      <div class="template-meta">
+        <span class="template-tag">6 tables</span>
+        <span class="template-tag">Progress</span>
+        <span class="template-tag">Certs</span>
+      </div>
+      <pre class="template-sql"><code><span class="cm">-- LMS Schema (PostgreSQL)</span>
+<span class="kw">CREATE TABLE</span> instructors (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">UNIQUE NOT NULL</span>,
+  bio <span class="kw">TEXT</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> courses (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  instructor_id <span class="kw">INTEGER REFERENCES</span> instructors(id),
+  slug <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  title <span class="kw">VARCHAR</span>(200) <span class="kw">NOT NULL</span>,
+  description <span class="kw">TEXT</span>,
+  level <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'beginner'</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'draft'</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> lessons (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  course_id <span class="kw">INTEGER REFERENCES</span> courses(id) <span class="kw">ON DELETE CASCADE</span>,
+  title <span class="kw">VARCHAR</span>(200) <span class="kw">NOT NULL</span>,
+  content <span class="kw">TEXT</span>,
+  video_url <span class="kw">TEXT</span>,
+  duration_minutes <span class="kw">INTEGER</span>,
+  position <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  is_free <span class="kw">BOOLEAN DEFAULT</span> <span class="kw">FALSE</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> students (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  email <span class="kw">VARCHAR</span>(255) <span class="kw">UNIQUE NOT NULL</span>,
+  name <span class="kw">VARCHAR</span>(100) <span class="kw">NOT NULL</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);
+
+<span class="kw">CREATE TABLE</span> enrollments (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  student_id <span class="kw">INTEGER REFERENCES</span> students(id) <span class="kw">ON DELETE CASCADE</span>,
+  course_id <span class="kw">INTEGER REFERENCES</span> courses(id) <span class="kw">ON DELETE CASCADE</span>,
+  status <span class="kw">VARCHAR</span>(20) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
+  completed_at <span class="kw">TIMESTAMP</span>,
+  created_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">UNIQUE</span> (student_id, course_id)
+);
+
+<span class="kw">CREATE TABLE</span> progress (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  enrollment_id <span class="kw">INTEGER REFERENCES</span> enrollments(id) <span class="kw">ON DELETE CASCADE</span>,
+  lesson_id <span class="kw">INTEGER REFERENCES</span> lessons(id) <span class="kw">ON DELETE CASCADE</span>,
+  is_completed <span class="kw">BOOLEAN DEFAULT</span> <span class="kw">FALSE</span>,
+  completed_at <span class="kw">TIMESTAMP</span>,
+  <span class="kw">UNIQUE</span> (enrollment_id, lesson_id)
+);
+
+<span class="kw">CREATE TABLE</span> certificates (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  enrollment_id <span class="kw">INTEGER REFERENCES</span> enrollments(id) <span class="kw">ON DELETE CASCADE</span>,
+  certificate_number <span class="kw">VARCHAR</span>(50) <span class="kw">UNIQUE NOT NULL</span>,
+  issued_at <span class="kw">TIMESTAMP DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>
+);</code></pre>
+      <div class="template-actions">
+        <button class="btn btn-secondary" onclick="copyTemplate(this)">Copy SQL</button>
+        <a class="btn btn-primary" href="app.html?demo=postgres">Compare in SchemaLens</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-section">
+    <h2>Need to compare two schemas?</h2>
+    <p>Paste your old and new CREATE TABLE dumps into SchemaLens and get an instant visual diff + migration script.</p>
+    <a href="app.html" class="btn btn-primary btn-lg">Open Schema Diff</a>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div class="container">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="index.html">Home</a>
+      <a href="app.html">Schema Diff</a>
+      <a href="tools.html">All Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+      <a href="team.html">Team</a>
+      <a href="testimonials.html">Wall of Love</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+function filterTemplates(dialect) {
+  const buttons = document.querySelectorAll('.filter-bar button');
+  buttons.forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(dialect) || (dialect === 'all' && b.textContent === 'All')));
+  
+  const cards = document.querySelectorAll('.template-card');
+  cards.forEach(card => {
+    const dialects = card.getAttribute('data-dialects');
+    if (dialect === 'all' || dialects.includes(dialect)) {
+      card.classList.remove('hidden-card');
+    } else {
+      card.classList.add('hidden-card');
+    }
+  });
+}
+
+function copyTemplate(btn) {
+  const card = btn.closest('.template-card');
+  const code = card.querySelector('.template-sql code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const old = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+}
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="lib/analytics-client.js"></script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

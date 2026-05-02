@@ -91,6 +91,7 @@
 ### Day 63 (May 2)
 - **View dependency tracking:** Breaking change detector now warns when dropped columns/tables break views. Extracts table refs from `FROM`/`JOIN` clauses. 3 new tests. Addresses top community feedback.
 - **Copy PR Summary:** One-click markdown summary generation for GitHub PR descriptions. Includes table changes, breaking changes, risk score, and SchemaLens watermark.
+- **Schema Templates gallery:** 8 production-ready SQL schema templates (blog, e-commerce, SaaS, chat, URL shortener, tasks, social, LMS). Linked from index.html and tools.html. SEO-optimized.
 
 ---
 
