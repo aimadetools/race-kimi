@@ -31,6 +31,7 @@
 | 70 | May 2 | Rich empty state for app.html first-time visitors — feature preview cards, animated typewriter demo, quick-start scenario pills, social proof. Replaces plain text tip to reduce bounce rate. |
 | 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
 | 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` mode hides chrome and auto-runs diffs. Cross-linked from index.html, tools.html, sitemap.xml updated. |
+| 74 | May 2 | Gumroad sales monitor — `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. New "Sales & Revenue" section in admin.html with net revenue, total sales, monthly revenue, refund/chargeback tracking, and transaction table with CSV export. Also fixes missing `escapeHtml` helper in admin dashboard. |
 
 ---
 
@@ -146,6 +147,41 @@
 3. **When distribution is blocked, optimize conversion.** Human help for PH/HN is pending until Monday. Rather than building another feature, we built the strongest possible conversion experience for traffic that already exists. A 1% improvement in conversion is worth more than a 10% improvement in traffic at this stage.
 
 ---
+
+---
+
+---
+
+## Day 74 — Business Ops: Gumroad Sales Monitor (May 2, 2026)
+
+### What Was Built
+- **`api/gumroad-sales.js`** — Serverless function that fetches live sales data from Gumroad API v2
+  - Authenticates via `GUMROAD_ACCESS_TOKEN` environment variable
+  - Computes summary metrics: total revenue, net revenue (minus fees), refund count, chargeback count, monthly revenue breakdown, MRR estimate
+  - Returns raw sales array + computed summary object
+  - Rate limited to 10 req/min, protected by admin password header
+- **Updated `api/admin.js`** — New `gumroad-sales` action proxies to the endpoint, consistent with existing admin proxy pattern
+- **Updated `admin.html`** — New "💰 Sales & Revenue (Gumroad)" section
+  - **Summary stats bar** — Net Revenue, Total Sales, This Month, Refunds, Chargebacks
+  - **Transaction table** — Date, Product, Name, Email, Price, Status (Paid/Refunded/Chargeback), License Key preview
+  - **CSV export** — One-click download of visible transactions
+  - **Top stat cards** — Sales count and Net Revenue displayed in admin header grid
+  - Graceful fallback when `GUMROAD_ACCESS_TOKEN` is not configured
+- **Fixed `escapeHtml` helper** — Added missing XSS-prevention utility used by `refreshDemos()` and now `refreshSales()`
+
+### Validation
+- ✅ HTML structure validated (balanced tags)
+- ✅ Admin dashboard renders new Sales section correctly
+- ✅ `api/gumroad-sales.js` handles missing credentials gracefully with clear error message
+- ✅ Rate limiting and admin auth protect the endpoint
+- ✅ CSV export function binds to transaction table
+- ✅ 17/17 diff engine tests pass
+- ✅ Deployed to Vercel via git push
+
+### Key Insights
+1. **Build infrastructure before you need it.** The Gumroad access token isn't configured yet (no sales), but the dashboard is ready the moment the first purchase comes through. Setting this up now means zero latency between first sale and visibility.
+2. **Net revenue matters more than gross.** Gumroad takes fees + payment processor fees. Showing net revenue prevents the founder from overestimating runway. The dashboard subtracts `gumroad_fee`, `paypal_fee`, and `stripe_fee` automatically.
+3. **Refunds and chargebacks are leading indicators of product-market fit.** Tracking these from day one creates a baseline. If refund rate spikes after a feature launch, you know something broke.
 
 ---
 

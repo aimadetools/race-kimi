@@ -146,6 +146,16 @@ module.exports = async (req, res) => {
       case 'demo-requests':
         data = await fetchSupabase('demo_requests', `select=*&order=created_at.desc&limit=${maxLimit}`);
         break;
+      case 'gumroad-sales': {
+        const gumroadUrl = `${proto}://${host}/api/gumroad-sales`;
+        const gumroadHeaders = { 'x-admin-password': ADMIN_PASSWORD };
+        const gumroadRes = await fetch(gumroadUrl, { method: 'GET', headers: gumroadHeaders });
+        const gumroadJson = await gumroadRes.json().catch(() => ({}));
+        if (!gumroadRes.ok) {
+          return res.status(gumroadRes.status || 500).json({ error: gumroadJson.error || 'Gumroad sales request failed' });
+        }
+        return res.status(200).json({ data: gumroadJson });
+      }
       case 'launch-email': {
         const proto = req.headers['x-forwarded-proto'] || 'https';
         const host = req.headers.host || 'schemalens.tech';

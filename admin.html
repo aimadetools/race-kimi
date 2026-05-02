@@ -273,6 +273,14 @@
           <div class="value" id="statDemos">—</div>
           <div class="label">Demos</div>
         </div>
+        <div class="admin-stat">
+          <div class="value" id="statSales">—</div>
+          <div class="label">Sales</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statRevenue">—</div>
+          <div class="label">Revenue</div>
+        </div>
       </div>
 
       <div class="admin-section">
@@ -411,6 +419,20 @@
         <div class="admin-actions-bar">
           <button onclick="refreshDemos()">Refresh</button>
           <button class="primary" onclick="exportDemos()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>💰 Sales & Revenue (Gumroad)</h3>
+          <span class="admin-badge success" id="badgeSales">0</span>
+        </div>
+        <div class="admin-section-body" id="salesBody">
+          <div class="admin-empty">Sales data requires Gumroad access token. Configure GUMROAD_ACCESS_TOKEN in Vercel environment variables.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshSales()">Refresh</button>
+          <button class="primary" onclick="exportSales()">Export CSV</button>
         </div>
       </div>
 
@@ -1074,6 +1096,75 @@
       downloadCsv('schemalens-demo-requests.csv', headers, rows);
     }
 
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Gumroad Sales
+    async function refreshSales() {
+      const body = document.getElementById('salesBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('gumroad-sales');
+        const summary = data.summary || {};
+        const sales = data.sales || [];
+        document.getElementById('statSales').textContent = summary.totalSales ?? 0;
+        document.getElementById('statRevenue').textContent = summary.netRevenueFormatted ?? '$0.00';
+        document.getElementById('badgeSales').textContent = summary.totalSales ?? 0;
+
+        if (!sales.length) {
+          body.innerHTML = `<div class="admin-empty">No sales yet. When sales come in, they'll appear here.</div>`;
+          return;
+        }
+
+        const summaryHtml = `
+          <div style="padding:14px 18px;background:var(--bg);border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;">
+            <div><div style="font-size:1.3rem;font-weight:700;color:var(--success);">${escapeHtml(summary.netRevenueFormatted || '$0.00')}</div><div style="font-size:0.75rem;color:var(--text-muted);">Net Revenue</div></div>
+            <div><div style="font-size:1.3rem;font-weight:700;">${summary.totalSales || 0}</div><div style="font-size:0.75rem;color:var(--text-muted);">Total Sales</div></div>
+            <div><div style="font-size:1.3rem;font-weight:700;">${escapeHtml(summary.mrrEstimateFormatted || '$0.00')}</div><div style="font-size:0.75rem;color:var(--text-muted);">This Month</div></div>
+            <div><div style="font-size:1.3rem;font-weight:700;color:var(--danger);">${summary.refundCount || 0}</div><div style="font-size:0.75rem;color:var(--text-muted);">Refunds</div></div>
+            <div><div style="font-size:1.3rem;font-weight:700;color:var(--warning);">${summary.chargebackCount || 0}</div><div style="font-size:0.75rem;color:var(--text-muted);">Chargebacks</div></div>
+          </div>
+        `;
+
+        const rows = sales.slice(0, 100).map(s => {
+          const price = s.price ? `$${(s.price / 100).toFixed(2)}` : '—';
+          const status = s.refunded ? '<span class="admin-badge danger">Refunded</span>' : s.chargebacked ? '<span class="admin-badge warning">Chargeback</span>' : '<span class="admin-badge success">Paid</span>';
+          return `
+            <tr>
+              <td>${formatDate(s.created_at || s.timestamp)}</td>
+              <td>${escapeHtml(s.product_name || '—')}</td>
+              <td>${escapeHtml(s.full_name || '—')}</td>
+              <td>${escapeHtml(s.email || '—')}</td>
+              <td>${price}</td>
+              <td>${status}</td>
+              <td><code style="font-size:0.75rem;background:var(--bg);padding:2px 6px;border-radius:4px;">${escapeHtml((s.license_key || '').slice(0, 16))}${(s.license_key || '').length > 16 ? '…' : ''}</code></td>
+            </tr>
+          `;
+        }).join('');
+
+        body.innerHTML = summaryHtml + `
+          <table class="admin-table" id="salesTable">
+            <thead><tr><th>Date</th><th>Product</th><th>Name</th><th>Email</th><th>Price</th><th>Status</th><th>License Key</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load sales data.<br><small>${escapeHtml(e.message)}</small><br><small>Ensure GUMROAD_ACCESS_TOKEN is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
+    function exportSales() {
+      const table = document.querySelector('#salesTable');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-gumroad-sales.csv', headers, rows);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
@@ -1084,6 +1175,7 @@
       refreshLeads();
       refreshAffiliates();
       refreshDemos();
+      refreshSales();
     }
   </script>
 </body>
