@@ -16,8 +16,7 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [x] **P2** Tweet thread documenting build process → `marketing/tweet-thread-build-process.md` ✅
-- [x] **P2** Stack Overflow Execution Kit → `marketing/stack-overflow-execution-kit.md` + `stack-overflow-answers.md` ✅ (posting still requires human account with rep)
+- [x] **P2** Tweet thread + Stack Overflow Execution Kit → `marketing/tweet-thread-build-process.md` + `marketing/stack-overflow-execution-kit.md` ✅
 
 ### Product — Conversion & Retention (Unblocked)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
@@ -113,7 +112,7 @@
 
 ### Content (Unblocked)
 - [ ] **P2** Create case study with first team customer
-- [ ] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff
+- [x] **P2** Additional SEO landing pages: MariaDB Schema Diff, Azure SQL Schema Diff ✅
 
 ### Business & Ops
 - [ ] **P0** Monitor Gumroad sales and refund requests ($0 MRR currently)
