@@ -46,3 +46,12 @@ This is real traction from a targeted developer community. These users are your 
 2. The CLI vs browser debate is real. Your CLI tool (schemalens-cli on npm) is the answer to this. Promote it more prominently. Developers who prefer CLI can use npx schemalens-cli.
 3. The DDL text vs database object question is important. SchemaLens compares DDL text (CREATE TABLE statements). Liquibase can connect to live databases and compare actual objects. This is a fundamental limitation to be honest about.
 4. Trust: 20 years of Liquibase history vs a new tool. The only way to build trust is time, adoption, and transparency. Open-source the diff engine if possible.
+
+### Feedback from PH viewer (May 3, 2026)
+**Source:** Email to hello@schemalens.tech
+
+> Hey, saw SchemaLens on Product Hunt. Cool idea. I tried pasting two Postgres schemas and the diff worked fine, but I was hoping it would catch column type changes too (e.g. varchar(255) to text). Does it handle that? Also, any plans for MySQL support? We are mostly a MySQL shop.
+
+**Action items:**
+1. Verify column type change detection works correctly. If not, this is a bug.
+2. MySQL support is a real demand signal. Consider adding it to the roadmap.
