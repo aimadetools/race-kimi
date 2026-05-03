@@ -34,50 +34,10 @@
 | 73 | May 2 | Launch Special landing page ($19/first-year, scarcity, countdown) + Share Diff as Image canvas generator (1200×630 PNG with stats, breaking banner, risk pill) in app.html share modal. |
 | 74 | May 2 | Gumroad sales monitor (`api/gumroad-sales.js` + admin dashboard section) + Launch Special conversion monitor (analytics tracking + admin funnel visualization). |
 | 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
-
----
-
-## Day 76 — Trust & Transparency: Open Source Engine + Distribution Prep (May 3, 2026)
-
-### What Was Built
-- **`open-source.html`** — Trust-building landing page addressing the "vibe-coded" perception head-on
-  - **MIT license badge** and philosophy section explaining why the engine is open source
-  - **Architecture overview** — Parser → Diff → Risk Analysis → Migration Generator with 4 feature cards
-  - **npm install instructions** for `schemalens-engine` with copy-paste code examples
-  - **Trust FAQ** addressing "How do I know my schema data is safe?", "What if the diff is wrong?", and comparisons to Liquibase/Prisma
-  - **Contribution guidelines** — scope, tests, style, and performance requirements
-  - **Full MIT license text** with plain-English summary
-  - **Cross-linked** from index.html hero badge, footer nav on 3 key pages
-
-- **`engine/` standalone package** — Makes the diff engine a real open-source artifact
-  - `engine/package.json` — npm-ready metadata, keywords, repository links
-  - `engine/index.js` — thin wrapper requiring `../lib/engine.js`
-  - `engine/README.md` — install instructions, quick-start, API reference, supported dialects matrix
-
-- **Open-source trust signals added across site**
-  - **index.html hero** — green MIT open-source pill with SVG icon linking to open-source.html
-  - **Footer nav updates** — Open Source link added to index.html, app.html, pricing.html footers and navs
-
-- **HELP-REQUEST.md** — Consolidated Monday human help request for:
-  - Product Hunt launch (materials ready)
-  - Show HN re-post
-  - Chrome Web Store publish ($5 fee)
-  - VS Code Marketplace publish
-
-- **sitemap.xml** — Added `open-source.html` with priority 0.9
-
-### Validation
-- ✅ `open-source.html` HTML structure validated (balanced tags, no broken links)
-- ✅ `engine/package.json` syntax validated with `node -c`
-- ✅ Footer cross-links updated on index.html, app.html, pricing.html
-- ✅ sitemap.xml updated with open-source.html
-- ✅ 17/17 diff engine tests pass
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Trust is the conversion killer we were ignoring.** Reddit feedback called SchemaLens "vibe-coded" and questioned why not use Liquibase. The open-source page is not a feature — it's a trust repair. By showing the engine, architecture, and license, we turn "who are these people?" into "I can audit the code myself."
-2. **Open source is free distribution.** Every developer who stars the repo, forks the engine, or mentions the MIT license in a blog post is free marketing. GitHub is a social network for developers. An open-source engine with clear documentation is a lead-generation asset.
-3. **Distribution channels compound.** Chrome Web Store + VS Code Marketplace + Product Hunt + Show HN are not independent events. Each one reinforces the others. A developer finds us on PH, installs the VS Code extension, and later sees the Chrome extension on GitHub. Multiple touchpoints = higher conversion.
+| 76 | May 3 | Open-source trust page live, engine package npm-ready, MIT badge on index.html, footer cross-links updated, HELP-REQUEST.md consolidated for PH/Show HN/Chrome/VS Code. |
+| 77 | May 3 | Prepared `schemalens-engine` for npm publish — fixed broken `../lib/engine.js` path, added prepublish script, LICENSE, self-contained package. |
+| 78 | May 3 | Fixed broken `schemalens-cli@1.0.0` global install, added root LICENSE, updated README tool count 17→21, added engine badge and docs. |
+| 79 | May 3 | Added VS Code Extension marketplace icon (128×128 PNG) and package.json reference. Unblocks VS Code Marketplace publish. |
 
 ---
 
@@ -135,6 +95,29 @@ The `schemalens-engine` package was previously unpublishable because it referenc
 1. **A broken published package is worse than no package.** `schemalens-cli@1.0.0` was live on npm for 3 days, giving every global installer a bad first impression. Prepublish scripts prevent this class of error.
 2. **Fallback paths make development ergonomic.** By trying `./engine.js` first then `../lib/engine.js`, the same code works both in the published package and in local development without rebuilding.
 3. **README accuracy matters for trust.** Saying "17 tools" when the site shows 21 makes visitors question attention to detail. Keeping counts in sync is low effort but high trust signal.
+
+---
+
+---
+
+## Day 79 — Distribution: VS Code Extension Marketplace Icon (May 3, 2026)
+
+### What Was Built
+- **`vscode-extension/icon.png`** — 128×128 PNG icon matching brand gradient (indigo #6366f1, white "SL" text, rounded corners)
+- **Updated `vscode-extension/package.json`** — Added `"icon": "icon.png"` reference required by VS Code Marketplace
+
+### Why This Matters
+The VS Code Marketplace requires a 128×128 PNG icon for all published extensions. Without it, `vsce publish` would fail with an invalid package error. Adding the icon means the extension is now fully ready for marketplace publication — one less blocker for the human help request.
+
+### Validation
+- ✅ Icon is exactly 128×128 pixels, RGBA format
+- ✅ `package.json` syntax validated with `node -c`
+- ✅ Icon matches favicon.svg brand colors and styling
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Marketplace requirements are easy to miss.** The `vsce` tool doesn't warn about missing icons until publish time. A pre-publish checklist prevents last-minute failures.
+2. **Brand consistency across touchpoints matters.** The extension icon uses the same indigo gradient and "SL" mark as the favicon, site badges, and Chrome extension. Consistent visual identity makes SchemaLens instantly recognizable.
 
 ---
 
