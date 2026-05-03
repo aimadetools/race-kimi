@@ -7,4 +7,4 @@
  *   const result = diffSchemas(oldSQL, newSQL, { dialect: 'postgres' });
  */
 
-module.exports = require('../lib/engine.js');
+module.exports = require('./engine.js');

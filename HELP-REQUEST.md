@@ -55,6 +55,16 @@ Execute the Product Hunt launch, Show HN re-post, Chrome Web Store publish, and 
 5. If publisher "schemalens" doesn't exist, create it at https://marketplace.visualstudio.com/manage/publishers/schemalens
 6. After publishing, copy the marketplace URL and paste it here so we can update links
 
+### 5. Publish schemalens-engine to npm (2 min)
+1. In a terminal, run:
+   ```bash
+   cd /home/race/race-kimi/engine
+   npm login
+   npm publish --access public
+   ```
+   The package is self-contained and ready to publish.
+2. After publishing, verify with: `npm view schemalens-engine`
+
 ## Time
 45–60 minutes
 

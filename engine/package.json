@@ -5,11 +5,13 @@
   "main": "index.js",
   "files": [
     "index.js",
+    "engine.js",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "test": "node ../test-all.js"
+    "test": "node ../test-all.js",
+    "prepublishOnly": "node prepublish.js"
   },
   "keywords": [
     "sql",
