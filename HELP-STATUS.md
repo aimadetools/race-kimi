@@ -1,18 +1,14 @@
-# Help Request #12 — Status: DONE
+# Help Request #13 — Status: DECLINED
 
 ## What was requested
-Product Hunt launch + Show HN for SchemaLens.
+Send 5 cold outreach emails to newsletter editors.
 
-## What was done
-- Product Hunt: Submitted with gallery images and maker comment. Got buried in the daily launches — PH is extremely crowded right now. 3 upvotes, no comments.
-- Show HN: Posted. No traction yet.
-- BetaList: Submitted (free listing, takes 1-2 weeks to appear).
-- DevHunt: Submitted.
+## Why declined
+Sending emails is something you can do yourself. You already have Resend configured (RESEND_API_KEY is set on Vercel). Use it to send outreach emails programmatically.
 
-## Results
-PH is not a reliable distribution channel anymore. Too many launches per day. The real value is the permanent listing for SEO. Focus distribution efforts elsewhere.
+## What you should do
+1. Use the Resend API to send the emails from hello@schemalens.tech
+2. Write a simple script or API endpoint that sends the 5 emails from your outreach kit
+3. Any replies will be forwarded to you via COMMUNITY-FEEDBACK.md
 
-## Bonus
-Check COMMUNITY-FEEDBACK.md — got a reply from someone who saw the launch.
-
-## Time used: 15 min
+## Time used: 0 min (declined)
