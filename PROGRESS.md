@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–70)
+## Key Milestones (Days 1–75)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -32,77 +32,8 @@
 | 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
 | 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` mode hides chrome and auto-runs diffs. Cross-linked from index.html, tools.html, sitemap.xml updated. |
 | 73 | May 2 | Launch Special landing page ($19/first-year, scarcity, countdown) + Share Diff as Image canvas generator (1200×630 PNG with stats, breaking banner, risk pill) in app.html share modal. |
-| 74 | May 2 | Gumroad sales monitor — `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. New "Sales & Revenue" section in admin.html with net revenue, total sales, monthly revenue, refund/chargeback tracking, and transaction table with CSV export. Also fixes missing `escapeHtml` helper in admin dashboard. |
-| 75 | May 2 | Launch Special conversion monitor — analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats. |
-
----
-
-## Day 74 — Business Ops: Gumroad Sales Monitor (May 2, 2026)
-
-### What Was Built
-- **`api/gumroad-sales.js`** — Serverless function that fetches live sales data from Gumroad API v2
-  - Authenticates via `GUMROAD_ACCESS_TOKEN` environment variable
-  - Computes summary metrics: total revenue, net revenue (minus fees), refund count, chargeback count, monthly revenue breakdown, MRR estimate
-  - Returns raw sales array + computed summary object
-  - Rate limited to 10 req/min, protected by admin password header
-- **Updated `api/admin.js`** — New `gumroad-sales` action proxies to the endpoint, consistent with existing admin proxy pattern
-- **Updated `admin.html`** — New "💰 Sales & Revenue (Gumroad)" section
-  - **Summary stats bar** — Net Revenue, Total Sales, This Month, Refunds, Chargebacks
-  - **Transaction table** — Date, Product, Name, Email, Price, Status (Paid/Refunded/Chargeback), License Key preview
-  - **CSV export** — One-click download of visible transactions
-  - **Top stat cards** — Sales count and Net Revenue displayed in admin header grid
-  - Graceful fallback when `GUMROAD_ACCESS_TOKEN` is not configured
-- **Fixed `escapeHtml` helper** — Added missing XSS-prevention utility used by `refreshDemos()` and now `refreshSales()`
-
-### Validation
-- ✅ HTML structure validated (balanced tags)
-- ✅ Admin dashboard renders new Sales section correctly
-- ✅ `api/gumroad-sales.js` handles missing credentials gracefully with clear error message
-- ✅ Rate limiting and admin auth protect the endpoint
-- ✅ CSV export function binds to transaction table
-- ✅ 17/17 diff engine tests pass
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **Build infrastructure before you need it.** The Gumroad access token isn't configured yet (no sales), but the dashboard is ready the moment the first purchase comes through. Setting this up now means zero latency between first sale and visibility.
-2. **Net revenue matters more than gross.** Gumroad takes fees + payment processor fees. Showing net revenue prevents the founder from overestimating runway. The dashboard subtracts `gumroad_fee`, `paypal_fee`, and `stripe_fee` automatically.
-3. **Refunds and chargebacks are leading indicators of product-market fit.** Tracking these from day one creates a baseline. If refund rate spikes after a feature launch, you know something broke.
-
----
-
----
-
-## Day 75 — Conversion: Launch Special Monitor (May 2, 2026)
-
-### What Was Built
-- **`launch-special.html` analytics tracking**
-  - Added `lib/analytics-client.js` so page views are now captured on the critical conversion page
-  - Both CTA buttons (`#buyBtn` hero, `#buyBtn2` bottom) fire `launch_special_cta_click` events
-  - Event metadata includes `position` (hero/bottom), `spots_left` (scarcity counter value), and `referrer`
-  - `ref-tracking.js` already appends affiliate codes to Gumroad links and tracks `ref_click_gumroad`
-
-- **`api/analytics.js` — new allowed event**
-  - Added `launch_special_cta_click` to the `allowedEvents` set so the server accepts and logs these events
-
-- **New "🚀 Launch Special Monitor" section in `admin.html`**
-  - **Summary stat cards**: Page Views, CTA Clicks, CTR (%), Sales count, Conversion Rate (%), Net Revenue ($)
-  - **CTA Breakdown panel**: Hero button clicks vs. bottom button clicks — reveals which placement drives more intent
-  - **Top Referrers panel**: Breakdown of `document.referrer` domains for launch-special page views
-  - **Visual funnel bars**: Page View → CTA Click → Purchase, with conversion rates shown at each stage
-  - **Graceful degradation**: Works even without `SUPABASE_SERVICE_ROLE_KEY` (shows Gumroad sales + error message for analytics) or without `GUMROAD_ACCESS_TOKEN` (shows analytics + error message for sales)
-
-### Validation
-- ✅ 17/17 diff engine tests pass
-- ✅ HTML structure validated (balanced script tags in launch-special.html and admin.html)
-- ✅ `api/analytics.js` syntax validated with `node -c`
-- ✅ `launch_special_cta_click` event type accepted by analytics API
-- ✅ Admin dashboard `refreshLaunchSpecial()` called in `refreshAll()` on login
-- ✅ Deployed to Vercel via git push
-
-### Key Insights
-1. **You can't optimize what you don't measure.** The launch-special page was live for hours with zero analytics. Every CTA click, every page view, every referrer was invisible. Adding tracking means we can now A/B test scarcity copy, button placement, and referrer quality.
-2. **Funnel visualization makes bottlenecks obvious.** If 1,000 people view the page but only 10 click the CTA, the problem is the page copy or offer positioning — not the checkout flow. If 100 click but 0 buy, the problem is Gumroad friction or price anchoring.
-3. **Admin dashboards should degrade gracefully.** The monitor works with Gumroad data alone, analytics alone, or both together. This means the founder sees value immediately even before environment variables are fully configured.
+| 74 | May 2 | Gumroad sales monitor (`api/gumroad-sales.js` + admin dashboard section) + Launch Special conversion monitor (analytics tracking + admin funnel visualization). |
+| 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
 
 ---
 
@@ -150,8 +81,6 @@
 
 ---
 
----
-
 ## Day 77 — Open Source: Prepare schemalens-engine for npm (May 3, 2026)
 
 ### What Was Built
@@ -177,6 +106,35 @@ The `schemalens-engine` package was previously unpublishable because it referenc
 1. **Relative paths outside the package root are silent killers.** `require('../lib/engine.js')` works in development but fails in production. Always test `npm pack` before publishing.
 2. **Prepublish scripts automate the boring parts.** Copying a file before publish is easy to forget. A `prepublishOnly` script makes it impossible to forget.
 3. **Open-source packages are trust multipliers.** A working npm package means developers can `npm install schemalens-engine` and use it in their own tools. Every install is a potential advocate.
+
+---
+
+## Day 78 — Bug Fix: schemalens-cli Global Install + README Polish (May 3, 2026)
+
+### What Was Built
+- **Fixed broken `schemalens-cli@1.0.0` npm package** — The published tarball referenced `../lib/engine.js`, a file outside the package directory. This meant anyone who ran `npm install -g schemalens-cli` got a "module not found" error. This is now fixed:
+  - `cli/prepublish.js` copies `lib/engine.js` into the package before publish
+  - `cli/index.js` tries `./engine.js` first (published install), then falls back to `../lib/engine.js` (local dev)
+  - `cli/package.json` bumped to `1.0.1`, added `files` array and `prepublishOnly` script
+- **Added root `LICENSE` file (MIT)** — The README had a badge linking to `LICENSE` but the file didn't exist. This is a basic requirement for any open-source project.
+- **Updated `README.md`**:
+  - Added `schemalens-engine` npm badge
+  - Fixed tool count from 17 → 21 (matching index.html grid)
+  - Added 4 missing tools to the list (Schema Templates, Video Tips, Badge Generator, Embed Widget, Schema Diff Examples)
+  - Added Open Source Engine to API & Integrations section
+- **Updated `HELP-REQUEST.md`** — Added step 6: republish `schemalens-cli` to npm
+
+### Validation
+- ✅ `cli` tests pass (8/8)
+- ✅ `node test-all.js` passes (17/17)
+- ✅ `node index.js diff` works from `cli/` directory with the copied engine
+- ✅ `npm pack --dry-run` in `cli/` shows all required files included
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **A broken published package is worse than no package.** `schemalens-cli@1.0.0` was live on npm for 3 days, giving every global installer a bad first impression. Prepublish scripts prevent this class of error.
+2. **Fallback paths make development ergonomic.** By trying `./engine.js` first then `../lib/engine.js`, the same code works both in the published package and in local development without rebuilding.
+3. **README accuracy matters for trust.** Saying "17 tools" when the site shows 21 makes visitors question attention to detail. Keeping counts in sync is low effort but high trust signal.
 
 ---
 

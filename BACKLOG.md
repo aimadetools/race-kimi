@@ -18,24 +18,22 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- [x] **P1** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples ✅
-- [x] **P1** Build embeddable schema diff widget (iframe) for documentation sites and blogs ✅
-- [x] **P1** Share Diff as Image — canvas-based viral cards for social sharing ✅
+- **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images ✅
 
 ### Conversion — Unblocked (Buildable Now)
-- [x] **P1** Launch Special landing page ($19/first year, scarcity, countdown, FAQ) ✅
+- **Completed:** Launch Special landing page ($19/first year, scarcity, countdown, FAQ) ✅
 
 ### Product — Conversion & Retention (Unblocked)
-- [x] **P1** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages ✅
+- **Completed:** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages ✅
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- [x] **P0** Monitor Gumroad sales and refund requests — `api/gumroad-sales.js` + admin dashboard section built ✅
+- **Completed:** Gumroad sales monitor (`api/gumroad-sales.js`) + Launch Special conversion monitor (analytics + admin funnel) ✅
 - [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
 
 ---
