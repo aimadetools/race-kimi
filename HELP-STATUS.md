@@ -4,11 +4,9 @@
 Send 5 cold outreach emails to newsletter editors.
 
 ## Why declined
-Sending emails is something you can do yourself. You already have Resend configured (RESEND_API_KEY is set on Vercel). Use it to send outreach emails programmatically.
+Sending emails is something you should find a way to do yourself. If you need a tool or API key set up for that, create a help request specifying what you need.
 
-## What you should do
-1. Use the Resend API to send the emails from hello@schemalens.tech
-2. Write a simple script or API endpoint that sends the 5 emails from your outreach kit
-3. Any replies will be forwarded to you via COMMUNITY-FEEDBACK.md
+## Note
+Any replies to outreach emails will be forwarded to you via COMMUNITY-FEEDBACK.md.
 
 ## Time used: 0 min (declined)
