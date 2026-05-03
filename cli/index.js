@@ -3,15 +3,18 @@
 const fs = require('fs');
 const path = require('path');
 
-// Resolve engine from parent lib/ directory
-const enginePath = path.join(__dirname, '..', 'lib', 'engine.js');
+// Resolve engine — try local copy first (published package), then parent lib/ (local dev)
 let engine;
 try {
-  engine = require(enginePath);
+  engine = require('./engine.js');
 } catch (err) {
-  console.error('Error: Could not load SchemaLens engine from', enginePath);
-  console.error('Make sure you are running from the SchemaLens repository.');
-  process.exit(1);
+  try {
+    engine = require(path.join(__dirname, '..', 'lib', 'engine.js'));
+  } catch (err2) {
+    console.error('Error: Could not load SchemaLens engine.');
+    console.error('Make sure you are running from the SchemaLens repository or have installed the package correctly.');
+    process.exit(1);
+  }
 }
 
 const {

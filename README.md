@@ -3,6 +3,7 @@
 > Compare SQL schemas. Spot changes instantly. Generate migrations.
 
 [![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)
+[![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
@@ -10,7 +11,8 @@
 
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
-Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`
+Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`  
+Core engine: `npm install schemalens-engine`
 
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
@@ -58,25 +60,29 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **17 free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **21 free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
-3. [Schema Documentation Generator](https://schemalens.tech/tools/schema-doc-generator.html)
-4. [CSV to SQL Converter](https://schemalens.tech/tools/csv-to-sql.html)
-5. [JSON to SQL Schema Converter](https://schemalens.tech/tools/json-to-sql.html)
-6. [Schema Health Check / SQL Linter](https://schemalens.tech/tools/schema-health-check.html)
-7. [SQL Index Analyzer](https://schemalens.tech/tools/sql-index-analyzer.html)
-8. [CREATE TABLE Generator](https://schemalens.tech/tools/create-table-generator.html)
-9. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
-10. [Migration Cost Calculator](https://schemalens.tech/tools/migration-cost-calculator.html)
-11. [SQL INSERT Generator](https://schemalens.tech/tools/sql-insert-generator.html)
-12. [SQL JOIN Visualizer](https://schemalens.tech/tools/sql-join-visualizer.html)
-13. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
-14. [ALTER TABLE Generator](https://schemalens.tech/tools/alter-table-generator.html)
-15. [Schema Mistake Quiz](https://schemalens.tech/tools/schema-mistake-quiz.html)
-16. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html)
-17. [SQL Diff Online](https://schemalens.tech/sql-diff-online.html)
+3. [Schema Diff](https://schemalens.tech/app.html)
+4. [Schema Documentation Generator](https://schemalens.tech/tools/schema-doc-generator.html)
+5. [CSV to SQL Converter](https://schemalens.tech/tools/csv-to-sql.html)
+6. [JSON to SQL Schema Converter](https://schemalens.tech/tools/json-to-sql.html)
+7. [CREATE TABLE Generator](https://schemalens.tech/tools/create-table-generator.html)
+8. [Schema Templates](https://schemalens.tech/schema-templates.html)
+9. [SQL INSERT Generator](https://schemalens.tech/tools/sql-insert-generator.html)
+10. [SQL JOIN Visualizer](https://schemalens.tech/tools/sql-join-visualizer.html)
+11. [Schema Health Check / SQL Linter](https://schemalens.tech/tools/schema-health-check.html)
+12. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
+13. [SQL Index Analyzer](https://schemalens.tech/tools/sql-index-analyzer.html)
+14. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
+15. [Migration Cost Calculator](https://schemalens.tech/tools/migration-cost-calculator.html)
+16. [Video Tips](https://schemalens.tech/video-tips.html)
+17. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html)
+18. [Schema Mistake Quiz](https://schemalens.tech/tools/schema-mistake-quiz.html)
+19. [Badge Generator](https://schemalens.tech/tools/badge-generator.html)
+20. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
+21. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
 
 ---
 
@@ -88,6 +94,7 @@ SchemaLens includes **17 free browser-based tools** that reuse the same custom S
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
 - **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens (`chrome-extension/`)
 - **CLI** — `npx schemalens-cli` for headless diffing from your terminal
+- **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 
 ---
 

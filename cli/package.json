@@ -1,13 +1,19 @@
 {
   "name": "schemalens-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI for SchemaLens — compare SQL schemas and generate migrations",
   "main": "index.js",
   "bin": {
     "schemalens": "index.js"
   },
+  "files": [
+    "index.js",
+    "engine.js",
+    "README.md"
+  ],
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "prepublishOnly": "node prepublish.js"
   },
   "keywords": [
     "sql",

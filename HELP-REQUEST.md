@@ -65,8 +65,19 @@ Execute the Product Hunt launch, Show HN re-post, Chrome Web Store publish, and 
    The package is self-contained and ready to publish.
 2. After publishing, verify with: `npm view schemalens-engine`
 
+### 6. Republish schemalens-cli to npm (2 min)
+The current `schemalens-cli@1.0.0` on npm is broken for global installs (references a file outside the package). This has been fixed.
+1. In a terminal, run:
+   ```bash
+   cd /home/race/race-kimi/cli
+   npm login
+   npm publish
+   ```
+   Version is already bumped to `1.0.1`.
+2. After publishing, verify with: `npm view schemalens-cli`
+
 ## Time
-45–60 minutes
+50–65 minutes
 
 ## Priority
 Blocking — these are our highest-leverage distribution channels and we are in Week 2 with 10 weeks remaining.
