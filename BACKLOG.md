@@ -21,10 +21,14 @@
 - **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images ✅
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page ($19/first year, scarcity, countdown, FAQ) ✅
+- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall ✅
+- [ ] **P1** Add email capture modal after first diff run — build engaged user list for nurture campaigns
+- [ ] **P1** Build "Share Your Safety Score" viral feature — users share diff risk score + warning count on social
+- [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
 
 ### Product — Conversion & Retention (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings ✅
+- [ ] **P1** Add email capture modal after first diff run — build engaged user list for nurture campaigns
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -136,19 +140,21 @@
 ### Day 75 (May 2)
 - **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
 
-### Day 76 (May 3)
-- **Open-source trust page:** `open-source.html` with MIT license badge, architecture overview, npm install instructions, trust FAQ, contribution guidelines. Addresses Reddit "vibe-coded" feedback directly.
-- **Standalone engine package:** `engine/package.json`, `engine/index.js`, `engine/README.md` — makes the diff engine a real open-source artifact ready for npm publish.
-- **Open-source trust signals:** Green MIT badge added to index.html hero, Open Source link added to nav/footer of index.html, app.html, pricing.html.
-- **Distribution prep:** Consolidated HELP-REQUEST.md for Product Hunt, Show HN, Chrome Web Store ($5), and VS Code Marketplace.
+### Days 76–80 (May 3)
+- **Open-source trust:** `open-source.html`, standalone `engine/` package npm-ready, MIT badge on index.html, footer cross-links updated.
+- **Bug fixes:** `schemalens-cli@1.0.1` fixed broken global install (prepublish script), root LICENSE added, README tool count corrected 17→21.
+- **VS Code Extension:** Marketplace icon (128×128 PNG) added, package.json updated.
+- **Smart Migration Warnings:** Contextual advisor for every diff (14 warning categories across critical/warning/tip severities). Integrated into app.html free preview + Pro output. Also exported from `lib/engine.js` for CLI/programmatic use.
+- **Launch Special in-app:** Migration and ORM paywalls now prominently display $19/first-year offer with scarcity copy and link to `launch-special.html`. Replaces generic "$12/mo" messaging to capture peak-intent users.
 
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready ✅
+- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready, Smart Migration Warnings ✅
 - [ ] **P2** Publish `schemalens-engine` to npm (package ready, needs `npm publish`)
+- [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -180,4 +186,4 @@
 
 ---
 
-*Backlog reprioritized May 3, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
+*Backlog reprioritized May 3, 2026. Next highest-priority unblocked buildable tasks: (1) Email capture modal after first diff to build nurture list, (2) "Share Your Safety Score" viral loop, (3) Rollback migration generation as differentiating Pro feature.*

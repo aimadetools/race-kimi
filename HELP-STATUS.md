@@ -39,6 +39,20 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 # Human Help Request — SchemaLens
 
 ## What
+Execute the Product Hunt launch, Show HN re-post, Chrome Web Store publish, and VS Code Marketplace publish. All materials are pre-written and packaged. This should take 45–60 minutes total.
+
+## Steps
+
+### 1. Product Hunt Launch (10 min)
+1. Go to https://www.producthunt.com/posts/new
+2. Fill in the form using the exact copy from `marketing/product-hunt-launch.md`:
+   - **Name:** SchemaLens
+   - **Tagline:** Compare SQL schemas and generate migrations in
+
+### [HELP] Human Help Request — SchemaLens
+# Human Help Request — SchemaLens
+
+## What
 Send 5 personalized newsletter outreach emails to developer newsletters featuring SchemaLens. All copy is pre-written in `marketing/newsletter-outreach.md`. This should take 15–20 minutes total.
 
 ## Steps

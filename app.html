@@ -467,6 +467,70 @@
       font-size: 0.85rem;
       font-weight: 500;
     }
+
+    .migration-warnings-panel {
+      background: rgba(251, 191, 36, 0.06);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    .migration-warnings-panel h4 {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      color: var(--warning);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .migration-warning-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.12);
+    }
+    .migration-warning-item:last-child {
+      border-bottom: none;
+    }
+    .migration-warning-item .warn-sev {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .migration-warning-item .warn-sev.critical {
+      background: rgba(248, 113, 113, 0.2);
+      color: var(--danger);
+    }
+    .migration-warning-item .warn-sev.warning {
+      background: rgba(251, 191, 36, 0.2);
+      color: var(--warning);
+    }
+    .migration-warning-item .warn-sev.tip {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+    .migration-warning-item .warn-body {
+      flex: 1;
+      line-height: 1.45;
+    }
+    .migration-warning-item .warn-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .migration-warning-item .warn-suggestion {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
     .trial-active-badge {
       display: inline-block;
       background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
@@ -3286,6 +3350,167 @@ function generateMigration(diff, dialect) {
   return lines.join('\n');
 }
 
+function generateMigrationWarnings(diff, dialect) {
+  const warnings = [];
+  function add(sev, title, suggestion) {
+    warnings.push({ severity: sev, title, suggestion });
+  }
+
+  // Table drops = data loss
+  for (const t of diff.tablesRemoved || []) {
+    add('critical', `DROP TABLE \`${t.name}\` will permanently delete all data in this table.`, 'Back up the table before running this migration. Consider renaming instead of dropping if data may be needed later.');
+  }
+
+  // Column drops = data loss
+  for (const td of diff.tablesModified || []) {
+    for (const col of td.columnsRemoved || []) {
+      add('critical', `DROP COLUMN \`${col.name}\` from \`${td.name}\` will permanently delete all data in that column.`, 'Back up the column data before migrating. If the column is referenced by views, triggers, or application code, update those first.');
+    }
+  }
+
+  // NOT NULL on existing columns without default
+  for (const td of diff.tablesModified || []) {
+    for (const mod of td.columnsModified || []) {
+      for (const change of mod.changes || []) {
+        if (change.field === 'nullable' && !mod.column.nullable) {
+          // Changing to NOT NULL
+          if (!mod.column.defaultValue) {
+            add('critical', `SET NOT NULL on \`${mod.column.name}\` (\`${td.name}\`) without a DEFAULT will fail if the table has existing rows with NULL values.`, `Add a DEFAULT value first (e.g., ALTER TABLE ... SET DEFAULT 'value'), backfill existing NULLs, then add the NOT NULL constraint.`);
+          }
+        }
+        if (change.field === 'type') {
+          const oldType = (change.oldType || '').toLowerCase();
+          const newType = (mod.column.type || '').toLowerCase();
+          // Type narrowing / truncation risks
+          if (oldType.includes('varchar') && newType.includes('varchar')) {
+            const oldLen = parseInt(oldType.match(/\d+/)?.[0] || '0', 10);
+            const newLen = parseInt(newType.match(/\d+/)?.[0] || '0', 10);
+            if (newLen > 0 && newLen < oldLen) {
+              add('critical', `VARCHAR shrink (${oldLen} → ${newLen}) on \`${mod.column.name}\` may truncate existing data.`, 'Backfill and verify no values exceed the new length before migrating.');
+            }
+          }
+          if ((oldType.includes('int') || oldType.includes('serial')) && (newType.includes('smallint') || newType.includes('tinyint'))) {
+            add('critical', `Downsizing integer type on \`${mod.column.name}\` may overflow existing values.`, 'Verify all existing values fit in the smaller type range before migrating.');
+          }
+          if (oldType.includes('text') && newType.includes('varchar')) {
+            add('critical', `TEXT → VARCHAR on \`${mod.column.name}\` may truncate existing long values.`, 'Check max length of existing values before narrowing the type.');
+          }
+          if (oldType.includes('decimal') && newType.includes('decimal')) {
+            const oldPrec = oldType.match(/(\d+),\s*(\d+)/);
+            const newPrec = newType.match(/(\d+),\s*(\d+)/);
+            if (oldPrec && newPrec) {
+              if (parseInt(newPrec[1], 10) < parseInt(oldPrec[1], 10) || parseInt(newPrec[2], 10) < parseInt(oldPrec[2], 10)) {
+                add('critical', `DECIMAL precision reduction on \`${mod.column.name}\` may truncate or round existing values.`, 'Verify financial/data accuracy after the migration.');
+              }
+            }
+          }
+          // Implicit casting issues
+          if ((oldType.includes('timestamp') && newType.includes('date')) || (oldType.includes('date') && newType.includes('timestamp'))) {
+            add('warning', `Changing ${mod.column.type} on \`${mod.column.name}\` may cause implicit casting or timezone issues.`, 'Review how your application reads this column after the type change.');
+          }
+        }
+      }
+    }
+    // Adding column with DEFAULT on large tables can lock
+    for (const col of td.columnsAdded || []) {
+      if (col.defaultValue && dialect === 'mysql') {
+        add('warning', `Adding \`${col.name}\` with a DEFAULT in MySQL locks the entire table while populating existing rows.`, 'For large tables, consider adding the column without DEFAULT, backfilling with a script, then adding the DEFAULT constraint.');
+      }
+      if (col.defaultValue && dialect === 'postgres') {
+        add('tip', `PostgreSQL 11+ optimizes ADD COLUMN with DEFAULT without rewriting the table.`, 'Ensure you are on PostgreSQL 11+ for instant DDL.');
+      }
+    }
+  }
+
+  // Index drops = query perf impact
+  for (const td of diff.tablesModified || []) {
+    for (const idx of td.indexesRemoved || []) {
+      add('warning', `Dropping index \`${idx.name}\` on \`${td.name}\` may slow down queries that filter or sort by ${(idx.columns || []).join(', ')}.`, 'Verify the index is unused (check pg_stat_user_indexes / sys.dm_db_index_usage_stats) before dropping.');
+    }
+  }
+
+  // Constraint drops
+  for (const td of diff.tablesModified || []) {
+    for (const con of td.constraintsRemoved || []) {
+      if (con.type === 'FOREIGN KEY') {
+        add('warning', `Dropping foreign key \`${con.name}\` on \`${td.name}\` removes referential integrity checks.`, 'Orphaned rows will no longer be prevented. If intentional, consider adding application-level validation.');
+      }
+      if (con.type === 'PRIMARY KEY') {
+        add('critical', `Dropping PRIMARY KEY on \`${td.name}\` can break ORM models, replication, and downstream ETL pipelines.`, 'Ensure every dependent system references an alternative unique key before proceeding.');
+      }
+      if (con.type === 'UNIQUE') {
+        add('warning', `Dropping UNIQUE constraint \`${con.name}\` on \`${td.name}\` allows duplicate values.`, 'Applications assuming uniqueness may throw errors or corrupt data.');
+      }
+    }
+  }
+
+  // SQLite specific limitations
+  if (dialect === 'sqlite') {
+    const hasModifications = (diff.tablesModified || []).some(td =>
+      (td.columnsRemoved || []).length > 0 ||
+      (td.columnsModified || []).length > 0
+    );
+    if (hasModifications) {
+      add('warning', `SQLite has limited ALTER TABLE support.`, 'Dropping columns and changing types require recreating the entire table. SchemaLens generates comments — you must implement the table recreation manually or use a tool like sqlite-utils.');
+    }
+  }
+
+  // View dependencies breaking
+  if (diff.breakingViews && diff.breakingViews.length > 0) {
+    for (const bv of diff.breakingViews) {
+      add('critical', `View \`${bv.view}\` references dropped or modified column \`${bv.column}\` in \`${bv.table}\`.`, 'Drop and recreate the view after the migration, or update the view query to exclude the removed column.');
+    }
+  }
+
+  // PostgreSQL index creation tip
+  if (dialect === 'postgres') {
+    for (const td of diff.tablesModified || []) {
+      if ((td.indexesAdded || []).length > 0) {
+        add('tip', `Adding indexes in PostgreSQL locks writes on the table.`, 'For production, prefer CREATE INDEX CONCURRENTLY to avoid blocking writes.');
+      }
+    }
+  }
+
+  // MySQL ALGORITHM=INPLACE tip for large tables
+  if (dialect === 'mysql') {
+    const hasColumnChanges = (diff.tablesModified || []).some(td =>
+      (td.columnsAdded || []).length > 0 ||
+      (td.columnsModified || []).length > 0
+    );
+    if (hasColumnChanges) {
+      add('tip', `MySQL 8.0 supports INSTANT ALGORITHM for some column changes.`, 'Add ALGORITHM=INSTANT, LOCK=NONE to your ALTER TABLE when supported to avoid table locks.');
+    }
+  }
+
+  // Enum drops
+  if (diff.enumsRemoved && diff.enumsRemoved.length > 0) {
+    for (const en of diff.enumsRemoved) {
+      add('warning', `Dropping ENUM type \`${en.name}\` will fail if any column still references it.`, 'Ensure all columns using this enum are altered to a different type first.');
+    }
+  }
+
+  return warnings;
+}
+
+function renderMigrationWarningsHTML(warnings, isLimited) {
+  if (!warnings || warnings.length === 0) return '';
+  const sevOrder = { critical: 0, warning: 1, tip: 2 };
+  const sorted = warnings.slice().sort((a, b) => sevOrder[a.severity] - sevOrder[b.severity]);
+  const countLabel = `${sorted.length} migration advisor note${sorted.length > 1 ? 's' : ''}`;
+  let html = `<div class="migration-warnings-panel">`;
+  html += `<h4>⚡ ${countLabel}</h4>`;
+  for (const w of sorted) {
+    const icon = w.severity === 'critical' ? '!' : w.severity === 'warning' ? '▲' : '✓';
+    html += `<div class="migration-warning-item">`;
+    html += `<span class="warn-sev ${w.severity}">${icon}</span>`;
+    html += `<div class="warn-body"><div class="warn-title">${escapeHtml(w.title)}</div>`;
+    if (w.suggestion) html += `<div class="warn-suggestion">${escapeHtml(w.suggestion)}</div>`;
+    html += `</div></div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
 function quoteId(name, dialect) {
   if (dialect === 'mysql') return '`' + name + '`';
   if (dialect === 'postgres') return '"' + name + '"';
@@ -3848,6 +4073,9 @@ function renderMigration(sql, diff) {
   const totalTables = diff.totalTablesNew;
   const unlocked = isProUnlocked();
   const isLimited = totalTables > 10 && !unlocked;
+  const dialect = document.getElementById('dialect')?.value || 'postgres';
+  const warnings = generateMigrationWarnings(diff, dialect);
+  const warningsHTML = renderMigrationWarningsHTML(warnings, isLimited);
 
   let html = '';
   if (isLimited) {
@@ -3857,15 +4085,18 @@ function renderMigration(sql, diff) {
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>Free plans show the first 3 changes. Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
-        <div style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:10px 14px;margin:12px 0;font-size:0.85rem;color:var(--success);font-weight:600;">
-          🚀 Early-access pricing: $12/mo (price increases soon)
+        <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
+          🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
         </div>
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
-        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a> · 14-day money-back guarantee</p>
+        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="launch-special.html" target="_blank" rel="noopener">buy on Gumroad</a> · 14-day money-back guarantee</p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
       </div>
     `;
+    // Show warnings even in free tier to demonstrate value
+    if (warningsHTML) html += warningsHTML;
     // Show preview with blur overlay so users can see the value before buying
     html += `<div class="migration-preview-wrap">`;
     html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(sql)}</div>`;
@@ -3881,6 +4112,7 @@ function renderMigration(sql, diff) {
     html += `<button class="btn btn-secondary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>`;
     html += `</div></div>`;
   } else {
+    if (warningsHTML) html += warningsHTML;
     html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button><button class="copy-btn" style="right:164px" onclick="runMigrationValidation()">Validate</button>${highlightSQL(sql)}</div>`;
     html += `<div id="validationResults"></div>`;
   }
@@ -5286,12 +5518,13 @@ function renderORM() {
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks full ORM export</h3>
         <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to 10 tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
-        <div style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:10px 14px;margin:12px 0;font-size:0.85rem;color:var(--success);font-weight:600;">
-          🚀 Early-access pricing: $12/mo (price increases soon)
+        <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
+          🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
         </div>
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
-        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="https://gumroad.com/l/schemalens-pro" target="_blank" rel="noopener">buy on Gumroad</a> · 14-day money-back guarantee</p>
+        <p style="margin-top:12px;font-size:0.85rem;">Or <a href="launch-special.html" target="_blank" rel="noopener">buy on Gumroad</a> · 14-day money-back guarantee</p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
       </div>
       <div style="text-align:center;margin-top:16px;">
