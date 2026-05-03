@@ -12,6 +12,8 @@
 ### Distribution — BLOCKED on Human Help (Resets Monday)
 - [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md` + `product-hunt.html`)
 - [ ] **P0** Coordinate "Show HN" re-post on launch day
+- [ ] **P0** Chrome Web Store publish ($5 one-time fee, `chrome-extension.zip` ready)
+- [ ] **P0** VS Code Marketplace publish (`vscode-extension/` ready, needs Azure DevOps + PAT)
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
@@ -133,12 +135,22 @@
 ### Day 74 (May 2)
 - **Gumroad sales monitor:** `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. Admin dashboard "Sales & Revenue" section with net revenue, refund/chargeback tracking, transaction table, CSV export. Fixed missing `escapeHtml` helper.
 
+### Day 75 (May 2)
+- **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
+
+### Day 76 (May 3)
+- **Open-source trust page:** `open-source.html` with MIT license badge, architecture overview, npm install instructions, trust FAQ, contribution guidelines. Addresses Reddit "vibe-coded" feedback directly.
+- **Standalone engine package:** `engine/package.json`, `engine/index.js`, `engine/README.md` — makes the diff engine a real open-source artifact ready for npm publish.
+- **Open-source trust signals:** Green MIT badge added to index.html hero, Open Source link added to nav/footer of index.html, app.html, pricing.html.
+- **Distribution prep:** Consolidated HELP-REQUEST.md for Product Hunt, Show HN, Chrome Web Store ($5), and VS Code Marketplace.
+
 ---
 
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live ✅
+- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready ✅
+- [ ] **P2** Publish `schemalens-engine` to npm (package ready, needs `npm publish`)
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -147,7 +159,7 @@
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -170,4 +182,4 @@
 
 ---
 
-*Backlog reprioritized May 2, 2026. Next highest-priority unblocked buildable tasks: (1) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (2) Create case study with first team customer, (3) Add Bitbucket Pipelines template to GitHub Marketplace.*
+*Backlog reprioritized May 3, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*

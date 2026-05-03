@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Open Source — SchemaLens Diff Engine</title>
+  <meta name="description" content="SchemaLens core diff engine is open source under the MIT license. Inspect the parser, diff algorithm, and migration generator. No black boxes.">
+  <meta property="og:title" content="Open Source — SchemaLens Diff Engine">
+  <meta property="og:description" content="The SchemaLens schema diff engine is MIT-licensed open source. Audit the code, self-host, or embed it in your own tools.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/open-source.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+    .os-hero {
+      padding: 64px 0 32px;
+      text-align: center;
+    }
+    .os-hero h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .os-hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 640px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+    .os-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .os-badge svg { width: 18px; height: 18px; }
+    .os-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .os-section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .os-section h3 {
+      font-size: 1.05rem;
+      margin: 18px 0 10px;
+      color: var(--text);
+    }
+    .os-section p, .os-section li {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .os-section ul { padding-left: 20px; margin: 10px 0; }
+    .os-section li { margin-bottom: 6px; }
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--text);
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .copy-btn:hover { color: var(--text); }
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .arch-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .arch-card h4 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .arch-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .arch-card .tag {
+      display: inline-block;
+      background: rgba(16,185,129,0.12);
+      color: var(--success);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .trust-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+      <a href="cli/">CLI</a>
+      <a href="team.html">Team</a>
+      <a href="testimonials.html">Wall of Love</a>
+      <a href="app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header class="os-hero">
+  <div class="container">
+    <div class="os-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 3 19.5"/><path d="M12 2a10 10 0 0 0-3 19.5"/></svg>
+      MIT Licensed
+    </div>
+    <h1>Open source, <span style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">no black boxes.</span></h1>
+    <p>The SchemaLens diff engine is open source. Inspect the parser, audit the diff algorithm, and self-host if you want. We believe schema diff is infrastructure — and infrastructure should be transparent.</p>
+  </div>
+</header>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="os-section">
+      <h2>🔍 Why open source the engine?</h2>
+      <p>Database schemas are sensitive. When you paste <code>CREATE TABLE</code> statements into a tool, you need to trust what happens next. Closed-source diff tools ask you to believe their marketing. We think the code should speak for itself.</p>
+      <p>Our engine is a plain JavaScript module with zero runtime dependencies. It parses SQL into an AST, runs a semantic diff at the table/column/index level, and generates migration scripts. Every step is inspectable.</p>
+      <div class="trust-row">
+        <span class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Zero network requests
+        </span>
+        <span class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Zero runtime dependencies
+        </span>
+        <span class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          1,500+ lines, fully commented
+        </span>
+        <span class="trust-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          MIT license — use anywhere
+        </span>
+      </div>
+    </div>
+
+    <div class="os-section">
+      <h2>⚙️ Architecture</h2>
+      <p>The engine is a single JavaScript file with a clear data flow. No frameworks. No magic.</p>
+      <div class="arch-grid">
+        <div class="arch-card">
+          <span class="tag">Parser</span>
+          <h4>Tokenizer → AST</h4>
+          <p>Custom tokenizer splits SQL into statements, then builds an abstract syntax tree for tables, columns, indexes, constraints, views, functions, and triggers.</p>
+        </div>
+        <div class="arch-card">
+          <span class="tag">Diff</span>
+          <h4>Semantic Comparison</h4>
+          <p>Compares schemas object-by-object (not line-by-line). Detects added/removed tables, column type changes, default value drift, index modifications, and renamed objects via Levenshtein heuristic.</p>
+        </div>
+        <div class="arch-card">
+          <span class="tag">Analysis</span>
+          <h4>Risk & Breaking Changes</h4>
+          <p>Calculates a risk score (Low / Medium / High) based on change severity. Flags breaking changes like dropped columns used by views, type narrowing, and NOT NULL additions without defaults.</p>
+        </div>
+        <div class="arch-card">
+          <span class="tag">Generator</span>
+          <h4>Migration SQL</h4>
+          <p>Generates dialect-specific <code>ALTER TABLE</code> scripts for PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, Oracle, and generic ANSI SQL.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="os-section">
+      <h2>📦 Use it in your project</h2>
+      <p>The engine is available as a standalone npm package. Install it in Node.js, a serverless function, or bundle it for the browser.</p>
+      <h3>Install</h3>
+      <pre class="code-block" style="position:relative;"><code>npm install schemalens-engine</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Diff two schemas</h3>
+      <pre class="code-block" style="position:relative;"><code>const { diffSchemas, generateMigration, detectBreakingChanges } = require('schemalens-engine');
+
+const result = diffSchemas(oldSQL, newSQL, { dialect: 'postgres' });
+console.log(result.addedTables);
+console.log(result.modifiedTables);
+
+const migration = generateMigration(result, { dialect: 'postgres' });
+console.log(migration);
+
+const breaking = detectBreakingChanges(result);
+console.log(breaking.length + ' breaking changes found');</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+      <h3>Supported dialects</h3>
+      <ul>
+        <li>PostgreSQL — including custom types, enums, arrays, and extensions</li>
+        <li>MySQL / MariaDB — including spatial indexes and full-text search</li>
+        <li>SQLite — including <code>WITHOUT ROWID</code> and <code>STRICT</code> tables</li>
+        <li>SQL Server / Azure SQL — including clustered columnstore indexes</li>
+        <li>Oracle — including PL/SQL triggers and procedures</li>
+      </ul>
+    </div>
+
+    <div class="os-section">
+      <h2>🛡️ Trust through transparency</h2>
+      <p>We know developers are skeptical of new tools. Here is how we address the common concerns:</p>
+      <h3>"How do I know my schema data is safe?"</h3>
+      <p>The engine runs entirely in your browser or your own server. When you use schemalens.tech, the web app loads the engine as a local JavaScript file. Your SQL never leaves your machine. You can verify this in the Network tab — zero uploads.</p>
+
+      <h3>"What if the diff is wrong?"</h3>
+      <p>The diff algorithm is deterministic and fully testable. We ship with 17+ unit tests covering edge cases like composite primary keys, foreign key cascades, and generated columns. You can run the test suite locally with <code>node test-all.js</code>.</p>
+
+      <h3>"Why not just use Liquibase / Prisma Migrate / schemalex?"</h3>
+      <p>Those are excellent tools for managed migration lifecycles. SchemaLens fills a different niche: <strong>instant, zero-setup ad-hoc diffs</strong> when you have two DDL dumps and need to see what changed in 10 seconds. Our open-source engine means you can also embed the diff logic into your own CI pipeline without pulling in a heavy framework.</p>
+    </div>
+
+    <div class="os-section">
+      <h2>🤝 Contribute</h2>
+      <p>We welcome bug reports, feature requests, and pull requests. The engine is intentionally simple — we want to keep it that way. Before contributing, please read our guidelines:</p>
+      <ul>
+        <li><strong>Scope:</strong> Schema diff and migration generation only. No query builder, no ER diagrams, no live DB connections in the engine.</li>
+        <li><strong>Tests:</strong> Every bug fix must include a test case in <code>test-all.js</code>.</li>
+        <li><strong>Style:</strong> Vanilla JS. No TypeScript, no build step, no bundler.</li>
+        <li><strong>Performance:</strong> The engine must stay under 50KB minified. Be mindful of algorithmic complexity.</li>
+      </ul>
+      <p style="margin-top: 12px;">Found a parsing edge case? Open an issue with the minimal SQL that reproduces it. We'll add it to the test suite and fix it.</p>
+    </div>
+
+    <div class="os-section">
+      <h2>📜 License</h2>
+      <p>SchemaLens Engine is released under the <strong>MIT License</strong>.</p>
+      <pre class="code-block" style="position:relative;"><code>MIT License
+
+Copyright (c) 2026 SchemaLens
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND...</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      <p style="margin-top: 12px; font-size: 0.9rem;">In plain English: you can use the engine in commercial projects, modify it, redistribute it, and even sell tools built on top of it. We only ask that you include the license notice.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <h2>Try the engine now</h2>
+    <p>No install. No account. Paste two schemas and see the diff in 10 seconds.</p>
+    <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+    <p style="margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);">Or <a href="cli/">install the CLI</a> and diff schemas from your terminal.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="affiliate.html">Affiliate</a>
+        <a href="open.html">Open Startup</a>
+        <a href="open-source.html">Open Source</a>
+        <a href="api.html">API</a>
+        <a href="cli/">CLI</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="tools.html">All Tools</a>
+        <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+        <a href="mysql-schema-diff.html">MySQL Diff</a>
+        <a href="mariadb-schema-diff.html">MariaDB Diff</a>
+        <a href="sqlite-schema-diff.html">SQLite Diff</a>
+        <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+        <a href="azure-sql-schema-diff.html">Azure SQL Diff</a>
+        <a href="oracle-schema-diff.html">Oracle Diff</a>
+        <a href="cockroachdb-schema-diff.html">CockroachDB Diff</a>
+        <a href="timescaledb-schema-diff.html">TimescaleDB Diff</a>
+        <a href="duckdb-schema-diff.html">DuckDB Diff</a>
+        <a href="clickhouse-schema-diff.html">ClickHouse Diff</a>
+        <a href="bigquery-schema-diff.html">BigQuery Diff</a>
+        <a href="snowflake-schema-diff.html">Snowflake Diff</a>
+        <a href="supabase-schema-diff.html">Supabase Diff</a>
+        <a href="neon-schema-diff.html">Neon Diff</a>
+        <a href="planetscale-schema-diff.html">PlanetScale Diff</a>
+        <a href="railway-schema-diff.html">Railway Diff</a>
+        <a href="firebase-schema-diff.html">Firebase Diff</a>
+        <a href="tools/sql-validator.html">SQL Validator</a>
+        <a href="tools/sql-formatter.html">SQL Formatter</a>
+        <a href="tools/schema-doc-generator.html">Schema Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compare</h4>
+        <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+        <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">Our Story</a>
+        <a href="about.html">Roadmap</a>
+        <a href="about.html">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SchemaLens. All rights reserved.</span>
+      <span>Built in the $100 AI Startup Race.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const code = btn.previousElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const old = btn.innerText;
+    btn.innerText = 'Copied!';
+    setTimeout(() => btn.innerText = old, 1500);
+  });
+}
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>

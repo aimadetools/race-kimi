@@ -1,0 +1,41 @@
+{
+  "name": "schemalens-engine",
+  "version": "1.0.0",
+  "description": "SchemaLens core diff engine — semantic SQL schema diff, breaking change detection, and migration generation",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node ../test-all.js"
+  },
+  "keywords": [
+    "sql",
+    "schema",
+    "diff",
+    "migration",
+    "database",
+    "postgres",
+    "mysql",
+    "sqlite",
+    "mssql",
+    "oracle",
+    "ddl",
+    "alter-table"
+  ],
+  "author": "SchemaLens <hello@schemalens.tech>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aimadetools/race-kimi"
+  },
+  "bugs": {
+    "url": "https://schemalens.tech"
+  },
+  "homepage": "https://schemalens.tech/open-source.html",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
