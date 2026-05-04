@@ -1727,6 +1727,7 @@ CREATE TABLE users (
         <button class="share-tab active" data-tab="link" onclick="switchShareTab('link')">🔗 Link</button>
         <button class="share-tab" data-tab="social" onclick="switchShareTab('social')">📢 Share</button>
         <button class="share-tab" data-tab="badge" onclick="switchShareTab('badge')">🔖 Badge</button>
+        <button class="share-tab" data-tab="safety" onclick="switchShareTab('safety')">🛡️ Safety</button>
         <button class="share-tab" data-tab="image" onclick="switchShareTab('image')">🖼️ Image</button>
       </div>
       <div id="shareTabLink" class="share-tab-panel active">
@@ -1776,6 +1777,32 @@ CREATE TABLE users (
           </div>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Want a custom badge? <a href="tools/badge-generator.html" target="_blank">Use the Badge Generator →</a></p>
+      </div>
+      <div id="shareTabSafety" class="share-tab-panel" style="display:none;">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Share your Migration Safety Score. A fun way to brag about clean schema changes or warn your team about risky ones.</p>
+        <div id="safetyScoreDisplay" style="text-align:center;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--border);margin-bottom:16px;">
+          <div id="safetyScoreBig" style="font-size:3rem;font-weight:800;line-height:1;">—</div>
+          <div id="safetyScoreLabel" style="font-size:1rem;font-weight:600;margin-top:6px;color:var(--text-muted);">Run a diff to see your score</div>
+          <div id="safetyScoreBreakdown" style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);display:flex;justify-content:center;gap:16px;flex-wrap:wrap;"></div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;border:1px dashed var(--border);margin-bottom:12px;">
+          <canvas id="safetyScoreCanvas" width="1200" height="630" style="max-width:100%;height:auto;border-radius:6px;"></canvas>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <a id="safetyScoreDownload" href="#" download="schemalens-safety-score.png" class="btn btn-primary" style="flex:1;text-align:center;text-decoration:none;" onclick="if(window.SchemaLensAnalytics)window.SchemaLensAnalytics.track('safety_score_downloaded')">Download Card</a>
+          <button class="btn btn-secondary" onclick="copySafetyScoreToClipboard()">Copy Image</button>
+        </div>
+        <div id="safetySocialShareButtons" style="display:flex;flex-direction:column;gap:10px;">
+          <a id="shareSafetyTwitter" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">𝕏</span> Share Safety Score on X / Twitter
+          </a>
+          <a id="shareSafetyLinkedIn" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">💼</span> Share Safety Score on LinkedIn
+          </a>
+          <a id="shareSafetyReddit" href="#" target="_blank" rel="noopener" class="btn btn-secondary" style="text-align:left;display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <span style="font-size:1.2rem;">🤖</span> Share Safety Score on Reddit
+          </a>
+        </div>
       </div>
       <div id="shareTabImage" class="share-tab-panel" style="display:none;">
         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Download a shareable image of your diff summary. Perfect for Twitter, LinkedIn, or Slack.</p>
@@ -3639,6 +3666,12 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     riskHTML = `<div class="summary-pill" style="border-color:${riskScore.color};color:${riskScore.color}"><span class="num">${riskScore.icon}</span> ${riskScore.score}/100 ${riskScore.label}</div>`;
   }
 
+  let safetyHTML = '';
+  if (riskScore && window.lastWarningCounts) {
+    const safety = calculateSafetyScore(riskScore, window.lastMigrationWarnings || []);
+    safetyHTML = `<div class="summary-pill" style="cursor:pointer;border-color:${safety.color};color:${safety.color};" onclick="openShareModalToTab('safety')" title="Click to share your Safety Score"><span class="num">🛡️</span> Safety: ${safety.score}/100</div>`;
+  }
+
   bar.innerHTML = `
     <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
@@ -3651,6 +3684,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     ${(diff.viewsAdded.length || diff.viewsRemoved.length || diff.viewsModified.length) ? `<div class="summary-pill modified"><span class="num">👁${diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length}</span> views</div>` : ''}
     ${(diff.functionsAdded.length || diff.functionsRemoved.length || diff.functionsModified.length) ? `<div class="summary-pill modified"><span class="num">ƒ${diff.functionsAdded.length + diff.functionsRemoved.length + diff.functionsModified.length}</span> functions</div>` : ''}
     ${riskHTML}
+    ${safetyHTML}
     ${confidenceHTML}
     ${breakingHTML}
     <div class="summary-pill" style="cursor:pointer;border-color:var(--primary);color:var(--primary);" onclick="openHowItWorksModal()" title="Learn how SchemaLens works"><span class="num">ℹ️</span> How it works</div>
@@ -6160,6 +6194,28 @@ function openShareModal() {
   } catch (e) {}
   generateShareImage(imageSummary);
 
+  // Populate Safety Score tab
+  let safetyScoreData = null;
+  let warningCounts = { critical: 0, warning: 0, tip: 0 };
+  try {
+    const oldSchema = parseSQL(a, dialect);
+    const newSchema = parseSQL(b, dialect);
+    const diff = diffSchemas(oldSchema, newSchema);
+    const bc = detectBreakingChanges(diff);
+    const rs = calculateRiskScore(diff, bc);
+    const warnings = generateMigrationWarnings(diff, dialect);
+    warningCounts.critical = warnings.filter(w => w.severity === 'critical').length;
+    warningCounts.warning = warnings.filter(w => w.severity === 'warning').length;
+    warningCounts.tip = warnings.filter(w => w.severity === 'tip').length;
+    safetyScoreData = calculateSafetyScore(rs, warnings);
+    window.lastSafetyScore = safetyScoreData;
+    window.lastWarningCounts = warningCounts;
+  } catch (e) {}
+  populateSafetyScoreTab(safetyScoreData, warningCounts, url);
+  if (safetyScoreData) {
+    generateSafetyScoreCard(safetyScoreData, warningCounts);
+  }
+
   // Reset to link tab
   switchShareTab('link');
 
@@ -6171,6 +6227,12 @@ function closeShareModal() {
   document.getElementById('shareModal').classList.remove('active');
 }
 
+function openShareModalToTab(tab) {
+  openShareModal();
+  switchShareTab(tab);
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_modal_tab_open', { tab });
+}
+
 function switchShareTab(tab) {
   document.querySelectorAll('.share-tab').forEach(el => {
     el.classList.toggle('active', el.dataset.tab === tab);
@@ -6178,6 +6240,7 @@ function switchShareTab(tab) {
   document.getElementById('shareTabLink').style.display = tab === 'link' ? 'block' : 'none';
   document.getElementById('shareTabSocial').style.display = tab === 'social' ? 'block' : 'none';
   document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
+  document.getElementById('shareTabSafety').style.display = tab === 'safety' ? 'block' : 'none';
   document.getElementById('shareTabImage').style.display = tab === 'image' ? 'block' : 'none';
 }
 
@@ -6322,6 +6385,196 @@ async function copyShareImageToClipboard() {
       btn.textContent = 'Copied!';
       setTimeout(() => btn.textContent = old, 2000);
     });
+  } catch (e) {
+    alert('Could not copy image. Try downloading instead.');
+  }
+}
+
+// -----------------------------
+// Safety Score Viral Feature
+// -----------------------------
+function calculateSafetyScore(riskScore, warnings) {
+  const baseScore = riskScore ? Math.max(0, 100 - riskScore.score) : 100;
+  // Boost score slightly if there are tips but no criticals
+  const hasCritical = warnings.some(w => w.severity === 'critical');
+  const hasWarning = warnings.some(w => w.severity === 'warning');
+  const tipCount = warnings.filter(w => w.severity === 'tip').length;
+  let label, color, icon, subtitle;
+  if (baseScore >= 90) {
+    label = 'Excellent';
+    color = '#34d399';
+    icon = '🛡️';
+    subtitle = 'This migration looks clean and safe.';
+  } else if (baseScore >= 70) {
+    label = 'Good';
+    color = '#34d399';
+    icon = '✓';
+    subtitle = 'Mostly safe — review the warnings before deploying.';
+  } else if (baseScore >= 50) {
+    label = 'Caution';
+    color = '#fbbf24';
+    icon = '⚠';
+    subtitle = 'Some risky changes detected. Proceed carefully.';
+  } else if (baseScore >= 25) {
+    label = 'Risky';
+    color = '#fb923c';
+    icon = '🔶';
+    subtitle = 'Several dangerous changes. Double-check everything.';
+  } else {
+    label = 'Dangerous';
+    color = '#f87171';
+    icon = '🔴';
+    subtitle = 'High risk of data loss or breakage. Review required.';
+  }
+  return { score: baseScore, label, color, icon, subtitle, hasCritical, hasWarning, tipCount };
+}
+
+function populateSafetyScoreTab(safetyScore, warningCounts, url) {
+  const bigEl = document.getElementById('safetyScoreBig');
+  const labelEl = document.getElementById('safetyScoreLabel');
+  const breakdownEl = document.getElementById('safetyScoreBreakdown');
+  if (!safetyScore) {
+    if (bigEl) bigEl.textContent = '—';
+    if (labelEl) labelEl.textContent = 'Run a diff to see your score';
+    if (breakdownEl) breakdownEl.innerHTML = '';
+    return;
+  }
+  if (bigEl) {
+    bigEl.textContent = safetyScore.score + '/100';
+    bigEl.style.color = safetyScore.color;
+  }
+  if (labelEl) {
+    labelEl.textContent = `${safetyScore.icon} ${safetyScore.label} — ${safetyScore.subtitle}`;
+    labelEl.style.color = safetyScore.color;
+  }
+  if (breakdownEl) {
+    const parts = [];
+    if (warningCounts.critical > 0) parts.push(`<span style="color:#f87171;font-weight:600;">${warningCounts.critical} critical</span>`);
+    if (warningCounts.warning > 0) parts.push(`<span style="color:#fbbf24;font-weight:600;">${warningCounts.warning} warnings</span>`);
+    if (warningCounts.tip > 0) parts.push(`<span style="color:#34d399;font-weight:600;">${warningCounts.tip} tips</span>`);
+    if (parts.length === 0) parts.push('<span style="color:#34d399;font-weight:600;">No warnings</span>');
+    breakdownEl.innerHTML = parts.join(' · ');
+  }
+
+  const encodedText = encodeURIComponent(`My schema migration scored ${safetyScore.score}/100 on SchemaLens — ${safetyScore.label}. ${safetyScore.subtitle}`);
+  const encodedUrl = encodeURIComponent(url);
+  document.getElementById('shareSafetyTwitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+  document.getElementById('shareSafetyLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+  document.getElementById('shareSafetyReddit').href = `https://www.reddit.com/submit?title=${encodedText}&url=${encodedUrl}`;
+}
+
+function generateSafetyScoreCard(safetyScore, warningCounts) {
+  const canvas = document.getElementById('safetyScoreCanvas');
+  if (!canvas || !safetyScore) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1200, H = 630;
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0f172a');
+  grad.addColorStop(1, '#1e1b4b');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid pattern
+  ctx.strokeStyle = 'rgba(99,102,241,0.06)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Top accent bar
+  const barGrad = ctx.createLinearGradient(0, 0, W, 0);
+  barGrad.addColorStop(0, '#6366f1');
+  barGrad.addColorStop(1, '#8b5cf6');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, 0, W, 6);
+
+  // Logo / Brand
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText('SchemaLens', 60, 60);
+  ctx.fillStyle = '#818cf8';
+  ctx.font = '500 18px sans-serif';
+  ctx.fillText('Migration Safety Score', 60, 90);
+
+  // Big score circle background
+  ctx.beginPath();
+  ctx.arc(W / 2, 280, 140, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(15,23,42,0.6)';
+  ctx.fill();
+  ctx.strokeStyle = safetyScore.color;
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // Score number
+  ctx.fillStyle = safetyScore.color;
+  ctx.font = 'bold 120px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(String(safetyScore.score), W / 2, 270);
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 28px sans-serif';
+  ctx.fillText('/100', W / 2, 310);
+
+  // Label
+  ctx.fillStyle = safetyScore.color;
+  ctx.font = 'bold 36px sans-serif';
+  ctx.fillText(`${safetyScore.icon} ${safetyScore.label}`, W / 2, 460);
+
+  // Subtitle
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 22px sans-serif';
+  ctx.fillText(safetyScore.subtitle, W / 2, 500);
+
+  // Warning breakdown pills
+  ctx.textAlign = 'left';
+  const pillY = 550;
+  const pillH = 40;
+  const pillGap = 16;
+  let pillX = 60;
+  const drawPill = (text, color) => {
+    ctx.fillStyle = 'rgba(15,23,42,0.7)';
+    roundRect(ctx, pillX, pillY, ctx.measureText(text).width + 32, pillH, 20);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    roundRect(ctx, pillX, pillY, ctx.measureText(text).width + 32, pillH, 20);
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.font = 'bold 18px sans-serif';
+    ctx.fillText(text, pillX + 16, pillY + 27);
+    pillX += ctx.measureText(text).width + 32 + pillGap;
+  };
+  if (warningCounts.critical > 0) drawPill(`${warningCounts.critical} Critical`, '#f87171');
+  if (warningCounts.warning > 0) drawPill(`${warningCounts.warning} Warnings`, '#fbbf24');
+  if (warningCounts.tip > 0) drawPill(`${warningCounts.tip} Tips`, '#34d399');
+  if (warningCounts.critical === 0 && warningCounts.warning === 0 && warningCounts.tip === 0) drawPill('No warnings', '#34d399');
+
+  // Bottom branding
+  ctx.fillStyle = '#475569';
+  ctx.font = '500 16px sans-serif';
+  ctx.fillText('Check your schema safety at schemalens.tech', 60, H - 40);
+
+  // Update download link
+  const link = document.getElementById('safetyScoreDownload');
+  if (link) {
+    try {
+      link.href = canvas.toDataURL('image/png');
+    } catch (e) {}
+  }
+}
+
+async function copySafetyScoreToClipboard() {
+  const canvas = document.getElementById('safetyScoreCanvas');
+  if (!canvas) return;
+  try {
+    canvas.toBlob(async (blob) => {
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      const btn = event.target;
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 2000);
+    });
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('safety_score_copied');
   } catch (e) {
     alert('Could not copy image. Try downloading instead.');
   }
@@ -6783,6 +7036,14 @@ document.getElementById('compareBtn').addEventListener('click', () => {
 
   const risk = calculateRiskScore(diff);
   window.lastRiskScore = risk;
+
+  const migrationWarnings = generateMigrationWarnings(diff, dialect);
+  window.lastMigrationWarnings = migrationWarnings;
+  window.lastWarningCounts = {
+    critical: migrationWarnings.filter(w => w.severity === 'critical').length,
+    warning: migrationWarnings.filter(w => w.severity === 'warning').length,
+    tip: migrationWarnings.filter(w => w.severity === 'tip').length
+  };
 
   renderSummary(diff, confidenceA, confidenceB, breakingChanges, risk);
   renderVisualDiff(diff, breakingChanges);
