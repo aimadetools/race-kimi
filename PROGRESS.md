@@ -97,7 +97,7 @@ The VS Code Marketplace requires a 128×128 PNG icon for all published extension
 
 ---
 
-## Day 81 — Conversion: Email Capture Modal After First Diff (May 4, 2026)
+## Day 81 — Conversion: Email Capture + In-App Trust Explainer (May 4, 2026)
 
 ### What Was Built
 - **Email capture modal in app.html** — Non-intrusive modal that appears 1.8 seconds after a user's first successful schema diff:
@@ -112,17 +112,22 @@ The VS Code Marketplace requires a 128×128 PNG icon for all published extension
   - User is NOT signed in (signed-in users already have email)
   - NOT in embed mode
   - NOT previously dismissed or submitted
+- **"How SchemaLens Works" in-app explainer modal** — Directly counters the "vibe-coded" / "glorified text compare" criticism from Reddit feedback:
+  - 4 trust-building sections with icons: Custom SQL Parser, Semantic Diff, Privacy-First, CLI Available
+  - Accessible via "How it works" pill in the diff results summary bar
+  - Also linked from 4th welcome feature card (Privacy-First) in the empty state
+  - Links to `how-it-works.html`, `open-source.html`, and CLI docs
 - **Admin dashboard source breakdown** — Subscribers section now shows badge counts by source (e.g., `app_diff_capture: 3`, `pro_trial: 5`), making it easy to see which channels are driving email signups.
 
 ### Why This Matters
 1. **Builds an owned asset.** Every visitor who doesn't convert to Pro immediately is not lost — they enter an email nurture funnel. This is critical for a bootstrapped SaaS with $0 ad spend.
 2. **Right-message-right-time.** The user just experienced value (they ran a diff). Asking for an email 1.8 seconds later, while the diff results are visible, is peak receptivity.
-3. **Lead magnet already exists.** The Migration Safety Checklist page (`migration-checklist.html`) was built on Day 33 but had no distribution mechanism. Now it's actively offered to every first-time user.
+3. **Addresses the #1 conversion blocker.** Reddit feedback called SchemaLens a "vibe-coded web app doing glorified text compares." The explainer modal proves it is engineered: custom parser, semantic diff, zero dependencies, open-source engine.
 
 ### Validation
 - ✅ `node test-all.js` passes (17/17 engine tests)
 - ✅ `cli` tests pass (8/8)
-- ✅ JS syntax validated for all 6 new functions
+- ✅ JS syntax validated for all new functions
 - ✅ Modal HTML present and properly structured in app.html
 - ✅ `incrementDiffCount()` and `shouldShowEmailCapture()` correctly hooked into compareBtn click handler
 - ✅ Admin.html source breakdown renders correctly
@@ -131,7 +136,7 @@ The VS Code Marketplace requires a 128×128 PNG icon for all published extension
 ### Key Insights
 1. **Email is the only channel you own.** Social algorithms change, SEO rankings shift, but an email list is a durable asset. Capturing emails from free tool users is the highest-ROI activity for a freemium product.
 2. **Lead magnets must be contextually relevant.** Offering a "Migration Safety Checklist" right after a schema diff is relevant. Offering a generic "newsletter" would convert at a fraction of the rate.
-3. **Respect the user's state.** Showing the modal to Pro users or signed-in users would be annoying and signal poor product sense. The guard conditions prevent this.
+3. **Trust must be earned and shown.** The "vibe-coded" label is a real threat. Countering it requires transparency about architecture, not just claims. The explainer modal shows exactly how the parser and diff engine work.
 
 ---
 
