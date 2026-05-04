@@ -180,4 +180,51 @@
 
 ---
 
+## Day 86 — Product: Safe Migration Checker Micro-Tool (May 4, 2026)
+
+### What Was Built
+- **`tools/safe-migration-checker.html`** — New micro-tool that audits SQL migration scripts for production safety issues before deployment:
+  - **12 safety checks across 5 dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+  - **Critical issue detection:** DROP TABLE/COLUMN (data loss), ADD NOT NULL without DEFAULT (insertion failure), DELETE/TRUNCATE in migrations (data destruction), column type narrowing (truncation risk)
+  - **Warning detection:** CREATE INDEX without CONCURRENTLY/ONLINE/ALGORITHM=INPLACE (table locks), ADD FOREIGN KEY without NOT VALID on PostgreSQL (long lock), column/table renames (breaking changes), removing PRIMARY KEY/UNIQUE constraints, UPDATE statements in migrations, MyISAM engine usage
+  - **Info tips:** Missing transaction wrapper, missing rollback/down migration
+  - **Safety score (0-100)** with color-coded result (good/warn/bad) and animated score bar
+  - **Issue cards** with severity badge, message, fix suggestion, and line number reference
+  - **Summary pills** showing critical/warning/tip counts and total statements
+  - **Copy Report button** generates a plain-text summary for clipboard
+  - **Sample migrations** per dialect — one-click loads a realistic unsafe migration and runs analysis
+  - **Keyboard shortcut:** Ctrl+Enter triggers analysis
+  - **SchemaLens Pro CTA** in results panel linking to full schema diff with rollback generation
+  - **Schema.org SoftwareApplication markup** for SEO
+  - **Footer cross-links** to all major site sections
+- **Site integration:**
+  - Added to index.html Free Developer Tools grid (25 tools)
+  - Added to tools.html tool grid
+  - Added to footer cross-links on both index.html and tools.html
+  - Added to sitemap.xml
+  - Added `privacy-policy.html` to sitemap.xml (was missing)
+
+### Why This Matters
+1. **Fills a real gap in the developer workflow.** Every developer runs migrations in production, but few have a systematic way to check them for safety before deploying. This tool provides that check in seconds.
+2. **High viral potential.** The safety score is shareable. A developer who finds 3 critical issues in their migration will screenshot and share the result, driving awareness.
+3. **Natural Pro conversion path.** The tool detects issues but doesn't fix them. The CTA points to SchemaLens Pro, which generates both forward and rollback migrations — the exact next step a safety-conscious developer needs.
+4. **SEO value.** Targets keywords like "check migration safety", "safe alter table", "dangerous database migration", "migration risk checker" — high-intent searches from developers preparing production deploys.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ Tool renders correctly in browser: score display, issue cards, sample loading, copy report
+- ✅ All 5 dialect samples load and analyze correctly
+- ✅ Critical/warning/info severity levels display with correct colors
+- ✅ sitemap.xml includes new tool and privacy-policy.html
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Safety is a pre-deployment ritual.** Developers who care about reliability will bookmark this tool and run it before every production migration. That's recurring engagement.
+2. **The score gamifies caution.** A "78/100" score makes developers want to get to 90+. The tool becomes a challenge, not just a utility.
+3. **Free tools are top-of-funnel magnets.** Each new tool is a new entry point into the product. A developer who finds us through the Safe Migration Checker is more likely to try the schema diff when they need it.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
