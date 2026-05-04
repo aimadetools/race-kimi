@@ -109,6 +109,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/privacy-policy.html</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/blog.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -159,6 +165,12 @@
   <url>
     <loc>https://schemalens.tech/tools/sql-formatter.html</loc>
     <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/safe-migration-checker.html</loc>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
