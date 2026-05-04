@@ -3956,6 +3956,29 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     safetyHTML = `<div class="summary-pill" style="cursor:pointer;border-color:${safety.color};color:${safety.color};" onclick="openShareModalToTab('safety')" title="Click to share your Safety Score"><span class="num">🛡️</span> Safety: ${safety.score}/100</div>`;
   }
 
+  // Column-level aggregates
+  let colAdded = 0, colRemoved = 0, colRenamed = 0, colTypeChanged = 0, colNullableChanged = 0, colDefaultChanged = 0;
+  for (const td of diff.tablesModified) {
+    colAdded += td.columnsAdded.length;
+    colRemoved += td.columnsRemoved.length;
+    colRenamed += td.columnsRenamed.length;
+    for (const mod of td.columnsModified) {
+      for (const c of mod.changes) {
+        if (c.field === 'type') colTypeChanged++;
+        else if (c.field === 'nullable') colNullableChanged++;
+        else if (c.field === 'default') colDefaultChanged++;
+      }
+    }
+  }
+
+  let columnSummaryHTML = '';
+  if (colAdded) columnSummaryHTML += `<div class="summary-pill added"><span class="num">+${colAdded}</span> col added</div>`;
+  if (colRemoved) columnSummaryHTML += `<div class="summary-pill removed"><span class="num">−${colRemoved}</span> col dropped</div>`;
+  if (colRenamed) columnSummaryHTML += `<div class="summary-pill modified"><span class="num">→${colRenamed}</span> col renamed</div>`;
+  if (colTypeChanged) columnSummaryHTML += `<div class="summary-pill" style="border-color:#a78bfa;color:#a78bfa;"><span class="num">T</span> ${colTypeChanged} type change${colTypeChanged > 1 ? 's' : ''}</div>`;
+  if (colNullableChanged) columnSummaryHTML += `<div class="summary-pill" style="border-color:#fbbf24;color:#fbbf24;"><span class="num">N</span> ${colNullableChanged} null change${colNullableChanged > 1 ? 's' : ''}</div>`;
+  if (colDefaultChanged) columnSummaryHTML += `<div class="summary-pill" style="border-color:#60a5fa;color:#60a5fa;"><span class="num">D</span> ${colDefaultChanged} default change${colDefaultChanged > 1 ? 's' : ''}</div>`;
+
   bar.innerHTML = `
     <div class="summary-pill"><span class="num">${diff.totalTablesOld}</span> tables in A</div>
     <div class="summary-pill"><span class="num">${diff.totalTablesNew}</span> tables in B</div>
@@ -3967,6 +3990,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     ${(diff.triggersAdded.length || diff.triggersRemoved.length || diff.triggersModified.length) ? `<div class="summary-pill modified"><span class="num">⚡${diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length}</span> triggers</div>` : ''}
     ${(diff.viewsAdded.length || diff.viewsRemoved.length || diff.viewsModified.length) ? `<div class="summary-pill modified"><span class="num">👁${diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length}</span> views</div>` : ''}
     ${(diff.functionsAdded.length || diff.functionsRemoved.length || diff.functionsModified.length) ? `<div class="summary-pill modified"><span class="num">ƒ${diff.functionsAdded.length + diff.functionsRemoved.length + diff.functionsModified.length}</span> functions</div>` : ''}
+    ${columnSummaryHTML}
     ${riskHTML}
     ${safetyHTML}
     ${confidenceHTML}

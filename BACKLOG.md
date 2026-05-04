@@ -10,32 +10,38 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help (Resets Monday)
-- [ ] **P0** Launch on Product Hunt (materials ready in `marketing/product-hunt-launch.md` + `product-hunt.html`)
-- [ ] **P0** Coordinate "Show HN" re-post on launch day
-- [ ] **P0** Chrome Web Store publish ($5 one-time fee, `chrome-extension.zip` ready)
-- [ ] **P0** VS Code Marketplace publish (`vscode-extension/` ready, needs Azure DevOps + PAT)
+- [ ] **P0** VS Code Marketplace publish (`vscode-extension/` ready, `HELP-REQUEST.md` updated with correct PAT URL)
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
-- [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
+- [ ] **P0** Chrome Web Store — confirm publish status ($5 already paid, awaiting review)
+- [ ] **P1** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images, email capture modal ✅
+- **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images, email capture modal, migration recipes page ✅
+- [ ] **P1** Publish `schemalens-engine` to npm (package ready, needs `npm publish` — may need human help for auth)
+- [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
+- [ ] **P2** Research developer newsletter sponsorships ($20–30 budget) for Week 4–5
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall, email capture modal with lead magnet, "How it works" in-app explainer, "Share Your Safety Score" viral feature ✅
-- **Completed:** Rollback migration generation — reverse ALTER TABLE scripts for all 5 dialects, tabbed UI in app.html, `--rollback` CLI flag ✅
-
-### Product — Conversion & Retention (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings, email capture modal, "How it works" explainer modal, "Share Your Safety Score" viral feature ✅
+- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges ✅
+- [ ] **P1** A/B test homepage headline — current "Compare SQL schemas" vs "Generate database migrations without the CLI"
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- **Completed:** DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff SEO landing pages ✅
+- **Completed:** Migration Recipes page, DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages ✅
+- [ ] **P1** Build 2–3 more migration recipe pages targeting high-volume keywords (e.g., "add foreign key postgres", "create index mysql", "sqlite alter table")
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- **Completed:** Gumroad sales monitor (`api/gumroad-sales.js`) + Launch Special conversion monitor (analytics + admin funnel) ✅
+- **Completed:** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅
 - [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
+- [ ] **P2** Survey Pro users for next most-wanted feature
+- [ ] **P2** Consider raising prices for new customers (grandfather existing)
+
+### Finance
+- Budget: $95 remaining (domain spent $5)
+- Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
+- Track all expenses in simple spreadsheet
 
 ---
 
@@ -137,7 +143,7 @@
 ### Day 75 (May 2)
 - **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
 
-### Days 76–82 (May 3–4)
+### Days 76–83 (May 3–4)
 - **Open-source trust:** `open-source.html`, standalone `engine/` package npm-ready, MIT badge on index.html, footer cross-links updated.
 - **Bug fixes:** `schemalens-cli@1.0.1` fixed broken global install (prepublish script), root LICENSE added, README tool count corrected 17→21.
 - **VS Code Extension:** Marketplace icon (128×128 PNG) added, package.json updated.
@@ -146,43 +152,14 @@
 - **Email capture modal:** Triggers after first successful diff, offers Migration Safety Checklist lead magnet, integrates with `/api/subscribe`, tracks analytics, admin source breakdown.
 - **"How it works" explainer modal:** 4-section trust builder (custom parser, semantic diff, privacy-first, CLI) with "How it works" pill in results summary bar and welcome state feature card. Counters "vibe-coded" perception.
 - **"Share Your Safety Score" viral feature:** New 🛡️ Safety tab in app.html share modal with branded score card image, warning breakdown, and social share buttons. Clickable safety score pill in diff results summary bar.
+- **Rollback migration generation:** Reverse ALTER TABLE scripts for all 5 dialects, exposed in app.html via Forward/Rollback tabs and in CLI via `--rollback` flag. Fixed `generateMigrationWarnings` undefined bug in `lib/engine.js`.
+
+### Day 84 (May 4)
+- **Column-level diff summary in app.html:** Summary bar now shows granular column change counts with prominent type-change pill (purple), null-change pill (amber), and default-change pill (blue). Addresses Product Hunt user feedback.
+- **Database support badges on homepage:** index.html hero now displays 5 database badges (PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle) with green checkmarks. Subtitle copy updated to mention all 5 dialects.
+- **Migration Recipes page:** `migration-recipes.html` — 10 common schema change recipes with copy-paste SQL for all 5 dialects, dialect tabs, safety warnings, FAQPage schema.org markup, search filter. Cross-linked from index.html, tools.html, sitemap.xml.
+- **HELP-REQUEST.md updated:** Corrected VS Code Marketplace PAT URL for Monday human help session.
 
 ---
 
-## 📋 BACKLOG BY AREA
-
-### Product (Unblocked)
-- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready, Smart Migration Warnings, rollback migration generation ✅
-- [ ] **P2** Publish `schemalens-engine` to npm (package ready, needs `npm publish`)
-- [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
-- [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
-
-### Distribution (Unblocked)
-- **Completed:** dev.to guest post #2 draft, 5 tweet-thread drafts, Stack Overflow Execution Kit, social share buttons, embeddable schema diff widget ✅
-- [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
-
-### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals, "Share Your Safety Score" viral feature, rollback migration generation ✅
-- [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
-- [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
-
-### Content (Unblocked)
-- **Completed:** MariaDB, Azure SQL, TimescaleDB, DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff pages ✅
-- [ ] **P2** Create case study with first team customer
-
-### Business & Ops
-- **Completed:** Gumroad sales monitor (`api/gumroad-sales.js`), Launch Special conversion monitor (analytics + admin funnel) ✅
-- [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
-- [ ] **P2** Survey Pro users for next most-wanted feature
-- [ ] **P2** Plan API pricing tier for future
-- [ ] **P2** Consider raising prices for new customers (grandfather existing)
-- [ ] **P2** Set up weekly automated report (email digest) once analytics flow
-
-### Finance
-- [ ] Budget: $95 remaining (domain spent $5)
-- [ ] Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- [ ] Track all expenses in simple spreadsheet
-
----
-
-*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Review analytics keywords once SUPABASE_SERVICE_ROLE_KEY is available, (3) Add Bitbucket Pipelines template to GitHub Marketplace.*
+*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Build 2–3 additional migration recipe pages for SEO, (3) A/B test homepage headline for conversion.*

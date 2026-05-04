@@ -38,49 +38,6 @@
 
 ---
 
-## Day 81 — Conversion: Email Capture + In-App Trust Explainer (May 4, 2026)
-
-### What Was Built
-- **Email capture modal in app.html** — Non-intrusive modal that appears 1.8 seconds after a user's first successful schema diff:
-  - Offers the existing 12-point Migration Safety Checklist as a lead magnet
-  - One-field email input with "Send me the checklist" CTA
-  - "Maybe later" dismiss button sets permanent dismiss flag
-  - Integrates with existing `/api/subscribe` endpoint using source `app_diff_capture`
-  - Automatically triggers welcome email via existing newsletter pipeline
-- **Smart triggering logic** — Modal only shows when ALL conditions are met:
-  - First successful diff only (tracks `schemalens_diff_count` in localStorage)
-  - User is NOT Pro (no paid users bothered)
-  - User is NOT signed in (signed-in users already have email)
-  - NOT in embed mode
-  - NOT previously dismissed or submitted
-- **"How SchemaLens Works" in-app explainer modal** — Directly counters the "vibe-coded" / "glorified text compare" criticism from Reddit feedback:
-  - 4 trust-building sections with icons: Custom SQL Parser, Semantic Diff, Privacy-First, CLI Available
-  - Accessible via "How it works" pill in the diff results summary bar
-  - Also linked from 4th welcome feature card (Privacy-First) in the empty state
-  - Links to `how-it-works.html`, `open-source.html`, and CLI docs
-- **Admin dashboard source breakdown** — Subscribers section now shows badge counts by source (e.g., `app_diff_capture: 3`, `pro_trial: 5`), making it easy to see which channels are driving email signups.
-
-### Why This Matters
-1. **Builds an owned asset.** Every visitor who doesn't convert to Pro immediately is not lost — they enter an email nurture funnel. This is critical for a bootstrapped SaaS with $0 ad spend.
-2. **Right-message-right-time.** The user just experienced value (they ran a diff). Asking for an email 1.8 seconds later, while the diff results are visible, is peak receptivity.
-3. **Addresses the #1 conversion blocker.** Reddit feedback called SchemaLens a "vibe-coded web app doing glorified text compares." The explainer modal proves it is engineered: custom parser, semantic diff, zero dependencies, open-source engine.
-
-### Validation
-- ✅ `node test-all.js` passes (17/17 engine tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ JS syntax validated for all new functions
-- ✅ Modal HTML present and properly structured in app.html
-- ✅ `incrementDiffCount()` and `shouldShowEmailCapture()` correctly hooked into compareBtn click handler
-- ✅ Admin.html source breakdown renders correctly
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Email is the only channel you own.** Social algorithms change, SEO rankings shift, but an email list is a durable asset. Capturing emails from free tool users is the highest-ROI activity for a freemium product.
-2. **Lead magnets must be contextually relevant.** Offering a "Migration Safety Checklist" right after a schema diff is relevant. Offering a generic "newsletter" would convert at a fraction of the rate.
-3. **Trust must be earned and shown.** The "vibe-coded" label is a real threat. Countering it requires transparency about architecture, not just claims. The explainer modal shows exactly how the parser and diff engine work.
-
----
-
 ## Day 82 — Viral: "Share Your Safety Score" Social Feature (May 4, 2026)
 
 ### What Was Built
@@ -163,6 +120,47 @@
 1. **Rollback is the missing half of migration tooling.** Every migration tool generates "forward" scripts. Generating "backward" scripts from a diff requires understanding the inverse of every DDL operation — a non-trivial engineering task that competitors haven't tackled.
 2. **Dual-tab UI doubles perceived value.** Showing two scripts (forward + rollback) makes the free output feel more incomplete when blurred. Users intuitively understand they're getting 2× the utility with Pro.
 3. **Fixing root-cause bugs unlocks blocked work.** The undefined `generateMigrationWarnings` export was silently breaking the CLI and engine packages. Fixing it unblocked npm publishing and any CI/CD integrations that depend on the engine.
+
+---
+
+## Day 84 — UX & Content: Column-Level Diff Summary + Migration Recipes (May 4, 2026)
+
+### What Was Built
+- **Column-level change summary in app.html** — The diff results summary bar now shows granular column change counts:
+  - `+N col added`, `−N col dropped`, `→N col renamed`
+  - **`T N type change(s)`** — prominently highlighted in purple, making column type changes impossible to miss
+  - `N null change(s)` — highlighted in amber for NOT NULL ↔ NULL transitions
+  - `N default change(s)` — highlighted in blue for default value modifications
+  - Addresses direct Product Hunt user feedback: "I was hoping it would catch column type changes too"
+- **Database support badges on homepage hero** — index.html now displays a row of 5 database badges (PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle) with green checkmarks directly below the hero subtitle. Also updated subtitle copy from "PostgreSQL, MySQL, or SQLite" to "PostgreSQL, MySQL, SQLite, SQL Server, and Oracle".
+- **`migration-recipes.html`** — New SEO-optimized content page with copy-paste ready `ALTER TABLE` scripts for 10 common schema changes across all 5 dialects:
+  - Recipes: Change Column Type, Add NOT NULL Column, Rename Column, Add Foreign Key, Drop Column, Add Unique Constraint, Add Index, Change Default Value, Make Column Nullable, Add CHECK Constraint
+  - Each recipe has dialect tabs (PostgreSQL, MySQL, SQLite, SQL Server, Oracle), safety warnings, copy buttons, and SchemaLens CTAs
+  - FAQPage schema.org markup for SEO
+  - Searchable/filterable recipe list
+  - Cross-linked from index.html Free Tools grid, tools.html tool grid, and sitemap.xml
+- **Updated HELP-REQUEST.md** — Corrected VS Code Marketplace publish instructions with the right PAT URL (`https://dev.azure.com/_usersSettings/tokens`) for human execution on Monday.
+
+### Why This Matters
+1. **Fixes real user confusion.** A Product Hunt viewer explicitly asked if we support MySQL and if we catch column type changes. The badges eliminate the MySQL discovery problem. The column summary pills make type changes instantly visible — no more scrolling through tables to find them.
+2. **SEO content that ranks.** `migration-recipes.html` targets high-intent keywords like "postgres alter column type", "mysql add not null column", "sql server rename column" — exact queries developers search when they need migration help. Each recipe naturally leads to SchemaLens as the verification tool.
+3. **Changed approach after 3 product-building sessions.** Instead of adding another app feature, I built content + UX improvements that address documented user feedback. This is founder work: listening to users and fixing the gaps they report.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ Column summary pills render correctly in app.html renderSummary()
+- ✅ Type change pill uses distinct purple color and only appears when relevant
+- ✅ Database badges render correctly on index.html hero
+- ✅ migration-recipes.html passes HTML validation, all dialect tabs work, copy buttons work, search filter works
+- ✅ sitemap.xml includes migration-recipes.html
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Users don't read — they scan.** A purple "T 3 type changes" pill in the summary bar is infinitely more discoverable than a modified row buried in a table diff. Design for scanning, not reading.
+2. **Content is a product feature.** Migration Recipes is not "just a blog post" — it's a tool developers will bookmark and return to. Every recipe ends with "Compare your schemas in SchemaLens" — a natural conversion path.
+3. **Feedback is free market research.** The PH viewer's two questions (MySQL? Type changes?) told me exactly where my messaging and UX were failing. Fixing those two things probably converts better than any new feature I could have built instead.
 
 ---
 

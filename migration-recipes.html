@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQL Migration Recipes — Schema Change Patterns for PostgreSQL, MySQL &amp; More</title>
+  <meta name="description" content="Common SQL migration patterns with copy-paste ready scripts for PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. Change column types, add constraints, rename columns, and more.">
+  <meta property="og:title" content="SQL Migration Recipes — Schema Change Patterns for PostgreSQL, MySQL &amp; More">
+  <meta property="og:description" content="Copy-paste ready ALTER TABLE scripts for 10 common schema changes across 5 SQL dialects.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/migration-recipes.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I change a column type in PostgreSQL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use ALTER TABLE ... ALTER COLUMN ... TYPE new_type. For example: ALTER TABLE users ALTER COLUMN name TYPE text;"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add a NOT NULL column in MySQL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add the column with a DEFAULT value first, then update existing rows, then drop the default or keep it: ALTER TABLE users ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active';"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I safely drop a column in SQL Server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Check for dependencies (indexes, constraints, views) first, then use ALTER TABLE ... DROP COLUMN. Back up your data before dropping columns."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+    .recipe { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
+    .recipe-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .recipe-header h2 { font-size: 1.25rem; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .recipe-header p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+    .recipe-body { padding: 20px 24px; }
+
+    .dialect-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dialect-tab { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
+    .dialect-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .dialect-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    .code-block { background: var(--code-bg); border-radius: var(--radius-sm); padding: 16px; position: relative; }
+    .code-block pre { margin: 0; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; }
+    .code-block .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); }
+    .code-block .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 14px; font-size: 0.9rem; color: var(--warning); }
+    .warning-box strong { color: var(--warning); }
+
+    .cta-bar { background: var(--bg); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .search-box { max-width: 500px; margin: 0 auto 28px; }
+    .search-box input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; color: var(--text); font-size: 1rem; }
+    .search-box input:focus { outline: none; border-color: var(--primary); }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 1.5rem; }
+      .recipe-header h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>SQL Migration Recipes</h1>
+      <p>Copy-paste ready <code>ALTER TABLE</code> scripts for the 10 most common schema changes. PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="recipeSearch" placeholder="Search recipes (e.g. 'rename column', 'varchar to text')..." oninput="filterRecipes()">
+    </div>
+
+    <!-- Recipe 1: Change Column Type -->
+    <article class="recipe" data-keywords="change type varchar text int bigint alter column type">
+      <div class="recipe-header">
+        <h2>🔄 Change Column Type</h2>
+        <p>Modify an existing column's data type. Common examples: <code>VARCHAR(255)</code> → <code>TEXT</code>, <code>INT</code> → <code>BIGINT</code>, <code>NUMERIC</code> → <code>DECIMAL</code>.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r1-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r1-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r1-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r1-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r1-ora')">Oracle</button>
+        </div>
+        <div id="r1-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN name TYPE text;
+
+-- For type changes that require a cast:
+ALTER TABLE products
+  ALTER COLUMN price TYPE numeric(10,2)
+  USING price::numeric(10,2);</pre></div>
+        <div id="r1-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  MODIFY COLUMN name TEXT;
+
+-- Alternative syntax (MariaDB compatible):
+ALTER TABLE products
+  CHANGE COLUMN price price DECIMAL(10,2);</pre></div>
+        <div id="r1-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite does not support ALTER COLUMN TYPE directly.
+-- Recreate the table with the new type:
+BEGIN TRANSACTION;
+CREATE TABLE users_new (
+  id INTEGER PRIMARY KEY,
+  name TEXT  -- changed from VARCHAR(255)
+);
+INSERT INTO users_new SELECT * FROM users;
+DROP TABLE users;
+ALTER TABLE users_new RENAME TO users;
+COMMIT;</pre></div>
+        <div id="r1-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN name NVARCHAR(500);
+
+-- For size changes that affect indexes, drop and recreate:
+ALTER TABLE products
+  ALTER COLUMN price DECIMAL(10,2);</pre></div>
+        <div id="r1-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  MODIFY name VARCHAR2(4000);
+
+-- With explicit cast if needed:
+ALTER TABLE products
+  MODIFY price NUMBER(10,2);</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Changing a column type can truncate data (e.g., <code>VARCHAR(100)</code> → <code>VARCHAR(50)</code>) or cause implicit casting errors. Always back up your data and test on a staging database first.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Not sure what will break? Compare your schemas first.</span>
+        <a href="app.html?demo=typechange" class="btn btn-primary">Try in SchemaLens →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 2: Add NOT NULL Column -->
+    <article class="recipe" data-keywords="add column not null default alter table">
+      <div class="recipe-header">
+        <h2>➕ Add a NOT NULL Column</h2>
+        <p>Add a required column to an existing table that already has rows. You must provide a default value for existing rows.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r2-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r2-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r2-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r2-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r2-ora')">Oracle</button>
+        </div>
+        <div id="r2-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Step 1: Add column with default
+ALTER TABLE users ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active';
+
+-- Step 2 (optional): Remove default if you want to enforce app-level inserts
+ALTER TABLE users ALTER COLUMN status DROP DEFAULT;</pre></div>
+        <div id="r2-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- MySQL requires a default for NOT NULL on existing tables
+ALTER TABLE users
+  ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active';</pre></div>
+        <div id="r2-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite supports ADD COLUMN with default
+ALTER TABLE users
+  ADD COLUMN status TEXT NOT NULL DEFAULT 'active';</pre></div>
+        <div id="r2-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD status NVARCHAR(20) NOT NULL CONSTRAINT DF_users_status DEFAULT 'active';
+
+-- Optional: drop the constraint later if you want to enforce app-level inserts
+ALTER TABLE users DROP CONSTRAINT DF_users_status;</pre></div>
+        <div id="r2-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD status VARCHAR2(20) DEFAULT 'active' NOT NULL;</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> On large tables, adding a NOT NULL column with a default can lock the table for a long time. For PostgreSQL 11+, this is optimized. For older versions or other databases, consider adding the column as NULL, backfilling data, then adding the constraint.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Verify the change across environments.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 3: Rename Column -->
+    <article class="recipe" data-keywords="rename column change name alter table rename">
+      <div class="recipe-header">
+        <h2>✏️ Rename a Column</h2>
+        <p>Rename an existing column without changing its type or data. Update your application code to match.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r3-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r3-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r3-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r3-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r3-ora')">Oracle</button>
+        </div>
+        <div id="r3-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  RENAME COLUMN full_name TO name;</pre></div>
+        <div id="r3-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  CHANGE COLUMN full_name name VARCHAR(255);</pre></div>
+        <div id="r3-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite does not support RENAME COLUMN in older versions.
+-- For SQLite 3.25.0+:
+ALTER TABLE users RENAME COLUMN full_name TO name;
+
+-- For older versions, recreate the table:</pre></div>
+        <div id="r3-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>EXEC sp_rename 'users.full_name', 'name', 'COLUMN';</pre></div>
+        <div id="r3-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  RENAME COLUMN full_name TO name;</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Renaming a column breaks views, stored procedures, triggers, and application code that reference the old name. Search your codebase thoroughly before deploying.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Find every reference before you rename.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 4: Add Foreign Key -->
+    <article class="recipe" data-keywords="foreign key add constraint references alter table">
+      <div class="recipe-header">
+        <h2>🔗 Add a Foreign Key</h2>
+        <p>Enforce referential integrity between two tables by adding a FOREIGN KEY constraint.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r4-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r4-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r4-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r4-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r4-ora')">Oracle</button>
+        </div>
+        <div id="r4-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;</pre></div>
+        <div id="r4-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;</pre></div>
+        <div id="r4-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite supports FK but requires it at table creation or via ALTER in 3.35.0+
+-- For older versions, recreate the table with the FK.
+
+-- SQLite 3.35.0+:
+ALTER TABLE orders
+  ADD COLUMN user_id INTEGER REFERENCES users(id);</pre></div>
+        <div id="r4-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;</pre></div>
+        <div id="r4-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  ON DELETE CASCADE;</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Adding a foreign key on a large table can be slow and may lock both tables. Ensure existing data satisfies the constraint (no orphan rows) before adding the FK, or the statement will fail.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Spot missing constraints before they reach production.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 5: Drop Column -->
+    <article class="recipe" data-keywords="drop column remove delete alter table">
+      <div class="recipe-header">
+        <h2>🗑️ Drop a Column</h2>
+        <p>Remove an unused column from a table. This is a destructive operation — use with caution.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r5-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r5-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r5-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r5-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r5-ora')">Oracle</button>
+        </div>
+        <div id="r5-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div id="r5-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div id="r5-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite does not support DROP COLUMN directly (until 3.35.0).
+-- For older versions, recreate the table without the column.
+
+-- SQLite 3.35.0+:
+ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div id="r5-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- First drop any constraints/indexes referencing the column
+ALTER TABLE users DROP CONSTRAINT CK_users_old_field;
+
+-- Then drop the column
+ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div id="r5-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Dropping a column permanently deletes data. It can also break views, triggers, stored procedures, and application code. SchemaLens detects when a dropped column is referenced by a view and warns you before you deploy.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Check for view dependencies before dropping.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 6: Add Unique Constraint -->
+    <article class="recipe" data-keywords="unique constraint add alter table index">
+      <div class="recipe-header">
+        <h2>🔒 Add a Unique Constraint</h2>
+        <p>Ensure no duplicate values exist for one or more columns by adding a UNIQUE constraint.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r6-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r6-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r6-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r6-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r6-ora')">Oracle</button>
+        </div>
+        <div id="r6-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD CONSTRAINT uq_users_email UNIQUE (email);</pre></div>
+        <div id="r6-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD CONSTRAINT uq_users_email UNIQUE (email);</pre></div>
+        <div id="r6-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE UNIQUE INDEX uq_users_email ON users(email);</pre></div>
+        <div id="r6-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD CONSTRAINT uq_users_email UNIQUE (email);</pre></div>
+        <div id="r6-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ADD CONSTRAINT uq_users_email UNIQUE (email);</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Adding a UNIQUE constraint will fail if duplicate values already exist in the column. Clean your data first or use a partial/conditional unique index where supported.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Find duplicate data before adding constraints.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 7: Add Index -->
+    <article class="recipe" data-keywords="index create add performance alter table">
+      <div class="recipe-header">
+        <h2>⚡ Add an Index</h2>
+        <p>Speed up queries by adding an index on frequently filtered or joined columns.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r7-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r7-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r7-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r7-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r7-ora')">Oracle</button>
+        </div>
+        <div id="r7-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE INDEX idx_users_email ON users(email);
+
+-- Partial index (PostgreSQL only):
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';</pre></div>
+        <div id="r7-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index:
+CREATE INDEX idx_users_name_status ON users(name, status);</pre></div>
+        <div id="r7-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE INDEX idx_users_email ON users(email);
+
+-- Covering index:
+CREATE INDEX idx_users_email_name ON users(email, name);</pre></div>
+        <div id="r7-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE INDEX idx_users_email ON users(email);
+
+-- Include columns for covering index:
+CREATE INDEX idx_users_email ON users(email) INCLUDE (name, created_at);</pre></div>
+        <div id="r7-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>CREATE INDEX idx_users_email ON users(email);
+
+-- Function-based index:
+CREATE INDEX idx_users_lower_email ON users(LOWER(email));</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Adding an index on a large table can lock the table and consume significant disk I/O. Consider using <code>CREATE INDEX CONCURRENTLY</code> on PostgreSQL or online index builds on SQL Server to avoid blocking writes.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Compare indexes across environments.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 8: Change Default Value -->
+    <article class="recipe" data-keywords="default value change alter column set default">
+      <div class="recipe-header">
+        <h2>⚙️ Change a Default Value</h2>
+        <p>Update the default value for an existing column. This only affects future inserts, not existing rows.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r8-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r8-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r8-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r8-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r8-ora')">Oracle</button>
+        </div>
+        <div id="r8-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN status SET DEFAULT 'pending';</pre></div>
+        <div id="r8-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN status SET DEFAULT 'pending';</pre></div>
+        <div id="r8-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite does not support ALTER COLUMN.
+-- Recreate the table or use a workaround with a new table.</pre></div>
+        <div id="r8-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Drop existing default constraint first (name may vary)
+ALTER TABLE users DROP CONSTRAINT DF_users_status;
+
+-- Add new default
+ALTER TABLE users ADD CONSTRAINT DF_users_status DEFAULT 'pending' FOR status;</pre></div>
+        <div id="r8-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  MODIFY status DEFAULT 'pending';</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Changing a default does not update existing rows. If you need to backfill existing data, run a separate UPDATE statement.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">See every default change at a glance.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 9: Make Column Nullable -->
+    <article class="recipe" data-keywords="nullable not null drop constraint alter table">
+      <div class="recipe-header">
+        <h2>🔓 Make a Column Nullable</h2>
+        <p>Remove the NOT NULL constraint from a column to allow NULL values.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r9-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r9-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r9-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r9-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r9-ora')">Oracle</button>
+        </div>
+        <div id="r9-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN name DROP NOT NULL;</pre></div>
+        <div id="r9-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  MODIFY COLUMN name VARCHAR(255) NULL;</pre></div>
+        <div id="r9-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite does not support ALTER COLUMN.
+-- Recreate the table with the column defined without NOT NULL.</pre></div>
+        <div id="r9-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  ALTER COLUMN name NVARCHAR(255) NULL;</pre></div>
+        <div id="r9-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE users
+  MODIFY name VARCHAR2(255) NULL;</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Making a column nullable is generally safe, but your application code may now need to handle NULL values. Review ORM models, form validators, and API serializers.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Catch nullability drift between environments.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe 10: Add CHECK Constraint -->
+    <article class="recipe" data-keywords="check constraint add validate alter table">
+      <div class="recipe-header">
+        <h2>✅ Add a CHECK Constraint</h2>
+        <p>Enforce data quality rules at the database level with a CHECK constraint.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'r10-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r10-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r10-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r10-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'r10-ora')">Oracle</button>
+        </div>
+        <div id="r10-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE products
+  ADD CONSTRAINT chk_price_positive CHECK (price > 0);
+
+-- Multi-column check:
+ALTER TABLE events
+  ADD CONSTRAINT chk_dates CHECK (end_date > start_date);</pre></div>
+        <div id="r10-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE products
+  ADD CONSTRAINT chk_price_positive CHECK (price > 0);</pre></div>
+        <div id="r10-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite supports CHECK but cannot add it via ALTER TABLE.
+-- Recreate the table with the CHECK constraint.
+
+-- Or ensure the constraint is in your CREATE TABLE:</pre></div>
+        <div id="r10-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE products
+  ADD CONSTRAINT chk_price_positive CHECK (price > 0);</pre></div>
+        <div id="r10-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>ALTER TABLE products
+  ADD CONSTRAINT chk_price_positive CHECK (price > 0);</pre></div>
+        <div class="warning-box">
+          <strong>⚠ Safety Note:</strong> Adding a CHECK constraint on a large table may scan the entire table to validate existing rows. On PostgreSQL 12+, this is optimized with <code>NOT VALID</code> followed by <code>VALIDATE CONSTRAINT</code>.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Detect missing constraints across staging and prod.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>SchemaLens</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <p><a href="app.html">Schema Diff</a></p>
+          <p><a href="tools.html">Free Tools</a></p>
+          <p><a href="pricing.html">Pricing</a></p>
+          <p><a href="cli/">CLI</a></p>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <p><a href="blog.html">Blog</a></p>
+          <p><a href="schema-examples.html">Examples</a></p>
+          <p><a href="migration-checklist.html">Migration Checklist</a></p>
+          <p><a href="api-guide.html">API Guide</a></p>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <p><a href="schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+          <p><a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+          <p><a href="schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+    </div>
+  </footer>
+
+  <script>
+    function showDialect(btn, id) {
+      const parent = btn.closest('.recipe-body');
+      parent.querySelectorAll('.dialect-tab').forEach(t => t.classList.remove('active'));
+      parent.querySelectorAll('.code-block').forEach(b => b.classList.add('hidden'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+
+    function filterRecipes() {
+      const q = document.getElementById('recipeSearch').value.toLowerCase();
+      document.querySelectorAll('.recipe').forEach(r => {
+        const keywords = (r.dataset.keywords || '').toLowerCase();
+        const text = r.textContent.toLowerCase();
+        r.style.display = (keywords.includes(q) || text.includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
