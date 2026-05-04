@@ -29,7 +29,7 @@
 
 ### Content — SEO Engine (Unblocked)
 - **Completed:** Migration Recipes page, DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages ✅
-- [ ] **P1** Build 2–3 more migration recipe pages targeting high-volume keywords (e.g., "add foreign key postgres", "create index mysql", "sqlite alter table")
+- [x] **P1** Build 2–3 more migration recipe pages targeting high-volume keywords (e.g., "add foreign key postgres", "create index mysql", "sqlite alter table") ✅ Done May 4
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
@@ -160,6 +160,9 @@
 - **Migration Recipes page:** `migration-recipes.html` — 10 common schema change recipes with copy-paste SQL for all 5 dialects, dialect tabs, safety warnings, FAQPage schema.org markup, search filter. Cross-linked from index.html, tools.html, sitemap.xml.
 - **HELP-REQUEST.md updated:** Corrected VS Code Marketplace PAT URL for Monday human help session.
 
+### Day 85 (May 4)
+- **Dedicated migration recipe SEO pages:** `add-foreign-key-postgres.html`, `create-index-mysql.html`, `sqlite-alter-table.html` — 3 comprehensive standalone guides targeting high-volume keywords. Each covers all 5 dialects with copy-paste scripts, safety warnings, FAQPage schema.org, and related recipe cards. Cross-linked from index.html (24 tools), tools.html, migration-recipes.html. sitemap.xml updated.
+
 ---
 
-*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Build 2–3 additional migration recipe pages for SEO, (3) A/B test homepage headline for conversion.*
+*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) A/B test homepage headline for conversion, (2) Publish `schemalens-engine` to npm (blocked on auth), (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*

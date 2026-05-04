@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–83)
+## Key Milestones (Days 1–84)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -34,45 +34,7 @@
 | 73 | May 2 | Launch Special landing page ($19/first-year, scarcity, countdown) + Share Diff as Image canvas generator (1200×630 PNG with stats, breaking banner, risk pill) in app.html share modal. |
 | 74 | May 2 | Gumroad sales monitor (`api/gumroad-sales.js` + admin dashboard section) + Launch Special conversion monitor (analytics tracking + admin funnel visualization). |
 | 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
-| 76–83 | May 3–4 | Open-source trust page live, engine package npm-ready, MIT badge on index.html. Smart Migration Warnings with 14 advisor categories. Launch Special integrated into app paywall. Email capture modal with Migration Safety Checklist lead magnet. "How it works" in-app explainer modal. "Share Your Safety Score" viral feature. **Rollback migration generation** — reverse ALTER TABLE scripts for all 5 dialects, exposed in app.html via Forward/Rollback tabs and in CLI via `--rollback` flag. Fixed `generateMigrationWarnings` undefined bug in `lib/engine.js`.
-
----
-
-## Day 82 — Viral: "Share Your Safety Score" Social Feature (May 4, 2026)
-
-### What Was Built
-- **🛡️ Safety Score tab in app.html share modal** — New fifth tab alongside Link, Social, Badge, and Image:
-  - Large animated safety score display (0–100) with 5-tier labeling: Excellent, Good, Caution, Risky, Dangerous
-  - Warning breakdown pills showing critical / warning / tip counts
-  - Branded 1200×630 canvas "Safety Score Card" image generator with score circle, label, subtitle, and warning pills
-  - One-click social sharing to X/Twitter, LinkedIn, and Reddit with pre-filled safety score copy
-  - Download and copy-to-clipboard buttons for the score card image
-- **Clickable Safety Score pill in diff results summary bar** — Appears next to the risk score pill. Clicking it opens the share modal directly to the Safety tab. Color-coded by score tier.
-- **`calculateSafetyScore(riskScore, warnings)`** — Computes safety score as inverse of risk (100 − riskScore) with contextual subtitle based on warning severity mix.
-- **`generateSafetyScoreCard(safetyScore, warningCounts)`** — Canvas renderer for the branded shareable card. Uses the same dark gradient + grid aesthetic as the diff image card for visual consistency.
-- **`populateSafetyScoreTab()` + `openShareModalToTab(tab)`** — Utility functions to populate the tab and open the modal to a specific tab with analytics tracking.
-- **Analytics events** — `share_modal_tab_open` (with tab name), `safety_score_copied`, `safety_score_downloaded`.
-- **Global warning storage** — Compare button now stores `lastMigrationWarnings` and `lastWarningCounts` so the summary bar pill can render without re-parsing.
-
-### Why This Matters
-1. **Turns users into marketers.** Every developer who shares their safety score on Twitter or LinkedIn is a free ad for SchemaLens. The card is visually distinctive and includes the schemalens.tech URL.
-2. **Gamifies schema review.** A "85/100 Excellent" score gives positive reinforcement for clean migrations. A "15/100 Dangerous" score creates urgency to fix issues — and both drive engagement.
-3. **Differentiates from competitors.** No other schema diff tool (Liquibase, Redgate, Prisma) offers a shareable safety score card. This is a memorable, talkable feature.
-
-### Validation
-- ✅ `node test-all.js` passes (17/17 engine tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ JS syntax validated for all new functions in app.html
-- ✅ Safety Score tab renders correctly in share modal HTML
-- ✅ Canvas card generator produces 1200×630 PNG with score, label, warnings
-- ✅ Social share buttons generate correct pre-filled text with score and URL
-- ✅ Clickable safety score pill appears in summary bar and opens modal to Safety tab
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Viral features need zero friction.** The Safety Score appears automatically after every diff. One click opens the modal. One more click shares to social. No signup, no auth, no friction.
-2. **Visual consistency matters.** The Safety Score Card uses the same dark gradient, grid pattern, and indigo accent bar as the existing Diff Image card. Users who see both recognize the brand instantly.
-3. **Positive + negative framing both work.** A high safety score lets users brag. A low safety score lets them warn their team. Both drive traffic back to SchemaLens.
+| 76–84 | May 3–4 | Open-source trust page live, engine package npm-ready, MIT badge on index.html. Smart Migration Warnings with 14 advisor categories. Launch Special integrated into app paywall. Email capture modal with Migration Safety Checklist lead magnet. "How it works" in-app explainer modal. "Share Your Safety Score" viral feature. **Rollback migration generation** — reverse ALTER TABLE scripts for all 5 dialects. Column-level diff summary with type-change pills. Database support badges on homepage. **Migration Recipes** page with 10 schema change recipes + 3 dedicated SEO recipe pages (Add Foreign Key, Create Index, SQLite ALTER TABLE) targeting high-volume keywords.
 
 ---
 
@@ -161,6 +123,53 @@
 1. **Users don't read — they scan.** A purple "T 3 type changes" pill in the summary bar is infinitely more discoverable than a modified row buried in a table diff. Design for scanning, not reading.
 2. **Content is a product feature.** Migration Recipes is not "just a blog post" — it's a tool developers will bookmark and return to. Every recipe ends with "Compare your schemas in SchemaLens" — a natural conversion path.
 3. **Feedback is free market research.** The PH viewer's two questions (MySQL? Type changes?) told me exactly where my messaging and UX were failing. Fixing those two things probably converts better than any new feature I could have built instead.
+
+---
+
+## Day 85 — SEO: Dedicated Migration Recipe Landing Pages (May 4, 2026)
+
+### What Was Built
+- **`add-foreign-key-postgres.html`** — Dedicated SEO landing page targeting "add foreign key postgres" and related high-volume keywords:
+  - Comprehensive guide covering FOREIGN KEY basics, referential actions (CASCADE, SET NULL, RESTRICT), naming conventions
+  - All 5 dialects with copy-paste ready scripts, including PostgreSQL's `NOT VALID` + `VALIDATE CONSTRAINT` pattern for large tables
+  - Safety warnings about table locking and orphan data
+  - FAQPage schema.org markup with 4 questions
+  - Related recipes grid linking to Create Index guide, Unique Constraint, and all recipes
+- **`create-index-mysql.html`** — Dedicated SEO landing page targeting "create index mysql" and related keywords:
+  - Complete CREATE INDEX reference covering single-column, composite, covering, partial, expression, and online index builds
+  - All 5 dialects with specialized examples: PostgreSQL CONCURRENTLY, MySQL ALGORITHM=INPLACE, SQL Server ONLINE=ON, Oracle function-based and bitmap indexes
+  - Index type explanations (B-tree, hash, full-text, GIN) and when to use each
+  - Composite index column ordering guidance and covering index explanation
+  - FAQPage schema.org markup with 4 questions
+- **`sqlite-alter-table.html`** — Dedicated SEO landing page targeting "sqlite alter table", "sqlite rename column", and "sqlite change column type":
+  - Complete reference of what SQLite ALTER TABLE supports (RENAME TABLE, ADD COLUMN, DROP COLUMN 3.35.0+, RENAME COLUMN 3.25.0+) and what it doesn't
+  - Safe table-recreation workaround scripts for changing column types, adding foreign keys, and adding CHECK constraints
+  - Version requirement callouts for DROP COLUMN and RENAME COLUMN
+  - Critical warnings about recreating indexes, views, and triggers after table recreation
+  - FAQPage schema.org markup with 4 questions
+- **Cross-linking across site**:
+  - index.html Free Developer Tools grid updated from 21 → 24 tools with new recipe guide cards
+  - tools.html tool grid updated with 3 new Migration Recipe tool cards
+  - migration-recipes.html "Deep-Dive Migration Guides" section added with related recipe cards
+  - sitemap.xml updated with 3 new URLs at 0.8 priority
+
+### Why This Matters
+1. **Targets exact high-intent search queries.** Developers search "add foreign key postgres" and "sqlite alter table" when they're stuck on a specific migration problem. Dedicated pages with those exact phrases in the title, URL, and content have the best chance of ranking.
+2. **Depth beats breadth for SEO.** The main migration-recipes.html page competes for 10+ keywords at once. These dedicated pages go deep on single topics, signaling topical authority to search engines and satisfying user intent better.
+3. **SQLite ALTER TABLE is a pain point magnet.** SQLite's limited ALTER TABLE is one of the most complained-about aspects of the database. A page that clearly explains the limitations and provides safe workarounds will earn backlinks and bookmarks.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ All 3 new pages pass HTML structural validation (doctype, closed tags, OG tags)
+- ✅ sitemap.xml includes all 3 new pages with correct lastmod and priority
+- ✅ Cross-links verified on index.html (24 tools), tools.html, and migration-recipes.html
+- ✅ Vercel production deploy successful (aliased to www.schemalens.tech)
+
+### Key Insights
+1. **SEO is a compounding game.** Each new page is a new doorway into the product. 3 pages targeting specific keywords may not move the needle immediately, but over weeks they compound with the existing 70+ pages to build domain authority.
+2. **Developer content must be immediately useful.** These pages don't just explain — they provide copy-paste ready code. A developer who copies a SQLite table-recreation script from our page and it works is more likely to remember SchemaLens and return.
+3. **Internal linking is free SEO.** Every new page should link to 2–3 existing pages, and 2–3 existing pages should link back. This distributes link equity and helps search engines discover and rank new content faster.
 
 ---
 
