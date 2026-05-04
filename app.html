@@ -1434,6 +1434,11 @@ CREATE TABLE users (
           <h4>Breaking Changes</h4>
           <p>Spot dangerous drops and renames before they break production.</p>
         </div>
+        <div class="welcome-feature">
+          <span class="icon">🔒</span>
+          <h4>Privacy-First</h4>
+          <p>Custom parser runs entirely in your browser. Your schemas never touch our servers. <a href="#" onclick="openHowItWorksModal();return false;" style="color:var(--primary);">How it works</a></p>
+        </div>
       </div>
 
       <div class="welcome-cta">
@@ -1592,6 +1597,49 @@ CREATE TABLE users (
           <button class="btn btn-primary" onclick="signOut()">Sign Out</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- How It Works Modal -->
+  <div class="modal-overlay" id="howItWorksModal">
+    <div class="modal" style="max-width: 520px;">
+      <h3>🔧 How SchemaLens Works</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:18px;">Not a text diff. A semantic engine that understands SQL.</p>
+      <div style="display:grid;gap:14px;margin-bottom:18px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:1.3rem;flex-shrink:0;">🔧</span>
+          <div>
+            <strong style="font-size:0.95rem;color:var(--text);">Custom SQL Parser</strong>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;line-height:1.5;">~400 lines of vanilla JavaScript, zero dependencies. Parses CREATE TABLE, INDEX, VIEW, TRIGGER, and FUNCTION into structured objects.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:1.3rem;flex-shrink:0;">🧠</span>
+          <div>
+            <strong style="font-size:0.95rem;color:var(--text);">Semantic Diff</strong>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;line-height:1.5;">Compares tables, columns, indexes, and constraints structurally. Whitespace changes are ignored. Type changes (e.g. VARCHAR → TEXT) are detected precisely.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:1.3rem;flex-shrink:0;">🔒</span>
+          <div>
+            <strong style="font-size:0.95rem;color:var(--text);">Privacy-First</strong>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;line-height:1.5;">Everything runs in your browser. Your schema dumps never touch our servers. We cannot see your data even if we wanted to.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:1.3rem;flex-shrink:0;">🖥️</span>
+          <div>
+            <strong style="font-size:0.95rem;color:var(--text);">CLI Available</strong>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;line-height:1.5;">The same engine runs locally via npm. No browser required. <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:0.8em;">npx schemalens-cli diff old.sql new.sql</code></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeHowItWorksModal()">Close</button>
+        <a href="how-it-works.html" target="_blank" class="btn btn-primary" onclick="closeHowItWorksModal()">Full Technical Deep Dive →</a>
+      </div>
+      <p style="margin-top:14px;margin-bottom:0;font-size:0.8rem;color:var(--text-muted);text-align:center;">Engine is <a href="open-source.html" target="_blank">open source</a> · <a href="cli/" target="_blank">CLI docs</a></p>
     </div>
   </div>
 
@@ -3605,6 +3653,7 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
     ${riskHTML}
     ${confidenceHTML}
     ${breakingHTML}
+    <div class="summary-pill" style="cursor:pointer;border-color:var(--primary);color:var(--primary);" onclick="openHowItWorksModal()" title="Learn how SchemaLens works"><span class="num">ℹ️</span> How it works</div>
     <div style="flex:1"></div>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="copyPRSummary()">📋 Copy PR Summary</button>
     <button class="btn btn-secondary" style="font-size:0.8rem;padding:6px 12px;" onclick="sendToSlack()">Send to Slack</button>
@@ -7712,6 +7761,25 @@ async function submitEmailCapture() {
 
 document.getElementById('emailCaptureModal')?.addEventListener('click', (e) => {
   if (e.target.id === 'emailCaptureModal') closeEmailCaptureModal();
+});
+
+// -----------------------------
+// How It Works Modal
+// -----------------------------
+function openHowItWorksModal() {
+  const modal = document.getElementById('howItWorksModal');
+  if (!modal) return;
+  modal.classList.add('active');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('how_it_works_opened');
+}
+
+function closeHowItWorksModal() {
+  const modal = document.getElementById('howItWorksModal');
+  if (modal) modal.classList.remove('active');
+}
+
+document.getElementById('howItWorksModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'howItWorksModal') closeHowItWorksModal();
 });
 
 async function loadTeamDiffs() {
