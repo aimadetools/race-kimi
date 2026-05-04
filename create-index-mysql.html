@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Create an Index in MySQL — CREATE INDEX Examples &amp; Optimization Tips</title>
+  <meta name="description" content="Complete guide to creating indexes in MySQL, PostgreSQL, SQLite, SQL Server, and Oracle. Covers CREATE INDEX, composite indexes, covering indexes, online index builds, and performance tips.">
+  <meta property="og:title" content="How to Create an Index in MySQL — CREATE INDEX Examples &amp; Optimization Tips">
+  <meta property="og:description" content="Copy-paste ready CREATE INDEX scripts for MySQL, PostgreSQL, SQLite, SQL Server, and Oracle. Includes composite, covering, and partial indexes.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/create-index-mysql.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I create an index in MySQL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use CREATE INDEX: CREATE INDEX idx_users_email ON users(email); For composite indexes: CREATE INDEX idx_users_name_status ON users(name, status);"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between a single-column and composite index?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A single-column index speeds up queries that filter on one column. A composite index covers multiple columns and is most efficient when queries filter on the leftmost prefix of the indexed columns. For example, an index on (last_name, first_name) helps queries on last_name alone, but not first_name alone."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does adding an index lock the table?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, by default. Adding an index on a large table can lock it and consume significant I/O. Use online index builds where available: CREATE INDEX CONCURRENTLY on PostgreSQL, ALGORITHM=INPLACE on MySQL 5.6+, and ONLINE=ON on SQL Server."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a covering index?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A covering index contains all columns needed to satisfy a query, so the database does not need to look up the actual table rows. This dramatically reduces I/O. On SQL Server, use INCLUDE columns. On MySQL, the clustered secondary index in InnoDB can act as a covering index."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+    .content-section { max-width: 720px; margin: 0 auto 32px; }
+    .content-section h2 { font-size: 1.35rem; margin: 32px 0 14px; }
+    .content-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+    .content-section ul { color: var(--text-muted); line-height: 1.8; margin-bottom: 14px; padding-left: 22px; }
+    .content-section code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+    .recipe { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
+    .recipe-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .recipe-header h2 { font-size: 1.25rem; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .recipe-header p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+    .recipe-body { padding: 20px 24px; }
+
+    .dialect-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dialect-tab { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
+    .dialect-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .dialect-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    .code-block { background: var(--code-bg); border-radius: var(--radius-sm); padding: 16px; position: relative; }
+    .code-block pre { margin: 0; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; }
+    .code-block .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); }
+    .code-block .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 14px; font-size: 0.9rem; color: var(--warning); }
+    .warning-box strong { color: var(--warning); }
+
+    .tip-box { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--success); }
+    .tip-box strong { color: var(--success); }
+
+    .cta-bar { background: var(--bg); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .related-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .related-card p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 10px; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 1.5rem; }
+      .recipe-header h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>How to Create an Index in MySQL</h1>
+      <p>Complete guide to <code>CREATE INDEX</code> across MySQL, PostgreSQL, SQLite, SQL Server, and Oracle. Covers single-column, composite, covering, and partial indexes.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>What is a Database Index?</h2>
+      <p>A database index is a data structure that improves the speed of data retrieval operations on a table. Think of it like the index at the back of a book — instead of scanning every page, the database can jump directly to the relevant rows.</p>
+      <p>Indexes come with trade-offs: they speed up <code>SELECT</code> queries but slow down <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> operations because the index must be maintained. They also consume disk space. The key is to index the right columns — primarily those used in <code>WHERE</code>, <code>JOIN</code>, <code>ORDER BY</code>, and <code>GROUP BY</code> clauses.</p>
+
+      <h2>Basic CREATE INDEX Syntax</h2>
+      <div class="code-block" style="margin:14px 0;"><pre>CREATE INDEX index_name ON table_name(column_name);</pre></div>
+
+      <h2>Types of Indexes</h2>
+      <ul>
+        <li><strong>B-tree (default):</strong> Balanced tree structure. Great for equality and range queries.</li>
+        <li><strong>Hash:</strong> Only useful for exact equality lookups. Not supported by all storage engines.</li>
+        <li><strong>Full-text:</strong> Optimized for text search (MATCH ... AGAINST in MySQL).</li>
+        <li><strong>Composite:</strong> Covers multiple columns. Order matters — put the most selective column first.</li>
+        <li><strong>Covering:</strong> Contains all columns needed by a query, eliminating table lookups.</li>
+        <li><strong>Partial / Filtered:</strong> Indexes only rows matching a condition (PostgreSQL, SQL Server).</li>
+      </ul>
+    </div>
+
+    <!-- Recipe: Create Index -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>⚡ CREATE INDEX — All Dialects</h2>
+        <p>Copy-paste ready index creation scripts with composite, covering, and online build options.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'idx-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'idx-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'idx-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'idx-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'idx-ora')">Oracle</button>
+        </div>
+        <div id="idx-mysql" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Single-column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_users_name_status ON users(name, status);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Full-text index (MyISAM or InnoDB 5.6+)
+CREATE FULLTEXT INDEX idx_posts_content ON posts(content);
+
+-- Online index build (InnoDB, MySQL 5.6+)
+ALTER TABLE users
+  ADD INDEX idx_users_email (email),
+  ALGORITHM=INPLACE, LOCK=NONE;
+
+-- Prefix index (for long VARCHAR columns)
+CREATE INDEX idx_users_email_prefix ON users(email(50));</pre></div>
+        <div id="idx-pg" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Single-column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_users_name_status ON users(name, status);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Partial / filtered index
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';
+
+-- Concurrent index build (no table lock)
+CREATE INDEX CONCURRENTLY idx_users_email ON users(email);
+
+-- Covering index with INCLUDE (PostgreSQL 11+)
+CREATE INDEX idx_users_email ON users(email) INCLUDE (name, created_at);
+
+-- Expression index
+CREATE INDEX idx_users_lower_email ON users(LOWER(email));
+
+-- GIN index for JSONB / arrays
+CREATE INDEX idx_posts_tags ON posts USING GIN(tags);</pre></div>
+        <div id="idx-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Single-column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_users_name_status ON users(name, status);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Covering index (SQLite 3.8.2+ supports covering indexes)
+CREATE INDEX idx_users_email_name ON users(email, name);
+
+-- Index on expression
+CREATE INDEX idx_users_lower_email ON users(LOWER(email));
+
+-- Drop index
+DROP INDEX idx_users_email;</pre></div>
+        <div id="idx-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Single-column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_users_name_status ON users(name, status);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Covering index with INCLUDE
+CREATE INDEX idx_users_email ON users(email) INCLUDE (name, created_at);
+
+-- Online index build
+CREATE INDEX idx_users_email ON users(email) WITH (ONLINE = ON);
+
+-- Filtered index
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';
+
+-- Columnstore index (for analytics workloads)
+CREATE CLUSTERED COLUMNSTORE INDEX cci_orders ON orders;</pre></div>
+        <div id="idx-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Single-column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index
+CREATE INDEX idx_users_name_status ON users(name, status);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Function-based index
+CREATE INDEX idx_users_lower_email ON users(LOWER(email));
+
+-- Bitmap index (for low-cardinality columns)
+CREATE BITMAP INDEX bmp_users_status ON users(status);
+
+-- Online index build
+CREATE INDEX idx_users_email ON users(email) ONLINE;
+
+-- Reverse key index (for sequential inserts)
+CREATE INDEX idx_orders_id ON orders(id) REVERSE;</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Safety Note:</strong> Adding an index on a large table can lock the table and consume significant disk I/O. On PostgreSQL, always use <code>CREATE INDEX CONCURRENTLY</code> in production. On MySQL, use <code>ALGORITHM=INPLACE, LOCK=NONE</code>. On SQL Server, use <code>WITH (ONLINE = ON)</code>. Schedule index builds during low-traffic windows when possible.
+        </div>
+        <div class="tip-box">
+          <strong>💡 Index Naming Convention:</strong> Use <code>idx_&lt;table&gt;_&lt;column&gt;</code> for single-column indexes and <code>idx_&lt;table&gt;_&lt;col1&gt;_&lt;col2&gt;</code> for composite indexes. This makes it easy to identify which indexes are safe to drop when optimizing.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Compare indexes across staging and production.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <div class="content-section">
+      <h2>When to Create an Index</h2>
+      <ul>
+        <li><strong>Foreign key columns</strong> — Unindexed foreign keys cause full table scans on parent DELETE/UPDATE.</li>
+        <li><strong>Frequently filtered columns</strong> — Columns in <code>WHERE</code> clauses with high selectivity.</li>
+        <li><strong>JOIN keys</strong> — Columns used in <code>JOIN</code> conditions.</li>
+        <li><strong>ORDER BY / GROUP BY columns</strong> — Indexes can eliminate sorting.</li>
+        <li><strong>Large tables with read-heavy workloads</strong> — The benefit increases with table size.</li>
+      </ul>
+
+      <h2>When NOT to Create an Index</h2>
+      <ul>
+        <li><strong>Small tables</strong> — Sequential scans are often faster than index lookups for tables under ~1,000 rows.</li>
+        <li><strong>Columns with very low cardinality</strong> — A boolean column is rarely worth indexing alone.</li>
+        <li><strong>Write-heavy tables</strong> — Every index slows down INSERT, UPDATE, and DELETE.</li>
+        <li><strong>Columns that are frequently updated</strong> — The index maintenance cost is high.</li>
+      </ul>
+
+      <h2>Composite Index Column Order</h2>
+      <p>The order of columns in a composite index matters. A composite index on <code>(last_name, first_name)</code> can be used for queries on:</p>
+      <ul>
+        <li><code>WHERE last_name = 'Smith'</code> ✅</li>
+        <li><code>WHERE last_name = 'Smith' AND first_name = 'John'</code> ✅</li>
+        <li><code>WHERE first_name = 'John'</code> ❌ (cannot use the index)</li>
+      </ul>
+      <p>Put the most selective column first, and consider your query patterns carefully.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Related Migration Recipes</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <h3>🔗 Add a Foreign Key</h3>
+          <p>Enforce referential integrity between tables with FOREIGN KEY constraints.</p>
+          <a href="add-foreign-key-postgres.html" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>🔒 Add a Unique Constraint</h3>
+          <p>Ensure no duplicate values exist for one or more columns.</p>
+          <a href="migration-recipes.html#unique" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>📖 All Migration Recipes</h3>
+          <p>10 copy-paste ready ALTER TABLE scripts for common schema changes.</p>
+          <a href="migration-recipes.html" class="btn btn-secondary" style="font-size:0.85rem;">View All →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>SchemaLens</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <p><a href="app.html">Schema Diff</a></p>
+          <p><a href="tools.html">Free Tools</a></p>
+          <p><a href="pricing.html">Pricing</a></p>
+          <p><a href="cli/">CLI</a></p>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <p><a href="blog.html">Blog</a></p>
+          <p><a href="schema-examples.html">Examples</a></p>
+          <p><a href="migration-recipes.html">Migration Recipes</a></p>
+          <p><a href="api-guide.html">API Guide</a></p>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <p><a href="schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+          <p><a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+          <p><a href="schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+    </div>
+  </footer>
+
+  <script>
+    function showDialect(btn, id) {
+      const parent = btn.closest('.recipe-body');
+      parent.querySelectorAll('.dialect-tab').forEach(t => t.classList.remove('active'));
+      parent.querySelectorAll('.code-block').forEach(b => b.classList.add('hidden'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

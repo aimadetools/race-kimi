@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQLite ALTER TABLE — Complete Guide to Adding, Renaming &amp; Dropping Columns</title>
+  <meta name="description" content="SQLite ALTER TABLE is limited. Learn exactly what SQLite supports, what it doesn't, and how to use the table-recreation workaround for renaming columns, changing types, and adding constraints.">
+  <meta property="og:title" content="SQLite ALTER TABLE — Complete Guide to Adding, Renaming &amp; Dropping Columns">
+  <meta property="og:description" content="SQLite ALTER TABLE limitations explained with copy-paste workarounds for renaming columns, changing types, dropping columns, and adding constraints.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/sqlite-alter-table.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can you rename a column in SQLite?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but only in SQLite 3.25.0+ (released September 2018). Use: ALTER TABLE table_name RENAME COLUMN old_name TO new_name; For older versions, you must recreate the table with the new column name."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you change a column type in SQLite?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. SQLite does not support ALTER COLUMN TYPE. You must recreate the table with the new column definition, copy the data, drop the old table, and rename the new one. SchemaLens generates this workaround automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you drop a column in SQLite?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but only in SQLite 3.35.0+ (released March 2021). Use: ALTER TABLE table_name DROP COLUMN column_name; For older versions, recreate the table without the column."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you add a FOREIGN KEY in SQLite with ALTER TABLE?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. SQLite cannot add FOREIGN KEY constraints via ALTER TABLE. You must either add the FK at table creation time or recreate the table with the constraint."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+    .content-section { max-width: 720px; margin: 0 auto 32px; }
+    .content-section h2 { font-size: 1.35rem; margin: 32px 0 14px; }
+    .content-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+    .content-section ul { color: var(--text-muted); line-height: 1.8; margin-bottom: 14px; padding-left: 22px; }
+    .content-section code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+    .recipe { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
+    .recipe-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .recipe-header h2 { font-size: 1.25rem; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .recipe-header p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+    .recipe-body { padding: 20px 24px; }
+
+    .dialect-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dialect-tab { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
+    .dialect-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .dialect-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    .code-block { background: var(--code-bg); border-radius: var(--radius-sm); padding: 16px; position: relative; }
+    .code-block pre { margin: 0; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; }
+    .code-block .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); }
+    .code-block .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 14px; font-size: 0.9rem; color: var(--warning); }
+    .warning-box strong { color: var(--warning); }
+
+    .tip-box { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--success); }
+    .tip-box strong { color: var(--success); }
+
+    .cta-bar { background: var(--bg); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .related-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .related-card p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 10px; }
+
+    .version-note { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius-sm); padding: 10px 14px; margin: 10px 0; font-size: 0.85rem; color: var(--primary); }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 1.5rem; }
+      .recipe-header h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>SQLite ALTER TABLE — Complete Guide</h1>
+      <p>SQLite's <code>ALTER TABLE</code> is famously limited. Learn exactly what works, what doesn't, and how to safely recreate tables when you need unsupported changes.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>What SQLite ALTER TABLE Supports</h2>
+      <p>Unlike PostgreSQL, MySQL, or SQL Server, SQLite has a deliberately minimal <code>ALTER TABLE</code> implementation. As of SQLite 3.45.0, only these operations are supported:</p>
+      <ul>
+        <li><code>RENAME TABLE</code> — Rename the entire table.</li>
+        <li><code>ADD COLUMN</code> — Add a new column (with restrictions).</li>
+        <li><code>DROP COLUMN</code> — Remove a column (SQLite 3.35.0+, March 2021).</li>
+        <li><code>RENAME COLUMN</code> — Rename a column (SQLite 3.25.0+, September 2018).</li>
+      </ul>
+      <p>Notably, SQLite <strong>does not support</strong>:</p>
+      <ul>
+        <li>Changing a column's data type</li>
+        <li>Adding a <code>FOREIGN KEY</code> constraint to an existing table</li>
+        <li>Adding a <code>CHECK</code> or <code>UNIQUE</code> constraint via ALTER TABLE</li>
+        <li>Changing a column's default value</li>
+        <li>Changing a column's nullability (NOT NULL ↔ NULL)</li>
+      </ul>
+      <p>For any unsupported operation, you must use the <strong>table recreation workaround</strong>: create a new table with the desired schema, copy the data, drop the old table, and rename the new one.</p>
+    </div>
+
+    <!-- Recipe: Add Column -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>➕ Add a Column</h2>
+        <p>Add a new column to an existing SQLite table. Limited to the end of the column list with no PRIMARY KEY, FOREIGN KEY, or UNIQUE constraints.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Add a nullable column
+ALTER TABLE users ADD COLUMN bio TEXT;
+
+-- Add a column with a default value
+ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'active';
+
+-- Add a column with a constant expression default
+ALTER TABLE users ADD COLUMN created_at TEXT DEFAULT CURRENT_TIMESTAMP;
+
+-- NOT NULL is only allowed if a DEFAULT is also provided
+ALTER TABLE users ADD COLUMN age INTEGER NOT NULL DEFAULT 0;</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Limitation:</strong> The new column is always appended to the end of the table. You cannot insert it in the middle. Also, you cannot add a column with a <code>PRIMARY KEY</code>, <code>FOREIGN KEY</code>, or <code>UNIQUE</code> constraint using <code>ALTER TABLE</code>.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Compare your schema changes across environments.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe: Rename Column -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>✏️ Rename a Column</h2>
+        <p>Rename an existing column. Requires SQLite 3.25.0 or later.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="version-note">📌 Requires SQLite 3.25.0+ (September 2018). Check your version with <code>SELECT sqlite_version();</code></div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Rename a column
+ALTER TABLE users RENAME COLUMN full_name TO name;</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Safety Note:</strong> Renaming a column breaks any views, triggers, or application code that references the old name. Always search your codebase before deploying.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Find every reference before you rename.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe: Drop Column -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>🗑️ Drop a Column</h2>
+        <p>Remove a column from a table. Requires SQLite 3.35.0 or later.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="version-note">📌 Requires SQLite 3.35.0+ (March 2021). Check your version with <code>SELECT sqlite_version();</code></div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Drop a column
+ALTER TABLE users DROP COLUMN old_field;</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Safety Note:</strong> Dropping a column permanently deletes data. It can also break views and triggers. SchemaLens detects when a dropped column is referenced by a view and warns you before you deploy.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Check for view dependencies before dropping.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe: Change Column Type / The Workaround -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>🔄 Change Column Type — Table Recreation Workaround</h2>
+        <p>SQLite does not support ALTER COLUMN TYPE. Use this safe table-recreation pattern.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Step 1: Begin transaction
+BEGIN TRANSACTION;
+
+-- Step 2: Create the new table with the desired schema
+CREATE TABLE users_new (
+  id INTEGER PRIMARY KEY,
+  name TEXT,          -- changed from VARCHAR(255)
+  email TEXT NOT NULL,
+  age INTEGER         -- changed from TEXT
+);
+
+-- Step 3: Copy data from old table (cast if needed)
+INSERT INTO users_new (id, name, email, age)
+  SELECT id, name, email, CAST(age AS INTEGER)
+  FROM users;
+
+-- Step 4: Verify the data looks correct
+-- SELECT * FROM users_new LIMIT 5;
+
+-- Step 5: Drop the old table
+DROP TABLE users;
+
+-- Step 6: Rename the new table
+ALTER TABLE users_new RENAME TO users;
+
+-- Step 7: Recreate indexes, views, and triggers
+CREATE INDEX idx_users_email ON users(email);
+
+-- Step 8: Commit
+COMMIT;</pre></div>
+        <div class="tip-box">
+          <strong>💡 Pro Tip:</strong> Use <code>PRAGMA foreign_keys = OFF;</code> before the recreation if other tables reference this one, then <code>PRAGMA foreign_keys = ON;</code> after. Alternatively, update referencing tables to point to the new table before dropping the old one.
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ Critical:</strong> Do not forget to recreate indexes, views, and triggers after renaming. They are tied to the old table and will be lost when you <code>DROP TABLE</code>. Always back up your database before running table recreation.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">SchemaLens generates this workaround automatically.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <!-- Recipe: Add Foreign Key -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>🔗 Add a Foreign Key — Table Recreation Workaround</h2>
+        <p>SQLite cannot add FOREIGN KEY constraints via ALTER TABLE. Recreate the table with the constraint.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Step 1: Disable foreign key checks during migration
+PRAGMA foreign_keys = OFF;
+
+BEGIN TRANSACTION;
+
+-- Step 2: Create new table with the foreign key
+CREATE TABLE orders_new (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total REAL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- Step 3: Copy data
+INSERT INTO orders_new SELECT * FROM orders;
+
+-- Step 4: Replace old table
+DROP TABLE orders;
+ALTER TABLE orders_new RENAME TO orders;
+
+COMMIT;
+
+-- Step 5: Re-enable foreign key checks
+PRAGMA foreign_keys = ON;
+
+-- Step 6: Verify
+PRAGMA foreign_key_check;</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Safety Note:</strong> <code>PRAGMA foreign_keys = OFF</code> only affects the current connection. If your application has other connections open, they may still enforce foreign keys. Perform this operation during a maintenance window or with the application stopped.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Find missing foreign keys across environments.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <div class="content-section">
+      <h2>SQLite ALTER TABLE Quick Reference</h2>
+      <ul>
+        <li><code>ALTER TABLE ... RENAME TO ...</code> — Rename table. ✅ Always supported.</li>
+        <li><code>ALTER TABLE ... ADD COLUMN ...</code> — Add column (with limitations). ✅ Always supported.</li>
+        <li><code>ALTER TABLE ... DROP COLUMN ...</code> — Drop column. ✅ 3.35.0+</li>
+        <li><code>ALTER TABLE ... RENAME COLUMN ...</code> — Rename column. ✅ 3.25.0+</li>
+        <li><code>ALTER TABLE ... ALTER COLUMN ...</code> — Change type/default/nullability. ❌ Not supported.</li>
+        <li><code>ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY</code> — Add FK. ❌ Not supported.</li>
+        <li><code>ALTER TABLE ... ADD CONSTRAINT ... CHECK</code> — Add CHECK. ❌ Not supported.</li>
+      </ul>
+
+      <h2>When to Use the Table Recreation Workaround</h2>
+      <p>Use the recreation pattern whenever you need to:</p>
+      <ul>
+        <li>Change a column's data type</li>
+        <li>Change a column's nullability (add or remove NOT NULL)</li>
+        <li>Change a column's default value</li>
+        <li>Add a FOREIGN KEY, CHECK, or UNIQUE constraint</li>
+        <li>Reorder columns (cosmetic, but sometimes desired)</li>
+        <li>Drop a column on SQLite &lt; 3.35.0</li>
+        <li>Rename a column on SQLite &lt; 3.25.0</li>
+      </ul>
+      <p>SchemaLens's diff engine detects these unsupported changes and automatically generates the table recreation script with transaction safety, data copy, and index recreation.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Related Migration Recipes</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <h3>🔗 Add a Foreign Key</h3>
+          <p>Full foreign key guide for PostgreSQL, MySQL, SQL Server, and Oracle.</p>
+          <a href="add-foreign-key-postgres.html" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>⚡ Add an Index</h3>
+          <p>CREATE INDEX examples and optimization tips for all major databases.</p>
+          <a href="create-index-mysql.html" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>📖 All Migration Recipes</h3>
+          <p>10 copy-paste ready ALTER TABLE scripts for common schema changes.</p>
+          <a href="migration-recipes.html" class="btn btn-secondary" style="font-size:0.85rem;">View All →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>SchemaLens</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <p><a href="app.html">Schema Diff</a></p>
+          <p><a href="tools.html">Free Tools</a></p>
+          <p><a href="pricing.html">Pricing</a></p>
+          <p><a href="cli/">CLI</a></p>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <p><a href="blog.html">Blog</a></p>
+          <p><a href="schema-examples.html">Examples</a></p>
+          <p><a href="migration-recipes.html">Migration Recipes</a></p>
+          <p><a href="api-guide.html">API Guide</a></p>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <p><a href="schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+          <p><a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+          <p><a href="schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+    </div>
+  </footer>
+
+  <script>
+    function showDialect(btn, id) {
+      const parent = btn.closest('.recipe-body');
+      parent.querySelectorAll('.dialect-tab').forEach(t => t.classList.remove('active'));
+      parent.querySelectorAll('.code-block').forEach(b => b.classList.add('hidden'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

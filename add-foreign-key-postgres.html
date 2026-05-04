@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Add a Foreign Key in PostgreSQL — ALTER TABLE ADD FOREIGN KEY Examples</title>
+  <meta name="description" content="Complete guide to adding foreign key constraints in PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy-paste ready ALTER TABLE scripts with ON DELETE CASCADE, naming conventions, and safety warnings.">
+  <meta property="og:title" content="How to Add a Foreign Key in PostgreSQL — ALTER TABLE ADD FOREIGN KEY Examples">
+  <meta property="og:description" content="Copy-paste ready foreign key scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Includes CASCADE, SET NULL, and performance tips.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/add-foreign-key-postgres.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I add a foreign key in PostgreSQL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY. Example: ALTER TABLE orders ADD CONSTRAINT fk_orders_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between ON DELETE CASCADE and ON DELETE SET NULL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ON DELETE CASCADE automatically deletes child rows when the parent row is deleted. ON DELETE SET NULL sets the foreign key column to NULL instead. Use CASCADE for dependent data (order items), SET NULL for optional relationships (user profiles)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I add a foreign key to a table that already has data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but only if every existing value in the foreign key column exists in the referenced parent table. If there are orphan rows, the ALTER TABLE statement will fail. Clean your data first or use a NOT VALID / VALIDATE CONSTRAINT approach on PostgreSQL."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does adding a foreign key lock the table?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Adding a foreign key constraint requires a full table scan to validate existing rows, which acquires an ACCESS EXCLUSIVE lock on PostgreSQL and similar locks on other databases. On large tables, consider adding the constraint as NOT VALID first, then running VALIDATE CONSTRAINT separately."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+    .content-section { max-width: 720px; margin: 0 auto 32px; }
+    .content-section h2 { font-size: 1.35rem; margin: 32px 0 14px; }
+    .content-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+    .content-section ul { color: var(--text-muted); line-height: 1.8; margin-bottom: 14px; padding-left: 22px; }
+    .content-section code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+    .recipe { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
+    .recipe-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .recipe-header h2 { font-size: 1.25rem; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .recipe-header p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+    .recipe-body { padding: 20px 24px; }
+
+    .dialect-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dialect-tab { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
+    .dialect-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .dialect-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    .code-block { background: var(--code-bg); border-radius: var(--radius-sm); padding: 16px; position: relative; }
+    .code-block pre { margin: 0; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; }
+    .code-block .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); }
+    .code-block .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 14px; font-size: 0.9rem; color: var(--warning); }
+    .warning-box strong { color: var(--warning); }
+
+    .tip-box { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--success); }
+    .tip-box strong { color: var(--success); }
+
+    .cta-bar { background: var(--bg); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .related-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .related-card p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 10px; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 1.5rem; }
+      .recipe-header h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>How to Add a Foreign Key in PostgreSQL</h1>
+      <p>Complete guide to adding <code>FOREIGN KEY</code> constraints across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy-paste ready scripts with safety warnings.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>What is a Foreign Key?</h2>
+      <p>A foreign key (FK) is a column (or set of columns) that establishes a link between data in two tables. It enforces <strong>referential integrity</strong> — ensuring that every value in the child table's foreign key column exists in the parent table's referenced column.</p>
+      <p>Without foreign keys, your database can contain <strong>orphan rows</strong> — data that references records that no longer exist. This leads to inconsistent query results, broken application logic, and data quality issues.</p>
+
+      <h2>Basic Syntax</h2>
+      <p>The standard SQL pattern for adding a foreign key to an existing table is:</p>
+      <div class="code-block" style="margin:14px 0;"><pre>ALTER TABLE child_table
+  ADD CONSTRAINT constraint_name
+  FOREIGN KEY (child_column)
+  REFERENCES parent_table(parent_column);</pre></div>
+
+      <h2>Referential Actions</h2>
+      <p>When the parent row is updated or deleted, you can define what happens to the child rows:</p>
+      <ul>
+        <li><code>ON DELETE CASCADE</code> — Delete child rows automatically when parent is deleted.</li>
+        <li><code>ON DELETE SET NULL</code> — Set the foreign key column to NULL when parent is deleted.</li>
+        <li><code>ON DELETE RESTRICT</code> — Prevent deletion of the parent if children exist (default behavior).</li>
+        <li><code>ON UPDATE CASCADE</code> — Update child foreign key values when parent key changes.</li>
+      </ul>
+    </div>
+
+    <!-- Recipe: Add Foreign Key -->
+    <article class="recipe">
+      <div class="recipe-header">
+        <h2>🔗 Add a Foreign Key Constraint</h2>
+        <p>Enforce referential integrity between two tables. Includes naming conventions and referential actions.</p>
+      </div>
+      <div class="recipe-body">
+        <div class="dialect-tabs">
+          <button class="dialect-tab active" onclick="showDialect(this,'fk-pg')">PostgreSQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'fk-mysql')">MySQL</button>
+          <button class="dialect-tab" onclick="showDialect(this,'fk-sqlite')">SQLite</button>
+          <button class="dialect-tab" onclick="showDialect(this,'fk-mssql')">SQL Server</button>
+          <button class="dialect-tab" onclick="showDialect(this,'fk-ora')">Oracle</button>
+        </div>
+        <div id="fk-pg" class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Basic foreign key
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- With ON DELETE CASCADE
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_order_items_order_id
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+  ON DELETE CASCADE;
+
+-- With ON DELETE SET NULL
+ALTER TABLE comments
+  ADD CONSTRAINT fk_comments_author_id
+  FOREIGN KEY (author_id) REFERENCES users(id)
+  ON DELETE SET NULL;
+
+-- Large table: add without validation first, then validate
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  NOT VALID;
+
+ALTER TABLE orders
+  VALIDATE CONSTRAINT fk_orders_user_id;</pre></div>
+        <div id="fk-mysql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Basic foreign key
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- With ON DELETE CASCADE
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_order_items_order_id
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+  ON DELETE CASCADE;
+
+-- With ON DELETE SET NULL
+ALTER TABLE comments
+  ADD CONSTRAINT fk_comments_author_id
+  FOREIGN KEY (author_id) REFERENCES users(id)
+  ON DELETE SET NULL;
+
+-- InnoDB only supports CASCADE, SET NULL, RESTRICT, NO ACTION
+-- MyISAM does not support foreign keys</pre></div>
+        <div id="fk-sqlite" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- SQLite supports foreign keys but they must be enabled:
+PRAGMA foreign_keys = ON;
+
+-- Add column with inline foreign key (SQLite 3.35.0+)
+ALTER TABLE orders
+  ADD COLUMN user_id INTEGER REFERENCES users(id);
+
+-- For full constraint syntax, recreate the table:
+CREATE TABLE orders_new (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total DECIMAL(10,2),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+INSERT INTO orders_new SELECT * FROM orders;
+DROP TABLE orders;
+ALTER TABLE orders_new RENAME TO orders;</pre></div>
+        <div id="fk-mssql" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Basic foreign key
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- With ON DELETE CASCADE
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_order_items_order_id
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+  ON DELETE CASCADE;
+
+-- With ON DELETE SET NULL
+ALTER TABLE comments
+  ADD CONSTRAINT fk_comments_author_id
+  FOREIGN KEY (author_id) REFERENCES users(id)
+  ON DELETE SET NULL;
+
+-- Check existing data with NOCHECK (not recommended for production)
+ALTER TABLE orders WITH NOCHECK
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id);</pre></div>
+        <div id="fk-ora" class="code-block hidden"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre>-- Basic foreign key
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- With ON DELETE CASCADE
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_order_items_order_id
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+  ON DELETE CASCADE;
+
+-- With ON DELETE SET NULL
+ALTER TABLE comments
+  ADD CONSTRAINT fk_comments_author_id
+  FOREIGN KEY (author_id) REFERENCES users(id)
+  ON DELETE SET NULL;
+
+-- Oracle also supports ON DELETE SET DEFAULT</pre></div>
+        <div class="warning-box">
+          <strong>⚠️ Safety Note:</strong> Adding a foreign key on a large table can lock both tables while existing data is validated. On PostgreSQL, use <code>NOT VALID</code> + <code>VALIDATE CONSTRAINT</code> to split the operation. On SQL Server, consider adding during a maintenance window. Always ensure existing data satisfies the constraint before adding it.
+        </div>
+        <div class="tip-box">
+          <strong>💡 Naming Convention:</strong> Use <code>fk_&lt;child_table&gt;_&lt;column_name&gt;</code> for clarity. This makes it easy to identify which table and column a constraint applies to when reading error messages or query plans.
+        </div>
+      </div>
+      <div class="cta-bar">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Spot missing constraints before they reach production.</span>
+        <a href="app.html" class="btn btn-primary">Compare Schemas →</a>
+      </div>
+    </article>
+
+    <div class="content-section">
+      <h2>Best Practices</h2>
+      <ul>
+        <li><strong>Index the foreign key column.</strong> Unindexed foreign keys can cause full table scans on DELETE/UPDATE of parent rows. Most databases do not auto-index FK columns.</li>
+        <li><strong>Name your constraints.</strong> Auto-generated names like <code>orders_user_id_fkey</code> are hard to debug. Use explicit names.</li>
+        <li><strong>Clean data before adding.</strong> Run a query to find orphan rows first: <code>SELECT * FROM child WHERE fk_col NOT IN (SELECT id FROM parent)</code>.</li>
+        <li><strong>Use CASCADE carefully.</strong> ON DELETE CASCADE can accidentally delete large amounts of data. Prefer SET NULL or RESTRICT for critical relationships.</li>
+        <li><strong>Document your schema.</strong> Tools like SchemaLens compare schemas across environments and flag missing foreign keys before deployment.</li>
+      </ul>
+
+      <h2>Common Errors and Fixes</h2>
+      <ul>
+        <li><strong>"foreign key constraint cannot be implemented"</strong> — The referenced column is not a PRIMARY KEY or UNIQUE. Fix the parent table first.</li>
+        <li><strong>"violates foreign key constraint"</strong> — Orphan rows exist. Clean them or use NOT VALID + VALIDATE on PostgreSQL.</li>
+        <li><strong>"cannot add foreign key on partitioned table"</strong> — Some databases restrict FKs on partitioned tables. Add the FK to each partition instead.</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Related Migration Recipes</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <h3>⚡ Add an Index</h3>
+          <p>Speed up queries by adding indexes on frequently filtered or joined columns.</p>
+          <a href="create-index-mysql.html" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>🔒 Add a Unique Constraint</h3>
+          <p>Ensure no duplicate values exist for one or more columns.</p>
+          <a href="migration-recipes.html#unique" class="btn btn-secondary" style="font-size:0.85rem;">View Recipe →</a>
+        </div>
+        <div class="related-card">
+          <h3>📖 All Migration Recipes</h3>
+          <p>10 copy-paste ready ALTER TABLE scripts for common schema changes.</p>
+          <a href="migration-recipes.html" class="btn btn-secondary" style="font-size:0.85rem;">View All →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>SchemaLens</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <p><a href="app.html">Schema Diff</a></p>
+          <p><a href="tools.html">Free Tools</a></p>
+          <p><a href="pricing.html">Pricing</a></p>
+          <p><a href="cli/">CLI</a></p>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <p><a href="blog.html">Blog</a></p>
+          <p><a href="schema-examples.html">Examples</a></p>
+          <p><a href="migration-recipes.html">Migration Recipes</a></p>
+          <p><a href="api-guide.html">API Guide</a></p>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <p><a href="schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+          <p><a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+          <p><a href="schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+    </div>
+  </footer>
+
+  <script>
+    function showDialect(btn, id) {
+      const parent = btn.closest('.recipe-body');
+      parent.querySelectorAll('.dialect-tab').forEach(t => t.classList.remove('active'));
+      parent.querySelectorAll('.code-block').forEach(b => b.classList.add('hidden'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
