@@ -467,6 +467,43 @@
       font-size: 0.85rem;
       font-weight: 500;
     }
+    .migration-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .migration-tab {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 8px 14px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: -1px;
+    }
+    .migration-tab:hover {
+      color: var(--text);
+    }
+    .migration-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .migration-tab .pro-badge {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
 
     .migration-warnings-panel {
       background: rgba(251, 191, 36, 0.06);
@@ -3441,6 +3478,253 @@ function generateMigration(diff, dialect) {
   return lines.join('\n');
 }
 
+function generateRollbackMigration(diff, dialect) {
+  const lines = [];
+
+  // Functions added → drop
+  if (diff.functionsAdded && diff.functionsAdded.length) {
+    for (const fn of diff.functionsAdded) {
+      const dropType = fn.isProcedure ? 'PROCEDURE' : 'FUNCTION';
+      lines.push(`DROP ${dropType} IF EXISTS ${quoteId(fn.name, dialect)}${fn.args ? '(' + fn.args + ')' : ''};`);
+    }
+    if (diff.functionsAdded.length) lines.push('');
+  }
+
+  // Views added → drop
+  if (diff.viewsAdded && diff.viewsAdded.length) {
+    for (const vw of diff.viewsAdded) {
+      lines.push(`DROP VIEW IF EXISTS ${quoteId(vw.name, dialect)};`);
+    }
+    if (diff.viewsAdded.length) lines.push('');
+  }
+
+  // Triggers added → drop
+  if (diff.triggersAdded && diff.triggersAdded.length) {
+    for (const tr of diff.triggersAdded) {
+      lines.push(`DROP TRIGGER IF EXISTS ${quoteId(tr.name, dialect)} ON ${quoteId(tr.table, dialect)};`);
+    }
+    if (diff.triggersAdded.length) lines.push('');
+  }
+
+  // Enums added → drop
+  if (diff.enumsAdded && diff.enumsAdded.length) {
+    for (const en of diff.enumsAdded) {
+      if (dialect === 'postgres') {
+        lines.push(`DROP TYPE ${quoteId(en.name, dialect)};`);
+      } else {
+        lines.push(`-- DROP TYPE for enum ${en.name} (PostgreSQL-specific);`);
+      }
+    }
+    if (diff.enumsAdded.length) lines.push('');
+  }
+
+  // Tables added → drop
+  for (const table of diff.tablesAdded) {
+    lines.push(`DROP TABLE ${quoteId(table.name, dialect)};`);
+    lines.push('');
+  }
+
+  // Tables renamed → rename back
+  for (const ren of diff.tablesRenamed || []) {
+    if (dialect === 'postgres' || dialect === 'sqlite') {
+      lines.push(`ALTER TABLE ${quoteId(ren.newTable.name, dialect)} RENAME TO ${quoteId(ren.oldTable.name, dialect)};`);
+    } else if (dialect === 'mysql') {
+      lines.push(`RENAME TABLE ${quoteId(ren.newTable.name, dialect)} TO ${quoteId(ren.oldTable.name, dialect)};`);
+    } else if (dialect === 'mssql') {
+      lines.push(`EXEC sp_rename '${quoteId(ren.newTable.name, dialect).replace(/[[\]]/g, '')}', '${ren.oldTable.name}';`);
+    } else if (dialect === 'oracle') {
+      lines.push(`RENAME ${quoteId(ren.newTable.name, dialect)} TO ${quoteId(ren.oldTable.name, dialect)};`);
+    }
+  }
+  if (diff.tablesRenamed && diff.tablesRenamed.length) lines.push('');
+
+  // Modified tables — reverse changes
+  for (const td of diff.tablesModified) {
+    lines.push(`-- Rollback changes in table: ${td.name}`);
+
+    // Drop constraints that were added
+    for (const con of td.constraintsAdded) {
+      if (con.type === 'PRIMARY KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_pkey'), dialect)};`);
+      } else if (con.type === 'UNIQUE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_key'), dialect)};`);
+      } else if (con.type === 'FOREIGN KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)};`);
+      } else if (con.type === 'CHECK') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)};`);
+      }
+    }
+    if (td.constraintsAdded.length) lines.push('');
+
+    // Re-add constraints that were removed
+    for (const con of td.constraintsRemoved) {
+      if (con.type === 'PRIMARY KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD PRIMARY KEY (${con.columns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'UNIQUE') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_key'), dialect)} UNIQUE (${con.columns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'FOREIGN KEY') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_' + con.columns.join('_') + '_fkey'), dialect)} FOREIGN KEY (${con.columns.map(c => quoteId(c, dialect)).join(', ')}) REFERENCES ${quoteId(con.refTable, dialect)}(${con.refColumns.map(c => quoteId(c, dialect)).join(', ')});`);
+      } else if (con.type === 'CHECK') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD CONSTRAINT ${quoteId(con.name || (td.name + '_check'), dialect)} CHECK (${con.expression});`);
+      }
+    }
+    if (td.constraintsRemoved.length) lines.push('');
+
+    // Revert column modifications
+    for (const mod of td.columnsModified) {
+      const oldCol = td.oldTable && td.oldTable.columns.find(c => c.name === mod.column.name);
+      if (!oldCol) continue;
+
+      if (dialect === 'mysql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY COLUMN ${columnDefSQL(oldCol, dialect)};`);
+      } else if (dialect === 'mssql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(oldCol.name, dialect)} ${oldCol.type}${oldCol.nullable ? '' : ' NOT NULL'};`);
+      } else if (dialect === 'oracle') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} MODIFY (${columnDefSQL(oldCol, dialect)});`);
+      } else if (dialect === 'postgres') {
+        for (const change of mod.changes) {
+          if (change.field === 'type') {
+            lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(mod.column.name, dialect)} TYPE ${change.old};`);
+          } else if (change.field === 'nullable') {
+            if (change.old === 'NOT NULL') {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(mod.column.name, dialect)} SET NOT NULL;`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(mod.column.name, dialect)} DROP NOT NULL;`);
+            }
+          } else if (change.field === 'default') {
+            if (change.old !== 'none') {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(mod.column.name, dialect)} SET DEFAULT ${change.old};`);
+            } else {
+              lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ALTER COLUMN ${quoteId(mod.column.name, dialect)} DROP DEFAULT;`);
+            }
+          } else {
+            lines.push(`-- Review rollback: revert ${change.field} on ${mod.column.name} to ${change.old}`);
+          }
+        }
+      } else {
+        lines.push(`-- SQLite: column changes require table recreation`);
+      }
+    }
+    if (td.columnsModified.length) lines.push('');
+
+    // Drop columns that were added
+    for (const col of td.columnsAdded) {
+      if (dialect === 'sqlite') {
+        lines.push(`-- SQLite does not support DROP COLUMN directly.`);
+        lines.push(`-- ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)}; -- NOT SUPPORTED`);
+      } else {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} DROP COLUMN ${quoteId(col.name, dialect)};`);
+      }
+    }
+    if (td.columnsAdded.length) lines.push('');
+
+    // Re-add columns that were removed
+    for (const col of td.columnsRemoved) {
+      if (dialect === 'sqlite') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD COLUMN ${columnDefSQL(col, dialect)};`);
+      } else {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} ADD ${columnDefSQL(col, dialect)};`);
+      }
+    }
+    if (td.columnsRemoved.length) lines.push('');
+
+    // Rename columns back
+    for (const ren of td.columnsRenamed) {
+      if (dialect === 'postgres' || dialect === 'sqlite') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} RENAME COLUMN ${quoteId(ren.newColumn.name, dialect)} TO ${quoteId(ren.oldColumn.name, dialect)};`);
+      } else if (dialect === 'mysql') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} CHANGE COLUMN ${quoteId(ren.newColumn.name, dialect)} ${columnDefSQL(ren.oldColumn, dialect)};`);
+      } else if (dialect === 'mssql') {
+        lines.push(`EXEC sp_rename '${quoteId(td.name, dialect).replace(/[[\]]/g, '')}.${quoteId(ren.newColumn.name, dialect).replace(/[[\]]/g, '')}', '${ren.oldColumn.name}', 'COLUMN';`);
+      } else if (dialect === 'oracle') {
+        lines.push(`ALTER TABLE ${quoteId(td.name, dialect)} RENAME COLUMN ${quoteId(ren.newColumn.name, dialect)} TO ${quoteId(ren.oldColumn.name, dialect)};`);
+      }
+    }
+    if (td.columnsRenamed.length) lines.push('');
+  }
+
+  // Tables removed → recreate
+  for (const table of diff.tablesRemoved) {
+    lines.push(`-- Recreate table: ${table.name}`);
+    lines.push(`CREATE TABLE ${quoteId(table.name, dialect)} (`);
+    const colLines = table.columns.map(c => '  ' + columnDefSQL(c, dialect));
+    if (table.constraints.length) {
+      for (const con of table.constraints) {
+        colLines.push('  ' + con.raw);
+      }
+    }
+    lines.push(colLines.join(',\n'));
+    lines.push(`);`);
+    lines.push('');
+  }
+
+  // Enums removed → recreate
+  if (diff.enumsRemoved && diff.enumsRemoved.length) {
+    for (const en of diff.enumsRemoved) {
+      if (dialect === 'postgres') {
+        lines.push(`CREATE TYPE ${quoteId(en.name, dialect)} AS ENUM (${en.values.map(v => `'${v}'`).join(', ')});`);
+      } else {
+        lines.push(`-- CREATE TYPE for enum ${en.name} (PostgreSQL-specific);`);
+      }
+    }
+    if (diff.enumsRemoved.length) lines.push('');
+  }
+
+  // Triggers removed → recreate
+  if (diff.triggersRemoved && diff.triggersRemoved.length) {
+    for (const tr of diff.triggersRemoved) {
+      lines.push(tr.raw + ';');
+    }
+    if (diff.triggersRemoved.length) lines.push('');
+  }
+
+  // Triggers modified → drop new, recreate old
+  if (diff.triggersModified && diff.triggersModified.length) {
+    for (const tm of diff.triggersModified) {
+      lines.push(`DROP TRIGGER IF EXISTS ${quoteId(tm.newTrigger.name, dialect)} ON ${quoteId(tm.newTrigger.table, dialect)};`);
+      lines.push(tm.oldTrigger.raw + ';');
+    }
+    if (diff.triggersModified.length) lines.push('');
+  }
+
+  // Views removed → recreate
+  if (diff.viewsRemoved && diff.viewsRemoved.length) {
+    for (const vw of diff.viewsRemoved) {
+      lines.push(`CREATE OR REPLACE VIEW ${quoteId(vw.name, dialect)} AS ${vw.query};`);
+    }
+    if (diff.viewsRemoved.length) lines.push('');
+  }
+
+  // Views modified → drop new, recreate old
+  if (diff.viewsModified && diff.viewsModified.length) {
+    for (const vm of diff.viewsModified) {
+      lines.push(`DROP VIEW IF EXISTS ${quoteId(vm.newView.name, dialect)};`);
+      lines.push(`CREATE OR REPLACE VIEW ${quoteId(vm.oldView.name, dialect)} AS ${vm.oldView.query};`);
+    }
+    if (diff.viewsModified.length) lines.push('');
+  }
+
+  // Functions removed → recreate
+  if (diff.functionsRemoved && diff.functionsRemoved.length) {
+    for (const fn of diff.functionsRemoved) {
+      lines.push(fn.raw + ';');
+    }
+    if (diff.functionsRemoved.length) lines.push('');
+  }
+
+  // Functions modified → drop new, recreate old
+  if (diff.functionsModified && diff.functionsModified.length) {
+    for (const fm of diff.functionsModified) {
+      const dropType = fm.newFunction.isProcedure ? 'PROCEDURE' : 'FUNCTION';
+      lines.push(`DROP ${dropType} IF EXISTS ${quoteId(fm.newFunction.name, dialect)}${fm.newFunction.args ? '(' + fm.newFunction.args + ')' : ''};`);
+      lines.push(fm.oldFunction.raw + ';');
+    }
+    if (diff.functionsModified.length) lines.push('');
+  }
+
+  return lines.join('\n');
+}
+
 function generateMigrationWarnings(diff, dialect) {
   const warnings = [];
   function add(sev, title, suggestion) {
@@ -4167,7 +4451,15 @@ function getSocialProofHTML() {
   `;
 }
 
-function renderMigration(sql, diff) {
+function switchMigrationTab(tab) {
+  document.querySelectorAll('.migration-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.migration-tab[data-tab="' + tab + '"]').forEach(t => t.classList.add('active'));
+  document.getElementById('migrationForwardPanel').style.display = tab === 'forward' ? 'block' : 'none';
+  document.getElementById('migrationRollbackPanel').style.display = tab === 'rollback' ? 'block' : 'none';
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('migration_tab_switch', { tab });
+}
+
+function renderMigration(sql, rollbackSql, diff) {
   const container = document.getElementById('migrationContainer');
   const totalTables = diff.totalTablesNew;
   const unlocked = isProUnlocked();
@@ -4196,7 +4488,13 @@ function renderMigration(sql, diff) {
     `;
     // Show warnings even in free tier to demonstrate value
     if (warningsHTML) html += warningsHTML;
-    // Show preview with blur overlay so users can see the value before buying
+    // Tabs
+    html += `<div class="migration-tabs">`;
+    html += `<button class="migration-tab active" data-tab="forward" onclick="switchMigrationTab('forward')">Forward Migration</button>`;
+    html += `<button class="migration-tab" data-tab="rollback" onclick="switchMigrationTab('rollback')">Rollback Migration <span class="pro-badge">Pro</span></button>`;
+    html += `</div>`;
+    // Forward panel
+    html += `<div id="migrationForwardPanel">`;
     html += `<div class="migration-preview-wrap">`;
     html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(sql)}</div>`;
     html += `<div class="migration-preview-fade"></div>`;
@@ -4209,11 +4507,33 @@ function renderMigration(sql, diff) {
       html += `<div class="trial-used-notice">🎁 Pro trial expired</div>`;
     }
     html += `<button class="btn btn-secondary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>`;
-    html += `</div></div>`;
+    html += `</div></div></div>`;
+    // Rollback panel
+    html += `<div id="migrationRollbackPanel" style="display:none;">`;
+    html += `<div class="migration-preview-wrap">`;
+    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(rollbackSql)}</div>`;
+    html += `<div class="migration-preview-fade"></div>`;
+    html += `<div class="migration-preview-cta">`;
+    html += `<div style="font-size:0.9rem;color:var(--text);font-weight:600;margin-bottom:6px;">Rollback is a Pro feature</div>`;
+    html += `<button class="btn btn-secondary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>`;
+    html += `</div></div></div>`;
   } else {
     if (warningsHTML) html += warningsHTML;
+    // Tabs
+    html += `<div class="migration-tabs">`;
+    html += `<button class="migration-tab active" data-tab="forward" onclick="switchMigrationTab('forward')">Forward Migration</button>`;
+    html += `<button class="migration-tab" data-tab="rollback" onclick="switchMigrationTab('rollback')">Rollback Migration</button>`;
+    html += `</div>`;
+    // Forward panel
+    html += `<div id="migrationForwardPanel">`;
     html += `<div class="sql-output"><button class="copy-btn" onclick="copySQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadSQL()">Download .sql</button><button class="copy-btn" style="right:164px" onclick="runMigrationValidation()">Validate</button>${highlightSQL(sql)}</div>`;
     html += `<div id="validationResults"></div>`;
+    html += `</div>`;
+    // Rollback panel
+    html += `<div id="migrationRollbackPanel" style="display:none;">`;
+    html += `<div class="sql-output"><button class="copy-btn" onclick="copyRollbackSQL(this)">Copy</button><button class="copy-btn" style="right:72px" onclick="downloadRollbackSQL()">Download .sql</button><button class="copy-btn" style="right:164px" onclick="runRollbackValidation()">Validate</button>${highlightSQL(rollbackSql)}</div>`;
+    html += `<div id="rollbackValidationResults"></div>`;
+    html += `</div>`;
   }
   container.innerHTML = html;
 }
@@ -4222,6 +4542,44 @@ function downloadSQL() {
   if (!lastMigrationSQL) return;
   downloadFile(lastMigrationSQL, 'schemalens_migration.sql', 'text/plain');
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_sql');
+}
+
+function downloadRollbackSQL() {
+  if (!lastRollbackSQL) return;
+  downloadFile(lastRollbackSQL, 'schemalens_rollback.sql', 'text/plain');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('export_rollback_sql');
+}
+
+function copyRollbackSQL(btn) {
+  if (!lastRollbackSQL) return;
+  navigator.clipboard.writeText(lastRollbackSQL).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 1500);
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('copy_rollback_sql');
+  });
+}
+
+function runRollbackValidation() {
+  if (!lastRollbackSQL) return;
+  const dialect = document.getElementById('dialect').value;
+  const issues = validateMigrationSQL(lastRollbackSQL, dialect);
+  const container = document.getElementById('rollbackValidationResults');
+  if (!container) return;
+  if (issues.length === 0) {
+    container.innerHTML = '<div style="margin-top:12px;padding:12px 16px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;color:var(--success);font-size:0.9rem;">✓ Rollback SQL looks valid — no obvious syntax issues detected.</div>';
+  } else {
+    let html = '<div style="margin-top:12px;">';
+    html += '<div style="font-weight:600;margin-bottom:8px;font-size:0.9rem;">Validation Results</div>';
+    for (const issue of issues) {
+      const color = issue.severity === 'error' ? 'var(--danger)' : 'var(--warning)';
+      const bg = issue.severity === 'error' ? 'rgba(239,68,68,0.08)' : 'rgba(245,158,11,0.08)';
+      const border = issue.severity === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(245,158,11,0.25)';
+      html += `<div style="padding:8px 12px;background:${bg};border:1px solid ${border};border-radius:6px;margin-bottom:6px;font-size:0.85rem;color:${color};"><strong>Line ${issue.line}:</strong> ${issue.message}</div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  }
 }
 
 function validateMigrationSQL(sql, dialect) {
@@ -5686,6 +6044,7 @@ function downloadORM() {
 }
 
 let lastMigrationSQL = '';
+let lastRollbackSQL = '';
 let lastDiff = null;
 let currentSavedDiffId = null;
 let diffCommentsCache = [];
@@ -5748,7 +6107,7 @@ function tryProTrial() {
 
   // Re-render gated features
   if (lastDiff) {
-    renderMigration(lastMigrationSQL, lastDiff);
+    renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff);
     renderORM();
   }
   showError('✓ Pro trial activated! Copy, download, and export are unlocked for 24 hours.');
@@ -5799,14 +6158,14 @@ function applyLicense() {
     checkLicense();
     closeLicenseModal();
     // Re-render migration if results are showing
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastDiff); renderORM(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); }
     return;
   }
   if (validateLicenseKey(key)) {
     localStorage.setItem('schemalens_license', key);
     checkLicense();
     closeLicenseModal();
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastDiff); renderORM(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); }
     if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_activate');
   } else {
     input.style.borderColor = 'var(--danger)';
@@ -7022,7 +7381,9 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   diff.schemaA = schemaA;
   diff.schemaB = schemaB;
   const migrationSQL = generateMigration(diff, dialect);
+  const rollbackSQL = generateRollbackMigration(diff, dialect);
   lastMigrationSQL = migrationSQL;
+  lastRollbackSQL = rollbackSQL;
   lastDiff = diff;
 
   const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
@@ -7047,7 +7408,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
 
   renderSummary(diff, confidenceA, confidenceB, breakingChanges, risk);
   renderVisualDiff(diff, breakingChanges);
-  renderMigration(migrationSQL, diff);
+  renderMigration(migrationSQL, rollbackSQL, diff);
   renderMarkdown();
   renderPDF();
   renderORM();
