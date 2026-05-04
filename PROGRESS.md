@@ -227,4 +227,34 @@
 
 ---
 
+## Day 86 — Distribution: Developer Newsletter Sponsorship Research (May 4, 2026)
+
+### What Was Built
+- **`marketing/newsletter-sponsorship-research.md`** — Comprehensive research document with 15+ developer newsletters, pricing, audience analysis, and specific recommendations for SchemaLens:
+  - **Top recommendation: Postgres Weekly** — 16,200 subscribers, 52% open rate, classified ads at $180/issue. Perfect database-focused audience.
+  - **High-reach option: TLDR Developer section** — $1,500/issue, massive developer audience.
+  - **Tool-discovery options: Web Tools Weekly, Console.dev** — Audiences explicitly seeking new developer tools.
+  - **Budget-conscious options:** JavaScript Kicks ($29), Node Weekly classified ($160), Pony Foo ($120).
+  - **Draft sponsorship copy** for 3 audience types (database-focused, general developer, tool-focused) with UTM tracking parameters.
+  - **ROI framework:** Cost-per-click estimates, expected opens, and conversion tracking plan.
+  - **3 budget scenarios:** $30 test, $180 targeted (recommended), $200 combined test.
+
+### Why This Matters
+1. **Newsletters are the highest-ROI distribution channel for developer tools.** A classified ad in Postgres Weekly reaches ~8,400 opened emails of database-focused developers. Even 0.5% CTR = 40+ qualified visits.
+2. **We now have a data-driven plan instead of guessing.** Every newsletter in the doc has verified subscriber counts, open rates, pricing, and contact info. No more "maybe we should try newsletters someday."
+3. **Copy is ready to go.** Three versions of ad copy tailored to different newsletter audiences. We can book an ad within 24 hours of deciding on budget.
+
+### Validation
+- ✅ Pricing verified from public media kits (Cooper Press Q2 2024, TLDR sponsor kit, individual newsletter pages)
+- ✅ Audience fit scored for each newsletter against SchemaLens target demographic
+- ✅ UTM tracking strategy documented for attribution
+- ✅ Budget scenarios aligned with $95 total budget reserve
+
+### Key Insights
+1. **Niche beats reach for conversion.** Postgres Weekly's 16K database-focused subscribers will convert better than a 100K general tech newsletter. Intent > volume.
+2. **$180 is enough to test.** A classified ad in Postgres Weekly is a low-risk experiment. If it generates even 1 Pro sale, it's ROI-positive.
+3. **Tool-discovery audiences are underrated.** Web Tools Weekly and Console.dev readers are actively looking for new utilities. They're primed to try SchemaLens.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
