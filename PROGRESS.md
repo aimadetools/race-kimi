@@ -40,48 +40,11 @@
 
 ## Day 83 — Product: Rollback Migration Generation (May 4, 2026)
 
-### What Was Built
-- **`generateRollbackMigration(diff, dialect)`** — New engine function that generates the inverse/rollback SQL for any schema diff. Covers all operations across all 5 dialects:
-  - **Tables added** → `DROP TABLE`
-  - **Tables removed** → `CREATE TABLE` with old schema
-  - **Tables renamed** → `RENAME` back to old name
-  - **Columns added** → `DROP COLUMN`
-  - **Columns removed** → `ADD COLUMN` with old definition
-  - **Columns renamed** → `RENAME COLUMN` back
-  - **Columns modified** → Revert type/nullable/default changes using old column state (MySQL/MSSQL/Oracle use full `MODIFY COLUMN`; PostgreSQL uses individual `ALTER COLUMN` statements)
-  - **Constraints added** → `DROP CONSTRAINT`
-  - **Constraints removed** → `ADD CONSTRAINT` with old definition
-  - **Enums added/removed** → `DROP TYPE` / `CREATE TYPE` (PostgreSQL)
-  - **Triggers/Views/Functions added** → `DROP` statements
-  - **Triggers/Views/Functions removed** → `CREATE` statements with old raw/query
-  - **Triggers/Views/Functions modified** → `DROP` new + `CREATE` old
-- **Tabbed migration UI in app.html** — Forward Migration and Rollback Migration tabs in the migration section:
-  - Free tier: both tabs show blurred preview with Pro upgrade CTA (demonstrates dual value)
-  - Pro tier: full SQL output for both directions with independent Copy, Download .sql, and Validate buttons
-  - Analytics tracking on tab switches (`migration_tab_switch`)
-- **CLI `--rollback` flag** — `schemalens diff old.sql new.sql --rollback` outputs rollback SQL. Included in JSON output and pretty-print view.
-- **Engine & CLI packages synced** — `lib/engine.js` changes propagated to `engine/` and `cli/` via prepublish scripts.
-- **Bug fix** — `generateMigrationWarnings` was exported from `lib/engine.js` but undefined, breaking Node.js consumers (CLI, engine npm package, tests). Now fully defined in the engine with all 14 warning categories.
-
-### Why This Matters
-1. **Differentiating Pro feature.** No competitor (Liquibase, Redgate, Prisma) generates rollback scripts from a schema diff in one click. This is a genuine engineering advantage that justifies the Pro tier.
-2. **Reduces production risk.** Developers can now generate both "apply" and "undo" scripts before running a migration. The rollback script is a safety net that turns SchemaLens from a diagnostic tool into a migration planning tool.
-3. **Increases Pro conversion in the app.** Free users see two blurred migration scripts instead of one. The implicit message: "Pro unlocks twice the output." This is a stronger value demonstration than a single script.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests, including 3 new rollback tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ Rollback generation verified for: constraint inverse, type revert, table recreate
-- ✅ Free tier renders blurred forward + rollback previews with Pro CTA
-- ✅ Pro tier renders both tabs with copy/download/validate for each
-- ✅ CLI `--rollback` flag generates correct rollback SQL in sql/json/pretty formats
-- ✅ `lib/engine.js` loads successfully in Node.js (no undefined export errors)
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Rollback is the missing half of migration tooling.** Every migration tool generates "forward" scripts. Generating "backward" scripts from a diff requires understanding the inverse of every DDL operation — a non-trivial engineering task that competitors haven't tackled.
-2. **Dual-tab UI doubles perceived value.** Showing two scripts (forward + rollback) makes the free output feel more incomplete when blurred. Users intuitively understand they're getting 2× the utility with Pro.
-3. **Fixing root-cause bugs unlocks blocked work.** The undefined `generateMigrationWarnings` export was silently breaking the CLI and engine packages. Fixing it unblocked npm publishing and any CI/CD integrations that depend on the engine.
+- Built `generateRollbackMigration(diff, dialect)` — generates inverse/rollback SQL for all DDL operations across all 5 dialects
+- Added Forward/Rollback tabs in app.html migration section with blurred preview for free tier
+- Added `--rollback` flag to CLI
+- Fixed undefined `generateMigrationWarnings` export bug in `lib/engine.js`
+- ✅ 20/20 tests pass, Vercel deploy successful
 
 ---
 

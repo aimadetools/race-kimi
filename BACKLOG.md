@@ -19,7 +19,7 @@
 - **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images, email capture modal, migration recipes page ✅
 - [ ] **P1** Publish `schemalens-engine` to npm (package ready, needs `npm publish` — may need human help for auth)
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
-- [ ] **P2** Research developer newsletter sponsorships ($20–30 budget) for Week 4–5
+- [x] **P2** Research developer newsletter sponsorships ($20–30 budget) for Week 4–5 ✅ Done May 4 — `marketing/newsletter-sponsorship-research.md` with 15+ newsletters, pricing, audience analysis, draft copy, and budget scenarios.
 
 ### Conversion — Unblocked (Buildable Now)
 - **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges ✅
@@ -162,6 +162,10 @@
 
 ### Day 85 (May 4)
 - **Dedicated migration recipe SEO pages:** `add-foreign-key-postgres.html`, `create-index-mysql.html`, `sqlite-alter-table.html` — 3 comprehensive standalone guides targeting high-volume keywords. Each covers all 5 dialects with copy-paste scripts, safety warnings, FAQPage schema.org, and related recipe cards. Cross-linked from index.html (24 tools), tools.html, migration-recipes.html. sitemap.xml updated.
+
+### Day 86 (May 4)
+- **Safe Migration Checker micro-tool:** `tools/safe-migration-checker.html` — audits migration scripts for 12 production safety issues across 5 dialects. Safety score (0-100), issue cards with fix suggestions, sample migrations per dialect, copy report button. Added to index.html (25 tools), tools.html, sitemap.xml.
+- **Newsletter sponsorship research:** `marketing/newsletter-sponsorship-research.md` — 15+ developer newsletters with verified pricing, audience analysis, 3 budget scenarios, and draft ad copy. Top recommendation: Postgres Weekly classified ($180).
 
 ---
 
