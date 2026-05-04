@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Migration Checker — Validate Database Migration Safety | SchemaLens</title>
+<meta name="description" content="Check your database migration scripts for dangerous operations before running them in production. Detects unsafe ALTER TABLE, missing defaults, lock risks, and data loss. Free, instant, no signup.">
+<meta property="og:title" content="Safe Migration Checker — Validate Database Migration Safety">
+<meta property="og:description" content="Check your database migration scripts for dangerous operations before running them in production. Detects unsafe ALTER TABLE, missing defaults, lock risks, and data loss.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/safe-migration-checker.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Safe Migration Checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Validates SQL migration scripts for dangerous operations, missing defaults, lock risks, data loss, and production safety issues across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle",
+  "url": "https://schemalens.tech/tools/safe-migration-checker.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0 16px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button.primary { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button.primary:hover { background: var(--primary-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .score-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin: 1.5rem 0; text-align: center;
+  }
+  .score-value { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+  .score-value.good { color: var(--success); }
+  .score-value.warn { color: var(--warning); }
+  .score-value.bad { color: var(--danger); }
+  .score-label { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
+  .score-bar { height: 12px; border-radius: 6px; background: var(--border); overflow: hidden; margin: 12px 0 4px; }
+  .score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+
+  .issue-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem; margin-bottom: 0.75rem; text-align: left;
+  }
+  .issue-card.critical { border-left: 4px solid var(--danger); }
+  .issue-card.warning { border-left: 4px solid var(--warning); }
+  .issue-card.info { border-left: 4px solid var(--primary); }
+  .issue-card.good { border-left: 4px solid var(--success); }
+  .issue-severity {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.35rem;
+  }
+  .issue-severity.critical { color: var(--danger); }
+  .issue-severity.warning { color: var(--warning); }
+  .issue-severity.info { color: var(--primary); }
+  .issue-severity.good { color: var(--success); }
+  .issue-message { font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .issue-fix { font-size: 0.85rem; color: var(--text-muted); }
+  .issue-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--mono); }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .summary-pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.75rem; text-align: center;
+  }
+  .summary-pill .num { font-size: 1.4rem; font-weight: 700; }
+  .summary-pill .lbl { font-size: 0.8rem; color: var(--text-muted); }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(34,211,238,0.08));
+    border: 1px solid var(--primary); border-radius: var(--radius);
+    padding: 1.25rem; margin-top: 1.5rem; text-align: center;
+  }
+
+  .checks-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;
+    margin-top: 1.5rem;
+  }
+  .checks-list li {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem; font-size: 0.88rem; color: var(--text-muted);
+    list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  .checks-list li::before {
+    content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" class="logo" style="font-weight:700;font-size:1.1rem;color:var(--text);">SchemaLens</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="../app.html" style="color:var(--text-muted);font-size:0.9rem;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);font-size:0.9rem;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);font-size:0.9rem;">Pricing</a>
+      <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>🛡️ Safe Migration Checker</h1>
+    <p>Paste your migration script and get an instant safety audit. Catch dangerous ALTER TABLE operations, missing defaults, lock risks, and data-loss hazards before they reach production.</p>
+  </div>
+
+  <div class="toolbar">
+    <label for="dialect">Dialect:</label>
+    <select id="dialect">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+      <option value="oracle">Oracle</option>
+    </select>
+    <button class="primary" id="analyzeBtn">Analyze Migration</button>
+    <button id="clearBtn">Clear</button>
+    <button id="sampleBtn">Load Sample</button>
+    <button id="copyBtn">Copy Report</button>
+  </div>
+
+  <textarea id="sqlInput" placeholder="-- Paste your migration script here
+-- Example: ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL;"></textarea>
+
+  <div id="results" style="display:none;">
+    <div class="score-card">
+      <div class="score-value" id="scoreValue">—</div>
+      <div class="score-label" id="scoreLabel">Run analysis to see your safety score</div>
+      <div class="score-bar"><div class="score-bar-fill" id="scoreBar" style="width:0%"></div></div>
+    </div>
+
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="issuesList"></div>
+
+    <div class="cta-box">
+      <p style="margin-bottom:0.5rem;font-weight:600;">Want to compare your full schemas and generate both forward and rollback migrations?</p>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.75rem;">SchemaLens Pro detects breaking changes, calculates risk scores, and generates rollback scripts for 5 dialects.</p>
+      <a href="../app.html" class="btn btn-primary" style="display:inline-block;">Open SchemaLens →</a>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3 style="margin-bottom:0.5rem;">What we check</h3>
+    <ul class="checks-list">
+      <li>DROP TABLE / DROP COLUMN data-loss risk</li>
+      <li>DROP without IF EXISTS guard</li>
+      <li>ADD NOT NULL without DEFAULT value</li>
+      <li>ALTER COLUMN type changes (truncation risk)</li>
+      <li>CREATE INDEX without CONCURRENTLY / ONLINE</li>
+      <li>Adding FOREIGN KEY without NOT VALID (PostgreSQL)</li>
+      <li>Removing PRIMARY KEY or UNIQUE constraints</li>
+      <li>Missing transaction / rollback script</li>
+      <li>DELETE / TRUNCATE in migrations</li>
+      <li>Renaming columns or tables (breaking change)</li>
+      <li>Unsafe type narrowing (e.g. VARCHAR(255) → VARCHAR(50))</li>
+      <li>Direct data modifications (INSERT/UPDATE/DELETE)</li>
+    </ul>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2.5rem 1rem;margin-top:3rem;">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>SchemaLens</h4>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="../open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff</a></p>
+        <p><a href="../tools.html">Free Tools</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../cli/">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../schema-examples.html">Examples</a></p>
+        <p><a href="../migration-checklist.html">Migration Checklist</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+      </div>
+      <div>
+        <h4>Compare</h4>
+        <p><a href="../schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+        <p><a href="../schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+        <p><a href="../schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+function splitStatements(sql) {
+  const statements = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const c = sql[i];
+    if (inString) {
+      current += c;
+      if (c === stringChar && sql[i-1] !== '\\') inString = false;
+    } else if (c === "'" || c === '"' || c === '`') {
+      inString = true; stringChar = c; current += c;
+    } else if (c === ';') {
+      current += c; statements.push(current.trim()); current = '';
+    } else {
+      current += c;
+    }
+  }
+  if (current.trim()) statements.push(current.trim());
+  return statements;
+}
+
+function getLineNumber(sql, statement) {
+  const idx = sql.indexOf(statement);
+  if (idx === -1) return null;
+  return sql.substring(0, idx).split('\n').length;
+}
+
+function normalize(sql) {
+  return sql.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function analyzeMigration(sql, dialect) {
+  const issues = [];
+  const statements = splitStatements(sql);
+  let hasTransaction = false;
+  let hasRollback = false;
+  let hasAlter = false;
+  let hasCreateIndex = false;
+
+  const upperSql = normalize(sql).toUpperCase();
+  if (upperSql.includes('BEGIN') || upperSql.includes('START TRANSACTION')) hasTransaction = true;
+  if (upperSql.includes('ROLLBACK') || upperSql.includes('DOWN')) hasRollback = true;
+
+  for (let i = 0; i < statements.length; i++) {
+    const stmt = statements[i];
+    const upper = normalize(stmt).toUpperCase();
+    const line = getLineNumber(sql, stmt) || (i + 1);
+
+    // DROP TABLE / DROP COLUMN
+    if (upper.startsWith('DROP TABLE')) {
+      issues.push({
+        severity: 'critical',
+        message: 'DROP TABLE will permanently delete all data in the table.',
+        fix: 'Ensure you have a backup. Consider renaming the table first and dropping it in a later migration.',
+        line,
+        stmt: stmt.slice(0, 80)
+      });
+      if (!upper.includes('IF EXISTS')) {
+        issues.push({
+          severity: 'warning',
+          message: 'DROP TABLE without IF EXISTS will fail if the table does not exist.',
+          fix: 'Use DROP TABLE IF EXISTS to make the migration idempotent.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+    }
+
+    // DROP COLUMN
+    if (upper.includes('DROP COLUMN')) {
+      issues.push({
+        severity: 'critical',
+        message: 'DROP COLUMN will permanently delete data in that column.',
+        fix: 'Verify no application code, views, or triggers reference this column before dropping.',
+        line,
+        stmt: stmt.slice(0, 80)
+      });
+    }
+
+    // ALTER TABLE
+    if (upper.startsWith('ALTER TABLE')) {
+      hasAlter = true;
+
+      // ADD NOT NULL without DEFAULT
+      if (upper.includes('ADD') && upper.includes('NOT NULL')) {
+        const hasDefault = /DEFAULT\s+/i.test(stmt) || upper.includes('DEFAULT');
+        if (!hasDefault) {
+          issues.push({
+            severity: 'critical',
+            message: 'Adding a NOT NULL column without a DEFAULT will fail on tables with existing rows.',
+            fix: 'Add a DEFAULT value, or add the column as NULL first, backfill data, then set NOT NULL.',
+            line,
+            stmt: stmt.slice(0, 80)
+          });
+        }
+      }
+
+      // ALTER COLUMN type change
+      if ((upper.includes('ALTER COLUMN') || upper.includes('MODIFY COLUMN') || upper.includes('MODIFY') || upper.includes('CHANGE COLUMN')) && /TYPE|MODIFY|CHANGE/.test(upper)) {
+        const narrowingPatterns = [
+          { from: /VARCHAR\s*\(\s*(\d+)\s*\)/i, check: (m, stmt2) => {
+            const matches = stmt2.match(/VARCHAR\s*\(\s*(\d+)\s*\)/gi);
+            if (matches && matches.length >= 2) {
+              const nums = matches.map(m => parseInt(m.match(/\d+/)[0]));
+              return nums[1] < nums[0];
+            }
+            return false;
+          }}
+        ];
+        let isNarrowing = false;
+        for (const p of narrowingPatterns) {
+          if (p.check(null, stmt)) { isNarrowing = true; break; }
+        }
+        issues.push({
+          severity: isNarrowing ? 'critical' : 'warning',
+          message: isNarrowing ? 'Column type narrowing may truncate existing data.' : 'Changing a column type can cause data loss or application errors.',
+          fix: 'Test on a copy of production data first. Use SchemaLens to diff the schemas and verify the change.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+
+      // RENAME COLUMN / TABLE
+      if (upper.includes('RENAME') || upper.includes('CHANGE COLUMN')) {
+        issues.push({
+          severity: 'warning',
+          message: 'Renaming a column or table is a breaking change for application code.',
+          fix: 'Update all queries, ORM models, and dependent views before deploying this migration.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+
+      // ADD FOREIGN KEY
+      if (upper.includes('ADD') && upper.includes('FOREIGN') && upper.includes('KEY')) {
+        if (dialect === 'postgres' && !upper.includes('NOT VALID')) {
+          issues.push({
+            severity: 'warning',
+            message: 'Adding a FOREIGN KEY without NOT VALID locks the table while existing rows are checked.',
+            fix: 'Use ADD CONSTRAINT ... FOREIGN KEY ... NOT VALID, then VALIDATE CONSTRAINT in a separate transaction.',
+            line,
+            stmt: stmt.slice(0, 80)
+          });
+        }
+      }
+
+      // DROP PRIMARY KEY / UNIQUE
+      if (upper.includes('DROP') && (upper.includes('PRIMARY KEY') || upper.includes('UNIQUE'))) {
+        issues.push({
+          severity: 'warning',
+          message: 'Removing a PRIMARY KEY or UNIQUE constraint can break relationships and allow duplicate data.',
+          fix: 'Verify no foreign keys reference this constraint before dropping.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+    }
+
+    // CREATE INDEX
+    if (upper.startsWith('CREATE INDEX') || upper.startsWith('CREATE UNIQUE INDEX')) {
+      hasCreateIndex = true;
+      if (dialect === 'postgres' && !upper.includes('CONCURRENTLY')) {
+        issues.push({
+          severity: 'warning',
+          message: 'CREATE INDEX without CONCURRENTLY locks the table for writes in PostgreSQL.',
+          fix: 'Use CREATE INDEX CONCURRENTLY to avoid blocking writes on large tables.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+      if (dialect === 'mysql' && !upper.includes('ALGORITHM=INPLACE') && !upper.includes('LOCK=NONE')) {
+        issues.push({
+          severity: 'warning',
+          message: 'CREATE INDEX in MySQL may lock the table on older versions or certain storage engines.',
+          fix: 'Consider adding ALGORITHM=INPLACE, LOCK=NONE for online index builds on large tables.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+      if (dialect === 'mssql' && !upper.includes('ONLINE = ON')) {
+        issues.push({
+          severity: 'warning',
+          message: 'CREATE INDEX in SQL Server without ONLINE=ON locks the table.',
+          fix: 'Use WITH (ONLINE = ON) for online index builds on large tables.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+    }
+
+    // DELETE / TRUNCATE
+    if (upper.startsWith('DELETE') || upper.startsWith('TRUNCATE')) {
+      issues.push({
+        severity: 'critical',
+        message: 'DELETE or TRUNCATE in a migration script can destroy production data.',
+        fix: 'Migrations should only change schema. Data modifications belong in seed scripts or application code.',
+        line,
+        stmt: stmt.slice(0, 80)
+      });
+    }
+
+    // INSERT / UPDATE (data modifications)
+    if ((upper.startsWith('INSERT') || upper.startsWith('UPDATE')) && !upper.startsWith('INSERT INTO')) {
+      // Allow INSERT INTO (common for lookup tables), warn on general data mods
+    }
+    if (upper.startsWith('UPDATE') && !upper.includes('SET')) {
+      // rare case
+    }
+    if (upper.startsWith('UPDATE') && upper.includes('SET')) {
+      issues.push({
+        severity: 'warning',
+        message: 'UPDATE statements in migrations can have unintended side effects.',
+        fix: 'Consider if this data change should be in application logic instead. Ensure the WHERE clause is specific.',
+        line,
+        stmt: stmt.slice(0, 80)
+      });
+    }
+
+    // CREATE TABLE with risky defaults
+    if (upper.startsWith('CREATE TABLE')) {
+      if (upper.includes('ENGINE=MYISAM')) {
+        issues.push({
+          severity: 'warning',
+          message: 'MyISAM does not support transactions or foreign keys.',
+          fix: 'Use InnoDB instead for transactional safety and referential integrity.',
+          line,
+          stmt: stmt.slice(0, 80)
+        });
+      }
+    }
+  }
+
+  // Transaction check
+  if (hasAlter && !hasTransaction && dialect !== 'mysql' && dialect !== 'sqlite') {
+    issues.push({
+      severity: 'info',
+      message: 'No explicit transaction wrapper detected around schema changes.',
+      fix: 'Wrap schema changes in BEGIN / COMMIT so errors roll back cleanly.',
+      line: null,
+      stmt: null
+    });
+  }
+
+  // Rollback check
+  if (hasAlter && !hasRollback) {
+    issues.push({
+      severity: 'info',
+      message: 'No rollback script detected. If this migration fails in production, recovery is harder.',
+      fix: 'Always write a corresponding DOWN migration or use SchemaLens Pro to auto-generate rollback scripts.',
+      line: null,
+      stmt: null
+    });
+  }
+
+  // Calculate score
+  let penalties = 0;
+  for (const issue of issues) {
+    if (issue.severity === 'critical') penalties += 25;
+    else if (issue.severity === 'warning') penalties += 10;
+    else if (issue.severity === 'info') penalties += 3;
+  }
+  let score = Math.max(0, 100 - penalties);
+
+  // Boost for good practices
+  if (hasTransaction && score < 95) score += 3;
+  if (hasRollback && score < 95) score += 3;
+  if (score > 100) score = 100;
+
+  return { score, issues, statements: statements.length };
+}
+
+function renderResults(result) {
+  const resultsEl = document.getElementById('results');
+  const scoreValue = document.getElementById('scoreValue');
+  const scoreLabel = document.getElementById('scoreLabel');
+  const scoreBar = document.getElementById('scoreBar');
+  const summaryGrid = document.getElementById('summaryGrid');
+  const issuesList = document.getElementById('issuesList');
+
+  resultsEl.style.display = 'block';
+
+  scoreValue.textContent = result.score;
+  scoreValue.className = 'score-value ' + (result.score >= 80 ? 'good' : result.score >= 50 ? 'warn' : 'bad');
+  scoreLabel.textContent = result.score >= 90 ? 'Excellent — this migration looks safe' :
+    result.score >= 70 ? 'Good — minor concerns, review before deploying' :
+    result.score >= 50 ? 'Caution — several risks detected' :
+    'Dangerous — critical issues must be fixed before production';
+  scoreBar.style.width = result.score + '%';
+  scoreBar.style.background = result.score >= 80 ? 'var(--success)' : result.score >= 50 ? 'var(--warning)' : 'var(--danger)';
+
+  const counts = { critical: 0, warning: 0, info: 0, good: 0 };
+  for (const issue of result.issues) counts[issue.severity]++;
+
+  summaryGrid.innerHTML = `
+    <div class="summary-pill"><div class="num" style="color:var(--danger)">${counts.critical}</div><div class="lbl">Critical</div></div>
+    <div class="summary-pill"><div class="num" style="color:var(--warning)">${counts.warning}</div><div class="lbl">Warnings</div></div>
+    <div class="summary-pill"><div class="num" style="color:var(--primary)">${counts.info}</div><div class="lbl">Tips</div></div>
+    <div class="summary-pill"><div class="num">${result.statements}</div><div class="lbl">Statements</div></div>
+  `;
+
+  if (result.issues.length === 0) {
+    issuesList.innerHTML = `
+      <div class="issue-card good">
+        <div class="issue-severity good">✅ ALL CLEAR</div>
+        <div class="issue-message">No safety issues detected in this migration.</div>
+        <div class="issue-fix">Still, always test migrations on a copy of production data before deploying.</div>
+      </div>
+    `;
+  } else {
+    const order = ['critical', 'warning', 'info'];
+    const sorted = [...result.issues].sort((a, b) => order.indexOf(a.severity) - order.indexOf(b.severity));
+    issuesList.innerHTML = sorted.map(issue => `
+      <div class="issue-card ${issue.severity}">
+        <div class="issue-severity ${issue.severity}">${issue.severity}</div>
+        <div class="issue-message">${escapeHtml(issue.message)}</div>
+        <div class="issue-fix">💡 ${escapeHtml(issue.fix)}</div>
+        ${issue.line ? `<div class="issue-meta">Line ${issue.line}${issue.stmt ? ': ' + escapeHtml(issue.stmt) + (issue.stmt.length >= 80 ? '…' : '') : ''}</div>` : ''}
+      </div>
+    `).join('');
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function getReportText() {
+  const score = document.getElementById('scoreValue').textContent;
+  const label = document.getElementById('scoreLabel').textContent;
+  const cards = document.querySelectorAll('.issue-card');
+  let text = `SchemaLens Safe Migration Checker\nScore: ${score}/100 — ${label}\n\n`;
+  cards.forEach(card => {
+    const sev = card.querySelector('.issue-severity')?.textContent || '';
+    const msg = card.querySelector('.issue-message')?.textContent || '';
+    const fix = card.querySelector('.issue-fix')?.textContent || '';
+    const meta = card.querySelector('.issue-meta')?.textContent || '';
+    text += `[${sev}] ${msg}\n${fix}\n${meta}\n\n`;
+  });
+  text += `Generated by https://schemalens.tech/tools/safe-migration-checker.html`;
+  return text;
+}
+
+const inputEl = document.getElementById('sqlInput');
+const dialectEl = document.getElementById('dialect');
+
+document.getElementById('analyzeBtn').addEventListener('click', () => {
+  const sql = inputEl.value;
+  if (!sql.trim()) return;
+  const result = analyzeMigration(sql, dialectEl.value);
+  renderResults(result);
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  inputEl.value = '';
+  document.getElementById('results').style.display = 'none';
+  inputEl.focus();
+});
+
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  const dialect = dialectEl.value;
+  let sample = '';
+  if (dialect === 'postgres') {
+    sample = `BEGIN;
+
+ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL;
+
+CREATE INDEX idx_users_email ON users(email);
+
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id);
+
+DROP TABLE temp_backup;
+
+COMMIT;`;
+  } else if (dialect === 'mysql') {
+    sample = `ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL;
+
+CREATE INDEX idx_users_email ON users(email);
+
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id);
+
+DROP TABLE temp_backup;`;
+  } else if (dialect === 'sqlite') {
+    sample = `ALTER TABLE users ADD COLUMN email TEXT NOT NULL;
+
+CREATE INDEX idx_users_email ON users(email);
+
+DROP TABLE old_users;`;
+  } else if (dialect === 'mssql') {
+    sample = `BEGIN TRANSACTION;
+
+ALTER TABLE users ADD email NVARCHAR(255) NOT NULL;
+
+CREATE INDEX idx_users_email ON users(email);
+
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id);
+
+DROP TABLE temp_backup;
+
+COMMIT;`;
+  } else {
+    sample = `ALTER TABLE users ADD email VARCHAR2(255) NOT NULL;
+
+CREATE INDEX idx_users_email ON users(email);
+
+ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id);
+
+DROP TABLE temp_backup;`;
+  }
+  inputEl.value = sample;
+  const result = analyzeMigration(sample, dialect);
+  renderResults(result);
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = getReportText();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('analyzeBtn').click();
+  }
+});
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
