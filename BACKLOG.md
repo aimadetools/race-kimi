@@ -21,13 +21,11 @@
 - **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images, email capture modal ✅
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall, email capture modal with lead magnet, "How it works" in-app explainer ✅
-- [ ] **P1** Build "Share Your Safety Score" viral feature — users share diff risk score + warning count on social
+- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall, email capture modal with lead magnet, "How it works" in-app explainer, "Share Your Safety Score" viral feature ✅
 - [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
 
 ### Product — Conversion & Retention (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings, email capture modal, "How it works" explainer modal ✅
-- [ ] **P1** Build "Share Your Safety Score" viral feature — users share diff risk score + warning count on social
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings, email capture modal, "How it works" explainer modal, "Share Your Safety Score" viral feature ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -139,7 +137,7 @@
 ### Day 75 (May 2)
 - **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
 
-### Days 76–81 (May 3–4)
+### Days 76–82 (May 3–4)
 - **Open-source trust:** `open-source.html`, standalone `engine/` package npm-ready, MIT badge on index.html, footer cross-links updated.
 - **Bug fixes:** `schemalens-cli@1.0.1` fixed broken global install (prepublish script), root LICENSE added, README tool count corrected 17→21.
 - **VS Code Extension:** Marketplace icon (128×128 PNG) added, package.json updated.
@@ -147,6 +145,7 @@
 - **Launch Special in-app:** Migration and ORM paywalls now prominently display $19/first-year offer with scarcity copy and link to `launch-special.html`.
 - **Email capture modal:** Triggers after first successful diff, offers Migration Safety Checklist lead magnet, integrates with `/api/subscribe`, tracks analytics, admin source breakdown.
 - **"How it works" explainer modal:** 4-section trust builder (custom parser, semantic diff, privacy-first, CLI) with "How it works" pill in results summary bar and welcome state feature card. Counters "vibe-coded" perception.
+- **"Share Your Safety Score" viral feature:** New 🛡️ Safety tab in app.html share modal with branded score card image, warning breakdown, and social share buttons. Clickable safety score pill in diff results summary bar.
 
 ---
 
@@ -164,7 +163,7 @@
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals, "Share Your Safety Score" viral feature ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -187,4 +186,4 @@
 
 ---
 
-*Backlog reprioritized May 3, 2026. Next highest-priority unblocked buildable tasks: (1) Email capture modal after first diff to build nurture list, (2) "Share Your Safety Score" viral loop, (3) Rollback migration generation as differentiating Pro feature.*
+*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Rollback migration generation as differentiating Pro feature, (2) Review analytics keywords once SUPABASE_SERVICE_ROLE_KEY is available, (3) Publish `schemalens-engine` to npm.*

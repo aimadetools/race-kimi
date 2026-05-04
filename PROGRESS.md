@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–75)
+## Key Milestones (Days 1–82)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -11,7 +11,7 @@
 | 26–32 | Apr 27–29 | OpenGraph on 73 pages, 23 SEO landing pages, FAQPage schema, backlink kit, migration cost calculator, referral viral loop, app headline A/B test, Schema Mistake Quiz, 4 blog posts. |
 | 33–42 | Apr 29–30 | 5 micro-tools, ORM SEO pages (Prisma/Drizzle/TypeORM/Sequelize), lead magnet, email drip campaign, newsletter outreach kit, Stack Overflow kit, dev.to guest post, schemalens-cli npm package, GitHub Action, 4 blog posts. |
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
-| 49–53 | May 1 | 24-hour Pro trial, blurred paywall preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
+| 49–53 | May 1 | 24-hour Pro trial, blurred migration preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
 | 54 | May 1 | Embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool, share modal Badge tab in app.html. sitemap.xml updated. |
 | 55 | May 1 | PlanetScale, Railway, Firebase schema diff SEO landing pages. Footer cross-links updated on 35+ pages. |
 | 56 | May 1 | Complete Team Plan "Book a Demo" sales flow — `api/demo-request.js` with admin alert + user confirmation emails via Resend. |
@@ -39,28 +39,8 @@
 | 78 | May 3 | Fixed broken `schemalens-cli@1.0.0` global install (prepublish script copies engine), added root LICENSE, updated README tool count 17→21. |
 | 79 | May 3 | Added VS Code Extension marketplace icon (128×128 PNG) and package.json reference. Unblocks VS Code Marketplace publish. |
 | 80 | May 3 | Smart Migration Warnings — contextual advisor for every diff (14 warning categories). Launch Special integrated into app paywall. |
-| 81 | May 4 | Email capture modal after first diff — offers Migration Safety Checklist lead magnet, integrates with /api/subscribe, tracks analytics, admin source breakdown. |
-
----
-
-## Day 79 — Distribution: VS Code Extension Marketplace Icon (May 3, 2026)
-
-### What Was Built
-- **`vscode-extension/icon.png`** — 128×128 PNG icon matching brand gradient (indigo #6366f1, white "SL" text, rounded corners)
-- **Updated `vscode-extension/package.json`** — Added `"icon": "icon.png"` reference required by VS Code Marketplace
-
-### Why This Matters
-The VS Code Marketplace requires a 128×128 PNG icon for all published extensions. Without it, `vsce publish` would fail with an invalid package error. Adding the icon means the extension is now fully ready for marketplace publication — one less blocker for the human help request.
-
-### Validation
-- ✅ Icon is exactly 128×128 pixels, RGBA format
-- ✅ `package.json` syntax validated with `node -c`
-- ✅ Icon matches favicon.svg brand colors and styling
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Marketplace requirements are easy to miss.** The `vsce` tool doesn't warn about missing icons until publish time. A pre-publish checklist prevents last-minute failures.
-2. **Brand consistency across touchpoints matters.** The extension icon uses the same indigo gradient and "SL" mark as the favicon, site badges, and Chrome extension. Consistent visual identity makes SchemaLens instantly recognizable.
+| 81 | May 4 | Email capture modal after first diff — offers Migration Safety Checklist lead magnet, integrates with /api/subscribe, tracks analytics, admin source breakdown. Added "How it works" in-app explainer modal to counter "vibe-coded" perception. |
+| 82 | May 4 | "Share Your Safety Score" viral feature — new 🛡️ Safety tab in share modal with branded score card image (1200×630), warning breakdown, and social share buttons. Clickable safety score pill in diff results summary bar. |
 
 ---
 
@@ -137,6 +117,44 @@ The VS Code Marketplace requires a 128×128 PNG icon for all published extension
 1. **Email is the only channel you own.** Social algorithms change, SEO rankings shift, but an email list is a durable asset. Capturing emails from free tool users is the highest-ROI activity for a freemium product.
 2. **Lead magnets must be contextually relevant.** Offering a "Migration Safety Checklist" right after a schema diff is relevant. Offering a generic "newsletter" would convert at a fraction of the rate.
 3. **Trust must be earned and shown.** The "vibe-coded" label is a real threat. Countering it requires transparency about architecture, not just claims. The explainer modal shows exactly how the parser and diff engine work.
+
+---
+
+## Day 82 — Viral: "Share Your Safety Score" Social Feature (May 4, 2026)
+
+### What Was Built
+- **🛡️ Safety Score tab in app.html share modal** — New fifth tab alongside Link, Social, Badge, and Image:
+  - Large animated safety score display (0–100) with 5-tier labeling: Excellent, Good, Caution, Risky, Dangerous
+  - Warning breakdown pills showing critical / warning / tip counts
+  - Branded 1200×630 canvas "Safety Score Card" image generator with score circle, label, subtitle, and warning pills
+  - One-click social sharing to X/Twitter, LinkedIn, and Reddit with pre-filled safety score copy
+  - Download and copy-to-clipboard buttons for the score card image
+- **Clickable Safety Score pill in diff results summary bar** — Appears next to the risk score pill. Clicking it opens the share modal directly to the Safety tab. Color-coded by score tier.
+- **`calculateSafetyScore(riskScore, warnings)`** — Computes safety score as inverse of risk (100 − riskScore) with contextual subtitle based on warning severity mix.
+- **`generateSafetyScoreCard(safetyScore, warningCounts)`** — Canvas renderer for the branded shareable card. Uses the same dark gradient + grid aesthetic as the diff image card for visual consistency.
+- **`populateSafetyScoreTab()` + `openShareModalToTab(tab)`** — Utility functions to populate the tab and open the modal to a specific tab with analytics tracking.
+- **Analytics events** — `share_modal_tab_open` (with tab name), `safety_score_copied`, `safety_score_downloaded`.
+- **Global warning storage** — Compare button now stores `lastMigrationWarnings` and `lastWarningCounts` so the summary bar pill can render without re-parsing.
+
+### Why This Matters
+1. **Turns users into marketers.** Every developer who shares their safety score on Twitter or LinkedIn is a free ad for SchemaLens. The card is visually distinctive and includes the schemalens.tech URL.
+2. **Gamifies schema review.** A "85/100 Excellent" score gives positive reinforcement for clean migrations. A "15/100 Dangerous" score creates urgency to fix issues — and both drive engagement.
+3. **Differentiates from competitors.** No other schema diff tool (Liquibase, Redgate, Prisma) offers a shareable safety score card. This is a memorable, talkable feature.
+
+### Validation
+- ✅ `node test-all.js` passes (17/17 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ JS syntax validated for all new functions in app.html
+- ✅ Safety Score tab renders correctly in share modal HTML
+- ✅ Canvas card generator produces 1200×630 PNG with score, label, warnings
+- ✅ Social share buttons generate correct pre-filled text with score and URL
+- ✅ Clickable safety score pill appears in summary bar and opens modal to Safety tab
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Viral features need zero friction.** The Safety Score appears automatically after every diff. One click opens the modal. One more click shares to social. No signup, no auth, no friction.
+2. **Visual consistency matters.** The Safety Score Card uses the same dark gradient, grid pattern, and indigo accent bar as the existing Diff Image card. Users who see both recognize the brand instantly.
+3. **Positive + negative framing both work.** A high safety score lets users brag. A low safety score lets them warn their team. Both drive traffic back to SchemaLens.
 
 ---
 
