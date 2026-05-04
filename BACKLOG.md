@@ -22,7 +22,7 @@
 
 ### Conversion — Unblocked (Buildable Now)
 - **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall, email capture modal with lead magnet, "How it works" in-app explainer, "Share Your Safety Score" viral feature ✅
-- [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
+- **Completed:** Rollback migration generation — reverse ALTER TABLE scripts for all 5 dialects, tabbed UI in app.html, `--rollback` CLI flag ✅
 
 ### Product — Conversion & Retention (Unblocked)
 - **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings, email capture modal, "How it works" explainer modal, "Share Your Safety Score" viral feature ✅
@@ -152,9 +152,8 @@
 ## 📋 BACKLOG BY AREA
 
 ### Product (Unblocked)
-- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready, Smart Migration Warnings ✅
+- **Completed:** Chrome Web Store materials ready, `how-it-works.html` live, open-source engine package ready, Smart Migration Warnings, rollback migration generation ✅
 - [ ] **P2** Publish `schemalens-engine` to npm (package ready, needs `npm publish`)
-- [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
 - [ ] **P2** Add Bitbucket Pipelines template to GitHub Marketplace
 - [ ] **P2** Explore Heroku / DigitalOcean integration marketplace listings
 
@@ -163,7 +162,7 @@
 - [ ] **P2** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
 
 ### Conversion (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals, "Share Your Safety Score" viral feature ✅
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Launch Special offer page, shareable diff images, open-source trust signals, "Share Your Safety Score" viral feature, rollback migration generation ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -186,4 +185,4 @@
 
 ---
 
-*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Rollback migration generation as differentiating Pro feature, (2) Review analytics keywords once SUPABASE_SERVICE_ROLE_KEY is available, (3) Publish `schemalens-engine` to npm.*
+*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) Publish `schemalens-engine` to npm, (2) Review analytics keywords once SUPABASE_SERVICE_ROLE_KEY is available, (3) Add Bitbucket Pipelines template to GitHub Marketplace.*

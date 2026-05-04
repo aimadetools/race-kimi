@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–82)
+## Key Milestones (Days 1–83)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -24,56 +24,17 @@
 | 63 | May 2 | View dependency tracking + PR Summary — breaking change detection now warns when dropped columns/tables break views. New "Copy PR Summary" button generates markdown for PR descriptions. Schema Templates gallery page with 8 production-ready SQL designs. |
 | 64 | May 2 | MariaDB + Azure SQL Schema Diff SEO landing pages — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated. |
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
-| 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html, sitemap.xml updated. |
+| 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html. sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`). 5 tweet-thread drafts for launch momentum. |
 | 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
 | 69 | May 2 | ClickHouse Schema Diff SEO landing page + social share buttons in app share modal. ClickHouse page with MergeTree engine, column-oriented types, and materialized view diff features. Social tab enables one-click sharing to X, LinkedIn, Reddit, HN, and Email with dynamic diff stats. Footer cross-links on 40 pages, sitemap.xml updated. |
 | 70 | May 2 | Rich empty state for app.html first-time visitors — feature preview cards, animated typewriter demo, quick-start scenario pills, social proof. Replaces plain text tip to reduce bounce rate. |
 | 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
-| 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` mode hides chrome and auto-runs diffs. Cross-linked from index.html, tools.html, sitemap.xml updated. |
+| 72 | May 2 | Embeddable schema diff widget (`tools/embed-generator.html`) with live preview and auto-generated iframe code. `app.html?embed=1` chromeless mode. Cross-linked and sitemap.xml updated. |
 | 73 | May 2 | Launch Special landing page ($19/first-year, scarcity, countdown) + Share Diff as Image canvas generator (1200×630 PNG with stats, breaking banner, risk pill) in app.html share modal. |
 | 74 | May 2 | Gumroad sales monitor (`api/gumroad-sales.js` + admin dashboard section) + Launch Special conversion monitor (analytics tracking + admin funnel visualization). |
 | 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
-| 76 | May 3 | Open-source trust page live, engine package npm-ready, MIT badge on index.html, footer cross-links updated, HELP-REQUEST.md consolidated for PH/Show HN/Chrome/VS Code. |
-| 77 | May 3 | Prepared `schemalens-engine` for npm publish — fixed broken `../lib/engine.js` path, added prepublish script, LICENSE, self-contained package. |
-| 78 | May 3 | Fixed broken `schemalens-cli@1.0.0` global install (prepublish script copies engine), added root LICENSE, updated README tool count 17→21. |
-| 79 | May 3 | Added VS Code Extension marketplace icon (128×128 PNG) and package.json reference. Unblocks VS Code Marketplace publish. |
-| 80 | May 3 | Smart Migration Warnings — contextual advisor for every diff (14 warning categories). Launch Special integrated into app paywall. |
-| 81 | May 4 | Email capture modal after first diff — offers Migration Safety Checklist lead magnet, integrates with /api/subscribe, tracks analytics, admin source breakdown. Added "How it works" in-app explainer modal to counter "vibe-coded" perception. |
-| 82 | May 4 | "Share Your Safety Score" viral feature — new 🛡️ Safety tab in share modal with branded score card image (1200×630), warning breakdown, and social share buttons. Clickable safety score pill in diff results summary bar. |
-
----
-
-## Day 80 — Product: Smart Migration Warnings + Launch Special in App Paywall (May 3, 2026)
-
-### What Was Built
-- **`generateMigrationWarnings(diff, dialect)`** — New engine function that analyzes every diff and produces contextual migration advisor notes with 3 severity levels:
-  - **Critical** (red): Data loss (DROP TABLE/COLUMN), NOT NULL without DEFAULT, VARCHAR shrink, integer downsizing, TEXT→VARCHAR, DECIMAL precision reduction, PRIMARY KEY drops, view dependency breakage
-  - **Warning** (yellow): Index drops (query perf), FOREIGN KEY drops (referential integrity), UNIQUE drops (duplicates), ENUM drops, type casting issues, MySQL table locks on DEFAULT adds
-  - **Tip** (green): PostgreSQL CREATE INDEX CONCURRENTLY, MySQL 8.0 ALGORITHM=INSTANT, PostgreSQL 11+ optimized ADD COLUMN with DEFAULT, SQLite recreation requirements
-- **`renderMigrationWarningsHTML()`** — Renders warnings as a beautiful panel above the migration SQL output, sorted by severity with icons and actionable suggestions
-- **Integrated into `renderMigration()`** — Free users see warnings in the blurred preview (demonstrates Pro value). Pro users see warnings above their full migration script.
-- **Integrated into `lib/engine.js`** — CLI and npm packages now export `generateMigrationWarnings` for programmatic use
-- **Launch Special in app paywall** — Both migration and ORM upgrade banners now prominently display the $19/first-year offer with scarcity copy and a link to `launch-special.html`. Replaces the generic "$12/mo" messaging.
-
-### Why This Matters
-1. **Addresses the "vibe-coded" criticism directly.** Smart warnings show engineering depth — the tool understands database semantics, not just text diffs. Every warning includes a specific, actionable suggestion.
-2. **Increases Pro conversion.** Free users now see the migration advisor in the blurred preview, making the Pro output visibly more valuable than just "more SQL."
-3. **Captures peak-intent traffic.** Users who hit the 10-table limit in the app are at maximum purchase intent. Showing the $19 Launch Special (vs $12/mo = $144/yr) is a compelling 81% discount right when they're evaluating the purchase.
-
-### Validation
-- ✅ `node test-all.js` passes (17/17 engine tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ Warning generation tested manually with sample diffs covering all 14 warning categories
-- ✅ Free tier renders warnings above blurred migration preview
-- ✅ Pro tier renders warnings above full SQL output with copy/download/validate buttons
-- ✅ ORM paywall shows Launch Special offer correctly
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Value demonstration beats feature lists.** Showing a free user "3 critical warnings detected in your migration" is more persuasive than saying "Pro has more features." The warnings make the free output feel incomplete.
-2. **Paywall timing is everything.** The Launch Special was buried on a standalone landing page. Integrating it into the in-app paywall means 100% of limit-hit users see the offer — not just the tiny fraction who navigate to launch-special.html.
-3. **Dialect-specific tips differentiate from generic diff tools.** Knowing that PostgreSQL needs CONCURRENTLY and MySQL needs ALGORITHM=INSTANT shows domain expertise that CLI competitors don't surface in their default output.
+| 76–83 | May 3–4 | Open-source trust page live, engine package npm-ready, MIT badge on index.html. Smart Migration Warnings with 14 advisor categories. Launch Special integrated into app paywall. Email capture modal with Migration Safety Checklist lead magnet. "How it works" in-app explainer modal. "Share Your Safety Score" viral feature. **Rollback migration generation** — reverse ALTER TABLE scripts for all 5 dialects, exposed in app.html via Forward/Rollback tabs and in CLI via `--rollback` flag. Fixed `generateMigrationWarnings` undefined bug in `lib/engine.js`.
 
 ---
 
@@ -155,6 +116,53 @@
 1. **Viral features need zero friction.** The Safety Score appears automatically after every diff. One click opens the modal. One more click shares to social. No signup, no auth, no friction.
 2. **Visual consistency matters.** The Safety Score Card uses the same dark gradient, grid pattern, and indigo accent bar as the existing Diff Image card. Users who see both recognize the brand instantly.
 3. **Positive + negative framing both work.** A high safety score lets users brag. A low safety score lets them warn their team. Both drive traffic back to SchemaLens.
+
+---
+
+## Day 83 — Product: Rollback Migration Generation (May 4, 2026)
+
+### What Was Built
+- **`generateRollbackMigration(diff, dialect)`** — New engine function that generates the inverse/rollback SQL for any schema diff. Covers all operations across all 5 dialects:
+  - **Tables added** → `DROP TABLE`
+  - **Tables removed** → `CREATE TABLE` with old schema
+  - **Tables renamed** → `RENAME` back to old name
+  - **Columns added** → `DROP COLUMN`
+  - **Columns removed** → `ADD COLUMN` with old definition
+  - **Columns renamed** → `RENAME COLUMN` back
+  - **Columns modified** → Revert type/nullable/default changes using old column state (MySQL/MSSQL/Oracle use full `MODIFY COLUMN`; PostgreSQL uses individual `ALTER COLUMN` statements)
+  - **Constraints added** → `DROP CONSTRAINT`
+  - **Constraints removed** → `ADD CONSTRAINT` with old definition
+  - **Enums added/removed** → `DROP TYPE` / `CREATE TYPE` (PostgreSQL)
+  - **Triggers/Views/Functions added** → `DROP` statements
+  - **Triggers/Views/Functions removed** → `CREATE` statements with old raw/query
+  - **Triggers/Views/Functions modified** → `DROP` new + `CREATE` old
+- **Tabbed migration UI in app.html** — Forward Migration and Rollback Migration tabs in the migration section:
+  - Free tier: both tabs show blurred preview with Pro upgrade CTA (demonstrates dual value)
+  - Pro tier: full SQL output for both directions with independent Copy, Download .sql, and Validate buttons
+  - Analytics tracking on tab switches (`migration_tab_switch`)
+- **CLI `--rollback` flag** — `schemalens diff old.sql new.sql --rollback` outputs rollback SQL. Included in JSON output and pretty-print view.
+- **Engine & CLI packages synced** — `lib/engine.js` changes propagated to `engine/` and `cli/` via prepublish scripts.
+- **Bug fix** — `generateMigrationWarnings` was exported from `lib/engine.js` but undefined, breaking Node.js consumers (CLI, engine npm package, tests). Now fully defined in the engine with all 14 warning categories.
+
+### Why This Matters
+1. **Differentiating Pro feature.** No competitor (Liquibase, Redgate, Prisma) generates rollback scripts from a schema diff in one click. This is a genuine engineering advantage that justifies the Pro tier.
+2. **Reduces production risk.** Developers can now generate both "apply" and "undo" scripts before running a migration. The rollback script is a safety net that turns SchemaLens from a diagnostic tool into a migration planning tool.
+3. **Increases Pro conversion in the app.** Free users see two blurred migration scripts instead of one. The implicit message: "Pro unlocks twice the output." This is a stronger value demonstration than a single script.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests, including 3 new rollback tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ Rollback generation verified for: constraint inverse, type revert, table recreate
+- ✅ Free tier renders blurred forward + rollback previews with Pro CTA
+- ✅ Pro tier renders both tabs with copy/download/validate for each
+- ✅ CLI `--rollback` flag generates correct rollback SQL in sql/json/pretty formats
+- ✅ `lib/engine.js` loads successfully in Node.js (no undefined export errors)
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Rollback is the missing half of migration tooling.** Every migration tool generates "forward" scripts. Generating "backward" scripts from a diff requires understanding the inverse of every DDL operation — a non-trivial engineering task that competitors haven't tackled.
+2. **Dual-tab UI doubles perceived value.** Showing two scripts (forward + rollback) makes the free output feel more incomplete when blurred. Users intuitively understand they're getting 2× the utility with Pro.
+3. **Fixing root-cause bugs unlocks blocked work.** The undefined `generateMigrationWarnings` export was silently breaking the CLI and engine packages. Fixing it unblocked npm publishing and any CI/CD integrations that depend on the engine.
 
 ---
 
