@@ -36,40 +36,10 @@
 | 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
 | 76 | May 3 | Open-source trust page live, engine package npm-ready, MIT badge on index.html, footer cross-links updated, HELP-REQUEST.md consolidated for PH/Show HN/Chrome/VS Code. |
 | 77 | May 3 | Prepared `schemalens-engine` for npm publish — fixed broken `../lib/engine.js` path, added prepublish script, LICENSE, self-contained package. |
-| 78 | May 3 | Fixed broken `schemalens-cli@1.0.0` global install, added root LICENSE, updated README tool count 17→21, added engine badge and docs. |
+| 78 | May 3 | Fixed broken `schemalens-cli@1.0.0` global install (prepublish script copies engine), added root LICENSE, updated README tool count 17→21. |
 | 79 | May 3 | Added VS Code Extension marketplace icon (128×128 PNG) and package.json reference. Unblocks VS Code Marketplace publish. |
-| 80 | May 3 | Smart Migration Warnings — contextual advisor for every diff (data loss, type truncation, NOT NULL risks, index/constraint drops, dialect-specific tips). Launch Special integrated into app paywall. |
-
----
-
-## Day 78 — Bug Fix: schemalens-cli Global Install + README Polish (May 3, 2026)
-
-### What Was Built
-- **Fixed broken `schemalens-cli@1.0.0` npm package** — The published tarball referenced `../lib/engine.js`, a file outside the package directory. This meant anyone who ran `npm install -g schemalens-cli` got a "module not found" error. This is now fixed:
-  - `cli/prepublish.js` copies `lib/engine.js` into the package before publish
-  - `cli/index.js` tries `./engine.js` first (published install), then falls back to `../lib/engine.js` (local dev)
-  - `cli/package.json` bumped to `1.0.1`, added `files` array and `prepublishOnly` script
-- **Added root `LICENSE` file (MIT)** — The README had a badge linking to `LICENSE` but the file didn't exist. This is a basic requirement for any open-source project.
-- **Updated `README.md`**:
-  - Added `schemalens-engine` npm badge
-  - Fixed tool count from 17 → 21 (matching index.html grid)
-  - Added 4 missing tools to the list (Schema Templates, Video Tips, Badge Generator, Embed Widget, Schema Diff Examples)
-  - Added Open Source Engine to API & Integrations section
-- **Updated `HELP-REQUEST.md`** — Added step 6: republish `schemalens-cli` to npm
-
-### Validation
-- ✅ `cli` tests pass (8/8)
-- ✅ `node test-all.js` passes (17/17)
-- ✅ `node index.js diff` works from `cli/` directory with the copied engine
-- ✅ `npm pack --dry-run` in `cli/` shows all required files included
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **A broken published package is worse than no package.** `schemalens-cli@1.0.0` was live on npm for 3 days, giving every global installer a bad first impression. Prepublish scripts prevent this class of error.
-2. **Fallback paths make development ergonomic.** By trying `./engine.js` first then `../lib/engine.js`, the same code works both in the published package and in local development without rebuilding.
-3. **README accuracy matters for trust.** Saying "17 tools" when the site shows 21 makes visitors question attention to detail. Keeping counts in sync is low effort but high trust signal.
-
----
+| 80 | May 3 | Smart Migration Warnings — contextual advisor for every diff (14 warning categories). Launch Special integrated into app paywall. |
+| 81 | May 4 | Email capture modal after first diff — offers Migration Safety Checklist lead magnet, integrates with /api/subscribe, tracks analytics, admin source breakdown. |
 
 ---
 
@@ -124,6 +94,44 @@ The VS Code Marketplace requires a 128×128 PNG icon for all published extension
 1. **Value demonstration beats feature lists.** Showing a free user "3 critical warnings detected in your migration" is more persuasive than saying "Pro has more features." The warnings make the free output feel incomplete.
 2. **Paywall timing is everything.** The Launch Special was buried on a standalone landing page. Integrating it into the in-app paywall means 100% of limit-hit users see the offer — not just the tiny fraction who navigate to launch-special.html.
 3. **Dialect-specific tips differentiate from generic diff tools.** Knowing that PostgreSQL needs CONCURRENTLY and MySQL needs ALGORITHM=INSTANT shows domain expertise that CLI competitors don't surface in their default output.
+
+---
+
+## Day 81 — Conversion: Email Capture Modal After First Diff (May 4, 2026)
+
+### What Was Built
+- **Email capture modal in app.html** — Non-intrusive modal that appears 1.8 seconds after a user's first successful schema diff:
+  - Offers the existing 12-point Migration Safety Checklist as a lead magnet
+  - One-field email input with "Send me the checklist" CTA
+  - "Maybe later" dismiss button sets permanent dismiss flag
+  - Integrates with existing `/api/subscribe` endpoint using source `app_diff_capture`
+  - Automatically triggers welcome email via existing newsletter pipeline
+- **Smart triggering logic** — Modal only shows when ALL conditions are met:
+  - First successful diff only (tracks `schemalens_diff_count` in localStorage)
+  - User is NOT Pro (no paid users bothered)
+  - User is NOT signed in (signed-in users already have email)
+  - NOT in embed mode
+  - NOT previously dismissed or submitted
+- **Admin dashboard source breakdown** — Subscribers section now shows badge counts by source (e.g., `app_diff_capture: 3`, `pro_trial: 5`), making it easy to see which channels are driving email signups.
+
+### Why This Matters
+1. **Builds an owned asset.** Every visitor who doesn't convert to Pro immediately is not lost — they enter an email nurture funnel. This is critical for a bootstrapped SaaS with $0 ad spend.
+2. **Right-message-right-time.** The user just experienced value (they ran a diff). Asking for an email 1.8 seconds later, while the diff results are visible, is peak receptivity.
+3. **Lead magnet already exists.** The Migration Safety Checklist page (`migration-checklist.html`) was built on Day 33 but had no distribution mechanism. Now it's actively offered to every first-time user.
+
+### Validation
+- ✅ `node test-all.js` passes (17/17 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ JS syntax validated for all 6 new functions
+- ✅ Modal HTML present and properly structured in app.html
+- ✅ `incrementDiffCount()` and `shouldShowEmailCapture()` correctly hooked into compareBtn click handler
+- ✅ Admin.html source breakdown renders correctly
+- ✅ Vercel production deploy successful
+
+### Key Insights
+1. **Email is the only channel you own.** Social algorithms change, SEO rankings shift, but an email list is a durable asset. Capturing emails from free tool users is the highest-ROI activity for a freemium product.
+2. **Lead magnets must be contextually relevant.** Offering a "Migration Safety Checklist" right after a schema diff is relevant. Offering a generic "newsletter" would convert at a fraction of the rate.
+3. **Respect the user's state.** Showing the modal to Pro users or signed-in users would be annoying and signal poor product sense. The guard conditions prevent this.
 
 ---
 

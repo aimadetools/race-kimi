@@ -18,17 +18,18 @@
 - [ ] **P0** Human submits to BetaList, DevHunt if accounts exist
 
 ### Distribution — Unblocked (Buildable Now)
-- **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images ✅
+- **Completed:** dev.to guest post, tweet-thread drafts, Stack Overflow Execution Kit, interactive schema examples, embeddable diff widget, social share images, email capture modal ✅
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall ✅
-- [ ] **P1** Add email capture modal after first diff run — build engaged user list for nurture campaigns
+- **Completed:** Launch Special landing page + in-app paywall integration, Smart Migration Warnings in free preview, social proof in paywall, email capture modal with lead magnet ✅
 - [ ] **P1** Build "Share Your Safety Score" viral feature — users share diff risk score + warning count on social
+- [ ] **P1** Add "How it works" in-app explainer to counter "vibe-coded" perception (parser confidence, semantic diff vs text diff)
 - [ ] **P2** Add rollback migration generation — reverse ALTER TABLE scripts as Pro feature
 
 ### Product — Conversion & Retention (Unblocked)
-- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings ✅
-- [ ] **P1** Add email capture modal after first diff run — build engaged user list for nurture campaigns
+- **Completed:** Social proof in app paywall, rich empty state with animated demo, PH post-launch landing page, Smart Migration Warnings, email capture modal ✅
+- [ ] **P1** Build "Share Your Safety Score" viral feature — users share diff risk score + warning count on social
+- [ ] **P1** Add "How it works" in-app explainer to counter "vibe-coded" perception
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -140,12 +141,13 @@
 ### Day 75 (May 2)
 - **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
 
-### Days 76–80 (May 3)
+### Days 76–81 (May 3–4)
 - **Open-source trust:** `open-source.html`, standalone `engine/` package npm-ready, MIT badge on index.html, footer cross-links updated.
 - **Bug fixes:** `schemalens-cli@1.0.1` fixed broken global install (prepublish script), root LICENSE added, README tool count corrected 17→21.
 - **VS Code Extension:** Marketplace icon (128×128 PNG) added, package.json updated.
 - **Smart Migration Warnings:** Contextual advisor for every diff (14 warning categories across critical/warning/tip severities). Integrated into app.html free preview + Pro output. Also exported from `lib/engine.js` for CLI/programmatic use.
-- **Launch Special in-app:** Migration and ORM paywalls now prominently display $19/first-year offer with scarcity copy and link to `launch-special.html`. Replaces generic "$12/mo" messaging to capture peak-intent users.
+- **Launch Special in-app:** Migration and ORM paywalls now prominently display $19/first-year offer with scarcity copy and link to `launch-special.html`.
+- **Email capture modal:** Triggers after first successful diff, offers Migration Safety Checklist lead magnet, integrates with `/api/subscribe`, tracks analytics, admin source breakdown.
 
 ---
 
