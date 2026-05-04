@@ -26,8 +26,8 @@ const fs = require('fs');
 const html = fs.readFileSync('app.html', 'utf8');
 const scripts = [...html.matchAll(/<script>(?!.*src)([\s\S]*?)<\/script>/g)].map(m => m[1]);
 const script = scripts.find(s => s.includes('function parseSQL')) || scripts[scripts.length - 1];
-const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, quoteId, detectBreakingChanges };');
-const { parseSQL, diffSchemas, generateMigration, quoteId, detectBreakingChanges } = fn();
+const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges };');
+const { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges } = fn();
 
 function testDialect(name, sql) {
   try {
@@ -292,5 +292,42 @@ if (viewColBreaking.some(b => b.type === 'VIEW_DEPENDENCY' && b.column === 'name
   console.log('view-dep-column: FAIL — expected VIEW_DEPENDENCY breaking change for dropped column, got:', viewColBreaking);
 }
 
-console.log('\n' + ok + '/17 tests passed');
-process.exit(ok === 17 ? 0 : 1);
+// Rollback migration generation test
+const rollbackMigration = generateRollbackMigration(consDiff, 'postgres');
+if (rollbackMigration.includes('DROP CONSTRAINT') && rollbackMigration.includes('DROP COLUMN')) {
+  console.log('rollback-migration: OK — rollback SQL includes inverse constraint and column changes');
+  ok++;
+} else {
+  console.log('rollback-migration: FAIL — rollback SQL missing inverse constraint DDL');
+}
+
+// Rollback type change test
+const typeChangeOld = `CREATE TABLE products (id SERIAL PRIMARY KEY, price DECIMAL(10,2));`;
+const typeChangeNew = `CREATE TABLE products (id SERIAL PRIMARY KEY, price DECIMAL(12,2));`;
+const schemaTypeOld = parseSQL(typeChangeOld, 'postgres');
+const schemaTypeNew = parseSQL(typeChangeNew, 'postgres');
+const typeDiff = diffSchemas(schemaTypeOld, schemaTypeNew);
+const rollbackType = generateRollbackMigration(typeDiff, 'postgres');
+if (rollbackType.includes('TYPE DECIMAL') && rollbackType.includes('10') && rollbackType.includes('2')) {
+  console.log('rollback-type: OK — rollback reverts type change to old type');
+  ok++;
+} else {
+  console.log('rollback-type: FAIL — expected old DECIMAL type in rollback, got:', rollbackType);
+}
+
+// Rollback table drop test
+const tableDropOld = `CREATE TABLE orders (id SERIAL PRIMARY KEY, total DECIMAL(10,2));`;
+const tableDropNew = ``;
+const schemaDropOld = parseSQL(tableDropOld, 'postgres');
+const schemaDropNew = parseSQL(tableDropNew, 'postgres');
+const dropDiff = diffSchemas(schemaDropOld, schemaDropNew);
+const rollbackDrop = generateRollbackMigration(dropDiff, 'postgres');
+if (rollbackDrop.includes('CREATE TABLE "orders"') && rollbackDrop.includes('"id" SERIAL')) {
+  console.log('rollback-table-drop: OK — rollback recreates dropped table');
+  ok++;
+} else {
+  console.log('rollback-table-drop: FAIL — expected CREATE TABLE orders in rollback, got:', rollbackDrop);
+}
+
+console.log('\n' + ok + '/20 tests passed');
+process.exit(ok === 20 ? 0 : 1);

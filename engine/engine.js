@@ -1722,6 +1722,144 @@ function generateMarkdown(diff, dialect) {
   return md;
 }
 
+function generateMigrationWarnings(diff, dialect) {
+  const warnings = [];
+  function add(sev, title, suggestion) {
+    warnings.push({ severity: sev, title, suggestion });
+  }
+
+  // Table drops = data loss
+  for (const t of diff.tablesRemoved || []) {
+    add('critical', `DROP TABLE \`${t.name}\` will permanently delete all data in this table.`, 'Back up the table before running this migration. Consider renaming instead of dropping if data may be needed later.');
+  }
+
+  // Column drops = data loss
+  for (const td of diff.tablesModified || []) {
+    for (const col of td.columnsRemoved || []) {
+      add('critical', `DROP COLUMN \`${col.name}\` from \`${td.name}\` will permanently delete all data in that column.`, 'Back up the column data before migrating. If the column is referenced by views, triggers, or application code, update those first.');
+    }
+  }
+
+  // NOT NULL on existing columns without default
+  for (const td of diff.tablesModified || []) {
+    for (const mod of td.columnsModified || []) {
+      for (const change of mod.changes || []) {
+        if (change.field === 'nullable' && !mod.column.nullable) {
+          if (!mod.column.defaultValue) {
+            add('critical', `SET NOT NULL on \`${mod.column.name}\` (\`${td.name}\`) without a DEFAULT will fail if the table has existing rows with NULL values.`, `Add a DEFAULT value first, backfill existing NULLs, then add the NOT NULL constraint.`);
+          }
+        }
+        if (change.field === 'type') {
+          const oldType = (change.old || '').toLowerCase();
+          const newType = (change.new || '').toLowerCase();
+          if (oldType.includes('varchar') && newType.includes('varchar')) {
+            const oldLen = parseInt(oldType.match(/\d+/)?.[0] || '0', 10);
+            const newLen = parseInt(newType.match(/\d+/)?.[0] || '0', 10);
+            if (newLen > 0 && newLen < oldLen) {
+              add('critical', `VARCHAR shrink (${oldLen} → ${newLen}) on \`${mod.column.name}\` may truncate existing data.`, 'Backfill and verify no values exceed the new length before migrating.');
+            }
+          }
+          if ((oldType.includes('int') || oldType.includes('serial')) && (newType.includes('smallint') || newType.includes('tinyint'))) {
+            add('critical', `Downsizing integer type on \`${mod.column.name}\` may overflow existing values.`, 'Verify all existing values fit in the smaller type range before migrating.');
+          }
+          if (oldType.includes('text') && newType.includes('varchar')) {
+            add('critical', `TEXT → VARCHAR on \`${mod.column.name}\` may truncate existing long values.`, 'Check max length of existing values before narrowing the type.');
+          }
+          if (oldType.includes('decimal') && newType.includes('decimal')) {
+            const oldPrec = oldType.match(/(\d+),\s*(\d+)/);
+            const newPrec = newType.match(/(\d+),\s*(\d+)/);
+            if (oldPrec && newPrec) {
+              if (parseInt(newPrec[1], 10) < parseInt(oldPrec[1], 10) || parseInt(newPrec[2], 10) < parseInt(oldPrec[2], 10)) {
+                add('critical', `DECIMAL precision reduction on \`${mod.column.name}\` may truncate or round existing values.`, 'Verify financial/data accuracy after the migration.');
+              }
+            }
+          }
+          if ((oldType.includes('timestamp') && newType.includes('date')) || (oldType.includes('date') && newType.includes('timestamp'))) {
+            add('warning', `Changing ${mod.column.type} on \`${mod.column.name}\` may cause implicit casting or timezone issues.`, 'Review how your application reads this column after the type change.');
+          }
+        }
+      }
+    }
+    for (const col of td.columnsAdded || []) {
+      if (col.defaultValue && dialect === 'mysql') {
+        add('warning', `Adding \`${col.name}\` with a DEFAULT in MySQL locks the entire table while populating existing rows.`, 'For large tables, consider adding the column without DEFAULT, backfilling with a script, then adding the DEFAULT constraint.');
+      }
+      if (col.defaultValue && dialect === 'postgres') {
+        add('tip', `PostgreSQL 11+ optimizes ADD COLUMN with DEFAULT without rewriting the table.`, 'Ensure you are on PostgreSQL 11+ for instant DDL.');
+      }
+    }
+  }
+
+  // Index drops = query perf impact
+  for (const td of diff.tablesModified || []) {
+    for (const idx of td.indexesRemoved || []) {
+      add('warning', `Dropping index \`${idx.name}\` on \`${td.name}\` may slow down queries that filter or sort by ${(idx.columns || []).join(', ')}.`, 'Verify the index is unused before dropping.');
+    }
+  }
+
+  // Constraint drops
+  for (const td of diff.tablesModified || []) {
+    for (const con of td.constraintsRemoved || []) {
+      if (con.type === 'FOREIGN KEY') {
+        add('warning', `Dropping foreign key \`${con.name}\` on \`${td.name}\` removes referential integrity checks.`, 'Orphaned rows will no longer be prevented. If intentional, consider adding application-level validation.');
+      }
+      if (con.type === 'PRIMARY KEY') {
+        add('critical', `Dropping PRIMARY KEY on \`${td.name}\` can break ORM models, replication, and downstream ETL pipelines.`, 'Ensure every dependent system references an alternative unique key before proceeding.');
+      }
+      if (con.type === 'UNIQUE') {
+        add('warning', `Dropping UNIQUE constraint \`${con.name}\` on \`${td.name}\` allows duplicate values.`, 'Applications assuming uniqueness may throw errors or corrupt data.');
+      }
+    }
+  }
+
+  // SQLite specific limitations
+  if (dialect === 'sqlite') {
+    const hasModifications = (diff.tablesModified || []).some(td =>
+      (td.columnsRemoved || []).length > 0 ||
+      (td.columnsModified || []).length > 0
+    );
+    if (hasModifications) {
+      add('warning', `SQLite has limited ALTER TABLE support.`, 'Dropping columns and changing types require recreating the entire table. SchemaLens generates comments — you must implement the table recreation manually or use a tool like sqlite-utils.');
+    }
+  }
+
+  // View dependencies breaking
+  if (diff.breakingViews && diff.breakingViews.length > 0) {
+    for (const bv of diff.breakingViews) {
+      add('critical', `View \`${bv.view}\` references dropped or modified column \`${bv.column}\` in \`${bv.table}\`.`, 'Drop and recreate the view after the migration, or update the view query to exclude the removed column.');
+    }
+  }
+
+  // PostgreSQL index creation tip
+  if (dialect === 'postgres') {
+    for (const td of diff.tablesModified || []) {
+      if ((td.indexesAdded || []).length > 0) {
+        add('tip', `Adding indexes in PostgreSQL locks writes on the table.`, 'For production, prefer CREATE INDEX CONCURRENTLY to avoid blocking writes.');
+      }
+    }
+  }
+
+  // MySQL ALGORITHM=INPLACE tip for large tables
+  if (dialect === 'mysql') {
+    const hasColumnChanges = (diff.tablesModified || []).some(td =>
+      (td.columnsAdded || []).length > 0 ||
+      (td.columnsModified || []).length > 0
+    );
+    if (hasColumnChanges) {
+      add('tip', `MySQL 8.0 supports INSTANT ALGORITHM for some column changes.`, 'Add ALGORITHM=INSTANT, LOCK=NONE to your ALTER TABLE when supported to avoid table locks.');
+    }
+  }
+
+  // Enum drops
+  if (diff.enumsRemoved && diff.enumsRemoved.length > 0) {
+    for (const en of diff.enumsRemoved) {
+      add('warning', `Dropping ENUM type \`${en.name}\` will fail if any column still references it.`, 'Ensure all columns using this enum are altered to a different type first.');
+    }
+  }
+
+  return warnings;
+}
+
 module.exports = {
   stripComments,
   splitStatements,
