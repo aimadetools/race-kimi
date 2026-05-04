@@ -147,6 +147,12 @@
   - Version requirement callouts for DROP COLUMN and RENAME COLUMN
   - Critical warnings about recreating indexes, views, and triggers after table recreation
   - FAQPage schema.org markup with 4 questions
+- **Homepage headline A/B test** — Client-side 50/50 split test on index.html:
+  - Control (Variant A): "Compare SQL schemas. Generate migrations. Zero setup."
+  - CLI-focused (Variant B): "Generate database migrations without the CLI. Compare schemas free."
+  - Random assignment persisted in `localStorage` for session consistency
+  - Analytics tracking: `ab_test_assigned` event on load, `cta_click` event on hero button clicks — both include variant metadata
+  - `DOMContentLoaded` guard ensures headline swap happens after DOM is ready
 - **Cross-linking across site**:
   - index.html Free Developer Tools grid updated from 21 → 24 tools with new recipe guide cards
   - tools.html tool grid updated with 3 new Migration Recipe tool cards
@@ -164,6 +170,7 @@
 - ✅ All 3 new pages pass HTML structural validation (doctype, closed tags, OG tags)
 - ✅ sitemap.xml includes all 3 new pages with correct lastmod and priority
 - ✅ Cross-links verified on index.html (24 tools), tools.html, and migration-recipes.html
+- ✅ A/B test script loads without errors, DOMContentLoaded guard works correctly
 - ✅ Vercel production deploy successful (aliased to www.schemalens.tech)
 
 ### Key Insights

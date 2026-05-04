@@ -23,7 +23,7 @@
 
 ### Conversion — Unblocked (Buildable Now)
 - **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges ✅
-- [ ] **P1** A/B test homepage headline — current "Compare SQL schemas" vs "Generate database migrations without the CLI"
+- [x] **P1** A/B test homepage headline — current "Compare SQL schemas" vs "Generate database migrations without the CLI" ✅ Done May 4
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
