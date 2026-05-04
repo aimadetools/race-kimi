@@ -1595,6 +1595,22 @@ CREATE TABLE users (
     </div>
   </div>
 
+  <!-- Email Capture Modal -->
+  <div class="modal-overlay" id="emailCaptureModal">
+    <div class="modal" style="max-width: 460px;">
+      <h3>📬 Get the Migration Safety Checklist</h3>
+      <p style="font-size:0.95rem;color:var(--text);margin-bottom:8px;">You just ran your first schema diff. Want to save this comparison?</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;">Enter your email to receive our <strong>12-point Migration Safety Checklist</strong> — plus weekly tips on catching dangerous changes before they hit production.</p>
+      <input type="email" id="emailCaptureInput" placeholder="you@example.com">
+      <div id="emailCaptureError" style="color:var(--danger);font-size:0.85rem;margin-top:8px;display:none;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="dismissEmailCapture()">Maybe later</button>
+        <button class="btn btn-primary" onclick="submitEmailCapture()">Send me the checklist</button>
+      </div>
+      <p style="margin-top:14px;margin-bottom:0;font-size:0.75rem;color:var(--text-muted);text-align:center;">No spam. Unsubscribe anytime. Read our <a href="/privacy-policy.html" target="_blank">privacy policy</a>.</p>
+    </div>
+  </div>
+
   <!-- Slack Integration Modal -->
   <div class="modal-overlay" id="slackModal">
     <div class="modal">
@@ -6758,6 +6774,14 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   // Auto-send webhook if configured
   maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect);
 
+  // Track diff count and maybe show email capture after first diff
+  const newDiffCount = incrementDiffCount();
+  if (newDiffCount === 1) {
+    setTimeout(() => {
+      if (shouldShowEmailCapture()) openEmailCaptureModal();
+    }, 1800);
+  }
+
   // Scroll to results
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -7603,6 +7627,92 @@ function updateTeamAuthUI() {
     hasTeamEl.style.display = 'none';
   }
 }
+
+// -----------------------------
+// Email Capture Modal
+// -----------------------------
+function shouldShowEmailCapture() {
+  if (document.body.classList.contains('embed-mode')) return false;
+  if (isProUnlocked()) return false;
+  if (currentUser) return false;
+  if (localStorage.getItem('schemalens_email_captured')) return false;
+  if (localStorage.getItem('schemalens_email_capture_dismissed')) return false;
+  const diffCount = parseInt(localStorage.getItem('schemalens_diff_count') || '0', 10);
+  return diffCount === 1;
+}
+
+function incrementDiffCount() {
+  const count = parseInt(localStorage.getItem('schemalens_diff_count') || '0', 10);
+  localStorage.setItem('schemalens_diff_count', String(count + 1));
+  return count + 1;
+}
+
+function openEmailCaptureModal() {
+  const modal = document.getElementById('emailCaptureModal');
+  if (!modal) return;
+  document.getElementById('emailCaptureInput').value = '';
+  const err = document.getElementById('emailCaptureError');
+  if (err) { err.textContent = ''; err.style.display = 'none'; }
+  modal.classList.add('active');
+  setTimeout(() => document.getElementById('emailCaptureInput')?.focus(), 100);
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('email_capture_shown');
+}
+
+function closeEmailCaptureModal() {
+  const modal = document.getElementById('emailCaptureModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function dismissEmailCapture() {
+  localStorage.setItem('schemalens_email_capture_dismissed', '1');
+  closeEmailCaptureModal();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('email_capture_dismissed');
+}
+
+async function submitEmailCapture() {
+  const input = document.getElementById('emailCaptureInput');
+  const email = input.value.trim();
+  const errEl = document.getElementById('emailCaptureError');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.querySelector('#emailCaptureModal .btn-primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'app_diff_capture' })
+    });
+
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      throw new Error(json.error || 'Subscription failed');
+    }
+
+    localStorage.setItem('schemalens_email_captured', email);
+    closeEmailCaptureModal();
+    showError('✓ Checklist sent! Check your inbox.');
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('email_capture_submitted', { email_domain: email.split('@')[1] });
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('emailCaptureModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'emailCaptureModal') closeEmailCaptureModal();
+});
 
 async function loadTeamDiffs() {
   const panel = document.getElementById('teamDiffsPanel');

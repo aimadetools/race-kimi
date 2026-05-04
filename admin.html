@@ -600,6 +600,16 @@
           body.innerHTML = '<div class="admin-empty">No subscribers yet.</div>';
           return;
         }
+        // Source breakdown
+        const sourceCounts = {};
+        data.forEach(s => {
+          const src = s.source_page || 'unknown';
+          sourceCounts[src] = (sourceCounts[src] || 0) + 1;
+        });
+        const sourceBreakdown = Object.entries(sourceCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([src, count]) => `<span class="admin-badge ${src.includes('app_diff') ? 'success' : src.includes('trial') ? 'warning' : ''}">${src}: ${count}</span>`)
+          .join(' ');
         const rows = data.map(s => `
           <tr>
             <td>${formatDate(s.subscribed_at)}</td>
@@ -608,6 +618,7 @@
           </tr>
         `).join('');
         body.innerHTML = `
+          <div style="margin-bottom:12px;font-size:0.85rem;"><strong>By source:</strong> ${sourceBreakdown}</div>
           <table class="admin-table">
             <thead><tr><th>Date</th><th>Email</th><th>Source</th></tr></thead>
             <tbody>${rows}</tbody>
