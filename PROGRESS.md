@@ -49,7 +49,7 @@
 | 96–98 | May 5 | **SQL to Python Generator** (SQLAlchemy + Pydantic from CREATE TABLE, 5 dialects). **SQL UPDATE Generator** (SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT). **SQL DELETE Generator** (safe DELETE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE). Tool count 26→29. |
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
 | 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
-| 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. |
+| 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool — equality mapping, range buckets, conditional aggregates, UPDATE with CASE. Tool count 30→31. |
 
 ---
 
@@ -72,10 +72,28 @@
 - ✅ All JS blocks syntax-valid
 - ✅ Vercel production deploy triggered on git push
 
+### Also Built
+- **SQL CASE WHEN Generator** (`tools/sql-case-generator.html`) — generates CASE WHEN statements from CREATE TABLE schemas. Patterns include:
+  - **Equality mapping** — smart examples based on column name (status → Pending/Shipped/Delivered, tier → Free/Basic/Pro/Enterprise, etc.)
+  - **Range buckets** — age groups, price tiers, score grades based on column type and name
+  - **NULL handling** — COALESCE with type-appropriate defaults
+  - **Conditional aggregation** — COUNT/SUM/AVG with CASE for status breakdowns and revenue splits
+  - **UPDATE with CASE** — status transitions, price adjustments, string normalization
+- **Cross-linked** — Added to `index.html` free developer tools grid and footer, `tools.html` grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **Tool count updated** 30→31.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
 ### Key Insights
 1. **We can now measure whether the teaser actually converts.** For 6 straight sessions we built micro-tools to drive traffic. Then we optimized the paywall. Now we can measure whether the optimization worked.
 2. **Analytics tagging is critical.** Without variant metadata on every conversion event, we can't tell which version wins. Every tracked event now includes `variant: 'teaser' | 'blurred'`.
 3. **The blurred variant is the control, not the treatment.** The teaser (Day 99) is the experiment. If teaser wins, we roll it out to 100%. If blurred wins, we revert and try a different approach.
+4. **31 tools = 310 daily uniques at 10 visits/tool.** CASE WHEN is one of the most searched SQL syntax topics. Developers constantly look up "sql case when multiple conditions" and "sql case when range".
 
 ---
 

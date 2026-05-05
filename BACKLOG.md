@@ -121,6 +121,7 @@
 
 ### Day 101 (May 5)
 - **Conversion:** A/B test free tier teaser vs fully blurred — 50/50 split in app.html with `sl_teaser_variant_v1`. Teaser variant shows first 5 lines unblurred; blurred variant shows fully blurred preview. Variant-tagged analytics on preview copy, trial activation, and license modal open.
+- **Micro-tool:** SQL CASE WHEN Generator — equality mapping, range buckets, NULL handling, conditional aggregation, UPDATE with CASE. Cross-linked, sitemap.xml updated. Tool count 30→31.
 
 ---
 
