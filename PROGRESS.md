@@ -48,6 +48,30 @@
 
 ---
 
+## Day 97 — SQL UPDATE Generator (May 5, 2026)
+
+### What Was Built
+- **SQL UPDATE Generator** (`tools/sql-update-generator.html`) — Generate UPDATE statements from CREATE TABLE schemas. Supports all 5 dialects with dialect-specific syntax.
+- **Query variants**: Basic UPDATE (all columns), single-column UPDATE, UPDATE with RETURNING (PostgreSQL/Oracle) or OUTPUT (SQL Server), UPDATE with JOIN (INNER JOIN syntax per dialect), bulk UPDATE via CASE, UPDATE with LIMIT (MySQL/PostgreSQL/SQLite).
+- **Smart placeholders**: Type-aware values (int→1, bool→true, text→'value', datetime→'2024-01-01', etc.).
+- **PK-aware WHERE**: Automatically detects primary keys from columns and constraints to generate safe WHERE clauses.
+- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **Tool count updated** 27→28.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **UPDATE statements are error-prone in production.** A generator that creates safe, PK-qualified UPDATE queries reduces accidental full-table updates.
+2. **28 tools = 280 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the full CRUD query generation spectrum (SELECT, INSERT, UPDATE).
+3. **Completeness matters for SEO clustering.** Having SELECT + INSERT + UPDATE generators signals topical authority to search engines.
+
+---
+
 ## Day 96 — SQL to Python Generator (May 5, 2026)
 
 ### What Was Built
