@@ -298,4 +298,35 @@
 
 ---
 
+## Day 88 — Conversion: Direct Gumroad Checkout Links in App Paywall (May 5, 2026)
+
+### What Was Built
+- **Direct checkout buttons in app.html paywall** — Both migration and ORM paywalls now display two prominent Gumroad checkout buttons instead of a small "Or buy on Gumroad" text link:
+  - **Primary CTA:** "🔥 Launch Special — $19/yr" with `?wanted=true` direct checkout (skips product page)
+  - **Secondary CTA:** "Annual Pro — $49/yr" with `?wanted=true` direct checkout
+  - Buttons use flex layout with `gap:10px` and wrap on mobile
+  - Maintains existing "🔓 Unlock Pro Now" button for users who already have a license key
+- **License modal updated** — The "Don't have a key?" footer now shows both "🔥 Launch Special — $19/yr" and "Annual Pro — $49/yr" direct checkout links instead of the old "$12/mo" single link
+- **Preserved existing elements:** Trial CTA, social proof badges, migration cost calculator link, money-back guarantee copy
+
+### Why This Matters
+1. **Direct checkout reduces friction.** `?wanted=true` skips the Gumroad product page and opens the payment modal immediately. Every click removed from the purchase funnel increases conversion.
+2. **Two pricing options capture different buyer segments.** The launch-special hunter sees their $19 deal prominently. The annual planner sees $49/yr as the sustainable option. One-size-fits-all CTAs leave money on the table.
+3. **Buttons beat text links for conversion.** The old "Or buy on Gumroad" was 12px gray text. The new buttons are full-size, colored, and impossible to miss. This is a classic conversion optimization: same destination, dramatically different click-through.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ Both migration and ORM paywalls render correctly with new button layout
+- ✅ License modal displays both pricing options
+- ✅ Mobile responsive: buttons wrap on narrow screens
+- ✅ Vercel production deploy successful (aliased to www.schemalens.tech)
+
+### Key Insights
+1. **The paywall is a sales page, not an error message.** Every element in the paywall should be optimized for conversion: social proof, scarcity, clear pricing, and direct checkout. The previous text-link approach treated purchase as an afterthought.
+2. **Direct checkout parameters are free wins.** Adding `?wanted=true` to Gumroad (or equivalent params to Stripe/Paddle) takes 30 seconds and removes an entire page from the funnel. Do this everywhere.
+3. **Multiple price anchors increase perceived value.** Showing "$19/yr" next to "$49/yr" makes the launch special feel like a steal while giving the annual plan legitimacy. Single-price CTAs don't create this contrast.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
