@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Query Explainer — Understand Any SQL Query in Plain English | SchemaLens</title>
+<meta name="description" content="Paste any SQL query and get a plain-English breakdown of what it does. Explains SELECT, JOIN, WHERE, GROUP BY, CTEs, window functions, subqueries, and more. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL Query Explainer — Understand Any SQL Query in Plain English">
+<meta property="og:description" content="Paste any SQL query and get a plain-English breakdown of what it does. Explains JOINs, CTEs, window functions, subqueries, and more.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-query-explainer.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Query Explainer",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Explains SQL queries in plain English. Supports SELECT, INSERT, UPDATE, DELETE, CTEs, JOINs, window functions, and subqueries. Color-coded clause breakdown with complexity scoring.",
+  "url": "https://schemalens.tech/tools/sql-query-explainer.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .explainer-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .explainer-layout { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .complexity-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 6px 14px; font-size: 0.9rem; font-weight: 600; margin-bottom: 16px;
+  }
+  .complexity-badge .score { font-size: 1.1rem; }
+  .complexity-low { color: var(--success); }
+  .complexity-med { color: var(--warning); }
+  .complexity-high { color: var(--danger); }
+
+  .clause-list { display: flex; flex-direction: column; gap: 12px; }
+  .clause-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px; position: relative;
+  }
+  .clause-item .clause-tag {
+    display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px;
+  }
+  .tag-select { background: rgba(99,102,241,0.18); color: var(--primary); }
+  .tag-from { background: rgba(34,211,238,0.18); color: var(--secondary); }
+  .tag-join { background: rgba(52,211,153,0.18); color: var(--success); }
+  .tag-where { background: rgba(251,191,36,0.18); color: var(--warning); }
+  .tag-group { background: rgba(248,113,113,0.18); color: var(--danger); }
+  .tag-order { background: rgba(167,139,250,0.18); color: #a78bfa; }
+  .tag-limit { background: rgba(56,189,248,0.18); color: #38bdf8; }
+  .tag-cte { background: rgba(232,121,249,0.18); color: #e879f9; }
+  .tag-window { background: rgba(251,146,60,0.18); color: #fb923c; }
+  .tag-insert { background: rgba(99,102,241,0.18); color: var(--primary); }
+  .tag-update { background: rgba(251,191,36,0.18); color: var(--warning); }
+  .tag-delete { background: rgba(248,113,113,0.18); color: var(--danger); }
+  .tag-subquery { background: rgba(167,139,250,0.18); color: #a78bfa; }
+  .tag-having { background: rgba(248,113,113,0.18); color: var(--danger); }
+  .tag-set { background: rgba(52,211,153,0.18); color: var(--success); }
+  .tag-values { background: rgba(34,211,238,0.18); color: var(--secondary); }
+  .tag-returning { background: rgba(56,189,248,0.18); color: #38bdf8; }
+  .tag-union { background: rgba(232,121,249,0.18); color: #e879f9; }
+  .tag-with { background: rgba(251,146,60,0.18); color: #fb923c; }
+
+  .clause-item .clause-code {
+    font-family: var(--mono); font-size: 0.85rem; color: var(--code-text);
+    background: var(--code-bg); padding: 8px 10px; border-radius: 6px; margin: 8px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .clause-item .clause-desc {
+    font-size: 0.95rem; color: var(--text-muted); line-height: 1.55;
+  }
+
+  .summary-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 16px; margin-top: 16px; font-size: 0.95rem; line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .summary-box strong { color: var(--text); }
+
+  .empty-state {
+    text-align: center; color: var(--text-muted); padding: 48px 20px;
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { max-width: 400px; margin: 0 auto; }
+
+  .copy-bar {
+    display: flex; justify-content: flex-end; margin-bottom: 10px;
+  }
+  .copy-bar button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer;
+  }
+  .copy-bar button:hover { background: var(--surface-hover); color: var(--text); }
+
+  .examples { margin-top: 16px; }
+  .examples label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .example-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .example-chips button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer;
+  }
+  .example-chips button:hover { border-color: var(--primary); color: var(--text); }
+
+  .highlighted-sql {
+    font-family: var(--mono); font-size: 0.85rem; line-height: 1.7;
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; white-space: pre-wrap; word-break: break-word;
+  }
+  .hl-select { color: var(--primary); font-weight: 700; }
+  .hl-from { color: var(--secondary); font-weight: 700; }
+  .hl-join { color: var(--success); font-weight: 700; }
+  .hl-where { color: var(--warning); font-weight: 700; }
+  .hl-group { color: var(--danger); font-weight: 700; }
+  .hl-order { color: #a78bfa; font-weight: 700; }
+  .hl-limit { color: #38bdf8; font-weight: 700; }
+  .hl-cte { color: #e879f9; font-weight: 700; }
+  .hl-window { color: #fb923c; font-weight: 700; }
+  .hl-insert { color: var(--primary); font-weight: 700; }
+  .hl-update { color: var(--warning); font-weight: 700; }
+  .hl-delete { color: var(--danger); font-weight: 700; }
+  .hl-having { color: var(--danger); font-weight: 700; }
+  .hl-union { color: #e879f9; font-weight: 700; }
+  .hl-with { color: #fb923c; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL Query Explainer</h1>
+    <p>Paste any SQL query and get a plain-English breakdown of exactly what it does. No data leaves your browser.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="explainer-layout">
+    <div class="card">
+      <h2>Your Query</h2>
+      <div class="toolbar">
+        <select id="exampleSelect">
+          <option value="">Load an example…</option>
+          <option value="basic">Basic SELECT with JOIN</option>
+          <option value="aggregate">Aggregation with HAVING</option>
+          <option value="cte">CTE (Common Table Expression)</option>
+          <option value="window">Window Functions</option>
+          <option value="subquery">Correlated Subquery</option>
+          <option value="insert">INSERT with RETURNING</option>
+          <option value="update">UPDATE with JOIN</option>
+          <option value="union">UNION with sorting</option>
+        </select>
+        <button onclick="explain()" class="btn btn-primary">Explain Query</button>
+        <button onclick="clearInput()" class="secondary">Clear</button>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste your SQL query here...">SELECT u.id, u.email, COUNT(o.id) AS order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+WHERE u.created_at >= '2024-01-01'
+GROUP BY u.id, u.email
+HAVING COUNT(o.id) > 5
+ORDER BY order_count DESC
+LIMIT 20;</textarea>
+    </div>
+
+    <div class="card">
+      <h2>Explanation</h2>
+      <div id="output">
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <p>Paste a SQL query on the left and click <strong>Explain Query</strong> to see a clause-by-clause breakdown.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 24px;">
+    <h2>Highlighted Query</h2>
+    <div id="highlightedOutput" class="highlighted-sql">-- Your highlighted SQL will appear here</div>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../index.html">Home</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../app.html">Open App</a>
+        <a href="../tools.html">Tools</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../migration-recipes.html">Migration Recipes</a>
+        <a href="../schema-examples.html">Schema Examples</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SchemaLens. All rights reserved.</span>
+      <span>Built in the $100 AI Startup Race.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const examples = {
+  basic: `SELECT p.title, p.status, u.username
+FROM posts p
+INNER JOIN users u ON p.author_id = u.id
+WHERE p.status = 'published'
+ORDER BY p.created_at DESC
+LIMIT 10;`,
+  aggregate: `SELECT category, COUNT(*) AS total, AVG(price) AS avg_price
+FROM products
+WHERE in_stock = true
+GROUP BY category
+HAVING COUNT(*) >= 10
+ORDER BY total DESC;`,
+  cte: `WITH recent_orders AS (
+  SELECT user_id, MAX(created_at) AS last_order_at
+  FROM orders
+  WHERE created_at >= DATE('now', '-30 days')
+  GROUP BY user_id
+)
+SELECT u.email, r.last_order_at
+FROM users u
+INNER JOIN recent_orders r ON u.id = r.user_id
+WHERE u.email_verified = 1
+ORDER BY r.last_order_at DESC;`,
+  window: `SELECT
+  id,
+  department,
+  salary,
+  RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS dept_rank,
+  salary - LAG(salary) OVER (PARTITION BY department ORDER BY salary DESC) AS gap_from_top
+FROM employees;`,
+  subquery: `SELECT name, price
+FROM products
+WHERE price > (
+  SELECT AVG(price) FROM products WHERE category = products.category
+)
+ORDER BY price DESC;`,
+  insert: `INSERT INTO users (email, username, created_at)
+VALUES ('alice@example.com', 'alice', NOW())
+RETURNING id, email;`,
+  update: `UPDATE orders o
+SET status = 'shipped', shipped_at = NOW()
+FROM shipments s
+WHERE o.id = s.order_id AND s.tracking_code IS NOT NULL
+RETURNING o.id, o.status;`,
+  union: `SELECT email, 'newsletter' AS source, created_at FROM newsletter_subscribers
+UNION ALL
+SELECT email, 'purchase' AS source, created_at FROM orders
+ORDER BY created_at DESC
+LIMIT 100;`
+};
+
+document.getElementById('exampleSelect').addEventListener('change', function() {
+  const val = this.value;
+  if (examples[val]) {
+    document.getElementById('sqlInput').value = examples[val];
+    explain();
+  }
+});
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('output').innerHTML = `
+    <div class="empty-state">
+      <div class="icon">🔍</div>
+      <p>Paste a SQL query on the left and click <strong>Explain Query</strong> to see a clause-by-clause breakdown.</p>
+    </div>`;
+  document.getElementById('highlightedOutput').textContent = '-- Your highlighted SQL will appear here';
+}
+
+function explain() {
+  const sql = document.getElementById('sqlInput').value.trim();
+  if (!sql) {
+    clearInput();
+    return;
+  }
+  const clauses = parseSQL(sql);
+  const complexity = computeComplexity(clauses);
+  renderExplanation(clauses, complexity);
+  renderHighlighted(sql, clauses);
+}
+
+function parseSQL(sql) {
+  const clauses = [];
+  const upper = sql.toUpperCase();
+  const len = sql.length;
+
+  // Helper: find index of keyword, respecting quotes
+  function findKeyword(keyword, startPos) {
+    let i = startPos;
+    let inQuote = null;
+    while (i < len) {
+      const ch = sql[i];
+      if (inQuote) {
+        if (ch === inQuote && sql[i-1] !== '\\') inQuote = null;
+        i++;
+        continue;
+      }
+      if (ch === "'" || ch === '"' || ch === '`') {
+        inQuote = ch;
+        i++;
+        continue;
+      }
+      const slice = upper.slice(i, i + keyword.length);
+      if (slice === keyword) {
+        // Make sure it's a word boundary
+        const before = i > 0 ? upper[i-1] : ' ';
+        const after = i + keyword.length < len ? upper[i + keyword.length] : ' ';
+        if (!/[A-Z0-9_]/.test(before) && !/[A-Z0-9_]/.test(after)) {
+          return i;
+        }
+      }
+      i++;
+    }
+    return -1;
+  }
+
+  // Find positions of all major clause keywords
+  const keywords = [
+    { key: 'WITH', type: 'cte', label: 'CTE', desc: 'Defines one or more temporary result sets (CTEs) that can be referenced within the main query.' },
+    { key: 'SELECT', type: 'select', label: 'SELECT', desc: 'Specifies which columns or expressions to return in the result set.' },
+    { key: 'INSERT INTO', type: 'insert', label: 'INSERT', desc: 'Inserts new rows into a table with the specified column values.' },
+    { key: 'UPDATE', type: 'update', label: 'UPDATE', desc: 'Modifies existing rows in the specified table.' },
+    { key: 'DELETE FROM', type: 'delete', label: 'DELETE', desc: 'Removes rows from the specified table.' },
+    { key: 'DELETE', type: 'delete', label: 'DELETE', desc: 'Removes rows from the specified table.' },
+    { key: 'FROM', type: 'from', label: 'FROM', desc: 'Specifies the primary table(s) to query data from.' },
+    { key: 'JOIN', type: 'join', label: 'JOIN', desc: 'Combines rows from two or more tables based on a related column.' },
+    { key: 'WHERE', type: 'where', label: 'WHERE', desc: 'Filters rows before grouping or aggregation. Only rows matching the condition are included.' },
+    { key: 'GROUP BY', type: 'group', label: 'GROUP BY', desc: 'Collapses rows with matching values into summary rows for aggregation.' },
+    { key: 'HAVING', type: 'having', label: 'HAVING', desc: 'Filters grouped rows after aggregation. Use HAVING for conditions on aggregate results.' },
+    { key: 'ORDER BY', type: 'order', label: 'ORDER BY', desc: 'Sorts the result set by one or more columns in ascending or descending order.' },
+    { key: 'LIMIT', type: 'limit', label: 'LIMIT', desc: 'Restricts the number of rows returned in the result set.' },
+    { key: 'OFFSET', type: 'limit', label: 'OFFSET', desc: 'Skips a specified number of rows before starting to return rows.' },
+    { key: 'FETCH FIRST', type: 'limit', label: 'FETCH FIRST', desc: 'Restricts the number of rows returned (SQL Server / Oracle / standard SQL syntax).' },
+    { key: 'RETURNING', type: 'returning', label: 'RETURNING', desc: 'Returns values from the affected rows after an INSERT, UPDATE, or DELETE.' },
+    { key: 'SET', type: 'set', label: 'SET', desc: 'Specifies the columns and new values to apply in an UPDATE statement.' },
+    { key: 'VALUES', type: 'values', label: 'VALUES', desc: 'Provides the actual data rows to insert into the table.' },
+    { key: 'UNION', type: 'union', label: 'UNION', desc: 'Combines result sets from multiple SELECT statements, removing duplicates.' },
+    { key: 'UNION ALL', type: 'union', label: 'UNION ALL', desc: 'Combines result sets from multiple SELECT statements, keeping all duplicates.' },
+  ];
+
+  const positions = [];
+  for (const kw of keywords) {
+    let pos = 0;
+    while ((pos = findKeyword(kw.key, pos)) !== -1) {
+      positions.push({ pos, len: kw.key.length, ...kw });
+      pos += kw.key.length;
+    }
+  }
+
+  positions.sort((a, b) => a.pos - b.pos);
+
+  // Merge adjacent same-type positions and deduplicate overlapping
+  const merged = [];
+  for (const p of positions) {
+    // Skip if this position is inside an earlier clause text
+    const last = merged[merged.length - 1];
+    if (last && p.pos < last.pos + last.len + 1) continue;
+    merged.push(p);
+  }
+
+  // Extract text between positions
+  for (let i = 0; i < merged.length; i++) {
+    const start = merged[i].pos;
+    const end = i + 1 < merged.length ? merged[i+1].pos : len;
+    const text = sql.slice(start, end).trim();
+    // Refine description based on content
+    let desc = merged[i].desc;
+    const utext = text.toUpperCase();
+
+    if (merged[i].type === 'join') {
+      if (utext.includes('LEFT')) desc = 'LEFT JOIN returns all rows from the left table and matched rows from the right. Unmatched right rows are NULL.';
+      else if (utext.includes('RIGHT')) desc = 'RIGHT JOIN returns all rows from the right table and matched rows from the left. Unmatched left rows are NULL.';
+      else if (utext.includes('FULL OUTER') || utext.includes('FULL')) desc = 'FULL OUTER JOIN returns all rows when there is a match in either table. Non-matching rows are NULL-padded.';
+      else if (utext.includes('INNER')) desc = 'INNER JOIN returns only rows where the join condition matches in both tables.';
+      else if (utext.includes('CROSS')) desc = 'CROSS JOIN returns the Cartesian product — every row from the first table paired with every row from the second.';
+      else desc = 'JOIN combines rows from two or more tables based on a related column between them.';
+    }
+    if (merged[i].type === 'select') {
+      if (utext.includes('DISTINCT')) desc += ' DISTINCT removes duplicate rows from the result set.';
+      if (utext.includes('COUNT(') || utext.includes('SUM(') || utext.includes('AVG(') || utext.includes('MAX(') || utext.includes('MIN(')) {
+        desc += ' This query uses aggregate functions to summarize data.';
+      }
+      if (/\bOVER\s*\(/i.test(utext)) {
+        desc += ' Includes window functions that compute values across a set of related rows.';
+      }
+    }
+    if (merged[i].type === 'where') {
+      const conditions = [];
+      if (utext.includes(' AND ')) conditions.push('multiple AND conditions');
+      if (utext.includes(' OR ')) conditions.push('OR logic');
+      if (utext.includes(' IN ')) conditions.push('an IN list');
+      if (utext.includes(' BETWEEN ')) conditions.push('a BETWEEN range');
+      if (utext.includes(' LIKE ')) conditions.push('a LIKE pattern match');
+      if (utext.includes(' IS NULL')) conditions.push('NULL checks');
+      if (utext.includes(' EXISTS')) conditions.push('an EXISTS subquery');
+      if (conditions.length) desc += ' Filter includes ' + conditions.join(', ') + '.';
+    }
+    if (merged[i].type === 'order') {
+      if (utext.includes('DESC')) desc += ' Results are sorted in descending (Z→A, newest→oldest) order.';
+      else desc += ' Results are sorted in ascending (A→Z, oldest→newest) order by default.';
+    }
+    if (merged[i].type === 'cte') {
+      desc = 'WITH defines one or more Common Table Expressions (CTEs) — temporary named result sets used in the main query.';
+    }
+    if (merged[i].type === 'union') {
+      if (utext.includes('ALL')) desc = 'UNION ALL combines result sets from multiple queries, keeping all rows including duplicates.';
+      else desc = 'UNION combines result sets from multiple queries and removes duplicate rows.';
+    }
+
+    clauses.push({
+      type: merged[i].type,
+      label: merged[i].label,
+      text,
+      desc,
+      pos: start
+    });
+  }
+
+  // Detect subqueries
+  const subqueryMatches = [];
+  let depth = 0;
+  let subStart = -1;
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    let inQuote = false;
+    let quoteChar = null;
+    // simplistic: just look for parentheses not in quotes
+    // We already have quote tracking issues; let's do a simple pass
+  }
+  // Better: regex-based subquery detection for common patterns
+  const subRe = /\(\s*SELECT\b/gi;
+  let m;
+  while ((m = subRe.exec(sql)) !== null) {
+    // Find matching close paren
+    let d = 1;
+    let j = m.index + 1;
+    while (j < sql.length && d > 0) {
+      const c = sql[j];
+      if (c === "'" || c === '"') {
+        j++;
+        while (j < sql.length && sql[j] !== c) j++;
+      }
+      if (c === '(') d++;
+      if (c === ')') d--;
+      j++;
+    }
+    const subText = sql.slice(m.index, j).trim();
+    // Only insert if not already covered by a VALUES clause
+    const isValues = upper.slice(Math.max(0, m.index - 30), m.index).includes('VALUES');
+    if (!isValues) {
+      clauses.push({
+        type: 'subquery',
+        label: 'Subquery',
+        text: subText,
+        desc: 'A nested SELECT query used as part of the outer query. Subqueries can return a single value, a row, or a full result set.',
+        pos: m.index,
+        isSubquery: true
+      });
+    }
+  }
+
+  // Detect window functions not already in a SELECT clause
+  const winRe = /\b(RANK|DENSE_RANK|ROW_NUMBER|LEAD|LAG|FIRST_VALUE|LAST_VALUE|NTILE)\s*\(\s*\)\s*OVER\s*\(/gi;
+  while ((m = winRe.exec(sql)) !== null) {
+    // Check if this window function is already covered by a SELECT clause
+    const already = clauses.some(c => c.type === 'select' && m.index >= c.pos && m.index < c.pos + c.text.length);
+    if (!already) {
+      // Find the end of OVER clause
+      let d = 1;
+      let j = sql.indexOf('(', m.index);
+      while (j < sql.length && d > 0) {
+        const c = sql[j];
+        if (c === "'" || c === '"') { j++; while (j < sql.length && sql[j] !== c) j++; }
+        if (c === '(') d++;
+        if (c === ')') d--;
+        j++;
+      }
+      const winText = sql.slice(m.index, j).trim();
+      clauses.push({
+        type: 'window',
+        label: 'Window Function',
+        text: winText,
+        desc: 'A window function performs a calculation across a set of table rows that are related to the current row.',
+        pos: m.index
+      });
+    }
+  }
+
+  clauses.sort((a, b) => a.pos - b.pos);
+  return clauses;
+}
+
+function computeComplexity(clauses) {
+  let score = 0;
+  const types = new Set(clauses.map(c => c.type));
+  score += types.has('select') ? 1 : 0;
+  score += types.has('join') ? 2 : 0;
+  score += types.has('where') ? 1 : 0;
+  score += types.has('group') ? 2 : 0;
+  score += types.has('having') ? 2 : 0;
+  score += types.has('order') ? 1 : 0;
+  score += types.has('limit') ? 1 : 0;
+  score += types.has('cte') ? 3 : 0;
+  score += types.has('window') ? 3 : 0;
+  score += types.has('subquery') ? 3 : 0;
+  score += types.has('union') ? 2 : 0;
+  score += types.has('insert') ? 1 : 0;
+  score += types.has('update') ? 2 : 0;
+  score += types.has('delete') ? 2 : 0;
+  score += types.has('returning') ? 1 : 0;
+
+  const totalClauses = clauses.length;
+  if (totalClauses > 8) score += 2;
+  else if (totalClauses > 5) score += 1;
+
+  let level = 'low';
+  let label = 'Simple';
+  if (score >= 8) { level = 'high'; label = 'Complex'; }
+  else if (score >= 4) { level = 'med'; label = 'Moderate'; }
+
+  return { score, level, label, types: Array.from(types) };
+}
+
+function renderExplanation(clauses, complexity) {
+  const out = document.getElementById('output');
+  if (!clauses.length) {
+    out.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Could not parse the query. Try a standard SELECT, INSERT, UPDATE, or DELETE statement.</p></div>';
+    return;
+  }
+
+  let html = `<div class="complexity-badge complexity-${complexity.level}">
+    <span>Complexity:</span>
+    <span class="score">${complexity.label}</span>
+    <span style="font-size:0.8rem;color:var(--text-muted)">(${clauses.length} clause${clauses.length!==1?'s':''})</span>
+  </div>
+  <div class="copy-bar"><button onclick="copyExplanation()">Copy Explanation</button></div>
+  <div class="clause-list">`;
+
+  for (const c of clauses) {
+    html += `<div class="clause-item">
+      <div class="clause-tag tag-${c.type}">${escapeHtml(c.label)}</div>
+      <div class="clause-code">${escapeHtml(c.text)}</div>
+      <div class="clause-desc">${escapeHtml(c.desc)}</div>
+    </div>`;
+  }
+
+  html += '</div>';
+
+  // Summary
+  const stmtType = clauses.find(c => ['select','insert','update','delete'].includes(c.type));
+  let summary = '';
+  if (stmtType) {
+    const t = stmtType.type;
+    if (t === 'select') summary = 'This is a <strong>SELECT</strong> query that reads data';
+    else if (t === 'insert') summary = 'This is an <strong>INSERT</strong> statement that adds new rows';
+    else if (t === 'update') summary = 'This is an <strong>UPDATE</strong> statement that modifies existing rows';
+    else if (t === 'delete') summary = 'This is a <strong>DELETE</strong> statement that removes rows';
+
+    const joins = clauses.filter(c => c.type === 'join').length;
+    if (joins) summary += `, joining <strong>${joins}</strong> table${joins>1?'s':''}`;
+    const filters = clauses.filter(c => c.type === 'where').length;
+    if (filters) summary += `, with row filtering`;
+    const groups = clauses.filter(c => c.type === 'group').length;
+    if (groups) summary += `, using aggregation`;
+    const ctes = clauses.filter(c => c.type === 'cte').length;
+    if (ctes) summary += `, using <strong>${ctes}</strong> CTE${ctes>1?'s':''}`;
+    const subs = clauses.filter(c => c.type === 'subquery').length;
+    if (subs) summary += `, with <strong>${subs}</strong> subquer${subs>1?'ies':'y'}`;
+    const wins = clauses.filter(c => c.type === 'window').length;
+    if (wins) summary += `, using window functions`;
+    summary += '.';
+  }
+
+  if (summary) {
+    html += `<div class="summary-box"><strong>Summary:</strong> ${summary}</div>`;
+  }
+
+  out.innerHTML = html;
+}
+
+function renderHighlighted(sql, clauses) {
+  const out = document.getElementById('highlightedOutput');
+  if (!clauses.length) {
+    out.textContent = sql || '-- Your highlighted SQL will appear here';
+    return;
+  }
+
+  // Build a list of tokens to highlight
+  const tokens = [];
+  for (const c of clauses) {
+    if (c.isSubquery) continue; // skip subqueries in main highlight
+    const kwMap = {
+      select: 'SELECT', from: 'FROM', join: 'JOIN', where: 'WHERE',
+      group: 'GROUP BY', having: 'HAVING', order: 'ORDER BY',
+      limit: 'LIMIT', cte: 'WITH', window: 'OVER',
+      insert: 'INSERT', update: 'UPDATE', delete: 'DELETE',
+      set: 'SET', values: 'VALUES', returning: 'RETURNING',
+      union: 'UNION', subquery: 'SELECT'
+    };
+    const kw = kwMap[c.type];
+    if (!kw) continue;
+    // Find the keyword position within the clause text
+    const idx = c.text.toUpperCase().indexOf(kw);
+    if (idx !== -1) {
+      tokens.push({
+        start: c.pos + idx,
+        end: c.pos + idx + kw.length,
+        type: c.type
+      });
+    }
+    // Special case: UNION ALL, FETCH FIRST
+    if (c.type === 'union' && c.text.toUpperCase().includes('UNION ALL')) {
+      const uidx = c.text.toUpperCase().indexOf('UNION ALL');
+      tokens.push({ start: c.pos + uidx, end: c.pos + uidx + 9, type: 'union' });
+    }
+    if (c.type === 'limit' && c.text.toUpperCase().includes('FETCH FIRST')) {
+      const fidx = c.text.toUpperCase().indexOf('FETCH FIRST');
+      tokens.push({ start: c.pos + fidx, end: c.pos + fidx + 11, type: 'limit' });
+    }
+    if (c.type === 'cte') {
+      tokens.push({ start: c.pos, end: c.pos + 4, type: 'cte' });
+    }
+    if (c.type === 'insert') {
+      const iidx = c.text.toUpperCase().indexOf('INSERT');
+      tokens.push({ start: c.pos + iidx, end: c.pos + iidx + 6, type: 'insert' });
+    }
+    if (c.type === 'delete') {
+      const didx = c.text.toUpperCase().indexOf('DELETE');
+      tokens.push({ start: c.pos + didx, end: c.pos + didx + 6, type: 'delete' });
+    }
+    if (c.type === 'update') {
+      const uidx = c.text.toUpperCase().indexOf('UPDATE');
+      tokens.push({ start: c.pos + uidx, end: c.pos + uidx + 6, type: 'update' });
+    }
+    // Window function names
+    if (c.type === 'window' || c.type === 'select') {
+      const winNames = ['RANK','DENSE_RANK','ROW_NUMBER','LEAD','LAG','FIRST_VALUE','LAST_VALUE','NTILE','OVER'];
+      for (const wn of winNames) {
+        const widx = sql.toUpperCase().indexOf(wn, c.pos);
+        if (widx !== -1 && widx < c.pos + c.text.length) {
+          tokens.push({ start: widx, end: widx + wn.length, type: 'window' });
+        }
+      }
+    }
+  }
+
+  tokens.sort((a, b) => a.start - b.start);
+
+  // Deduplicate overlapping tokens
+  const unique = [];
+  for (const t of tokens) {
+    if (!unique.some(u => t.start < u.end && t.end > u.start)) {
+      unique.push(t);
+    }
+  }
+
+  let html = '';
+  let last = 0;
+  for (const t of unique) {
+    if (t.start > last) {
+      html += escapeHtml(sql.slice(last, t.start));
+    }
+    html += `<span class="hl-${t.type}">${escapeHtml(sql.slice(t.start, t.end))}</span>`;
+    last = t.end;
+  }
+  if (last < sql.length) html += escapeHtml(sql.slice(last));
+
+  out.innerHTML = html;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function copyExplanation() {
+  const items = document.querySelectorAll('.clause-item');
+  let text = '';
+  for (const item of items) {
+    const tag = item.querySelector('.clause-tag').textContent;
+    const code = item.querySelector('.clause-code').textContent;
+    const desc = item.querySelector('.clause-desc').textContent;
+    text += `${tag}\n${code}\n${desc}\n\n`;
+  }
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    const btn = document.querySelector('.copy-bar button');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+// Auto-explain on load if content present
+if (document.getElementById('sqlInput').value.trim()) {
+  explain();
+}
+</script>
+</body>
+</html>

@@ -26,7 +26,7 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** Build more micro-tools for organic traffic ✅ Done — 24 tools live
+- [x] **P2** Build more micro-tools for organic traffic ✅ Done — 25 tools live
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
 
 ### Business & Ops
@@ -109,7 +109,7 @@
 - **Distribution:** VS Code Extension published on Marketplace, dedicated `vscode-extension.html` landing page, site-wide VS Code promotion, newsletter sponsorship research (15+ newsletters).
 
 ### Days 89–92 (May 5)
-- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 24 free developer tools live.
+- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 25 free developer tools live.
 - **Conversion:** Homepage hero badge A/B test (CLI vs VS Code vs neither vs both) combined with headline A/B test.
 
 ---

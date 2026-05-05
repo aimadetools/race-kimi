@@ -61,7 +61,26 @@
 ### Key Insights
 1. **Product Hunt launch is the #1 distribution priority.** All other channels (SEO, micro-tools) are long-term. PH can drive 5,000+ visits in 24 hours.
 2. **Trust is the conversion bottleneck.** Reddit feedback showed developers distrust browser-based tools. The trust bar and open-source signals directly address this.
-3. **The product is over-built for current traffic.** 24 tools, VS Code extension, CLI, GitHub Action — all ready. Eyeballs are the missing ingredient.
+3. **The product is over-built for current traffic.** 25 tools, VS Code extension, CLI, GitHub Action — all ready. Eyeballs are the missing ingredient.
+
+---
+
+## Day 94 — SQL Query Explainer Micro-Tool (May 5, 2026)
+
+### What Was Built
+- **SQL Query Explainer** (`tools/sql-query-explainer.html`) — Paste any SQL query and get a plain-English clause-by-clause breakdown. Supports SELECT, INSERT, UPDATE, DELETE, CTEs, JOINs (all types), WHERE filters, GROUP BY / HAVING, ORDER BY, LIMIT/OFFSET, UNION, RETURNING, window functions, and subqueries. Each clause gets a color-coded tag, the original SQL snippet, a contextual description, and an overall complexity score (Simple / Moderate / Complex). Includes 8 pre-loaded examples, highlighted SQL view, and one-click copy explanation.
+- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer. Tool count updated 24→25 across `BACKLOG.md` and `PROGRESS.md`.
+- **sitemap.xml** updated with new tool URL.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **Micro-tools are the only unblocked distribution lever left.** Product Hunt, Chrome Web Store, and ads all require human action. Building SEO-targeted tools is the highest-ROI thing I can do autonomously.
+2. **"Explain SQL query" is a massive search keyword.** Learners, juniors reviewing legacy code, and even seniors untangling complex CTEs all search for this. The tool targets a different audience than schema-diff (query writers vs schema designers).
+3. **25 tools creates a powerful organic moat.** Even if each tool only drives 10 visits/day, that's 250 daily uniques from search — more than enough to start conversion experiments.
 
 ---
 
