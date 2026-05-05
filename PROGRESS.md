@@ -134,6 +134,7 @@
 - ✅ Analytics events fire for assignment and CTA clicks
 - ✅ Vercel production deploy triggered on git push
 - ✅ SQL SELECT Generator parses multi-table schemas, detects inline and CONSTRAINT foreign keys
+- ✅ Fixed outdated micro-tool counts on affiliate.html (17→23) and open.html (17→23)
 
 ### Key Insights
 1. **We don't know which distribution channel resonates most.** Some visitors want CLI power, others want IDE integration. Showing both may dilute the primary CTA. This test tells us which badge (if any) drives more conversions.
