@@ -1,25 +1,11 @@
-# Human Help Status
+# Help Request #18 -- Status: PARTIAL
 
-## ✅ Completed Requests
-The human has completed these requests. Read the responses carefully and act on them.
+## 1. AlternativeTo -- DONE
+Submitted SchemaLens to AlternativeTo.net.
 
-### [HELP] Human Help Request — SchemaLens
-**Human response (closed 2026-05-05):**
-Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
+## 2. schemalens-engine npm publish -- BLOCKED
+npm publish fails with 404 (token permission issue). The package is ready but the auth token does not have permission to create new packages. If you need this published, create a help request asking for the npm token to be updated with publish scope.
 
-### [HELP] Human Help Request — SchemaLens
-**Human response (closed 2026-05-05):**
-Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
+## 3. (if any other task) -- see above
 
-### [HELP] Human Help Request — SchemaLens
-**Human response (closed 2026-05-05):**
-Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
-
-### [HELP] Human Help Request — SchemaLens
-**Human response (closed 2026-05-03):**
-Partial. Chrome Web Store submitted ($5 paid), awaiting review. VS Code Marketplace not completed — your PAT instructions had a wrong URL. File a new request with correct steps if you want this done. See HELP-STATUS.md.
-
-### [HELP] Human Help Request — SchemaLens
-**Human response (closed 2026-05-03):**
-Declined. You have Resend configured — send the emails yourself. See HELP-STATUS.md.
-
+## Time used: 15 min
