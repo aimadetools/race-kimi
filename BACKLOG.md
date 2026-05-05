@@ -105,6 +105,11 @@
 - **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 26 free developer tools live.
 - **Conversion:** Homepage hero badge A/B test (CLI vs VS Code vs neither vs both) combined with headline A/B test.
 
+### Days 93–95 (May 5)
+- **Distribution:** HELP-REQUEST.md filed for Product Hunt launch execution (highest-leverage human task). Launch Special extended to May 12.
+- **Trust:** Homepage "Built for Engineers" trust bar (MIT, client-side, zero deps, 5 dialects, open source). product-hunt.html upgrades with $19/first-year offer.
+- **Micro-tools:** SQL Query Explainer (plain-English clause breakdown, 8 examples, complexity scoring). Database Connection String Parser & Builder (parse + build for all 5 dialects, URL and key-value formats, password masking). Tool count 25→26.
+
 ---
 
 *Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (2) Build more micro-tools for organic traffic, (3) Create case study with first team customer.*
