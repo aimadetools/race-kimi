@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Connection String Parser & Builder — PostgreSQL, MySQL, SQLite, SQL Server, Oracle | SchemaLens</title>
+<meta name="description" content="Parse and build database connection strings for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Auto-detect dialect, extract host, port, credentials, and options. Free, browser-based, privacy-first.">
+<meta property="og:title" content="Database Connection String Parser & Builder — PostgreSQL, MySQL, SQLite, SQL Server, Oracle">
+<meta property="og:description" content="Parse and build database connection strings for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Auto-detect dialect, extract components, and generate URLs.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/connection-string-parser.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Database Connection String Parser & Builder",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Parses and builds database connection strings for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Auto-detects dialect, extracts host, port, database, username, password, and query parameters.",
+  "url": "https://schemalens.tech/tools/connection-string-parser.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tabs button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 20px; font-size: 0.95rem; cursor: pointer; font-weight: 600;
+  }
+  .tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar input {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem;
+  }
+  .toolbar select { cursor: pointer; }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#connInput {
+    width: 100%; min-height: 120px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 320px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .props-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;
+  }
+  .prop {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+  .prop-label {
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--text-muted); margin-bottom: 6px;
+  }
+  .prop-value {
+    font-family: var(--mono); font-size: 0.9rem; color: var(--text); word-break: break-all;
+  }
+  .prop-value.empty { color: var(--text-muted); font-style: italic; }
+
+  .form-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+    margin-bottom: 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+  .field input, .field select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.95rem;
+  }
+
+  .examples { margin-top: 16px; }
+  .examples label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .example-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .example-chips button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer;
+  }
+  .example-chips button:hover { border-color: var(--primary); color: var(--text); }
+
+  .copy-bar {
+    display: flex; justify-content: flex-end; margin-bottom: 10px;
+  }
+  .copy-bar button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer;
+  }
+  .copy-bar button:hover { background: var(--surface-hover); color: var(--text); }
+
+  .notice {
+    background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25);
+    border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.9rem; color: var(--warning);
+    margin-bottom: 16px;
+  }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .hidden { display: none !important; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Database Connection String Parser & Builder</h1>
+    <p>Parse connection strings into components or build them from scratch. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Nothing leaves your browser.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="tabs">
+    <button id="tabParse" class="active" onclick="switchTab('parse')">🔍 Parse</button>
+    <button id="tabBuild" onclick="switchTab('build')">🏗️ Build</button>
+  </div>
+
+  <!-- PARSE TAB -->
+  <div id="panelParse">
+    <div class="card">
+      <h2>Connection String</h2>
+      <div class="toolbar">
+        <label>Dialect</label>
+        <select id="parseDialect" onchange="parse()">
+          <option value="auto">Auto-detect</option>
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="sqlserver">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+        <button onclick="parse()" class="btn btn-primary">Parse</button>
+        <button onclick="clearParse()" class="secondary">Clear</button>
+      </div>
+      <textarea id="connInput" placeholder="Paste a connection string here...">postgresql://dbuser:secretpass@db.host.com:5432/mydb?sslmode=require&connect_timeout=10</textarea>
+      <div class="examples">
+        <label>Load example:</label>
+        <div class="example-chips">
+          <button onclick="loadExample('postgres')">PostgreSQL</button>
+          <button onclick="loadExample('mysql')">MySQL</button>
+          <button onclick="loadExample('sqlite')">SQLite</button>
+          <button onclick="loadExample('sqlserver')">SQL Server</button>
+          <button onclick="loadExample('oracle')">Oracle</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="parseResultCard" style="display:none;">
+      <h2>Parsed Components</h2>
+      <div class="copy-bar">
+        <button onclick="copyParsedJSON()">Copy JSON</button>
+      </div>
+      <div class="props-grid" id="parseResult"></div>
+    </div>
+  </div>
+
+  <!-- BUILD TAB -->
+  <div id="panelBuild" class="hidden">
+    <div class="card">
+      <h2>Build Connection String</h2>
+      <div class="toolbar">
+        <label>Dialect</label>
+        <select id="buildDialect" onchange="onBuildDialectChange()">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="sqlserver">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+        <button onclick="build()" class="btn btn-primary">Generate</button>
+        <button onclick="clearBuild()" class="secondary">Clear</button>
+      </div>
+      <div class="form-grid">
+        <div class="field" id="fieldHost">
+          <label>Host / Server</label>
+          <input type="text" id="bHost" placeholder="localhost" value="localhost">
+        </div>
+        <div class="field" id="fieldPort">
+          <label>Port</label>
+          <input type="text" id="bPort" placeholder="5432" value="5432">
+        </div>
+        <div class="field" id="fieldUser">
+          <label>Username</label>
+          <input type="text" id="bUser" placeholder="postgres" value="postgres">
+        </div>
+        <div class="field" id="fieldPass">
+          <label>Password</label>
+          <input type="text" id="bPass" placeholder="password" value="password">
+        </div>
+        <div class="field" id="fieldDb">
+          <label>Database / SID</label>
+          <input type="text" id="bDb" placeholder="mydb" value="mydb">
+        </div>
+        <div class="field" id="fieldPath">
+          <label>File Path</label>
+          <input type="text" id="bPath" placeholder="/path/to/db.sqlite">
+        </div>
+        <div class="field" id="fieldOpts">
+          <label>Options (key=value, comma-separated)</label>
+          <input type="text" id="bOpts" placeholder="sslmode=require,connect_timeout=10">
+        </div>
+        <div class="field" id="fieldFormat">
+          <label>Format</label>
+          <select id="bFormat">
+            <option value="url">URL</option>
+            <option value="keyvalue">Key=Value</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="buildResultCard" style="display:none;">
+      <h2>Generated Connection String</h2>
+      <div class="copy-bar">
+        <button onclick="copyBuildOutput()">Copy to Clipboard</button>
+      </div>
+      <div class="output-wrap">
+        <pre id="buildOutput"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Diff database schemas in seconds</h3>
+    <p>SchemaLens compares two SQL schemas and generates migration scripts instantly. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — 100% in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Open Schema Diff</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../index.html">Home</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../app.html">Open App</a>
+        <a href="../tools.html">Tools</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../migration-recipes.html">Migration Recipes</a>
+        <a href="../schema-examples.html">Schema Examples</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SchemaLens. All rights reserved.</span>
+      <span>Built in the $100 AI Startup Race.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const DEFAULT_PORTS = { postgres: 5432, mysql: 3306, sqlite: null, sqlserver: 1433, oracle: 1521 };
+
+function switchTab(name) {
+  document.getElementById('tabParse').classList.toggle('active', name === 'parse');
+  document.getElementById('tabBuild').classList.toggle('active', name === 'build');
+  document.getElementById('panelParse').classList.toggle('hidden', name !== 'parse');
+  document.getElementById('panelBuild').classList.toggle('hidden', name !== 'build');
+}
+
+function loadExample(dialect) {
+  const examples = {
+    postgres: 'postgresql://dbuser:secretpass@db.host.com:5432/mydb?sslmode=require&connect_timeout=10',
+    mysql: 'mysql://root:mypassword@127.0.0.1:3306/ecommerce?charset=utf8mb4&parseTime=true',
+    sqlite: 'sqlite:///Users/dev/project/data/app.sqlite?_fk=1&mode=rwc',
+    sqlserver: 'Server=tcp:myserver.database.windows.net,1433;Database=mydb;User Id=admin;Password=secret;Encrypt=true;TrustServerCertificate=false;',
+    oracle: 'oracle://scott:tiger@dbhost:1521/ORCLPDB1'
+  };
+  document.getElementById('connInput').value = examples[dialect] || '';
+  document.getElementById('parseDialect').value = dialect === 'sqlserver' ? 'sqlserver' : (dialect === 'sqlite' ? 'sqlite' : (dialect === 'oracle' ? 'oracle' : (dialect === 'mysql' ? 'mysql' : 'postgres')));
+  parse();
+}
+
+function detectDialect(str) {
+  const s = str.trim().toLowerCase();
+  if (s.startsWith('postgres://') || s.startsWith('postgresql://')) return 'postgres';
+  if (s.startsWith('mysql://') || s.startsWith('mysqlx://')) return 'mysql';
+  if (s.startsWith('sqlite://') || s.startsWith('sqlite3://') || s.endsWith('.sqlite') || s.endsWith('.db')) return 'sqlite';
+  if (s.startsWith('sqlserver://') || s.startsWith('mssql://') || s.startsWith('server=') || s.startsWith('data source=') || s.startsWith('driver=')) return 'sqlserver';
+  if (s.startsWith('oracle://') || s.startsWith('oracle+cx_oracle://') || /\bhost\s*=\s*[\w\.]+.*\bport\s*=\s*\d+.*\bservice_name\s*=/.test(s)) return 'oracle';
+  return 'postgres';
+}
+
+function parse() {
+  const input = document.getElementById('connInput').value.trim();
+  if (!input) {
+    document.getElementById('parseResultCard').style.display = 'none';
+    return;
+  }
+  let dialect = document.getElementById('parseDialect').value;
+  if (dialect === 'auto') dialect = detectDialect(input);
+
+  let result = {};
+  try {
+    if (dialect === 'sqlserver' && (input.includes(';') || input.toLowerCase().startsWith('server='))) {
+      result = parseKeyValue(input, 'sqlserver');
+    } else if (dialect === 'oracle' && input.includes(';')) {
+      result = parseKeyValue(input, 'oracle');
+    } else if (input.includes('://')) {
+      result = parseURL(input, dialect);
+    } else if (input.includes('=')) {
+      result = parseKeyValue(input, dialect);
+    } else {
+      result = { dialect, raw: input, note: 'Unrecognized format' };
+    }
+  } catch (e) {
+    result = { dialect, error: e.message, raw: input };
+  }
+
+  renderParse(result);
+}
+
+function parseURL(input, dialect) {
+  const url = new URL(input);
+  const out = {
+    dialect,
+    protocol: url.protocol.replace(':', ''),
+    username: decodeURIComponent(url.username || ''),
+    password: decodeURIComponent(url.password || ''),
+    host: url.hostname,
+    port: url.port || String(DEFAULT_PORTS[dialect] || ''),
+    database: decodeURIComponent(url.pathname.replace(/^\//, '') || ''),
+    options: {}
+  };
+  url.searchParams.forEach((v, k) => { out.options[k] = v; });
+  if (dialect === 'oracle') {
+    // oracle://user:pass@host:port/SID
+    const sidMatch = url.pathname.match(/^\/(\w+)/);
+    if (sidMatch) out.sid = sidMatch[1];
+  }
+  return out;
+}
+
+function parseKeyValue(input, dialect) {
+  const out = { dialect, options: {} };
+  const pairs = input.split(/;\s*|\n/);
+  for (const pair of pairs) {
+    const idx = pair.indexOf('=');
+    if (idx === -1) continue;
+    const key = pair.slice(0, idx).trim();
+    const val = pair.slice(idx + 1).trim();
+    const lk = key.toLowerCase();
+    if (lk === 'server' || lk === 'data source' || lk === 'host') out.host = val;
+    else if (lk === 'port') out.port = val;
+    else if (lk === 'database' || lk === 'initial catalog' || lk === 'db') out.database = val;
+    else if (lk === 'user id' || lk === 'uid' || lk === 'username' || lk === 'user') out.username = val;
+    else if (lk === 'password' || lk === 'pwd') out.password = val;
+    else if (lk === 'sid' || lk === 'service_name') out.sid = val;
+    else out.options[key] = val;
+  }
+  if (out.host && out.host.includes(',')) {
+    const [h, p] = out.host.split(',');
+    out.host = h.trim();
+    if (!out.port) out.port = p.trim();
+  }
+  if (out.host && out.host.startsWith('tcp:')) out.host = out.host.slice(4);
+  return out;
+}
+
+function renderParse(result) {
+  const grid = document.getElementById('parseResult');
+  const card = document.getElementById('parseResultCard');
+  grid.innerHTML = '';
+  card.style.display = 'block';
+
+  if (result.error) {
+    grid.innerHTML = `<div class="prop" style="grid-column: 1 / -1;"><div class="prop-label">Error</div><div class="prop-value" style="color:var(--danger)">${escapeHtml(result.error)}</div></div>`;
+    return;
+  }
+
+  const rows = [];
+  if (result.dialect) rows.push({ label: 'Dialect', value: result.dialect });
+  if (result.protocol) rows.push({ label: 'Protocol', value: result.protocol });
+  if (result.username !== undefined) rows.push({ label: 'Username', value: result.username || '(none)' });
+  if (result.password !== undefined) rows.push({ label: 'Password', value: mask(result.password) || '(none)' });
+  if (result.host !== undefined) rows.push({ label: 'Host / Server', value: result.host || '(none)' });
+  if (result.port !== undefined) rows.push({ label: 'Port', value: result.port || '(default)' });
+  if (result.database !== undefined) rows.push({ label: 'Database', value: result.database || '(none)' });
+  if (result.sid !== undefined) rows.push({ label: 'SID / Service Name', value: result.sid });
+  if (result.path !== undefined) rows.push({ label: 'Path', value: result.path });
+  if (result.note) rows.push({ label: 'Note', value: result.note });
+
+  if (result.options && Object.keys(result.options).length > 0) {
+    rows.push({ label: 'Options', value: Object.entries(result.options).map(([k, v]) => `${k}=${v}`).join(', ') });
+  }
+
+  for (const r of rows) {
+    const el = document.createElement('div');
+    el.className = 'prop';
+    el.innerHTML = `<div class="prop-label">${escapeHtml(r.label)}</div><div class="prop-value ${!r.value || r.value === '(none)' ? 'empty' : ''}">${escapeHtml(String(r.value))}</div>`;
+    grid.appendChild(el);
+  }
+}
+
+function mask(s) {
+  if (!s) return s;
+  if (s.length <= 3) return '*'.repeat(s.length);
+  return s[0] + '*'.repeat(s.length - 2) + s[s.length - 1];
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function clearParse() {
+  document.getElementById('connInput').value = '';
+  document.getElementById('parseResultCard').style.display = 'none';
+}
+
+function copyParsedJSON() {
+  const items = document.querySelectorAll('#parseResult .prop');
+  const obj = {};
+  for (const item of items) {
+    const k = item.querySelector('.prop-label').textContent;
+    const v = item.querySelector('.prop-value').textContent;
+    obj[k] = v;
+  }
+  navigator.clipboard.writeText(JSON.stringify(obj, null, 2)).then(() => {
+    const btn = document.querySelector('#parseResultCard .copy-bar button');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+// BUILD TAB
+function onBuildDialectChange() {
+  const d = document.getElementById('buildDialect').value;
+  const port = DEFAULT_PORTS[d] || '';
+  document.getElementById('bPort').value = port;
+
+  const isSQLite = d === 'sqlite';
+  document.getElementById('fieldHost').style.display = isSQLite ? 'none' : 'flex';
+  document.getElementById('fieldPort').style.display = isSQLite ? 'none' : 'flex';
+  document.getElementById('fieldUser').style.display = isSQLite ? 'none' : 'flex';
+  document.getElementById('fieldPass').style.display = isSQLite ? 'none' : 'flex';
+  document.getElementById('fieldDb').style.display = isSQLite ? 'none' : 'flex';
+  document.getElementById('fieldPath').style.display = isSQLite ? 'flex' : 'none';
+  document.getElementById('fieldOpts').style.display = 'flex';
+  document.getElementById('fieldFormat').style.display = isSQLite ? 'none' : 'flex';
+}
+
+function build() {
+  const d = document.getElementById('buildDialect').value;
+  const host = document.getElementById('bHost').value.trim();
+  const port = document.getElementById('bPort').value.trim();
+  const user = document.getElementById('bUser').value.trim();
+  const pass = document.getElementById('bPass').value.trim();
+  const db = document.getElementById('bDb').value.trim();
+  const path = document.getElementById('bPath').value.trim();
+  const opts = document.getElementById('bOpts').value.trim();
+  const fmt = document.getElementById('bFormat').value;
+
+  let out = '';
+  const optObj = {};
+  if (opts) {
+    opts.split(/,\s*/).forEach(pair => {
+      const idx = pair.indexOf('=');
+      if (idx !== -1) optObj[pair.slice(0, idx).trim()] = pair.slice(idx + 1).trim();
+    });
+  }
+
+  if (d === 'sqlite') {
+    if (path) {
+      out = `sqlite://${path}`;
+    } else {
+      out = 'sqlite::memory:';
+    }
+    const q = new URLSearchParams(optObj).toString();
+    if (q) out += '?' + q;
+  } else if (fmt === 'keyvalue' && (d === 'sqlserver' || d === 'oracle')) {
+    const pairs = [];
+    if (host) pairs.push(`Server=${host}`);
+    if (port) pairs.push(`Port=${port}`);
+    if (db) pairs.push(d === 'oracle' ? `Service Name=${db}` : `Database=${db}`);
+    if (user) pairs.push(`User Id=${user}`);
+    if (pass) pairs.push(`Password=${pass}`);
+    for (const [k, v] of Object.entries(optObj)) pairs.push(`${k}=${v}`);
+    out = pairs.join(';');
+    if (!out.endsWith(';')) out += ';';
+  } else {
+    let url = `${d === 'postgres' ? 'postgresql' : d}://`;
+    if (user) {
+      url += encodeURIComponent(user);
+      if (pass) url += ':' + encodeURIComponent(pass);
+      url += '@';
+    }
+    if (host) url += host;
+    if (port) url += ':' + port;
+    if (db) url += '/' + encodeURIComponent(db);
+    const q = new URLSearchParams(optObj).toString();
+    if (q) url += '?' + q;
+    out = url;
+  }
+
+  document.getElementById('buildResultCard').style.display = 'block';
+  document.getElementById('buildOutput').textContent = out;
+}
+
+function clearBuild() {
+  document.getElementById('bHost').value = 'localhost';
+  document.getElementById('bPort').value = String(DEFAULT_PORTS[document.getElementById('buildDialect').value] || '');
+  document.getElementById('bUser').value = '';
+  document.getElementById('bPass').value = '';
+  document.getElementById('bDb').value = '';
+  document.getElementById('bPath').value = '';
+  document.getElementById('bOpts').value = '';
+  document.getElementById('buildResultCard').style.display = 'none';
+}
+
+function copyBuildOutput() {
+  const text = document.getElementById('buildOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#buildResultCard .copy-bar button');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+// Initialize
+onBuildDialectChange();
+parse();
+</script>
+</body>
+</html>

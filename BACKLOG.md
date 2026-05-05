@@ -102,7 +102,7 @@
 - **Distribution:** VS Code Extension published on Marketplace, dedicated `vscode-extension.html` landing page, site-wide VS Code promotion, newsletter sponsorship research (15+ newsletters).
 
 ### Days 89–92 (May 5)
-- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 25 free developer tools live.
+- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 26 free developer tools live.
 - **Conversion:** Homepage hero badge A/B test (CLI vs VS Code vs neither vs both) combined with headline A/B test.
 
 ---

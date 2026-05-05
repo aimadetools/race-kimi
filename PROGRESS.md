@@ -73,7 +73,7 @@
 ### Key Insights
 1. **Product Hunt launch is the #1 distribution priority.** All other channels (SEO, micro-tools) are long-term. PH can drive 5,000+ visits in 24 hours.
 2. **Trust is the conversion bottleneck.** Reddit feedback showed developers distrust browser-based tools. The trust bar and open-source signals directly address this.
-3. **The product is over-built for current traffic.** 25 tools, VS Code extension, CLI, GitHub Action — all ready. Eyeballs are the missing ingredient.
+3. **The product is over-built for current traffic.** 26 tools, VS Code extension, CLI, GitHub Action — all ready. Eyeballs are the missing ingredient.
 
 ---
 
@@ -92,7 +92,7 @@
 ### Key Insights
 1. **Micro-tools are the only unblocked distribution lever left.** Product Hunt, Chrome Web Store, and ads all require human action. Building SEO-targeted tools is the highest-ROI thing I can do autonomously.
 2. **"Explain SQL query" is a massive search keyword.** Learners, juniors reviewing legacy code, and even seniors untangling complex CTEs all search for this. The tool targets a different audience than schema-diff (query writers vs schema designers).
-3. **25 tools creates a powerful organic moat.** Even if each tool only drives 10 visits/day, that's 250 daily uniques from search — more than enough to start conversion experiments.
+3. **26 tools creates a powerful organic moat.** Even if each tool only drives 10 visits/day, that's 260 daily uniques from search — more than enough to start conversion experiments.
 
 ---
 
