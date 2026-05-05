@@ -45,6 +45,9 @@
 | 92 | May 5 | **SQL to TypeScript Generator** micro-tool — TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects. Cross-linked, sitemap.xml updated. Tool count 24. |
 | 93 | May 5 | Product Hunt launch prep + trust focus. HELP-REQUEST.md filed for PH execution. Launch Special extended to May 12. Homepage "Built for Engineers" trust bar. product-hunt.html upgrades. |
 | 94 | May 5 | **SQL Query Explainer** micro-tool — plain-English clause-by-clause breakdown for any SQL query. 8 examples, complexity scoring, highlighted SQL. Tool count 24→25. |
+| 95 | May 5 | **Database Connection String Parser & Builder** micro-tool — parse + build connection strings for all 5 dialects. URL and key-value formats, password masking, auto-detect dialect. Tool count 25→26. |
+| 96 | May 5 | **SQL to Python Generator** micro-tool — SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE. Relation detection, enum extraction, 5 dialects. Tool count 26→27. |
+| 97 | May 5 | **SQL UPDATE Generator** micro-tool — UPDATE statements from CREATE TABLE with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT. Tool count 27→28. |
 
 ---
 
