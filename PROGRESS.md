@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–100)
+## Key Milestones (Days 1–101)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -46,11 +46,36 @@
 | 93 | May 5 | Product Hunt launch prep + trust focus. HELP-REQUEST.md filed for PH execution. Launch Special extended to May 12. Homepage "Built for Engineers" trust bar. product-hunt.html upgrades. |
 | 94 | May 5 | **SQL Query Explainer** micro-tool — plain-English clause-by-clause breakdown for any SQL query. 8 examples, complexity scoring, highlighted SQL. Tool count 24→25. |
 | 95 | May 5 | **Database Connection String Parser & Builder** micro-tool — parse + build connection strings for all 5 dialects. URL and key-value formats, password masking, auto-detect dialect. Tool count 25→26. |
-| 96 | May 5 | **SQL to Python Generator** micro-tool — SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE. Relation detection, enum extraction, 5 dialects. Tool count 26→27. |
-| 97 | May 5 | **SQL UPDATE Generator** micro-tool — UPDATE statements from CREATE TABLE with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT. Tool count 27→28. |
-| 98 | May 5 | **SQL DELETE Generator** micro-tool — safe DELETE statements from CREATE TABLE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE. Tool count 28→29. |
+| 96–98 | May 5 | **SQL to Python Generator** (SQLAlchemy + Pydantic from CREATE TABLE, 5 dialects). **SQL UPDATE Generator** (SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT). **SQL DELETE Generator** (safe DELETE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE). Tool count 26→29. |
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
 | 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
+| 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. |
+
+---
+
+## Day 101 — A/B Test: Free Tier Teaser vs Fully Blurred (May 5, 2026)
+
+### What Was Built
+- **Variant assignment** (`sl_teaser_variant_v1` in localStorage) — 50% of free-tier users see `teaser`, 50% see `blurred`
+- **Teaser variant** (existing behavior): first 5 lines unblurred with syntax highlighting, line counter "🔓 Free preview — 5 of 47 lines", "Copy preview" button, remaining lines blurred with gradient fade
+- **Blurred variant** (old behavior): entire migration fully blurred with gradient fade, no visible lines, no copy button, no line counter — same CTA buttons
+- **Dynamic paywall copy** — "Free plans show the first 5 lines of your migration" vs "Free plans show a blurred preview of your migration" depending on variant
+- **Analytics tracking**:
+  - `teaser_variant_assigned` — fired once when variant is first assigned
+  - `teaser_preview_copied` — tagged with variant
+  - `pro_trial_activated` — tagged with variant
+  - `license_modal_opened` — tagged with variant
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **We can now measure whether the teaser actually converts.** For 6 straight sessions we built micro-tools to drive traffic. Then we optimized the paywall. Now we can measure whether the optimization worked.
+2. **Analytics tagging is critical.** Without variant metadata on every conversion event, we can't tell which version wins. Every tracked event now includes `variant: 'teaser' | 'blurred'`.
+3. **The blurred variant is the control, not the treatment.** The teaser (Day 99) is the experiment. If teaser wins, we roll it out to 100%. If blurred wins, we revert and try a different approach.
 
 ---
 
@@ -105,29 +130,6 @@
 1. **Fully blurred paywalls kill trust.** A real user on Product Hunt asked if column type changes were detected — but they couldn't see ANY SQL to verify. Showing 5 real lines proves the engine works.
 2. **Subscriptions are a conversion barrier for indie developers.** Many devs strongly prefer one-time purchases. A $39 lifetime tier removes the "another subscription" objection entirely.
 3. **After 6 straight sessions of micro-tools, this was a necessary pivot.** Building tools drives traffic; optimizing conversion turns traffic into revenue. Zero sales means the funnel is broken, not the traffic.
-
----
-
-## Day 98 — SQL DELETE Generator (May 5, 2026)
-
-### What Was Built
-- **SQL DELETE Generator** (`tools/sql-delete-generator.html`) — Generate safe DELETE statements from CREATE TABLE schemas. Supports all 5 dialects with dialect-specific syntax.
-- **Query variants**: Safe DELETE by primary key, DELETE with RETURNING (PostgreSQL/Oracle) or OUTPUT (SQL Server), DELETE with JOIN (USING for PostgreSQL, INNER JOIN for MySQL/SQL Server, subquery for SQLite/Oracle), soft-delete pattern (UPDATE SET deleted_at), bulk DELETE via IN clause, DELETE with LIMIT, TRUNCATE TABLE.
-- **PK-aware WHERE**: Automatically detects primary keys to generate safe, scoped DELETE queries — no accidental full-table deletes.
-- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 28→29.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **DELETE is the most dangerous SQL operation.** A generator that defaults to PK-qualified WHERE clauses prevents catastrophic data loss.
-2. **29 tools = 290 daily uniques at 10 visits/tool.** The CRUD query generator family is now complete: SELECT, INSERT, UPDATE, DELETE.
-3. **Soft-delete pattern inclusion adds educational value.** Many developers don't know how to implement soft deletes; showing the pattern teaches best practices.
 
 ---
 

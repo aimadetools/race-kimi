@@ -19,7 +19,7 @@
 ### Conversion — Unblocked (Buildable Now)
 - [x] **P1** Free tier migration teaser — show first 5 lines unblurred with copy button (Day 99)
 - [x] **P1** Lifetime Pro $39 one-time tier — added to pricing, app paywall, license modal, exit-intent, schema.org, FAQ (Day 99)
-- [ ] **P1** A/B test free tier teaser vs fully blurred — measure trial activation rate
+- [x] **P1** A/B test free tier teaser vs fully blurred — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open (Day 101)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -119,6 +119,9 @@
 ### Day 100 (May 5)
 - **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Cross-linked, sitemap.xml updated. Tool count 29→30.
 
+### Day 101 (May 5)
+- **Conversion:** A/B test free tier teaser vs fully blurred — 50/50 split in app.html with `sl_teaser_variant_v1`. Teaser variant shows first 5 lines unblurred; blurred variant shows fully blurred preview. Variant-tagged analytics on preview copy, trial activation, and license modal open.
+
 ---
 
-*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (2) Build more micro-tools for organic traffic, (3) Create case study with first team customer.*
+*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Build more micro-tools for organic traffic, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
