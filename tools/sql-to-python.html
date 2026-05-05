@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL to Python Generator — SQLAlchemy & Pydantic Models from CREATE TABLE | SchemaLens</title>
+<meta name="description" content="Convert SQL CREATE TABLE statements to Python SQLAlchemy ORM models and Pydantic validation schemas instantly. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL to Python Generator — SQLAlchemy & Pydantic Models from CREATE TABLE">
+<meta property="og:description" content="Convert SQL CREATE TABLE statements to Python SQLAlchemy ORM models and Pydantic validation schemas instantly. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-to-python.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL to Python Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Converts SQL CREATE TABLE statements to Python SQLAlchemy ORM models and Pydantic schemas. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Includes SQLAlchemy type mapping, relation detection, enum generation, and constraint handling.",
+  "url": "https://schemalens.tech/tools/sql-to-python.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .converter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .converter-grid { grid-template-columns: 1fr; } }
+
+  .converter-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .converter-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+  .toolbar button.active {
+    background: var(--primary); color: #fff; border-color: var(--primary);
+  }
+
+  .output-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .output-tabs button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.9rem; cursor: pointer; font-weight: 500;
+  }
+  .output-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 320px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .options-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .options-row label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
+  .options-row input[type="checkbox"] { accent-color: var(--primary); cursor: pointer; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL to Python Generator</h1>
+    <p>Paste your SQL CREATE TABLE statements and get Python SQLAlchemy ORM models and Pydantic schemas in seconds. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="converter-grid">
+    <div class="converter-card">
+      <h2>Input SQL</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <div class="options-row">
+        <label><input type="checkbox" id="optPydantic" checked> Generate Pydantic schemas</label>
+        <label><input type="checkbox" id="optOptional"> Optional for nullable</label>
+        <label><input type="checkbox" id="optDateStr"> Dates as strings</label>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT now()
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="convert()">🔄 Generate</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <p class="notice">Foreign keys, primary keys, defaults, unique constraints, and enums are automatically mapped.</p>
+    </div>
+
+    <div class="converter-card">
+      <h2>Python Output</h2>
+      <div class="output-tabs">
+        <button id="tabAlchemy" class="active" onclick="setOutputTab('alchemy')">SQLAlchemy</button>
+        <button id="tabPydantic" onclick="setOutputTab('pydantic')">Pydantic</button>
+      </div>
+      <div id="statsRow" class="stats-row" style="display:none;">
+        <div class="stat"><div class="stat-value" id="statTables">0</div><div class="stat-label">Tables</div></div>
+        <div class="stat"><div class="stat-value" id="statColumns">0</div><div class="stat-label">Columns</div></div>
+        <div class="stat"><div class="stat-value" id="statRelations">0</div><div class="stat-label">Relations</div></div>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Paste SQL and click Generate to see Python output.</div>
+      </div>
+      <div class="toolbar" style="margin-top:12px; display:none;" id="outputActions">
+        <button class="secondary" onclick="copyOutput()">📋 Copy</button>
+        <button class="secondary" onclick="downloadOutput()">⬇️ Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to compare two schemas and generate migrations too?</h3>
+    <p>SchemaLens diffs your SQL schemas, detects breaking changes, and generates safe forward + rollback migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-validator.html">SQL Validator</a>
+        <a href="sql-formatter.html">SQL Formatter</a>
+        <a href="schema-health-check.html">Schema Health Check</a>
+        <a href="safe-migration-checker.html">Safe Migration Checker</a>
+        <a href="migration-cost-calculator.html">Cost Calculator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =====================
+// SQL Parser (simplified from SchemaLens Engine)
+// =====================
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts.filter(s => s.length > 0);
+}
+
+function tokenize(text) {
+  const tokens = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch;
+      inString = true;
+      stringChar = ch;
+      continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') {
+        inString = false;
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current.trim()) tokens.push(current.trim());
+      current = '';
+    } else if (ch === '(' || ch === ')' || ch === ',') {
+      if (current.trim()) tokens.push(current.trim());
+      tokens.push(ch);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+
+function splitBody(body) {
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    const prev = body[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        continue;
+      }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function parseColumn(tokens, dialect) {
+  const col = {
+    name: tokens[0].replace(/["`\[\]]/g, ''),
+    type: '',
+    nullable: true,
+    defaultValue: null,
+    primaryKey: false,
+    unique: false,
+    autoIncrement: false,
+    raw: tokens.join(' ')
+  };
+
+  let i = 1;
+  const typeTokens = [];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED'];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (constraintKeywords.includes(t)) break;
+    typeTokens.push(tokens[i]);
+    i++;
+  }
+  col.type = typeTokens.join(' ') || 'UNKNOWN';
+
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'NULL') {
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'NULL') {
+      col.nullable = true;
+      i++;
+    } else if (t === 'PRIMARY' && tokens[i+1] && tokens[i+1].toUpperCase() === 'KEY') {
+      col.primaryKey = true;
+      col.nullable = false;
+      i += 2;
+      if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+    } else if (t === 'UNIQUE') {
+      col.unique = true;
+      i++;
+    } else if (t === 'DEFAULT') {
+      i++;
+      const defaultTokens = [];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+      while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
+        defaultTokens.push(tokens[i]);
+        i++;
+      }
+      col.defaultValue = defaultTokens.join(' ') || null;
+    } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
+      col.autoIncrement = true;
+      i++;
+    } else if (t === 'IDENTITY') {
+      col.autoIncrement = true;
+      i++;
+      if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; }
+    } else if (t === 'REFERENCES') {
+      i++;
+      col.foreignKey = { table: '', columns: [] };
+      if (tokens[i]) {
+        col.foreignKey.table = tokens[i].replace(/["`]/g, '');
+        i++;
+      }
+      if (tokens[i] === '(') {
+        i++;
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+        i++;
+      }
+      while (i < tokens.length) {
+        const next = tokens[i].toUpperCase();
+        if (next === 'ON' || next === 'DEFERRABLE' || next === 'INITIALLY') {
+          i++;
+          while (i < tokens.length && !['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CONSTRAINT'].includes(tokens[i].toUpperCase())) i++;
+        } else break;
+      }
+    } else {
+      i++;
+    }
+  }
+
+  return col;
+}
+
+function parseConstraint(tokens, dialect) {
+  const con = { raw: tokens.join(' '), type: '', name: null, columns: [] };
+  let i = 0;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    i++;
+    con.name = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : null;
+    i++;
+  }
+  const t = tokens[i] ? tokens[i].toUpperCase() : '';
+  if (t === 'PRIMARY') {
+    con.type = 'PRIMARY KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'UNIQUE') {
+    con.type = 'UNIQUE';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'FOREIGN') {
+    con.type = 'FOREIGN KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+      i++;
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
+      i++;
+      con.refTable = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+      i++;
+      if (tokens[i] === '(') {
+        i++;
+        con.refColumns = [];
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`\[\]]/g, ''));
+          i++;
+        }
+      }
+    }
+  } else if (t === 'CHECK') {
+    con.type = 'CHECK';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      const checkTokens = [];
+      let depth = 1;
+      while (i < tokens.length && depth > 0) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') depth--;
+        if (depth > 0) checkTokens.push(tokens[i]);
+        i++;
+      }
+      con.expression = checkTokens.join(' ');
+    }
+  }
+  return con;
+}
+
+function parseCreateTable(stmt, dialect) {
+  const m = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(.+?)\s*\((.*)\)\s*(?:ENGINE\s*=\s*\w+)?\s*;?$/is);
+  if (!m) return null;
+  let tableName = m[1].trim();
+  tableName = tableName.replace(/["`\[\]]/g, '');
+  const body = m[2];
+  const parts = splitBody(body);
+  const table = { name: tableName, columns: [], constraints: [] };
+  for (const part of parts) {
+    const tokens = tokenize(part);
+    if (!tokens.length) continue;
+    const first = tokens[0].toUpperCase();
+    if (first === 'CONSTRAINT' || first === 'PRIMARY' || first === 'UNIQUE' || first === 'FOREIGN' || first === 'CHECK') {
+      const con = parseConstraint(tokens, dialect);
+      if (con.type) table.constraints.push(con);
+    } else {
+      const col = parseColumn(tokens, dialect);
+      if (col.name) table.columns.push(col);
+    }
+  }
+  return table;
+}
+
+function parseSQL(sql, dialect) {
+  sql = stripComments(sql);
+  const stmts = splitStatements(sql);
+  const schema = { tables: [], errors: [] };
+  for (const stmt of stmts) {
+    const upper = stmt.toUpperCase();
+    if (upper.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) schema.tables.push(table);
+      else schema.errors.push({ type: 'parse', stmt: stmt.substring(0, 120) + (stmt.length > 120 ? '...' : ''), msg: 'Could not parse CREATE TABLE statement' });
+    }
+  }
+  return schema;
+}
+
+// =====================
+// Python / SQLAlchemy / Pydantic Generation
+// =====================
+function toPascalCase(str) {
+  return str.replace(/(^|_)([a-z])/g, (_, __, letter) => letter.toUpperCase());
+}
+
+function toSnakeCase(str) {
+  return str;
+}
+
+function mapToPythonType(sqlType, dialect, opts) {
+  const t = (sqlType || '').toLowerCase().trim();
+  const base = t.replace(/\([^)]+\)/g, '').trim();
+
+  if (base === 'serial' || base === 'bigserial') {
+    if (base === 'bigserial') return 'int';
+    return 'int';
+  }
+  if (base.includes('int') || base === 'integer' || base === 'mediumint' || base === 'tinyint' || base === 'smallint') {
+    return 'int';
+  }
+  if (base.includes('bool') || base === 'bit') return 'bool';
+  if (base === 'float' || base === 'real' || base.includes('double') || base.includes('decimal') || base.includes('numeric') || base === 'number' || base === 'money') {
+    return 'float';
+  }
+  if (base.includes('json')) return 'dict';
+  if (base === 'bytea' || base === 'blob' || base === 'varbinary' || base === 'binary' || base === 'raw') return 'bytes';
+  if (base === 'uuid' || base === 'uniqueidentifier') return 'str';
+  if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime' || base === 'date' || base === 'time' || base === 'timetz') {
+    return opts.dateAsString ? 'str' : 'datetime';
+  }
+  if (base.includes('varchar') || base.includes('char') || base === 'text' || base === 'clob' || base === 'nvarchar' || base === 'nchar' || base === 'ntext' || base === 'varchar2' || base === 'nvarchar2' || base === 'longtext' || base === 'mediumtext' || base === 'tinytext') return 'str';
+  if (base === 'xml' || base === 'xmltype') return 'str';
+  if (base === 'inet' || base === 'cidr') return 'str';
+  if (base === 'interval') return 'str';
+  if (base === 'array' || t.endsWith('[]')) {
+    const itemType = mapToPythonType(t.replace(/\[\]/g, ''), dialect, opts);
+    return `List[${itemType}]`;
+  }
+  return 'Any';
+}
+
+function mapToSqlAlchemyType(sqlType, dialect) {
+  const t = (sqlType || '').toLowerCase().trim();
+  const base = t.replace(/\([^)]+\)/g, '').trim();
+  const sizeMatch = sqlType.match(/\((\d+(?:,\s*\d+)?)\)/);
+  const size = sizeMatch ? sizeMatch[1] : null;
+
+  if (base === 'serial') return 'Integer';
+  if (base === 'bigserial') return 'BigInteger';
+  if (base === 'integer' || base === 'int') return 'Integer';
+  if (base === 'bigint') return 'BigInteger';
+  if (base === 'smallint') return 'SmallInteger';
+  if (base === 'tinyint') return 'SmallInteger';
+  if (base === 'mediumint') return 'Integer';
+  if (base.includes('bool') || base === 'bit') return 'Boolean';
+  if (base === 'float' || base === 'real') return 'Float';
+  if (base.includes('double')) return 'Float';
+  if (base.includes('decimal') || base.includes('numeric')) return size ? `Numeric(${size})` : 'Numeric';
+  if (base === 'number') return size ? `Numeric(${size})` : 'Numeric';
+  if (base === 'money') return 'Numeric';
+  if (base.includes('json')) return 'JSON';
+  if (base === 'bytea' || base === 'blob' || base === 'varbinary' || base === 'binary' || base === 'raw') return 'LargeBinary';
+  if (base === 'uuid' || base === 'uniqueidentifier') return 'String(36)';
+  if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime') return 'DateTime';
+  if (base === 'date') return 'Date';
+  if (base === 'time' || base === 'timetz') return 'Time';
+  if (base.includes('varchar') || base === 'varchar2' || base === 'nvarchar' || base === 'nvarchar2') return size ? `String(${size.split(',')[0].trim()})` : 'String';
+  if (base.includes('char') || base === 'nchar') return size ? `String(${size.split(',')[0].trim()})` : 'String';
+  if (base === 'text' || base === 'clob' || base === 'longtext' || base === 'mediumtext' || base === 'tinytext' || base === 'ntext') return 'Text';
+  if (base === 'xml' || base === 'xmltype') return 'Text';
+  if (base === 'inet' || base === 'cidr') return 'String';
+  if (base === 'interval') return 'Interval';
+  if (base === 'array' || t.endsWith('[]')) return 'ARRAY(String)';
+  return 'String';
+}
+
+function extractEnumFromCheck(checkExpr, colName) {
+  if (!checkExpr) return null;
+  const inMatch = checkExpr.match(new RegExp(colName + '\\s+IN\\s*\\(([^)]+)\\)', 'i'));
+  if (inMatch) {
+    const vals = inMatch[1].match(/'([^']*)'/g);
+    if (vals && vals.length > 1) {
+      return vals.map(v => v.replace(/'/g, ''));
+    }
+  }
+  const orMatch = checkExpr.match(new RegExp(colName + "\\s*=\\s*'([^']*)'", 'gi'));
+  if (orMatch && orMatch.length > 1) {
+    return orMatch.map(m => m.match(/'([^']*)'/)[1]);
+  }
+  return null;
+}
+
+function generateSQLAlchemy(schema, dialect, opts) {
+  if (!schema || !schema.tables) return '';
+  const tables = Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables);
+  let out = '';
+
+  const imports = new Set(['Column', 'Integer', 'String', 'ForeignKey']);
+  const typeSet = new Set();
+  let hasRelationships = false;
+
+  for (const table of tables) {
+    for (const col of table.columns) {
+      const st = mapToSqlAlchemyType(col.type, dialect);
+      typeSet.add(st.replace(/\([^)]+\)/g, '').trim());
+      if (col.foreignKey) hasRelationships = true;
+    }
+    for (const con of table.constraints || []) {
+      if (con.type === 'FOREIGN KEY') hasRelationships = true;
+    }
+  }
+
+  // Add type imports
+  const allTypes = ['Integer','String','Text','Boolean','DateTime','Date','Time','Float','Numeric','BigInteger','SmallInteger','LargeBinary','JSON','Interval','ARRAY'];
+  for (const t of allTypes) {
+    if (typeSet.has(t)) imports.add(t);
+  }
+  if (hasRelationships) imports.add('relationship');
+
+  out += 'from sqlalchemy import ' + Array.from(imports).sort().join(', ') + '\n';
+  out += 'from sqlalchemy.ext.declarative import declarative_base\n';
+  out += 'from sqlalchemy.orm import relationship\n\n';
+  out += 'Base = declarative_base()\n\n';
+
+  for (const table of tables) {
+    const className = toPascalCase(table.name);
+    out += `class ${className}(Base):\n`;
+    out += `    __tablename__ = "${table.name}"\n\n`;
+
+    // Gather PK columns from constraints
+    const pkCols = new Set();
+    for (const con of table.constraints || []) {
+      if (con.type === 'PRIMARY KEY' && con.columns) {
+        for (const c of con.columns) pkCols.add(c);
+      }
+    }
+
+    // Gather enums from CHECK constraints
+    const colEnums = {};
+    for (const con of table.constraints || []) {
+      if (con.type === 'CHECK' && con.expression) {
+        for (const col of table.columns) {
+          const en = extractEnumFromCheck(con.expression, col.name);
+          if (en) colEnums[col.name] = en;
+        }
+      }
+    }
+
+    for (const col of table.columns) {
+      const saType = mapToSqlAlchemyType(col.type, dialect);
+      const parts = [`Column(${saType}`];
+
+      if (col.primaryKey || pkCols.has(col.name)) {
+        parts.push('primary_key=True');
+      }
+      if (col.unique) {
+        parts.push('unique=True');
+      }
+      if (!col.nullable) {
+        parts.push('nullable=False');
+      }
+      if (col.autoIncrement) {
+        parts.push('autoincrement=True');
+      }
+      if (col.defaultValue) {
+        const dv = col.defaultValue;
+        if (/^\d+(\.\d+)?$/.test(dv)) parts.push(`default=${dv}`);
+        else if (dv.toLowerCase() === 'true' || dv.toLowerCase() === 'false') parts.push(`default=${dv.toLowerCase() === 'true'}`);
+        else if (dv.toLowerCase() === 'now()' || dv.toLowerCase() === 'current_timestamp') parts.push('default=datetime.utcnow');
+        else parts.push(`default='${dv.replace(/'/g, "\\'")}'`);
+      }
+      if (col.foreignKey && col.foreignKey.table) {
+        const refCol = col.foreignKey.columns[0] || 'id';
+        parts.push(`ForeignKey('${col.foreignKey.table}.${refCol}')`);
+      }
+
+      const args = parts.join(', ');
+      out += `    ${col.name} = ${args})\n`;
+    }
+
+    // Relationships
+    const rels = [];
+    for (const con of table.constraints || []) {
+      if (con.type === 'FOREIGN KEY' && con.refTable) {
+        const refClass = toPascalCase(con.refTable);
+        const relName = con.refTable.toLowerCase();
+        rels.push(`    ${relName} = relationship("${refClass}", back_populates="${table.name.toLowerCase()}_items")`);
+      }
+    }
+    for (const col of table.columns) {
+      if (col.foreignKey && col.foreignKey.table) {
+        const refClass = toPascalCase(col.foreignKey.table);
+        const relName = col.foreignKey.table.toLowerCase();
+        const existing = rels.find(r => r.includes(`"${refClass}"`));
+        if (!existing) {
+          rels.push(`    ${relName} = relationship("${refClass}", back_populates="${table.name.toLowerCase()}_items")`);
+        }
+      }
+    }
+    if (rels.length) {
+      out += '\n' + rels.join('\n') + '\n';
+    }
+
+    out += '\n';
+  }
+
+  return out.trim();
+}
+
+function generatePydantic(schema, dialect, opts) {
+  if (!schema || !schema.tables) return '';
+  const tables = Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables);
+  let out = '';
+
+  const imports = new Set(['BaseModel']);
+  let needsOptional = false;
+  let needsDatetime = false;
+  let needsList = false;
+  let needsAny = false;
+
+  for (const table of tables) {
+    for (const col of table.columns) {
+      const pyType = mapToPythonType(col.type, dialect, opts);
+      if (col.nullable && opts.optionalNullable) needsOptional = true;
+      if (pyType === 'datetime') needsDatetime = true;
+      if (pyType.startsWith('List[')) needsList = true;
+      if (pyType === 'Any') needsAny = true;
+    }
+  }
+
+  out += 'from pydantic import BaseModel, Field\n';
+  if (needsOptional) out += 'from typing import Optional\n';
+  if (needsList) out += 'from typing import List\n';
+  if (needsAny) out += 'from typing import Any\n';
+  if (needsDatetime) out += 'from datetime import datetime\n';
+  out += '\n';
+
+  for (const table of tables) {
+    const className = toPascalCase(table.name);
+    out += `class ${className}(BaseModel):\n`;
+
+    // Gather PK columns from constraints
+    const pkCols = new Set();
+    for (const con of table.constraints || []) {
+      if (con.type === 'PRIMARY KEY' && con.columns) {
+        for (const c of con.columns) pkCols.add(c);
+      }
+    }
+
+    // Gather enums from CHECK constraints
+    const colEnums = {};
+    for (const con of table.constraints || []) {
+      if (con.type === 'CHECK' && con.expression) {
+        for (const col of table.columns) {
+          const en = extractEnumFromCheck(con.expression, col.name);
+          if (en) colEnums[col.name] = en;
+        }
+      }
+    }
+
+    for (const col of table.columns) {
+      let pyType = mapToPythonType(col.type, dialect, opts);
+      const enumVals = colEnums[col.name];
+
+      let fieldType = pyType;
+      if (enumVals) {
+        fieldType = 'Literal[' + enumVals.map(v => `'${v}'`).join(', ') + ']';
+        needsOptional = true; // will need Optional for Literal
+      }
+
+      if (col.nullable && opts.optionalNullable) {
+        fieldType = `Optional[${fieldType}]`;
+      }
+
+      const docs = [];
+      if (col.primaryKey || pkCols.has(col.name)) docs.push('Primary key');
+      if (col.unique) docs.push('Unique');
+      if (col.autoIncrement) docs.push('Auto-increment');
+      if (col.defaultValue) docs.push(`Default: ${col.defaultValue}`);
+      if (col.foreignKey) docs.push(`References ${col.foreignKey.table}(${col.foreignKey.columns.join(', ')})`);
+
+      let fieldExpr = '';
+      if (docs.length) {
+        fieldExpr = ` = Field(..., description="${docs.join('. ')}")`;
+      }
+
+      out += `    ${col.name}: ${fieldType}${fieldExpr}\n`;
+    }
+
+    out += '\n';
+  }
+
+  return out.trim();
+}
+
+// =====================
+// UI State
+// =====================
+let currentOutputTab = 'alchemy';
+let lastAlchemyOutput = '';
+let lastPydanticOutput = '';
+
+function setOutputTab(tab) {
+  currentOutputTab = tab;
+  document.getElementById('tabAlchemy').classList.toggle('active', tab === 'alchemy');
+  document.getElementById('tabPydantic').classList.toggle('active', tab === 'pydantic');
+  updateOutputPanel();
+}
+
+function updateOutputPanel() {
+  const output = currentOutputTab === 'alchemy' ? lastAlchemyOutput : lastPydanticOutput;
+  if (!output) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste SQL and click Generate to see Python output.</div>';
+    document.getElementById('outputActions').style.display = 'none';
+    return;
+  }
+  document.getElementById('outputPanel').innerHTML = '<div class="output-wrap"><pre>' + escapeHtml(output) + '</pre></div>';
+  document.getElementById('outputActions').style.display = 'flex';
+}
+
+function convert() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const schema = parseSQL(sql, dialect);
+
+  if (!schema.tables.length) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">No CREATE TABLE statements found. Paste valid SQL and try again.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('outputActions').style.display = 'none';
+    lastAlchemyOutput = '';
+    lastPydanticOutput = '';
+    return;
+  }
+
+  const opts = {
+    optionalNullable: document.getElementById('optOptional').checked,
+    dateAsString: document.getElementById('optDateStr').checked,
+    generatePydantic: document.getElementById('optPydantic').checked
+  };
+
+  lastAlchemyOutput = generateSQLAlchemy(schema, dialect, opts);
+  lastPydanticOutput = generatePydantic(schema, dialect, opts);
+
+  // Stats
+  let totalCols = 0;
+  let totalRelations = 0;
+  for (const t of schema.tables) {
+    totalCols += t.columns.length;
+    for (const c of t.columns) {
+      if (c.foreignKey) totalRelations++;
+    }
+    for (const con of t.constraints || []) {
+      if (con.type === 'FOREIGN KEY') totalRelations++;
+    }
+  }
+  document.getElementById('statTables').textContent = schema.tables.length;
+  document.getElementById('statColumns').textContent = totalCols;
+  document.getElementById('statRelations').textContent = totalRelations;
+  document.getElementById('statsRow').style.display = 'grid';
+
+  updateOutputPanel();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function copyOutput() {
+  const output = currentOutputTab === 'alchemy' ? lastAlchemyOutput : lastPydanticOutput;
+  if (!output) return;
+  navigator.clipboard.writeText(output).then(() => {
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+}
+
+function downloadOutput() {
+  const output = currentOutputTab === 'alchemy' ? lastAlchemyOutput : lastPydanticOutput;
+  if (!output) return;
+  const fileName = currentOutputTab === 'alchemy' ? 'models.py' : 'schemas.py';
+  const blob = new Blob([output], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste SQL and click Generate to see Python output.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('outputActions').style.display = 'none';
+  lastAlchemyOutput = '';
+  lastPydanticOutput = '';
+}
+
+const SAMPLES = {
+  postgres: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT now(),
+  CONSTRAINT chk_status CHECK (status IN ('active', 'inactive', 'banned'))
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  text TEXT NOT NULL,
+  post_id INTEGER NOT NULL REFERENCES posts(id),
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT now()
+);`,
+
+  mysql: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chk_status CHECK (status IN ('active', 'inactive', 'banned'))
+);
+
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  text TEXT NOT NULL,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`,
+
+  sqlite: `CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  role TEXT NOT NULL DEFAULT 'user',
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chk_status CHECK (status IN ('active', 'inactive', 'banned'))
+);
+
+CREATE TABLE posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  content TEXT,
+  published INTEGER NOT NULL DEFAULT 0,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  text TEXT NOT NULL,
+  post_id INTEGER NOT NULL REFERENCES posts(id),
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);`,
+
+  mssql: `CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  email NVARCHAR(255) NOT NULL UNIQUE,
+  name NVARCHAR(100),
+  role NVARCHAR(50) NOT NULL DEFAULT 'user',
+  status NVARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at DATETIME2 DEFAULT GETDATE(),
+  CONSTRAINT chk_status CHECK (status IN ('active', 'inactive', 'banned'))
+);
+
+CREATE TABLE posts (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  title NVARCHAR(255) NOT NULL,
+  content NVARCHAR(MAX),
+  published BIT NOT NULL DEFAULT 0,
+  user_id INT NOT NULL,
+  created_at DATETIME2 DEFAULT GETDATE(),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  text NVARCHAR(MAX) NOT NULL,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  created_at DATETIME2 DEFAULT GETDATE(),
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`,
+
+  oracle: `CREATE TABLE users (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR2(255) NOT NULL UNIQUE,
+  name VARCHAR2(100),
+  role VARCHAR2(50) NOT NULL DEFAULT 'user',
+  status VARCHAR2(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chk_status CHECK (status IN ('active', 'inactive', 'banned'))
+);
+
+CREATE TABLE posts (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title VARCHAR2(255) NOT NULL,
+  content CLOB,
+  published NUMBER(1) NOT NULL DEFAULT 0,
+  user_id NUMBER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  text CLOB NOT NULL,
+  post_id NUMBER NOT NULL,
+  user_id NUMBER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`
+};
+
+function loadSample() {
+  const dialect = document.getElementById('dialect').value;
+  document.getElementById('sqlInput').value = SAMPLES[dialect] || SAMPLES.postgres;
+}
+</script>
+</body>
+</html>
