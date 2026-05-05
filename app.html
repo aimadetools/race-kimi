@@ -1225,6 +1225,20 @@
   };
 })();
 </script>
+<script>
+(function() {
+  const TEASER_KEY = 'sl_teaser_variant_v1';
+  let variant = localStorage.getItem(TEASER_KEY);
+  if (!variant) {
+    variant = Math.random() < 0.5 ? 'teaser' : 'blurred';
+    localStorage.setItem(TEASER_KEY, variant);
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('teaser_variant_assigned', { variant, test: 'free_tier_teaser_may2026' });
+    }
+  }
+  window.SchemaLensTeaserVariant = variant;
+})();
+</script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
@@ -4498,13 +4512,17 @@ function renderMigration(sql, rollbackSql, diff) {
   const warningsHTML = renderMigrationWarningsHTML(warnings, isLimited);
 
   let html = '';
+  const teaserVariant = window.SchemaLensTeaserVariant || 'teaser';
   if (isLimited) {
     const trialExpired = isTrialClaimed();
     const trialAvailable = !trialExpired;
+    const teaserCopy = teaserVariant === 'teaser'
+      ? 'Free plans show the first 5 lines of your migration.'
+      : 'Free plans show a blurred preview of your migration.';
     html += `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
-        <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>Free plans show the first 5 lines of your migration. Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
+        <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
@@ -4529,21 +4547,27 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `</div>`;
     // Forward panel
     html += `<div id="migrationForwardPanel">`;
-    const sqlLines = sql.split('\n');
-    const visibleCount = Math.min(5, sqlLines.length);
-    const visibleSQL = sqlLines.slice(0, visibleCount).join('\n');
-    const hiddenSQL = sqlLines.slice(visibleCount).join('\n');
-    const totalLines = sqlLines.length;
-    const visibleEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(visibleSQL))) : '';
-    html += `<div style="position:relative;margin-bottom:0;">`;
-    html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(visibleSQL)}</div>`;
-    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
-    html += `<span>🔓 Free preview — ${visibleCount} of ${totalLines} lines</span>`;
-    html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${visibleEncoded}">Copy preview</button>`;
-    html += `</div></div>`;
-    html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
-    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(hiddenSQL)}</div>`;
-    html += `<div class="migration-preview-fade"></div>`;
+    if (teaserVariant === 'teaser') {
+      const sqlLines = sql.split('\n');
+      const visibleCount = Math.min(5, sqlLines.length);
+      const visibleSQL = sqlLines.slice(0, visibleCount).join('\n');
+      const hiddenSQL = sqlLines.slice(visibleCount).join('\n');
+      const totalLines = sqlLines.length;
+      const visibleEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(visibleSQL))) : '';
+      html += `<div style="position:relative;margin-bottom:0;">`;
+      html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(visibleSQL)}</div>`;
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
+      html += `<span>🔓 Free preview — ${visibleCount} of ${totalLines} lines</span>`;
+      html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${visibleEncoded}">Copy preview</button>`;
+      html += `</div></div>`;
+      html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+      html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(hiddenSQL)}</div>`;
+      html += `<div class="migration-preview-fade"></div>`;
+    } else {
+      html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+      html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(sql)}</div>`;
+      html += `<div class="migration-preview-fade"></div>`;
+    }
     html += `<div class="migration-preview-cta">`;
     if (trialAvailable) {
       html += `<div style="margin-bottom:10px;"><input type="email" id="trialEmail" placeholder="Your email (optional) — get migration tips" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:0.85rem;width:280px;max-width:100%;"></div>`;
@@ -4556,21 +4580,27 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `</div></div></div>`;
     // Rollback panel
     html += `<div id="migrationRollbackPanel" style="display:none;">`;
-    const rbLines = rollbackSql.split('\n');
-    const rbVisibleCount = Math.min(5, rbLines.length);
-    const rbVisible = rbLines.slice(0, rbVisibleCount).join('\n');
-    const rbHidden = rbLines.slice(rbVisibleCount).join('\n');
-    const rbTotal = rbLines.length;
-    const rbEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(rbVisible))) : '';
-    html += `<div style="position:relative;margin-bottom:0;">`;
-    html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(rbVisible)}</div>`;
-    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
-    html += `<span>🔓 Free preview — ${rbVisibleCount} of ${rbTotal} lines</span>`;
-    html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${rbEncoded}">Copy preview</button>`;
-    html += `</div></div>`;
-    html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
-    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(rbHidden)}</div>`;
-    html += `<div class="migration-preview-fade"></div>`;
+    if (teaserVariant === 'teaser') {
+      const rbLines = rollbackSql.split('\n');
+      const rbVisibleCount = Math.min(5, rbLines.length);
+      const rbVisible = rbLines.slice(0, rbVisibleCount).join('\n');
+      const rbHidden = rbLines.slice(rbVisibleCount).join('\n');
+      const rbTotal = rbLines.length;
+      const rbEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(rbVisible))) : '';
+      html += `<div style="position:relative;margin-bottom:0;">`;
+      html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(rbVisible)}</div>`;
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
+      html += `<span>🔓 Free preview — ${rbVisibleCount} of ${rbTotal} lines</span>`;
+      html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${rbEncoded}">Copy preview</button>`;
+      html += `</div></div>`;
+      html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+      html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(rbHidden)}</div>`;
+      html += `<div class="migration-preview-fade"></div>`;
+    } else {
+      html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+      html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(rollbackSql)}</div>`;
+      html += `<div class="migration-preview-fade"></div>`;
+    }
     html += `<div class="migration-preview-cta">`;
     html += `<div style="font-size:0.9rem;color:var(--text);font-weight:600;margin-bottom:6px;">Rollback is a Pro feature</div>`;
     html += `<button class="btn btn-secondary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>`;
@@ -6148,7 +6178,7 @@ function isProUnlocked() {
 function tryProTrial() {
   localStorage.setItem('schemalens_trial_claimed', '1');
   localStorage.setItem('schemalens_trial_used_at', Date.now().toString());
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated', { variant: window.SchemaLensTeaserVariant || 'teaser' });
 
   // Capture optional email for newsletter follow-up
   const emailInput = document.getElementById('trialEmail') || document.getElementById('trialEmailOrm');
@@ -6207,6 +6237,7 @@ function openLicenseModal() {
   document.getElementById('licenseModal').classList.add('active');
   document.getElementById('licenseInput').value = localStorage.getItem('schemalens_license') || '';
   document.getElementById('licenseInput').focus();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser' });
 }
 
 function closeLicenseModal() {
@@ -6270,6 +6301,7 @@ function copyPreviewFromData(btn) {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy preview', 2000);
   });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('teaser_preview_copied', { variant: window.SchemaLensTeaserVariant || 'teaser' });
 }
 
 // -----------------------------
