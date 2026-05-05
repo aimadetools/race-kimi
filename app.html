@@ -1573,7 +1573,7 @@ CREATE TABLE users (
         <button class="btn btn-secondary" onclick="closeLicenseModal()">Cancel</button>
         <button class="btn btn-primary" onclick="applyLicense()">Activate</button>
       </div>
-      <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a> · <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">Annual Pro — $49/yr</a></p>
+      <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a> · <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">Annual Pro — $49/yr</a> · <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a></p>
     </div>
   </div>
 
@@ -1965,8 +1965,8 @@ CREATE TABLE users (
         </ul>
       </div>
       <div class="exit-intent-price" style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">Lock in early-access pricing</div>
-        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">$12/mo or $99/yr — cancel anytime · 14-day money-back guarantee</div>
+        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">🔥 Launch Special: $19 for your first year</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Or $49/yr · $39 lifetime — cancel anytime · 14-day money-back guarantee</div>
       </div>
       <div class="modal-actions" style="justify-content:center;">
         <button class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;" onclick="closeExitIntentModal(); openLicenseModal();">🔓 Unlock Pro Now</button>
@@ -4504,7 +4504,7 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
-        <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>Free plans show the first 3 changes. Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
+        <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>Free plans show the first 5 lines of your migration. Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
@@ -4514,6 +4514,7 @@ function renderMigration(sql, rollbackSql, diff) {
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
           <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a>
           <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">Annual Pro — $49/yr</a>
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
@@ -4528,8 +4529,20 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `</div>`;
     // Forward panel
     html += `<div id="migrationForwardPanel">`;
-    html += `<div class="migration-preview-wrap">`;
-    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(sql)}</div>`;
+    const sqlLines = sql.split('\n');
+    const visibleCount = Math.min(5, sqlLines.length);
+    const visibleSQL = sqlLines.slice(0, visibleCount).join('\n');
+    const hiddenSQL = sqlLines.slice(visibleCount).join('\n');
+    const totalLines = sqlLines.length;
+    const visibleEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(visibleSQL))) : '';
+    html += `<div style="position:relative;margin-bottom:0;">`;
+    html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(visibleSQL)}</div>`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
+    html += `<span>🔓 Free preview — ${visibleCount} of ${totalLines} lines</span>`;
+    html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${visibleEncoded}">Copy preview</button>`;
+    html += `</div></div>`;
+    html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(hiddenSQL)}</div>`;
     html += `<div class="migration-preview-fade"></div>`;
     html += `<div class="migration-preview-cta">`;
     if (trialAvailable) {
@@ -4543,8 +4556,20 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `</div></div></div>`;
     // Rollback panel
     html += `<div id="migrationRollbackPanel" style="display:none;">`;
-    html += `<div class="migration-preview-wrap">`;
-    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;">${highlightSQL(rollbackSql)}</div>`;
+    const rbLines = rollbackSql.split('\n');
+    const rbVisibleCount = Math.min(5, rbLines.length);
+    const rbVisible = rbLines.slice(0, rbVisibleCount).join('\n');
+    const rbHidden = rbLines.slice(rbVisibleCount).join('\n');
+    const rbTotal = rbLines.length;
+    const rbEncoded = typeof btoa !== 'undefined' ? btoa(unescape(encodeURIComponent(rbVisible))) : '';
+    html += `<div style="position:relative;margin-bottom:0;">`;
+    html += `<div class="sql-output" style="max-height:none;overflow:visible;border-radius:8px 8px 0 0;">${highlightSQL(rbVisible)}</div>`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:0.8rem;color:var(--text-muted);background:var(--surface);border-top:1px dashed var(--border);border-radius:0 0 8px 8px;">`;
+    html += `<span>🔓 Free preview — ${rbVisibleCount} of ${rbTotal} lines</span>`;
+    html += `<button class="btn btn-secondary" style="padding:4px 10px;font-size:0.75rem;" onclick="copyPreviewFromData(this)" data-preview="${rbEncoded}">Copy preview</button>`;
+    html += `</div></div>`;
+    html += `<div class="migration-preview-wrap" style="margin-top:12px;">`;
+    html += `<div class="sql-output" style="filter:blur(1.2px);opacity:0.65;max-height:260px;">${highlightSQL(rbHidden)}</div>`;
     html += `<div class="migration-preview-fade"></div>`;
     html += `<div class="migration-preview-cta">`;
     html += `<div style="font-size:0.9rem;color:var(--text);font-weight:600;margin-bottom:6px;">Rollback is a Pro feature</div>`;
@@ -6017,6 +6042,7 @@ function renderORM() {
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
           <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a>
           <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">Annual Pro — $49/yr</a>
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
@@ -6235,6 +6261,14 @@ function copySQL(btn) {
   navigator.clipboard.writeText(code).then(() => {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+function copyPreviewFromData(btn) {
+  const text = decodeURIComponent(escape(atob(btn.dataset.preview)));
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy preview', 2000);
   });
 }
 

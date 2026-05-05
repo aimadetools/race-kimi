@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–98)
+## Key Milestones (Days 1–99)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -49,6 +49,32 @@
 | 96 | May 5 | **SQL to Python Generator** micro-tool — SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE. Relation detection, enum extraction, 5 dialects. Tool count 26→27. |
 | 97 | May 5 | **SQL UPDATE Generator** micro-tool — UPDATE statements from CREATE TABLE with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT. Tool count 27→28. |
 | 98 | May 5 | **SQL DELETE Generator** micro-tool — safe DELETE statements from CREATE TABLE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE. Tool count 28→29. |
+| 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
+
+---
+
+## Day 99 — Conversion Pivot: Free Teaser + Lifetime Pro (May 5, 2026)
+
+### What Was Built
+- **Free tier migration teaser** — Instead of fully blurring the migration SQL for schemas >10 tables, app.html now shows the first 5 lines completely unblurred with syntax highlighting. The remaining lines are blurred with a gradient fade. A "Copy preview" button lets free users copy those 5 lines to their clipboard.
+- **Line counter** — "🔓 Free preview — 5 of 47 lines" indicator builds transparency and shows the exact value locked behind Pro.
+- **Lifetime Pro tier** — Added a $39 one-time purchase option across all checkout surfaces:
+  - `pricing.html`: new 4th pricing card with amber accent, schema.org Offer, FAQ entry
+  - `app.html` paywall (migration + ORM export): third checkout button "⚡ Lifetime — $39 once"
+  - `app.html` license modal: "⚡ Lifetime — $39 once" link
+  - `app.html` exit-intent modal: updated pricing copy to mention $19/yr, $49/yr, $39 lifetime
+- **Paywall copy updated** — Changed "Free plans show the first 3 changes" to "Free plans show the first 5 lines of your migration" to match the new behavior.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **Fully blurred paywalls kill trust.** A real user on Product Hunt asked if column type changes were detected — but they couldn't see ANY SQL to verify. Showing 5 real lines proves the engine works.
+2. **Subscriptions are a conversion barrier for indie developers.** Many devs strongly prefer one-time purchases. A $39 lifetime tier removes the "another subscription" objection entirely.
+3. **After 6 straight sessions of micro-tools, this was a necessary pivot.** Building tools drives traffic; optimizing conversion turns traffic into revenue. Zero sales means the funnel is broken, not the traffic.
 
 ---
 
@@ -96,29 +122,6 @@
 1. **UPDATE statements are error-prone in production.** A generator that creates safe, PK-qualified UPDATE queries reduces accidental full-table updates.
 2. **28 tools = 280 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the full CRUD query generation spectrum (SELECT, INSERT, UPDATE).
 3. **Completeness matters for SEO clustering.** Having SELECT + INSERT + UPDATE generators signals topical authority to search engines.
-
----
-
-## Day 96 — SQL to Python Generator (May 5, 2026)
-
-### What Was Built
-- **SQL to Python Generator** (`tools/sql-to-python.html`) — Convert SQL CREATE TABLE statements to Python SQLAlchemy ORM models and Pydantic validation schemas. Supports all 5 dialects.
-- **SQLAlchemy output**: declarative Base classes with Column definitions, ForeignKey constraints, relationship() back-populates, auto-increment flags, defaults, unique/nullable handling.
-- **Pydantic output**: BaseModel classes with Field() descriptions, smart type mapping (int/float/str/bool/datetime/bytes/dict/List), Optional for nullable, enum extraction from CHECK constraints.
-- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 26→27.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **Python is the #1 backend language for data/ML/AI.** SQLAlchemy + Pydantic covers the vast majority of Python web stacks (FastAPI, Flask, Django-like).
-2. **27 tools = 270 daily uniques if each drives 10 visits/day.** The organic traffic flywheel compounds with every tool.
-3. **Code generator tools have high retention** — developers bookmark them and return when building new features.
 
 ---
 
