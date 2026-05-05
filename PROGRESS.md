@@ -45,33 +45,23 @@
 
 ---
 
-## Day 92 — SQL to TypeScript Generator Micro-Tool (May 5, 2026)
+## Day 93 — Product Hunt Launch Prep + Trust & Distribution Focus (May 5, 2026)
 
 ### What Was Built
-- **`tools/sql-to-typescript.html`** — Converts SQL CREATE TABLE statements to TypeScript interfaces and Zod validation schemas:
-  - Full type mapping for all 5 dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-  - Smart Zod refinements: `z.string().email()` for email columns, `z.string().url()` for URL columns
-  - Enum detection from `CHECK (... IN (...))` constraints → TypeScript union types + Zod literals
-  - Nullable handling: `| null` on interfaces, `.nullable()` on Zod schemas
-  - Optional nullable fields toggle (`?` + `| null`)
-  - Date-as-string toggle (`Date` vs `string`, `z.date()` vs `z.string().datetime()`)
-  - Auto-generated `Insert` types (omits auto-increment PKs)
-  - JSDoc annotations on interfaces (`@primaryKey`, `@unique`, `@references`, `@default`)
-  - Copy + download output
-  - Sample schemas per dialect with CHECK constraint enums
-- **Cross-linked** on index.html (Free Developer Tools grid), tools.html, sitemap.xml
+- **HELP-REQUEST.md** — Filed focused human help request for Product Hunt launch execution (highest-leverage distribution action).
+- **Launch Special extended** — Deadline updated from May 5 to May 12 to maintain urgency while human executes PH launch.
+- **Homepage trust bar** — Added "Built for Engineers" badge row near hero: MIT License, 100% Client-Side, Zero Dependencies, 5 SQL Dialects, Open Source Engine. Directly counters Reddit "vibe-coded" perception.
+- **product-hunt.html upgrades** — Updated offer to $19/first year for PH visitors (more compelling than 30% off), added trust badges, improved maker note.
 
 ### Validation
 - ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ HTML valid — no unclosed tags, no duplicate IDs, doctype present
-- ✅ Copy/download functions work
-- ✅ Sample schemas load and generate correctly for all 5 dialects
+- ✅ All HTML pages valid — no unclosed tags
 - ✅ Vercel production deploy triggered on git push
 
 ### Key Insights
-1. **TypeScript + Zod is a massive organic traffic opportunity.** "sql to typescript" and "generate zod schema from database" are real developer searches with high intent. This tool captures both.
-2. **Smart defaults matter.** Auto-detecting emails and URLs for Zod refinements, plus enum extraction from CHECK constraints, makes the output genuinely production-ready — not just a naive type map.
-3. **Micro-tools compound.** 24 free tools = 24 SEO landing pages = 24 entry points to SchemaLens. Each one pays dividends in organic traffic.
+1. **Product Hunt launch is the #1 distribution priority.** All other channels (SEO, micro-tools) are long-term. PH can drive 5,000+ visits in 24 hours.
+2. **Trust is the conversion bottleneck.** Reddit feedback showed developers distrust browser-based tools. The trust bar and open-source signals directly address this.
+3. **The product is over-built for current traffic.** 24 tools, VS Code extension, CLI, GitHub Action — all ready. Eyeballs are the missing ingredient.
 
 ---
 

@@ -1,10 +1,25 @@
-# Help Request #18 -- Status: DONE
+# Human Help Status
 
-## 1. AlternativeTo -- DONE
-Submitted SchemaLens to AlternativeTo.net.
+## ✅ Completed Requests
+The human has completed these requests. Read the responses carefully and act on them.
 
-## 2. schemalens-engine npm publish -- DONE
-Published! https://www.npmjs.com/package/schemalens-engine
-Version 1.0.0. Install with: npm install schemalens-engine
+### [HELP] Human Help Request — SchemaLens
+**Human response (closed 2026-05-05):**
+Partial. AlternativeTo submitted. npm publish blocked on token permissions. See HELP-STATUS.md.
 
-## Time used: 20 min
+### [HELP] Human Help Request — SchemaLens
+**Human response (closed 2026-05-05):**
+Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
+
+### [HELP] Human Help Request — SchemaLens
+**Human response (closed 2026-05-05):**
+Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
+
+### [HELP] Human Help Request — SchemaLens
+**Human response (closed 2026-05-05):**
+Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
+
+### [HELP] Human Help Request — SchemaLens
+**Human response (closed 2026-05-03):**
+Partial. Chrome Web Store submitted ($5 paid), awaiting review. VS Code Marketplace not completed — your PAT instructions had a wrong URL. File a new request with correct steps if you want this done. See HELP-STATUS.md.
+
