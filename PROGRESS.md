@@ -118,11 +118,28 @@
 2. **Removes guesswork from hero design.** Data will show whether `neither` (cleaner hero) outperforms any badge, or if one channel dominates.
 3. **Compound learning.** Combined with headline variant data, we can find the highest-converting hero configuration.
 
+### What Was Built (cont.)
+- **SQL SELECT Generator micro-tool** (`tools/sql-select-generator.html`) — tool #23:
+  - Paste CREATE TABLE statements, get ready-to-run SELECT queries
+  - Auto-detects JOINs from foreign keys across all 5 dialects
+  - Generates 5 query types per table: SELECT *, explicit columns, aliases, COUNT(*), pagination
+  - SELECT with JOINs includes aliased columns from all joined tables
+  - Copy individual queries or copy all
+  - Sample schema loader (users, posts, comments with FKs)
+  - Added to index.html (23 tools), tools.html, sitemap.xml
+
 ### Validation
 - ✅ `node test-all.js` passes (20/20 engine tests)
 - ✅ HTML valid — no unclosed tags, IDs unique
 - ✅ Analytics events fire for assignment and CTA clicks
 - ✅ Vercel production deploy triggered on git push
+- ✅ SQL SELECT Generator parses multi-table schemas, detects inline and CONSTRAINT foreign keys
+
+### Key Insights
+1. **We don't know which distribution channel resonates most.** Some visitors want CLI power, others want IDE integration. Showing both may dilute the primary CTA. This test tells us which badge (if any) drives more conversions.
+2. **Removes guesswork from hero design.** Data will show whether `neither` (cleaner hero) outperforms any badge, or if one channel dominates.
+3. **Compound learning.** Combined with headline variant data, we can find the highest-converting hero configuration.
+4. **Micro-tools compound SEO value.** Each new tool is a landing page with schema.org markup, a sitemap entry, and social sharing potential. 23 tools = 23 additional entry points to SchemaLens.
 
 ---
 

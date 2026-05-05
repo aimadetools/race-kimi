@@ -61,7 +61,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **22 free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **23 free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
