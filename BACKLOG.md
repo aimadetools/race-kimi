@@ -10,27 +10,25 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [x] **P0** VS Code Marketplace publish ✅ DONE May 5 — https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens
+- [x] **P0** VS Code Marketplace publish ✅ Done May 5
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
-- [ ] **P0** Chrome Web Store — confirm publish status ($5 already paid, awaiting review)
+- [ ] **P0** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
 - [ ] **P1** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md`
-- [ ] **P1** Publish `schemalens-engine` to npm (package ready, needs `npm publish` — may need human help for auth)
-- [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
+- [ ] **P1** Publish `schemalens-engine` to npm (package ready, needs `npm publish`)
+- [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md`
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
-- **Completed:** Newsletter sponsorship research (15+ newsletters, pricing, audience analysis, draft copy, budget scenarios) ✅ Done May 4
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges, pricing page ROI calculator embed, homepage headline A/B test, direct Gumroad checkout buttons in app paywall, VS Code Extension site-wide promotion, hero badge A/B test (CLI vs VS Code vs neither vs both) ✅
-- [ ] **P1** A/B test: homepage headline vs CLI-focused headline (running — awaiting data)
+- [x] **P1** Homepage headline A/B test, hero badge A/B test (CLI vs VS Code vs neither vs both) ✅ Running — awaiting data
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- **Completed:** Migration Recipes page, 3 dedicated recipe SEO pages, DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages, Safe Migration Checker, SQL Reserved Words Checker, Zero-Downtime Migration Guide, SQL to ORM Converter, VS Code Extension landing page ✅
+- [x] **P2** Build more micro-tools for organic traffic ✅ Done — 24 tools live (latest: SQL to TypeScript Generator, May 5)
 - [ ] **P2** Create case study with first team customer
 
 ### Business & Ops
-- **Completed:** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅
+- [x] **P1** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅ Done
 - [ ] **P1** Review first week of Pro conversions once sales start (dashboard ready, awaiting first sale)
 - [ ] **P2** Survey Pro users for next most-wanted feature
 - [ ] **P2** Consider raising prices for new customers (grandfather existing)
@@ -52,21 +50,21 @@
 - **CI/CD:** GitHub Actions + GitLab CI + Bitbucket Pipelines templates, standalone CLI.
 
 ### Weeks 5–6 (Apr 24–27)
-- **Team Features:** Supabase magic-link auth, cloud save (My Saved Diffs), diff versioning, team workspace UI, diff comments/annotations.
+- **Team Features:** Supabase magic-link auth, cloud save, diff versioning, team workspace UI, diff comments/annotations.
 - **Product Polish:** Dark/light mode toggle, breaking change detection, parser confidence indicator, exit-intent popup, onboarding tour with analytics.
-- **Content:** 11 additional blog posts (24 total), comparison pages (Redgate, Liquibase, CLI tools), team landing page, Wall of Love testimonials page.
+- **Content:** 11 additional blog posts (24 total), comparison pages, team landing page, Wall of Love testimonials page.
 - **Integrations:** REST API (/api/diff), Slack webhook (/api/slack), generic webhook auto-notifications (/api/webhook), VS Code extension MVP.
 
 ### Weeks 7–8 (Apr 27–28)
-- **SEO & Performance:** 100% OpenGraph coverage (73+ pages), schema.org Article on 35 blog posts + SoftwareApplication on 12 tools + FAQPage on pricing, preconnect/dns-prefetch hints, zero broken internal links, 23 SEO landing pages.
-- **Ops Infrastructure:** Admin dashboard (admin.html), serverless admin proxy (/api/admin), newsletter welcome email (/api/newsletter-welcome), weekly analytics summary (/api/analytics-summary), conversion funnel visualization.
+- **SEO & Performance:** 100% OpenGraph coverage (73+ pages), schema.org Article on 35 blog posts + SoftwareApplication on 12 tools + FAQPage on pricing, zero broken internal links, 23 SEO landing pages.
+- **Ops Infrastructure:** Admin dashboard (admin.html), serverless admin proxy (/api/admin), newsletter welcome email, weekly analytics summary, conversion funnel visualization.
 - **Content:** 11 more blog posts (36 total), 12 micro-tools/tools landing pages.
 - **Product:** Trigger diff, view diff, function/procedure diff, Oracle support, ORM export (Prisma/Drizzle), schema change risk score, PWA support.
 - **Integrations:** CI/CD integration landing page, Zapier integration guide, backlink outreach kit.
 
 ### Days 29–42 (Apr 29–30)
 - **Micro-tools:** SQL INSERT Generator, SQL JOIN Visualizer, SQL Data Types Reference, Schema Mistake Quiz, SQL Test Data Generator.
-- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, referral viral loop, app headline A/B test, how-it-works.html, CLI promo banners, landing page FAQ, lead magnet (Migration Safety Checklist).
+- **Conversion:** Demo URLs, urgency banners, exit-intent modal, paywall improvements, referral viral loop, app headline A/B test, how-it-works.html, CLI promo banners, lead magnet (Migration Safety Checklist).
 - **Content:** Blog posts #37–39, ORM SEO landing pages (Prisma/Drizzle/TypeORM/Sequelize), dev.to guest post draft.
 - **Email automation:** 3-email newsletter drip campaign with Supabase tracking.
 - **Distribution assets:** Newsletter outreach kit, Stack Overflow kit, IndieHackers post, backlink outreach kit, video walkthrough script.
@@ -98,89 +96,20 @@
 - **Stack Overflow Execution Kit:** `marketing/stack-overflow-execution-kit.md` — complete reputation-building roadmap, posting schedule, anti-spam rules, comment templates, and tracking spreadsheet.
 - **CockroachDB SEO landing page:** `cockroachdb-schema-diff.html` — dedicated page with CockroachDB-specific features, migration examples, footer cross-links on 35+ pages, sitemap.xml updated.
 
-### Day 63 (May 2)
-- **View dependency tracking:** Breaking change detector now warns when dropped columns/tables break views. Extracts table refs from `FROM`/`JOIN` clauses. 3 new tests. Addresses top community feedback.
-- **Copy PR Summary:** One-click markdown summary generation for GitHub PR descriptions. Includes table changes, breaking changes, risk score, and SchemaLens watermark.
-- **Schema Templates gallery:** 8 production-ready SQL schema templates (blog, e-commerce, SaaS, chat, URL shortener, tasks, social, LMS). Linked from index.html and tools.html. SEO-optimized.
+### Days 63–75 (May 2)
+- **Product:** View dependency tracking (breaking change detector warns when dropped columns/tables break views), Copy PR Summary (markdown for GitHub PR descriptions), rich empty state for app.html first-time visitors, embeddable schema diff widget (`tools/embed-generator.html`), Share Diff as Image (canvas-based 1200×630 PNG generator), Gumroad sales monitor (`api/gumroad-sales.js`), Launch Special conversion monitor.
+- **Content:** Schema Templates gallery (8 production-ready SQL designs), Schema Diff Examples playground (`schema-examples.html` with 6 real-world pre-loaded diffs).
+- **SEO:** MariaDB, Azure SQL, TimescaleDB, DuckDB, BigQuery, Snowflake, ClickHouse Schema Diff landing pages. Footer cross-links on 35–50+ pages, sitemap.xml updated.
+- **Trust:** Social proof in app paywall, 5 tweet-thread drafts, Product Hunt post-launch landing page upgrades.
 
-### Days 64–65 (May 2)
-- **SEO landing pages:** MariaDB Schema Diff, Azure SQL Schema Diff, TimescaleDB Schema Diff — dedicated pages with database-specific features, footer cross-links on 35+ pages, sitemap.xml updated.
-- **Tool discovery fix:** Added 3 missing tools (SQL Test Data Generator, Schema Mistake Quiz, Badge Generator) to index.html Free Developer Tools grid. Count updated 18→21.
+### Days 76–88 (May 3–5)
+- **Product:** Open-source trust page (`open-source.html`), standalone `engine/` package npm-ready, Smart Migration Warnings (14 advisor categories), Launch Special integrated into app paywall, email capture modal with Migration Safety Checklist lead magnet, "How it works" in-app explainer modal, "Share Your Safety Score" viral feature, rollback migration generation (reverse ALTER TABLE scripts for all 5 dialects), column-level diff summary with type-change pills, database support badges on homepage, Migration Recipes page (`migration-recipes.html` with 10 recipes), 3 dedicated recipe SEO pages, Safe Migration Checker micro-tool, Reserved Words Checker micro-tool, Migration Cost Calculator embedded on pricing.html, Zero-Downtime Migration Guide SEO landing page, direct Gumroad checkout buttons (`?wanted=true`).
+- **Distribution:** VS Code Extension published on Marketplace, dedicated `vscode-extension.html` landing page, site-wide VS Code promotion, newsletter sponsorship research (15+ newsletters).
 
-### Day 66 (May 2)
-- **Schema Diff Examples playground:** `schema-examples.html` with 6 real-world pre-loaded diffs (soft deletes, multi-tenant, breaking view dependency, e-commerce, API evolution, performance optimization). One-click opens in app.html via `#diff=` hash. Cross-linked from index.html, app.html, tools.html. sitemap.xml updated.
-
-### Day 67 (May 2)
-- **Social proof in app paywall:** `getSocialProofHTML()` helper with trust badges (100% private, zero setup, custom parser, money-back guarantee), usage stats, and recent comparisons ticker in both migration and ORM paywalls. Addresses "vibe-coded" perception from Reddit feedback.
-- **5 tweet-thread drafts:** migration mistakes, review like a senior engineer, CLI vs browser, hidden cost of manual migrations, breaking changes that should never reach production. All copy-paste ready in `marketing/tweet-thread-*.md`.
-
-### Day 68 (May 2)
-- **DuckDB SEO landing page:** `duckdb-schema-diff.html` — dedicated page for analytical database schema comparison with DuckDB-specific features (STRUCT/LIST/MAP/ENUM types, ART indexes, external tables). Footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in `oracle-schema-diff.html`.
-
-### Day 69 (May 2)
-- **ClickHouse SEO landing page:** `clickhouse-schema-diff.html` — dedicated page for ClickHouse schema comparison with MergeTree engine, column-oriented types, materialized view diff features. Footer cross-links on 40 pages, sitemap.xml updated.
-- **Social share buttons in app.html share modal:** One-click sharing to X/Twitter, LinkedIn, Reddit, Hacker News, and Email with dynamic diff stats. URLs include shareable diff link.
-
-### Day 70 (May 2)
-- **Rich empty state for app.html:** Replaced plain text welcome hint with engaging panel featuring feature preview cards, animated typewriter demo, quick-start scenario pills, and social proof. Tracks demo_started / demo_completed analytics events.
-
-### Day 71 (May 2)
-- **Product Hunt post-launch landing page:** Upgraded `product-hunt.html` with countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, and PH discussion CTA. Works pre- and post-launch.
-
-### Day 72 (May 2)
-- **Embeddable schema diff widget:** `tools/embed-generator.html` with live preview, iframe code generation, `app.html?embed=1` chromeless mode. Cross-linked and sitemap.xml updated.
-
-### Day 73 (May 2)
-- **Launch Special landing page:** `launch-special.html` with $19/first-year offer, 20-spot scarcity counter, 72-hour countdown, FAQ, schema.org Product markup.
-- **Share Diff as Image:** Canvas-based 1200×630 PNG generator in app.html share modal with stats, breaking change banner, risk score, one-click download/copy.
-
-### Day 74 (May 2)
-- **Gumroad sales monitor:** `api/gumroad-sales.js` fetches live sales data via Gumroad API v2. Admin dashboard "Sales & Revenue" section with net revenue, refund/chargeback tracking, transaction table, CSV export. Fixed missing `escapeHtml` helper.
-
-### Day 75 (May 2)
-- **Launch Special conversion monitor:** Analytics CTA click tracking on `launch-special.html`, new "🚀 Launch Special Monitor" section in admin.html with funnel visualization, CTR, conversion rate, referrer breakdown, and CTA position stats.
-
-### Days 76–83 (May 3–4)
-- **Open-source trust:** `open-source.html`, standalone `engine/` package npm-ready, MIT badge on index.html, footer cross-links updated.
-- **Bug fixes:** `schemalens-cli@1.0.1` fixed broken global install (prepublish script), root LICENSE added, README tool count corrected 17→21.
-- **VS Code Extension:** Marketplace icon (128×128 PNG) added, package.json updated.
-- **Smart Migration Warnings:** Contextual advisor for every diff (14 warning categories across critical/warning/tip severities). Integrated into app.html free preview + Pro output. Also exported from `lib/engine.js` for CLI/programmatic use.
-- **Launch Special in-app:** Migration and ORM paywalls now prominently display $19/first-year offer with scarcity copy and link to `launch-special.html`.
-- **Email capture modal:** Triggers after first successful diff, offers Migration Safety Checklist lead magnet, integrates with `/api/subscribe`, tracks analytics, admin source breakdown.
-- **"How it works" explainer modal:** 4-section trust builder (custom parser, semantic diff, privacy-first, CLI) with "How it works" pill in results summary bar and welcome state feature card. Counters "vibe-coded" perception.
-- **"Share Your Safety Score" viral feature:** New 🛡️ Safety tab in app.html share modal with branded score card image, warning breakdown, and social share buttons. Clickable safety score pill in diff results summary bar.
-- **Rollback migration generation:** Reverse ALTER TABLE scripts for all 5 dialects, exposed in app.html via Forward/Rollback tabs and in CLI via `--rollback` flag. Fixed `generateMigrationWarnings` undefined bug in `lib/engine.js`.
-
-### Day 84 (May 4)
-- **Column-level diff summary in app.html:** Summary bar now shows granular column change counts with prominent type-change pill (purple), null-change pill (amber), and default-change pill (blue). Addresses Product Hunt user feedback.
-- **Database support badges on homepage:** index.html hero now displays 5 database badges (PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle) with green checkmarks. Subtitle copy updated to mention all 5 dialects.
-- **Migration Recipes page:** `migration-recipes.html` — 10 common schema change recipes with copy-paste SQL for all 5 dialects, dialect tabs, safety warnings, FAQPage schema.org markup, search filter. Cross-linked from index.html, tools.html, sitemap.xml.
-- **HELP-REQUEST.md updated:** Corrected VS Code Marketplace PAT URL for Monday human help session.
-
-### Day 85 (May 4)
-- **Dedicated migration recipe SEO pages:** `add-foreign-key-postgres.html`, `create-index-mysql.html`, `sqlite-alter-table.html` — 3 comprehensive standalone guides targeting high-volume keywords. Each covers all 5 dialects with copy-paste scripts, safety warnings, FAQPage schema.org, and related recipe cards. Cross-linked from index.html (24 tools), tools.html, migration-recipes.html. sitemap.xml updated.
-
-### Day 86 (May 4)
-- **Safe Migration Checker micro-tool:** `tools/safe-migration-checker.html` — audits migration scripts for 12 production safety issues across 5 dialects. Safety score (0-100), issue cards with fix suggestions, sample migrations per dialect, copy report button. Added to index.html (25 tools), tools.html, sitemap.xml.
-- **Newsletter sponsorship research:** `marketing/newsletter-sponsorship-research.md` — 15+ developer newsletters with verified pricing, audience analysis, 3 budget scenarios, and draft ad copy. Top recommendation: Postgres Weekly classified ($180).
-
-### Day 87 (May 5)
-- **Reserved Words Checker micro-tool:** `tools/sql-reserved-words-checker.html` — 450+ reserved words per dialect, collision detection, rename suggestions, score 0-100. Added to index.html (26 tools), tools.html, sitemap.xml.
-- **Migration Cost Calculator embed:** Live ROI calculator embedded directly on pricing.html above tiers. 4 sliders, real-time annual cost, "pays for itself" metric.
-- **HELP-REQUEST.md recreated:** Corrected VS Code Marketplace PAT URL, AlternativeTo.net retry, npm publish `schemalens-engine`, social media copy.
-
-### Day 88 (May 5)
-- **Zero-Downtime Migration Guide:** `zero-downtime-migration-guide.html` — comprehensive guide covering online DDL for all 5 dialects, expand/contract pattern, pre-deploy safety checklist. Added to index.html (27 tools), tools.html, migration-recipes.html, sitemap.xml.
-- **Direct Gumroad checkout buttons:** `?wanted=true` skip-product-page checkout in app.html paywall + license modal. Two CTAs: Launch Special $19/yr and Annual Pro $49/yr.
-
-### Day 89 (May 5)
-- **SQL to ORM Converter micro-tool:** `tools/sql-to-orm-converter.html` — converts SQL CREATE TABLE statements to Prisma or Drizzle ORM schemas. Supports all 5 dialects with full type mapping, relation detection, and constraint handling. Copy + download output. Sample schemas per dialect. Added to index.html, tools.html, sitemap.xml.
-
-### Day 90 (May 5)
-- **VS Code Extension published on Marketplace!** https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens
-- **`vscode-extension.html` landing page:** Dedicated SEO page with install guide, feature cards, command reference, dialect detection table, Schema.org SoftwareApplication markup, OG tags.
-- **Site-wide VS Code promotion:** Hero pill on index.html, feature card in "Why developers love" section, Free Developer Tools grid card (count 21→22), tools.html card, app.html Settings modal section + How It Works footer link, changelog.html Marketplace link, README.md badge, sitemap.xml entry, footer cross-links on index.html and tools.html.
+### Days 89–92 (May 5)
+- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 24 free developer tools live.
+- **Conversion:** Homepage hero badge A/B test (CLI vs VS Code vs neither vs both) combined with headline A/B test.
 
 ---
 
-*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) A/B test homepage hero variants, (2) Build more micro-tools for organic traffic, (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*
+*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (2) Build more micro-tools for organic traffic, (3) Create case study with first team customer.*

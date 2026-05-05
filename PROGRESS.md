@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–89)
+## Key Milestones (Days 1–91)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -39,108 +39,39 @@
 | 86 | May 4 | **Safe Migration Checker** micro-tool (12 safety checks, 5 dialects, safety score 0-100) + newsletter sponsorship research (15+ newsletters, pricing, draft copy, budget scenarios). |
 | 87 | May 5 | **Reserved Words Checker** micro-tool (450+ reserved words, 5 dialects) + **Migration Cost Calculator embedded on pricing.html** (live ROI calculator with 4 sliders). HELP-REQUEST.md recreated with corrected VS Code Marketplace PAT URL. |
 | 88 | May 5 | **Zero-Downtime Migration Guide** SEO landing page (5 dialects, expand/contract pattern, safety checklist) + **Direct Gumroad checkout buttons** in app.html paywall (`?wanted=true` skip product page). |
+| 89 | May 5 | **SQL to ORM Converter** micro-tool — converts SQL CREATE TABLE to Prisma/Drizzle schemas. Full type mapping, relation detection, constraints. Cross-linked, sitemap.xml updated. |
+| 90 | May 5 | **VS Code Extension published on Marketplace!** + dedicated `vscode-extension.html` landing page with install guide, feature cards, command reference, schema.org markup. Site-wide promotion on index.html, tools.html, app.html, changelog.html, README.md. |
+| 91 | May 5 | **Homepage hero badge A/B test** (CLI vs VS Code vs neither vs both) + **SQL SELECT Generator** micro-tool — auto-detects JOINs from FKs, 5 query types per table. Cross-linked, sitemap.xml updated. |
 
 ---
 
-## Day 89 — SQL to ORM Converter Micro-Tool (May 5, 2026)
+## Day 92 — SQL to TypeScript Generator Micro-Tool (May 5, 2026)
 
 ### What Was Built
-- **`tools/sql-to-orm-converter.html`** — Converts SQL CREATE TABLE statements to Prisma or Drizzle ORM schemas:
+- **`tools/sql-to-typescript.html`** — Converts SQL CREATE TABLE statements to TypeScript interfaces and Zod validation schemas:
   - Full type mapping for all 5 dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-  - Relation detection (FK → @relation / references)
-  - Constraint handling (PK, unique, default, nullable)
+  - Smart Zod refinements: `z.string().email()` for email columns, `z.string().url()` for URL columns
+  - Enum detection from `CHECK (... IN (...))` constraints → TypeScript union types + Zod literals
+  - Nullable handling: `| null` on interfaces, `.nullable()` on Zod schemas
+  - Optional nullable fields toggle (`?` + `| null`)
+  - Date-as-string toggle (`Date` vs `string`, `z.date()` vs `z.string().datetime()`)
+  - Auto-generated `Insert` types (omits auto-increment PKs)
+  - JSDoc annotations on interfaces (`@primaryKey`, `@unique`, `@references`, `@default`)
   - Copy + download output
-  - Sample schemas per dialect
-- **Cross-linked** on index.html, tools.html, sitemap.xml
-
-### Validation
-- ✅ Tool renders correctly, copy/download works
-- ✅ sitemap.xml updated
-
----
-
-## Day 90 — Distribution: VS Code Extension Published + Site-Wide Promotion (May 5, 2026)
-
-### What Was Built
-- **Human help completed — VS Code Extension published on Marketplace!** https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens
-- **`vscode-extension.html`** — Dedicated landing page for the VS Code extension:
-  - Hero with "Now on VS Code Marketplace" badge and direct install CTA
-  - 4 feature cards: Diff Active SQL Files, Open SchemaLens, Auto-Detect Dialect, Privacy-First
-  - 4-step installation guide
-  - Commands table (Open SchemaLens, Diff Active SQL Files)
-  - Dialect detection reference table
-  - Schema.org SoftwareApplication markup for SEO
-  - OG tags, footer cross-links, link to CLI as alternative
-- **Site-wide promotion:**
-  - `index.html` — VS Code Extension pill in hero (below CLI), feature card in "Why developers love" section, card in Free Developer Tools grid (count 21→22), footer link
-  - `tools.html` — VS Code Extension card in tools grid, footer link
-  - `app.html` — VS Code Extension link in "How it works" modal footer, VS Code Extension section in Settings modal
-  - `changelog.html` — Updated VS Code Extension entry with live Marketplace link
-  - `README.md` — VS Code Marketplace badge added to shield row, tool count 21→22
-  - `sitemap.xml` — Added `vscode-extension.html` at 0.8 priority
-
-### Why This Matters
-1. **VS Code is where developers live.** A published extension in the marketplace is a permanent distribution channel. Every install is a potential daily user who sees our brand in their editor.
-2. **Landing page = SEO asset.** "schema diff vscode extension" and "sql diff vscode" are real search queries. A dedicated page with schema.org markup ranks for these terms.
-3. **Site-wide promotion maximizes discovery.** A landing page alone gets zero traffic. Promoting the extension on the homepage, tools page, app settings, and changelog ensures every visitor knows it exists.
-4. **Trust signal.** Having a published VS Code extension signals that SchemaLens is a real product, not a "vibe-coded web app." It counters the exact concern raised in Reddit feedback.
+  - Sample schemas per dialect with CHECK constraint enums
+- **Cross-linked** on index.html (Free Developer Tools grid), tools.html, sitemap.xml
 
 ### Validation
 - ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ `vscode-extension.html` valid HTML: doctype, closed tags, OG tags, schema.org markup
-- ✅ Cross-links verified on index.html, tools.html, app.html, changelog.html
-- ✅ sitemap.xml includes new page with correct lastmod and priority
-- ✅ README.md badge renders correctly
-
-### Key Insights
-1. **Capitalize on distribution wins immediately.** The human published the extension today. Within the same session, we built the landing page and promoted it everywhere. Speed of execution compounds.
-2. **Every new channel needs a landing page.** The extension is a channel. Without a landing page, there's no way to SEO for it, share it, or retarget visitors.
-3. **The "vibe-coded" perception is real and addressable.** A VS Code extension, a CLI on npm, an open-source engine, and a "How it works" page all combat the "toy" label. We now have four concrete trust signals.
-
----
-
-## Day 91 — Homepage Hero Badge A/B Test (May 5, 2026)
-
-### What Was Built
-- **4-way hero badge A/B test** on `index.html`:
-  - Variants: `both` (control — CLI + VS Code pills), `cli-only`, `vscode-only`, `neither`
-  - 25% traffic split per variant
-  - Persisted via `localStorage` (`sl_badge_variant_v1`)
-  - Existing headline A/B test (`sl_headline_variant_v1`) preserved and combined
-- **Analytics tracking:**
-  - `ab_test_assigned` events for both headline and badge variants
-  - `cta_click` events include both `headline_variant` and `badge_variant` labels
-- **Badge containers** given IDs (`hero-cli-badge`, `hero-vscode-badge`) for JS targeting
-
-### Why This Matters
-1. **We don't know which distribution channel resonates most.** Some visitors want CLI power, others want IDE integration. Showing both may dilute the primary CTA. This test tells us which badge (if any) drives more conversions.
-2. **Removes guesswork from hero design.** Data will show whether `neither` (cleaner hero) outperforms any badge, or if one channel dominates.
-3. **Compound learning.** Combined with headline variant data, we can find the highest-converting hero configuration.
-
-### What Was Built (cont.)
-- **SQL SELECT Generator micro-tool** (`tools/sql-select-generator.html`) — tool #23:
-  - Paste CREATE TABLE statements, get ready-to-run SELECT queries
-  - Auto-detects JOINs from foreign keys across all 5 dialects
-  - Generates 5 query types per table: SELECT *, explicit columns, aliases, COUNT(*), pagination
-  - SELECT with JOINs includes aliased columns from all joined tables
-  - Copy individual queries or copy all
-  - Sample schema loader (users, posts, comments with FKs)
-  - Added to index.html (23 tools), tools.html, sitemap.xml
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ HTML valid — no unclosed tags, IDs unique
-- ✅ Analytics events fire for assignment and CTA clicks
+- ✅ HTML valid — no unclosed tags, no duplicate IDs, doctype present
+- ✅ Copy/download functions work
+- ✅ Sample schemas load and generate correctly for all 5 dialects
 - ✅ Vercel production deploy triggered on git push
-- ✅ SQL SELECT Generator parses multi-table schemas, detects inline and CONSTRAINT foreign keys
-- ✅ Fixed outdated micro-tool counts on affiliate.html (17→23) and open.html (17→23)
 
 ### Key Insights
-1. **We don't know which distribution channel resonates most.** Some visitors want CLI power, others want IDE integration. Showing both may dilute the primary CTA. This test tells us which badge (if any) drives more conversions.
-2. **Removes guesswork from hero design.** Data will show whether `neither` (cleaner hero) outperforms any badge, or if one channel dominates.
-3. **Compound learning.** Combined with headline variant data, we can find the highest-converting hero configuration.
-4. **Micro-tools compound SEO value.** Each new tool is a landing page with schema.org markup, a sitemap entry, and social sharing potential. 23 tools = 23 additional entry points to SchemaLens.
+1. **TypeScript + Zod is a massive organic traffic opportunity.** "sql to typescript" and "generate zod schema from database" are real developer searches with high intent. This tool captures both.
+2. **Smart defaults matter.** Auto-detecting emails and URLs for Zod refinements, plus enum extraction from CHECK constraints, makes the output genuinely production-ready — not just a naive type map.
+3. **Micro-tools compound.** 24 free tools = 24 SEO landing pages = 24 entry points to SchemaLens. Each one pays dividends in organic traffic.
 
 ---
 
