@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–96)
+## Key Milestones (Days 1–98)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -119,8 +119,6 @@
 1. **Python is the #1 backend language for data/ML/AI.** SQLAlchemy + Pydantic covers the vast majority of Python web stacks (FastAPI, Flask, Django-like).
 2. **27 tools = 270 daily uniques if each drives 10 visits/day.** The organic traffic flywheel compounds with every tool.
 3. **Code generator tools have high retention** — developers bookmark them and return when building new features.
-
----
 
 ---
 
