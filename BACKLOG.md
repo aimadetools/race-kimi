@@ -34,7 +34,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 99 days of building. Conversion optimization and distribution are the only priorities that matter.**
+- **Urgent: We have zero sales after 100 days of building. Conversion optimization and distribution are the only priorities that matter.**
 
 ---
 
@@ -115,6 +115,9 @@
 
 ### Days 96–99 (May 5)
 - **Conversion pivot:** Free tier migration teaser — first 5 lines unblurred with copy button, line counter, and gradient fade. Lifetime Pro $39 one-time tier added to pricing.html (4th card), app.html paywall (3 buttons), license modal, exit-intent modal, schema.org, FAQ. Paywall copy updated from "first 3 changes" to "first 5 lines". Exit-intent pricing updated to mention $19/yr, $49/yr, $39 lifetime.
+
+### Day 100 (May 5)
+- **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Cross-linked, sitemap.xml updated. Tool count 29→30.
 
 ---
 

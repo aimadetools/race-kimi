@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–99)
+## Key Milestones (Days 1–100)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -50,6 +50,36 @@
 | 97 | May 5 | **SQL UPDATE Generator** micro-tool — UPDATE statements from CREATE TABLE with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT. Tool count 27→28. |
 | 98 | May 5 | **SQL DELETE Generator** micro-tool — safe DELETE statements from CREATE TABLE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE. Tool count 28→29. |
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
+| 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
+
+---
+
+## Day 100 — SQL UPSERT & MERGE Generator (May 5, 2026)
+
+### What Was Built
+- **SQL UPSERT & MERGE Generator** (`tools/sql-upsert-generator.html`) — Generate UPSERT and MERGE statements automatically from CREATE TABLE schemas. Every major SQL dialect handles upserts differently; this tool generates the exact syntax for each.
+- **Dialect-specific syntax**:
+  - **PostgreSQL**: `INSERT ... ON CONFLICT (pk) DO UPDATE SET ...`, `ON CONFLICT DO NOTHING`, `RETURNING *`
+  - **MySQL**: `INSERT ... ON DUPLICATE KEY UPDATE ...`, `INSERT IGNORE`
+  - **SQLite**: `INSERT ... ON CONFLICT (pk) DO UPDATE SET ...`, `ON CONFLICT DO NOTHING`, `RETURNING *`
+  - **SQL Server**: `MERGE INTO ... USING (...) ON ... WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ... OUTPUT inserted.*`
+  - **Oracle**: `MERGE INTO ... USING (SELECT ... FROM dual) ON ... WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ... RETURNING * INTO :out_cursor`
+- **Query variants** (6 per table): Basic UPSERT, DO NOTHING / INSERT IGNORE, UPSERT with RETURNING/OUTPUT, Bulk UPSERT (2 rows), Single-column UPSERT, MERGE-style (SQL Server/Oracle)
+- **Smart conflict target detection** — Automatically uses primary key columns; falls back to unique constraints, then non-nullable columns.
+- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **Tool count updated** 29→30.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **UPSERT is the "fifth" CRUD operation.** After SELECT, INSERT, UPDATE, DELETE — upsert (create-or-update) is the most common missing piece. Developers constantly search for "postgres upsert" and "mysql upsert."
+2. **Dialect differences for UPSERT are extreme.** PostgreSQL uses ON CONFLICT, MySQL uses ON DUPLICATE KEY, SQL Server and Oracle use MERGE — a single tool that handles all five saves significant research time.
+3. **30 tools = 300 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the complete data manipulation spectrum: SELECT, INSERT, UPDATE, DELETE, and UPSERT.
 
 ---
 
@@ -98,30 +128,6 @@
 1. **DELETE is the most dangerous SQL operation.** A generator that defaults to PK-qualified WHERE clauses prevents catastrophic data loss.
 2. **29 tools = 290 daily uniques at 10 visits/tool.** The CRUD query generator family is now complete: SELECT, INSERT, UPDATE, DELETE.
 3. **Soft-delete pattern inclusion adds educational value.** Many developers don't know how to implement soft deletes; showing the pattern teaches best practices.
-
----
-
-## Day 97 — SQL UPDATE Generator (May 5, 2026)
-
-### What Was Built
-- **SQL UPDATE Generator** (`tools/sql-update-generator.html`) — Generate UPDATE statements from CREATE TABLE schemas. Supports all 5 dialects with dialect-specific syntax.
-- **Query variants**: Basic UPDATE (all columns), single-column UPDATE, UPDATE with RETURNING (PostgreSQL/Oracle) or OUTPUT (SQL Server), UPDATE with JOIN (INNER JOIN syntax per dialect), bulk UPDATE via CASE, UPDATE with LIMIT (MySQL/PostgreSQL/SQLite).
-- **Smart placeholders**: Type-aware values (int→1, bool→true, text→'value', datetime→'2024-01-01', etc.).
-- **PK-aware WHERE**: Automatically detects primary keys from columns and constraints to generate safe WHERE clauses.
-- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 27→28.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **UPDATE statements are error-prone in production.** A generator that creates safe, PK-qualified UPDATE queries reduces accidental full-table updates.
-2. **28 tools = 280 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the full CRUD query generation spectrum (SELECT, INSERT, UPDATE).
-3. **Completeness matters for SEO clustering.** Having SELECT + INSERT + UPDATE generators signals topical authority to search engines.
 
 ---
 
