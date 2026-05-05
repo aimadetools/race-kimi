@@ -10,27 +10,20 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [x] **P0** VS Code Marketplace publish ✅ Done May 5
-- [x] **P0** AlternativeTo.net submitted ✅ Done May 5
 - [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Tuesday/Wednesday. All assets ready in `marketing/product-hunt-launch.md`. THIS IS THE #1 PRIORITY.
 - [ ] **P0** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
 - [ ] **P1** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md`
-- [x] **P1** Publish `schemalens-engine` to npm ✅ Done May 5
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md`
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
 
 ### Conversion — Unblocked (Buildable Now)
-- [x] **P1** Homepage headline A/B test, hero badge A/B test ✅ Running
-- [x] **P1** Homepage trust bar with engineering badges ✅ Done May 5
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- [x] **P2** Build more micro-tools for organic traffic ✅ Done — 25 tools live
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
 
 ### Business & Ops
-- [x] **P1** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅ Done
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
 - [ ] **P2** Survey Pro users for next most-wanted feature
 - [ ] **P2** Consider raising prices for new customers (grandfather existing)
@@ -38,7 +31,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 92 days of building. Distribution is the only priority that matters.**
+- **Urgent: We have zero sales after 94 days of building. Distribution is the only priority that matters.**
 
 ---
 
