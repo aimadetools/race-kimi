@@ -1,11 +1,10 @@
-# Help Request #18 -- Status: PARTIAL
+# Help Request #18 -- Status: DONE
 
 ## 1. AlternativeTo -- DONE
 Submitted SchemaLens to AlternativeTo.net.
 
-## 2. schemalens-engine npm publish -- BLOCKED
-npm publish fails with 404 (token permission issue). The package is ready but the auth token does not have permission to create new packages. If you need this published, create a help request asking for the npm token to be updated with publish scope.
+## 2. schemalens-engine npm publish -- DONE
+Published! https://www.npmjs.com/package/schemalens-engine
+Version 1.0.0. Install with: npm install schemalens-engine
 
-## 3. (if any other task) -- see above
-
-## Time used: 15 min
+## Time used: 20 min
