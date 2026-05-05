@@ -228,6 +228,11 @@
         <code style="background:var(--code-bg);padding:4px 10px;border-radius:6px;font-size:0.85rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
         <a href="cli/" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Docs →</a>
       </div>
+      <div style="margin-top:12px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+        <span style="font-size:0.85rem;color:var(--text-muted);">🖥️ VS Code:</span>
+        <span style="font-size:0.85rem;color:var(--text);">Diff SQL files directly from your editor</span>
+        <a href="vscode-extension.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Learn more →</a>
+      </div>
 
       <div class="demo-card">
         <div class="demo-header">
@@ -269,7 +274,7 @@
     <div class="container">
       <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center;">
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">21</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">22</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
         </div>
         <div>
@@ -299,6 +304,9 @@
         </div>
         <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.85rem;">
           <span style="font-size: 1.1rem;">🏗️</span> <a href="how-it-works.html" style="color: var(--primary); text-decoration: none;">Engineering transparency →</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.85rem;">
+          <span style="font-size: 1.1rem;">🖥️</span> <a href="vscode-extension.html" style="color: var(--primary); text-decoration: none;">VS Code Extension →</a>
         </div>
       </div>
     </div>
@@ -338,6 +346,11 @@
           <div class="feature-icon">🛠️</div>
           <h3>Zero Install</h3>
           <p>No CLI to learn. No dependencies to install. No Docker image to pull. Open your browser and go. Or use <code>npx schemalens-cli</code> if you prefer the terminal.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>VS Code Extension</h3>
+          <p>Diff two open SQL files directly from VS Code. Auto-detects dialect, generates a shareable diff URL, and opens it in your browser. <a href="vscode-extension.html" style="color: var(--primary);">Learn more →</a></p>
         </div>
       </div>
     </div>
@@ -564,6 +577,12 @@
           <h3>Badge Generator</h3>
           <p>Generate custom SVG badges for your GitHub READMEs and shared schema diffs. Embed diff status anywhere.</p>
           <a href="tools/badge-generator.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Make Badge</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>VS Code Extension</h3>
+          <p>Diff two open SQL files directly from VS Code. Auto-detects dialect and opens SchemaLens with both schemas pre-filled.</p>
+          <a href="vscode-extension.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Install Extension</a>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🖼️</div>
@@ -822,6 +841,7 @@
       <a href="tools/safe-migration-checker.html">Safe Migration</a>
       <a href="tools/sql-reserved-words-checker.html">Reserved Words</a>
       <a href="tools/sql-to-orm-converter.html">SQL to ORM</a>
+      <a href="vscode-extension.html">VS Code Extension</a>
           <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
           <a href="tools/schema-diagram.html">ER Diagram</a>
           <a href="tools/migration-cost-calculator.html">Cost Calculator</a>

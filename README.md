@@ -4,6 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
@@ -60,7 +61,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **21 free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **22 free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
