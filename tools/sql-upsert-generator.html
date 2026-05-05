@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SQL UPSERT &amp; MERGE Statement Generator — SchemaLens</title>
+<meta name="description" content="Generate SQL UPSERT and MERGE statements automatically from CREATE TABLE schemas. Supports INSERT ON CONFLICT, ON DUPLICATE KEY UPDATE, MERGE INTO, and REPLACE. All 5 dialects. No signup required.">
+<meta property="og:title" content="Free SQL UPSERT &amp; MERGE Statement Generator — SchemaLens">
+<meta property="og:description" content="Paste CREATE TABLE statements and get ready-to-run UPSERT/MERGE queries for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-upsert-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL UPSERT & MERGE Statement Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates SQL UPSERT and MERGE statements from CREATE TABLE schemas. Supports PostgreSQL ON CONFLICT, MySQL ON DUPLICATE KEY UPDATE, SQLite ON CONFLICT, SQL Server MERGE, and Oracle MERGE. Includes bulk upsert, RETURNING/OUTPUT, and DO NOTHING variants.",
+  "url": "https://schemalens.tech/tools/sql-upsert-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .generator-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .generator-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 320px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .query-list { display: flex; flex-direction: column; gap: 12px; }
+  .query-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
+  }
+  .query-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+  .query-item pre {
+    margin: 0; font-family: var(--mono); font-size: 0.8rem; line-height: 1.5;
+    color: var(--code-text); white-space: pre-wrap; word-break: break-word;
+  }
+  .query-item .actions { margin-top: 8px; display: flex; gap: 8px; }
+  .query-item .actions button {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  }
+  .query-item .actions button:hover { background: var(--surface-hover); }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL UPSERT &amp; MERGE Generator</h1>
+    <p>Paste your CREATE TABLE statements and get ready-to-run UPSERT / MERGE queries. Every major dialect handles upserts differently — we generate the right syntax for yours.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="generator-grid">
+    <div class="generator-card">
+      <h2>Input SQL</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  updated_at TIMESTAMP DEFAULT now()
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">🔄 Generate</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <p class="notice">Generates UPSERT, MERGE, bulk upsert, DO NOTHING, and RETURNING/OUTPUT variants.</p>
+    </div>
+
+    <div class="generator-card">
+      <h2>Generated UPSERT / MERGE Queries</h2>
+      <div id="statsRow" class="stats-row" style="display:none;">
+        <div class="stat"><div class="stat-value" id="statTables">0</div><div class="stat-label">Tables</div></div>
+        <div class="stat"><div class="stat-value" id="statQueries">0</div><div class="stat-label">Queries</div></div>
+        <div class="stat"><div class="stat-value" id="statMerge">0</div><div class="stat-label">MERGE Style</div></div>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Paste SQL and click Generate to see UPSERT / MERGE statements.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to compare two schemas and generate migrations too?</h3>
+    <p>SchemaLens diffs your SQL schemas, detects breaking changes, and generates safe forward + rollback migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-validator.html">SQL Validator</a>
+        <a href="sql-formatter.html">SQL Formatter</a>
+        <a href="schema-health-check.html">Schema Health Check</a>
+        <a href="safe-migration-checker.html">Safe Migration Checker</a>
+        <a href="migration-cost-calculator.html">Cost Calculator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =====================
+// SQL Parser (simplified from SchemaLens Engine)
+// =====================
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts.filter(s => s.length > 0);
+}
+
+function tokenize(text) {
+  const tokens = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch;
+      inString = true;
+      stringChar = ch;
+      continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') {
+        inString = false;
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current.trim()) tokens.push(current.trim());
+      current = '';
+    } else if (ch === '(' || ch === ')' || ch === ',') {
+      if (current.trim()) tokens.push(current.trim());
+      tokens.push(ch);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+
+function splitBody(body) {
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    const prev = body[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true;
+      stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        continue;
+      }
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function parseColumn(tokens, dialect) {
+  const col = {
+    name: tokens[0].replace(/["`\[\]]/g, ''),
+    type: '',
+    nullable: true,
+    defaultValue: null,
+    primaryKey: false,
+    unique: false,
+    autoIncrement: false,
+    raw: tokens.join(' ')
+  };
+
+  let i = 1;
+  const typeTokens = [];
+  const constraintKeywords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','KEY','CLUSTERED','NONCLUSTERED'];
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (constraintKeywords.includes(t)) break;
+    typeTokens.push(tokens[i]);
+    i++;
+  }
+  col.type = typeTokens.join(' ') || 'UNKNOWN';
+
+  while (i < tokens.length) {
+    const t = tokens[i].toUpperCase();
+    if (t === 'NOT' && tokens[i+1] && tokens[i+1].toUpperCase() === 'NULL') {
+      col.nullable = false;
+      i += 2;
+    } else if (t === 'NULL') {
+      col.nullable = true;
+      i++;
+    } else if (t === 'PRIMARY' && tokens[i+1] && tokens[i+1].toUpperCase() === 'KEY') {
+      col.primaryKey = true;
+      col.nullable = false;
+      i += 2;
+      if (tokens[i] && (tokens[i].toUpperCase() === 'CLUSTERED' || tokens[i].toUpperCase() === 'NONCLUSTERED')) i++;
+    } else if (t === 'UNIQUE') {
+      col.unique = true;
+      i++;
+    } else if (t === 'DEFAULT') {
+      i++;
+      const defaultTokens = [];
+      const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+      while (i < tokens.length && !stopWords.includes(tokens[i].toUpperCase())) {
+        defaultTokens.push(tokens[i]);
+        i++;
+      }
+      col.defaultValue = defaultTokens.join(' ') || null;
+    } else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') {
+      col.autoIncrement = true;
+      i++;
+    } else if (t === 'IDENTITY') {
+      col.autoIncrement = true;
+      i++;
+      if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; }
+    } else if (t === 'REFERENCES') {
+      i++;
+      col.foreignKey = { table: '', columns: [] };
+      if (tokens[i]) {
+        col.foreignKey.table = tokens[i].replace(/["`]/g, '');
+        i++;
+      }
+      if (tokens[i] === '(') {
+        i++;
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g, ''));
+          i++;
+        }
+        i++;
+      }
+      while (i < tokens.length) {
+        const next = tokens[i].toUpperCase();
+        if (next === 'ON' || next === 'DEFERRABLE' || next === 'INITIALLY') {
+          i++;
+          while (i < tokens.length && !['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','REFERENCES','CHECK','COLLATE','COMMENT','CONSTRAINT'].includes(tokens[i].toUpperCase())) i++;
+        } else break;
+      }
+    } else {
+      i++;
+    }
+  }
+
+  return col;
+}
+
+function parseConstraint(tokens, dialect) {
+  const con = { raw: tokens.join(' '), type: '', name: null, columns: [] };
+  let i = 0;
+  if (tokens[i].toUpperCase() === 'CONSTRAINT') {
+    i++;
+    con.name = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : null;
+    i++;
+  }
+  const t = tokens[i] ? tokens[i].toUpperCase() : '';
+  if (t === 'PRIMARY') {
+    con.type = 'PRIMARY KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'UNIQUE') {
+    con.type = 'UNIQUE';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+    }
+  } else if (t === 'FOREIGN') {
+    con.type = 'FOREIGN KEY';
+    i += 2;
+    if (tokens[i] === '(') {
+      i++;
+      while (i < tokens.length && tokens[i] !== ')') {
+        if (tokens[i] !== ',') con.columns.push(tokens[i].replace(/["`\[\]]/g, ''));
+        i++;
+      }
+      i++;
+    }
+    if (tokens[i] && tokens[i].toUpperCase() === 'REFERENCES') {
+      i++;
+      con.refTable = tokens[i] ? tokens[i].replace(/["`\[\]]/g, '') : '';
+      i++;
+      if (tokens[i] === '(') {
+        i++;
+        con.refColumns = [];
+        while (i < tokens.length && tokens[i] !== ')') {
+          if (tokens[i] !== ',') con.refColumns.push(tokens[i].replace(/["`\[\]]/g, ''));
+          i++;
+        }
+      }
+    }
+  } else if (t === 'CHECK') {
+    con.type = 'CHECK';
+    i++;
+    if (tokens[i] === '(') {
+      i++;
+      const checkTokens = [];
+      let depth = 1;
+      while (i < tokens.length && depth > 0) {
+        if (tokens[i] === '(') depth++;
+        else if (tokens[i] === ')') depth--;
+        if (depth > 0) checkTokens.push(tokens[i]);
+        i++;
+      }
+      con.expression = checkTokens.join(' ');
+    }
+  }
+  return con;
+}
+
+function parseCreateTable(stmt, dialect) {
+  const m = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(.+?)\s*\((.*)\)\s*(?:ENGINE\s*=\s*\w+)?\s*;?$/is);
+  if (!m) return null;
+  let tableName = m[1].trim();
+  tableName = tableName.replace(/["`\[\]]/g, '');
+  const body = m[2];
+  const parts = splitBody(body);
+  const table = { name: tableName, columns: [], constraints: [] };
+  for (const part of parts) {
+    const tokens = tokenize(part);
+    if (!tokens.length) continue;
+    const first = tokens[0].toUpperCase();
+    if (first === 'CONSTRAINT' || first === 'PRIMARY' || first === 'UNIQUE' || first === 'FOREIGN' || first === 'CHECK') {
+      const con = parseConstraint(tokens, dialect);
+      if (con.type) table.constraints.push(con);
+    } else {
+      const col = parseColumn(tokens, dialect);
+      if (col.name) table.columns.push(col);
+    }
+  }
+  return table;
+}
+
+function parseSQL(sql, dialect) {
+  sql = stripComments(sql);
+  const stmts = splitStatements(sql);
+  const schema = { tables: [], errors: [] };
+  for (const stmt of stmts) {
+    const upper = stmt.toUpperCase();
+    if (upper.includes('CREATE TABLE')) {
+      const table = parseCreateTable(stmt, dialect);
+      if (table) schema.tables.push(table);
+      else schema.errors.push({ type: 'parse', stmt: stmt.substring(0, 120) + (stmt.length > 120 ? '...' : ''), msg: 'Could not parse CREATE TABLE statement' });
+    }
+  }
+  return schema;
+}
+
+// =====================
+// UPSERT / MERGE Generator
+// =====================
+function placeholderForType(sqlType, dialect) {
+  const t = (sqlType || '').toLowerCase();
+  const base = t.replace(/\([^)]+\)/g, '').trim();
+  if (base.includes('int') || base === 'integer' || base === 'serial' || base === 'bigserial' || base === 'mediumint' || base === 'tinyint' || base === 'smallint' || base === 'bigint') return '1';
+  if (base.includes('bool') || base === 'bit') return 'true';
+  if (base === 'float' || base === 'real' || base.includes('double') || base.includes('decimal') || base.includes('numeric') || base === 'number' || base === 'money') return '1.0';
+  if (base.includes('json')) return "'{}'";
+  if (base === 'bytea' || base === 'blob' || base === 'varbinary' || base === 'binary' || base === 'raw') return "'\\x00'";
+  if (base === 'uuid' || base === 'uniqueidentifier') return "'550e8400-e29b-41d4-a716-446655440000'";
+  if (base.includes('timestamp') || base === 'datetime' || base === 'datetime2' || base === 'smalldatetime' || base === 'date' || base === 'time') return "'2024-01-01 00:00:00'";
+  if (base.includes('varchar') || base.includes('char') || base === 'text' || base === 'clob' || base === 'nvarchar' || base === 'nchar' || base === 'ntext' || base === 'varchar2' || base === 'nvarchar2' || base === 'longtext' || base === 'mediumtext' || base === 'tinytext') return "'value'";
+  return "'value'";
+}
+
+function getPkColumns(table) {
+  const pkCols = [];
+  for (const col of table.columns) {
+    if (col.primaryKey) pkCols.push(col.name);
+  }
+  for (const con of table.constraints || []) {
+    if (con.type === 'PRIMARY KEY' && con.columns) {
+      for (const c of con.columns) {
+        if (!pkCols.includes(c)) pkCols.push(c);
+      }
+    }
+  }
+  return pkCols;
+}
+
+function getUniqueColumns(table) {
+  const uniq = [];
+  for (const col of table.columns) {
+    if (col.unique && !col.primaryKey) uniq.push(col.name);
+  }
+  for (const con of table.constraints || []) {
+    if (con.type === 'UNIQUE' && con.columns && con.columns.length === 1) {
+      if (!uniq.includes(con.columns[0])) uniq.push(con.columns[0]);
+    }
+  }
+  return uniq;
+}
+
+function getConflictTarget(table, dialect) {
+  const pkCols = getPkColumns(table);
+  if (pkCols.length > 0) return pkCols;
+  const uniqCols = getUniqueColumns(table);
+  if (uniqCols.length > 0) return uniqCols;
+  // fallback: all non-nullable columns without defaults
+  const fallback = table.columns
+    .filter(c => !c.nullable && !c.defaultValue && !c.autoIncrement)
+    .map(c => c.name);
+  return fallback.length > 0 ? fallback : table.columns.slice(0, 1).map(c => c.name);
+}
+
+function generateUpsertQueries(schema, dialect) {
+  if (!schema || !schema.tables) return [];
+  const tables = Array.isArray(schema.tables) ? schema.tables : Object.values(schema.tables);
+  const queries = [];
+
+  for (const table of tables) {
+    const pkCols = getPkColumns(table);
+    const conflictCols = getConflictTarget(table, dialect);
+    const insertableCols = table.columns.filter(c => !c.autoIncrement && !c.type.toLowerCase().includes('serial') && !c.type.toLowerCase().includes('identity') && !c.type.toLowerCase().includes('generated'));
+    const nonPkInsertable = insertableCols.filter(c => !pkCols.includes(c.name));
+    const allColNames = insertableCols.map(c => c.name);
+    const allPlaceholders = insertableCols.map(c => placeholderForType(c.type, dialect));
+
+    if (insertableCols.length === 0) continue;
+
+    // Basic UPSERT (all columns)
+    if (nonPkInsertable.length > 0) {
+      if (dialect === 'postgres') {
+        const setClause = nonPkInsertable.map(c => `    ${c.name} = EXCLUDED.${c.name}`).join(',\n');
+        let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause};`;
+        queries.push({ table: table.name, type: 'UPSERT (ON CONFLICT UPDATE)', sql });
+      } else if (dialect === 'mysql') {
+        const setClause = nonPkInsertable.map(c => `    ${c.name} = VALUES(${c.name})`).join(',\n');
+        let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON DUPLICATE KEY UPDATE\n${setClause};`;
+        queries.push({ table: table.name, type: 'UPSERT (ON DUPLICATE KEY UPDATE)', sql });
+      } else if (dialect === 'sqlite') {
+        const setClause = nonPkInsertable.map(c => `    ${c.name} = excluded.${c.name}`).join(',\n');
+        let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause};`;
+        queries.push({ table: table.name, type: 'UPSERT (ON CONFLICT UPDATE)', sql });
+      } else if (dialect === 'mssql') {
+        const updates = nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n');
+        const inserts = allColNames.map(c => `    src.${c}`).join(',\n');
+        let sql = `MERGE INTO ${table.name} AS tgt\nUSING (VALUES (${allPlaceholders.join(', ')})) AS src (${allColNames.join(', ')})\n  ON tgt.${conflictCols[0]} = src.${conflictCols[0]}\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+        queries.push({ table: table.name, type: 'UPSERT (MERGE)', sql });
+      } else if (dialect === 'oracle') {
+        const updates = nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n');
+        let sql = `MERGE INTO ${table.name} tgt\nUSING (SELECT ${allPlaceholders.map((p, i) => `${p} AS ${allColNames[i]}`).join(', ')} FROM dual) src\n  ON (tgt.${conflictCols[0]} = src.${conflictCols[0]})\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+        queries.push({ table: table.name, type: 'UPSERT (MERGE)', sql });
+      }
+    }
+
+    // DO NOTHING / ignore conflict
+    if (dialect === 'postgres' || dialect === 'sqlite') {
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO NOTHING;`;
+      queries.push({ table: table.name, type: 'UPSERT (DO NOTHING)', sql });
+    } else if (dialect === 'mysql') {
+      // MySQL doesn't have DO NOTHING, but INSERT IGNORE is the closest
+      let sql = `INSERT IGNORE INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')});`;
+      queries.push({ table: table.name, type: 'UPSERT (INSERT IGNORE)', sql });
+    } else if (dialect === 'mssql') {
+      let sql = `MERGE INTO ${table.name} AS tgt\nUSING (VALUES (${allPlaceholders.join(', ')})) AS src (${allColNames.join(', ')})\n  ON tgt.${conflictCols[0]} = src.${conflictCols[0]}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+      queries.push({ table: table.name, type: 'UPSERT (MERGE INSERT ONLY)', sql });
+    } else if (dialect === 'oracle') {
+      let sql = `MERGE INTO ${table.name} tgt\nUSING (SELECT ${allPlaceholders.map((p, i) => `${p} AS ${allColNames[i]}`).join(', ')} FROM dual) src\n  ON (tgt.${conflictCols[0]} = src.${conflictCols[0]})\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+      queries.push({ table: table.name, type: 'UPSERT (MERGE INSERT ONLY)', sql });
+    }
+
+    // UPSERT with RETURNING / OUTPUT
+    if (dialect === 'postgres') {
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = EXCLUDED.${c.name}`).join(',\n')
+        : `    ${table.columns[0].name} = EXCLUDED.${table.columns[0].name}`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause}\nRETURNING *;`;
+      queries.push({ table: table.name, type: 'UPSERT with RETURNING', sql });
+    } else if (dialect === 'mysql') {
+      // MySQL doesn't support RETURNING on INSERT, but we can show a note in the query comment
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = VALUES(${c.name})`).join(',\n')
+        : `    ${table.columns[0].name} = VALUES(${table.columns[0].name})`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON DUPLICATE KEY UPDATE\n${setClause};\n-- Note: MySQL 8.0.19+ supports RETURNING on INSERT, but not with ON DUPLICATE KEY`;
+      queries.push({ table: table.name, type: 'UPSERT (MySQL limitation noted)', sql });
+    } else if (dialect === 'sqlite') {
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = excluded.${c.name}`).join(',\n')
+        : `    ${table.columns[0].name} = excluded.${table.columns[0].name}`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause}\nRETURNING *;`;
+      queries.push({ table: table.name, type: 'UPSERT with RETURNING', sql });
+    } else if (dialect === 'mssql') {
+      const updates = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n')
+        : `    tgt.${table.columns[0].name} = src.${table.columns[0].name}`;
+      let sql = `MERGE INTO ${table.name} AS tgt\nUSING (VALUES (${allPlaceholders.join(', ')})) AS src (${allColNames.join(', ')})\n  ON tgt.${conflictCols[0]} = src.${conflictCols[0]}\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')})\nOUTPUT inserted.*;`;
+      queries.push({ table: table.name, type: 'UPSERT with OUTPUT', sql });
+    } else if (dialect === 'oracle') {
+      const updates = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n')
+        : `    tgt.${table.columns[0].name} = src.${table.columns[0].name}`;
+      let sql = `MERGE INTO ${table.name} tgt\nUSING (SELECT ${allPlaceholders.map((p, i) => `${p} AS ${allColNames[i]}`).join(', ')} FROM dual) src\n  ON (tgt.${conflictCols[0]} = src.${conflictCols[0]})\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')})\nRETURNING * INTO :out_cursor;`;
+      queries.push({ table: table.name, type: 'UPSERT with RETURNING INTO', sql });
+    }
+
+    // Bulk UPSERT (2 rows)
+    if (dialect === 'postgres') {
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = EXCLUDED.${c.name}`).join(',\n')
+        : `    ${table.columns[0].name} = EXCLUDED.${table.columns[0].name}`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES\n  (${allPlaceholders.join(', ')}),\n  (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause};`;
+      queries.push({ table: table.name, type: 'Bulk UPSERT (2 rows)', sql });
+    } else if (dialect === 'mysql') {
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = VALUES(${c.name})`).join(',\n')
+        : `    ${table.columns[0].name} = VALUES(${table.columns[0].name})`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES\n  (${allPlaceholders.join(', ')}),\n  (${allPlaceholders.join(', ')})\nON DUPLICATE KEY UPDATE\n${setClause};`;
+      queries.push({ table: table.name, type: 'Bulk UPSERT (2 rows)', sql });
+    } else if (dialect === 'sqlite') {
+      const setClause = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    ${c.name} = excluded.${c.name}`).join(',\n')
+        : `    ${table.columns[0].name} = excluded.${table.columns[0].name}`;
+      let sql = `INSERT INTO ${table.name} (${allColNames.join(', ')})\nVALUES\n  (${allPlaceholders.join(', ')}),\n  (${allPlaceholders.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET\n${setClause};`;
+      queries.push({ table: table.name, type: 'Bulk UPSERT (2 rows)', sql });
+    } else if (dialect === 'mssql') {
+      const updates = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n')
+        : `    tgt.${table.columns[0].name} = src.${table.columns[0].name}`;
+      let sql = `MERGE INTO ${table.name} AS tgt\nUSING (VALUES\n  (${allPlaceholders.join(', ')}),\n  (${allPlaceholders.join(', ')})) AS src (${allColNames.join(', ')})\n  ON tgt.${conflictCols[0]} = src.${conflictCols[0]}\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+      queries.push({ table: table.name, type: 'Bulk UPSERT (MERGE 2 rows)', sql });
+    } else if (dialect === 'oracle') {
+      const updates = nonPkInsertable.length > 0
+        ? nonPkInsertable.map(c => `    tgt.${c.name} = src.${c.name}`).join(',\n')
+        : `    tgt.${table.columns[0].name} = src.${table.columns[0].name}`;
+      let sql = `MERGE INTO ${table.name} tgt\nUSING (SELECT ${allPlaceholders.map((p, i) => `${p} AS ${allColNames[i]}`).join(', ')} FROM dual\n        UNION ALL\n        SELECT ${allPlaceholders.map((p, i) => `${p} AS ${allColNames[i]}`).join(', ')} FROM dual) src\n  ON (tgt.${conflictCols[0]} = src.${conflictCols[0]})\nWHEN MATCHED THEN\n  UPDATE SET\n${updates}\nWHEN NOT MATCHED THEN\n  INSERT (${allColNames.join(', ')})\n  VALUES (${allColNames.map(c => 'src.' + c).join(', ')});`;
+      queries.push({ table: table.name, type: 'Bulk UPSERT (MERGE 2 rows)', sql });
+    }
+
+    // Single-column UPSERT (most common pattern)
+    if (nonPkInsertable.length > 0) {
+      const col = nonPkInsertable[0];
+      const singleCols = pkCols.concat([col.name]);
+      const singleVals = singleCols.map(c => placeholderForType(table.columns.find(x => x.name === c)?.type || 'text', dialect));
+      if (dialect === 'postgres') {
+        let sql = `INSERT INTO ${table.name} (${singleCols.join(', ')})\nVALUES (${singleVals.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET ${col.name} = EXCLUDED.${col.name};`;
+        queries.push({ table: table.name, type: 'Single Column UPSERT', sql });
+      } else if (dialect === 'mysql') {
+        let sql = `INSERT INTO ${table.name} (${singleCols.join(', ')})\nVALUES (${singleVals.join(', ')})\nON DUPLICATE KEY UPDATE ${col.name} = VALUES(${col.name});`;
+        queries.push({ table: table.name, type: 'Single Column UPSERT', sql });
+      } else if (dialect === 'sqlite') {
+        let sql = `INSERT INTO ${table.name} (${singleCols.join(', ')})\nVALUES (${singleVals.join(', ')})\nON CONFLICT (${conflictCols.join(', ')})\nDO UPDATE SET ${col.name} = excluded.${col.name};`;
+        queries.push({ table: table.name, type: 'Single Column UPSERT', sql });
+      } else if (dialect === 'mssql') {
+        let sql = `MERGE INTO ${table.name} AS tgt\nUSING (VALUES (${singleVals.join(', ')})) AS src (${singleCols.join(', ')})\n  ON tgt.${conflictCols[0]} = src.${conflictCols[0]}\nWHEN MATCHED THEN\n  UPDATE SET tgt.${col.name} = src.${col.name}\nWHEN NOT MATCHED THEN\n  INSERT (${singleCols.join(', ')})\n  VALUES (${singleCols.map(c => 'src.' + c).join(', ')});`;
+        queries.push({ table: table.name, type: 'Single Column UPSERT (MERGE)', sql });
+      } else if (dialect === 'oracle') {
+        let sql = `MERGE INTO ${table.name} tgt\nUSING (SELECT ${singleVals.map((p, i) => `${p} AS ${singleCols[i]}`).join(', ')} FROM dual) src\n  ON (tgt.${conflictCols[0]} = src.${conflictCols[0]})\nWHEN MATCHED THEN\n  UPDATE SET tgt.${col.name} = src.${col.name}\nWHEN NOT MATCHED THEN\n  INSERT (${singleCols.join(', ')})\n  VALUES (${singleCols.map(c => 'src.' + c).join(', ')});`;
+        queries.push({ table: table.name, type: 'Single Column UPSERT (MERGE)', sql });
+      }
+    }
+  }
+
+  return queries;
+}
+
+// =====================
+// UI
+// =====================
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const schema = parseSQL(sql, dialect);
+
+  if (!schema.tables.length) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">No CREATE TABLE statements found. Paste valid SQL and try again.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    return;
+  }
+
+  const queries = generateUpsertQueries(schema, dialect);
+  let mergeCount = 0;
+  for (const q of queries) {
+    if (q.type.includes('MERGE')) mergeCount++;
+  }
+
+  document.getElementById('statTables').textContent = schema.tables.length;
+  document.getElementById('statQueries').textContent = queries.length;
+  document.getElementById('statMerge').textContent = mergeCount;
+  document.getElementById('statsRow').style.display = 'grid';
+
+  let html = '<div class="query-list">';
+  for (const q of queries) {
+    html += `<div class="query-item">
+      <h4>${escapeHtml(q.type)} — ${escapeHtml(q.table)}</h4>
+      <pre>${escapeHtml(q.sql)}</pre>
+      <div class="actions">
+        <button onclick="copyQuery(this)">📋 Copy</button>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('outputPanel').innerHTML = html;
+}
+
+function copyQuery(btn) {
+  const pre = btn.closest('.query-item').querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste SQL and click Generate to see UPSERT / MERGE statements.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+}
+
+const SAMPLES = {
+  postgres: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  updated_at TIMESTAMP DEFAULT now()
+);`,
+
+  mysql: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  user_id INT NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`,
+
+  sqlite: `CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  role TEXT NOT NULL DEFAULT 'user',
+  status TEXT NOT NULL DEFAULT 'active',
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  content TEXT,
+  published INTEGER NOT NULL DEFAULT 0,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);`,
+
+  mssql: `CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  email NVARCHAR(255) NOT NULL UNIQUE,
+  name NVARCHAR(100),
+  role NVARCHAR(50) NOT NULL DEFAULT 'user',
+  status NVARCHAR(20) NOT NULL DEFAULT 'active',
+  updated_at DATETIME2 DEFAULT GETDATE()
+);
+
+CREATE TABLE posts (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  title NVARCHAR(255) NOT NULL,
+  content NVARCHAR(MAX),
+  published BIT NOT NULL DEFAULT 0,
+  user_id INT NOT NULL,
+  updated_at DATETIME2 DEFAULT GETDATE(),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`,
+
+  oracle: `CREATE TABLE users (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR2(255) NOT NULL UNIQUE,
+  name VARCHAR2(100),
+  role VARCHAR2(50) NOT NULL DEFAULT 'user',
+  status VARCHAR2(20) NOT NULL DEFAULT 'active',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title VARCHAR2(255) NOT NULL,
+  content CLOB,
+  published NUMBER(1) NOT NULL DEFAULT 0,
+  user_id NUMBER NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`
+};
+
+function loadSample() {
+  const dialect = document.getElementById('dialect').value;
+  document.getElementById('sqlInput').value = SAMPLES[dialect] || SAMPLES.postgres;
+}
+</script>
+</body>
+</html>
