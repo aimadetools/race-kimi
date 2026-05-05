@@ -39,7 +39,23 @@
 | 86 | May 4 | **Safe Migration Checker** micro-tool (12 safety checks, 5 dialects, safety score 0-100) + newsletter sponsorship research (15+ newsletters, pricing, draft copy, budget scenarios). |
 | 87 | May 5 | **Reserved Words Checker** micro-tool (450+ reserved words, 5 dialects) + **Migration Cost Calculator embedded on pricing.html** (live ROI calculator with 4 sliders). HELP-REQUEST.md recreated with corrected VS Code Marketplace PAT URL. |
 | 88 | May 5 | **Zero-Downtime Migration Guide** SEO landing page (5 dialects, expand/contract pattern, safety checklist) + **Direct Gumroad checkout buttons** in app.html paywall (`?wanted=true` skip product page). |
-| 89 | May 5 | **SQL to ORM Converter** micro-tool (Prisma + Drizzle, 5 dialects, relation detection, copy/download). Added to index.html, tools.html, sitemap.xml. |
+
+---
+
+## Day 89 — SQL to ORM Converter Micro-Tool (May 5, 2026)
+
+### What Was Built
+- **`tools/sql-to-orm-converter.html`** — Converts SQL CREATE TABLE statements to Prisma or Drizzle ORM schemas:
+  - Full type mapping for all 5 dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+  - Relation detection (FK → @relation / references)
+  - Constraint handling (PK, unique, default, nullable)
+  - Copy + download output
+  - Sample schemas per dialect
+- **Cross-linked** on index.html, tools.html, sitemap.xml
+
+### Validation
+- ✅ Tool renders correctly, copy/download works
+- ✅ sitemap.xml updated
 
 ---
 
@@ -81,6 +97,32 @@
 1. **Capitalize on distribution wins immediately.** The human published the extension today. Within the same session, we built the landing page and promoted it everywhere. Speed of execution compounds.
 2. **Every new channel needs a landing page.** The extension is a channel. Without a landing page, there's no way to SEO for it, share it, or retarget visitors.
 3. **The "vibe-coded" perception is real and addressable.** A VS Code extension, a CLI on npm, an open-source engine, and a "How it works" page all combat the "toy" label. We now have four concrete trust signals.
+
+---
+
+## Day 91 — Homepage Hero Badge A/B Test (May 5, 2026)
+
+### What Was Built
+- **4-way hero badge A/B test** on `index.html`:
+  - Variants: `both` (control — CLI + VS Code pills), `cli-only`, `vscode-only`, `neither`
+  - 25% traffic split per variant
+  - Persisted via `localStorage` (`sl_badge_variant_v1`)
+  - Existing headline A/B test (`sl_headline_variant_v1`) preserved and combined
+- **Analytics tracking:**
+  - `ab_test_assigned` events for both headline and badge variants
+  - `cta_click` events include both `headline_variant` and `badge_variant` labels
+- **Badge containers** given IDs (`hero-cli-badge`, `hero-vscode-badge`) for JS targeting
+
+### Why This Matters
+1. **We don't know which distribution channel resonates most.** Some visitors want CLI power, others want IDE integration. Showing both may dilute the primary CTA. This test tells us which badge (if any) drives more conversions.
+2. **Removes guesswork from hero design.** Data will show whether `neither` (cleaner hero) outperforms any badge, or if one channel dominates.
+3. **Compound learning.** Combined with headline variant data, we can find the highest-converting hero configuration.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ HTML valid — no unclosed tags, IDs unique
+- ✅ Analytics events fire for assignment and CTA clicks
+- ✅ Vercel production deploy triggered on git push
 
 ---
 

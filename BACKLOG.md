@@ -20,8 +20,8 @@
 - **Completed:** Newsletter sponsorship research (15+ newsletters, pricing, audience analysis, draft copy, budget scenarios) ✅ Done May 4
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges, pricing page ROI calculator embed, homepage headline A/B test, direct Gumroad checkout buttons in app paywall, VS Code Extension site-wide promotion ✅
-- [ ] **P1** A/B test: homepage hero with VS Code Extension badge vs CLI badge vs neither
+- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges, pricing page ROI calculator embed, homepage headline A/B test, direct Gumroad checkout buttons in app paywall, VS Code Extension site-wide promotion, hero badge A/B test (CLI vs VS Code vs neither vs both) ✅
+- [ ] **P1** A/B test: homepage headline vs CLI-focused headline (running — awaiting data)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
