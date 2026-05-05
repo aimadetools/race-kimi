@@ -239,6 +239,36 @@
         <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lock in Pro at <strong style="color: var(--primary);">$49/year</strong> (50% off) forever. No coupon code needed — just choose the annual plan on Gumroad. <strong id="founderDealRemaining" style="color: var(--success);">20 spots left.</strong></p>
       </div>
 
+      <!-- Migration Cost Calculator Embed -->
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 32px;">
+        <h2 style="text-align:center; font-size: 1.3rem; margin-bottom: 6px;">What do manual migrations cost you?</h2>
+        <p style="text-align:center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Most teams spend $10,000+ per year on manual schema work without realizing it.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <div>
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Team size <span id="calc-team-val" style="color:var(--primary); font-weight:700;">8</span></label>
+            <input type="range" id="calc-team" min="1" max="50" value="8" style="width:100%; accent-color: var(--primary);">
+          </div>
+          <div>
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Hourly rate <span id="calc-rate-val" style="color:var(--primary); font-weight:700;">$85</span></label>
+            <input type="range" id="calc-rate" min="25" max="250" value="85" step="5" style="width:100%; accent-color: var(--primary);">
+          </div>
+          <div>
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Migrations/month <span id="calc-migrations-val" style="color:var(--primary); font-weight:700;">4</span></label>
+            <input type="range" id="calc-migrations" min="1" max="20" value="4" style="width:100%; accent-color: var(--primary);">
+          </div>
+          <div>
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Hours/migration <span id="calc-hours-val" style="color:var(--primary); font-weight:700;">2.5</span></label>
+            <input type="range" id="calc-hours" min="0.5" max="12" value="2.5" step="0.5" style="width:100%; accent-color: var(--primary);">
+          </div>
+        </div>
+        <div style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08)); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 0.9rem; color: var(--text-muted);">Estimated annual cost of manual migrations</div>
+          <div id="calc-total" style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; margin: 6px 0;">$10,200</div>
+          <div style="font-size: 1rem; font-weight: 600; color: var(--success);">SchemaLens Pro pays for itself in <span id="calc-roi">4</span> days</div>
+        </div>
+        <p style="text-align:center; margin-top: 12px; margin-bottom: 0; font-size: 0.85rem;"><a href="tools/migration-cost-calculator.html" style="color: var(--primary);">See full breakdown →</a></p>
+      </div>
+
       <div class="pricing-grid">
         <div class="pricing-card">
           <h3>Free</h3>
@@ -465,6 +495,41 @@
     </div>
   </footer>
 
+<script>
+(function() {
+  const calcInputs = {
+    team: document.getElementById('calc-team'),
+    rate: document.getElementById('calc-rate'),
+    migrations: document.getElementById('calc-migrations'),
+    hours: document.getElementById('calc-hours')
+  };
+  const calcLabels = {
+    team: document.getElementById('calc-team-val'),
+    rate: document.getElementById('calc-rate-val'),
+    migrations: document.getElementById('calc-migrations-val'),
+    hours: document.getElementById('calc-hours-val')
+  };
+  function fmtMoney(n) { return '$' + Math.round(n).toLocaleString(); }
+  function calcPricingROI() {
+    const team = +calcInputs.team.value;
+    const rate = +calcInputs.rate.value;
+    const migrations = +calcInputs.migrations.value;
+    const hours = +calcInputs.hours.value;
+    calcLabels.team.textContent = team;
+    calcLabels.rate.textContent = '$' + rate;
+    calcLabels.migrations.textContent = migrations;
+    calcLabels.hours.textContent = hours;
+    const annualHours = migrations * hours * 12;
+    const annualCost = annualHours * rate;
+    const proCost = 99;
+    const paybackDays = annualCost > 0 ? Math.max(1, Math.round((proCost / (annualCost / 365)))) : 0;
+    document.getElementById('calc-total').textContent = fmtMoney(annualCost);
+    document.getElementById('calc-roi').textContent = paybackDays;
+  }
+  Object.values(calcInputs).forEach(el => el.addEventListener('input', calcPricingROI));
+  calcPricingROI();
+})();
+</script>
 <script>
 (function() {
   const key = 'schemalens_analytics';

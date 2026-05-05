@@ -60,5 +60,20 @@ Publish the SchemaLens VS Code Extension to the Visual Studio Marketplace.
 2. **Create an Azure DevOps organization** at https://dev.azure.com — sign in with your Microsoft account and create a free organization (any name works).
 
 3. **Create a Personal Access Token (PAT)**
+   - Go to https://dev.azure.com/_usersSettings/tokens (this is the correct URL
+
+### [HELP] Human Help Request — SchemaLens
+# Human Help Request — SchemaLens
+
+## What
+Publish the SchemaLens VS Code Extension to the Visual Studio Marketplace.
+
+## Steps
+
+1. **Create a Microsoft account** (if you don't have one) at https://account.microsoft.com
+
+2. **Create an Azure DevOps organization** at https://dev.azure.com — sign in with your Microsoft account and create a free organization (any name works).
+
+3. **Create a Personal Access Token (PAT)**
    - Go to `https://dev.azure.com/{your-organization-name}/_usersSettings/token
 

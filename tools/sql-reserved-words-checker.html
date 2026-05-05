@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Reserved Words Checker — Avoid Naming Collisions | SchemaLens</title>
+<meta name="description" content="Check your database table and column names against SQL reserved words for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Prevent migration errors and quoting headaches.">
+<meta property="og:title" content="SQL Reserved Words Checker — Avoid Naming Collisions">
+<meta property="og:description" content="Check your database table and column names against SQL reserved words for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-reserved-words-checker.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Reserved Words Checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Checks SQL table and column names against reserved words for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Prevents migration errors and quoting conflicts.",
+  "url": "https://schemalens.tech/tools/sql-reserved-words-checker.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .checker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 768px) { .checker-grid { grid-template-columns: 1fr; } }
+
+  .checker-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .checker-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  textarea#schemaInput {
+    width: 100%; min-height: 260px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+  .mode-toggle button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; font-weight: 500;
+  }
+  .mode-toggle button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .dialect-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .dialect-filters label {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 6px 12px; font-size: 0.85rem; cursor: pointer; user-select: none;
+  }
+  .dialect-filters input { accent-color: var(--primary); }
+
+  .result-summary {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 20px; text-align: center;
+  }
+  .result-summary.good { border-color: var(--success); }
+  .result-summary.warn { border-color: var(--warning); }
+  .result-summary.bad { border-color: var(--danger); }
+  .result-score { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+  .result-score.good { color: var(--success); }
+  .result-score.warn { color: var(--warning); }
+  .result-score.bad { color: var(--danger); }
+  .result-label { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
+
+  .collision-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+  }
+  .collision-card.critical { border-left: 4px solid var(--danger); }
+  .collision-card.warning { border-left: 4px solid var(--warning); }
+  .collision-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .collision-name { font-family: var(--mono); font-size: 1rem; font-weight: 700; }
+  .collision-type { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 999px; background: var(--bg); }
+  .collision-type.table { color: var(--primary); }
+  .collision-type.column { color: var(--secondary); }
+  .collision-dialects { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .collision-dialects span {
+    font-size: 0.75rem; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-sm);
+    background: rgba(99,102,241,0.12); color: var(--primary);
+  }
+  .collision-fix { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+  .collision-fix code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-size: 0.8rem;
+  }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL Reserved Words Checker</h1>
+    <p>Using a reserved word as a table or column name causes quoting headaches, migration failures, and subtle bugs. Check your schema against all 5 major dialects in seconds.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="checker-grid">
+    <div class="checker-card">
+      <h2>Input</h2>
+      <div class="mode-toggle">
+        <button id="modeSchema" class="active" onclick="setMode('schema')">Schema</button>
+        <button id="modeList" onclick="setMode('list')">Name List</button>
+      </div>
+      <div class="dialect-filters">
+        <label><input type="checkbox" id="d-postgres" checked> PostgreSQL</label>
+        <label><input type="checkbox" id="d-mysql" checked> MySQL</label>
+        <label><input type="checkbox" id="d-sqlite" checked> SQLite</label>
+        <label><input type="checkbox" id="d-mssql" checked> SQL Server</label>
+        <label><input type="checkbox" id="d-oracle" checked> Oracle</label>
+      </div>
+      <textarea id="schemaInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  order INT,
+  select VARCHAR(50)
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="checkReserved()">🔍 Check Reserved Words</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+    </div>
+
+    <div class="checker-card">
+      <h2>Results</h2>
+      <div id="resultsPanel">
+        <div class="empty-state">Paste a schema and click "Check Reserved Words" to see results.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Spot schema issues before they reach production</h3>
+    <p>SchemaLens diffs your schemas, detects breaking changes, and generates safe migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="tools/sql-validator.html">SQL Validator</a>
+        <a href="tools/sql-formatter.html">SQL Formatter</a>
+        <a href="tools/schema-health-check.html">Schema Health Check</a>
+        <a href="tools/safe-migration-checker.html">Safe Migration Checker</a>
+        <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Comprehensive reserved word lists for each dialect
+const RESERVED = {
+  postgres: new Set([
+    'ALL','ANALYSE','ANALYZE','AND','ANY','ARRAY','AS','ASC','ASYMMETRIC','AUTHORIZATION','BINARY','BOTH','CASE','CAST','CHECK',
+    'COLLATE','COLLATION','COLUMN','CONCURRENTLY','CONSTRAINT','CREATE','CROSS','CURRENT_CATALOG','CURRENT_DATE','CURRENT_ROLE',
+    'CURRENT_SCHEMA','CURRENT_TIME','CURRENT_TIMESTAMP','CURRENT_USER','DEFAULT','DEFERRABLE','DESC','DISTINCT','DO','ELSE',
+    'END','EXCEPT','FALSE','FETCH','FOR','FOREIGN','FREEZE','FROM','FULL','GRANT','GROUP','HAVING','ILIKE','IN','INITIALLY',
+    'INNER','INTERSECT','INTO','IS','ISNULL','JOIN','LATERAL','LEADING','LEFT','LIKE','LIMIT','LOCALTIME','LOCALTIMESTAMP',
+    'NATURAL','NOT','NOTNULL','NULL','OFFSET','ON','ONLY','OR','ORDER','OUTER','OVERLAPS','PLACING','PRIMARY','REFERENCES',
+    'RETURNING','RIGHT','SELECT','SESSION_USER','SIMILAR','SOME','SYMMETRIC','TABLE','TABLESAMPLE','THEN','TO','TRAILING',
+    'TRUE','UNION','UNIQUE','USER','USING','VARIADIC','VERBOSE','WHEN','WHERE','WINDOW','WITH'
+  ]),
+  mysql: new Set([
+    'ACCESSIBLE','ADD','ALL','ALTER','ANALYZE','AND','AS','ASC','ASENSITIVE','BEFORE','BETWEEN','BIGINT','BINARY','BLOB',
+    'BOTH','BY','CALL','CASCADE','CASE','CHANGE','CHAR','CHARACTER','CHECK','COLLATE','COLUMN','CONDITION','CONSTRAINT',
+    'CONTINUE','CONVERT','CREATE','CROSS','CURRENT_DATE','CURRENT_TIME','CURRENT_TIMESTAMP','CURRENT_USER','CURSOR','DATABASE',
+    'DATABASES','DAY_HOUR','DAY_MICROSECOND','DAY_MINUTE','DAY_SECOND','DEC','DECIMAL','DECLARE','DEFAULT','DELAYED','DELETE',
+    'DESC','DESCRIBE','DETERMINISTIC','DISTINCT','DISTINCTROW','DIV','DOUBLE','DROP','DUAL','EACH','ELSE','ELSEIF','ENCLOSED',
+    'ESCAPED','EXCEPT','EXISTS','EXIT','EXPLAIN','FALSE','FETCH','FLOAT','FLOAT4','FLOAT8','FOR','FORCE','FOREIGN','FROM',
+    'FULLTEXT','GENERATED','GET','GRANT','GROUP','HAVING','HIGH_PRIORITY','HOUR_MICROSECOND','HOUR_MINUTE','HOUR_SECOND','IF',
+    'IGNORE','IN','INDEX','INFILE','INNER','INOUT','INSENSITIVE','INSERT','INT','INT1','INT2','INT3','INT4','INT8','INTEGER',
+    'INTERSECT','INTERVAL','INTO','IO_AFTER_GTIDS','IO_BEFORE_GTIDS','IS','ITERATE','JOIN','KEY','KEYS','KILL','LEADING',
+    'LEAVE','LEFT','LIKE','LIMIT','LINEAR','LINES','LOAD','LOCALTIME','LOCALTIMESTAMP','LOCK','LONG','LONGBLOB','LONGTEXT',
+    'LOOP','LOW_PRIORITY','MASTER_BIND','MASTER_SSL_VERIFY_SERVER_CERT','MATCH','MAXVALUE','MEDIUMBLOB','MEDIUMINT','MEDIUMTEXT',
+    'MIDDLEINT','MINUTE_MICROSECOND','MINUTE_SECOND','MOD','MODIFIES','NATURAL','NOT','NO_WRITE_TO_BINLOG','NULL','NUMERIC',
+    'ON','OPTIMIZE','OPTIMIZER_COSTS','OPTION','OPTIONALLY','OR','ORDER','OUT','OUTER','OUTFILE','PARTITION','PRECISION',
+    'PRIMARY','PROCEDURE','PURGE','RANGE','READ','READS','READ_WRITE','REAL','REFERENCES','REGEXP','RELEASE','RENAME','REPEAT',
+    'REPLACE','REQUIRE','RESIGNAL','RESTRICT','RETURN','REVOKE','RIGHT','RLIKE','SCHEMA','SCHEMAS','SECOND_MICROSECOND',
+    'SELECT','SENSITIVE','SEPARATOR','SET','SHOW','SIGNAL','SMALLINT','SPATIAL','SPECIFIC','SQL','SQLEXCEPTION','SQLSTATE',
+    'SQLWARNING','SQL_BIG_RESULT','SQL_CALC_FOUND_ROWS','SQL_SMALL_RESULT','SSL','STARTING','STORED','STRAIGHT_JOIN','TABLE',
+    'TERMINATED','THEN','TINYBLOB','TINYINT','TINYTEXT','TO','TRAILING','TRIGGER','TRUE','UNDO','UNION','UNIQUE','UNLOCK',
+    'UNSIGNED','UPDATE','USAGE','USE','USING','UTC_DATE','UTC_TIME','UTC_TIMESTAMP','VALUES','VARBINARY','VARCHAR','VARCHARACTER',
+    'VARYING','VIRTUAL','WHEN','WHERE','WHILE','WINDOW','WITH','WRITE','XOR','YEAR_MONTH','ZEROFILL'
+  ]),
+  sqlite: new Set([
+    'ABORT','ACTION','ADD','AFTER','ALL','ALTER','ANALYZE','AND','AS','ASC','ATTACH','AUTOINCREMENT','BEFORE','BEGIN','BETWEEN',
+    'BY','CASCADE','CASE','CAST','CHECK','COLLATE','COLUMN','COMMIT','CONFLICT','CONSTRAINT','CREATE','CROSS','CURRENT_DATE',
+    'CURRENT_TIME','CURRENT_TIMESTAMP','DATABASE','DEFAULT','DEFERRABLE','DEFERRED','DELETE','DESC','DETACH','DISTINCT','DROP',
+    'EACH','ELSE','END','ESCAPE','EXCEPT','EXCLUSIVE','EXISTS','EXPLAIN','FAIL','FOR','FOREIGN','FROM','FULL','GLOB','GROUP',
+    'HAVING','IF','IGNORE','IMMEDIATE','IN','INDEX','INDEXED','INITIALLY','INNER','INSERT','INSTEAD','INTERSECT','INTO','IS',
+    'ISNULL','JOIN','KEY','LEFT','LIKE','LIMIT','MATCH','NATURAL','NO','NOT','NOTNULL','NULL','OF','OFFSET','ON','OR','ORDER',
+    'OUTER','PLAN','PRAGMA','PRIMARY','QUERY','RAISE','RECURSIVE','REFERENCES','REGEXP','REINDEX','RELEASE','RENAME','REPLACE',
+    'RESTRICT','RIGHT','ROLLBACK','ROW','SAVEPOINT','SELECT','SET','TABLE','TEMP','TEMPORARY','THEN','TO','TRANSACTION','TRIGGER',
+    'UNION','UNIQUE','UPDATE','USING','VACUUM','VALUES','VIEW','VIRTUAL','WHEN','WHERE','WINDOW','WITH','WITHOUT'
+  ]),
+  mssql: new Set([
+    'ADD','ALL','ALTER','AND','ANY','AS','ASC','AUTHORIZATION','BACKUP','BEGIN','BETWEEN','BREAK','BROWSE','BULK','BY','CASCADE',
+    'CASE','CHECK','CHECKPOINT','CLOSE','CLUSTERED','COALESCE','COLLATE','COLUMN','COMMIT','COMPUTE','CONSTRAINT','CONTAINS',
+    'CONTAINSTABLE','CONTINUE','CONVERT','CREATE','CROSS','CURRENT','CURRENT_DATE','CURRENT_TIME','CURRENT_TIMESTAMP',
+    'CURRENT_USER','CURSOR','DATABASE','DBCC','DEALLOCATE','DECLARE','DEFAULT','DELETE','DENY','DESC','DISK','DISTINCT',
+    'DISTRIBUTED','DOUBLE','DROP','DUMP','ELSE','END','ERRLVL','ESCAPE','EXCEPT','EXEC','EXECUTE','EXISTS','EXIT','EXTERNAL',
+    'FETCH','FILE','FILLFACTOR','FOR','FOREIGN','FREETEXT','FREETEXTTABLE','FROM','FULL','FUNCTION','GOTO','GRANT','GROUP',
+    'HAVING','HOLDLOCK','IDENTITY','IDENTITYCOL','IDENTITY_INSERT','IF','IN','INDEX','INNER','INSERT','INTERSECT','INTO','IS',
+    'JOIN','KEY','KILL','LEFT','LIKE','LINENO','LOAD','MERGE','NATIONAL','NOCHECK','NONCLUSTERED','NOT','NULL','NULLIF','OF',
+    'OFF','OFFSETS','ON','OPEN','OPENDATASOURCE','OPENQUERY','OPENROWSET','OPENXML','OPTION','OR','ORDER','OUTER','OVER','PERCENT',
+    'PIVOT','PLAN','PRECISION','PRIMARY','PRINT','PROC','PROCEDURE','PUBLIC','RAISERROR','READ','READTEXT','RECONFIGURE',
+    'REFERENCES','REPLICATION','RESTORE','RESTRICT','RETURN','REVERT','REVOKE','RIGHT','ROLLBACK','ROWCOUNT','ROWGUIDCOL','RULE',
+    'SAVE','SCHEMA','SECURITYAUDIT','SELECT','SEMANTICKEYPHRASETABLE','SEMANTICSIMILARITYDETAILSTABLE','SEMANTICSIMILARITYTABLE',
+    'SESSION_USER','SET','SETUSER','SHUTDOWN','SOME','STATISTICS','SYSTEM_USER','TABLE','TABLESAMPLE','TEXTSIZE','THEN','TO',
+    'TOP','TRAN','TRANSACTION','TRIGGER','TRUNCATE','TRY_CONVERT','TSEQUAL','UNION','UNIQUE','UNPIVOT','UPDATE','UPDATETEXT',
+    'USE','USER','VALUES','VARYING','VIEW','WAITFOR','WHEN','WHERE','WHILE','WITH','WITHIN GROUP','WRITETEXT'
+  ]),
+  oracle: new Set([
+    'ACCESS','ADD','ALL','ALTER','AND','ANY','AS','ASC','AUDIT','BETWEEN','BY','CHAR','CHECK','CLUSTER','COLUMN','COMMENT',
+    'COMPRESS','CONNECT','CREATE','CURRENT','DATE','DECIMAL','DEFAULT','DELETE','DESC','DISTINCT','DROP','ELSE','EXCLUSIVE',
+    'EXISTS','FILE','FLOAT','FOR','FROM','GRANT','GROUP','HAVING','IDENTIFIED','IMMEDIATE','IN','INCREMENT','INDEX','INITIAL',
+    'INSERT','INTEGER','INTERSECT','INTO','IS','LEVEL','LIKE','LOCK','LONG','MAXEXTENTS','MINUS','MLSLABEL','MODE','MODIFY',
+    'NOAUDIT','NOCOMPRESS','NOT','NOWAIT','NULL','NUMBER','OF','OFFLINE','ON','ONLINE','OPTION','OR','ORDER','PCTFREE','PRIOR',
+    'PRIVILEGES','PUBLIC','RAW','RENAME','RESOURCE','REVOKE','ROW','ROWID','ROWNUM','ROWS','SELECT','SESSION','SET','SHARE',
+    'SIZE','SMALLINT','START','SUCCESSFUL','SYNONYM','SYSDATE','TABLE','THEN','TO','TRIGGER','UID','UNION','UNIQUE','UPDATE',
+    'USER','VALIDATE','VALUES','VARCHAR','VARCHAR2','VIEW','WHENEVER','WHERE','WITH'
+  ])
+};
+
+const DIALECT_LABELS = { postgres: 'PostgreSQL', mysql: 'MySQL', sqlite: 'SQLite', mssql: 'SQL Server', oracle: 'Oracle' };
+
+let currentMode = 'schema';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeSchema').classList.toggle('active', mode === 'schema');
+  document.getElementById('modeList').classList.toggle('active', mode === 'list');
+  const textarea = document.getElementById('schemaInput');
+  if (mode === 'schema') {
+    textarea.placeholder = "Paste CREATE TABLE statements...\n\nCREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(100),\n  order INT,\n  select VARCHAR(50)\n);";
+  } else {
+    textarea.placeholder = "Paste one name per line...\n\nusers\norder\nselect\ngroup\nindex";
+  }
+}
+
+function getActiveDialects() {
+  const d = [];
+  if (document.getElementById('d-postgres').checked) d.push('postgres');
+  if (document.getElementById('d-mysql').checked) d.push('mysql');
+  if (document.getElementById('d-sqlite').checked) d.push('sqlite');
+  if (document.getElementById('d-mssql').checked) d.push('mssql');
+  if (document.getElementById('d-oracle').checked) d.push('oracle');
+  return d;
+}
+
+function simpleParseSchema(sql) {
+  const tables = [];
+  const tableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"\[]?(\w+)[`"\]]?\s*\(([^;]*?)\)/gi;
+  let m;
+  while ((m = tableRegex.exec(sql)) !== null) {
+    const tableName = m[1];
+    const body = m[2];
+    const columns = [];
+    // Split by comma, but be naive about parentheses
+    const parts = body.split(',').map(s => s.trim()).filter(Boolean);
+    for (const part of parts) {
+      const words = part.split(/\s+/);
+      if (words.length >= 2) {
+        const colName = words[0].replace(/[`"\[\]]/g, '');
+        if (/^[a-zA-Z_]\w*$/.test(colName) && !/^(CONSTRAINT|PRIMARY|FOREIGN|UNIQUE|CHECK|INDEX|KEY)$/i.test(colName)) {
+          columns.push(colName);
+        }
+      }
+    }
+    tables.push({ name: tableName, columns });
+  }
+  return tables;
+}
+
+function checkReserved() {
+  const input = document.getElementById('schemaInput').value.trim();
+  const dialects = getActiveDialects();
+  const panel = document.getElementById('resultsPanel');
+
+  if (!input) {
+    panel.innerHTML = '<div class="empty-state">Paste a schema or name list first.</div>';
+    return;
+  }
+  if (dialects.length === 0) {
+    panel.innerHTML = '<div class="empty-state">Select at least one dialect.</div>';
+    return;
+  }
+
+  let names = [];
+  if (currentMode === 'schema') {
+    const tables = simpleParseSchema(input);
+    for (const t of tables) {
+      names.push({ name: t.name, type: 'table', context: null });
+      for (const c of t.columns) {
+        names.push({ name: c, type: 'column', context: t.name });
+      }
+    }
+  } else {
+    const lines = input.split(/\n/).map(l => l.trim()).filter(Boolean);
+    for (const line of lines) {
+      const name = line.replace(/[`"\[\]]/g, '');
+      if (name) names.push({ name, type: 'name', context: null });
+    }
+  }
+
+  const collisions = [];
+  for (const item of names) {
+    const upper = item.name.toUpperCase();
+    const hitDialects = [];
+    for (const d of dialects) {
+      if (RESERVED[d].has(upper)) hitDialects.push(d);
+    }
+    if (hitDialects.length > 0) {
+      collisions.push({ ...item, dialects: hitDialects });
+    }
+  }
+
+  const total = names.length;
+  const bad = collisions.length;
+  const clean = total - bad;
+  let score = total > 0 ? Math.round((clean / total) * 100) : 100;
+
+  let html = '';
+
+  // Summary
+  const summaryClass = score >= 90 ? 'good' : score >= 70 ? 'warn' : 'bad';
+  html += `<div class="result-summary ${summaryClass}">`;
+  html += `<div class="result-score ${summaryClass}">${score}/100</div>`;
+  html += `<div class="result-label">${bad === 0 ? 'No reserved word collisions found 🎉' : `${bad} collision${bad !== 1 ? 's' : ''} found in ${total} name${total !== 1 ? 's' : ''}`}</div>`;
+  html += `</div>`;
+
+  html += `<div class="stats-row">`;
+  html += `<div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Names checked</div></div>`;
+  html += `<div class="stat"><div class="stat-value" style="color:var(--danger)">${bad}</div><div class="stat-label">Collisions</div></div>`;
+  html += `<div class="stat"><div class="stat-value" style="color:var(--success)">${clean}</div><div class="stat-label">Clean names</div></div>`;
+  html += `</div>`;
+
+  if (bad > 0) {
+    html += `<h3 style="margin-bottom:12px;font-size:1rem;">Collisions</h3>`;
+    for (const c of collisions) {
+      const sev = c.type === 'table' ? 'critical' : 'warning';
+      html += `<div class="collision-card ${sev}">`;
+      html += `<div class="collision-header">`;
+      html += `<span class="collision-name">${escapeHtml(c.name)}</span>`;
+      html += `<span class="collision-type ${c.type}">${c.type}</span>`;
+      html += `</div>`;
+      if (c.context) {
+        html += `<div style="font-size:0.85rem;color:var(--text-muted)">In table <code>${escapeHtml(c.context)}</code></div>`;
+      }
+      html += `<div class="collision-dialects">`;
+      for (const d of c.dialects) {
+        html += `<span>${DIALECT_LABELS[d]}</span>`;
+      }
+      html += `</div>`;
+      html += `<div class="collision-fix">Fix: Rename to <code>${escapeHtml(suggestAlternative(c.name))}</code> or always quote with double quotes/backticks.</div>`;
+      html += `</div>`;
+    }
+  }
+
+  panel.innerHTML = html;
+}
+
+function suggestAlternative(name) {
+  const map = {
+    'ORDER': 'sort_order', 'SELECT': 'selection', 'INSERT': 'insertion', 'UPDATE': 'last_updated',
+    'DELETE': 'deletion', 'GROUP': 'group_name', 'INDEX': 'idx_name', 'TABLE': 'table_name',
+    'COLUMN': 'col_name', 'USER': 'username', 'NAME': 'full_name', 'DATE': 'created_date',
+    'TIME': 'event_time', 'YEAR': 'release_year', 'MONTH': 'billing_month', 'DAY': 'day_of_week',
+    'KEY': 'item_key', 'VALUE': 'setting_value', 'LEVEL': 'log_level', 'STATUS': 'record_status',
+    'TYPE': 'record_type', 'MODE': 'access_mode', 'ROLE': 'user_role', 'ACTION': 'audit_action',
+    'STATE': 'current_state', 'CODE': 'error_code', 'ID': 'record_id', 'NO': 'item_number',
+    'TO': 'recipient', 'FROM': 'sender', 'BY': 'author', 'FOR': 'purpose',
+    'IN': 'location', 'ON': 'event_date', 'AT': 'meeting_time', 'WITH': 'associated',
+    'ALL': 'every_item', 'ANY': 'some_item', 'AS': 'alias_name', 'OR': 'option',
+    'AND': 'condition', 'NOT': 'negation', 'IS': 'equality', 'IF': 'condition_flag',
+    'DO': 'action', 'GO': 'proceed', 'TO': 'destination', 'OF': 'belonging'
+  };
+  return map[name.toUpperCase()] || name + '_col';
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function loadSample() {
+  const sample = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  "order" INT,
+  select VARCHAR(50),
+  group VARCHAR(20),
+  index INT
+);
+
+CREATE TABLE orders (
+  order_id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id),
+  date DATE,
+  status VARCHAR(20)
+);`;
+  document.getElementById('schemaInput').value = sample;
+  setMode('schema');
+}
+
+function clearInput() {
+  document.getElementById('schemaInput').value = '';
+  document.getElementById('resultsPanel').innerHTML = '<div class="empty-state">Paste a schema and click "Check Reserved Words" to see results.</div>';
+}
+</script>
+</body>
+</html>
