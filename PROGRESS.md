@@ -256,4 +256,46 @@
 
 ---
 
+## Day 88 — Content: Zero-Downtime Migration Guide SEO Landing Page (May 5, 2026)
+
+### What Was Built
+- **`zero-downtime-migration-guide.html`** — Comprehensive SEO-optimized guide to online schema changes across all 5 dialects:
+  - **PostgreSQL:** `CREATE INDEX CONCURRENTLY`, `NOT VALID` + `VALIDATE CONSTRAINT` for FKs, metadata-only column adds (PG 11+), expand/contract pattern for type changes, pg_repack / pg_squeeze tools
+  - **MySQL:** Native `ALGORITHM=INPLACE, LOCK=NONE`, `pt-online-schema-change` (Percona Toolkit) with `--dry-run` and `--max-load` flags, `gh-ost` (triggerless, binary-log based) with replication-lag throttling
+  - **SQLite:** Safe table recreation workaround for unsupported ALTER TABLE operations, native ADD COLUMN limitations, critical warning about dropped indexes/triggers/views
+  - **SQL Server:** `WITH (ONLINE = ON)`, resumable index builds (`RESUMABLE = ON`), batch backfill pattern for DEFAULT columns, `WITH NOCHECK` FK strategy
+  - **Oracle:** `DBMS_REDEFINITION` step-by-step (CAN_REDEF_TABLE → START_REDEF_TABLE → SYNC → FINISH), online index rebuild, Edition-Based Redefinition (EBR) for hot-rollover deployments
+  - **Expand/Contract pattern:** Database-agnostic 6-step deployment strategy with rename-column example
+  - **Pre-deploy safety checklist:** 9-item checklist covering staging tests, lock measurement, rollback scripts, backup verification, replication lag monitoring
+  - **Common pitfalls:** 5 dangerous misconceptions about online migrations
+  - **FAQPage schema.org markup** with 5 questions covering online DDL, pt-osc, gh-ost, index locking, and expand/contract
+  - **SchemaLens CTAs** in results panel linking to app.html and Safe Migration Checker
+- **Site integration:**
+  - Added to index.html Free Developer Tools grid (27 tools)
+  - Added to tools.html tool grid
+  - Added to migration-recipes.html Deep-Dive Migration Guides section
+  - Added to sitemap.xml at 0.9 priority
+
+### Why This Matters
+1. **Targets exact high-intent search queries.** Developers search "zero downtime migration postgres", "pt-online-schema-change example", "gh-ost tutorial", and "online schema change mysql" when they need to alter a large production table. This page targets all of those.
+2. **Depth beats breadth for SEO.** Unlike the general migration-recipes.html page, this guide goes deep on a single high-value topic. Search engines reward topical authority, and developers reward pages that solve their exact problem.
+3. **Natural Pro conversion path.** A developer reading about gh-ost or CONCURRENTLY is actively managing production schema changes — exactly the user who needs SchemaLens Pro's rollback generation and breaking-change detection.
+4. **Establishes SchemaLens as an authority.** Zero-downtime migrations are an advanced topic. By publishing a comprehensive, accurate guide, we signal that SchemaLens is built by people who understand production databases.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ HTML structure valid: doctype, closed tags, OG tags, schema.org markup
+- ✅ All 5 dialect sections have copy-paste ready scripts
+- ✅ sitemap.xml includes new page with correct lastmod and priority
+- ✅ Cross-links verified on index.html, tools.html, and migration-recipes.html
+- ✅ Vercel production deploy successful (aliased to www.schemalens.tech)
+
+### Key Insights
+1. **The best SEO content answers the next question too.** A developer searches "pt-online-schema-change example" and finds our script. But they also see the safety checklist, common pitfalls, and a link to verify their migration with SchemaLens. One page becomes their entire workflow.
+2. **Expand/contract is the universal pattern.** Every database section references expand/contract because it works everywhere. This unifying thread makes the page coherent despite covering 5 very different databases.
+3. **Production migration content is evergreen.** Unlike tool lists or launch announcements, a zero-downtime migration guide is relevant for years. It will accumulate backlinks and organic traffic long after publish day.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
