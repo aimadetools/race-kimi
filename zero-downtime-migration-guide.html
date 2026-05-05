@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Zero-Downtime Database Migration Guide — Online Schema Changes for PostgreSQL, MySQL &amp; More</title>
+  <meta name="description" content="Complete guide to zero-downtime database migrations. Learn online schema change strategies for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy-paste ready scripts with pt-online-schema-change, gh-ost, and CONCURRENTLY.">
+  <meta property="og:title" content="Zero-Downtime Database Migration Guide — Online Schema Changes for PostgreSQL, MySQL &amp; More">
+  <meta property="og:description" content="Learn how to alter tables without downtime. Covers PostgreSQL, MySQL, SQLite, SQL Server, and Oracle with copy-paste ready scripts and safety checklists.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/zero-downtime-migration-guide.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can you alter a table without downtime?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but it depends on the database and the type of change. PostgreSQL can add columns without a table rewrite (since PG 11), and CREATE INDEX CONCURRENTLY avoids table locks. MySQL requires tools like pt-online-schema-change or gh-ost for large tables. SQL Server supports ONLINE=ON for many operations. SQLite requires table recreation for most changes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is pt-online-schema-change?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "pt-online-schema-change is a Percona Toolkit utility that alters MySQL tables without locking them. It creates a shadow table with the new schema, copies data in chunks, applies changes from the original table via triggers, and then atomically swaps the tables."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is gh-ost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "gh-ost (GitHub Online Schema Transformer) is a triggerless MySQL schema migration tool. It creates a ghost table, copies data in chunks, reads the binary log to apply ongoing changes, and then swaps the tables. Unlike pt-online-schema-change, it does not use triggers, making it safer for high-traffic tables."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does CREATE INDEX lock the table?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A standard CREATE INDEX acquires a write lock on the table during the build and an exclusive lock at the end. On PostgreSQL, use CREATE INDEX CONCURRENTLY. On MySQL 5.6+, use ALGORITHM=INPLACE, LOCK=NONE. On SQL Server, use WITH (ONLINE = ON)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the expand/contract pattern?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The expand/contract pattern is a deployment strategy where you first add new structures (expand) while keeping old ones running, migrate data and traffic gradually, and then remove old structures (contract). This allows zero-downtime deployments by never removing something that is still in use."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+    .content-section { max-width: 720px; margin: 0 auto 32px; }
+    .content-section h2 { font-size: 1.35rem; margin: 32px 0 14px; }
+    .content-section h3 { font-size: 1.15rem; margin: 24px 0 10px; color: var(--text); }
+    .content-section p { color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+    .content-section ul { color: var(--text-muted); line-height: 1.8; margin-bottom: 14px; padding-left: 22px; }
+    .content-section code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+    .recipe { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
+    .recipe-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .recipe-header h2 { font-size: 1.25rem; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .recipe-header p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+    .recipe-body { padding: 20px 24px; }
+
+    .dialect-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dialect-tab { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
+    .dialect-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .dialect-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    .code-block { background: var(--code-bg); border-radius: var(--radius-sm); padding: 16px; position: relative; }
+    .code-block pre { margin: 0; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; }
+    .code-block .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); }
+    .code-block .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--warning); }
+    .warning-box strong { color: var(--warning); }
+
+    .tip-box { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--success); }
+    .tip-box strong { color: var(--success); }
+
+    .danger-box { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-sm); padding: 12px 16px; margin: 14px 0; font-size: 0.9rem; color: var(--danger); }
+    .danger-box strong { color: var(--danger); }
+
+    .cta-bar { background: var(--bg); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .related-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .related-card p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 10px; }
+
+    .checklist { list-style: none; padding-left: 0 !important; }
+    .checklist li { position: relative; padding-left: 28px; margin-bottom: 10px; }
+    .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--primary); font-size: 1.1rem; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 1.5rem; }
+      .recipe-header h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-bottom: 48px;">
+    <div class="page-header">
+      <h1>Zero-Downtime Database Migration Guide</h1>
+      <p>Alter tables without locking users out. Production-safe schema change strategies for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — with copy-paste ready scripts.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Why Standard Migrations Cause Downtime</h2>
+      <p>Most <code>ALTER TABLE</code> statements need an <strong>exclusive lock</strong> on the table. While the lock is held, reads may be blocked and writes are definitely blocked. On large tables, the alteration can take minutes or hours — effectively taking your application offline.</p>
+      <p>Here is what typically locks a table:</p>
+      <ul>
+        <li>Adding a column with a <code>DEFAULT</code> value (rewrites the entire table on some databases)</li>
+        <li>Changing a column type</li>
+        <li>Adding an index the standard way</li>
+        <li>Adding a <code>FOREIGN KEY</code> (validates every row)</li>
+        <li>Dropping a column</li>
+        <li>Renaming a column or table</li>
+      </ul>
+      <p>The good news: many of these can be done online if you use the right syntax or the right tool.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>PostgreSQL — The Friendliest for Online Changes</h2>
+      <p>PostgreSQL has the best out-of-the-box support for online schema changes among open-source databases.</p>
+
+      <h3>Add a Column (No Lock)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Adding a nullable column is instant and lock-free
+ALTER TABLE users ADD COLUMN preferences JSONB;
+
+-- Adding with DEFAULT rewrites the table in PG &lt; 11.
+-- In PG 11+, this is also fast (metadata-only).
+ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'active';</pre>
+      </div>
+
+      <h3>Create Index Without Locking</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Standard CREATE INDEX locks writes. Use CONCURRENTLY instead.
+CREATE INDEX CONCURRENTLY idx_users_email ON users(email);
+
+-- Drop index concurrently too
+DROP INDEX CONCURRENTLY idx_users_email;</pre>
+      </div>
+      <div class="warning-box">
+        <strong>Warning:</strong> <code>CONCURRENTLY</code> takes longer and uses more CPU, but it never acquires an exclusive lock. If it fails (e.g., duplicate values on a unique index), you get an <em>invalid index</em> that you must drop and retry.
+      </div>
+
+      <h3>Add Foreign Key Without Long Locks</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Step 1: Add the FK as NOT VALID (no row scan, minimal lock)
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user_id
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  NOT VALID;
+
+-- Step 2: Validate in a separate transaction (SHARE UPDATE EXCLUSIVE lock)
+ALTER TABLE orders
+  VALIDATE CONSTRAINT fk_orders_user_id;</pre>
+      </div>
+      <div class="tip-box">
+        <strong>Tip:</strong> <code>VALIDATE CONSTRAINT</code> still needs a lock, but it is much weaker than the lock required by a full <code>ADD FOREIGN KEY</code>. Run it during low traffic.
+      </div>
+
+      <h3>Change a Column Type (Requires Rewrite)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Changing column type usually rewrites the table.
+-- There is no built-in online tool, but you can use the expand/contract pattern:
+
+-- Step 1: Add new column
+ALTER TABLE products ADD COLUMN price_cents BIGINT;
+
+-- Step 2: Backfill in batches
+UPDATE products SET price_cents = (price * 100)::BIGINT
+WHERE id BETWEEN 1 AND 10000;
+-- ... repeat in batches
+
+-- Step 3: Add trigger to keep in sync
+CREATE OR REPLACE FUNCTION sync_price_cents() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.price_cents = (NEW.price * 100)::BIGINT;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_sync_price_cents
+BEFORE INSERT OR UPDATE ON products
+FOR EACH ROW EXECUTE FUNCTION sync_price_cents();
+
+-- Step 4: Switch application to use new column
+-- Step 5: Drop old column
+ALTER TABLE products DROP COLUMN price;</pre>
+      </div>
+
+      <h3>Third-Party Tools</h3>
+      <ul>
+        <li><strong>pg_repack</strong> — Rebuilds bloated tables online. Can also add columns/types by rebuilding.</li>
+        <li><strong>pg_squeeze</strong> — Similar to pg_repack, works via logical decoding (no triggers).</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>MySQL — Use pt-online-schema-change or gh-ost</h2>
+      <p>MySQL's native <code>ALTER TABLE</code> is historically table-locking. InnoDB supports <em>online DDL</em> in 5.6+, but coverage is spotty and large-table rewrites still lock.</p>
+
+      <h3>Native Online DDL (MySQL 5.6+ / MariaDB 10.0+)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Add column online
+ALTER TABLE users
+  ADD COLUMN preferences JSON,
+  ALGORITHM=INPLACE, LOCK=NONE;
+
+-- Create index online
+ALTER TABLE users
+  ADD INDEX idx_email (email),
+  ALGORITHM=INPLACE, LOCK=NONE;
+
+-- Add foreign key online (InnoDB only)
+ALTER TABLE orders
+  ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+  ALGORITHM=INPLACE, LOCK=NONE;</pre>
+      </div>
+      <div class="warning-box">
+        <strong>Warning:</strong> Not all operations support <code>ALGORITHM=INPLACE</code>. Changing a column type, dropping a primary key, or converting a character set still requires a table copy (locks). Check <code>SHOW ENGINE INNODB STATUS</code> during the migration.
+      </div>
+
+      <h3>pt-online-schema-change (Percona Toolkit)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre># Install: apt-get install percona-toolkit  (or download from percona.com)
+
+# Add a column to a large table
+pt-online-schema-change \
+  --alter "ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active'" \
+  --execute \
+  --max-load Threads_running=25 \
+  --critical-load Threads_running=50 \
+  D=mydb,t=users
+
+# Add an index
+pt-online-schema-change \
+  --alter "ADD INDEX idx_email (email)" \
+  --execute \
+  D=mydb,t=users
+
+# Drop a column
+pt-online-schema-change \
+  --alter "DROP COLUMN old_field" \
+  --execute \
+  D=mydb,t=users</pre>
+      </div>
+      <div class="tip-box">
+        <strong>Tip:</strong> Always run with <code>--dry-run</code> first to validate the migration without executing it. Use <code>--max-load</code> and <code>--critical-load</code> to throttle or abort if the database is under heavy load.
+      </div>
+
+      <h3>gh-ost (GitHub's Triggerless Tool)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre># Download from https://github.com/github/gh-ost/releases
+
+# Add a column
+gh-ost \
+  --database="mydb" \
+  --table="users" \
+  --alter="ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active'" \
+  --user="root" \
+  --password="secret" \
+  --host="localhost" \
+  --execute
+
+# Throttle if replication lag &gt; 3 seconds
+gh-ost \
+  --database="mydb" \
+  --table="users" \
+  --alter="ADD INDEX idx_email (email)" \
+  --user="root" \
+  --password="secret" \
+  --host="localhost" \
+  --max-lag-millis=3000 \
+  --execute</pre>
+      </div>
+      <div class="tip-box">
+        <strong>Why gh-ost over pt-online-schema-change?</strong> gh-ost does not use triggers. It reads the binary log to catch ongoing changes, which is safer on very busy tables and avoids trigger-related performance degradation.
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>SQLite — Work Around Limited ALTER TABLE</h2>
+      <p>SQLite supports only a tiny subset of <code>ALTER TABLE</code>: <code>RENAME TABLE</code>, <code>ADD COLUMN</code> (with restrictions), <code>DROP COLUMN</code> (3.35.0+), and <code>RENAME COLUMN</code> (3.25.0+). Everything else requires recreating the table.</p>
+
+      <h3>Safe Table Recreation</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- SQLite: change a column type (requires recreation)
+-- Step 1: Create new table
+CREATE TABLE users_new (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  preferences JSONB  -- new/changed column
+);
+
+-- Step 2: Copy data
+INSERT INTO users_new (id, name, email, preferences)
+SELECT id, name, email, NULL FROM users;
+
+-- Step 3: Drop old table
+DROP TABLE users;
+
+-- Step 4: Rename
+ALTER TABLE users_new RENAME TO users;
+
+-- Step 5: Recreate indexes and triggers
+CREATE INDEX idx_users_email ON users(email);</pre>
+      </div>
+      <div class="danger-box">
+        <strong>Critical:</strong> SQLite table recreation drops indexes, triggers, and views that reference the old table. You must script their recreation. SchemaLens can diff your before/after schemas to verify nothing was lost.
+      </div>
+
+      <h3>Add Column (Native, Limited)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- SQLite can add columns, but with restrictions:
+--  - Cannot add PRIMARY KEY, UNIQUE, or FOREIGN KEY
+--  - Cannot add NOT NULL without DEFAULT
+ALTER TABLE users ADD COLUMN preferences TEXT;</pre>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>SQL Server — ONLINE=ON and Resumable Operations</h2>
+      <p>SQL Server Enterprise Edition supports online index operations and resumable index builds. Standard Edition is more limited.</p>
+
+      <h3>Create Index Online</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Online index build (Enterprise Edition)
+CREATE INDEX idx_users_email ON users(email)
+WITH (ONLINE = ON);
+
+-- Resumable index build (SQL Server 2017+)
+CREATE INDEX idx_users_email ON users(email)
+WITH (ONLINE = ON, RESUMABLE = ON, MAX_DURATION = 5 MINUTES);
+
+-- Resume later if interrupted
+ALTER INDEX idx_users_email ON users RESUME;
+ALTER INDEX idx_users_email ON users PAUSE;
+ALTER INDEX idx_users_email ON users ABORT;</pre>
+      </div>
+
+      <h3>Add Column Online</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Adding a nullable column is metadata-only and instant
+ALTER TABLE users ADD COLUMN preferences NVARCHAR(MAX) NULL;
+
+-- Adding with DEFAULT may lock. Use this pattern for large tables:
+-- 1. Add column nullable (instant)
+ALTER TABLE users ADD COLUMN status NVARCHAR(20) NULL;
+
+-- 2. Backfill in small batches
+UPDATE TOP (10000) users SET status = 'active'
+WHERE status IS NULL;
+-- Repeat until complete
+
+-- 3. Add DEFAULT constraint (metadata-only)
+ALTER TABLE users ADD CONSTRAINT df_users_status DEFAULT 'active' FOR status;
+
+-- 4. Optionally make NOT NULL after backfill
+ALTER TABLE users ALTER COLUMN status NVARCHAR(20) NOT NULL;</pre>
+      </div>
+
+      <h3>Add Foreign Key with Minimal Locking</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- SQL Server checks all rows by default.
+-- For large tables, first create a trusted CHECK constraint,
+-- then add the FK WITH NOCHECK to skip validation.
+
+-- Step 1: Add a CHECK constraint that enforces the FK rule
+ALTER TABLE orders WITH CHECK
+  ADD CONSTRAINT chk_orders_user_id CHECK (user_id IN (SELECT id FROM users));
+
+-- Step 2: Add FK with NOCHECK (no row scan)
+ALTER TABLE orders WITH NOCHECK
+  ADD CONSTRAINT fk_orders_user_id FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- Step 3: Make the FK trusted (optional, for query optimizer)
+ALTER TABLE orders WITH CHECK CHECK CONSTRAINT fk_orders_user_id;</pre>
+      </div>
+      <div class="warning-box">
+        <strong>Warning:</strong> <code>WITH NOCHECK</code> skips validation. If orphan rows exist, your data integrity is compromised. Only use this if you have already verified referential integrity.
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Oracle — DBMS_REDEFINITION and Editioning Views</h2>
+      <p>Oracle has the most mature online redefinition toolkit, but it is also the most complex.</p>
+
+      <h3>DBMS_REDEFINITION (Online Table Redefinition)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Step 1: Verify the table can be redefined
+BEGIN
+  DBMS_REDEFINITION.CAN_REDEF_TABLE('SCOTT', 'EMPLOYEES');
+END;
+/
+
+-- Step 2: Create an interim table with the new schema
+CREATE TABLE employees_new (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR2(100) NOT NULL,
+  email VARCHAR2(100),
+  status VARCHAR2(20) DEFAULT 'active'  -- new column
+);
+
+-- Step 3: Start redefinition
+BEGIN
+  DBMS_REDEFINITION.START_REDEF_TABLE(
+    uname        => 'SCOTT',
+    orig_table   => 'EMPLOYEES',
+    int_table    => 'EMPLOYEES_NEW',
+    col_mapping  => NULL,
+    options_flag => DBMS_REDEFINITION.CONS_USE_PK
+  );
+END;
+/
+
+-- Step 4: Sync changes (run periodically during migration)
+BEGIN
+  DBMS_REDEFINITION.SYNC_INTERIM_TABLE('SCOTT', 'EMPLOYEES', 'EMPLOYEES_NEW');
+END;
+/
+
+-- Step 5: Finish redefinition (atomic swap)
+BEGIN
+  DBMS_REDEFINITION.FINISH_REDEF_TABLE('SCOTT', 'EMPLOYEES', 'EMPLOYEES_NEW');
+END;
+/
+
+-- Step 6: Drop interim table
+DROP TABLE employees_new;</pre>
+      </div>
+
+      <h3>Online Index Rebuild</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Rebuild an index online
+ALTER INDEX idx_employees_email REBUILD ONLINE;
+
+-- Create index online
+CREATE INDEX idx_employees_email ON employees(email) ONLINE;</pre>
+      </div>
+
+      <h3>Edition-Based Redefinition (Advanced)</h3>
+      <p>For applications that must remain available during complex structural changes, Oracle's <strong>Edition-Based Redefinition (EBR)</strong> allows you to install a new version of your schema in a separate <em>edition</em> while the old edition continues to serve traffic. After testing, you switch sessions to the new edition.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Create a new edition
+CREATE EDITION edition_v2;
+
+-- Switch to it
+ALTER SESSION SET EDITION = edition_v2;
+
+-- Apply schema changes in this edition only
+ALTER TABLE employees ADD COLUMN status VARCHAR2(20);
+
+-- Hot-rollover: new sessions get edition_v2, existing sessions stay on old edition</pre>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>The Expand/Contract Pattern</h2>
+      <p>The most database-agnostic way to do zero-downtime migrations is the <strong>expand/contract</strong> pattern (also called blue/green or parallel change). It works on every database, including SQLite.</p>
+
+      <h3>How It Works</h3>
+      <ol style="color:var(--text-muted);line-height:1.8;margin-bottom:14px;padding-left:22px;">
+        <li><strong>Expand:</strong> Add the new column/table/index. Old code still works.</li>
+        <li><strong>Dual-write:</strong> Update application code to write to both old and new structures.</li>
+        <li><strong>Backfill:</strong> Migrate existing data in small batches.</li>
+        <li><strong>Switch reads:</strong> Point read queries to the new structure.</li>
+        <li><strong>Remove old writes:</strong> Stop writing to the old structure.</li>
+        <li><strong>Contract:</strong> Drop the old column/table/index.</li>
+      </ol>
+
+      <h3>Example: Rename a Column</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Step 1: Add new column (expand)
+ALTER TABLE users ADD COLUMN user_email VARCHAR(255);
+
+-- Step 2: Backfill in batches
+UPDATE users SET user_email = email WHERE user_email IS NULL LIMIT 10000;
+-- Repeat until done
+
+-- Step 3: Add trigger to keep in sync
+CREATE TRIGGER trg_sync_email
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW
+BEGIN
+  NEW.user_email = COALESCE(NEW.user_email, NEW.email);
+  NEW.email = COALESCE(NEW.email, NEW.user_email);
+END;
+
+-- Step 4: Update application to read from user_email
+-- Step 5: Stop writing to old 'email' column
+-- Step 6: Drop old column (contract)
+ALTER TABLE users DROP COLUMN email;</pre>
+      </div>
+      <div class="tip-box">
+        <strong>Tip:</strong> Never drop the old structure in the same deploy that adds the new one. Always keep at least one deploy cycle where both exist. This lets you roll back instantly if something breaks.
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Pre-Deploy Safety Checklist</h2>
+      <ul class="checklist">
+        <li>Run the migration on a staging database with production-like data size</li>
+        <li>Measure lock time with <code>performance_schema</code> (MySQL) or <code>pg_stat_activity</code> (PostgreSQL)</li>
+        <li>Test rollback script — know how to undo the change in &lt; 5 minutes</li>
+        <li>Schedule the migration during lowest traffic hours</li>
+        <li>Notify the team; have a second engineer on standby</li>
+        <li>Verify backups are current and restorable</li>
+        <li>Use <code>pt-online-schema-change --dry-run</code> or <code>gh-ost --test-on-replica</code> first</li>
+        <li>Monitor replication lag during and after the migration</li>
+        <li>Have a runbook for aborting mid-migration</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Common Pitfalls</h2>
+      <ul>
+        <li><strong>Assuming "online" means zero impact.</strong> Online migrations still use CPU, I/O, and disk space. Monitor resource usage.</li>
+        <li><strong>Running migrations directly on the primary.</strong> For MySQL, consider running <code>gh-ost</code> on a replica first with <code>--test-on-replica</code>.</li>
+        <li><strong>Adding a DEFAULT to a large table on old PostgreSQL.</strong> Before PG 11, this rewrites the entire table. Upgrade or use the expand/contract pattern.</li>
+        <li><strong>Missing index recreation after SQLite table rebuild.</strong> Always diff the schema before and after to catch dropped objects.</li>
+        <li><strong>Foreign key validation on a busy table.</strong> Even <code>VALIDATE CONSTRAINT</code> can spike I/O. Run during low traffic or use <code>NOT VALID</code> + application-level checks.</li>
+      </ul>
+    </div>
+
+    <div class="content-section" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+      <h2 style="margin-top:0;">Verify Your Migrations with SchemaLens</h2>
+      <p>Before you deploy, paste your old and new schemas into SchemaLens to catch:</p>
+      <ul>
+        <li>Breaking changes that could crash your app</li>
+        <li>Missing indexes after a table recreation</li>
+        <li>Column type changes that truncate data</li>
+        <li>Rollback scripts for every forward change</li>
+      </ul>
+      <p><a href="app.html" class="btn btn-primary">Compare Schemas Free</a> <a href="tools/safe-migration-checker.html" class="btn btn-secondary">Check Migration Safety</a></p>
+    </div>
+
+    <div class="content-section">
+      <h2>Related Migration Guides</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <h3>📖 Migration Recipes</h3>
+          <p>Copy-paste ready ALTER TABLE scripts for 10 common schema changes across all 5 dialects.</p>
+          <a href="migration-recipes.html" class="btn btn-secondary" style="font-size:0.85rem;">View Recipes →</a>
+        </div>
+        <div class="related-card">
+          <h3>🛡️ Safe Migration Checker</h3>
+          <p>Audit your migration script for dangerous operations before production. 12 safety checks, 5 dialects.</p>
+          <a href="tools/safe-migration-checker.html" class="btn btn-secondary" style="font-size:0.85rem;">Check Safety →</a>
+        </div>
+        <div class="related-card">
+          <h3>⚡ Create Index Guide</h3>
+          <p>Complete CREATE INDEX reference with composite, covering, partial, and online index builds.</p>
+          <a href="create-index-mysql.html" class="btn btn-secondary" style="font-size:0.85rem;">View Guide →</a>
+        </div>
+        <div class="related-card">
+          <h3>🔗 Add Foreign Key Guide</h3>
+          <p>Step-by-step guide with ON DELETE CASCADE, naming conventions, and performance tips.</p>
+          <a href="add-foreign-key-postgres.html" class="btn btn-secondary" style="font-size:0.85rem;">View Guide →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>SchemaLens</h4>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <p><a href="app.html">Schema Diff</a></p>
+          <p><a href="tools.html">Free Tools</a></p>
+          <p><a href="pricing.html">Pricing</a></p>
+          <p><a href="cli/">CLI</a></p>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <p><a href="blog.html">Blog</a></p>
+          <p><a href="schema-examples.html">Examples</a></p>
+          <p><a href="migration-recipes.html">Migration Recipes</a></p>
+          <p><a href="api-guide.html">API Guide</a></p>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <p><a href="schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+          <p><a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+          <p><a href="schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean migrations.</p>
+    </div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
