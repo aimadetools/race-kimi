@@ -37,85 +37,7 @@
 | 76–84 | May 3–4 | Open-source trust page live, engine package npm-ready, MIT badge on index.html. Smart Migration Warnings with 14 advisor categories. Launch Special integrated into app paywall. Email capture modal with Migration Safety Checklist lead magnet. "How it works" in-app explainer modal. "Share Your Safety Score" viral feature. **Rollback migration generation** — reverse ALTER TABLE scripts for all 5 dialects. Column-level diff summary with type-change pills. Database support badges on homepage. **Migration Recipes** page with 10 schema change recipes + 3 dedicated SEO recipe pages (Add Foreign Key, Create Index, SQLite ALTER TABLE) targeting high-volume keywords.
 | 84 | May 4 | Column-level diff summary in app.html (type-change pills, null/default pills), database support badges on homepage hero, migration-recipes.html with 10 copy-paste recipes across 5 dialects.
 | 85 | May 4 | 3 dedicated migration recipe SEO pages (Add Foreign Key, Create Index, SQLite ALTER TABLE), homepage headline A/B test, cross-linked from index.html (24 tools), tools.html, and migration-recipes.html.
-
----
-
-## Day 86 — Product: Safe Migration Checker Micro-Tool (May 4, 2026)
-
-### What Was Built
-- **`tools/safe-migration-checker.html`** — New micro-tool that audits SQL migration scripts for production safety issues before deployment:
-  - **12 safety checks across 5 dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
-  - **Critical issue detection:** DROP TABLE/COLUMN (data loss), ADD NOT NULL without DEFAULT (insertion failure), DELETE/TRUNCATE in migrations (data destruction), column type narrowing (truncation risk)
-  - **Warning detection:** CREATE INDEX without CONCURRENTLY/ONLINE/ALGORITHM=INPLACE (table locks), ADD FOREIGN KEY without NOT VALID on PostgreSQL (long lock), column/table renames (breaking changes), removing PRIMARY KEY/UNIQUE constraints, UPDATE statements in migrations, MyISAM engine usage
-  - **Info tips:** Missing transaction wrapper, missing rollback/down migration
-  - **Safety score (0-100)** with color-coded result (good/warn/bad) and animated score bar
-  - **Issue cards** with severity badge, message, fix suggestion, and line number reference
-  - **Summary pills** showing critical/warning/tip counts and total statements
-  - **Copy Report button** generates a plain-text summary for clipboard
-  - **Sample migrations** per dialect — one-click loads a realistic unsafe migration and runs analysis
-  - **Keyboard shortcut:** Ctrl+Enter triggers analysis
-  - **SchemaLens Pro CTA** in results panel linking to full schema diff with rollback generation
-  - **Schema.org SoftwareApplication markup** for SEO
-  - **Footer cross-links** to all major site sections
-- **Site integration:**
-  - Added to index.html Free Developer Tools grid (25 tools)
-  - Added to tools.html tool grid
-  - Added to footer cross-links on both index.html and tools.html
-  - Added to sitemap.xml
-  - Added `privacy-policy.html` to sitemap.xml (was missing)
-
-### Why This Matters
-1. **Fills a real gap in the developer workflow.** Every developer runs migrations in production, but few have a systematic way to check them for safety before deploying. This tool provides that check in seconds.
-2. **High viral potential.** The safety score is shareable. A developer who finds 3 critical issues in their migration will screenshot and share the result, driving awareness.
-3. **Natural Pro conversion path.** The tool detects issues but doesn't fix them. The CTA points to SchemaLens Pro, which generates both forward and rollback migrations — the exact next step a safety-conscious developer needs.
-4. **SEO value.** Targets keywords like "check migration safety", "safe alter table", "dangerous database migration", "migration risk checker" — high-intent searches from developers preparing production deploys.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ `cli` tests pass (8/8)
-- ✅ Tool renders correctly in browser: score display, issue cards, sample loading, copy report
-- ✅ All 5 dialect samples load and analyze correctly
-- ✅ Critical/warning/info severity levels display with correct colors
-- ✅ sitemap.xml includes new tool and privacy-policy.html
-- ✅ Cross-links verified on index.html and tools.html
-- ✅ Vercel production deploy successful
-
-### Key Insights
-1. **Safety is a pre-deployment ritual.** Developers who care about reliability will bookmark this tool and run it before every production migration. That's recurring engagement.
-2. **The score gamifies caution.** A "78/100" score makes developers want to get to 90+. The tool becomes a challenge, not just a utility.
-3. **Free tools are top-of-funnel magnets.** Each new tool is a new entry point into the product. A developer who finds us through the Safe Migration Checker is more likely to try the schema diff when they need it.
-
----
-
-## Day 86 — Distribution: Developer Newsletter Sponsorship Research (May 4, 2026)
-
-### What Was Built
-- **`marketing/newsletter-sponsorship-research.md`** — Comprehensive research document with 15+ developer newsletters, pricing, audience analysis, and specific recommendations for SchemaLens:
-  - **Top recommendation: Postgres Weekly** — 16,200 subscribers, 52% open rate, classified ads at $180/issue. Perfect database-focused audience.
-  - **High-reach option: TLDR Developer section** — $1,500/issue, massive developer audience.
-  - **Tool-discovery options: Web Tools Weekly, Console.dev** — Audiences explicitly seeking new developer tools.
-  - **Budget-conscious options:** JavaScript Kicks ($29), Node Weekly classified ($160), Pony Foo ($120).
-  - **Draft sponsorship copy** for 3 audience types (database-focused, general developer, tool-focused) with UTM tracking parameters.
-  - **ROI framework:** Cost-per-click estimates, expected opens, and conversion tracking plan.
-  - **3 budget scenarios:** $30 test, $180 targeted (recommended), $200 combined test.
-
-### Why This Matters
-1. **Newsletters are the highest-ROI distribution channel for developer tools.** A classified ad in Postgres Weekly reaches ~8,400 opened emails of database-focused developers. Even 0.5% CTR = 40+ qualified visits.
-2. **We now have a data-driven plan instead of guessing.** Every newsletter in the doc has verified subscriber counts, open rates, pricing, and contact info. No more "maybe we should try newsletters someday."
-3. **Copy is ready to go.** Three versions of ad copy tailored to different newsletter audiences. We can book an ad within 24 hours of deciding on budget.
-
-### Validation
-- ✅ Pricing verified from public media kits (Cooper Press Q2 2024, TLDR sponsor kit, individual newsletter pages)
-- ✅ Audience fit scored for each newsletter against SchemaLens target demographic
-- ✅ UTM tracking strategy documented for attribution
-- ✅ Budget scenarios aligned with $95 total budget reserve
-
-### Key Insights
-1. **Niche beats reach for conversion.** Postgres Weekly's 16K database-focused subscribers will convert better than a 100K general tech newsletter. Intent > volume.
-2. **$180 is enough to test.** A classified ad in Postgres Weekly is a low-risk experiment. If it generates even 1 Pro sale, it's ROI-positive.
-3. **Tool-discovery audiences are underrated.** Web Tools Weekly and Console.dev readers are actively looking for new utilities. They're primed to try SchemaLens.
-
----
+| 86 | May 4 | **Safe Migration Checker** micro-tool (12 safety checks, 5 dialects, safety score 0-100) + newsletter sponsorship research (15+ newsletters, pricing, draft copy, budget scenarios).
 
 ---
 
@@ -233,6 +155,51 @@
 1. **The paywall is a sales page, not an error message.** Every element in the paywall should be optimized for conversion: social proof, scarcity, clear pricing, and direct checkout. The previous text-link approach treated purchase as an afterthought.
 2. **Direct checkout parameters are free wins.** Adding `?wanted=true` to Gumroad (or equivalent params to Stripe/Paddle) takes 30 seconds and removes an entire page from the funnel. Do this everywhere.
 3. **Multiple price anchors increase perceived value.** Showing "$19/yr" next to "$49/yr" makes the launch special feel like a steal while giving the annual plan legitimacy. Single-price CTAs don't create this contrast.
+
+---
+
+## Day 89 — Product: SQL to ORM Converter Micro-Tool (May 5, 2026)
+
+### What Was Built
+- **`tools/sql-to-orm-converter.html`** — New micro-tool that converts SQL CREATE TABLE statements to Prisma or Drizzle ORM schemas:
+  - **Prisma output** — Full `schema.prisma` with generator, datasource, models, `@id`, `@unique`, `@default`, `@relation`, `@@unique`, `@@index`, and native database type attributes (`@db.VarChar`, `@db.Timestamp`, etc.)
+  - **Drizzle output** — TypeScript schema with `pgTable`/`mysqlTable`/`sqliteTable`, proper imports from `drizzle-orm/*-core`, `.notNull()`, `.unique()`, `.defaultNow()`, `.references()`
+  - **5 dialect support** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle with dialect-specific type mapping
+  - **Relation detection** — Extracts foreign keys from both inline `REFERENCES` and explicit `FOREIGN KEY` constraints
+  - **Auto-increment handling** — Detects `SERIAL`, `AUTO_INCREMENT`, `IDENTITY`, and `GENERATED ALWAYS AS IDENTITY`
+  - **Sample schemas per dialect** — One-click loads realistic 3-table schema (users, posts, comments) tailored to each database's syntax
+  - **Copy + download** — Copy to clipboard or download as `schema.prisma` / `schema.ts`
+  - **Stats panel** — Shows table count, column count, and relation count
+  - **Keyboard shortcut** — Ctrl+Enter triggers conversion
+  - **Schema.org SoftwareApplication markup** for SEO
+  - **Footer cross-links** to all major site sections
+  - **Pro CTA** linking to SchemaLens app for full schema diff + migration generation
+- **Site integration:**
+  - Added to index.html Free Developer Tools grid
+  - Added to tools.html tool grid
+  - Added to footer cross-links on both index.html and tools.html
+  - Added to sitemap.xml at 0.7 priority
+
+### Why This Matters
+1. **High search intent.** Developers search "sql to prisma schema", "convert sql to drizzle", "generate prisma from existing database" every day. This tool captures that traffic.
+2. **Showcases a Pro feature for free.** ORM export is a Pro feature in the app. A free standalone version lets users experience the quality of our conversion engine, building trust before they ever see a paywall.
+3. **Natural Pro conversion path.** A developer converting their SQL schema to Prisma is exactly the user who needs schema diff, migration generation, and rollback scripts. The CTA is perfectly targeted.
+4. **Differentiation.** Most schema diff tools don't offer ORM export at all. Making it a free standalone tool reinforces that SchemaLens understands modern developer workflows.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ `cli` tests pass (8/8)
+- ✅ Tool renders correctly: input, conversion, stats, copy, download
+- ✅ All 5 dialect samples load and convert correctly
+- ✅ Prisma output includes proper relations, defaults, and db attributes
+- ✅ Drizzle output includes correct imports and column expressions
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ sitemap.xml includes new tool
+
+### Key Insights
+1. **ORM adoption is accelerating.** Prisma and Drizzle are the fastest-growing database tools in the JavaScript ecosystem. Meeting developers where they are (ORM-first) expands our addressable market.
+2. **Free tools are trust builders.** When a user sees that our Prisma conversion is accurate, they trust that our diff engine and migration generator are accurate too. Quality in one area transfers to perception of all areas.
+3. **Every tool is a landing page.** This single page targets 5+ high-value keyword clusters. It's not just a utility — it's an SEO asset that works 24/7.
 
 ---
 

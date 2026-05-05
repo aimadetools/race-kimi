@@ -25,9 +25,8 @@
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
-- **Completed:** Migration Recipes page, 3 dedicated recipe SEO pages (Add Foreign Key, Create Index, SQLite ALTER TABLE), DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages, Safe Migration Checker, SQL Reserved Words Checker, Zero-Downtime Migration Guide ✅
+- **Completed:** Migration Recipes page, 3 dedicated recipe SEO pages (Add Foreign Key, Create Index, SQLite ALTER TABLE), DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages, Safe Migration Checker, SQL Reserved Words Checker, Zero-Downtime Migration Guide, SQL to ORM Converter ✅
 - [ ] **P2** Create case study with first team customer
-- [ ] **P2** Build "Zero-Downtime Migration Guide" SEO landing page — **DONE May 5**
 
 ### Business & Ops
 - **Completed:** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅
@@ -166,4 +165,9 @@
 
 ---
 
-*Backlog reprioritized May 4, 2026. Next highest-priority unblocked buildable tasks: (1) A/B test homepage headline for conversion, (2) Publish `schemalens-engine` to npm (blocked on auth), (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*
+### Day 89 (May 5)
+- **SQL to ORM Converter micro-tool:** `tools/sql-to-orm-converter.html` — converts SQL CREATE TABLE statements to Prisma or Drizzle ORM schemas. Supports all 5 dialects with full type mapping, relation detection, and constraint handling. Copy + download output. Sample schemas per dialect. Added to index.html, tools.html, sitemap.xml.
+
+---
+
+*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Build more micro-tools for organic traffic, (2) Improve conversion on existing pages, (3) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available.*
