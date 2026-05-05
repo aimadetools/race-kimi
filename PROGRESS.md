@@ -45,6 +45,18 @@
 
 ---
 
+## Day 92 — SQL to TypeScript Generator Micro-Tool (May 5, 2026)
+
+### What Was Built
+- **SQL to TypeScript Generator** (`tools/sql-to-typescript.html`) — Converts SQL CREATE TABLE statements to TypeScript interfaces and Zod validation schemas. Full type mapping for all 5 dialects, enum detection from CHECK constraints, smart refinements for email/URL columns, nullable handling, optional fields, date-as-string toggle, and Insert types. Cross-linked on index.html, tools.html, sitemap.xml.
+- Tool count updated to 24.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ Vercel production deploy triggered on git push
+
+---
+
 ## Day 93 — Product Hunt Launch Prep + Trust & Distribution Focus (May 5, 2026)
 
 ### What Was Built
