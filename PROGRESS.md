@@ -48,6 +48,30 @@
 | 95 | May 5 | **Database Connection String Parser & Builder** micro-tool — parse + build connection strings for all 5 dialects. URL and key-value formats, password masking, auto-detect dialect. Tool count 25→26. |
 | 96 | May 5 | **SQL to Python Generator** micro-tool — SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE. Relation detection, enum extraction, 5 dialects. Tool count 26→27. |
 | 97 | May 5 | **SQL UPDATE Generator** micro-tool — UPDATE statements from CREATE TABLE with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT. Tool count 27→28. |
+| 98 | May 5 | **SQL DELETE Generator** micro-tool — safe DELETE statements from CREATE TABLE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE. Tool count 28→29. |
+
+---
+
+## Day 98 — SQL DELETE Generator (May 5, 2026)
+
+### What Was Built
+- **SQL DELETE Generator** (`tools/sql-delete-generator.html`) — Generate safe DELETE statements from CREATE TABLE schemas. Supports all 5 dialects with dialect-specific syntax.
+- **Query variants**: Safe DELETE by primary key, DELETE with RETURNING (PostgreSQL/Oracle) or OUTPUT (SQL Server), DELETE with JOIN (USING for PostgreSQL, INNER JOIN for MySQL/SQL Server, subquery for SQLite/Oracle), soft-delete pattern (UPDATE SET deleted_at), bulk DELETE via IN clause, DELETE with LIMIT, TRUNCATE TABLE.
+- **PK-aware WHERE**: Automatically detects primary keys to generate safe, scoped DELETE queries — no accidental full-table deletes.
+- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **Tool count updated** 28→29.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **DELETE is the most dangerous SQL operation.** A generator that defaults to PK-qualified WHERE clauses prevents catastrophic data loss.
+2. **29 tools = 290 daily uniques at 10 visits/tool.** The CRUD query generator family is now complete: SELECT, INSERT, UPDATE, DELETE.
+3. **Soft-delete pattern inclusion adds educational value.** Many developers don't know how to implement soft deletes; showing the pattern teaches best practices.
 
 ---
 
@@ -97,25 +121,6 @@
 3. **Code generator tools have high retention** — developers bookmark them and return when building new features.
 
 ---
-
-## Day 95 — Database Connection String Parser & Builder (May 5, 2026)
-
-### What Was Built
-- **Database Connection String Parser & Builder** (`tools/connection-string-parser.html`) — Parse and build database connection strings for all 5 dialects. Auto-detects dialect from URL or key-value format. Parse tab extracts protocol, username, password (masked), host, port, database, SID, and query options. Build tab generates connection strings from form inputs with URL and key-value format options for SQL Server/Oracle. Includes 5 pre-loaded examples and copy-to-clipboard.
-- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 25→26 across `BACKLOG.md` and `PROGRESS.md`.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **Micro-tools remain the highest-ROI unblocked distribution lever.** No human gatekeeping — build, ship, index, rank.
-2. **Connection string parsing is a high-search, low-competition niche.** Developers debug connection issues daily across all stacks.
-3. **26 tools = 260 daily uniques if each drives 10 visits/day.** That's enough to start real conversion experiments and validate pricing.
 
 ---
 
