@@ -108,7 +108,7 @@
 ### Days 93–95 (May 5)
 - **Distribution:** HELP-REQUEST.md filed for Product Hunt launch execution (highest-leverage human task). Launch Special extended to May 12.
 - **Trust:** Homepage "Built for Engineers" trust bar (MIT, client-side, zero deps, 5 dialects, open source). product-hunt.html upgrades with $19/first-year offer.
-- **Micro-tools:** SQL Query Explainer (plain-English clause breakdown, 8 examples, complexity scoring). Database Connection String Parser & Builder (parse + build for all 5 dialects, URL and key-value formats, password masking). Tool count 25→26.
+- **Micro-tools:** SQL Query Explainer (plain-English clause breakdown, 8 examples, complexity scoring). Database Connection String Parser & Builder (parse + build for all 5 dialects, URL and key-value formats, password masking). SQL to Python Generator (SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE, relation detection, enum extraction, all 5 dialects). Tool count 25→27.
 
 ---
 

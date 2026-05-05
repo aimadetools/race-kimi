@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–94)
+## Key Milestones (Days 1–96)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -45,6 +45,29 @@
 | 92 | May 5 | **SQL to TypeScript Generator** micro-tool — TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects. Cross-linked, sitemap.xml updated. Tool count 24. |
 | 93 | May 5 | Product Hunt launch prep + trust focus. HELP-REQUEST.md filed for PH execution. Launch Special extended to May 12. Homepage "Built for Engineers" trust bar. product-hunt.html upgrades. |
 | 94 | May 5 | **SQL Query Explainer** micro-tool — plain-English clause-by-clause breakdown for any SQL query. 8 examples, complexity scoring, highlighted SQL. Tool count 24→25. |
+
+---
+
+## Day 96 — SQL to Python Generator (May 5, 2026)
+
+### What Was Built
+- **SQL to Python Generator** (`tools/sql-to-python.html`) — Convert SQL CREATE TABLE statements to Python SQLAlchemy ORM models and Pydantic validation schemas. Supports all 5 dialects.
+- **SQLAlchemy output**: declarative Base classes with Column definitions, ForeignKey constraints, relationship() back-populates, auto-increment flags, defaults, unique/nullable handling.
+- **Pydantic output**: BaseModel classes with Field() descriptions, smart type mapping (int/float/str/bool/datetime/bytes/dict/List), Optional for nullable, enum extraction from CHECK constraints.
+- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **Tool count updated** 26→27.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **Python is the #1 backend language for data/ML/AI.** SQLAlchemy + Pydantic covers the vast majority of Python web stacks (FastAPI, Flask, Django-like).
+2. **27 tools = 270 daily uniques if each drives 10 visits/day.** The organic traffic flywheel compounds with every tool.
+3. **Code generator tools have high retention** — developers bookmark them and return when building new features.
 
 ---
 
