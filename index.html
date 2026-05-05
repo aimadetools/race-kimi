@@ -73,36 +73,71 @@
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="lib/analytics-client.js"></script>
   <script>
-    // Homepage headline A/B test (May 2026)
+    // Homepage A/B tests (May 2026)
     (function() {
-      const storageKey = 'sl_headline_variant_v1';
-      let variant = localStorage.getItem(storageKey);
-      if (!variant) {
-        variant = Math.random() < 0.5 ? 'control' : 'cli';
-        localStorage.setItem(storageKey, variant);
+      // Test 1: Headline variant
+      const headlineKey = 'sl_headline_variant_v1';
+      let headlineVariant = localStorage.getItem(headlineKey);
+      if (!headlineVariant) {
+        headlineVariant = Math.random() < 0.5 ? 'control' : 'cli';
+        localStorage.setItem(headlineKey, headlineVariant);
       }
-      function applyVariant() {
+
+      // Test 2: Hero badge variant (CLI pill vs VS Code pill vs neither vs both)
+      const badgeKey = 'sl_badge_variant_v1';
+      let badgeVariant = localStorage.getItem(badgeKey);
+      if (!badgeVariant) {
+        const r = Math.random();
+        if (r < 0.25) badgeVariant = 'both';
+        else if (r < 0.5) badgeVariant = 'cli-only';
+        else if (r < 0.75) badgeVariant = 'vscode-only';
+        else badgeVariant = 'neither';
+        localStorage.setItem(badgeKey, badgeVariant);
+      }
+
+      function applyVariants() {
         if (typeof track === 'function') {
-          track('ab_test_assigned', { variant: variant, test: 'homepage_headline_may2026' });
+          track('ab_test_assigned', { variant: headlineVariant, test: 'homepage_headline_may2026' });
+          track('ab_test_assigned', { variant: badgeVariant, test: 'homepage_badge_may2026' });
         }
-        if (variant === 'cli') {
+
+        // Headline test
+        if (headlineVariant === 'cli') {
           const h1 = document.querySelector('header.hero h1');
           if (h1) {
             h1.innerHTML = 'Generate database migrations<br><span>without the CLI.</span><br>Compare schemas free.';
           }
         }
-        document.querySelectorAll('header.hero .hero-actions a').forEach(function(a) {
+
+        // Badge test
+        const cliBadge = document.getElementById('hero-cli-badge');
+        const vscodeBadge = document.getElementById('hero-vscode-badge');
+        if (cliBadge) {
+          cliBadge.style.display = (badgeVariant === 'both' || badgeVariant === 'cli-only') ? '' : 'none';
+        }
+        if (vscodeBadge) {
+          vscodeBadge.style.display = (badgeVariant === 'both' || badgeVariant === 'vscode-only') ? '' : 'none';
+        }
+
+        // Track CTA clicks with both variant labels
+        document.querySelectorAll('header.hero .hero-actions a, #hero-cli-badge a, #hero-vscode-badge a').forEach(function(a) {
           a.addEventListener('click', function() {
             if (typeof track === 'function') {
-              track('cta_click', { variant: variant, test: 'homepage_headline_may2026', cta: a.textContent.trim() });
+              track('cta_click', {
+                headline_variant: headlineVariant,
+                badge_variant: badgeVariant,
+                test: 'homepage_combined_may2026',
+                cta: a.textContent.trim()
+              });
             }
           });
         });
       }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyVariant);
+        document.addEventListener('DOMContentLoaded', applyVariants);
       } else {
-        applyVariant();
+        applyVariants();
       }
     })();
   </script>
@@ -223,12 +258,12 @@
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
       <p class="hero-note" style="margin-top:8px;font-size:0.85rem;">🛡️ Reviewing a migration? Use our <a href="migration-checklist.html">Database Migration Safety Checklist</a></p>
-      <div style="margin-top:20px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+      <div id="hero-cli-badge" style="margin-top:20px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
         <span style="font-size:0.85rem;color:var(--text-muted);">⚡ Also on CLI:</span>
         <code style="background:var(--code-bg);padding:4px 10px;border-radius:6px;font-size:0.85rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
         <a href="cli/" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Docs →</a>
       </div>
-      <div style="margin-top:12px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+      <div id="hero-vscode-badge" style="margin-top:12px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
         <span style="font-size:0.85rem;color:var(--text-muted);">🖥️ VS Code:</span>
         <span style="font-size:0.85rem;color:var(--text);">Diff SQL files directly from your editor</span>
         <a href="vscode-extension.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Learn more →</a>
