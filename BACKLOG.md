@@ -9,31 +9,25 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — BLOCKED on Human Help (Resets Monday May 4)
+### Distribution — BLOCKED on Human Help
 - [ ] **P0** VS Code Marketplace publish (`vscode-extension/` ready, `HELP-REQUEST.md` recreated with correct steps)
 - [ ] **P0** Human submits SchemaLens to AlternativeTo.net (site was down last attempt)
 - [ ] **P0** Chrome Web Store — confirm publish status ($5 already paid, awaiting review)
 - [ ] **P1** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `HELP-REQUEST.md`
 - [ ] **P1** Publish `schemalens-engine` to npm (package ready, needs `npm publish` — may need human help for auth)
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md` (requires human to create account and build rep)
-- [x] **P2** Research developer newsletter sponsorships ($20–30 budget) for Week 4–5 ✅ Done May 4 — `marketing/newsletter-sponsorship-research.md` with 15+ newsletters, pricing, audience analysis, draft copy, and budget scenarios.
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
+- **Completed:** Newsletter sponsorship research (15+ newsletters, pricing, audience analysis, draft copy, budget scenarios) ✅ Done May 4
 
 ### Conversion — Unblocked (Buildable Now)
-- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges, pricing page ROI calculator embed ✅
-- [x] **P1** A/B test homepage headline — current "Compare SQL schemas" vs "Generate database migrations without the CLI" ✅ Done May 4
-- [x] **P1** Embed Migration Cost Calculator on pricing.html ✅ Done May 5
+- **Completed:** Launch Special landing page, Smart Migration Warnings, social proof in paywall, email capture modal, "How it works" explainer, "Share Your Safety Score" viral feature, rollback migration generation, column-level diff summary, database support badges, pricing page ROI calculator embed, homepage headline A/B test, direct Gumroad checkout buttons in app paywall ✅
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
-- [ ] **P2** Build "Zero-Downtime Migration Guide" SEO landing page — targets high-intent keywords, establishes authority
-- [ ] **P2** Add direct Gumroad checkout links for Annual and Launch Special plans in app paywall
 
 ### Content — SEO Engine (Unblocked)
-- **Completed:** Migration Recipes page, DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages, Safe Migration Checker, SQL Reserved Words Checker ✅
-- [x] **P1** Build 2–3 more migration recipe pages targeting high-volume keywords (e.g., "add foreign key postgres", "create index mysql", "sqlite alter table") ✅ Done May 4
-- [x] **P1** Build SQL Reserved Words Checker micro-tool ✅ Done May 5
+- **Completed:** Migration Recipes page, 3 dedicated recipe SEO pages (Add Foreign Key, Create Index, SQLite ALTER TABLE), DuckDB/BigQuery/Snowflake/ClickHouse Schema Diff pages, ORM pages, Safe Migration Checker, SQL Reserved Words Checker, Zero-Downtime Migration Guide ✅
 - [ ] **P2** Create case study with first team customer
-- [ ] **P2** Build "Zero-Downtime Migration Guide" SEO landing page
+- [ ] **P2** Build "Zero-Downtime Migration Guide" SEO landing page — **DONE May 5**
 
 ### Business & Ops
 - **Completed:** Gumroad sales monitor, Launch Special conversion monitor, trial drip campaign, expired trial winback ✅
