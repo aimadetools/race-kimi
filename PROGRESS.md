@@ -92,6 +92,35 @@
 
 ---
 
+## Day 106 (cont) — SQL to Go Struct Generator + Site-Wide Cross-Linking (May 6, 2026)
+
+### What Was Built
+- **SQL to Go Struct Generator** (`tools/sql-to-go.html`) — converts SQL CREATE TABLE statements to Go structs:
+  - **Tag support:** json, db, and GORM tags (all toggleable independently)
+  - **Nullable handling:** sql.NullBool, sql.NullFloat64, sql.NullInt64, sql.NullString, sql.NullTime for nullable fields
+  - **Go type mapping:** int/int8/int16/int32/int64/uint/uint64/float32/float64/bool/string/[]byte/time.Time/interface{}
+  - **5 dialect samples:** PostgreSQL, MySQL, SQLite, SQL Server, Oracle with realistic schemas
+  - **Stats row:** tables, columns, relations count
+  - **Copy + download** output as `schema.go`
+  - **Same parser** as sql-to-typescript.html and sql-to-python.html for consistency
+- **Cross-linked** on index.html free tools grid and footer, tools.html grid and footer
+- **README.md** tool list updated (30→31 items)
+- **sitemap.xml** updated with sql-to-go.html
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `tools/sql-to-go.html` loads without console errors
+- ✅ All internal links valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **The "SQL to X" generator family is a proven pattern.** TypeScript (Day 92), Python (Day 96), and now Go each target a distinct developer community. The incremental cost of adding a new language is low because the parser is shared.
+2. **Go is an underserved audience in our tool lineup.** Go developers are extremely active on Hacker News and Reddit r/golang. This gives us a concrete reason to post in Go-specific communities.
+3. **Tool count is now 31+ but index.html still says 31.** We should consider whether the exact number matters or if we should use "30+" to avoid frequent updates. For now, accuracy is better than rounding.
+4. **Each new tool is a new SEO entry point.** "SQL to Go struct generator" and "CREATE TABLE to Go" are search queries with real volume. The tool targets a different intent than our core schema diff product.
+
+---
+
 ## Day 105 — Schema Health Check Viral Upgrade + HELP-REQUEST for PH Launch (May 6, 2026)
 
 ### What Was Built
