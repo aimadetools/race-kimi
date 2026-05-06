@@ -26,8 +26,8 @@ const fs = require('fs');
 const html = fs.readFileSync('app.html', 'utf8');
 const scripts = [...html.matchAll(/<script>(?!.*src)([\s\S]*?)<\/script>/g)].map(m => m[1]);
 const script = scripts.find(s => s.includes('function parseSQL')) || scripts[scripts.length - 1];
-const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges };');
-const { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges } = fn();
+const fn = new Function(script + '; return { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges, generateMigrationWarnings };');
+const { parseSQL, diffSchemas, generateMigration, generateRollbackMigration, quoteId, detectBreakingChanges, generateMigrationWarnings } = fn();
 
 function testDialect(name, sql) {
   try {
@@ -329,5 +329,137 @@ if (rollbackDrop.includes('CREATE TABLE "orders"') && rollbackDrop.includes('"id
   console.log('rollback-table-drop: FAIL — expected CREATE TABLE orders in rollback, got:', rollbackDrop);
 }
 
-console.log('\n' + ok + '/20 tests passed');
-process.exit(ok === 20 ? 0 : 1);
+// --- Migration Warning Tests ---
+function testWarning(name, oldSQL, newSQL, dialect, checkFn) {
+  try {
+    const schemaOld = parseSQL(oldSQL, dialect);
+    const schemaNew = parseSQL(newSQL, dialect);
+    const d = diffSchemas(schemaOld, schemaNew);
+    const warnings = generateMigrationWarnings(d, dialect);
+    if (checkFn(warnings)) {
+      console.log(name + ': OK');
+      return true;
+    } else {
+      console.log(name + ': FAIL — warnings:', warnings.map(w => w.title));
+      return false;
+    }
+  } catch (e) {
+    console.log(name + ': FAIL —', e.message);
+    return false;
+  }
+}
+
+// 1. VARCHAR shrink
+if (testWarning('warn-varchar-shrink',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(100));`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  'postgres',
+  w => w.some(x => x.title.includes('VARCHAR shrink') && x.severity === 'critical')
+)) ok++;
+
+// 2. Integer downsizing
+if (testWarning('warn-int-downsize',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, count INT);`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, count SMALLINT);`,
+  'postgres',
+  w => w.some(x => x.title.includes('Downsizing integer') && x.severity === 'critical')
+)) ok++;
+
+// 3. TEXT -> VARCHAR
+if (testWarning('warn-text-to-varchar',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, body TEXT);`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, body VARCHAR(255));`,
+  'postgres',
+  w => w.some(x => x.title.includes('TEXT → VARCHAR') && x.severity === 'critical')
+)) ok++;
+
+// 4. DECIMAL precision reduction
+if (testWarning('warn-decimal-reduce',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, price DECIMAL(10,2));`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, price DECIMAL(8,2));`,
+  'postgres',
+  w => w.some(x => x.title.includes('DECIMAL precision reduction') && x.severity === 'critical')
+)) ok++;
+
+// 5. Timestamp -> date casting
+if (testWarning('warn-timestamp-date',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, created_at TIMESTAMP);`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, created_at DATE);`,
+  'postgres',
+  w => w.some(x => x.title.includes('implicit casting') && x.severity === 'warning')
+)) ok++;
+
+// 6. NOT NULL without default
+if (testWarning('warn-not-null-no-default',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50) NOT NULL);`,
+  'postgres',
+  w => w.some(x => x.title.includes('SET NOT NULL') && x.severity === 'critical')
+)) ok++;
+
+// 7. Table drop
+if (testWarning('warn-table-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY);`,
+  ``,
+  'postgres',
+  w => w.some(x => x.title.includes('DROP TABLE') && x.severity === 'critical')
+)) ok++;
+
+// 8. Column drop
+if (testWarning('warn-column-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY);`,
+  'postgres',
+  w => w.some(x => x.title.includes('DROP COLUMN') && x.severity === 'critical')
+)) ok++;
+
+// 9. Index drop
+if (testWarning('warn-index-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50)); CREATE INDEX idx_name ON t(name);`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  'postgres',
+  w => w.some(x => x.title.includes('Dropping index') && x.severity === 'warning')
+)) ok++;
+
+// 10. Foreign key drop
+if (testWarning('warn-fk-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, pid INT, CONSTRAINT fk_p FOREIGN KEY (pid) REFERENCES p(id)); CREATE TABLE p (id SERIAL PRIMARY KEY);`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, pid INT); CREATE TABLE p (id SERIAL PRIMARY KEY);`,
+  'postgres',
+  w => w.some(x => x.title.includes('Dropping foreign key') && x.severity === 'warning')
+)) ok++;
+
+// 11. PRIMARY KEY drop
+if (testWarning('warn-pk-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  `CREATE TABLE t (id SERIAL, name VARCHAR(50));`,
+  'postgres',
+  w => w.some(x => x.title.includes('Dropping PRIMARY KEY') && x.severity === 'critical')
+)) ok++;
+
+// 12. UNIQUE drop
+if (testWarning('warn-unique-drop',
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50), CONSTRAINT uq_name UNIQUE (name));`,
+  `CREATE TABLE t (id SERIAL PRIMARY KEY, name VARCHAR(50));`,
+  'postgres',
+  w => w.some(x => x.title.includes('Dropping UNIQUE') && x.severity === 'warning')
+)) ok++;
+
+// 13. MySQL ADD COLUMN with DEFAULT
+if (testWarning('warn-mysql-add-default',
+  `CREATE TABLE t (id INT PRIMARY KEY AUTO_INCREMENT);`,
+  `CREATE TABLE t (id INT PRIMARY KEY AUTO_INCREMENT, status VARCHAR(20) DEFAULT 'active');`,
+  'mysql',
+  w => w.some(x => x.title.includes('DEFAULT') && x.severity === 'warning')
+)) ok++;
+
+// 14. SQLite limitation warning
+if (testWarning('warn-sqlite-limitation',
+  `CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT);`,
+  `CREATE TABLE t (id INTEGER PRIMARY KEY);`,
+  'sqlite',
+  w => w.some(x => x.title.includes('SQLite has limited') && x.severity === 'warning')
+)) ok++;
+
+console.log('\n' + ok + '/34 tests passed');
+process.exit(ok === 34 ? 0 : 1);
