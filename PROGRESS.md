@@ -183,38 +183,4 @@
 
 ---
 
-## Day 103 — Hardcore QA Audit: 3 Silent Bugs Fixed (May 6, 2026)
-
-### What Was Built
-- **Comprehensive warning test suite** — 14 new tests covering every `generateMigrationWarnings` code path. Tests now verify that warnings actually fire with correct severity and message content. Suite expanded 20→34 tests.
-- **Bug fix #1 — Index changes invisible to diff engine:**
-  - `diffTable` never compared `oldTable.indexes` vs `newTable.indexes`
-  - Index-only changes caused `hasChanges` to stay `false`, so the table never appeared in `tablesModified`
-  - This broke index drop warnings and the PostgreSQL `CREATE INDEX CONCURRENTLY` tip — both were dead code paths
-  - Fixed: added `indexesAdded`/`indexesRemoved` with `idxKey(name|unique|columns)` comparison
-  - Files: `engine/engine.js`, `lib/engine.js`, `cli/engine.js`, `app.html`
-- **Bug fix #2 — DECIMAL precision reduction warning never fired:**
-  - Parser stores types with spaces: `DECIMAL ( 10 , 2 )` instead of `DECIMAL(10,2)`
-  - Regex failed because there is a space before the comma
-  - Fixed: regex handles all spacing variants
-  - This is the same class of silent failure as Day 102's `oldType` bug — the regex returned `null`, so the condition was silently skipped
-- **Bug fix #3 — Inline PRIMARY KEY drop warning never fired:**
-  - Column-level `PRIMARY KEY` changes create `field: 'primary key'` in `columnsModified`, not `constraintsRemoved`
-  - Warning code only checked `constraintsRemoved` for PRIMARY KEY drops
-  - Fixed: added `columnsModified` loop check for `change.field === 'primary key' && change.new === 'NO'`
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **Silent bugs cluster around the same failure mode.** The `oldType` bug (Day 102), the DECIMAL regex bug, and the index diff bug all share one trait: the code ran without errors but never did anything useful. Empty strings, null regex matches, and empty arrays look like "no warning needed" when they are actually "bug prevented the warning."
-2. **Testing the absence of bugs requires positive tests.** We had tests for "does the diff run" but not "does this specific warning fire when condition X is met." The 14 new warning tests catch the exact message, severity, and trigger condition.
-3. **Parser output formatting leaks into consumer code.** The parser tokenizes `DECIMAL(10,2)` into `DECIMAL ( 10 , 2 )`. Any consumer doing string matching on types must handle spacing. We should consider normalizing types in the parser, but for now we have patched the consumers.
-4. **The engine has 3 identical copies (engine/, lib/, cli/) plus app.html's inline script.** Every engine fix must be applied to all 4 locations. This is error-prone and should be automated or consolidated.
-
----
-
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*

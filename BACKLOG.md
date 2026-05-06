@@ -122,6 +122,14 @@
 - **Distribution:** Schema Breaking Change Quiz (`tools/schema-breaking-change-quiz.html`) — interactive 10-question quiz with before/after diff visuals, real-world migration scenarios, 3-option answers (Safe/Risky/Breaking), educational explanations, score tracking with localStorage best score, social sharing (X, LinkedIn, copy), strong product CTA. Cross-linked on index.html, tools.html, footer. sitemap.xml updated.
 - **Docs:** README.md tool count updated 23→32+, missing tools added to list.
 
+### Day 105 (May 6)
+- **Distribution:** Schema Health Check viral upgrade — 10 new lint checks (reserved words, soft-delete, enum misuse, inconsistent types, duplicate indexes, missing FK clauses, short column names, overly wide TEXT columns). Social sharing with Copy/X/LinkedIn/Share Link buttons. Dynamic OG score cards via `/api/share?health=85`. Strong Pro CTA. HELP-REQUEST.md filed for PH launch next week.
+
+### Day 106 (May 6)
+- **Distribution:** Show HN landing page (`show-hn.html`) — optimized for Hacker News traffic with privacy-first messaging, self-hosting instructions, tech stack transparency, CLI promo, honest limitations, and maker's note. Updated `marketing/show-hn.md` with current features and engagement strategy.
+- **Product:** SQL to Go Struct Generator (`tools/sql-to-go.html`) — converts CREATE TABLE to Go structs with json/db/GORM tags, sql.Null* nullable types, smart type mapping for all 5 dialects. Cross-linked on index.html and tools.html.
+- **Maintenance:** Fixed stale tool counts across site (23→32+), fixed rename detection FAQ on index.html, added missing sql-update-generator and sql-delete-generator to index.html grid.
+
 ---
 
-*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Build Show HN landing page and updated draft for Hacker News distribution (completed Day 106). Next: Framework-specific schema diff guides or additional viral micro-tools.*
+*Backlog reprioritized May 6, 2026. Product Hunt launch is #1 priority but blocked on human help (scheduled for next week). Next highest-priority unblocked buildable tasks: framework-specific schema diff guides (Laravel/Django/Rails) or additional viral micro-tools.*
