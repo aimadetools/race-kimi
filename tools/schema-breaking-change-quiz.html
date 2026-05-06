@@ -559,20 +559,34 @@ function escapeHtml(str) {
   return str.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
 
+function getBadge(pct) {
+  if (pct >= 80) return 'Migration Guardian';
+  if (pct >= 50) return 'Migration Aware';
+  return 'Migration Rookie';
+}
+
+function getShareUrl(pct) {
+  const badge = getBadge(pct);
+  return 'https://schemalens.tech/api/share?quiz=breaking&score=' + pct + '&name=' + encodeURIComponent(badge);
+}
+
 function copyResult() {
   const pct = Math.round((score / questions.length) * 100);
-  const text = `I scored ${pct}% on the Schema Breaking Change Quiz by @SchemaLens (${score}/${questions.length} correct). Can you spot the migrations that break production? https://schemalens.tech/tools/schema-breaking-change-quiz.html`;
+  const url = getShareUrl(pct);
+  const text = `I scored ${pct}% on the Schema Breaking Change Quiz by @SchemaLens (${score}/${questions.length} correct). Can you spot the migrations that break production? ${url}`;
   navigator.clipboard.writeText(text).then(() => alert('Result copied to clipboard!'));
 }
 
 function tweetResult() {
   const pct = Math.round((score / questions.length) * 100);
+  const url = getShareUrl(pct);
   const text = `I scored ${pct}% on the Schema Breaking Change Quiz by @SchemaLens. Can you spot the migrations that break production?`;
-  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent('https://schemalens.tech/tools/schema-breaking-change-quiz.html'), '_blank');
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
 }
 
 function linkedinResult() {
-  const url = 'https://schemalens.tech/tools/schema-breaking-change-quiz.html';
+  const pct = Math.round((score / questions.length) * 100);
+  const url = getShareUrl(pct);
   window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
 }
 

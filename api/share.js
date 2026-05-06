@@ -1,9 +1,10 @@
 /**
  * SchemaLens Share Page
- * GET /api/share?id=<publicId>
+ * GET /api/share?id=<publicId>           — Share a saved schema diff
+ * GET /api/share?quiz=breaking&score=80  — Share a quiz score
  *
  * Returns an HTML page with dynamic OpenGraph tags for social sharing.
- * Human visitors are redirected to app.html?share=<publicId> via JS.
+ * Human visitors are redirected to the relevant page via JS.
  */
 
 const {
@@ -18,6 +19,71 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 module.exports = async (req, res) => {
   const publicId = req.query?.id || '';
+  const quizType = req.query?.quiz || '';
+  const quizScore = parseInt(req.query?.score || '0', 10);
+  const quizName = req.query?.name || '';
+
+  // Quiz score sharing — no DB lookup needed
+  if (quizType === 'breaking') {
+    const score = Math.max(0, Math.min(100, quizScore));
+    let badge = quizName || 'Migration Rookie';
+    if (!quizName) {
+      if (score >= 80) badge = 'Migration Guardian';
+      else if (score >= 50) badge = 'Migration Aware';
+    }
+    const title = `I scored ${score}% on the Schema Breaking Change Quiz | SchemaLens`;
+    const description = `${badge} — ${Math.round(score / 10)}/10 correct. Can you spot the migrations that break production?`;
+    const ogImage = 'https://schemalens.tech/og-image.png';
+    const redirectUrl = 'https://schemalens.tech/tools/schema-breaking-change-quiz.html';
+
+    res.setHeader('Content-Type', 'text/html');
+    return res.status(200).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${escapeHtml(redirectUrl)}">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:image" content="${escapeHtml(ogImage)}">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="${escapeHtml(redirectUrl)}">
+  <meta property="twitter:title" content="${escapeHtml(title)}">
+  <meta property="twitter:description" content="${escapeHtml(description)}">
+  <meta property="twitter:image" content="${escapeHtml(ogImage)}">
+  <link rel="canonical" href="${escapeHtml(redirectUrl)}">
+  <style>
+    body { font-family: system-ui,-apple-system,sans-serif; background: #0b0b0f; color: #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    .card { background: #141419; border: 1px solid #27272f; border-radius: 16px; padding: 48px; max-width: 460px; text-align: center; }
+    .score { font-size: 4rem; font-weight: 800; background: linear-gradient(135deg, #6366f1, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
+    .badge { display: inline-block; padding: 6px 16px; border-radius: 999px; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; background: rgba(99,102,241,0.12); color: #818cf8; }
+    h1 { font-size: 1.1rem; margin: 0 0 12px; color: #94a3b8; }
+    p { color: #64748b; margin: 0 0 28px; line-height: 1.5; font-size: 0.95rem; }
+    .btn { display: inline-block; background: #6366f1; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .btn:hover { background: #4f46e5; }
+    .meta { margin-top: 16px; font-size: 0.8rem; color: #475569; }
+  </style>
+  <script>
+    setTimeout(function() {
+      window.location.replace('${redirectUrl}');
+    }, 2500);
+  </script>
+</head>
+<body>
+  <div class="card">
+    <div class="score">${score}%</div>
+    <div class="badge">${escapeHtml(badge)}</div>
+    <h1>Schema Breaking Change Quiz</h1>
+    <p>${escapeHtml(description)}</p>
+    <a class="btn" href="${escapeHtml(redirectUrl)}">Take the Quiz →</a>
+    <div class="meta">Redirecting automatically…</div>
+  </div>
+</body>
+</html>`);
+  }
 
   if (!publicId) {
     res.setHeader('Content-Type', 'text/html');

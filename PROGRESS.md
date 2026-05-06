@@ -52,11 +52,11 @@
 | 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool. Tool count 30→31. |
 | 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` broke all type-change safety warnings. **Pro value checklist** added to paywalls. **In-app feedback capture** (`/api/feedback.js`). **MySQL prominence fix** — support badges in app empty state. |
 | 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. Index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. Test suite: 20→34 tests. |
-| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios (NOT NULL additions, precision loss, view breakage, PK drops). Shareable results. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
+| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
 
 ---
 
-## Day 104 — Schema Breaking Change Quiz: Viral Distribution Asset (May 6, 2026)
+## Day 104 — Schema Breaking Change Quiz + Dynamic OG Score Sharing (May 6, 2026)
 
 ### What Was Built
 - **Schema Breaking Change Quiz** (`tools/schema-breaking-change-quiz.html`) — interactive 10-question quiz testing users' ability to identify breaking schema migrations before they hit production:
@@ -68,12 +68,18 @@
   - **Social sharing** — Copy result, Share on X, Share on LinkedIn with pre-written copy including score
   - **Strong product CTA** — result screen emphasizes "SchemaLens caught all 10 of these automatically"
   - **Schema.org Quiz markup** — structured data for SEO discoverability
+- **Dynamic OG score cards** (`/api/share.js`) — extended the share endpoint to support quiz score sharing:
+  - `GET /api/share?quiz=breaking&score=80&name=Migration+Guardian` returns an HTML page with dynamic OpenGraph tags
+  - Twitter/LinkedIn crawlers see the actual score and badge in the preview card
+  - Human visitors see a styled score card and are redirected to the quiz after 2.5s
+  - Quiz share buttons updated to use the dynamic share URL instead of the generic quiz page
 - **Cross-linked** — added to `index.html` free developer tools grid and footer, `tools.html` grid and footer.
 - **sitemap.xml** updated with new tool URL.
-- **README.md** — tool count updated from 23 to 32+, added all missing tools to the list (Safe Migration Checker, Reserved Words Checker, SQL to ORM, SQL SELECT, SQL to TypeScript, Query Explainer, Connection String Parser, SQL to Python, SQL UPDATE, SQL DELETE, SQL UPSERT, SQL CASE WHEN, Breaking Change Quiz).
+- **README.md** — tool count updated from 23 to 32+, added all missing tools to the list.
 
 ### Validation
 - ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `api/share.js` syntax valid
 - ✅ All HTML pages valid — no unclosed tags
 - ✅ All JS blocks syntax-valid
 - ✅ Vercel production deploy triggered on git push
@@ -81,7 +87,7 @@
 ### Key Insights
 1. **After 3 sessions of QA/conversion work, building a new distribution asset is the right move.** We have fixed the product and optimized conversion. The remaining blocker is getting eyeballs. A viral quiz is a self-distributing asset — shareable, educational, and naturally promotes the product.
 2. **The quiz mirrors the exact value proposition of SchemaLens.** Every question teaches something that SchemaLens automates. Users who learn from the quiz understand WHY they need the tool.
-3. **Before/after diff visuals reinforce brand recognition.** The quiz uses the same visual language as the app (before/after panels, colored syntax highlighting). Users who see the quiz and later visit the app feel continuity.
+3. **Dynamic OG tags amplify the viral loop.** When someone shares their score, the social preview shows their actual result — "I scored 80% on the Schema Breaking Change Quiz" — which is far more compelling than a generic tool description. This increases click-through rate from social feeds.
 4. **32+ tools = 32+ entry points for organic traffic.** Each tool targets a different search intent. The quiz targets "breaking change" and "migration safety" keywords while also being inherently social.
 
 ---

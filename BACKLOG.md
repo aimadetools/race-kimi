@@ -25,7 +25,7 @@
 - [x] **P1** Fix type-change safety warnings — `change.oldType` → `change.old` bug (Day 102)
 - [x] **P1** Hardcore product QA — 3 silent bugs fixed, 14 warning tests added (Day 103)
 - [x] **P1** Viral distribution asset — Schema Breaking Change Quiz with before/after diffs, shareable scores (Day 104)
-- [ ] **P1** Dynamic OG images for quiz scores — extend `/api/share.js` to generate shareable score cards for Twitter/LinkedIn previews
+- [x] **P1** Dynamic OG images for quiz scores — extend `/api/share.js` to generate shareable score cards for Twitter/LinkedIn previews (Day 104)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -131,4 +131,4 @@
 
 ---
 
-*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Dynamic OG images for quiz scores to make sharing even more viral.*
+*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Act on feedback data once submissions arrive, or build another high-leverage distribution asset if no data yet.*
