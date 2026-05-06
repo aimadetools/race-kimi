@@ -665,6 +665,26 @@ function diffTable(oldTable, newTable) {
     result.hasChanges = true;
   }
 
+  // Index diff
+  result.indexesAdded = [];
+  result.indexesRemoved = [];
+  const oldIdxs = oldTable.indexes || [];
+  const newIdxs = newTable.indexes || [];
+  function idxKey(i) {
+    return (i.name || '') + '|' + (i.unique ? 'U' : 'N') + '|' + (i.columns ? i.columns.join(',') : '');
+  }
+  const oldIdxMap = new Map(oldIdxs.map(i => [idxKey(i), i]));
+  const newIdxMap = new Map(newIdxs.map(i => [idxKey(i), i]));
+  for (const i of newIdxs) {
+    if (!oldIdxMap.has(idxKey(i))) result.indexesAdded.push(i);
+  }
+  for (const i of oldIdxs) {
+    if (!newIdxMap.has(idxKey(i))) result.indexesRemoved.push(i);
+  }
+  if (result.indexesAdded.length || result.indexesRemoved.length) {
+    result.hasChanges = true;
+  }
+
   return result;
 }
 
@@ -1749,6 +1769,9 @@ function generateMigrationWarnings(diff, dialect) {
             add('critical', `SET NOT NULL on \`${mod.column.name}\` (\`${td.name}\`) without a DEFAULT will fail if the table has existing rows with NULL values.`, `Add a DEFAULT value first, backfill existing NULLs, then add the NOT NULL constraint.`);
           }
         }
+        if (change.field === 'primary key' && change.new === 'NO') {
+          add('critical', `Dropping PRIMARY KEY on \`${td.name}\` can break ORM models, replication, and downstream ETL pipelines.`, 'Ensure every dependent system references an alternative unique key before proceeding.');
+        }
         if (change.field === 'type') {
           const oldType = (change.old || '').toLowerCase();
           const newType = (change.new || '').toLowerCase();
@@ -1766,8 +1789,8 @@ function generateMigrationWarnings(diff, dialect) {
             add('critical', `TEXT → VARCHAR on \`${mod.column.name}\` may truncate existing long values.`, 'Check max length of existing values before narrowing the type.');
           }
           if (oldType.includes('decimal') && newType.includes('decimal')) {
-            const oldPrec = oldType.match(/(\d+),\s*(\d+)/);
-            const newPrec = newType.match(/(\d+),\s*(\d+)/);
+            const oldPrec = oldType.match(/(\d+)\s*,\s*(\d+)/);
+            const newPrec = newType.match(/(\d+)\s*,\s*(\d+)/);
             if (oldPrec && newPrec) {
               if (parseInt(newPrec[1], 10) < parseInt(oldPrec[1], 10) || parseInt(newPrec[2], 10) < parseInt(oldPrec[2], 10)) {
                 add('critical', `DECIMAL precision reduction on \`${mod.column.name}\` may truncate or round existing values.`, 'Verify financial/data accuracy after the migration.');
