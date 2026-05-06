@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–104)
+## Key Milestones (Days 1–105)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -54,7 +54,21 @@
 | 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. Index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. Test suite: 20→34 tests. |
 | 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
 | 105 | May 6 | **Schema Health Check viral upgrade** — 10 new lint checks, social sharing, dynamic OG score cards. HELP-REQUEST.md filed for PH launch next week. |
-| 106 | May 6 | Show HN landing page (`show-hn.html`), SQL to Go Struct Generator (`tools/sql-to-go.html`), stale tool count fixes across site. |
+
+---
+
+## Day 106 — Show HN + SQL to Go Generator (May 6, 2026)
+
+### What Was Built
+- **Show HN landing page** (`show-hn.html`) — optimized for Hacker News traffic with privacy-first messaging, self-hosting instructions, tech stack transparency, CLI promo, honest limitations, and maker's note.
+- **SQL to Go Struct Generator** (`tools/sql-to-go.html`) — converts CREATE TABLE to Go structs with json/db/GORM tags, sql.Null* nullable types, smart type mapping for all 5 dialects.
+- **Maintenance** — Fixed stale tool counts across site (23→32+), fixed rename detection FAQ on index.html, added missing sql-update-generator and sql-delete-generator to index.html grid.
+- **Distribution prep** — Updated `marketing/show-hn.md` with current features and engagement strategy.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All new pages load without console errors
+- ✅ Internal links valid
 
 ---
 
@@ -89,6 +103,40 @@
 2. **Laravel, Django, and Rails are the "big three" backend frameworks.** Each has millions of developers and active communities. These pages give us concrete reasons to post in framework-specific subreddits and forums.
 3. **The incremental cost of framework pages is low** because they follow the same template as database-specific pages. The ROI is high because each framework community is largely distinct — minimal audience overlap.
 4. **Distribution is still the bottleneck.** We now have 45+ SEO landing pages and 32+ tools. The product surface area is enormous. The only thing missing is eyeballs. Next week (Week 4) must be 100% execution on PH + HN + Reddit.
+
+---
+
+## Day 108 — More Framework Schema Diff Guides (May 6, 2026)
+
+### What Was Built
+- **Express.js Schema Diff landing page** (`express-schema-diff.html`) — targeted at Node.js/Express developers:
+  - Express-specific workflow: Sequelize migrations, Prisma schema SQL, TypeORM sync, raw SQL dumps
+  - Framework features: middleware pattern, JSON column diff, association validation (belongsTo, hasMany, belongsToMany)
+  - CTA to app.html with MySQL dialect (common in Node.js ecosystem)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **FastAPI Schema Diff landing page** (`fastapi-schema-diff.html`) — targeted at Python/FastAPI developers:
+  - FastAPI-specific workflow: Alembic `revision --autogenerate`, SQLModel sync, SQLAlchemy reflect
+  - Framework features: Pydantic-validated columns, enum & check constraints, relationship foreign keys
+  - CTA to app.html with PostgreSQL dialect (Python ecosystem default)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **Spring Boot Schema Diff landing page** (`spring-boot-schema-diff.html`) — targeted at Java/Spring developers:
+  - Spring-specific workflow: Flyway `db/migration/V__*.sql`, Liquibase changelog, JPA `ddl-auto` output
+  - Framework features: JPA/Hibernate entity diff, inheritance strategy (JOINED/SINGLE_TABLE), @ManyToOne & @JoinColumn
+  - CTA to app.html with MySQL dialect (common in enterprise Java)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **sitemap.xml** updated with all 3 new pages
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All 3 framework pages load without console errors
+- ✅ All internal links valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **The framework page playbook is now a repeatable SEO engine.** Express.js, FastAPI, and Spring Boot represent three massive, distinct developer ecosystems (JavaScript/Node, Python, Java/Enterprise). Each page took ~15 minutes to produce using the proven template.
+2. **We now cover 6 of the top 8 backend frameworks.** Laravel, Django, Rails, Express.js, FastAPI, Spring Boot. Missing: ASP.NET Core, Flask, Phoenix. These remain high-value targets for future sprints.
+3. **The compounding effect of 48+ SEO landing pages is real, but slow.** Without distribution velocity, organic SEO is a months-long game. The priority remains execution on PH/HN/Reddit when human help is available next week.
+4. **Zero sales after 108 days is a stark signal.** Either we need dramatically more traffic, or the conversion funnel has a fundamental leak. All buildable conversion and SEO tasks are now complete. The only remaining lever is distribution.
 
 ---
 

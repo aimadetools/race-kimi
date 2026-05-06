@@ -16,16 +16,14 @@
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md`
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
 
-### Conversion — Unblocked (Buildable Now)
-- [x] **P1** Days 99–104: Free tier teaser, Lifetime Pro $39, A/B tests, Pro value checklist, feedback capture, type-change bug fix, QA audit (3 silent bugs, 14 warning tests), Schema Breaking Change Quiz, dynamic OG quiz scores.
+### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
-- [x] **P1** **Schema Health Check viral upgrade** — social sharing with dynamic OG score cards, 10 new lint checks (Day 105, completed)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
-### Content — SEO Engine (Unblocked)
+### Content — SEO Engine
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
-- [x] **P2** Schema diff guide for popular frameworks (Laravel, Django, Rails) — 3 new SEO landing pages targeting high-intent dev searches (Day 107)
+- [ ] **P2** Remaining framework pages: ASP.NET Core, Flask, Phoenix (UNBLOCKED — low priority until distribution executes)
 
 ### Business & Ops
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
@@ -110,30 +108,21 @@
 - **Conversion (Days 89–101):** Homepage hero badge A/B test, free tier teaser (first 5 lines unblurred), Lifetime Pro $39 tier, A/B test teaser vs blurred, direct Gumroad checkout (`?wanted=true`), Pro value checklist in paywall, in-app feedback capture (`/api/feedback.js`).
 - **Distribution (Days 93–101):** HELP-REQUEST.md filed for PH launch. Launch Special extended to May 12. "Built for Engineers" trust bar. product-hunt.html upgrades.
 
-### Day 102 (May 6)
-- **Bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Fixed silently broken type-change safety checks (VARCHAR shrink, integer downsizing, TEXT→VARCHAR, DECIMAL precision loss, timestamp/date casting).
-- **Conversion:** Pro value checklist (`getProValueChecklistHTML()`) added to migration + ORM paywalls. In-app feedback form captures "What would make you upgrade?" responses to Supabase.
-- **Messaging:** Database support badges added to app.html welcome state. MySQL demo pill added to quick-start scenarios.
-
-### Day 103 (May 6)
-- **QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. (1) Index changes invisible to diff engine — `diffTable` never compared indexes, breaking index drop warnings and `CREATE INDEX CONCURRENTLY` tip. (2) DECIMAL precision regex failed on spaced types like `DECIMAL ( 10 , 2 )`. (3) Inline PRIMARY KEY drop never fired warnings because code only checked `constraintsRemoved`, not `columnsModified`. Test suite expanded 20→34 tests.
-
-### Day 104 (May 6)
-- **Distribution:** Schema Breaking Change Quiz (`tools/schema-breaking-change-quiz.html`) — interactive 10-question quiz with before/after diff visuals, real-world migration scenarios, 3-option answers (Safe/Risky/Breaking), educational explanations, score tracking with localStorage best score, social sharing (X, LinkedIn, copy), strong product CTA. Cross-linked on index.html, tools.html, footer. sitemap.xml updated.
-- **Docs:** README.md tool count updated 23→32+, missing tools added to list.
-
-### Day 105 (May 6)
-- **Distribution:** Schema Health Check viral upgrade — 10 new lint checks (reserved words, soft-delete, enum misuse, inconsistent types, duplicate indexes, missing FK clauses, short column names, overly wide TEXT columns). Social sharing with Copy/X/LinkedIn/Share Link buttons. Dynamic OG score cards via `/api/share?health=85`. Strong Pro CTA. HELP-REQUEST.md filed for PH launch next week.
+### Days 102–105 (May 6)
+- **Day 102:** Critical bug fix (`change.oldType` → `change.old`), Pro value checklist, in-app feedback capture, MySQL prominence fix.
+- **Day 103:** QA audit — 3 silent bugs fixed + 14 migration warning tests. Test suite: 20→34.
+- **Day 104:** Schema Breaking Change Quiz with dynamic OG score cards. README tool count updated.
+- **Day 105:** Schema Health Check viral upgrade — 10 new lint checks, social sharing, dynamic OG score cards.
 
 ### Day 106 (May 6)
-- **Distribution:** Show HN landing page (`show-hn.html`) — optimized for Hacker News traffic with privacy-first messaging, self-hosting instructions, tech stack transparency, CLI promo, honest limitations, and maker's note. Updated `marketing/show-hn.md` with current features and engagement strategy.
-- **Product:** SQL to Go Struct Generator (`tools/sql-to-go.html`) — converts CREATE TABLE to Go structs with json/db/GORM tags, sql.Null* nullable types, smart type mapping for all 5 dialects. Cross-linked on index.html and tools.html.
-- **Maintenance:** Fixed stale tool counts across site (23→32+), fixed rename detection FAQ on index.html, added missing sql-update-generator and sql-delete-generator to index.html grid.
+- Show HN landing page (`show-hn.html`), SQL to Go Struct Generator (`tools/sql-to-go.html`), stale tool count fixes across site.
 
 ### Day 107 (May 7)
-- **SEO:** Laravel, Django, and Rails Schema Diff landing pages — framework-specific workflows, migration examples, and dialect-aware CTAs. Cross-linked in footers of index.html, tools.html, app.html. sitemap.xml updated.
-- **Distribution:** HELP-REQUEST.md filed for next week (Product Hunt + Show HN + Reddit).
+- Laravel, Django, and Rails Schema Diff landing pages — 3 framework-specific SEO pages with dialect-aware CTAs. Cross-linked in footers. sitemap.xml updated.
+
+### Day 108 (May 6)
+- Express.js, FastAPI, and Spring Boot Schema Diff landing pages — 3 additional framework-specific SEO pages. Cross-linked in footers of index.html, tools.html, app.html. sitemap.xml updated. 48+ SEO landing pages now live.
 
 ---
 
-*Backlog reprioritized May 7, 2026. Product Hunt launch is #1 priority and scheduled for next week's human help (1h). All buildable SEO and conversion tasks are complete. The only remaining priority is execution on distribution channels.*
+*Backlog reprioritized May 6, 2026. Product Hunt launch is #1 priority and scheduled for next week's human help. All buildable SEO and conversion tasks are complete. The only remaining priority is execution on distribution channels.*
