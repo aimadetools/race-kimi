@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–102)
+## Key Milestones (Days 1–103)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -50,7 +50,42 @@
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
 | 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
 | 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool — equality mapping, range buckets, conditional aggregates, UPDATE with CASE. Tool count 30→31. |
-| 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Type-change safety checks (VARCHAR shrink, integer downsizing, DECIMAL precision loss, timestamp casting) were silently broken. **Pro value checklist** added to both paywalls (migration + ORM) showing 6 Pro features with checkmarks. **In-app feedback capture** (`/api/feedback.js` + form in paywall) asks "What would make you upgrade?" and writes to Supabase. **MySQL prominence fix** — database support badges added to app.html empty state, MySQL demo pill added to quick-start scenarios.
+| 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Type-change safety checks (VARCHAR shrink, integer downsizing, DECIMAL precision loss, timestamp casting) were silently broken. **Pro value checklist** added to both paywalls (migration + ORM) showing 6 Pro features with checkmarks. **In-app feedback capture** (`/api/feedback.js` + form in paywall) asks "What would make you upgrade?" and writes to Supabase. **MySQL prominence fix** — database support badges added to app.html empty state, MySQL demo pill added to quick-start scenarios. |
+| 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. (1) Index changes were invisible to diff engine — `diffTable` never compared indexes. (2) DECIMAL precision regex failed on spaced types like `DECIMAL ( 10 , 2 )`. (3) Inline PRIMARY KEY drop never fired warnings because code only checked `constraintsRemoved`, not `columnsModified`. Test suite: 20→34 tests. |
+
+---
+
+## Day 103 — Hardcore QA Audit: 3 Silent Bugs Fixed (May 6, 2026)
+
+### What Was Built
+- **Comprehensive warning test suite** — 14 new tests covering every `generateMigrationWarnings` code path. Tests now verify that warnings actually fire with correct severity and message content. Suite expanded 20→34 tests.
+- **Bug fix #1 — Index changes invisible to diff engine:**
+  - `diffTable` never compared `oldTable.indexes` vs `newTable.indexes`
+  - Index-only changes caused `hasChanges` to stay `false`, so the table never appeared in `tablesModified`
+  - This broke index drop warnings and the PostgreSQL `CREATE INDEX CONCURRENTLY` tip — both were dead code paths
+  - Fixed: added `indexesAdded`/`indexesRemoved` with `idxKey(name|unique|columns)` comparison
+  - Files: `engine/engine.js`, `lib/engine.js`, `cli/engine.js`, `app.html`
+- **Bug fix #2 — DECIMAL precision reduction warning never fired:**
+  - Parser stores types with spaces: `DECIMAL ( 10 , 2 )` instead of `DECIMAL(10,2)`
+  - Regex `/(\d+),\s*(\d+)/` failed because there is a space before the comma
+  - Fixed: `/(\d+)\s*,\s*(\d+)/` handles all spacing variants
+  - This is the same class of silent failure as Day 102's `oldType` bug — the regex returned `null`, so the condition was silently skipped
+- **Bug fix #3 — Inline PRIMARY KEY drop warning never fired:**
+  - Column-level `PRIMARY KEY` changes create `field: 'primary key'` in `columnsModified`, not `constraintsRemoved`
+  - Warning code only checked `constraintsRemoved` for PRIMARY KEY drops
+  - Fixed: added `columnsModified` loop check for `change.field === 'primary key' && change.new === 'NO'`
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **Silent bugs cluster around the same failure mode.** The `oldType` bug (Day 102), the DECIMAL regex bug, and the index diff bug all share one trait: the code ran without errors but never did anything useful. Empty strings, null regex matches, and empty arrays look like "no warning needed" when they are actually "bug prevented the warning."
+2. **Testing the absence of bugs requires positive tests.** We had tests for "does the diff run" but not "does this specific warning fire when condition X is met." The 14 new warning tests catch the exact message, severity, and trigger condition.
+3. **Parser output formatting leaks into consumer code.** The parser tokenizes `DECIMAL(10,2)` into `DECIMAL ( 10 , 2 )`. Any consumer doing string matching on types must handle spacing. We should consider normalizing types in the parser, but for now we have patched the consumers.
+4. **The engine has 3 identical copies (engine/, lib/, cli/) plus app.html's inline script.** Every engine fix must be applied to all 4 locations. This is error-prone and should be automated or consolidated.
 
 ---
 
@@ -76,7 +111,7 @@
 
 ### Key Insights
 1. **A single property name bug (`oldType` vs `old`) silently disabled 5 critical safety warnings.** This is why testing the actual warning output matters, not just "does the diff run." The bug was invisible because the code ran without errors — it just always got empty strings.
-2. **Free users who don't convert are our best source of product insight.** The feedback form captures why people leave. If 10 people say "I need live DB connection," that's our next feature. If 10 people say "too expensive," we test pricing.
+2. **Free users who don't convert are our best source of product insight.** The feedback form captures why people leave. If 10 people say "I need live DB connection," that is our next feature. If 10 people say "too expensive," we test pricing.
 3. **Messaging failures look like missing features.** The PH viewer asking about MySQL support meant our UI didn't communicate capability. Badges in the empty state fix this at the first impression.
 4. **After 6+ sessions of micro-tools, product hardening and conversion UX are the right pivot.** We have 31 tools driving traffic. Now we need to fix the leaks in the bucket.
 
@@ -123,35 +158,6 @@
 2. **Analytics tagging is critical.** Without variant metadata on every conversion event, we can't tell which version wins. Every tracked event now includes `variant: 'teaser' | 'blurred'`.
 3. **The blurred variant is the control, not the treatment.** The teaser (Day 99) is the experiment. If teaser wins, we roll it out to 100%. If blurred wins, we revert and try a different approach.
 4. **31 tools = 310 daily uniques at 10 visits/tool.** CASE WHEN is one of the most searched SQL syntax topics. Developers constantly look up "sql case when multiple conditions" and "sql case when range".
-
----
-
-## Day 100 — SQL UPSERT & MERGE Generator (May 5, 2026)
-
-### What Was Built
-- **SQL UPSERT & MERGE Generator** (`tools/sql-upsert-generator.html`) — Generate UPSERT and MERGE statements automatically from CREATE TABLE schemas. Every major SQL dialect handles upserts differently; this tool generates the exact syntax for each.
-- **Dialect-specific syntax**:
-  - **PostgreSQL**: `INSERT ... ON CONFLICT (pk) DO UPDATE SET ...`, `ON CONFLICT DO NOTHING`, `RETURNING *`
-  - **MySQL**: `INSERT ... ON DUPLICATE KEY UPDATE ...`, `INSERT IGNORE`
-  - **SQLite**: `INSERT ... ON CONFLICT (pk) DO UPDATE SET ...`, `ON CONFLICT DO NOTHING`, `RETURNING *`
-  - **SQL Server**: `MERGE INTO ... USING (...) ON ... WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ... OUTPUT inserted.*`
-  - **Oracle**: `MERGE INTO ... USING (SELECT ... FROM dual) ON ... WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ... RETURNING * INTO :out_cursor`
-- **Query variants** (6 per table): Basic UPSERT, DO NOTHING / INSERT IGNORE, UPSERT with RETURNING/OUTPUT, Bulk UPSERT (2 rows), Single-column UPSERT, MERGE-style (SQL Server/Oracle)
-- **Smart conflict target detection** — Automatically uses primary key columns; falls back to unique constraints, then non-nullable columns.
-- **Cross-linked everywhere** — Added to `tools.html` grid and footer, `index.html` free developer tools grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 29→30.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **UPSERT is the "fifth" CRUD operation.** After SELECT, INSERT, UPDATE, DELETE — upsert (create-or-update) is the most common missing piece. Developers constantly search for "postgres upsert" and "mysql upsert."
-2. **Dialect differences for UPSERT are extreme.** PostgreSQL uses ON CONFLICT, MySQL uses ON DUPLICATE KEY, SQL Server and Oracle use MERGE — a single tool that handles all five saves significant research time.
-3. **30 tools = 300 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the complete data manipulation spectrum: SELECT, INSERT, UPDATE, DELETE, and UPSERT.
 
 ---
 

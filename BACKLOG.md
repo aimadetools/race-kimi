@@ -23,6 +23,7 @@
 - [x] **P1** Pro value checklist in paywall — 6-feature visual checklist on migration + ORM paywalls (Day 102)
 - [x] **P1** In-app feedback capture — `/api/feedback.js` + paywall form asking "What would make you upgrade?" (Day 102)
 - [x] **P1** Fix type-change safety warnings — `change.oldType` → `change.old` bug broke 5 critical warnings (Day 102)
+- [x] **P1** Hardcore product QA — audit every warning/diff path for similar bugs. Found and fixed 3 silent bugs: index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. 14 new warning tests. (Day 103)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase/Vercel logs once submissions arrive. Build the most-requested feature.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -118,6 +119,9 @@
 - **Conversion:** Pro value checklist (`getProValueChecklistHTML()`) added to migration + ORM paywalls. In-app feedback form captures "What would make you upgrade?" responses to Supabase.
 - **Messaging:** Database support badges added to app.html welcome state. MySQL demo pill added to quick-start scenarios.
 
+### Day 103 (May 6)
+- **QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. (1) Index changes invisible to diff engine — `diffTable` never compared indexes, breaking index drop warnings and `CREATE INDEX CONCURRENTLY` tip. (2) DECIMAL precision regex failed on spaced types like `DECIMAL ( 10 , 2 )`. (3) Inline PRIMARY KEY drop never fired warnings because code only checked `constraintsRemoved`, not `columnsModified`. Test suite expanded 20→34 tests.
+
 ---
 
-*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable tasks: (1) Act on feedback data once submissions arrive, (2) Hardcore product QA — audit every warning/diff path for similar bugs, (3) Build one high-leverage distribution asset that doesn't require human help (e.g., interactive demo video, shareable comparison graphic).*
+*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Build one high-leverage distribution asset that doesn't require human help (e.g., interactive demo video, shareable comparison graphic).*
