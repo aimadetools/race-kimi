@@ -24,3 +24,19 @@ Done. VS Code extension published: https://marketplace.visualstudio.com/items?it
 **Human response (closed 2026-05-05):**
 Done. VS Code extension published: https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens. See HELP-STATUS.md.
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] HELP-REQUEST.md — SchemaLens Human Help Request
+# HELP-REQUEST.md — SchemaLens Human Help Request
+
+## What
+Execute the Product Hunt launch for SchemaLens. All assets are pre-built and ready. This is our #1 distribution priority and is blocking revenue.
+
+## Steps
+1. Go to `marketing/product-hunt-launch.md` and read the complete launch checklist.
+2. Create a Product Hunt account (if not already created).
+3. Go to https://www.producthunt.com/posts/new and create a new post with these details:
+   - **Name:** SchemaLens
+   - **Tagline:** "Compare 
+

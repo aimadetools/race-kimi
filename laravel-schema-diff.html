@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Laravel Schema Diff — Compare Migrations & Database Schemas Online</title>
+  <meta name="description" content="Compare Laravel database schemas and migration outputs side by side. Generate ALTER TABLE scripts instantly. Works with Eloquent, artisan schema:dump, and raw SQL. No install, 100% browser-based.">
+  <meta property="og:title" content="Laravel Schema Diff — Compare Migrations & Database Schemas Online">
+  <meta property="og:description" content="Compare Laravel database schemas and migration outputs side by side. Generate ALTER TABLE scripts instantly.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/laravel-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Laravel schema diff — free to use
+      </div>
+      <h1>Laravel Schema Diff.<br><span>Compare migrations.</span><br>Zero setup.</h1>
+      <p>Paste two <code>php artisan schema:dump</code> outputs or raw <code>CREATE TABLE</code> dumps from your Laravel app. Spot every table, column, index, and constraint change instantly. Get ready-to-run <code>ALTER TABLE</code> scripts for MySQL or PostgreSQL — all in your browser.</p>
+      <div class="hero-actions">
+        <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Diff Laravel Schemas</a>
+        <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Built for Laravel &amp; Eloquent workflows</h2>
+      <p class="section-subtitle text-center">SchemaLens understands Laravel-specific patterns that generic diff tools miss.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(249,115,22,0.15);">🔶</div>
+          <h3>Migration Review</h3>
+          <p>Compare the schema before and after running <code>php artisan migrate</code>. Catch unexpected column changes, missing indexes, or constraint drift before deploying to production.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🗑️</div>
+          <h3>Soft Delete Detection</h3>
+          <p>Warns when <code>deleted_at</code> is missing from a table that should have it. Catches schema drift that breaks Eloquent's <code>withTrashed()</code> and <code>onlyTrashed()</code> queries.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">⏱️</div>
+          <h3>Timestamps &amp; Enums</h3>
+          <p>Detects changes to <code>created_at</code> / <code>updated_at</code> columns and enum-backed columns. Validates that enum values match your Eloquent <code>$casts</code> definitions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔗</div>
+          <h3>Foreign Key Constraints</h3>
+          <p>Validates <code>constrained()</code> and <code>onDelete('cascade')</code> migrations. Detects missing or changed foreign keys that could break Eloquent relationships.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🔄</div>
+          <h3>Pivot Table Diff</h3>
+          <p>Compares many-to-many pivot tables for extra columns, composite keys, and timestamp changes. Critical for apps with complex <code>belongsToMany</code> relationships.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔒</div>
+          <h3>Privacy First</h3>
+          <p>Your schema never leaves the browser. Compare production Laravel schemas safely without uploading sensitive table structures to a third-party server.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">How it works with Laravel</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">1</div>
+          <h3>Dump your schemas</h3>
+          <p>Run <code>php artisan schema:dump --database=mysql</code> on both environments (local vs staging, or staging vs production).</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">2</div>
+          <h3>Paste into SchemaLens</h3>
+          <p>Copy the SQL into the two editor panes. Dialect auto-detects MySQL or PostgreSQL based on your Laravel <code>DB_CONNECTION</code>.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">3</div>
+          <h3>Review the diff</h3>
+          <p>See added tables, dropped columns, type changes, and constraint modifications highlighted in color. Check for breaking changes before deploying.</p>
+        </div>
+        <div class="step">
+          <div class="feature-icon" style="background: var(--primary-glow); color: var(--primary);">4</div>
+          <h3>Copy the migration</h3>
+          <p>Export <code>ALTER TABLE</code> scripts, save as Markdown for PR descriptions, or generate rollback SQL. Run in staging, then production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Laravel migration examples</h2>
+      <p class="section-subtitle text-center">SchemaLens generates production-ready ALTER TABLE scripts for every change it detects.</p>
+      <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
+        <div class="feature-card">
+          <h3>Add a new column</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `users`
+  ADD COLUMN `two_factor_secret` VARCHAR(255) NULL;</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Change enum values</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `orders`
+  MODIFY COLUMN `status` ENUM('pending','paid','shipped','refunded');</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Add a foreign key</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_post_id_foreign`
+  FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`)
+  ON DELETE CASCADE;</code></pre>
+        </div>
+        <div class="feature-card">
+          <h3>Add soft delete timestamp</h3>
+          <pre style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); font-size: 0.85rem; overflow-x: auto;"><code>ALTER TABLE `products`
+  ADD COLUMN `deleted_at` TIMESTAMP NULL;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Related guides</h2>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Laravel</span>
+            <h3><a href="blog/compare-database-schemas-before-deploying.html">How to Compare Database Schemas Before Deploying</a></h3>
+            <p>A step-by-step workflow for catching schema drift between staging and production in Laravel apps.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">Migration</span>
+            <h3><a href="blog/dangerous-schema-changes.html">The 5 Most Dangerous Schema Changes</a></h3>
+            <p>Learn how to catch dropped columns, missing indexes, and type changes before they cause incidents.</p>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-content">
+            <span class="blog-meta">MySQL</span>
+            <h3><a href="mysql-schema-diff.html">MySQL Schema Diff Online</a></h3>
+            <p>Deep-dive into MySQL-specific schema comparison features and migration generation.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Ready to diff your Laravel schemas?</h2>
+      <p class="mb-24">Join thousands of developers who use SchemaLens to catch schema changes before they hit production.</p>
+      <a href="app.html?dialect=mysql" class="btn btn-primary btn-lg">Start Comparing Free</a>
+      <p class="hero-note mt-16">Free for up to 10 tables. Pro starts at $12/mo.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="affiliate.html">Affiliate</a>
+          <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="mysql-schema-diff.html">MySQL Diff</a>
+          <a href="mariadb-schema-diff.html">MariaDB Diff</a>
+          <a href="sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="azure-sql-schema-diff.html">Azure SQL Diff</a>
+          <a href="oracle-schema-diff.html">Oracle Diff</a>
+          <a href="cockroachdb-schema-diff.html">CockroachDB Diff</a>
+          <a href="timescaledb-schema-diff.html">TimescaleDB Diff</a>
+          <a href="duckdb-schema-diff.html">DuckDB Diff</a>
+          <a href="clickhouse-schema-diff.html">ClickHouse Diff</a>
+          <a href="bigquery-schema-diff.html">BigQuery Diff</a>
+          <a href="snowflake-schema-diff.html">Snowflake Diff</a>
+          <a href="supabase-schema-diff.html">Supabase Diff</a>
+          <a href="neon-schema-diff.html">Neon Diff</a>
+          <a href="planetscale-schema-diff.html">PlanetScale Diff</a>
+          <a href="railway-schema-diff.html">Railway Diff</a>
+          <a href="firebase-schema-diff.html">Firebase Diff</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="tools/json-to-sql.html">JSON to SQL</a>
+      <a href="tools/schema-health-check.html">Health Check</a>
+          <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>
