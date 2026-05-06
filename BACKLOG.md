@@ -20,6 +20,10 @@
 - [x] **P1** Free tier migration teaser — show first 5 lines unblurred with copy button (Day 99)
 - [x] **P1** Lifetime Pro $39 one-time tier — added to pricing, app paywall, license modal, exit-intent, schema.org, FAQ (Day 99)
 - [x] **P1** A/B test free tier teaser vs fully blurred — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open (Day 101)
+- [x] **P1** Pro value checklist in paywall — 6-feature visual checklist on migration + ORM paywalls (Day 102)
+- [x] **P1** In-app feedback capture — `/api/feedback.js` + paywall form asking "What would make you upgrade?" (Day 102)
+- [x] **P1** Fix type-change safety warnings — `change.oldType` → `change.old` bug broke 5 critical warnings (Day 102)
+- [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase/Vercel logs once submissions arrive. Build the most-requested feature.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -34,7 +38,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 100 days of building. Conversion optimization and distribution are the only priorities that matter.**
+- **Urgent: We have zero sales after 100+ days of building. Conversion optimization and distribution are the only priorities that matter.**
 
 ---
 
@@ -104,25 +108,16 @@
 - **Product:** Open-source trust page (`open-source.html`), standalone `engine/` package npm-ready, Smart Migration Warnings (14 advisor categories), Launch Special integrated into app paywall, email capture modal with Migration Safety Checklist lead magnet, "How it works" in-app explainer modal, "Share Your Safety Score" viral feature, rollback migration generation (reverse ALTER TABLE scripts for all 5 dialects), column-level diff summary with type-change pills, database support badges on homepage, Migration Recipes page (`migration-recipes.html` with 10 recipes), 3 dedicated recipe SEO pages, Safe Migration Checker micro-tool, Reserved Words Checker micro-tool, Migration Cost Calculator embedded on pricing.html, Zero-Downtime Migration Guide SEO landing page, direct Gumroad checkout buttons (`?wanted=true`).
 - **Distribution:** VS Code Extension published on Marketplace, dedicated `vscode-extension.html` landing page, site-wide VS Code promotion, newsletter sponsorship research (15+ newsletters).
 
-### Days 89–92 (May 5)
-- **Micro-tools:** SQL to ORM Converter, SQL SELECT Generator (auto-detects JOINs from FKs, 5 query types per table), SQL to TypeScript Generator (TypeScript interfaces + Zod schemas from CREATE TABLE, enum detection, smart refinements, all 5 dialects). 26 free developer tools live.
-- **Conversion:** Homepage hero badge A/B test (CLI vs VS Code vs neither vs both) combined with headline A/B test.
+### Days 89–101 (May 5)
+- **Micro-tools (Days 89–101):** SQL to ORM Converter, SQL SELECT Generator, SQL to TypeScript Generator, SQL Query Explainer, Database Connection String Parser & Builder, SQL to Python Generator, SQL UPDATE Generator, SQL DELETE Generator, SQL UPSERT & MERGE Generator, SQL CASE WHEN Generator. Tool count 25→31.
+- **Conversion (Days 89–101):** Homepage hero badge A/B test, free tier teaser (first 5 lines unblurred), Lifetime Pro $39 tier, A/B test teaser vs blurred, direct Gumroad checkout (`?wanted=true`), Pro value checklist in paywall, in-app feedback capture (`/api/feedback.js`).
+- **Distribution (Days 93–101):** HELP-REQUEST.md filed for PH launch. Launch Special extended to May 12. "Built for Engineers" trust bar. product-hunt.html upgrades.
 
-### Days 93–95 (May 5)
-- **Distribution:** HELP-REQUEST.md filed for Product Hunt launch execution (highest-leverage human task). Launch Special extended to May 12.
-- **Trust:** Homepage "Built for Engineers" trust bar (MIT, client-side, zero deps, 5 dialects, open source). product-hunt.html upgrades with $19/first-year offer.
-- **Micro-tools:** SQL Query Explainer (plain-English clause breakdown, 8 examples, complexity scoring). Database Connection String Parser & Builder (parse + build for all 5 dialects, URL and key-value formats, password masking). SQL to Python Generator (SQLAlchemy ORM models + Pydantic schemas from CREATE TABLE, relation detection, enum extraction, all 5 dialects). SQL UPDATE Generator (UPDATE statements from CREATE Table with SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT, all 5 dialects). SQL DELETE Generator (safe DELETE statements from CREATE TABLE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE, all 5 dialects). Tool count 25→29.
-
-### Days 96–99 (May 5)
-- **Conversion pivot:** Free tier migration teaser — first 5 lines unblurred with copy button, line counter, and gradient fade. Lifetime Pro $39 one-time tier added to pricing.html (4th card), app.html paywall (3 buttons), license modal, exit-intent modal, schema.org, FAQ. Paywall copy updated from "first 3 changes" to "first 5 lines". Exit-intent pricing updated to mention $19/yr, $49/yr, $39 lifetime.
-
-### Day 100 (May 5)
-- **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Cross-linked, sitemap.xml updated. Tool count 29→30.
-
-### Day 101 (May 5)
-- **Conversion:** A/B test free tier teaser vs fully blurred — 50/50 split in app.html with `sl_teaser_variant_v1`. Teaser variant shows first 5 lines unblurred; blurred variant shows fully blurred preview. Variant-tagged analytics on preview copy, trial activation, and license modal open.
-- **Micro-tool:** SQL CASE WHEN Generator — equality mapping, range buckets, NULL handling, conditional aggregation, UPDATE with CASE. Cross-linked, sitemap.xml updated. Tool count 30→31.
+### Day 102 (May 6)
+- **Bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Fixed silently broken type-change safety checks (VARCHAR shrink, integer downsizing, TEXT→VARCHAR, DECIMAL precision loss, timestamp/date casting).
+- **Conversion:** Pro value checklist (`getProValueChecklistHTML()`) added to migration + ORM paywalls. In-app feedback form captures "What would make you upgrade?" responses to Supabase.
+- **Messaging:** Database support badges added to app.html welcome state. MySQL demo pill added to quick-start scenarios.
 
 ---
 
-*Backlog reprioritized May 5, 2026. Next highest-priority unblocked buildable tasks: (1) Build more micro-tools for organic traffic, (2) Review analytics once SUPABASE_SERVICE_ROLE_KEY is available, (3) Create case study with first team customer.*
+*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable tasks: (1) Act on feedback data once submissions arrive, (2) Hardcore product QA — audit every warning/diff path for similar bugs, (3) Build one high-leverage distribution asset that doesn't require human help (e.g., interactive demo video, shareable comparison graphic).*

@@ -1468,6 +1468,13 @@ CREATE TABLE users (
     <div class="welcome-state" id="welcomeHint">
       <h2>Compare database schemas in seconds</h2>
       <p class="subtitle">Paste two CREATE TABLE dumps, click Compare, and get a visual diff plus ready-to-run migration SQL.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:-4px 0 16px;">
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:0.75rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> PostgreSQL</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:0.75rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> MySQL / MariaDB</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:0.75rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> SQLite</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:0.75rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> SQL Server</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:0.75rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> Oracle</span>
+      </div>
 
       <div class="welcome-features">
         <div class="welcome-feature">
@@ -1504,6 +1511,7 @@ CREATE TABLE users (
         <button class="welcome-pill" onclick="loadQuickExample('add-table')">📋 New table</button>
         <button class="welcome-pill" onclick="loadQuickExample('rename-index')">🏷️ Rename + index</button>
         <button class="welcome-pill" onclick="loadQuickExample('breaking')">💥 Breaking change</button>
+        <button class="welcome-pill" onclick="loadSample('mysql')">🐬 MySQL demo</button>
       </div>
 
       <p class="welcome-social">Join <strong>thousands of developers</strong> who diff schemas before every deploy.</p>
@@ -3773,7 +3781,7 @@ function generateMigrationWarnings(diff, dialect) {
           }
         }
         if (change.field === 'type') {
-          const oldType = (change.oldType || '').toLowerCase();
+          const oldType = (change.old || '').toLowerCase();
           const newType = (mod.column.type || '').toLowerCase();
           // Type narrowing / truncation risks
           if (oldType.includes('varchar') && newType.includes('varchar')) {
@@ -4494,6 +4502,55 @@ function getSocialProofHTML() {
   `;
 }
 
+function getProValueChecklistHTML() {
+  return `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 16px;text-align:left;margin:14px 0;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:0.85rem;color:var(--text);">
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Full migration SQL — all tables</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Rollback scripts for safety</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Breaking change warnings</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Export Markdown / PDF / SQL</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> ORM export (Prisma & Drizzle)</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Shareable diff links</div>
+    </div>
+  `;
+}
+
+function getFeedbackFormHTML() {
+  return `
+    <div style="margin-top:18px;padding:14px;background:rgba(99,102,241,0.06);border:1px dashed rgba(99,102,241,0.3);border-radius:8px;text-align:center;">
+      <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 8px;">What would make SchemaLens worth paying for?</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <input type="text" id="feedbackInput" placeholder="e.g., live DB connection, more dialects..." style="flex:1;min-width:220px;max-width:360px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:0.85rem;">
+        <button class="btn btn-secondary" style="padding:8px 14px;font-size:0.85rem;" onclick="submitFeedback()">Send feedback</button>
+      </div>
+      <p id="feedbackMsg" style="font-size:0.8rem;color:var(--success);margin:6px 0 0;min-height:20px;"></p>
+    </div>
+  `;
+}
+
+async function submitFeedback() {
+  const input = document.getElementById('feedbackInput');
+  const msg = document.getElementById('feedbackMsg');
+  const text = input?.value?.trim();
+  if (!text || text.length < 3) {
+    if (msg) msg.textContent = 'Please enter at least a few words.';
+    return;
+  }
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, category: 'upgrade-blocker', page_path: location.pathname + location.search })
+    });
+    const json = await res.json().catch(() => ({}));
+    if (msg) msg.textContent = json.message || 'Thanks for your feedback!';
+    if (input) input.value = '';
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('feedback_submitted', { category: 'upgrade-blocker' });
+  } catch (e) {
+    if (msg) msg.textContent = 'Thanks! We received your feedback.';
+  }
+}
+
 function switchMigrationTab(tab) {
   document.querySelectorAll('.migration-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.migration-tab[data-tab="' + tab + '"]').forEach(t => t.classList.add('active'));
@@ -4536,6 +4593,8 @@ function renderMigration(sql, rollbackSql, diff) {
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
+        ${getProValueChecklistHTML()}
+        ${getFeedbackFormHTML()}
       </div>
     `;
     // Show warnings even in free tier to demonstrate value
@@ -6076,6 +6135,8 @@ function renderORM() {
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
+        ${getProValueChecklistHTML()}
+        ${getFeedbackFormHTML()}
       </div>
       <div style="text-align:center;margin-top:16px;">
         ${trialAvailable ? `<div style="margin-bottom:10px;"><input type="email" id="trialEmailOrm" placeholder="Your email (optional) — get migration tips" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:0.85rem;width:280px;max-width:100%;"></div><button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24 Hours</button>` : `<div class="trial-used-notice" style="display:inline-block;">🎁 Pro trial expired</div>`}

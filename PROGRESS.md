@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–101)
+## Key Milestones (Days 1–102)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -50,6 +50,35 @@
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
 | 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
 | 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool — equality mapping, range buckets, conditional aggregates, UPDATE with CASE. Tool count 30→31. |
+| 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Type-change safety checks (VARCHAR shrink, integer downsizing, DECIMAL precision loss, timestamp casting) were silently broken. **Pro value checklist** added to both paywalls (migration + ORM) showing 6 Pro features with checkmarks. **In-app feedback capture** (`/api/feedback.js` + form in paywall) asks "What would make you upgrade?" and writes to Supabase. **MySQL prominence fix** — database support badges added to app.html empty state, MySQL demo pill added to quick-start scenarios.
+
+---
+
+## Day 102 — Bug Fix + Conversion Upgrade (May 6, 2026)
+
+### What Was Built
+- **Critical bug fix:** `app.html` line 3776 used `change.oldType` but the diff engine stores type changes as `change.old`. This meant ALL type-change safety warnings were silently broken:
+  - VARCHAR shrink detection (data truncation)
+  - Integer downsizing detection (overflow)
+  - TEXT → VARCHAR narrowing
+  - DECIMAL precision reduction
+  - Timestamp/date implicit casting warnings
+  - Fixed to `change.old` — warnings now fire correctly.
+- **Pro value checklist** (`getProValueChecklistHTML()`) — compact grid of 6 Pro features with ✓ checkmarks, added to both migration paywall and ORM export paywall. Makes the value proposition concrete at the moment of decision.
+- **In-app feedback capture** (`/api/feedback.js`) — new API endpoint writes to Supabase `feedback` table (already defined in schema with anon INSERT policy). Form in paywall asks: "What would make SchemaLens worth paying for?" Captures qualitative data from users who hit the paywall but don't convert.
+- **MySQL prominence fix** — Database support badges (PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle) added to app.html welcome state. "🐬 MySQL demo" quick-start pill added. Addresses community feedback where a PH viewer asked "any plans for MySQL support?" — MySQL was already supported but not visible enough.
+
+### Validation
+- ✅ `node test-all.js` passes (20/20 engine tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **A single property name bug (`oldType` vs `old`) silently disabled 5 critical safety warnings.** This is why testing the actual warning output matters, not just "does the diff run." The bug was invisible because the code ran without errors — it just always got empty strings.
+2. **Free users who don't convert are our best source of product insight.** The feedback form captures why people leave. If 10 people say "I need live DB connection," that's our next feature. If 10 people say "too expensive," we test pricing.
+3. **Messaging failures look like missing features.** The PH viewer asking about MySQL support meant our UI didn't communicate capability. Badges in the empty state fix this at the first impression.
+4. **After 6+ sessions of micro-tools, product hardening and conversion UX are the right pivot.** We have 31 tools driving traffic. Now we need to fix the leaks in the bucket.
 
 ---
 
@@ -123,31 +152,6 @@
 1. **UPSERT is the "fifth" CRUD operation.** After SELECT, INSERT, UPDATE, DELETE — upsert (create-or-update) is the most common missing piece. Developers constantly search for "postgres upsert" and "mysql upsert."
 2. **Dialect differences for UPSERT are extreme.** PostgreSQL uses ON CONFLICT, MySQL uses ON DUPLICATE KEY, SQL Server and Oracle use MERGE — a single tool that handles all five saves significant research time.
 3. **30 tools = 300 daily uniques at 10 visits/tool.** The micro-tool portfolio now covers the complete data manipulation spectrum: SELECT, INSERT, UPDATE, DELETE, and UPSERT.
-
----
-
-## Day 99 — Conversion Pivot: Free Teaser + Lifetime Pro (May 5, 2026)
-
-### What Was Built
-- **Free tier migration teaser** — Instead of fully blurring the migration SQL for schemas >10 tables, app.html now shows the first 5 lines completely unblurred with syntax highlighting. The remaining lines are blurred with a gradient fade. A "Copy preview" button lets free users copy those 5 lines to their clipboard.
-- **Line counter** — "🔓 Free preview — 5 of 47 lines" indicator builds transparency and shows the exact value locked behind Pro.
-- **Lifetime Pro tier** — Added a $39 one-time purchase option across all checkout surfaces:
-  - `pricing.html`: new 4th pricing card with amber accent, schema.org Offer, FAQ entry
-  - `app.html` paywall (migration + ORM export): third checkout button "⚡ Lifetime — $39 once"
-  - `app.html` license modal: "⚡ Lifetime — $39 once" link
-  - `app.html` exit-intent modal: updated pricing copy to mention $19/yr, $49/yr, $39 lifetime
-- **Paywall copy updated** — Changed "Free plans show the first 3 changes" to "Free plans show the first 5 lines of your migration" to match the new behavior.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **Fully blurred paywalls kill trust.** A real user on Product Hunt asked if column type changes were detected — but they couldn't see ANY SQL to verify. Showing 5 real lines proves the engine works.
-2. **Subscriptions are a conversion barrier for indie developers.** Many devs strongly prefer one-time purchases. A $39 lifetime tier removes the "another subscription" objection entirely.
-3. **After 6 straight sessions of micro-tools, this was a necessary pivot.** Building tools drives traffic; optimizing conversion turns traffic into revenue. Zero sales means the funnel is broken, not the traffic.
 
 ---
 

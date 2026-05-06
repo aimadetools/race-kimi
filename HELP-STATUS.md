@@ -26,6 +26,22 @@ Partial. Chrome Web Store submitted ($5 paid), awaiting review. VS Code Marketpl
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
+### [HELP] HELP-REQUEST.md — SchemaLens Gumroad Lifetime Product
+# HELP-REQUEST.md — SchemaLens Gumroad Lifetime Product
+
+## What
+Create a new Gumroad product for "SchemaLens Lifetime Pro" at $39 one-time payment, with slug `schemalens-lifetime`. All UI already points to this URL.
+
+## Steps (Estimated time: 10 minutes)
+
+### 1. Log into Gumroad (2 min)
+- Go to https://gumroad.com/ and log into the SchemaLens seller account
+
+### 2. Create New Product (5 min)
+- Click "Add a product" → choose "Digital product"
+- Name: **SchemaLens Lifetime Pro**
+- Description: "P
+
 ### [HELP] HELP-REQUEST.md — SchemaLens Distribution Execution
 # HELP-REQUEST.md — SchemaLens Distribution Execution
 
