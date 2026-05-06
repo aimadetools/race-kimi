@@ -363,19 +363,37 @@ function parseSQL(sql, dialect) {
   return schema;
 }
 
+// ─── Reserved Words (subset) ───
+const RESERVED_WORDS = new Set([
+  'SELECT','INSERT','UPDATE','DELETE','FROM','WHERE','JOIN','ORDER','GROUP','HAVING',
+  'CREATE','DROP','ALTER','TABLE','INDEX','VIEW','TRIGGER','FUNCTION','PROCEDURE',
+  'DATABASE','SCHEMA','COLUMN','CONSTRAINT','PRIMARY','FOREIGN','KEY','UNIQUE','CHECK',
+  'DEFAULT','NULL','NOT','AND','OR','IN','EXISTS','BETWEEN','LIKE','IS','AS','ON',
+  'USER','PASSWORD','ROLE','SESSION','TRANSACTION','COMMIT','ROLLBACK','SAVEPOINT',
+  'GRANT','REVOKE','ALL','ANY','SOME','CASE','WHEN','THEN','ELSE','END','IF','WHILE',
+  'FOR','LOOP','RETURN','DECLARE','SET','VALUES','INTO','TO','BY','ASC','DESC','LIMIT',
+  'OFFSET','UNION','INTERSECT','EXCEPT','DISTINCT','TOP','WITH','CTE','RECURSIVE',
+  'WINDOW','OVER','PARTITION','RANGE','ROWS','PRECEDING','FOLLOWING','CURRENT','ROW'
+]);
+
 // ─── Health Check Engine ───
 function checkHealth(schema, dialect) {
   const issues = [];
   const add = (severity, message, table, column, fix) => {
-    issues.push({ severity, message, table: table || '', column: column || '', fix: fix || '' });
+    issues.push({ severity, message, table: table || '', column: column || '', fix: fix || '', category: '' });
   };
 
   const allIndexCols = new Set();
+  const allIndexes = [];
   for (const tbl of schema.tables) {
     for (const idx of (tbl.indexes || [])) {
       for (const c of idx.columns) allIndexCols.add(tbl.name + '.' + c);
+      allIndexes.push({ table: tbl.name, ...idx });
     }
   }
+
+  // Track column types across tables for consistency check
+  const colTypeMap = {};
 
   for (const tbl of schema.tables) {
     const hasPK = tbl.constraints.some(c => c.type === 'PRIMARY KEY') || tbl.columns.some(c => c.primaryKey);
@@ -384,13 +402,18 @@ function checkHealth(schema, dialect) {
     }
 
     const fkCols = new Set();
+    const fkConstraints = [];
     for (const c of tbl.constraints) {
       if (c.type === 'FOREIGN KEY') {
         for (const col of c.columns) fkCols.add(col);
+        fkConstraints.push(c);
       }
     }
     for (const col of tbl.columns) {
-      if (col.foreignKey) fkCols.add(col.name);
+      if (col.foreignKey) {
+        fkCols.add(col.name);
+        fkConstraints.push({ columns: [col.name], refTable: col.foreignKey.table, refColumns: col.foreignKey.columns, onDelete: null, onUpdate: null });
+      }
     }
     for (const colName of fkCols) {
       const indexed = (tbl.indexes || []).some(idx => idx.columns[0] === colName);
@@ -398,24 +421,79 @@ function checkHealth(schema, dialect) {
         add('warning', `Foreign key column "${colName}" on "${tbl.name}" has no supporting index.`, tbl.name, colName, `CREATE INDEX idx_${tbl.name}_${colName} ON ${tbl.name} (${colName});`);
       }
     }
+    // Check missing ON DELETE/ON UPDATE
+    for (const fk of tbl.constraints) {
+      if (fk.type === 'FOREIGN KEY') {
+        if (!fk.onDelete && !fk.onUpdate) {
+          add('info', `Foreign key "${fk.name || ''}" on "${tbl.name}" has no ON DELETE or ON UPDATE clause.`, tbl.name, fk.columns[0], `Consider ON DELETE CASCADE or ON DELETE SET NULL for data integrity.`);
+        }
+      }
+    }
 
     const colNames = tbl.columns.map(c => c.name);
     const hasCreatedAt = colNames.some(n => /created_at|createdat|inserted_at/.test(n));
     const hasUpdatedAt = colNames.some(n => /updated_at|updatedat|modified_at/.test(n));
+    const hasDeletedAt = colNames.some(n => /deleted_at|deletedat|soft_delete/.test(n));
     if (!hasCreatedAt) {
       add('info', `Table "${tbl.name}" is missing a created_at timestamp.`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
     }
     if (!hasUpdatedAt) {
       add('info', `Table "${tbl.name}" is missing an updated_at timestamp.`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
     }
+    if (!hasDeletedAt && tbl.columns.length > 2) {
+      add('info', `Table "${tbl.name}" is missing a soft-delete column (deleted_at).`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN deleted_at TIMESTAMP NULL;`);
+    }
 
+    // Per-column checks
     for (const col of tbl.columns) {
       const upperType = col.type.toUpperCase();
+      const shortName = col.name.length;
+
+      // Track for cross-table consistency
+      if (!colTypeMap[col.name]) colTypeMap[col.name] = {};
+      colTypeMap[col.name][tbl.name] = upperType;
+
+      // Reserved word check
+      if (RESERVED_WORDS.has(col.name.toUpperCase())) {
+        add('warning', `Column "${col.name}" on "${tbl.name}" is a reserved SQL keyword.`, tbl.name, col.name, `Rename to ${tbl.name}_${col.name} or use a non-reserved name.`);
+      }
+
+      // VARCHAR without length
       if (upperType === 'VARCHAR' || upperType === 'CHAR' || upperType === 'NVARCHAR') {
         add('warning', `Column "${col.name}" on "${tbl.name}" is a ${col.type} without explicit length.`, tbl.name, col.name, `Use ${col.type}(255) or TEXT instead.`);
       }
+
+      // TINYINT in postgres/sqlite
       if ((dialect === 'postgres' || dialect === 'sqlite') && (upperType === 'TINYINT' || upperType === 'INT1')) {
         add('warning', `Column "${col.name}" on "${tbl.name}" uses TINYINT — consider BOOLEAN in ${dialect === 'postgres' ? 'PostgreSQL' : 'SQLite'}.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} TYPE BOOLEAN;`);
+      }
+
+      // TEXT for short strings
+      if ((upperType === 'TEXT' || upperType === 'CLOB' || upperType === 'NTEXT') && /name|title|slug|code|sku|label|status|role|type|color/.test(col.name)) {
+        add('info', `Column "${col.name}" on "${tbl.name}" uses ${col.type} for a short string. Consider VARCHAR with a length limit.`, tbl.name, col.name, `Use VARCHAR(255) instead of ${col.type} for predictable storage and indexing.`);
+      }
+
+      // Missing NOT NULL on critical columns
+      if (col.nullable && !col.primaryKey && !col.autoIncrement && /id$|email|username|phone|uuid|slug|code/.test(col.name)) {
+        add('warning', `Column "${col.name}" on "${tbl.name}" is nullable but looks like a required identifier.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} SET NOT NULL;`);
+      }
+
+      // Boolean without DEFAULT
+      if ((upperType === 'BOOLEAN' || upperType === 'BOOL' || upperType === 'BIT') && col.nullable && !col.default) {
+        add('info', `Boolean column "${col.name}" on "${tbl.name}" has no DEFAULT. Consider adding one.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} SET DEFAULT FALSE;`);
+      }
+
+      // Short column names
+      if (shortName <= 1 && !col.primaryKey) {
+        add('info', `Column "${col.name}" on "${tbl.name}" has a very short name. Consider a more descriptive name.`, tbl.name, col.name, `Rename to something descriptive (e.g., description instead of d).`);
+      }
+
+      // Enum misuse: VARCHAR for status/role/type without CHECK
+      if ((upperType.startsWith('VARCHAR') || upperType.startsWith('TEXT') || upperType.startsWith('CHAR')) && /status|state|role|type|priority|level|gender/.test(col.name)) {
+        const hasCheck = tbl.constraints.some(c => c.type === 'CHECK' && c.expression && c.expression.toUpperCase().includes(col.name.toUpperCase()));
+        if (!hasCheck && dialect !== 'sqlite') {
+          add('info', `Column "${col.name}" on "${tbl.name}" stores categorical data in ${col.type}. Consider ENUM or CHECK constraint.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ADD CONSTRAINT chk_${col.name} CHECK (${col.name} IN ('value1', 'value2'));`);
+        }
       }
     }
 
@@ -430,6 +508,17 @@ function checkHealth(schema, dialect) {
     const totalIndexes = (tbl.indexes || []).length;
     if (totalIndexes === 0 && tbl.columns.length > 3) {
       add('info', `Table "${tbl.name}" has no indexes beyond the primary key.`, tbl.name, '', 'Add indexes on columns used in WHERE, JOIN, and ORDER BY clauses.');
+    }
+
+    // Duplicate index detection
+    const idxSignatures = {};
+    for (const idx of (tbl.indexes || [])) {
+      const sig = idx.columns.join(',');
+      if (idxSignatures[sig]) {
+        add('warning', `Table "${tbl.name}" has duplicate indexes on columns (${sig}).`, tbl.name, '', `DROP INDEX ${idx.name}; — keep ${idxSignatures[sig]}.`);
+      } else {
+        idxSignatures[sig] = idx.name;
+      }
     }
   }
 
@@ -446,6 +535,15 @@ function checkHealth(schema, dialect) {
     }
   }
 
+  // Inconsistent types across tables
+  for (const [colName, tableMap] of Object.entries(colTypeMap)) {
+    const types = Object.values(tableMap);
+    const uniqueTypes = [...new Set(types)];
+    if (uniqueTypes.length > 1) {
+      add('info', `Column "${colName}" has inconsistent types across tables: ${uniqueTypes.join(', ')}.`, '', colName, 'Standardize the type across all tables for consistency.');
+    }
+  }
+
   return issues;
 }
 
@@ -454,7 +552,18 @@ function computeScore(issues) {
   const warning = issues.filter(i => i.severity === 'warning').length;
   const info = issues.filter(i => i.severity === 'info').length;
   let score = 100 - critical * 15 - warning * 5 - info * 1;
-  return Math.max(0, Math.min(100, score));
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function getScoreBadge(score) {
+  if (score >= 90) return { label: 'Schema Guardian', emoji: '🛡️' };
+  if (score >= 75) return { label: 'Migration Aware', emoji: '✅' };
+  if (score >= 50) return { label: 'Needs Attention', emoji: '⚠️' };
+  return { label: 'Critical Issues', emoji: '🚨' };
+}
+
+function generateShareText(score, badge, issueCount, tableCount) {
+  return `I scored ${score}/100 on the SQL Schema Health Check — ${badge.emoji} ${badge.label}.\n\n${issueCount} issue(s) found across ${tableCount} table(s).\n\nCheck your own schema for free → https://schemalens.tech/tools/schema-health-check.html`;
 }
 
 // ─── UI ───
@@ -521,20 +630,33 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('results').style.display = 'none';
 });
 
+let lastHealthResult = null;
+
 document.getElementById('checkBtn').addEventListener('click', () => {
   const sql = document.getElementById('sqlInput').value;
   const dialect = document.getElementById('dialect').value;
   const schema = parseSQL(sql, dialect);
   const issues = checkHealth(schema, dialect);
   const score = computeScore(issues);
+  const badge = getScoreBadge(score);
 
   let scoreClass = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
-  let scoreLabel = score >= 80 ? 'Healthy' : score >= 50 ? 'Needs Attention' : 'Critical Issues';
 
   let html = '';
   html += `<div class="health-score ${scoreClass}">${score}<span style="font-size:1rem;font-weight:500;color:var(--text-muted);">/100</span></div>`;
-  html += `<div class="score-bar"><div class="score-bar-fill" style="width:${score}%;background:${score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)'};"></div></div>`;
-  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem;">${scoreLabel} — ${issues.length} issue${issues.length !== 1 ? 's' : ''} found across ${schema.tables.length} table${schema.tables.length !== 1 ? 's' : ''}</p>`;
+  html += `<div class="score-bar"><div class="score-bar-fill" style="width:${score}%;background:${score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)'}"></div></div>`;
+  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:0.5rem;"><strong>${badge.emoji} ${badge.label}</strong></p>`;
+  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem;">${issues.length} issue${issues.length !== 1 ? 's' : ''} found across ${schema.tables.length} table${schema.tables.length !== 1 ? 's' : ''}</p>`;
+
+  // Share buttons
+  const shareText = encodeURIComponent(generateShareText(score, badge, issues.length, schema.tables.length));
+  const shareUrl = encodeURIComponent('https://schemalens.tech/tools/schema-health-check.html');
+  html += `<div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">`;
+  html += `<button class="btn btn-secondary" id="copyResultBtn" style="font-size:0.85rem;">📋 Copy Result</button>`;
+  html += `<a class="btn btn-secondary" href="https://twitter.com/intent/tweet?text=${shareText}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">𝕏 Share on X</a>`;
+  html += `<a class="btn btn-secondary" href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">🔗 Share on LinkedIn</a>`;
+  html += `<a class="btn btn-secondary" href="/api/share?health=${score}&badge=${encodeURIComponent(badge.label)}&issues=${issues.length}&tables=${schema.tables.length}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">🌐 Share Link</a>`;
+  html += `</div>`;
 
   if (schema.errors.length) {
     html += `<div class="issue-card critical"><div class="issue-severity critical">Parse Error</div><div class="issue-message">${schema.errors.length} CREATE TABLE statement(s) could not be parsed.</div></div>`;
@@ -554,9 +676,31 @@ document.getElementById('checkBtn').addEventListener('click', () => {
     html += `<div class="empty-state"><p>Paste some CREATE TABLE statements to get started.</p></div>`;
   }
 
+  // CTA
+  html += `<div style="margin-top:2rem;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-align:center;">`;
+  html += `<p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.95rem;">SchemaLens found ${issues.length} issue(s) automatically. Generate the fix script in one click with Pro.</p>`;
+  html += `<a href="../app.html" class="btn btn-primary" style="text-decoration:none;">Fix with SchemaLens →</a>`;
+  html += `</div>`;
+
   const results = document.getElementById('results');
   results.innerHTML = html;
   results.style.display = 'block';
+
+  lastHealthResult = { score, badge: badge.label, issues: issues.length, tables: schema.tables.length, dialect };
+
+  // Copy button handler
+  setTimeout(() => {
+    const btn = document.getElementById('copyResultBtn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const text = generateShareText(score, badge, issues.length, schema.tables.length);
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '✅ Copied!';
+          setTimeout(() => btn.textContent = '📋 Copy Result', 2000);
+        });
+      });
+    }
+  }, 0);
 });
 
 function renderIssue(issue) {
