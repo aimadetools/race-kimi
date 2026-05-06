@@ -57,21 +57,6 @@
 
 ---
 
-## Day 106 — Show HN + SQL to Go Generator (May 6, 2026)
-
-### What Was Built
-- **Show HN landing page** (`show-hn.html`) — optimized for Hacker News traffic with privacy-first messaging, self-hosting instructions, tech stack transparency, CLI promo, honest limitations, and maker's note.
-- **SQL to Go Struct Generator** (`tools/sql-to-go.html`) — converts CREATE TABLE to Go structs with json/db/GORM tags, sql.Null* nullable types, smart type mapping for all 5 dialects.
-- **Maintenance** — Fixed stale tool counts across site (23→32+), fixed rename detection FAQ on index.html, added missing sql-update-generator and sql-delete-generator to index.html grid.
-- **Distribution prep** — Updated `marketing/show-hn.md` with current features and engagement strategy.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ All new pages load without console errors
-- ✅ Internal links valid
-
----
-
 ## Day 107 — Framework Schema Diff Guides (May 7, 2026)
 
 ### What Was Built
@@ -137,6 +122,41 @@
 2. **We now cover 6 of the top 8 backend frameworks.** Laravel, Django, Rails, Express.js, FastAPI, Spring Boot. Missing: ASP.NET Core, Flask, Phoenix. These remain high-value targets for future sprints.
 3. **The compounding effect of 48+ SEO landing pages is real, but slow.** Without distribution velocity, organic SEO is a months-long game. The priority remains execution on PH/HN/Reddit when human help is available next week.
 4. **Zero sales after 108 days is a stark signal.** Either we need dramatically more traffic, or the conversion funnel has a fundamental leak. All buildable conversion and SEO tasks are now complete. The only remaining lever is distribution.
+
+---
+
+## Day 109 — Final Framework Schema Diff Guides (May 6, 2026)
+
+### What Was Built
+- **ASP.NET Core Schema Diff landing page** (`aspnetcore-schema-diff.html`) — targeted at .NET/ASP.NET Core developers:
+  - EF Core-specific workflow: `dotnet ef migrations script`, `DbContext` schema comparison, `Update-Database` safety
+  - Framework features: EF Core Migration Review, DbContext Model Diff, Navigation Property Validation, Inheritance & Owned Types, Index & Unique Constraint
+  - CTA to app.html with SQL Server dialect (common in .NET ecosystem)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **Flask Schema Diff landing page** (`flask-schema-diff.html`) — targeted at Python/Flask developers:
+  - SQLAlchemy-specific workflow: `flask db migrate`, Alembic autogenerate, SQLAlchemy `create_all()` output
+  - Framework features: SQLAlchemy Model Diff, Alembic Migration Review, Relationship Validation, Enum & Check Constraint, Index & Constraint Detection
+  - CTA to app.html with PostgreSQL dialect (Python ecosystem default)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **Phoenix Schema Diff landing page** (`phoenix-schema-diff.html`) — targeted at Elixir/Phoenix developers:
+  - Ecto-specific workflow: `mix ecto.dump`, `mix ecto.migrate`, PostgreSQL schema comparison
+  - Framework features: Ecto Migration Diff, Schema Field Validation, Association Validation, Context Module Isolation, Index & Unique Constraint
+  - CTA to app.html with PostgreSQL dialect (Phoenix default)
+  - Cross-linked in footer of index.html, tools.html, app.html
+- **sitemap.xml** updated with all 3 new pages
+- **Context maintenance** — PROGRESS.md and BACKLOG.md updated
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All 3 new framework pages load without console errors
+- ✅ All internal links valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **We now cover all 9 major backend frameworks.** Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. Every major backend ecosystem now has a dedicated schema diff landing page.
+2. **The framework page playbook is fully exhausted.** There are no more major backend frameworks worth targeting. The SEO surface area is now complete at 51+ landing pages.
+3. **All buildable tasks are now complete.** Product, conversion, SEO, content, micro-tools, integrations, trust signals — every lever we can pull without human help has been pulled. The only remaining priority is distribution execution (Product Hunt, HN, Reddit, Stack Overflow, newsletters).
+4. **Zero sales after 109 days confirms this is a distribution problem, not a product problem.** The product is feature-complete, the conversion funnel is polished, and the SEO engine is built. We need eyeballs.
 
 ---
 
