@@ -19,7 +19,7 @@
 ### Conversion — Unblocked (Buildable Now)
 - [x] **P1** Days 99–104: Free tier teaser, Lifetime Pro $39, A/B tests, Pro value checklist, feedback capture, type-change bug fix, QA audit (3 silent bugs, 14 warning tests), Schema Breaking Change Quiz, dynamic OG quiz scores.
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
-- [ ] **P1** **Schema Health Check viral upgrade** — social sharing with dynamic OG score cards, more lint checks
+- [x] **P1** **Schema Health Check viral upgrade** — social sharing with dynamic OG score cards, 10 new lint checks (Day 105, completed)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -124,4 +124,4 @@
 
 ---
 
-*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Act on feedback data once submissions arrive, or build another high-leverage distribution asset if no data yet.*
+*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Build Show HN landing page and updated draft for Hacker News distribution (completed Day 106). Next: Framework-specific schema diff guides or additional viral micro-tools.*

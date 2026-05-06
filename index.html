@@ -309,7 +309,7 @@
     <div class="container">
       <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center;">
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">23</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">31</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
         </div>
         <div>
@@ -612,6 +612,18 @@
           <a href="tools/sql-select-generator.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Generate SELECT</a>
         </div>
         <div class="feature-card">
+          <div class="feature-icon">✏️</div>
+          <h3>SQL UPDATE Generator</h3>
+          <p>Generate safe UPDATE statements from CREATE TABLE schemas. SET placeholders, PK WHERE clauses, JOIN updates, and bulk CASE patterns.</p>
+          <a href="tools/sql-update-generator.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Generate UPDATE</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗑️</div>
+          <h3>SQL DELETE Generator</h3>
+          <p>Generate safe DELETE statements with primary-key WHERE clauses. Supports JOIN deletes, soft-delete patterns, bulk DELETE, and TRUNCATE.</p>
+          <a href="tools/sql-delete-generator.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Generate DELETE</a>
+        </div>
+        <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>SQL UPSERT Generator</h3>
           <p>Generate UPSERT and MERGE statements from CREATE TABLE schemas. ON CONFLICT, ON DUPLICATE KEY, MERGE INTO — all 5 dialects.</p>
@@ -824,7 +836,7 @@
         </details>
         <details style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--bg);">
           <summary style="font-weight: 600; cursor: pointer; color: var(--text);">How does rename detection work?</summary>
-          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">SchemaLens currently treats renames as drop+add because it compares two static snapshots. There is no way to infer intent from just the before/after state. If you need rename detection, you can annotate the generated migration manually. We are exploring a heuristic (same type + similar name = likely rename) for a future release.</p>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); line-height: 1.7;">SchemaLens uses a Levenshtein distance heuristic to detect likely renames. If a column (or table) disappears and a new one appears with the same type and a similar name (e.g., <code>user_name</code> → <code>username</code>), it is flagged as a rename rather than a drop+add. This preserves data during migration generation. You can adjust sensitivity via the <code>renameThreshold</code> option in the CLI and engine.</p>
         </details>
       </div>
     </div>
