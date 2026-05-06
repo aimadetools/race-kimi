@@ -61,7 +61,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **23 free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **32+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -84,6 +84,21 @@ SchemaLens includes **23 free browser-based tools** that reuse the same custom S
 19. [Badge Generator](https://schemalens.tech/tools/badge-generator.html)
 20. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
 21. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
+22. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
+23. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
+24. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
+25. [SQL SELECT Generator](https://schemalens.tech/tools/sql-select-generator.html)
+26. [SQL to TypeScript Generator](https://schemalens.tech/tools/sql-to-typescript.html)
+27. [SQL Query Explainer](https://schemalens.tech/tools/sql-query-explainer.html)
+28. [Connection String Parser](https://schemalens.tech/tools/connection-string-parser.html)
+29. [SQL to Python Generator](https://schemalens.tech/tools/sql-to-python.html)
+30. [SQL UPDATE Generator](https://schemalens.tech/tools/sql-update-generator.html)
+31. [SQL DELETE Generator](https://schemalens.tech/tools/sql-delete-generator.html)
+32. [SQL UPSERT & MERGE Generator](https://schemalens.tech/tools/sql-upsert-generator.html)
+33. [SQL CASE WHEN Generator](https://schemalens.tech/tools/sql-case-generator.html)
+34. [Schema Breaking Change Quiz](https://schemalens.tech/tools/schema-breaking-change-quiz.html)
+
+[View all tools →](https://schemalens.tech/tools.html)
 
 ---
 
@@ -159,7 +174,7 @@ SchemaLens includes **23 free browser-based tools** that reuse the same custom S
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 10 micro-tools
+- **Free tool uses:** Growing via 32+ micro-tools
 - **Pro customers:** 0 (pre-launch)
 - **MRR:** $0 (pre-launch)
 - **Blog posts:** 32 published

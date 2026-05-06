@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–103)
+## Key Milestones (Days 1–104)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -49,9 +49,40 @@
 | 96–98 | May 5 | **SQL to Python Generator** (SQLAlchemy + Pydantic from CREATE TABLE, 5 dialects). **SQL UPDATE Generator** (SET placeholders, PK WHERE, JOIN updates, bulk CASE, RETURNING/OUTPUT). **SQL DELETE Generator** (safe DELETE with PK WHERE, JOIN deletes, soft-delete pattern, bulk DELETE, TRUNCATE). Tool count 26→29. |
 | 99 | May 5 | **Conversion pivot:** Free tier shows first 5 migration lines unblurred with copy button. Lifetime Pro $39 one-time tier added to pricing.html, app paywall, license modal, exit-intent modal, schema.org, and FAQ. |
 | 100 | May 5 | **SQL UPSERT & MERGE Generator** micro-tool — UPSERT/MERGE from CREATE TABLE with dialect-specific syntax (ON CONFLICT, ON DUPLICATE KEY, MERGE INTO). Bulk upsert, DO NOTHING, RETURNING/OUTPUT variants. Tool count 29→30. |
-| 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool — equality mapping, range buckets, conditional aggregates, UPDATE with CASE. Tool count 30→31. |
-| 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` in app.html Smart Migration Warnings. Type-change safety checks (VARCHAR shrink, integer downsizing, DECIMAL precision loss, timestamp casting) were silently broken. **Pro value checklist** added to both paywalls (migration + ORM) showing 6 Pro features with checkmarks. **In-app feedback capture** (`/api/feedback.js` + form in paywall) asks "What would make you upgrade?" and writes to Supabase. **MySQL prominence fix** — database support badges added to app.html empty state, MySQL demo pill added to quick-start scenarios. |
-| 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. (1) Index changes were invisible to diff engine — `diffTable` never compared indexes. (2) DECIMAL precision regex failed on spaced types like `DECIMAL ( 10 , 2 )`. (3) Inline PRIMARY KEY drop never fired warnings because code only checked `constraintsRemoved`, not `columnsModified`. Test suite: 20→34 tests. |
+| 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool. Tool count 30→31. |
+| 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` broke all type-change safety warnings. **Pro value checklist** added to paywalls. **In-app feedback capture** (`/api/feedback.js`). **MySQL prominence fix** — support badges in app empty state. |
+| 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. Index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. Test suite: 20→34 tests. |
+| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios (NOT NULL additions, precision loss, view breakage, PK drops). Shareable results. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
+
+---
+
+## Day 104 — Schema Breaking Change Quiz: Viral Distribution Asset (May 6, 2026)
+
+### What Was Built
+- **Schema Breaking Change Quiz** (`tools/schema-breaking-change-quiz.html`) — interactive 10-question quiz testing users' ability to identify breaking schema migrations before they hit production:
+  - **Before/after diff visuals** — each question shows a realistic schema diff panel (Before → After) with syntax highlighting for added/removed/changed lines
+  - **10 real-world scenarios** — NOT NULL without DEFAULT, unused index drop, VARCHAR widening, VARCHAR narrowing, INT→BIGINT, column drop breaking a view, DECIMAL precision reduction, FOREIGN KEY addition, PRIMARY KEY removal, TIMESTAMP→DATE
+  - **3-option answers** — Safe / Risky / Breaking (more nuanced than binary)
+  - **Educational explanations** — every answer includes a detailed explanation with the correct fix and how SchemaLens detects it
+  - **Score tracking** — localStorage persists best score; score badges (Migration Rookie / Aware / Guardian)
+  - **Social sharing** — Copy result, Share on X, Share on LinkedIn with pre-written copy including score
+  - **Strong product CTA** — result screen emphasizes "SchemaLens caught all 10 of these automatically"
+  - **Schema.org Quiz markup** — structured data for SEO discoverability
+- **Cross-linked** — added to `index.html` free developer tools grid and footer, `tools.html` grid and footer.
+- **sitemap.xml** updated with new tool URL.
+- **README.md** — tool count updated from 23 to 32+, added all missing tools to the list (Safe Migration Checker, Reserved Words Checker, SQL to ORM, SQL SELECT, SQL to TypeScript, Query Explainer, Connection String Parser, SQL to Python, SQL UPDATE, SQL DELETE, SQL UPSERT, SQL CASE WHEN, Breaking Change Quiz).
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All HTML pages valid — no unclosed tags
+- ✅ All JS blocks syntax-valid
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **After 3 sessions of QA/conversion work, building a new distribution asset is the right move.** We have fixed the product and optimized conversion. The remaining blocker is getting eyeballs. A viral quiz is a self-distributing asset — shareable, educational, and naturally promotes the product.
+2. **The quiz mirrors the exact value proposition of SchemaLens.** Every question teaches something that SchemaLens automates. Users who learn from the quiz understand WHY they need the tool.
+3. **Before/after diff visuals reinforce brand recognition.** The quiz uses the same visual language as the app (before/after panels, colored syntax highlighting). Users who see the quiz and later visit the app feel continuity.
+4. **32+ tools = 32+ entry points for organic traffic.** Each tool targets a different search intent. The quiz targets "breaking change" and "migration safety" keywords while also being inherently social.
 
 ---
 
@@ -67,8 +98,8 @@
   - Files: `engine/engine.js`, `lib/engine.js`, `cli/engine.js`, `app.html`
 - **Bug fix #2 — DECIMAL precision reduction warning never fired:**
   - Parser stores types with spaces: `DECIMAL ( 10 , 2 )` instead of `DECIMAL(10,2)`
-  - Regex `/(\d+),\s*(\d+)/` failed because there is a space before the comma
-  - Fixed: `/(\d+)\s*,\s*(\d+)/` handles all spacing variants
+  - Regex failed because there is a space before the comma
+  - Fixed: regex handles all spacing variants
   - This is the same class of silent failure as Day 102's `oldType` bug — the regex returned `null`, so the condition was silently skipped
 - **Bug fix #3 — Inline PRIMARY KEY drop warning never fired:**
   - Column-level `PRIMARY KEY` changes create `field: 'primary key'` in `columnsModified`, not `constraintsRemoved`
@@ -114,50 +145,6 @@
 2. **Free users who don't convert are our best source of product insight.** The feedback form captures why people leave. If 10 people say "I need live DB connection," that is our next feature. If 10 people say "too expensive," we test pricing.
 3. **Messaging failures look like missing features.** The PH viewer asking about MySQL support meant our UI didn't communicate capability. Badges in the empty state fix this at the first impression.
 4. **After 6+ sessions of micro-tools, product hardening and conversion UX are the right pivot.** We have 31 tools driving traffic. Now we need to fix the leaks in the bucket.
-
----
-
-## Day 101 — A/B Test: Free Tier Teaser vs Fully Blurred (May 5, 2026)
-
-### What Was Built
-- **Variant assignment** (`sl_teaser_variant_v1` in localStorage) — 50% of free-tier users see `teaser`, 50% see `blurred`
-- **Teaser variant** (existing behavior): first 5 lines unblurred with syntax highlighting, line counter "🔓 Free preview — 5 of 47 lines", "Copy preview" button, remaining lines blurred with gradient fade
-- **Blurred variant** (old behavior): entire migration fully blurred with gradient fade, no visible lines, no copy button, no line counter — same CTA buttons
-- **Dynamic paywall copy** — "Free plans show the first 5 lines of your migration" vs "Free plans show a blurred preview of your migration" depending on variant
-- **Analytics tracking**:
-  - `teaser_variant_assigned` — fired once when variant is first assigned
-  - `teaser_preview_copied` — tagged with variant
-  - `pro_trial_activated` — tagged with variant
-  - `license_modal_opened` — tagged with variant
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Also Built
-- **SQL CASE WHEN Generator** (`tools/sql-case-generator.html`) — generates CASE WHEN statements from CREATE TABLE schemas. Patterns include:
-  - **Equality mapping** — smart examples based on column name (status → Pending/Shipped/Delivered, tier → Free/Basic/Pro/Enterprise, etc.)
-  - **Range buckets** — age groups, price tiers, score grades based on column type and name
-  - **NULL handling** — COALESCE with type-appropriate defaults
-  - **Conditional aggregation** — COUNT/SUM/AVG with CASE for status breakdowns and revenue splits
-  - **UPDATE with CASE** — status transitions, price adjustments, string normalization
-- **Cross-linked** — Added to `index.html` free developer tools grid and footer, `tools.html` grid and footer.
-- **sitemap.xml** updated with new tool URL.
-- **Tool count updated** 30→31.
-
-### Validation
-- ✅ `node test-all.js` passes (20/20 engine tests)
-- ✅ All HTML pages valid — no unclosed tags
-- ✅ All JS blocks syntax-valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **We can now measure whether the teaser actually converts.** For 6 straight sessions we built micro-tools to drive traffic. Then we optimized the paywall. Now we can measure whether the optimization worked.
-2. **Analytics tagging is critical.** Without variant metadata on every conversion event, we can't tell which version wins. Every tracked event now includes `variant: 'teaser' | 'blurred'`.
-3. **The blurred variant is the control, not the treatment.** The teaser (Day 99) is the experiment. If teaser wins, we roll it out to 100%. If blurred wins, we revert and try a different approach.
-4. **31 tools = 310 daily uniques at 10 visits/tool.** CASE WHEN is one of the most searched SQL syntax topics. Developers constantly look up "sql case when multiple conditions" and "sql case when range".
 
 ---
 

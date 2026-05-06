@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://cdn.vercel-insights.com">
+<link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+<title>Schema Breaking Change Quiz — Can You Spot the Migration Risk? | SchemaLens</title>
+<meta name="description" content="Test your migration safety skills. 10 real-world schema changes — can you tell which ones will break production? Interactive quiz with instant feedback.">
+<meta property="og:title" content="Schema Breaking Change Quiz — Can You Spot the Migration Risk?">
+<meta property="og:description" content="10 real-world schema changes. Can you tell which ones will break production? Take the quiz and share your score.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-breaking-change-quiz.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Quiz",
+  "name": "Schema Breaking Change Quiz",
+  "description": "Interactive 10-question quiz testing your ability to identify breaking schema changes before they hit production.",
+  "url": "https://schemalens.tech/tools/schema-breaking-change-quiz.html",
+  "about": {
+    "@type": "Thing",
+    "name": "Database Schema Migration Safety"
+  },
+  "educationalLevel": "Intermediate",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens"
+  }
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<style>
+.quiz-container { max-width: 860px; margin: 0 auto; padding: 2rem 1rem; }
+.page-header { text-align: center; padding: 32px 0 20px; }
+.page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+.page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto; }
+
+.progress-bar { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; margin-bottom: 24px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; transition: width 0.4s ease; }
+
+.question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; }
+.question-number { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px; }
+.question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+
+.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.diff-panel { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.diff-panel .panel-header { padding: 10px 14px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.diff-panel.before .panel-header { color: var(--danger); background: rgba(248,113,113,0.06); }
+.diff-panel.after .panel-header { color: var(--success); background: rgba(52,211,153,0.06); }
+.diff-panel pre { padding: 14px; font-family: var(--mono); font-size: 0.82rem; color: var(--code-text); overflow-x: auto; line-height: 1.5; margin: 0; }
+.diff-panel pre .hl-add { color: var(--success); font-weight: 600; }
+.diff-panel pre .hl-rem { color: var(--danger); font-weight: 600; }
+.diff-panel pre .hl-change { color: var(--warning); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .diff-grid { grid-template-columns: 1fr; }
+}
+
+.option-list { display: flex; flex-direction: column; gap: 10px; }
+.option-btn {
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--surface-hover); }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { border-color: var(--success); background: rgba(52,211,153,0.08); }
+.option-btn.wrong { border-color: var(--danger); background: rgba(248,113,113,0.08); }
+.option-btn .marker { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.option-btn.correct .marker { border-color: var(--success); color: var(--success); }
+.option-btn.wrong .marker { border-color: var(--danger); color: var(--danger); }
+
+.explanation {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(99,102,241,0.06);
+  border-left: 3px solid var(--primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: none;
+}
+.explanation.visible { display: block; }
+.explanation a { color: var(--primary); text-decoration: underline; }
+.explanation .verdict { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; }
+.explanation .verdict.safe { background: rgba(52,211,153,0.12); color: var(--success); }
+.explanation .verdict.risky { background: rgba(251,191,36,0.12); color: var(--warning); }
+.explanation .verdict.breaking { background: rgba(248,113,113,0.12); color: var(--danger); }
+
+.nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+.nav-row .btn { min-width: 120px; }
+
+.result-card { text-align: center; padding: 48px 28px; }
+.result-score { font-size: 4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.result-label { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+.result-desc { color: var(--text-muted); font-size: 1rem; max-width: 480px; margin: 0 auto 24px; }
+.result-badge { display: inline-block; padding: 6px 18px; border-radius: 999px; font-size: 0.9rem; font-weight: 700; margin-bottom: 24px; }
+.result-badge.expert { background: rgba(52,211,153,0.12); color: var(--success); }
+.result-badge.solid { background: rgba(99,102,241,0.12); color: var(--primary); }
+.result-badge.beginner { background: rgba(251,191,36,0.12); color: var(--warning); }
+
+.share-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.share-row button { padding: 10px 18px; font-size: 0.9rem; }
+
+.review-list { text-align: left; margin-top: 28px; }
+.review-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.review-item:last-child { border-bottom: none; }
+.review-item .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.review-item .q-title { font-weight: 600; margin-bottom: 4px; }
+.review-item .q-answer { color: var(--text-muted); font-size: 0.88rem; }
+
+.start-screen { text-align: center; padding: 48px 28px; }
+.start-screen .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 28px 0; text-align: center; }
+.start-screen .feature-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-size: 0.9rem; }
+.start-screen .feature-item .emoji { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+
+.cta-banner { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 32px; text-align: center; }
+.cta-banner h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.cta-banner p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+
+.stats-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-item { text-align: center; }
+.stat-item .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+.stat-item .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.5rem; }
+  .question-card { padding: 20px 16px; }
+  .result-score { font-size: 3rem; }
+}
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('schemalens-theme', next);
+}
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">Diff</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+    </div>
+    <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<div class="quiz-container">
+  <div class="page-header">
+    <h1>🚨 Breaking Change Quiz</h1>
+    <p>10 real-world schema migrations. Can you spot which ones will break production? Test your migration safety instincts.</p>
+  </div>
+
+  <div id="quizApp"></div>
+
+  <div class="cta-banner">
+    <h3>Never miss a breaking change again</h3>
+    <p>SchemaLens automatically detects breaking changes, calculates risk scores, and generates safe migration scripts — for every major SQL dialect.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:32px 0;margin-top:48px;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <div style="color:var(--text-muted);font-size:0.9rem;">
+      © 2026 SchemaLens. Built for developers who care about clean schemas.
+    </div>
+    <div style="display:flex;gap:20px;font-size:0.9rem;">
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../changelog.html">Changelog</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const questions = [
+  {
+    text: "A teammate adds a required status column to the orders table. Will this migration break production?",
+    before: `CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  total DECIMAL(10,2)
+);`,
+    after: `CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  total DECIMAL(10,2),
+  <span class="hl-add">status VARCHAR(20) NOT NULL</span>
+);`,
+    options: [
+      { text: "✅ Safe — just adds a column", correct: false },
+      { text: "⚠️ Risky — could be slow on large tables", correct: false },
+      { text: "🚨 Breaking — existing rows will fail the NOT NULL constraint", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Adding a <code>NOT NULL</code> column without a <code>DEFAULT</code> value breaks on existing rows because they get NULL. The fix: add <code>DEFAULT 'pending'</code> first, then optionally remove the default later. SchemaLens flags this automatically."
+  },
+  {
+    text: "An unused index on user emails is dropped to reduce write overhead. Safe or breaking?",
+    before: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(255)
+);
+
+<span class="hl-rem">CREATE INDEX idx_email ON users(email);</span>`,
+    after: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(255)
+);`,
+    options: [
+      { text: "✅ Safe — dropping an unused index has no data impact", correct: true },
+      { text: "⚠️ Risky — may affect query performance", correct: false },
+      { text: "🚨 Breaking — dependent views may fail", correct: false }
+    ],
+    verdict: "safe",
+    explanation: "Dropping an unused index is completely safe. It only affects query performance (and write throughput improves). No data is lost, no constraints are violated, and no dependent objects break. Always check query plans before dropping, but the migration itself is safe."
+  },
+  {
+    text: "The bio column is widened from VARCHAR(500) to TEXT to support longer content. Any risk?",
+    before: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  <span class="hl-rem">bio VARCHAR(500)</span>
+);`,
+    after: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  <span class="hl-add">bio TEXT</span>
+);`,
+    options: [
+      { text: "✅ Safe — TEXT can hold everything VARCHAR(500) could", correct: true },
+      { text: "⚠️ Risky — some ORMs treat TEXT differently", correct: false },
+      { text: "🚨 Breaking — existing data may be truncated", correct: false }
+    ],
+    verdict: "safe",
+    explanation: "Widening a column (or moving from VARCHAR to TEXT) is always safe — no data loss occurs. The reverse (TEXT → VARCHAR(500)) would be breaking if any row exceeds 500 characters. SchemaLens highlights type widening as safe and narrowing as dangerous."
+  },
+  {
+    text: "A refactor changes the name column from VARCHAR(255) to VARCHAR(50). What's the impact?",
+    before: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  <span class="hl-rem">name VARCHAR(255)</span>
+);`,
+    after: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  <span class="hl-add">name VARCHAR(50)</span>
+);`,
+    options: [
+      { text: "✅ Safe — VARCHAR is VARCHAR regardless of size", correct: false },
+      { text: "⚠️ Risky — may truncate data for long names", correct: false },
+      { text: "🚨 Breaking — will truncate or fail for rows > 50 chars", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Narrowing a VARCHAR is a classic silent data truncation bug. If any existing name exceeds 50 characters, the ALTER TABLE will either fail (strict mode) or silently truncate data (loose mode). Both are bad. Audit your data first with <code>SELECT MAX(LENGTH(name)) FROM users</code>."
+  },
+  {
+    text: "The events table gets BIGINT IDs to prepare for scale. Is this migration safe?",
+    before: `CREATE TABLE events (
+  <span class="hl-rem">id INT PRIMARY KEY</span>,
+  count INT
+);`,
+    after: `CREATE TABLE events (
+  <span class="hl-add">id BIGINT PRIMARY KEY</span>,
+  count INT
+);`,
+    options: [
+      { text: "✅ Safe — BIGINT is a superset of INT, no data loss", correct: true },
+      { text: "⚠️ Risky — may lock the table during conversion", correct: false },
+      { text: "🚨 Breaking — foreign key references may fail", correct: false }
+    ],
+    verdict: "safe",
+    explanation: "Widening an integer type (INT → BIGINT) is safe for data integrity. Every INT value fits in BIGINT. Note: on very large tables, the ALTER may lock the table for a long time, so plan for maintenance windows or use online DDL tools. But the change itself won't break anything."
+  },
+  {
+    text: "A column used by a view is dropped during a refactor. What happens?",
+    before: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(255),
+  <span class="hl-rem">phone VARCHAR(20)</span>
+);
+
+CREATE VIEW user_contacts AS
+  SELECT email, phone FROM users;`,
+    after: `CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(255)
+);`,
+    options: [
+      { text: "✅ Safe — views automatically adapt to schema changes", correct: false },
+      { text: "⚠️ Risky — the view becomes invalid and queries fail", correct: false },
+      { text: "🚨 Breaking — the view becomes invalid and queries fail", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Dropping a column referenced by a view breaks the view. The view doesn't auto-update — it becomes invalid and any query against it fails. SchemaLens detects view dependencies and warns you before you drop a column that would break a view. Always drop/recreate dependent views in the same migration."
+  },
+  {
+    text: "The price column precision is reduced from DECIMAL(10,2) to DECIMAL(8,2). Impact?",
+    before: `CREATE TABLE products (
+  id INT PRIMARY KEY,
+  <span class="hl-rem">price DECIMAL(10,2)</span>
+);`,
+    after: `CREATE TABLE products (
+  id INT PRIMARY KEY,
+  <span class="hl-add">price DECIMAL(8,2)</span>
+);`,
+    options: [
+      { text: "✅ Safe — same scale, just less total digits", correct: false },
+      { text: "⚠️ Risky — may affect accounting precision", correct: false },
+      { text: "🚨 Breaking — values above 999,999.99 will overflow", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Reducing DECIMAL precision from (10,2) to (8,2) lowers the maximum value from 99,999,999.99 to 999,999.99. Any product priced above that will cause an overflow or error. This is a subtle but real breaking change. SchemaLens detects precision reductions and warns about overflow risk."
+  },
+  {
+    text: "A FOREIGN KEY constraint is added to the orders table. Any concerns?",
+    before: `CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  user_id INT
+);`,
+    after: `CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  user_id INT,
+  <span class="hl-add">FOREIGN KEY (user_id) REFERENCES users(id)</span>
+);`,
+    options: [
+      { text: "✅ Safe — FKs only enforce what should already be true", correct: false },
+      { text: "⚠️ Risky — may fail on existing bad data and locks table", correct: true },
+      { text: "🚨 Breaking — will always fail on large tables", correct: false }
+    ],
+    verdict: "risky",
+    explanation: "Adding a FOREIGN KEY is <strong>risky</strong>, not strictly breaking. If all existing <code>user_id</code> values reference valid users, it succeeds. But if any orphaned rows exist, the ALTER fails. Plus, on MySQL/MariaDB it acquires a shared lock on the referenced table. Always verify referential integrity first with a query."
+  },
+  {
+    text: "The PRIMARY KEY is removed from the sessions table to switch to UUIDs later. Safe?",
+    before: `CREATE TABLE sessions (
+  <span class="hl-rem">id INT PRIMARY KEY</span>,
+  token VARCHAR(255)
+);`,
+    after: `CREATE TABLE sessions (
+  id INT,
+  token VARCHAR(255)
+);`,
+    options: [
+      { text: "✅ Safe — the column still exists, just no longer a PK", correct: false },
+      { text: "⚠️ Risky — may cause duplicate rows", correct: false },
+      { text: "🚨 Breaking — duplicates allowed, indexes dropped, apps may fail", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Dropping a PRIMARY KEY is highly breaking. Duplicates become allowed. Clustered indexes are dropped (performance crash). Any app code or ORM that expects <code>id</code> to be unique will fail. Foreign keys referencing this PK also break. This should never be done in a single migration — add the new key first, migrate data, then remove the old."
+  },
+  {
+    text: "A timestamp column is changed to DATE, dropping the time component. Impact?",
+    before: `CREATE TABLE logs (
+  id INT PRIMARY KEY,
+  <span class="hl-rem">created_at TIMESTAMP</span>
+);`,
+    after: `CREATE TABLE logs (
+  id INT PRIMARY KEY,
+  <span class="hl-add">created_at DATE</span>
+);`,
+    options: [
+      { text: "✅ Safe — DATE is a valid timestamp type", correct: false },
+      { text: "⚠️ Risky — time-of-day data is silently lost", correct: false },
+      { text: "🚨 Breaking — time-of-day data is silently lost", correct: true }
+    ],
+    verdict: "breaking",
+    explanation: "Changing TIMESTAMP → DATE silently discards the time component (hours, minutes, seconds) for every row. This is irreversible data loss. Any queries that filter by time-of-day will return wrong results. If you truly only need the date, add a new <code>DATE</code> column, backfill it, then deprecate the old one gradually."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+
+const app = document.getElementById('quizApp');
+
+function renderStart() {
+  const best = localStorage.getItem('sl_breaking_quiz_best') || 0;
+  app.innerHTML = `
+    <div class="start-screen">
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">Questions</div></div>
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Choices</div></div>
+        <div class="stat-item"><div class="stat-num">${best}</div><div class="stat-label">Your Best</div></div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-item"><span class="emoji">🚨</span>Real scenarios</div>
+        <div class="feature-item"><span class="emoji">⏱️</span>~3 minutes</div>
+        <div class="feature-item"><span class="emoji">🎯</span>Instant feedback</div>
+        <div class="feature-item"><span class="emoji">📤</span>Share your score</div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem;padding:14px 36px;">Start Quiz →</button>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-top:16px;">No signup required. Your best score is saved in your browser.</p>
+    </div>
+  `;
+}
+
+function startQuiz() {
+  current = 0; score = 0; answers = [];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const progress = ((current) / questions.length) * 100;
+  app.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="question-card">
+      <div class="question-number">Question ${current + 1} of ${questions.length}</div>
+      <div class="question-text">${escapeHtml(q.text)}</div>
+      <div class="diff-grid">
+        <div class="diff-panel before">
+          <div class="panel-header">❌ Before</div>
+          <pre>${q.before}</pre>
+        </div>
+        <div class="diff-panel after">
+          <div class="panel-header">✅ After</div>
+          <pre>${q.after}</pre>
+        </div>
+      </div>
+      <div class="option-list" id="opts">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" onclick="selectOption(${i})" data-idx="${i}">
+            <span class="marker">${String.fromCharCode(65 + i)}</span>
+            <span>${escapeHtml(opt.text)}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation" id="exp"></div>
+      <div class="nav-row">
+        <span style="color:var(--text-muted);font-size:0.9rem;">${score} / ${current} correct so far</span>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(idx) {
+  const q = questions[current];
+  const btns = document.querySelectorAll('#opts .option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === idx) btn.classList.add(q.options[i].correct ? 'correct' : 'wrong');
+    if (q.options[i].correct) btn.classList.add('correct');
+    btn.querySelector('.marker').textContent = q.options[i].correct ? '✓' : (i === idx ? '✗' : String.fromCharCode(65 + i));
+  });
+
+  if (q.options[idx].correct) score++;
+  answers.push({ question: current, correct: q.options[idx].correct, selected: idx });
+
+  const exp = document.getElementById('exp');
+  const vClass = q.verdict;
+  const vText = vClass === 'safe' ? 'SAFE' : vClass === 'risky' ? 'RISKY' : 'BREAKING';
+  exp.innerHTML = `<div class="verdict ${vClass}">${vText}</div>` + q.explanation;
+  exp.classList.add('visible');
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    renderResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderResults() {
+  const pct = Math.round((score / questions.length) * 100);
+  const prevBest = parseInt(localStorage.getItem('sl_breaking_quiz_best') || '0', 10);
+  if (pct > prevBest) {
+    localStorage.setItem('sl_breaking_quiz_best', pct);
+  }
+
+  let badgeClass = 'beginner', badgeText = 'Migration Rookie', desc = "Good start! Review the explanations above — these are the exact issues SchemaLens catches automatically.";
+  if (pct >= 80) { badgeClass = 'expert'; badgeText = 'Migration Guardian'; desc = "Outstanding. You'd catch these in any code review. SchemaLens would have flagged them even faster."; }
+  else if (pct >= 50) { badgeClass = 'solid'; badgeText = 'Migration Aware'; desc = "Solid instincts, but a few got through. SchemaLens detects all 10 of these automatically."; }
+
+  const review = answers.map((a, i) => {
+    const q = questions[i];
+    const verdict = q.verdict;
+    const verdictEmoji = verdict === 'safe' ? '✅' : verdict === 'risky' ? '⚠️' : '🚨';
+    return `
+    <div class="review-item">
+      <span class="icon">${a.correct ? '✅' : '❌'}</span>
+      <div>
+        <div class="q-title">${verdictEmoji} Q${i + 1}: ${escapeHtml(q.text)}</div>
+        <div class="q-answer">Correct: ${escapeHtml(q.options.find(o => o.correct).text)}</div>
+      </div>
+    </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="question-card result-card">
+      <div class="result-score">${pct}%</div>
+      <div class="result-label">${badgeText}</div>
+      <div class="result-badge ${badgeClass}">${score}/${questions.length} correct</div>
+      <div class="result-desc">${desc}</div>
+      <div class="share-row">
+        <button class="btn btn-secondary" onclick="copyResult()">📋 Copy Result</button>
+        <button class="btn btn-secondary" onclick="tweetResult()">🐦 Share on X</button>
+        <button class="btn btn-secondary" onclick="linkedinResult()">💼 Share on LinkedIn</button>
+        <button class="btn btn-primary" onclick="startQuiz()">↻ Retake Quiz</button>
+      </div>
+      <div class="review-list">${review}</div>
+      <div class="cta-banner" style="margin-top:32px;">
+        <h3>SchemaLens caught all ${questions.length} of these automatically</h3>
+        <p>Paste two schemas, get instant breaking change detection, risk scoring, and safe migration scripts.</p>
+        <a href="../app.html" class="btn btn-primary">Try SchemaLens Free →</a>
+        <a href="../schema-examples.html" class="btn btn-secondary" style="margin-left:8px;">See More Examples</a>
+      </div>
+    </div>
+  `;
+
+  // Analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'breaking_quiz_complete', { score, total: questions.length, pct, badge: badgeText });
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function copyResult() {
+  const pct = Math.round((score / questions.length) * 100);
+  const text = `I scored ${pct}% on the Schema Breaking Change Quiz by @SchemaLens (${score}/${questions.length} correct). Can you spot the migrations that break production? https://schemalens.tech/tools/schema-breaking-change-quiz.html`;
+  navigator.clipboard.writeText(text).then(() => alert('Result copied to clipboard!'));
+}
+
+function tweetResult() {
+  const pct = Math.round((score / questions.length) * 100);
+  const text = `I scored ${pct}% on the Schema Breaking Change Quiz by @SchemaLens. Can you spot the migrations that break production?`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent('https://schemalens.tech/tools/schema-breaking-change-quiz.html'), '_blank');
+}
+
+function linkedinResult() {
+  const url = 'https://schemalens.tech/tools/schema-breaking-change-quiz.html';
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
+}
+
+renderStart();
+</script>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

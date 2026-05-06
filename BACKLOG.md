@@ -19,17 +19,20 @@
 ### Conversion — Unblocked (Buildable Now)
 - [x] **P1** Free tier migration teaser — show first 5 lines unblurred with copy button (Day 99)
 - [x] **P1** Lifetime Pro $39 one-time tier — added to pricing, app paywall, license modal, exit-intent, schema.org, FAQ (Day 99)
-- [x] **P1** A/B test free tier teaser vs fully blurred — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open (Day 101)
+- [x] **P1** A/B test free tier teaser vs fully blurred — 50/50 split in app.html, variant-tagged analytics (Day 101)
 - [x] **P1** Pro value checklist in paywall — 6-feature visual checklist on migration + ORM paywalls (Day 102)
-- [x] **P1** In-app feedback capture — `/api/feedback.js` + paywall form asking "What would make you upgrade?" (Day 102)
-- [x] **P1** Fix type-change safety warnings — `change.oldType` → `change.old` bug broke 5 critical warnings (Day 102)
-- [x] **P1** Hardcore product QA — audit every warning/diff path for similar bugs. Found and fixed 3 silent bugs: index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. 14 new warning tests. (Day 103)
-- [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase/Vercel logs once submissions arrive. Build the most-requested feature.
+- [x] **P1** In-app feedback capture — `/api/feedback.js` + paywall form (Day 102)
+- [x] **P1** Fix type-change safety warnings — `change.oldType` → `change.old` bug (Day 102)
+- [x] **P1** Hardcore product QA — 3 silent bugs fixed, 14 warning tests added (Day 103)
+- [x] **P1** Viral distribution asset — Schema Breaking Change Quiz with before/after diffs, shareable scores (Day 104)
+- [ ] **P1** Dynamic OG images for quiz scores — extend `/api/share.js` to generate shareable score cards for Twitter/LinkedIn previews
+- [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
 ### Content — SEO Engine (Unblocked)
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
+- [ ] **P2** Schema diff guide for popular frameworks (Laravel, Django, Rails, Prisma) — targets high-intent dev searches
 
 ### Business & Ops
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
@@ -122,6 +125,10 @@
 ### Day 103 (May 6)
 - **QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. (1) Index changes invisible to diff engine — `diffTable` never compared indexes, breaking index drop warnings and `CREATE INDEX CONCURRENTLY` tip. (2) DECIMAL precision regex failed on spaced types like `DECIMAL ( 10 , 2 )`. (3) Inline PRIMARY KEY drop never fired warnings because code only checked `constraintsRemoved`, not `columnsModified`. Test suite expanded 20→34 tests.
 
+### Day 104 (May 6)
+- **Distribution:** Schema Breaking Change Quiz (`tools/schema-breaking-change-quiz.html`) — interactive 10-question quiz with before/after diff visuals, real-world migration scenarios, 3-option answers (Safe/Risky/Breaking), educational explanations, score tracking with localStorage best score, social sharing (X, LinkedIn, copy), strong product CTA. Cross-linked on index.html, tools.html, footer. sitemap.xml updated.
+- **Docs:** README.md tool count updated 23→32+, missing tools added to list.
+
 ---
 
-*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Build one high-leverage distribution asset that doesn't require human help (e.g., interactive demo video, shareable comparison graphic).*
+*Backlog reprioritized May 6, 2026. Next highest-priority unblocked buildable task: Dynamic OG images for quiz scores to make sharing even more viral.*
