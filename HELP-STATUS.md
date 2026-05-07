@@ -31,6 +31,21 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 # HELP-REQUEST.md — SchemaLens Human Help Request
 
 ## What
+Execute our two highest-priority distribution events: Product Hunt launch AND Show HN post. Both are fully prepared — you just need to copy-paste and submit.
+
+## Steps
+
+### 1. Product Hunt Launch (~30 min)
+1. Read `marketing/product-hunt-launch.md` for the complete checklist.
+2. Create a Product Hunt account (if not already created).
+3. Go to https://www.producthunt.com/posts/new and create a new post with:
+   - **Name:** SchemaLens
+   -
+
+### [HELP] HELP-REQUEST.md — SchemaLens Human Help Request
+# HELP-REQUEST.md — SchemaLens Human Help Request
+
+## What
 Execute the Product Hunt launch for SchemaLens. All assets are pre-built and ready. This is our #1 distribution priority and is blocking revenue.
 
 ## Steps

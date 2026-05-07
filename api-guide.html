@@ -425,6 +425,26 @@ func main() {
       </div>
     </div>
 
+    <div class="guide-section" style="background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(99,102,241,0.05) 100%); border-radius: var(--radius); padding: 28px;">
+      <h2>🆓 Free Diff API — No License Key Required</h2>
+      <p>Perfect for CI/CD pipelines, open-source projects, and quick checks. Returns a summarized diff with a migration teaser.</p>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="url">https://schemalens.tech/api/free-diff</span>
+      </div>
+      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/free-diff \
+  -H "Content-Type: application/json" \
+  -d '{
+    "schemaA": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
+    "schemaB": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));",
+    "dialect": "postgres",
+    "format": "json"
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">
+        <strong>Free tier limits:</strong> 15 requests/minute. Response includes summary, risk score, first 5 breaking changes, and first 5 lines of migration SQL.
+        <a href="pricing.html">Upgrade to Pro</a> for unlimited access and full migration generation.
+      </p>
+    </div>
+
     <div class="guide-section">
       <h2>📤 Step 3 — Understand the Response</h2>
       <pre class="code-block"><code>{

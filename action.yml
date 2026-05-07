@@ -2,7 +2,7 @@ name: 'SchemaLens Schema Diff'
 branding:
   icon: 'git-compare'
   color: 'indigo'
-description: 'Compare SQL schemas and post diff comments on PRs using SchemaLens'
+description: 'Compare SQL schemas and post diff comments on PRs. Free tier — no license key required.'
 inputs:
   old-schema-path:
     description: 'Path to the old schema SQL file'
@@ -15,10 +15,10 @@ inputs:
     default: 'postgres'
     required: false
   license-key:
-    description: 'SchemaLens Pro license key for API access'
-    required: true
+    description: 'SchemaLens Pro license key for full migration output. Free tier works without this.'
+    required: false
   format:
-    description: 'Output format: json | markdown | sql'
+    description: 'Output format: json | markdown | sql (sql requires license key)'
     default: 'markdown'
     required: false
   fail-on-breaking:
@@ -35,30 +35,60 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Diff schemas with SchemaLens API
+    - name: Diff schemas with SchemaLens
       id: diff
       shell: bash
       run: |
         set -e
         OLD_SQL=$(cat "${{ inputs.old-schema-path }}" | jq -Rs .)
         NEW_SQL=$(cat "${{ inputs.new-schema-path }}" | jq -Rs .)
+        DIALECT="${{ inputs.dialect }}"
+        FORMAT="${{ inputs.format }}"
+        LICENSE_KEY="${{ inputs.license-key }}"
 
-        RESPONSE=$(curl -s -X POST "https://schemalens.tech/api/diff" \
-          -H "Content-Type: application/json" \
-          -H "X-License-Key: ${{ inputs.license-key }}" \
-          -d "{\"schemaA\":${OLD_SQL},\"schemaB\":${NEW_SQL},\"dialect\":\"${{ inputs.dialect }}\",\"format\":\"${{ inputs.format }}\"}")
+        # Determine endpoint
+        if [ -n "$LICENSE_KEY" ]; then
+          ENDPOINT="https://schemalens.tech/api/diff"
+          HEADERS="-H \"X-License-Key: $LICENSE_KEY\""
+        else
+          ENDPOINT="https://schemalens.tech/api/free-diff"
+          HEADERS=""
+        fi
+
+        # Build request
+        BODY=$(jq -n \
+          --arg schemaA "$(cat ${{ inputs.old-schema-path }})" \
+          --arg schemaB "$(cat ${{ inputs.new-schema-path }})" \
+          --arg dialect "$DIALECT" \
+          --arg format "$FORMAT" \
+          '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+
+        if [ -n "$LICENSE_KEY" ]; then
+          RESPONSE=$(curl -s -X POST "$ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -H "X-License-Key: $LICENSE_KEY" \
+            -d "$BODY")
+        else
+          RESPONSE=$(curl -s -X POST "$ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -d "$BODY")
+        fi
 
         echo "response=${RESPONSE}" >> "$GITHUB_OUTPUT"
 
-        # Extract breaking change count for conditional failing
-        BCOUNT=$(echo "$RESPONSE" | jq -r '.summary.breakingChangeCount // 0')
+        # Extract breaking change count
+        BCOUNT=$(echo "$RESPONSE" | jq -r '.summary.breakingChangeCount // .breakingChanges | length // 0')
         echo "breaking_count=${BCOUNT}" >> "$GITHUB_OUTPUT"
 
-        # Print markdown or sql output to logs
+        # Print output to logs
         if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
           echo "$RESPONSE" | jq -r '.markdown'
         elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
           echo "$RESPONSE" | jq -r '.migration'
+        elif echo "$RESPONSE" | jq -e '.migrationTeaser' >/dev/null 2>&1; then
+          echo "--- SchemaLens Free Diff (upgrade for full migration) ---"
+          echo "$RESPONSE" | jq -r '.migrationTeaser'
+          echo "... $(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0') total lines. Get Pro at https://schemalens.tech/pricing.html"
         fi
 
     - name: Fail on breaking changes
@@ -74,7 +104,33 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.github-token }}
       run: |
-        BODY=$(echo '${{ steps.diff.outputs.response }}' | jq -r '.markdown // .migration // "Schema diff completed."')
+        RESPONSE='${{ steps.diff.outputs.response }}'
+        if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
+          BODY=$(echo "$RESPONSE" | jq -r '.markdown')
+        elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
+          BODY=$(echo "$RESPONSE" | jq -r '.migration')
+          BODY="## Schema Diff Report\n\n\`\`\`sql\n${BODY}\n\`\`\`"
+        else
+          TEASER=$(echo "$RESPONSE" | jq -r '.migrationTeaser // "No migration needed."')
+          TOTAL=$(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0')
+          RISK=$(echo "$RESPONSE" | jq -r '.riskScore.label // "Unknown"')
+          SCORE=$(echo "$RESPONSE" | jq -r '.riskScore.score // 0')
+          BC=$(echo "$RESPONSE" | jq -r '.summary.breakingChangeCount // (.breakingChanges | length // 0)')
+          BODY="## 🔍 SchemaLens Schema Diff (Free Tier)
+
+**Risk:** ${RISK} (${SCORE}/100) | **Breaking changes:** ${BC}
+
+### Migration Preview
+\`\`\`sql
+${TEASER}
+\`\`\`
+
+*${TOTAL} total migration lines. [Unlock full migration with SchemaLens Pro](https://schemalens.tech/pricing.html)*
+
+---
+*Generated by [SchemaLens GitHub Action](https://schemalens.tech/github-action.html)*"
+        fi
+
         PAYLOAD=$(jq -n --arg body "$BODY" '{body: $body}')
         curl -s -X POST \
           -H "Authorization: token $GH_TOKEN" \
