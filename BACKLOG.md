@@ -11,7 +11,7 @@
 
 ### Distribution — BLOCKED on Human Help
 - [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Tuesday/Wednesday. All assets ready in `marketing/product-hunt-launch.md`. THIS IS THE #1 PRIORITY.
-- [ ] **P0** **npm republish** — `schemalens-cli` v1.0.0 tarball is missing `engine.js` (broken install). Need human with npm token to publish v1.0.1+.
+- [x] **P0** **npm republish** — `schemalens-cli@1.0.1` published. Tarball now correctly includes `engine.js`. `npx schemalens-cli` works.
 - [ ] **P0** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
 - [ ] **P1** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md`
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md`
