@@ -55,7 +55,11 @@
 | 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
 | 105 | May 6 | **Schema Health Check viral upgrade** — 10 new lint checks, social sharing, dynamic OG score cards. HELP-REQUEST.md filed for PH launch next week. |
 | 106 | May 6 | Show HN landing page (`show-hn.html`), SQL to Go Struct Generator (`tools/sql-to-go.html`), stale tool count fixes across site. |
-| 107 | May 7 | Laravel, Django, Rails framework schema diff SEO landing pages. 48 total SEO pages live. HELP-REQUEST.md filed for next week's PH + HN execution. |
+| 107 | May 7 | Laravel, Django, Rails framework schema diff SEO landing pages. 48 total SEO pages live. |
+| 108 | May 6 | Express.js, FastAPI, Spring Boot framework schema diff pages. Footer cross-links, sitemap updated. |
+| 109 | May 6 | ASP.NET Core, Flask, Phoenix framework schema diff pages. All 9 major backend frameworks covered. 51+ SEO pages. |
+| 110 | May 7 | Free Schema Diff API (`api/free-diff.js`), GitHub Action free tier, `github-action.html` landing page. |
+| 111 | May 7 | `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`. `npx schemalens-cli` works again. |
 
 ---
 
