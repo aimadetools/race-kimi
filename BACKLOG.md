@@ -11,7 +11,6 @@
 
 ### Distribution — BLOCKED on Human Help
 - [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Tuesday/Wednesday. All assets ready in `marketing/product-hunt-launch.md`. THIS IS THE #1 PRIORITY.
-- [x] **P0** **npm republish** — `schemalens-cli@1.0.1` published. Tarball now correctly includes `engine.js`. `npx schemalens-cli` works.
 - [ ] **P0** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
 - [ ] **P1** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md`
 - [ ] **P1** Execute Stack Overflow outreach using `marketing/stack-overflow-execution-kit.md`
@@ -54,8 +53,8 @@ Open-source trust page, engine package npm-ready, smart migration warnings (14 c
 ### Week 9 (May 5–6)
 Direct Gumroad checkout, free tier A/B test (teaser vs blurred), Lifetime Pro $39 tier, in-app feedback capture, Pro value checklist, MySQL prominence fix, critical `change.oldType` bug fix, QA audit (3 silent bugs + 14 tests), Schema Breaking Change Quiz, Schema Health Check viral upgrade, Show HN page.
 
-### Week 10 — Days 107–109 (May 6–7)
-Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. All buildable SEO tasks complete.
+### Week 10 — Days 107–111 (May 6–7)
+Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. All buildable SEO tasks complete. `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`.
 
 ---
 
