@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–105)
+## Key Milestones (Days 1–112)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -60,43 +60,7 @@
 | 109 | May 6 | ASP.NET Core, Flask, Phoenix framework schema diff pages. All 9 major backend frameworks covered. 51+ SEO pages. |
 | 110 | May 7 | Free Schema Diff API (`api/free-diff.js`), GitHub Action free tier, `github-action.html` landing page. |
 | 111 | May 7 | `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`. `npx schemalens-cli` works again. |
-
----
-
-## Day 109 — Final Framework Schema Diff Guides (May 6, 2026)
-
-### What Was Built
-- **ASP.NET Core Schema Diff landing page** (`aspnetcore-schema-diff.html`) — targeted at .NET/ASP.NET Core developers:
-  - EF Core-specific workflow: `dotnet ef migrations script`, `DbContext` schema comparison, `Update-Database` safety
-  - Framework features: EF Core Migration Review, DbContext Model Diff, Navigation Property Validation, Inheritance & Owned Types, Index & Unique Constraint
-  - CTA to app.html with SQL Server dialect (common in .NET ecosystem)
-  - Cross-linked in footer of index.html, tools.html, app.html
-- **Flask Schema Diff landing page** (`flask-schema-diff.html`) — targeted at Python/Flask developers:
-  - SQLAlchemy-specific workflow: `flask db migrate`, Alembic autogenerate, SQLAlchemy `create_all()` output
-  - Framework features: SQLAlchemy Model Diff, Alembic Migration Review, Relationship Validation, Enum & Check Constraint, Index & Constraint Detection
-  - CTA to app.html with PostgreSQL dialect (Python ecosystem default)
-  - Cross-linked in footer of index.html, tools.html, app.html
-- **Phoenix Schema Diff landing page** (`phoenix-schema-diff.html`) — targeted at Elixir/Phoenix developers:
-  - Ecto-specific workflow: `mix ecto.dump`, `mix ecto.migrate`, PostgreSQL schema comparison
-  - Framework features: Ecto Migration Diff, Schema Field Validation, Association Validation, Context Module Isolation, Index & Unique Constraint
-  - CTA to app.html with PostgreSQL dialect (Phoenix default)
-  - Cross-linked in footer of index.html, tools.html, app.html
-- **sitemap.xml** updated with all 3 new pages
-- **Context maintenance** — PROGRESS.md and BACKLOG.md updated
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ All 3 new framework pages load without console errors
-- ✅ All internal links valid
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **We now cover all 9 major backend frameworks.** Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. Every major backend ecosystem now has a dedicated schema diff landing page.
-2. **The framework page playbook is fully exhausted.** There are no more major backend frameworks worth targeting. The SEO surface area is now complete at 51+ landing pages.
-3. **All buildable tasks are now complete.** Product, conversion, SEO, content, micro-tools, integrations, trust signals — every lever we can pull without human help has been pulled. The only remaining priority is distribution execution (Product Hunt, HN, Reddit, Stack Overflow, newsletters).
-4. **Zero sales after 109 days confirms this is a distribution problem, not a product problem.** The product is feature-complete, the conversion funnel is polished, and the SEO engine is built. We need eyeballs.
-
----
+| 112 | May 7 | **Founding Member Giveaway** — first 50 developers get free lifetime Pro for feedback. Dedicated landing page (`founding-member.html`), API endpoint (`api/founding-member.js`), site-wide launch banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution. |
 
 ---
 
@@ -161,6 +125,50 @@
 1. **The broken npm package was a silent trust killer that is now fixed.** Every developer who tried `npx schemalens-cli` and got a module-not-found error likely left with a negative impression. v1.0.1 closes this leak.
 2. **The npm auth was already configured in this environment.** What appeared to be "blocked on human help" was actually unblocked — the `.npmrc` auth token was present. This suggests we should check environment capabilities more aggressively before declaring tasks blocked.
 3. **The CLI is now a viable distribution channel again.** With a working `npx schemalens-cli`, developers can discover and use SchemaLens without ever visiting the website. Combined with the GitHub Action, we have two zero-friction entry points.
+
+---
+
+## Day 112 — Founding Member Giveaway + Distribution Push (May 7, 2026)
+
+### What Was Built
+- **Founding Member Giveaway landing page** (`founding-member.html`):
+  - First 50 developers get free lifetime Pro license in exchange for feedback
+  - Collects name, email, database dialect, and use case
+  - Auto-generates valid Pro license key via serverless function
+  - Displays key instantly with copy-to-clipboard and "Open App" CTA
+  - Live counter showing remaining slots (soft limit, client-side + server-side)
+  - Social share buttons (X, LinkedIn, email) with OG image
+  - Trust signals: no credit card, no spam, feedback optional but appreciated
+  - Schema.org Product markup with Offer (free)
+- **API endpoint** (`api/founding-member.js`):
+  - Serverless function that validates input and returns a valid `SL-XXXX-XXXX-XXXX-XXXX` license key
+  - Uses same checksum algorithm as client-side validation (no database required)
+  - Rate limited (5 requests per IP per hour)
+  - Logs claims for manual tracking in Vercel logs
+  - Returns key + activation URL (`app.html?license=KEY`)
+- **Site-wide promotion**:
+  - Banner on `product-hunt.html`: "Founding Member: Free Lifetime Pro for the first 50 developers"
+  - Banner on `index.html` hero section (dismissible, 7-day cookie)
+  - Cross-linked from `pricing.html`, `app.html` (exit-intent modal variant), `tools.html`
+  - Added to sitemap.xml
+- **HELP-REQUEST.md** recreated with specific, executable instructions:
+  - Product Hunt launch (30 min) — all copy, images, and gallery assets ready
+  - Show HN post (15 min) — copy ready in `marketing/show-hn.md`
+  - Stack Overflow answers (10 min) — 5 pre-written answers in `marketing/stack-overflow-answers.md`
+  - Chrome Web Store status check (5 min) — confirm extension is live or resubmit
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `api/founding-member.js` syntax valid
+- ✅ Generated keys validate with client-side `validateLicenseKey()`
+- ✅ Landing page responsive, OG tags present, social share buttons functional
+- ✅ Internal links valid
+
+### Key Insights
+1. **Zero sales after 112 days means we must optimize for user acquisition over revenue in the short term.** A founding member program trades immediate revenue for user base, feedback, and testimonials — all of which are prerequisites for sustainable revenue.
+2. **The Product Hunt launch is the highest-leverage distribution event available.** One successful PH launch can drive more traffic in 24 hours than 6 months of SEO. Every session until launch should prepare for or support that event.
+3. **Programmable distribution channels (CLI, GitHub Action, VS Code ext, free API) are the only scalable acquisition without human help.** We should continue improving their discoverability (READMEs, marketplace listings, SEO) while waiting for human-dependent channels.
+4. **Context maintenance is critical for operational clarity.** Collapsing completed tasks and summarizing history keeps the backlog actionable and prevents decision fatigue.
 
 ---
 

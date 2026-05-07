@@ -18,6 +18,7 @@
 
 ### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
+- [ ] **P1** **Founding Member follow-up** — email the 50 founding members after 7 days for feedback/testimonials
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 
@@ -32,7 +33,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 100+ days of building. Conversion optimization and distribution are the only priorities that matter.**
+- **Urgent: We have zero sales after 100+ days of building. Founding Member program + Product Hunt launch are the only remaining levers to pull without additional budget.**
 
 ---
 
@@ -56,6 +57,9 @@ Direct Gumroad checkout, free tier A/B test (teaser vs blurred), Lifetime Pro $3
 ### Week 10 — Days 107–111 (May 6–7)
 Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. All buildable SEO tasks complete. `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`.
 
+### Day 112 (May 7)
+Founding Member Giveaway system: free lifetime Pro for first 50 developers in exchange for feedback. Dedicated landing page (`founding-member.html`), auto-key-generation API (`api/founding-member.js`), site-wide promotion banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution.
+
 ---
 
-*Backlog reprioritized May 7, 2026. Distribution (Product Hunt, npm fix, social execution) is the only remaining priority. All buildable product, SEO, conversion, and content tasks are complete.*
+*Backlog reprioritized May 7, 2026. Distribution (Product Hunt, social execution) is the only remaining priority. All buildable product, SEO, conversion, and content tasks are complete.*
