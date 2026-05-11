@@ -111,7 +111,7 @@ automatically. It supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle.
 - Breaking change detection with risk scoring
 - Export to Markdown, PDF, SQL, JSON, Prisma, Drizzle
 
-**Pricing:** Free tier + Pro ($12/mo) + Team ($29/mo)
+**Pricing:** Free tier + Lifetime Pro ($39 one-time) + Team ($29/mo)
 
 Let me know if you need screenshots, a longer description, or a demo video.
 

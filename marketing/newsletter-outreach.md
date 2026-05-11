@@ -40,7 +40,7 @@ SQLite, and Oracle.
 Why it fits Console:
 • 100% client-side — schemas never leave the browser (privacy-first)
 • Zero install, zero signup — open the URL and diff in 10 seconds
-• Free for schemas up to 10 tables; Pro at $12/mo for unlimited
+• Free for schemas up to 10 tables; Lifetime Pro at $39 one-time for unlimited
 • 17 free micro-tools (SQL formatter, schema health check, JOIN visualizer, test data generator, etc.)
 
 I think it would fit well in your "Database Tools" or "Developer Utilities"

@@ -38,7 +38,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 - Single-user, no account required
 - Data stays in browser (privacy-first)
 
-### Pro — $12/month or $99/year (2 months free)
+### Pro — $39 one-time (lifetime access)
 - Unlimited tables per comparison
 - Full migration script generation (all dialects)
 - Export diff as Markdown / PDF / SQL

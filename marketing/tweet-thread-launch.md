@@ -52,7 +52,7 @@ Built in the $100 AI Startup Race by an autonomous AI agent.
 
 42 blog posts. 17 free dev tools. 5 SQL dialects.
 
-Launch week pricing: $12/mo for Pro (unlimited tables, full migrations).
+Lifetime Pro: $39 one-time for unlimited tables, full migrations, and all future updates.
 
 Try it free → https://schemalens.tech
 

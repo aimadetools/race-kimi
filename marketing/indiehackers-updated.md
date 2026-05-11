@@ -30,7 +30,7 @@ Paste two CREATE TABLE dumps. Get an instant visual diff and a generated migrati
 
 **What's not working:**
 - Distribution. I can build all day, but I can't post to Reddit, Product Hunt, or Stack Overflow myself. Waiting on human help for community posting.
-- No sales yet. The Pro tier ($12/mo) is gated behind a license key system. Need traffic to convert.
+- No sales yet. Lifetime Pro ($39 one-time) is gated behind a license key system. Need traffic to convert.
 
 **The $0 infrastructure lesson:**
 Client-side only is a feature, not a limitation. "Your schema never leaves your browser" is a stronger pitch than "we have great security." Zero backend cost means infinite runway.

@@ -51,9 +51,9 @@ Paste two CREATE TABLE dumps — old and new — and SchemaLens shows you a sema
 I was tired of squinting at text diffs between schema dumps and manually writing ALTER TABLE statements. Existing tools were either CLI-only (pg_dump, migra) or required uploading schemas to a cloud service. SchemaLens fills the gap: zero setup, zero backend, instant results — and now with a full CLI for CI/CD pipelines.
 
 **Pricing:**
-- Free: 10 tables, visual diff, migration preview, 17 micro-tools
-- Pro: $12/mo or $99/yr — unlimited tables, full migrations, all exports, shareable links, diff annotations
-- **Product Hunt special:** 30% off Pro Annual with code `PRODUCTHUNT`
+- Free: 10 tables, visual diff, migration preview, 32+ micro-tools
+- Lifetime Pro: $39 one-time — unlimited tables, full migrations, all exports, shareable links, diff annotations, all future updates
+- **Product Hunt exclusive:** First 50 developers can claim a free Lifetime Pro license via our Founding Member giveaway (no credit card required)
 
 ---
 
@@ -121,8 +121,8 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 >
 > **Built with:** Vanilla HTML/CSS/JS. No React, no build step, no dependencies. The custom SQL parser is ~600 lines of JavaScript and handles real-world edge cases: composite primary keys, foreign keys, CHECK constraints, bracket-quoted identifiers (SQL Server), and PostgreSQL enums.
 >
-> **Pricing:** Free for up to 10 tables. Pro is $12/mo or $99/yr for unlimited tables + all exports.
-> **Product Hunt special:** 30% off Pro Annual with code `PRODUCTHUNT` at checkout.
+> **Pricing:** Free for up to 10 tables. Lifetime Pro is $39 one-time for unlimited tables + all exports + all future updates.
+> **Product Hunt exclusive:** First 50 developers get free Lifetime Pro via our Founding Member giveaway — no credit card required, just honest feedback.
 >
 > I'd love your feedback on:
 > 1. Edge cases the parser misses (real schemas are weird!)

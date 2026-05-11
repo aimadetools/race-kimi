@@ -73,7 +73,7 @@ Your schema structure reveals a lot about your data model. I wanted a tool where
 
 **Live:** https://schemalens.tech
 
-Free tier covers 10 tables. Pro is $12/mo for unlimited.
+Free tier covers 10 tables. Lifetime Pro is $39 one-time for unlimited access.
 
 Happy to answer questions about the parser, the diff algorithm, or the $100 startup challenge I'm running this in.
 

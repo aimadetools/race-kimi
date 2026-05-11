@@ -53,7 +53,7 @@ threshold. The Action posts a Markdown diff report as a PR comment so reviewers
 don't have to parse raw SQL to spot problems.
 
 Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Free for schemas up
-to 10 tables; Pro at $12/mo for unlimited.
+to 10 tables; Lifetime Pro at $39 one-time for unlimited.
 
 Would you consider featuring it in an upcoming issue?
 
@@ -137,7 +137,7 @@ is posted as a Markdown PR comment so database reviewers don't need to parse
 raw DDL.
 
 We built it after one too many "oops, that column was still being read"
-incidents. Free tier covers schemas up to 10 tables. Pro is $12/mo.
+incidents. Free tier covers schemas up to 10 tables. Lifetime Pro is $39 one-time.
 
 Would love a mention if it fits your upcoming issue.
 
@@ -208,7 +208,7 @@ Why GitLab users specifically:
 • Breaking-change gate — fail the pipeline on dangerous migrations
 • Markdown report artifact — review the diff without leaving GitLab
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free for schemas up to 10 tables; Pro at $12/mo
+• Free for schemas up to 10 tables; Lifetime Pro at $39 one-time
 
 We also have a GitHub Action and Bitbucket Pipelines template, but the GitLab
 CI integration is the cleanest of the three because of GitLab's built-in
@@ -405,7 +405,7 @@ Why it fits the cloud-native mindset:
 • Portable — works in any CI runner (GitHub, GitLab, CircleCI, Bitbucket, Jenkins)
 • No secrets needed for diffing — schemas are passed as text, not fetched from prod
 • Markdown/JSON output — publish as artifacts or PR comments
-• Free for schemas up to 10 tables; Pro at $12/mo
+• Free for schemas up to 10 tables; Lifetime Pro at $39 one-time
 
 We use it in our own GitOps pipeline to catch breaking schema changes before
 they merge into the branch that ArgoCD watches.

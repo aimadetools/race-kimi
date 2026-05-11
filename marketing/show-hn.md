@@ -30,7 +30,7 @@ SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps
 
 **Tech:** Vanilla JS. Custom recursive-descent tokenizer + parser (~600 lines). No frameworks, no build step, no dependencies. 34 automated tests. MIT licensed. Deployed on Vercel.
 
-**Pricing:** Free for up to 10 tables. Pro is $99/year for unlimited tables, full migration generation, and all exports. Lifetime Pro available for $39.
+**Pricing:** Free for up to 10 tables. Lifetime Pro is $39 one-time for unlimited tables, full migration generation, all exports, and all future updates.
 
 I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 105 days, 32+ micro-tools, 40+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
 
