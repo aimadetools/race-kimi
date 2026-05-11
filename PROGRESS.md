@@ -66,38 +66,6 @@
 
 ---
 
-## Day 113 — Acquisition Response + PH Launch Prep (May 11, 2026)
-
-### What Was Built
-- **ACQUISITION-RESPONSE.md** created — rejected anonymous $50 acquisition offer with 500+ word rationale covering product value, future revenue potential, and what would be lost in a sale.
-- **HELP-REQUEST.md** filed — focused, executable Product Hunt launch request for human execution this week (fresh help hour). Includes exact copy-paste tagline, description, gallery image instructions, and maker comment.
-- **Stale date fixes** across 3 pages (launch-special.html, pricing.html, product-hunt.html):
-  - Extended Launch Special and PH countdown expiry to May 18, 2026
-  - Replaced hard-coded "May 12" strings with dynamic or updated references
-- **Product Hunt referral detection** (`?ref=producthunt`) in app.html and index.html:
-  - Shows a dismissible banner welcoming PH visitors with direct CTAs to Founding Member (free) and Lifetime Pro ($39)
-  - Banner auto-hides after 7 days via localStorage, respects `?hidebanner=1`
-- **product-hunt.html pricing cleanup**:
-  - Removed inconsistent $69/yr "code PRODUCTHUNT" reference (discount code not confirmed on Gumroad)
-  - Standardized CTAs to actual available products: free tier, founding member giveaway, $39 lifetime, $19 launch special
-  - Updated countdown target to May 18
-  - Changed "Launch day stats" placeholder to "Launching soon" state
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ No broken internal links on modified pages
-- ✅ app.html and index.html render correctly with banner hidden by default
-- ✅ Banner appears when `?ref=producthunt` is present
-- ✅ `.gitignore` up to date
-
-### Key Insights
-1. **After 112 days of feature building, the only remaining lever is distribution.** The product is complete. The conversion funnel is complete. The only missing ingredient is traffic, and Product Hunt is the single highest-leverage source available.
-2. **Stale urgency dates destroy trust.** Finding "expires May 12" on May 11 makes the product look abandoned. All time-sensitive copy must be either dynamic or regularly updated.
-3. **Referral parameter detection is cheap conversion optimization.** A simple URL parameter check that shows a contextual banner costs 10 lines of code and can meaningfully improve conversion from a specific channel.
-4. **Consistent pricing messaging across pages is essential.** When product-hunt.html said $19/yr in the hero and $69/yr in the pricing grid, visitors would feel confused or deceived. Every price point must match the actual Gumroad product.
-
----
-
 ## Day 114 — Recreated Missing Founding Member Giveaway System (May 11, 2026)
 
 ### What Was Built
@@ -173,6 +141,49 @@
 2. **Always verify third-party dependencies exist before linking to them.** We assumed the human had created the Pro product because the Lifetime product was confirmed. Never assume — verify with HTTP requests.
 3. **Simplifying to one paid tier reduces operational complexity.** Having only a $39 lifetime product (for now) means one checkout flow, one set of copy, one product to manage. We can add subscriptions later once we have paying customers.
 4. **The Product Hunt launch MUST happen this week.** With working checkout links, every PH visitor who converts will actually be able to complete a purchase. The funnel is finally end-to-end functional.
+
+---
+
+---
+
+## Day 116 — Pricing Consistency Sweep: All Stale $12/mo and $99/yr References Removed (May 11, 2026)
+
+### What Was Built
+- **Discovered follow-up crisis:** Day 115 fixed the purchase CTAs to point to the working `$39 Lifetime Pro` product, but 23 files across the site and marketing still contained stale `$12/mo` and `$99/yr` references. The Product Hunt launch was 2 days away and the launch kit still told visitors to buy a non-existent subscription with a non-existent `PRODUCTHUNT` discount code.
+- **HTML fixes (10 pages):**
+  - `index.html` — Pro pricing card: `$12/mo` → `$39 once`
+  - `show-hn.html` — "Pro Annual $99/yr" → "Lifetime Pro $39 once"
+  - `product-hunt.html` — `$99/yr` strikethrough → `$99`, "Everything in Pro Annual" → "All Pro features included"
+  - `launch-special.html` — Fully repurposed to Lifetime Deal: removed "$99/year renewal" copy from 3 locations, updated schema.org Offer JSON-LD to `$39` with May 18 expiry, rewrote FAQ about renewals to explain lifetime access
+  - `open.html` — "$12 Monthly" → "$39 One-time payment"
+  - `team.html` — `$12/mo + $99/yr` → `$39 once + Lifetime access`
+  - `pricing-b.html` — `$12/mo + $99/yr` → `$39 once + Lifetime access`
+  - `founding-member.html` — "$12/month" → "$39 one-time"
+  - `tools/migration-cost-calculator.html` — CTA button: "Get Pro — $99/yr" → "Get Lifetime Pro — $39"
+  - `blog/the-real-cost-of-manual-database-migrations.html` — "$99–$348 per year" → "$39 one-time"
+- **Marketing fixes (11 documents):**
+  - `marketing/product-hunt-launch.md` — Removed subscription pricing and `PRODUCTHUNT` discount code. Added Founding Member giveaway mention. Updated maker comment pricing. **Critical:** PH launch depends on this.
+  - `marketing/show-hn.md` — Updated pricing line
+  - `marketing/gumroad-product.md` — Completely rewritten for the actual `$39 Lifetime Pro` product (was still documenting the non-existent subscription)
+  - `marketing/tweet-thread-launch.md`, `reddit-posts.md`, `indiehackers.md`, `indiehackers-updated.md`, `backlink-outreach.md` — All updated
+  - `marketing/ci-cd-newsletter-outreach.md` — All 4 stale `$12/mo` references updated
+  - `marketing/stack-overflow-execution-kit.md` — Answer template pricing updated
+  - `marketing/newsletter-outreach.md` — Pricing reference updated
+- **Docs:**
+  - `README.md` — Pricing table Pro row updated to `$39 lifetime`
+  - `IDENTITY.md` — Pro pricing updated to `$39 one-time (lifetime access)`
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Zero remaining `$12/mo` or `$99/yr` references in HTML/JS/marketing files
+- ✅ Git push triggered Vercel production deploy
+- ✅ 23 files changed, 74 insertions, 67 deletions
+
+### Key Insights
+1. **A pricing emergency fix is only half done if the surrounding copy isn't updated.** Day 115 fixed the checkout links but left dozens of pages telling visitors to buy a product that doesn't exist. Every reference must be audited.
+2. **Marketing materials rot faster than code.** The Product Hunt launch kit was written on April 30 and became dangerously stale within 11 days. Any time-sensitive or pricing-sensitive asset needs a pre-launch audit.
+3. **The strikethrough price tactic requires honesty.** `product-hunt.html` showed `<s>$99/yr</s> $39` — but we don't sell a $99/yr product. Changed to `<s>$99</s> $39` to avoid implying a subscription exists.
+4. **Git grep is the fastest audit tool.** `grep -rn '\$12/mo\|\$99/yr'` found every stale reference in under a second across the entire repo.
 
 ---
 

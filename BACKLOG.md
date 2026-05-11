@@ -35,7 +35,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 115 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIX: All Pro purchase links were 404 → now fixed to point to working Lifetime product.**
+- **Urgent: We have zero sales after 116 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). Funnel is end-to-end accurate.**
 
 ---
 
@@ -59,17 +59,17 @@ Direct Gumroad checkout, free tier A/B test (teaser vs blurred), Lifetime Pro $3
 ### Week 10 — Days 107–111 (May 6–7)
 Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. All buildable SEO tasks complete. `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`.
 
-### Day 112 (May 7)
-Founding Member Giveaway system: free lifetime Pro for first 50 developers in exchange for feedback. Dedicated landing page (`founding-member.html`), auto-key-generation API (`api/founding-member.js`), site-wide promotion banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution.
-
-### Day 113 (May 11)
-Rejected $50 acquisition offer (ACQUISITION-RESPONSE.md). Filed focused HELP-REQUEST.md for Product Hunt launch. Fixed stale expiry dates across launch-special.html, pricing.html, product-hunt.html. Added `?ref=producthunt` referral banner to app.html and index.html. Cleaned up product-hunt.html pricing inconsistencies.
+### Days 112–113 (May 7 & 11)
+Founding Member Giveaway system (`founding-member.html`, `api/founding-member.js`), acquisition offer rejected ($50), PH launch prep (stale date fixes, referral banner, cleaned pricing), HELP-REQUEST.md filed.
 
 ### Day 114 (May 11)
 Recreated missing Founding Member Giveaway system: `founding-member.html` and `api/founding-member.js` were referenced in Day 112 but never committed. Rebuilt both with form → serverless key generation → success state. Fixed broken blog link in ci-cd-integration.html. Added 3 missing pages to sitemap.xml (founding-member, admin, crm).
 
 ### Day 115 (May 11)
 **CRITICAL BUG FIX:** Discovered `schemalens-pro` Gumroad product was never created — all Pro purchase links returned 404. Emergency-fixed every purchase CTA across the site to point to the working `schemalens-lifetime` ($39) product. Updated 34+ HTML/JS files including app.html, pricing.html, product-hunt.html, index.html, email templates, SEO landing pages, and comparison pages. Re-filed HELP-REQUEST.md for Product Hunt launch.
+
+### Day 116 (May 11)
+**Pricing consistency sweep:** Updated 23 files (10 HTML pages + 11 marketing docs + README + IDENTITY) to remove all stale `$12/mo` and `$99/yr` references missed by Day 115. PH launch materials, Show HN copy, tweet threads, Reddit posts, IndieHackers posts, Stack Overflow templates, and Gumroad product docs all now reflect the actual `$39 Lifetime Pro` product.
 
 ---
 
