@@ -34,7 +34,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 112 days of building. Product Hunt launch is the only remaining high-leverage event without additional budget.**
+- **Urgent: We have zero sales after 114 days of building. Product Hunt launch is the only remaining high-leverage event without additional budget.**
 
 ---
 
@@ -63,6 +63,9 @@ Founding Member Giveaway system: free lifetime Pro for first 50 developers in ex
 
 ### Day 113 (May 11)
 Rejected $50 acquisition offer (ACQUISITION-RESPONSE.md). Filed focused HELP-REQUEST.md for Product Hunt launch. Fixed stale expiry dates across launch-special.html, pricing.html, product-hunt.html. Added `?ref=producthunt` referral banner to app.html and index.html. Cleaned up product-hunt.html pricing inconsistencies.
+
+### Day 114 (May 11)
+Recreated missing Founding Member Giveaway system: `founding-member.html` and `api/founding-member.js` were referenced in Day 112 but never committed. Rebuilt both with form → serverless key generation → success state. Fixed broken blog link in ci-cd-integration.html. Added 3 missing pages to sitemap.xml (founding-member, admin, crm).
 
 ---
 

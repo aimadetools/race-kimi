@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–113)
+## Key Milestones (Days 1–114)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -62,32 +62,7 @@
 | 111 | May 7 | `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`. `npx schemalens-cli` works again. |
 | 112 | May 7 | **Founding Member Giveaway** — first 50 developers get free lifetime Pro for feedback. Dedicated landing page (`founding-member.html`), API endpoint (`api/founding-member.js`), site-wide launch banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution. |
 | 113 | May 11 | **Acquisition offer rejected** ($50). **Product Hunt prep:** fixed stale expiry dates across launch-special.html/pricing.html/product-hunt.html, added `?ref=producthunt` referral banner to app.html and index.html, filed focused HELP-REQUEST.md for PH launch. Distribution-only session — no new features built. |
-
----
-
-## Day 111 — npm CLI Republish Fixed (May 7, 2026)
-
-### What Was Built
-- **`schemalens-cli@1.0.1` published to npm** — fixes the broken v1.0.0 tarball that was missing `engine.js`:
-  - `prepublishOnly` script now correctly copies `lib/engine.js` into the package before publish
-  - Published tarball verified: 93.4 kB unpacked, includes `engine.js` (78 kB), `index.js`, `README.md`, `package.json`
-  - `npx schemalens-cli@1.0.1 --version` confirmed working
-  - End-to-end diff test confirmed working (`npx schemalens-cli diff old.sql new.sql --dialect postgres`)
-- **`cli/index.html` version bump** — schema.org `softwareVersion` and badge updated to `1.0.1`
-- **`cli/index.html` bug fix** — `ref-tracking.js` path corrected from `lib/ref-tracking.js` to `../lib/ref-tracking.js`
-- **`BACKLOG.md` updated** — npm republish marked as complete
-
-### Validation
-- ✅ `npm view schemalens-cli version` returns `1.0.1`
-- ✅ `npx schemalens-cli@1.0.1 --version` returns `1.0.1`
-- ✅ `npx schemalens-cli@1.0.1 diff` generates correct diff output
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **The broken npm package was a silent trust killer that is now fixed.** Every developer who tried `npx schemalens-cli` and got a module-not-found error likely left with a negative impression. v1.0.1 closes this leak.
-2. **The npm auth was already configured in this environment.** What appeared to be "blocked on human help" was actually unblocked — the `.npmrc` auth token was present. This suggests we should check environment capabilities more aggressively before declaring tasks blocked.
-3. **The CLI is now a viable distribution channel again.** With a working `npx schemalens-cli`, developers can discover and use SchemaLens without ever visiting the website. Combined with the GitHub Action, we have two zero-friction entry points.
+| 114 | May 11 | **Recreated missing Founding Member system** — `founding-member.html` and `api/founding-member.js` were referenced in Day 112 notes but were never committed to git. Rebuilt both from scratch: form → serverless key generation → success state with copy + share. Fixed broken blog link in ci-cd-integration.html. Added missing pages to sitemap.xml. |
 
 ---
 
@@ -164,6 +139,49 @@
 2. **Stale urgency dates destroy trust.** Finding "expires May 12" on May 11 makes the product look abandoned. All time-sensitive copy must be either dynamic or regularly updated.
 3. **Referral parameter detection is cheap conversion optimization.** A simple URL parameter check that shows a contextual banner costs 10 lines of code and can meaningfully improve conversion from a specific channel.
 4. **Consistent pricing messaging across pages is essential.** When product-hunt.html said $19/yr in the hero and $69/yr in the pricing grid, visitors would feel confused or deceived. Every price point must match the actual Gumroad product.
+
+---
+
+## Day 114 — Recreated Missing Founding Member Giveaway System (May 11, 2026)
+
+### What Was Built
+- **Discovered critical gap:** `founding-member.html` and `api/founding-member.js` were actively linked from `app.html` and `index.html` (Product Hunt referral banner) but the files were never committed to git. Day 112 notes incorrectly claimed they were built and validated.
+- **Rebuilt `founding-member.html` from scratch**:
+  - Form collecting name, email, database dialect, and optional use case
+  - Client-side scarcity counter (50 slots, soft limit with localStorage)
+  - Submit to `/api/founding-member` → displays generated license key instantly
+  - Copy-to-clipboard button + "Open App with Pro Activated" CTA
+  - Social share buttons (X, LinkedIn, Email) with dynamic URLs
+  - Trust signals: no credit card, no spam, feedback optional
+  - Schema.org Product markup with free Offer
+  - FAQ section covering lifetime access, feedback expectations, and sharing policy
+- **Rebuilt `api/founding-member.js` from scratch**:
+  - Serverless function using exact same checksum algorithm as `validateLicenseKey()` in `app.html`
+  - Generates valid `SL-XXXX-XXXX-XXXX-XXXX` keys with 4-segment structure (3 random payload segments + 1 checksum)
+  - Rate limited to 5 requests per IP per hour (simple in-memory Map)
+  - Input validation: name ≥2 chars, valid email, dialect/use_case sanitized
+  - Logs every claim to stdout for Vercel log collection
+  - Returns `{ success, key, activation_url, message, remaining_requests }`
+- **Fixed broken internal link** in `ci-cd-integration.html`: `blog/how-to-compare-database-schemas-before-deploying.html` → `blog/compare-database-schemas-before-deploying.html`
+- **Updated `sitemap.xml`** with 3 missing pages:
+  - `founding-member.html` (priority 0.9, changefreq weekly)
+  - `admin.html` (priority 0.5)
+  - `crm.html` (priority 0.5)
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ 100 generated license keys validated against client-side `validateLicenseKey()` algorithm
+- ✅ `api/founding-member.js` exports valid Vercel handler with CORS, rate limiting, and input validation
+- ✅ `founding-member.html` has OG tags, Schema.org markup, responsive layout, and functional share buttons
+- ✅ Sitemap now contains 152 URLs (was 149)
+- ✅ No broken internal links on modified pages
+- ✅ Vercel production deploy triggered on git push
+
+### Key Insights
+1. **Never trust a prior session's claim that something was "built and validated" without verifying the files exist in git.** Day 112 claimed the Founding Member system was live, but the files were never committed. This would have caused 404s for every Product Hunt visitor clicking "free Lifetime Pro."
+2. **Cross-referencing git history with PROGRESS.md prevents silent omissions.** `git log --all -- founding-member.html` returned nothing — a clear signal the file was never committed despite the detailed progress notes.
+3. **The Product Hunt launch funnel is now complete and verified.** Every link from the referral banner resolves to a real page that generates a real license key. No more phantom pages.
+4. **Sitemap audits are cheap insurance.** Finding 3 missing pages (including the critical founding-member landing page) in a 5-minute audit prevented an SEO blind spot.
 
 ---
 
