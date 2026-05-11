@@ -68,6 +68,63 @@ const pages = [
   { path: '/migration-checklist.html', name: 'Migration Safety Checklist' },
   { path: '/prisma-schema-diff.html', name: 'Prisma Schema Diff Landing' },
   { path: '/drizzle-schema-diff.html', name: 'Drizzle Schema Diff Landing' },
+  { path: '/product-hunt.html', name: 'Product Hunt Landing' },
+  { path: '/show-hn.html', name: 'Show HN Landing' },
+  { path: '/founding-member.html', name: 'Founding Member Landing' },
+  { path: '/launch-special.html', name: 'Launch Special Landing' },
+  { path: '/open-source.html', name: 'Open Source Landing' },
+  { path: '/vscode-extension.html', name: 'VS Code Extension Landing' },
+  { path: '/schema-examples.html', name: 'Schema Examples' },
+  { path: '/schema-templates.html', name: 'Schema Templates' },
+  { path: '/migration-recipes.html', name: 'Migration Recipes' },
+  { path: '/github-action.html', name: 'GitHub Action Landing' },
+  { path: '/book-demo.html', name: 'Book Demo' },
+  { path: '/team.html', name: 'Team' },
+  { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },
+  { path: '/tools/sql-to-orm-converter.html', name: 'SQL to ORM Converter' },
+  { path: '/tools/sql-to-typescript.html', name: 'SQL to TypeScript Generator' },
+  { path: '/tools/sql-query-explainer.html', name: 'SQL Query Explainer' },
+  { path: '/tools/connection-string-parser.html', name: 'Connection String Parser' },
+  { path: '/tools/sql-to-python.html', name: 'SQL to Python Generator' },
+  { path: '/tools/sql-update-generator.html', name: 'SQL UPDATE Generator' },
+  { path: '/tools/sql-delete-generator.html', name: 'SQL DELETE Generator' },
+  { path: '/tools/sql-upsert-generator.html', name: 'SQL UPSERT Generator' },
+  { path: '/tools/sql-case-generator.html', name: 'SQL CASE Generator' },
+  { path: '/tools/sql-select-generator.html', name: 'SQL SELECT Generator' },
+  { path: '/tools/sql-to-go.html', name: 'SQL to Go Generator' },
+  { path: '/tools/safe-migration-checker.html', name: 'Safe Migration Checker' },
+  { path: '/tools/sql-reserved-words-checker.html', name: 'Reserved Words Checker' },
+  { path: '/tools/migration-cost-calculator.html', name: 'Migration Cost Calculator' },
+  { path: '/tools/embed-generator.html', name: 'Embed Generator' },
+  { path: '/tools/badge-generator.html', name: 'Badge Generator' },
+  { path: '/typeorm-schema-diff.html', name: 'TypeORM Schema Diff Landing' },
+  { path: '/sequelize-schema-diff.html', name: 'Sequelize Schema Diff Landing' },
+  { path: '/supabase-schema-diff.html', name: 'Supabase Schema Diff Landing' },
+  { path: '/neon-schema-diff.html', name: 'Neon Schema Diff Landing' },
+  { path: '/cockroachdb-schema-diff.html', name: 'CockroachDB Schema Diff Landing' },
+  { path: '/mariadb-schema-diff.html', name: 'MariaDB Schema Diff Landing' },
+  { path: '/azure-sql-schema-diff.html', name: 'Azure SQL Schema Diff Landing' },
+  { path: '/timescaledb-schema-diff.html', name: 'TimescaleDB Schema Diff Landing' },
+  { path: '/duckdb-schema-diff.html', name: 'DuckDB Schema Diff Landing' },
+  { path: '/bigquery-schema-diff.html', name: 'BigQuery Schema Diff Landing' },
+  { path: '/snowflake-schema-diff.html', name: 'Snowflake Schema Diff Landing' },
+  { path: '/clickhouse-schema-diff.html', name: 'ClickHouse Schema Diff Landing' },
+  { path: '/planetscale-schema-diff.html', name: 'PlanetScale Schema Diff Landing' },
+  { path: '/railway-schema-diff.html', name: 'Railway Schema Diff Landing' },
+  { path: '/firebase-schema-diff.html', name: 'Firebase Schema Diff Landing' },
+  { path: '/laravel-schema-diff.html', name: 'Laravel Schema Diff Landing' },
+  { path: '/django-schema-diff.html', name: 'Django Schema Diff Landing' },
+  { path: '/rails-schema-diff.html', name: 'Rails Schema Diff Landing' },
+  { path: '/express-schema-diff.html', name: 'Express Schema Diff Landing' },
+  { path: '/fastapi-schema-diff.html', name: 'FastAPI Schema Diff Landing' },
+  { path: '/spring-boot-schema-diff.html', name: 'Spring Boot Schema Diff Landing' },
+  { path: '/aspnetcore-schema-diff.html', name: 'ASP.NET Core Schema Diff Landing' },
+  { path: '/flask-schema-diff.html', name: 'Flask Schema Diff Landing' },
+  { path: '/phoenix-schema-diff.html', name: 'Phoenix Schema Diff Landing' },
+  { path: '/sqlite-alter-table.html', name: 'SQLite ALTER TABLE Guide' },
+  { path: '/create-index-mysql.html', name: 'Create Index MySQL Guide' },
+  { path: '/add-foreign-key-postgres.html', name: 'Add Foreign Key Postgres Guide' },
+  { path: '/schema-examples.html', name: 'Schema Diff Examples' },
 ];
 
 for (const { path, name } of pages) {
@@ -389,6 +446,82 @@ test('api: POST /api/analytics returns 400 for invalid event', async ({ request 
     test.skip(true, 'Static server does not support POST');
   }
   expect(response.status()).toBe(400);
+});
+
+test('api: POST /api/founding-member returns valid license key', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/founding-member`, {
+    data: { name: 'Test User', email: 'test@example.com', dialect: 'postgres' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body).toHaveProperty('success', true);
+  expect(body).toHaveProperty('key');
+  expect(body.key).toMatch(/^SL-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/);
+  expect(body).toHaveProperty('activation_url');
+  expect(body.activation_url).toContain(body.key);
+});
+
+test('api: POST /api/founding-member returns 400 for invalid input', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/founding-member`, {
+    data: { name: 'A', email: 'invalid', dialect: 'postgres' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(400);
+});
+
+test('api: POST /api/feedback returns success', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/feedback`, {
+    data: { message: 'Great tool!', category: 'praise', email: 'test@example.com', page_path: '/app.html' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body).toHaveProperty('success', true);
+});
+
+test('api: POST /api/feedback returns 400 for short message', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/feedback`, {
+    data: { message: 'Hi' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(400);
+});
+
+test('api: POST /api/free-diff returns JSON diff', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/free-diff`, {
+    data: {
+      schemaA: 'CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT);',
+      schemaB: 'CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT, email TEXT);',
+      dialect: 'postgres',
+    },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body).toHaveProperty('diff');
+  expect(body).toHaveProperty('migration');
+  expect(body).toHaveProperty('warnings');
 });
 
 // ───────────────────────────────────────────────
