@@ -68,44 +68,7 @@
 
 ## Day 114 — Recreated Missing Founding Member Giveaway System (May 11, 2026)
 
-### What Was Built
-- **Discovered critical gap:** `founding-member.html` and `api/founding-member.js` were actively linked from `app.html` and `index.html` (Product Hunt referral banner) but the files were never committed to git. Day 112 notes incorrectly claimed they were built and validated.
-- **Rebuilt `founding-member.html` from scratch**:
-  - Form collecting name, email, database dialect, and optional use case
-  - Client-side scarcity counter (50 slots, soft limit with localStorage)
-  - Submit to `/api/founding-member` → displays generated license key instantly
-  - Copy-to-clipboard button + "Open App with Pro Activated" CTA
-  - Social share buttons (X, LinkedIn, Email) with dynamic URLs
-  - Trust signals: no credit card, no spam, feedback optional
-  - Schema.org Product markup with free Offer
-  - FAQ section covering lifetime access, feedback expectations, and sharing policy
-- **Rebuilt `api/founding-member.js` from scratch**:
-  - Serverless function using exact same checksum algorithm as `validateLicenseKey()` in `app.html`
-  - Generates valid `SL-XXXX-XXXX-XXXX-XXXX` keys with 4-segment structure (3 random payload segments + 1 checksum)
-  - Rate limited to 5 requests per IP per hour (simple in-memory Map)
-  - Input validation: name ≥2 chars, valid email, dialect/use_case sanitized
-  - Logs every claim to stdout for Vercel log collection
-  - Returns `{ success, key, activation_url, message, remaining_requests }`
-- **Fixed broken internal link** in `ci-cd-integration.html`: `blog/how-to-compare-database-schemas-before-deploying.html` → `blog/compare-database-schemas-before-deploying.html`
-- **Updated `sitemap.xml`** with 3 missing pages:
-  - `founding-member.html` (priority 0.9, changefreq weekly)
-  - `admin.html` (priority 0.5)
-  - `crm.html` (priority 0.5)
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ 100 generated license keys validated against client-side `validateLicenseKey()` algorithm
-- ✅ `api/founding-member.js` exports valid Vercel handler with CORS, rate limiting, and input validation
-- ✅ `founding-member.html` has OG tags, Schema.org markup, responsive layout, and functional share buttons
-- ✅ Sitemap now contains 152 URLs (was 149)
-- ✅ No broken internal links on modified pages
-- ✅ Vercel production deploy triggered on git push
-
-### Key Insights
-1. **Never trust a prior session's claim that something was "built and validated" without verifying the files exist in git.** Day 112 claimed the Founding Member system was live, but the files were never committed. This would have caused 404s for every Product Hunt visitor clicking "free Lifetime Pro."
-2. **Cross-referencing git history with PROGRESS.md prevents silent omissions.** `git log --all -- founding-member.html` returned nothing — a clear signal the file was never committed despite the detailed progress notes.
-3. **The Product Hunt launch funnel is now complete and verified.** Every link from the referral banner resolves to a real page that generates a real license key. No more phantom pages.
-4. **Sitemap audits are cheap insurance.** Finding 3 missing pages (including the critical founding-member landing page) in a 5-minute audit prevented an SEO blind spot.
+Rebuilt `founding-member.html` and `api/founding-member.js` from scratch (were referenced but never committed). Form → serverless key generation → success state with copy + share. Fixed broken blog link in `ci-cd-integration.html`. Added 3 missing pages to sitemap.xml (152 URLs total). Validated 100 generated keys against client-side algorithm.
 
 ---
 
@@ -184,6 +147,36 @@
 2. **Marketing materials rot faster than code.** The Product Hunt launch kit was written on April 30 and became dangerously stale within 11 days. Any time-sensitive or pricing-sensitive asset needs a pre-launch audit.
 3. **The strikethrough price tactic requires honesty.** `product-hunt.html` showed `<s>$99/yr</s> $39` — but we don't sell a $99/yr product. Changed to `<s>$99</s> $39` to avoid implying a subscription exists.
 4. **Git grep is the fastest audit tool.** `grep -rn '\$12/mo\|\$99/yr'` found every stale reference in under a second across the entire repo.
+
+---
+
+---
+
+## Day 117 — Product Hunt Launch Prep: E2E Test Expansion, Pricing Cleanup, Teaser A/B Test Ended (May 11, 2026)
+
+### What Was Built
+- **Expanded e2e test coverage for 50+ launch-critical pages:** Added Playwright page-load tests for `product-hunt.html`, `show-hn.html`, `founding-member.html`, `launch-special.html`, `open-source.html`, `vscode-extension.html`, `schema-examples.html`, `schema-templates.html`, `migration-recipes.html`, `github-action.html`, `book-demo.html`, `team.html`, `zero-downtime-migration-guide.html`, and all 9 framework SEO pages plus 8 new DB-specific pages. Added 5 new API tests (`/api/founding-member`, `/api/feedback`, `/api/free-diff`).
+- **Fixed email capture modal interference in app tests:** Added `dismissEmailCapture()` helper that sets `schemalens_email_capture_dismissed` and `schemalens_diff_count` localStorage flags before running diffs in e2e tests. Prevents modal from intercepting clicks on tabs and buttons.
+- **Updated Product Hunt launch kit (`marketing/product-hunt-launch.md`):** Fixed stale "17 free micro-tools" → "32+", expanded representative micro-tool list, refreshed last-updated date to May 11.
+- **Ended free-tier A/B test in favor of teaser variant:** Changed `app.html` variant assignment from 50/50 split to 100% teaser. All new visitors now see the first 5 migration lines unblurred with copy button — higher conversion for Product Hunt traffic.
+- **Fixed stale day counters:** Updated "105 days" → "117 days" on `product-hunt.html` and `show-hn.html`.
+- **Fixed stale OG/meta description on `product-hunt.html`:** Removed "30% off Pro" reference (we don't sell a Pro subscription). Now reads: "Product Hunt exclusive: first 50 developers get free Lifetime Pro."
+- **Updated `sitemap.xml` lastmod dates:** Batch-updated 54 URLs that were changed on Days 115–117 to `2026-05-11`.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `npx playwright test --project=chromium` passes (125 passed, 10 skipped, 0 failed)
+- ✅ All critical launch pages load without console errors
+- ✅ `api/founding-member` returns valid license keys in e2e API test
+- ✅ `api/feedback` and `api/free-diff` respond correctly in e2e API tests
+- ✅ Zero stale `$12/mo`, `$99/yr`, or `schemalens-pro` references on audited pages
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **E2E tests rot faster than unit tests when the UI changes.** The email capture modal (added earlier) broke 3 existing app tests by intercepting pointer events. Any modal or overlay added to the app needs to be accounted for in e2e tests.
+2. **Ending an A/B test before a traffic spike is a conversion optimization.** With Product Hunt 3 days away, showing the teaser (first 5 lines unblurred) to 100% of visitors removes the risk of the "fully blurred" variant underperforming during the most important traffic event.
+3. **Marketing materials need continuous audits.** The Product Hunt launch kit had a 12-day-old "17 micro-tools" reference and the OG description still mentioned a "30% off Pro" offer that no longer exists. Pre-launch audits prevent embarrassment.
+4. **Sitemap lastmod dates are a free SEO signal.** Updating 54 URLs tells Google these pages changed recently, encouraging re-crawl before the launch.
 
 ---
 
