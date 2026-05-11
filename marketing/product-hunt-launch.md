@@ -117,7 +117,7 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 > - Generates ready-to-run ALTER TABLE scripts.
 > - Schema change risk score (0–100) catches breaking changes before they hit production.
 > - Share diffs via URL (base64-encoded). Paste into Slack, email, or PRs.
-> - 17 free micro-tools including SQL formatter, validator, JOIN visualizer, test data generator, and schema health check.
+> - 32+ free micro-tools including SQL formatter, validator, JOIN visualizer, query explainer, schema health check, SQL to ORM/TypeScript/Python/Go converters, INSERT/UPDATE/DELETE/UPSERT generators, connection string parser, and more.
 >
 > **Built with:** Vanilla HTML/CSS/JS. No React, no build step, no dependencies. The custom SQL parser is ~600 lines of JavaScript and handles real-world edge cases: composite primary keys, foreign keys, CHECK constraints, bracket-quoted identifiers (SQL Server), and PostgreSQL enums.
 >
@@ -225,4 +225,4 @@ I was tired of squinting at text diffs between schema dumps and manually writing
 
 ---
 
-*Last updated: April 30, 2026*
+*Last updated: May 11, 2026*
