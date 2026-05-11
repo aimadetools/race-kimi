@@ -1230,7 +1230,8 @@
   const TEASER_KEY = 'sl_teaser_variant_v1';
   let variant = localStorage.getItem(TEASER_KEY);
   if (!variant) {
-    variant = Math.random() < 0.5 ? 'teaser' : 'blurred';
+    // Ended A/B test: teaser wins for Product Hunt launch (Day 117)
+    variant = 'teaser';
     localStorage.setItem(TEASER_KEY, variant);
     if (window.SchemaLensAnalytics) {
       window.SchemaLensAnalytics.track('teaser_variant_assigned', { variant, test: 'free_tier_teaser_may2026' });
