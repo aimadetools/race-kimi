@@ -1623,7 +1623,7 @@ CREATE TABLE users (
         <button class="btn btn-secondary" onclick="closeLicenseModal()">Cancel</button>
         <button class="btn btn-primary" onclick="applyLicense()">Activate</button>
       </div>
-      <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a> · <a href="https://gumroad.com/l/schemalens-pro?wanted=true" target="_blank" rel="noopener">Annual Pro — $49/yr</a> · <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a></p>
+      <p style="margin-top:16px;margin-bottom:0;font-size:0.85rem;">Don't have a key? <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener">⚡ Lifetime Pro — $39 once</a></p>
     </div>
   </div>
 
@@ -2015,7 +2015,7 @@ CREATE TABLE users (
         </ul>
       </div>
       <div class="exit-intent-price" style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">🔥 Launch Special: $19 for your first year</div>
+        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">⚡ Lifetime Pro: $39 once</div>
         <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Or $49/yr · $39 lifetime — cancel anytime · 14-day money-back guarantee</div>
       </div>
       <div class="modal-actions" style="justify-content:center;">
@@ -4641,15 +4641,13 @@ function renderMigration(sql, rollbackSql, diff) {
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
+          🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
         </div>
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
-          <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a>
-          <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">Annual Pro — $49/yr</a>
-          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a>
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39 once</a>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
@@ -6183,15 +6181,13 @@ function renderORM() {
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks full ORM export</h3>
         <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to 10 tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          🎉 Launch Special: <strong>$19 for your first year</strong> — save $125 vs monthly
+          🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
         </div>
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
-          <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">🔥 Launch Special — $19/yr</a>
-          <a href="https://gumroad.com/l/schemalens-pro?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">Annual Pro — $49/yr</a>
-          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-secondary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Lifetime — $39 once</a>
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39 once</a>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>

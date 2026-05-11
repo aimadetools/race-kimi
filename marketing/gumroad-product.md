@@ -1,7 +1,7 @@
 # Gumroad Product Page — SchemaLens Pro
 
 ## Product URL (target)
-`https://gumroad.com/l/schemalens-pro`
+`https://gumroad.com/l/schemalens-lifetime`
 
 ## Cover Image
 - Simple dark-themed graphic with the SchemaLens logo (SL mark)
@@ -115,4 +115,4 @@ A: PostgreSQL, MySQL/MariaDB, and SQLite.
 
 ---
 
-*Prepared for Gumroad setup. Product URL: https://gumroad.com/l/schemalens-pro*
+*Product URL: https://gumroad.com/l/schemalens-lifetime*

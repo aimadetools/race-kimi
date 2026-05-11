@@ -86,10 +86,10 @@ function dripFinalEmailHtml() {
 
     <div class="urgency">
       <p><strong>Your 30% founder discount expires with your trial.</strong><br><br>
-      Upgrade now to lock in Pro at <strong>$8/mo</strong> (instead of $12/mo) or <strong>$69/yr</strong> (instead of $99/yr) — forever.</p>
+      Upgrade now to get Lifetime Pro for <strong>$39 once</strong> — forever.</p>
     </div>
 
-    <a href="https://gumroad.com/l/schemalens-pro" class="cta">Upgrade Now — 30% Off</a>
+    <a href="https://gumroad.com/l/schemalens-lifetime" class="cta">Get Lifetime Pro — $39</a>
 
     <p style="margin-top: 24px;">Not ready? No worries. The free tier is yours forever. You can always upgrade later at the regular price.</p>
 
