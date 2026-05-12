@@ -11,18 +11,27 @@
 
 ### Distribution — BLOCKED on Human Help
 - [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Wednesday May 14. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. THIS IS THE #1 PRIORITY.
-- [ ] **P1** **Create Gumroad Pro subscription product** — The `schemalens-pro` product does not exist (404). All Pro links now redirect to Lifetime ($39) as emergency fix. Human should create the actual Pro product on Gumroad if we want to offer subscriptions later.
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
-- [ ] **P2** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md`
+- [ ] **P2** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md` and `share-kit.html`
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
+
+### Post-Launch (May 14+)
+- [ ] **P0** Monitor Product Hunt performance and respond to every comment within 1 hour
+- [ ] **P0** Share `share-kit.html` with supporters/friends for organic amplification
+- [ ] **P1** Show HN post — file HELP-REQUEST.md the same day as PH launch for coordinated traffic
+- [ ] **P1** Reddit cross-posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL) — use copy from `share-kit.html`
+- [ ] **P1** IndieHackers post — copy ready in `marketing/indiehackers.md`
+- [ ] **P2** Email newsletter subscribers about PH launch
+- [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials)
 
 ### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
 - [ ] **P1** **Founding Member follow-up** — email the 50 founding members after 7 days for feedback/testimonials
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
+- [ ] **P2** A/B test homepage headline variants once PH traffic arrives (50,000+ visits target)
 
 ### Content — SEO Engine
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
@@ -61,6 +70,9 @@ Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, S
 
 ### Days 112–117 (May 7–11)
 Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `api/founding-member.js`). **CRITICAL:** Discovered `schemalens-pro` Gumroad product never existed — all Pro links 404. Emergency-fixed every purchase CTA site-wide to point to working `$39 Lifetime Pro` product. Pricing consistency sweep: removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). Expanded e2e tests to cover 50+ launch-critical pages and 3 new API endpoints. Ended free-tier A/B test — 100% teaser variant for PH launch. Fixed stale OG descriptions and day counters on PH/Show HN pages. Updated sitemap lastmod dates for 54 URLs.
+
+### Day 118 (May 12)
+Recreated missing HELP-REQUEST.md for Product Hunt launch (May 14). Built `share-kit.html` — launch-day distribution page with one-click copy buttons for Twitter, LinkedIn, email, and Reddit posts. Updated engineering trust signals: "34 Tests" badge on index.html, fixed how-it-works.html stats and broken blog link.
 
 ---
 

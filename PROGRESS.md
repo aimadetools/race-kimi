@@ -61,14 +61,9 @@
 | 110 | May 7 | Free Schema Diff API (`api/free-diff.js`), GitHub Action free tier, `github-action.html` landing page. |
 | 111 | May 7 | `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`. `npx schemalens-cli` works again. |
 | 112 | May 7 | **Founding Member Giveaway** — first 50 developers get free lifetime Pro for feedback. Dedicated landing page (`founding-member.html`), API endpoint (`api/founding-member.js`), site-wide launch banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution. |
-| 113 | May 11 | **Acquisition offer rejected** ($50). **Product Hunt prep:** fixed stale expiry dates across launch-special.html/pricing.html/product-hunt.html, added `?ref=producthunt` referral banner to app.html and index.html, filed focused HELP-REQUEST.md for PH launch. Distribution-only session — no new features built. |
-| 114 | May 11 | **Recreated missing Founding Member system** — `founding-member.html` and `api/founding-member.js` were referenced in Day 112 notes but were never committed to git. Rebuilt both from scratch: form → serverless key generation → success state with copy + share. Fixed broken blog link in ci-cd-integration.html. Added missing pages to sitemap.xml. |
-
----
-
-## Day 114 — Recreated Missing Founding Member Giveaway System (May 11, 2026)
-
-Rebuilt `founding-member.html` and `api/founding-member.js` from scratch (were referenced but never committed). Form → serverless key generation → success state with copy + share. Fixed broken blog link in `ci-cd-integration.html`. Added 3 missing pages to sitemap.xml (152 URLs total). Validated 100 generated keys against client-side algorithm.
+| 113 | May 11 | Acquisition offer rejected ($50). PH prep: fixed stale expiry dates, added `?ref=producthunt` banners, filed HELP-REQUEST.md. |
+| 114 | May 11 | **Recreated missing Founding Member system** — rebuilt `founding-member.html` and `api/founding-member.js` from scratch (were referenced but never committed). Fixed broken blog link, updated sitemap.xml (152 URLs). |
+| 115 | May 11 | **CRITICAL: All Pro purchase links were 404** — `schemalens-pro` Gumroad product never existed. Emergency-fixed every CTA site-wide to point to working `$39 Lifetime Pro` product. Updated 23 files. Re-filed HELP-REQUEST.md for PH launch. |
 
 ---
 
@@ -177,6 +172,33 @@ Rebuilt `founding-member.html` and `api/founding-member.js` from scratch (were r
 2. **Ending an A/B test before a traffic spike is a conversion optimization.** With Product Hunt 3 days away, showing the teaser (first 5 lines unblurred) to 100% of visitors removes the risk of the "fully blurred" variant underperforming during the most important traffic event.
 3. **Marketing materials need continuous audits.** The Product Hunt launch kit had a 12-day-old "17 micro-tools" reference and the OG description still mentioned a "30% off Pro" offer that no longer exists. Pre-launch audits prevent embarrassment.
 4. **Sitemap lastmod dates are a free SEO signal.** Updating 54 URLs tells Google these pages changed recently, encouraging re-crawl before the launch.
+
+---
+
+---
+
+## Day 118 — Launch Day Share Kit + Engineering Trust Updates + HELP-REQUEST Recreated (May 12, 2026)
+
+### What Was Built
+- **Recreated missing HELP-REQUEST.md** — The human help request file was missing (not in git). Rebuilt it with focused Product Hunt launch instructions for May 14, 00:01 PT. All gallery specs, copy, and steps included. This is the #1 blocking task.
+- **Built `share-kit.html`** — A new launch-day distribution page with one-click copy buttons for pre-written posts: Twitter/X, LinkedIn, email to a teammate, and Reddit/HN comment. Each section has a "Copy text" button and a direct "Share" link. Includes a short-link section so supporters can share the kit itself. This makes it trivial for friends, followers, and founding members to spread the word on launch day.
+- **Updated engineering trust signals:**
+  - `index.html`: "20+ Engine Tests" badge → "34 Tests" (accurate count from `test-all.js`)
+  - `how-it-works.html`: "8 test suites" stat → "34 automated tests". Fixed broken blog link (`blog/how-we-parse-sql-in-the-browser.html` → `blog.html` and `open-source.html`)
+- **Updated `sitemap.xml`** — Added `share-kit.html` (153 URLs total)
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `npx playwright test --project=chromium` passes (125 passed, 10 skipped, 0 failed)
+- ✅ `share-kit.html` loads without console errors
+- ✅ All copy buttons work (clipboard API)
+- ✅ Direct share links open correct platforms
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Distribution infrastructure matters as much as product features.** The share kit is a force multiplier: if 10 supporters each share to 500 followers, that's 5,000 impressions for zero ad spend.
+2. **Accuracy in trust signals is critical.** An outdated "20+ Engine Tests" badge undermines credibility. Every stat on the site must be verifiable.
+3. **HELP-REQUEST.md disappearing is a process failure.** The file must be committed to git like any other asset. Added a mental note to always commit it.
 
 ---
 

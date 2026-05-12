@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share SchemaLens — Launch Day Kit</title>
+  <meta name="description" content="Help spread the word about SchemaLens. Copy pre-written posts for Twitter, LinkedIn, Reddit, and email.">
+  <meta property="og:title" content="Share SchemaLens — Launch Day Kit">
+  <meta property="og:description" content="Help spread the word about SchemaLens. Copy pre-written posts for Twitter, LinkedIn, Reddit, and email.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .sk-page { max-width: 720px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .sk-page h1 { font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.2; }
+    .sk-page .lead { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+    .sk-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .sk-card h3 { margin: 0 0 0.75rem; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .sk-card pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      margin: 0 0 0.75rem;
+    }
+    .sk-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .sk-card .actions a, .sk-card .actions button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .sk-card .actions .btn-copy {
+      background: var(--primary);
+      color: #fff;
+    }
+    .sk-card .actions .btn-copy:hover { opacity: 0.9; }
+    .sk-card .actions .btn-share {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .sk-card .actions .btn-share:hover { border-color: var(--primary); }
+    .sk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .sk-header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    .sk-header h1 { font-size: 2.4rem; }
+    .sk-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="product-hunt.html">Product Hunt</a>
+    </div>
+  </div>
+</nav>
+
+<main class="sk-page">
+  <div class="sk-header">
+    <h1>Help Spread the Word 🚀</h1>
+    <p class="lead">SchemaLens launches on Product Hunt May 14. Every share helps. Copy a post below or share directly.</p>
+    <div class="sk-links">
+      <a href="https://www.producthunt.com/posts/schemalens" target="_blank" rel="noopener" class="btn btn-primary">Upvote on Product Hunt</a>
+      <a href="app.html?ref=sharekit" class="btn btn-secondary">Try the App</a>
+      <a href="founding-member.html" class="btn btn-secondary">Free Lifetime Pro</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🐦 Twitter / X</h3>
+    <pre id="tweet">Just discovered SchemaLens — a free browser-based SQL schema diff tool that generates migration scripts instantly.
+
+No install. No signup. No data leaves your machine.
+
+Perfect for reviewing migrations before deploying to prod.
+
+→ https://schemalens.tech
+
+#buildinpublic #postgresql #mysql #sql</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('tweet')">📋 Copy text</button>
+      <a class="btn-share" href="https://twitter.com/intent/tweet?text=Just%20discovered%20SchemaLens%20%E2%80%94%20a%20free%20browser-based%20SQL%20schema%20diff%20tool%20that%20generates%20migration%20scripts%20instantly.%0A%0A%E2%86%92%20https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to X →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>💼 LinkedIn</h3>
+    <pre id="linkedin">If you work with databases, this free tool will save you hours.
+
+SchemaLens compares two SQL schemas in your browser and generates the migration scripts to get from one to the other. No CLI setup, no cloud upload, no account required.
+
+I just paste two CREATE TABLE dumps and get a visual diff + ready-to-run ALTER TABLE statements in seconds.
+
+They just launched on Product Hunt with a lifetime deal ($39 once) and a founding member giveaway for the first 50 developers.
+
+Worth bookmarking for your next migration review.
+
+→ https://schemalens.tech
+
+#database #postgresql #mysql #sql #devtools #producthunt</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('linkedin')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://schemalens.tech" target="_blank" rel="noopener">Share on LinkedIn →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>📧 Email to a teammate</h3>
+    <pre id="email">Hey — found a tool you might like: SchemaLens (https://schemalens.tech)
+
+It diffs two SQL schemas in the browser and generates ALTER TABLE migration scripts. I just used it to review a staging-to-prod schema drift and it caught a column type change I would have missed.
+
+Free tier covers most use cases. They have a lifetime Pro deal for $39 if you need unlimited tables and exports.
+
+Worth keeping in your toolkit.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('email')">📋 Copy text</button>
+      <a class="btn-share" href="mailto:?subject=Tool%20for%20database%20schema%20diffs&body=Hey%20%E2%80%94%20found%20a%20tool%20you%20might%20like%3A%20SchemaLens%20(https%3A%2F%2Fschemalens.tech)%0A%0AIt%20diffs%20two%20SQL%20schemas%20in%20the%20browser%20and%20generates%20ALTER%20TABLE%20migration%20scripts.%20Worth%20keeping%20in%20your%20toolkit.">Open in email client →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🗣️ Reddit / HN Comment</h3>
+    <pre id="reddit">SchemaLens (https://schemalens.tech) is a free browser-based schema diff tool I have been using. Paste two CREATE TABLE dumps, get a visual semantic diff + generated migration scripts.
+
+Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Runs entirely client-side so your schema never leaves the browser. Also has a CLI (`npx schemalens-cli`) if you prefer terminal workflows.
+
+They just launched on Product Hunt with a $39 lifetime deal and a founding member giveaway.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('reddit')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/webdev/submit?title=SchemaLens%20%E2%80%94%20Free%20browser-based%20SQL%20schema%20diff%20tool&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to Reddit →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🔗 Short Link</h3>
+    <p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.9rem;">Share this page so others can spread the word too:</p>
+    <pre id="shortlink">https://schemalens.tech/share-kit.html</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('shortlink')">📋 Copy link</button>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;">
+    <p style="color:var(--text-muted);font-size:0.9rem;">Thank you for supporting SchemaLens. Every share matters.</p>
+    <a href="index.html" style="color:var(--primary);text-decoration:none;">← Back to home</a>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <strong>SchemaLens</strong><br>
+      Compare SQL schemas. Spot changes instantly. Generate migrations.
+    </div>
+    <div class="footer-links">
+      <a href="app.html">App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="open-source.html">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast">Copied to clipboard!</div>
+
+<script>
+function copy(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
