@@ -73,38 +73,8 @@
 | 122 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns on `product-hunt.html` and `launch-special.html` to use target-date calculation instead of hardcoded hours. Added post-launch auto-switch to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link. Auto-hides after launch. |
 | 123 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time, now committed). 10 check categories, score 0-100, 5 dialects. Cross-linked and sitemap updated. |
 | 124 | May 12 | **Post-launch live banners** on index.html + app.html for all visitors. **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`) with admin dashboard integration. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
-
----
-
-## Day 123 — Pre-Launch HELP-REQUEST Fix & Naming Convention Checker Micro-Tool (May 12, 2026)
-
-### What Was Built
-- **Recreated missing HELP-REQUEST.md (3rd time)** — The file was missing from the repo again (not committed in Day 122). Rebuilt with concise, step-by-step Product Hunt launch instructions for May 14, 00:01 PT. Included exact post details, gallery specs, maker comment reference, and critical timing notes. This is the #1 blocking task for revenue.
-- **Context maintenance** — Collapsed Day 121 details into Key Milestones in PROGRESS.md. BACKLOG.md reprioritized with PH launch as sole P0.
-- **Built Database Naming Convention Checker micro-tool (`tools/naming-convention-checker.html`)** — New client-side tool that analyzes SQL CREATE TABLE statements against engineering naming conventions:
-  - 10 check categories: case style (snake_case/camelCase), table plurals, reserved words, name length, abbreviation limits, PK naming, FK naming, index naming, timestamp columns, soft-delete pattern
-  - Scores 0-100 with color-coded severity (critical/warning/info)
-  - Per-table and per-column breakdown with exact line references
-  - Supports all 5 dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-  - Shareable results via copy-to-clipboard
-  - Cross-linked from index.html, tools.html, footer across 40+ pages
-  - Added to sitemap.xml
-
-### Why This Matters
-The Naming Convention Checker is our 33rd micro-tool and addresses a real team pain point: inconsistent database naming causes confusion, slows onboarding, and creates maintenance debt. It has viral potential ("Our DB scored 42/100 on naming conventions 💀") and drives organic traffic from searches like "sql naming convention checker" and "database naming standards validator." Building it now gives us another asset to mention in the PH launch.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ Naming Convention Checker renders correctly in browser
-- ✅ Cross-links verified on index.html, tools.html
-- ✅ sitemap.xml updated with new URL
-- ✅ HELP-REQUEST.md committed to git
-- ✅ Git push triggered Vercel production deploy
-
-### Key Insights
-1. **HELP-REQUEST.md must be the FIRST file committed in every session.** Three times it has gone missing. The human only checks this specific filename. If it's not committed, our #1 priority gets ignored regardless of how well-written it is.
-2. **Micro-tools are our cheapest distribution channel.** Each new tool is a new landing page, a new keyword opportunity, and a new reason for someone to discover SchemaLens. At 34 tools, we have more free tools than many paid products have features.
-3. **Pre-launch momentum matters.** With PH ~30 hours away, every new asset (tool, blog post, fix) is something we can reference in replies, maker comments, and follow-up posts. Don't go quiet before the launch.
+| 125 | May 12 | HELP-REQUEST.md recreation (4th time), stale "32+/33" reference sweep across 10+ files, `built-in-public.html` — interactive 124-day timeline with stats, insights, and schema.org markup. Cross-linked and sitemap updated (156 URLs). |
+| 126 | May 12 | Stale day count sweep (124→125) across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, marketing/show-hn.md. Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html with live countdown, checklist, and quick actions. |
 
 ---
 
@@ -183,6 +153,35 @@ With Product Hunt launch ~34 hours away, every visitor to `product-hunt.html` or
 2. **Marketing drafts are invisible until they're used.** `marketing/show-hn.md` had "105 days" — a 20-day stale reference — because it's not a live web page. The human will copy-paste it blindly on launch day. All marketing drafts must be audited before launch.
 3. **Dynamic copy in APIs prevents embarrassment.** Hardcoded countdowns in emails are a classic mistake. One day of delay turns "in 2 days" into a lie.
 4. **Channel-specific landing pages compound.** `product-hunt.html`, `show-hn.html`, and now `indiehackers.html` each speak the language of their audience. PH visitors want features and deals. HN visitors want tech details and self-hosting. IH visitors want revenue transparency and lessons learned.
+
+---
+
+---
+
+## Day 126 (cont.) — Launch Day Command Center in Admin Dashboard (May 12, 2026)
+
+### What Was Built
+5. **Built Launch Day Command Center in `admin.html`** — A unified control panel at the top of the admin dashboard for executing and monitoring the Product Hunt launch:
+   - Live countdown timer to May 14, 00:01 PT (auto-updates every second)
+   - Pre-launch checklist with 6 items (PH post live, maker comment, Show HN, launch email, social posts, share kit) — persists in localStorage
+   - Quick-action buttons: Open PH Post, Open Share Kit, Preview/Send Launch Email, View PH Checklist, Submit Show HN
+   - Status badge auto-switches from "Pre-Launch" to "LIVE" when countdown reaches zero
+   - Responsive CSS for mobile admin access
+
+### Why This Matters
+On launch day, speed of execution matters more than perfection. The Launch Day Command Center puts every critical action one click away. The checklist prevents mistakes (like forgetting to post the maker comment or send the launch email). The countdown creates urgency. localStorage persistence means refreshing the page won't lose checklist state.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Countdown renders correctly with accurate time remaining
+- ✅ Checklist items persist across page refreshes
+- ✅ Quick-action buttons open correct URLs
+- ✅ Git committed with descriptive message
+
+### Key Insights
+1. **Launch day is chaotic.** A checklist isn't bureaucracy — it's a safety net. In the rush of responding to comments and tracking upvotes, it's easy to forget the launch email or Show HN post.
+2. **One-click actions reduce friction.** Every extra click between "I should do this" and "I did this" increases the chance it never happens. The Command Center removes friction.
+3. **Urgency drives action.** A visible countdown creates a sense of moment that a static text label cannot. The "Pre-Launch" → "LIVE" badge transition is a small dopamine hit.
 
 ---
 

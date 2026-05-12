@@ -45,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 124 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 123). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 125 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 123). Funnel is end-to-end accurate.**
 
 ---
 
@@ -81,6 +81,7 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 **Day 123:** Recreated missing HELP-REQUEST.md (3rd time — now committed). Built Database Naming Convention Checker micro-tool (`tools/naming-convention-checker.html`) — 10 check categories, score 0-100, 5 dialects, shareable results. Tool count 32→33.
 **Day 124:** Post-launch live banners on `index.html` and `app.html` for all visitors (not just `?ref=producthunt`). Built pre-launch newsletter warm-up email system (`api/newsletter-prelaunch.js` + admin dashboard). Built SQL IN Clause Builder micro-tool (`tools/sql-in-list-builder.html`) — auto-detect types, 5 dialects, copy/download. Fixed stale "120 days" references on PH/Show HN pages. README tool count updated 32+→34+. Fixed stale tool count references (32+/33→34+) across show-hn.html, product-hunt.html, open.html, affiliate.html, marketing files, and ACQUISITION-RESPONSE.md.
 **Day 125:** Recreated HELP-REQUEST.md (4th time) with exact PH launch instructions. Full stale reference sweep: fixed "32+/33" tool counts across 10+ files including JS email templates. Built `built-in-public.html` — interactive 124-day timeline addressing "vibe-coded" trust criticism. Cross-linked and sitemap.xml updated (156 URLs).
+**Day 126:** Stale day count sweep (124→125) across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, marketing/show-hn.md. Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page for IndieHackers traffic with revenue transparency. Launch Day Command Center in admin.html with live countdown, checklist, and quick-action buttons.
 
 ---
 
