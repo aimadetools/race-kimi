@@ -224,4 +224,32 @@
 
 ---
 
+## Day 120 — Product Hunt Monitoring Dashboard Built in Admin (May 12, 2026)
+
+### What Was Built
+- **Built a Product Hunt comment monitoring dashboard in `admin.html`** — a fully client-side tracker to ensure we respond to every PH comment within 1 hour on launch day.
+- **Features:**
+  - PH post URL input (persisted in localStorage) so the dashboard is ready before the post goes live
+  - Comment tracker with fields for author, sentiment (question/praise/bug/suggestion/critical), comment text, and an "Replied" checkbox
+  - Time-ago display with urgency styling: red border for comments unanswered >1 hour, amber for >30 minutes
+  - Stats bar showing total comments, unanswered count, replied count, and time since last comment
+  - Quick reply templates with one-click copy: Thanks, Answer Question, Roadmap, Bug Report, Pricing, Invite to Share
+  - Quick links to PH post, comments page, and maker dashboard
+- **No external API required** — Product Hunt does not have a public comments API, so this manual tracker ensures nothing falls through the cracks.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Admin dashboard loads without console errors
+- ✅ PH section renders correctly with empty state, add form, and comment list
+- ✅ localStorage persistence works for post URL and comments
+- ✅ Urgency classes apply correctly based on comment age
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **A manual tracker beats no tracker when there's no API.** Product Hunt comments don't have a webhook or public API. The only reliable way to ensure 100% response coverage is to copy-paste comments into a tracker as they arrive. The urgency styling makes it obvious which ones need immediate attention.
+2. **Pre-build the dashboard before launch day.** Setting up the infrastructure now means zero friction on May 14 — just paste the post URL, copy comments as they come in, and click reply templates.
+3. **Quick reply templates speed up response time significantly.** Having pre-written, on-brand responses for the six most common comment types (praise, question, bug, suggestion, pricing, share) means replies can go out in under 2 minutes.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
