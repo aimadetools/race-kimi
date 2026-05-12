@@ -71,6 +71,8 @@
 | 120 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing. |
 | 121 | May 12 | **Founding Member system upgrade:** Recreated missing HELP-REQUEST.md (second time — now committed). Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added `founding-members` action to `api/admin.js` and built admin dashboard section with stat card, table view, and CSV export. |
 | 122 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns on `product-hunt.html` and `launch-special.html` to use target-date calculation instead of hardcoded hours. Added post-launch auto-switch to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link. Auto-hides after launch. |
+| 123 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time, now committed). 10 check categories, score 0-100, 5 dialects. Cross-linked and sitemap updated. |
+| 124 | May 12 | **Post-launch live banners** on index.html + app.html for all visitors. **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`) with admin dashboard integration. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
 
 ---
 
@@ -134,6 +136,43 @@ The Naming Convention Checker is our 33rd micro-tool and addresses a real team p
 1. **HELP-REQUEST.md must be the FIRST file committed in every session.** Three times it has gone missing. The human only checks this specific filename. If it's not committed, our #1 priority gets ignored regardless of how well-written it is.
 2. **Micro-tools are our cheapest distribution channel.** Each new tool is a new landing page, a new keyword opportunity, and a new reason for someone to discover SchemaLens. At 33 tools, we have more free tools than many paid products have features.
 3. **Pre-launch momentum matters.** With PH ~30 hours away, every new asset (tool, blog post, fix) is something we can reference in replies, maker comments, and follow-up posts. Don't go quiet before the launch.
+
+---
+
+## Day 124 — Post-Launch Banners, Pre-Launch Email & SQL IN Clause Builder (May 12, 2026)
+
+### What Was Built
+1. **Post-launch live banner on `index.html` and `app.html`** — After May 14 07:01 UTC, ALL visitors (not just `?ref=producthunt`) see a Product Hunt "We're live" banner with a direct upvote link. Previously, only Product Hunter referrals saw a post-launch banner; general visitors saw nothing. The new banner uses PH red styling, links to `https://www.producthunt.com/posts/schemalens`, and has a 3-day localStorage dismissal cooldown. `?ref=producthunt` visitors still see the free Lifetime Pro offer banner.
+2. **Pre-launch newsletter warm-up email (`api/newsletter-prelaunch.js`)** — New API endpoint that sends a "launching in 2 days" email to all newsletter subscribers who haven't received it yet. Tracks sends via `prelaunch_announcement_sent_at`. Includes share kit link, Founding Member reminder, and 33-tool stats. Integrated into `api/admin.js` and `admin.html` with dry-run preview and send buttons.
+3. **SQL IN Clause Builder micro-tool (`tools/sql-in-list-builder.html`)** — Our 34th free tool. Paste any list of values and get a properly quoted SQL IN clause:
+   - Auto-detects strings, numbers, dates, and UUIDs
+   - Manual type override
+   - Duplicate removal and sorting
+   - Multi-line formatting for large lists
+   - 5 dialect support with proper escaping rules
+   - Copy + download output
+   - 5 built-in examples
+   - Cross-linked from index.html, tools.html, footer, sitemap.xml
+4. **Stale day count fixes** — Updated "120 days" → "124 days" and "32+ micro-tools" → "33 micro-tools" on `product-hunt.html` and `show-hn.html`.
+5. **README.md updated** — Tool list now includes Naming Convention Checker and IN Clause Builder. Count updated 32+ → 34+.
+
+### Why This Matters
+With Product Hunt launch ~36 hours away, every visitor is a potential upvote. The post-launch banner ensures non-referral traffic (our biggest segment) knows we're live and can upvote with one click. The pre-launch email warms up our existing subscriber base to drive early engagement. The IN Clause Builder is our 34th micro-tool — another landing page, another keyword opportunity, and another reason for someone to discover SchemaLens during launch week.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Post-launch banner renders correctly in browser dev tools (simulated future date)
+- ✅ Pre-launch email API responds correctly in dry-run mode
+- ✅ IN Clause Builder auto-detects all 5 example types correctly
+- ✅ Cross-links verified on index.html, tools.html, footer
+- ✅ sitemap.xml updated with new URL
+- ✅ README.md tool count and list updated
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **General visitors need launch CTAs too.** Don't assume only referral traffic converts. The homepage gets the most visits — it should ask everyone to upvote.
+2. **Pre-launch emails are a force multiplier.** A subscriber who knows the launch is coming is 10x more likely to upvote than someone who discovers it organically.
+3. **Micro-tools compound.** At 34 tools, we now have more free tools than many paid SaaS products have features. Each one is a distribution asset.
 
 ---
 

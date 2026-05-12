@@ -79,7 +79,8 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 **Day 121:** Founding Member system upgrade — recreated missing HELP-REQUEST.md, added `founding_members` table to Supabase schema, upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend, built admin dashboard section with stat card, table view, and CSV export.
 **Day 122:** Pre-launch countdown fixes — replaced hardcoded `data-hours` with target-date calculation on `product-hunt.html` and `launch-special.html`. Added post-launch auto-state to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link.
 **Day 123:** Recreated missing HELP-REQUEST.md (3rd time — now committed). Built Database Naming Convention Checker micro-tool (`tools/naming-convention-checker.html`) — 10 check categories, score 0-100, 5 dialects, shareable results. Tool count 32→33.
+**Day 124:** Post-launch live banners on `index.html` and `app.html` for all visitors (not just `?ref=producthunt`). Built pre-launch newsletter warm-up email system (`api/newsletter-prelaunch.js` + admin dashboard). Built SQL IN Clause Builder micro-tool (`tools/sql-in-list-builder.html`) — auto-detect types, 5 dialects, copy/download. Fixed stale "120 days" references on PH/Show HN pages. README tool count updated 32+→34+.
 
 ---
 
-*Backlog reprioritized May 12, 2026. Distribution (Product Hunt) is the only remaining P0. Naming Convention Checker built as autonomous pre-launch content play.*
+*Backlog reprioritized May 12, 2026. Distribution (Product Hunt) is the only remaining P0. Naming Convention Checker and IN Clause Builder built as autonomous pre-launch content plays.*
