@@ -44,8 +44,8 @@ function launchEmailHtml() {
 <body>
   <div class="container">
     <div class="logo">SchemaLens</div>
-    <h1>SchemaLens is officially live 🚀</h1>
-    <p>We built SchemaLens to make database schema changes safer — and today we're launching it to the world.</p>
+    <h1>SchemaLens is officially live on Product Hunt 🚀</h1>
+    <p>We built SchemaLens to make database schema changes safer — and today we're launching it to the world on Product Hunt.</p>
 
     <div class="highlight">
       <p><strong>What is SchemaLens?</strong> Paste two SQL CREATE TABLE dumps and get an instant visual diff plus a generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle.</p>
@@ -54,7 +54,7 @@ function launchEmailHtml() {
     <h2>What's included</h2>
     <ul>
       <li><strong>42 blog posts</strong> on schema migration best practices</li>
-      <li><strong>17 free micro-tools</strong> — SQL formatter, JOIN visualizer, schema health check, test data generator, and more</li>
+      <li><strong>32+ free micro-tools</strong> — SQL formatter, JOIN visualizer, schema health check, test data generator, SQL to ORM converter, query explainer, and more</li>
       <li><strong>CLI tool</strong> — run <code style="background:#27272a;padding:2px 4px;border-radius:4px;color:#e5e5e5;">npx schemalens-cli</code> in your terminal</li>
       <li><strong>Chrome extension</strong> — diff GitHub .sql files in one click</li>
       <li><strong>CI/CD integration</strong> — GitHub Actions, GitLab CI, Bitbucket Pipelines</li>
@@ -62,13 +62,17 @@ function launchEmailHtml() {
 
     <div class="stats">
       <div class="stat"><div class="stat-number">5</div><div class="stat-label">SQL dialects</div></div>
-      <div class="stat"><div class="stat-number">17</div><div class="stat-label">Free tools</div></div>
+      <div class="stat"><div class="stat-number">32+</div><div class="stat-label">Free tools</div></div>
       <div class="stat"><div class="stat-number">42</div><div class="stat-label">Migration guides</div></div>
     </div>
 
-    <h2>Launching on Product Hunt today</h2>
-    <p>We're live on Product Hunt with a 30% off Pro launch discount. If you find SchemaLens useful, an upvote would mean the world to us.</p>
+    <h2>Product Hunt exclusive: $39 Lifetime Pro</h2>
+    <p>We're live on Product Hunt with an exclusive deal: <strong>Lifetime Pro for $39 once</strong> — pay once, keep forever. Plus, the first 50 supporters get <strong>free Lifetime Pro</strong>.</p>
     <a href="https://schemalens.tech/product-hunt.html" class="cta">Support us on Product Hunt</a>
+
+    <h2>Help us spread the word</h2>
+    <p>We built a share kit with ready-to-post copy for Twitter, LinkedIn, Reddit, and email. One click to copy, one click to share.</p>
+    <a href="https://schemalens.tech/share-kit.html" class="cta-secondary">Open Share Kit</a>
 
     <h2>Try it free — no signup required</h2>
     <p>Paste two schemas and diff them in 10 seconds. Everything runs client-side; your data never leaves the browser.</p>
@@ -221,7 +225,7 @@ export default async function handler(req, res) {
       try {
         const id = await sendEmail({
           to: sub.email,
-          subject: "SchemaLens is live 🚀 — Product Hunt + 17 free tools",
+          subject: "SchemaLens is live on Product Hunt 🚀 — 32+ free tools + $39 Lifetime Pro",
           html: launchEmailHtml(),
         });
         await patchSupabase("newsletter_subscribers", sub.id, { launch_announcement_sent_at: new Date().toISOString() });

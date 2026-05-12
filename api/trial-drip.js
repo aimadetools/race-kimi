@@ -2,7 +2,7 @@
 // Trigger via GET/POST with x-drip-token header.
 // Drip schedule:
 //   Hour 6:  "6 hours left — here is what you have unlocked"
-//   Hour 18: "2 hours left + 30% off expires soon"
+//   Hour 18: "2 hours left + founder deal expires soon"
 //
 // Required env vars:
 //   SUPABASE_SERVICE_ROLE_KEY — to read/update trial subscriber state
@@ -64,7 +64,7 @@ function dripFinalEmailHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Pro trial expires in 2 hours — 30% off ends soon</title>
+  <title>Your Pro trial expires in 2 hours — founder deal ends soon</title>
   <style>
     body { margin: 0; padding: 0; background: #0f0f0f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     .container { max-width: 560px; margin: 0 auto; padding: 40px 24px; color: #e5e5e5; }
@@ -85,7 +85,7 @@ function dripFinalEmailHtml() {
     <p>Your 24-hour Pro trial ends soon. If SchemaLens saved you even 10 minutes today, imagine what it will save you over the next month.</p>
 
     <div class="urgency">
-      <p><strong>Your 30% founder discount expires with your trial.</strong><br><br>
+      <p><strong>Your founder deal expires with your trial.</strong><br><br>
       Upgrade now to get Lifetime Pro for <strong>$39 once</strong> — forever.</p>
     </div>
 
@@ -217,7 +217,7 @@ export default async function handler(req, res) {
     }
     try {
       const subject = drip === "final"
-        ? "Your Pro trial expires in 2 hours — 30% off ends soon"
+        ? "Your Pro trial expires in 2 hours — founder deal ends soon"
         : "6 hours left on your Pro trial";
       const html = drip === "final" ? dripFinalEmailHtml() : drip6HourEmailHtml();
       const id = await sendEmail({ to: email, subject, html });
@@ -290,7 +290,7 @@ export default async function handler(req, res) {
       try {
         const id = await sendEmail({
           to: sub.email,
-          subject: "Your Pro trial expires in 2 hours — 30% off ends soon",
+          subject: "Your Pro trial expires in 2 hours — founder deal ends soon",
           html: dripFinalEmailHtml(),
         });
         await patchSupabase("newsletter_subscribers", sub.id, { trial_drip_final_sent_at: new Date().toISOString() });

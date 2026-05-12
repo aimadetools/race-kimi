@@ -65,7 +65,7 @@ function trialWelcomeEmailHtml() {
     <p>Click <strong>Share</strong> to generate a URL with your diff encoded. Send it to a teammate for async review — they don't need an account or a license to view it.</p>
 
     <div class="deal">
-      <h2>🎁 Founder Deal: 30% off Pro if you upgrade in the next 24 hours</h2>
+      <h2>🎁 Founder Deal: Lifetime Pro for $39 if you upgrade in the next 24 hours</h2>
       <p>Lifetime Pro is available for just <strong>$39 once</strong> — pay once, keep forever. This deal disappears when your trial ends.<br><br>
       <a href="https://gumroad.com/l/schemalens-lifetime" class="cta">Get Lifetime Pro — $39</a></p>
     </div>
