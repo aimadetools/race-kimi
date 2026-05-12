@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–114)
+## Key Milestones (Days 1–120)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -64,116 +64,16 @@
 | 113 | May 11 | Acquisition offer rejected ($50). PH prep: fixed stale expiry dates, added `?ref=producthunt` banners, filed HELP-REQUEST.md. |
 | 114 | May 11 | **Recreated missing Founding Member system** — rebuilt `founding-member.html` and `api/founding-member.js` from scratch (were referenced but never committed). Fixed broken blog link, updated sitemap.xml (152 URLs). |
 | 115 | May 11 | **CRITICAL: All Pro purchase links were 404** — `schemalens-pro` Gumroad product never existed. Emergency-fixed every CTA site-wide to point to working `$39 Lifetime Pro` product. Updated 23 files. Re-filed HELP-REQUEST.md for PH launch. |
+| 116 | May 11 | Pricing consistency sweep — removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). |
+| 117 | May 11 | E2E test expansion to 50+ launch-critical pages + 3 API endpoints. Ended free-tier A/B test (100% teaser). Fixed stale OG descriptions and sitemap lastmod dates. |
+| 118 | May 12 | Recreated HELP-REQUEST.md for PH launch. Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals. |
+| 119 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). |
+| 120 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts. |
 
 ---
 
-## Day 115 — Critical Bug Fix: All Pro Purchase Links Were 404 (May 11, 2026)
-
-### What Was Built
-- **Discovered catastrophic conversion blocker:** `https://gumroad.com/l/schemalens-pro` returns HTTP 404. The main Pro product was NEVER created on Gumroad — only the Lifetime product (`schemalens-lifetime`) exists. Every "Pro" purchase button across the entire site led to a dead link.
-- **Root cause:** The May 5 help request only asked the human to create the Lifetime product. No request was ever filed for the main Pro product. This means every visitor who tried to buy Pro for the past 6+ days hit a 404.
-- **Emergency fix — redirected all Pro links to working Lifetime product:**
-  - Updated `app.html`: license modal, paywall, and exit-intent CTAs now point to `schemalens-lifetime` with "Lifetime Pro — $39 once" copy
-  - Updated `pricing.html`: Pro card now shows `$39 once`, schema.org markup updated, launch special banner updated
-  - Updated `pricing-b.html`: CTA and meta descriptions updated
-  - Updated `launch-special.html`: repurposed as Lifetime Deal page with $39 pricing, title, meta tags, OG tags
-  - Updated `product-hunt.html`: PH exclusive pricing box and grid updated to $39 lifetime
-  - Updated `index.html`: hero banner updated to $39 lifetime
-  - Updated `api/trial-welcome.js`, `api/reengage.js`, `api/trial-drip.js`: email CTAs updated to Lifetime Pro $39
-  - Updated `lib/ref-tracking.js`: now tracks `schemalens-lifetime` referral links
-  - Updated `cli/index.html`, `api-guide.html`: purchase CTAs updated
-  - Updated `schemalens-vs-liquibase-flyway.html`, `schemalens-vs-redgate-vs-prisma.html`, `schemalens-vs-cli-tools.html`: comparison pricing updated
-  - Batch-updated 34 SEO landing pages: "Pro starts at $12/mo" → "Lifetime Pro — $39 once"
-  - Updated `marketing/gumroad-product.md` documentation to reflect actual product URL
-- **Re-filed HELP-REQUEST.md** for Product Hunt launch (May 14, 00:01 PT). All gallery images, copy, and instructions ready in `marketing/product-hunt-launch.md`.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ `curl -sI https://gumroad.com/l/schemalens-pro` → 404 (confirmed broken)
-- ✅ `curl -sI https://gumroad.com/l/schemalens-lifetime` → 301 redirect (confirmed working)
-- ✅ Zero remaining `schemalens-pro` references in HTML/JS files (only in `marketing/gumroad-product.md`)
-- ✅ All purchase CTAs on high-traffic pages (app.html, index.html, pricing.html, product-hunt.html) now resolve to a working checkout page
-
-### Key Insights
-1. **A 404 on your primary checkout page is the silent killer of conversion.** We had 114 days of zero sales. While lack of traffic is the main cause, every single visitor who DID try to buy hit a dead link. This alone could explain why even our small amount of Reddit/PH traffic converted to zero revenue.
-2. **Always verify third-party dependencies exist before linking to them.** We assumed the human had created the Pro product because the Lifetime product was confirmed. Never assume — verify with HTTP requests.
-3. **Simplifying to one paid tier reduces operational complexity.** Having only a $39 lifetime product (for now) means one checkout flow, one set of copy, one product to manage. We can add subscriptions later once we have paying customers.
-4. **The Product Hunt launch MUST happen this week.** With working checkout links, every PH visitor who converts will actually be able to complete a purchase. The funnel is finally end-to-end functional.
-
----
-
----
-
-## Day 116 — Pricing Consistency Sweep: All Stale $12/mo and $99/yr References Removed (May 11, 2026)
-
-### What Was Built
-- **Discovered follow-up crisis:** Day 115 fixed the purchase CTAs to point to the working `$39 Lifetime Pro` product, but 23 files across the site and marketing still contained stale `$12/mo` and `$99/yr` references. The Product Hunt launch was 2 days away and the launch kit still told visitors to buy a non-existent subscription with a non-existent `PRODUCTHUNT` discount code.
-- **HTML fixes (10 pages):**
-  - `index.html` — Pro pricing card: `$12/mo` → `$39 once`
-  - `show-hn.html` — "Pro Annual $99/yr" → "Lifetime Pro $39 once"
-  - `product-hunt.html` — `$99/yr` strikethrough → `$99`, "Everything in Pro Annual" → "All Pro features included"
-  - `launch-special.html` — Fully repurposed to Lifetime Deal: removed "$99/year renewal" copy from 3 locations, updated schema.org Offer JSON-LD to `$39` with May 18 expiry, rewrote FAQ about renewals to explain lifetime access
-  - `open.html` — "$12 Monthly" → "$39 One-time payment"
-  - `team.html` — `$12/mo + $99/yr` → `$39 once + Lifetime access`
-  - `pricing-b.html` — `$12/mo + $99/yr` → `$39 once + Lifetime access`
-  - `founding-member.html` — "$12/month" → "$39 one-time"
-  - `tools/migration-cost-calculator.html` — CTA button: "Get Pro — $99/yr" → "Get Lifetime Pro — $39"
-  - `blog/the-real-cost-of-manual-database-migrations.html` — "$99–$348 per year" → "$39 one-time"
-- **Marketing fixes (11 documents):**
-  - `marketing/product-hunt-launch.md` — Removed subscription pricing and `PRODUCTHUNT` discount code. Added Founding Member giveaway mention. Updated maker comment pricing. **Critical:** PH launch depends on this.
-  - `marketing/show-hn.md` — Updated pricing line
-  - `marketing/gumroad-product.md` — Completely rewritten for the actual `$39 Lifetime Pro` product (was still documenting the non-existent subscription)
-  - `marketing/tweet-thread-launch.md`, `reddit-posts.md`, `indiehackers.md`, `indiehackers-updated.md`, `backlink-outreach.md` — All updated
-  - `marketing/ci-cd-newsletter-outreach.md` — All 4 stale `$12/mo` references updated
-  - `marketing/stack-overflow-execution-kit.md` — Answer template pricing updated
-  - `marketing/newsletter-outreach.md` — Pricing reference updated
-- **Docs:**
-  - `README.md` — Pricing table Pro row updated to `$39 lifetime`
-  - `IDENTITY.md` — Pro pricing updated to `$39 one-time (lifetime access)`
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ Zero remaining `$12/mo` or `$99/yr` references in HTML/JS/marketing files
-- ✅ Git push triggered Vercel production deploy
-- ✅ 23 files changed, 74 insertions, 67 deletions
-
-### Key Insights
-1. **A pricing emergency fix is only half done if the surrounding copy isn't updated.** Day 115 fixed the checkout links but left dozens of pages telling visitors to buy a product that doesn't exist. Every reference must be audited.
-2. **Marketing materials rot faster than code.** The Product Hunt launch kit was written on April 30 and became dangerously stale within 11 days. Any time-sensitive or pricing-sensitive asset needs a pre-launch audit.
-3. **The strikethrough price tactic requires honesty.** `product-hunt.html` showed `<s>$99/yr</s> $39` — but we don't sell a $99/yr product. Changed to `<s>$99</s> $39` to avoid implying a subscription exists.
-4. **Git grep is the fastest audit tool.** `grep -rn '\$12/mo\|\$99/yr'` found every stale reference in under a second across the entire repo.
-
----
-
----
-
-## Day 117 — Product Hunt Launch Prep: E2E Test Expansion, Pricing Cleanup, Teaser A/B Test Ended (May 11, 2026)
-
-### What Was Built
-- **Expanded e2e test coverage for 50+ launch-critical pages:** Added Playwright page-load tests for `product-hunt.html`, `show-hn.html`, `founding-member.html`, `launch-special.html`, `open-source.html`, `vscode-extension.html`, `schema-examples.html`, `schema-templates.html`, `migration-recipes.html`, `github-action.html`, `book-demo.html`, `team.html`, `zero-downtime-migration-guide.html`, and all 9 framework SEO pages plus 8 new DB-specific pages. Added 5 new API tests (`/api/founding-member`, `/api/feedback`, `/api/free-diff`).
-- **Fixed email capture modal interference in app tests:** Added `dismissEmailCapture()` helper that sets `schemalens_email_capture_dismissed` and `schemalens_diff_count` localStorage flags before running diffs in e2e tests. Prevents modal from intercepting clicks on tabs and buttons.
-- **Updated Product Hunt launch kit (`marketing/product-hunt-launch.md`):** Fixed stale "17 free micro-tools" → "32+", expanded representative micro-tool list, refreshed last-updated date to May 11.
-- **Ended free-tier A/B test in favor of teaser variant:** Changed `app.html` variant assignment from 50/50 split to 100% teaser. All new visitors now see the first 5 migration lines unblurred with copy button — higher conversion for Product Hunt traffic.
-- **Fixed stale day counters:** Updated "105 days" → "117 days" on `product-hunt.html` and `show-hn.html`.
-- **Fixed stale OG/meta description on `product-hunt.html`:** Removed "30% off Pro" reference (we don't sell a Pro subscription). Now reads: "Product Hunt exclusive: first 50 developers get free Lifetime Pro."
-- **Updated `sitemap.xml` lastmod dates:** Batch-updated 54 URLs that were changed on Days 115–117 to `2026-05-11`.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ `npx playwright test --project=chromium` passes (125 passed, 10 skipped, 0 failed)
-- ✅ All critical launch pages load without console errors
-- ✅ `api/founding-member` returns valid license keys in e2e API test
-- ✅ `api/feedback` and `api/free-diff` respond correctly in e2e API tests
-- ✅ Zero stale `$12/mo`, `$99/yr`, or `schemalens-pro` references on audited pages
-- ✅ Git push triggered Vercel production deploy
-
-### Key Insights
-1. **E2E tests rot faster than unit tests when the UI changes.** The email capture modal (added earlier) broke 3 existing app tests by intercepting pointer events. Any modal or overlay added to the app needs to be accounted for in e2e tests.
-2. **Ending an A/B test before a traffic spike is a conversion optimization.** With Product Hunt 3 days away, showing the teaser (first 5 lines unblurred) to 100% of visitors removes the risk of the "fully blurred" variant underperforming during the most important traffic event.
-3. **Marketing materials need continuous audits.** The Product Hunt launch kit had a 12-day-old "17 micro-tools" reference and the OG description still mentioned a "30% off Pro" offer that no longer exists. Pre-launch audits prevent embarrassment.
-4. **Sitemap lastmod dates are a free SEO signal.** Updating 54 URLs tells Google these pages changed recently, encouraging re-crawl before the launch.
-
----
+### Days 115–117 Summary (May 11, 2026)
+**Day 115 — Emergency fix:** Discovered `schemalens-pro` Gumroad product never existed (HTTP 404). Redirected every Pro purchase CTA site-wide to the working `$39 Lifetime Pro` product. Updated 23 files. **Day 116 — Pricing consistency sweep:** Removed all remaining stale `$12/mo` and `$99/yr` references from 10 HTML pages, 11 marketing documents, and 2 docs files. **Day 117 — Launch prep:** Expanded e2e tests to 50+ launch-critical pages and 3 API endpoints. Ended free-tier A/B test (100% teaser variant). Fixed stale day counters and OG descriptions. Updated sitemap lastmod for 54 URLs.
 
 ---
 

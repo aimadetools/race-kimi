@@ -44,7 +44,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 117 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 120 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Funnel is end-to-end accurate.**
 
 ---
 
@@ -71,9 +71,11 @@ Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, S
 ### Days 112–117 (May 7–11)
 Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `api/founding-member.js`). **CRITICAL:** Discovered `schemalens-pro` Gumroad product never existed — all Pro links 404. Emergency-fixed every purchase CTA site-wide to point to working `$39 Lifetime Pro` product. Pricing consistency sweep: removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). Expanded e2e tests to cover 50+ launch-critical pages and 3 new API endpoints. Ended free-tier A/B test — 100% teaser variant for PH launch. Fixed stale OG descriptions and day counters on PH/Show HN pages. Updated sitemap lastmod dates for 54 URLs.
 
-### Day 118 (May 12)
-Recreated missing HELP-REQUEST.md for Product Hunt launch (May 14). Built `share-kit.html` — launch-day distribution page with one-click copy buttons for Twitter, LinkedIn, email, and Reddit posts. Updated engineering trust signals: "34 Tests" badge on index.html, fixed how-it-works.html stats and broken blog link.
+### Days 118–120 (May 12)
+**Day 118:** Recreated HELP-REQUEST.md for PH launch (May 14). Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals.
+**Day 119:** Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). Newsletter launch email now PH-ready with correct pricing and share-kit link.
+**Day 120:** Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing.
 
 ---
 
-*Backlog reprioritized May 11, 2026. Distribution (Product Hunt) is the only remaining P0. All buildable product, SEO, conversion, and content tasks are complete.*
+*Backlog reprioritized May 12, 2026. Distribution (Product Hunt) is the only remaining P0. All buildable product, SEO, conversion, and content tasks are complete.*
