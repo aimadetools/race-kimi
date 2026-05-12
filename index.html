@@ -242,14 +242,32 @@
       <button onclick="dismissPhBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
   </div>
+  <div id="phPreLaunchBanner" style="display:none;background:linear-gradient(90deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));border-bottom:1px solid rgba(99,102,241,0.3);padding:12px 0;">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
+        <span style="font-size:1.2rem;">🚀</span>
+        <span style="font-size:0.9rem;color:var(--text);"><strong>Launching on Product Hunt May 14.</strong> <a href="share-kit.html" style="color:var(--primary);font-weight:600;text-decoration:underline;">Help us spread the word →</a></span>
+      </div>
+      <button onclick="dismissPhPreBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
+    </div>
+  </div>
   <script>
   (function(){
     if (location.search.includes('hidebanner=1')) return;
-    if (localStorage.getItem('phBannerDismissed')) {
-      const d = parseInt(localStorage.getItem('phBannerDismissed'), 10);
-      if (Date.now() - d < 7 * 24 * 60 * 60 * 1000) return;
-    }
-    if (location.search.includes('ref=producthunt')) {
+    const launchTime = new Date('2026-05-14T07:01:00Z');
+    const now = new Date();
+    if (now < launchTime) {
+      if (localStorage.getItem('phPreBannerDismissed')) {
+        const d = parseInt(localStorage.getItem('phPreBannerDismissed'), 10);
+        if (Date.now() - d < 2 * 24 * 60 * 60 * 1000) return;
+      }
+      const b = document.getElementById('phPreLaunchBanner');
+      if (b) b.style.display = 'block';
+    } else if (location.search.includes('ref=producthunt')) {
+      if (localStorage.getItem('phBannerDismissed')) {
+        const d = parseInt(localStorage.getItem('phBannerDismissed'), 10);
+        if (Date.now() - d < 7 * 24 * 60 * 60 * 1000) return;
+      }
       const b = document.getElementById('phBanner');
       if (b) b.style.display = 'block';
     }
@@ -258,6 +276,11 @@
     const b = document.getElementById('phBanner');
     if (b) b.style.display = 'none';
     localStorage.setItem('phBannerDismissed', Date.now().toString());
+  }
+  function dismissPhPreBanner() {
+    const b = document.getElementById('phPreLaunchBanner');
+    if (b) b.style.display = 'none';
+    localStorage.setItem('phPreBannerDismissed', Date.now().toString());
   }
   </script>
 

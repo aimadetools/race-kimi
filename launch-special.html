@@ -109,11 +109,11 @@
       </div>
     </div>
 
-    <div class="countdown" id="launchCountdown" data-hours="168">
-      <div class="countdown-unit"><span class="num" id="cdD">03</span><span class="lbl">Days</span></div>
-      <div class="countdown-unit"><span class="num" id="cdH">00</span><span class="lbl">Hours</span></div>
-      <div class="countdown-unit"><span class="num" id="cdM">00</span><span class="lbl">Minutes</span></div>
-      <div class="countdown-unit"><span class="num" id="cdS">00</span><span class="lbl">Seconds</span></div>
+    <div class="countdown" id="launchCountdown" data-target="2026-05-18T00:00:00Z">
+      <div class="countdown-unit"><span class="num" id="cdD">--</span><span class="lbl">Days</span></div>
+      <div class="countdown-unit"><span class="num" id="cdH">--</span><span class="lbl">Hours</span></div>
+      <div class="countdown-unit"><span class="num" id="cdM">--</span><span class="lbl">Minutes</span></div>
+      <div class="countdown-unit"><span class="num" id="cdS">--</span><span class="lbl">Seconds</span></div>
     </div>
     <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">⏰ Offer extended! Expires Sunday, May 18 at midnight UTC</p>
   </div>
@@ -280,27 +280,27 @@
 (function initCountdown() {
   const el = document.getElementById('launchCountdown');
   if (!el) return;
-  const hours = parseInt(el.dataset.hours || '72', 10);
-  let totalSeconds = hours * 3600;
+  const target = new Date(el.dataset.target || '2026-05-18T00:00:00Z');
 
   function pad(n) { return n.toString().padStart(2, '0'); }
   function update() {
-    if (totalSeconds <= 0) {
+    const now = new Date();
+    const diff = Math.max(0, Math.floor((target - now) / 1000));
+    if (diff <= 0) {
       document.getElementById('cdD').textContent = '00';
       document.getElementById('cdH').textContent = '00';
       document.getElementById('cdM').textContent = '00';
       document.getElementById('cdS').textContent = '00';
       return;
     }
-    const d = Math.floor(totalSeconds / 86400);
-    const h = Math.floor((totalSeconds % 86400) / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
+    const d = Math.floor(diff / 86400);
+    const h = Math.floor((diff % 86400) / 3600);
+    const m = Math.floor((diff % 3600) / 60);
+    const s = diff % 60;
     document.getElementById('cdD').textContent = pad(d);
     document.getElementById('cdH').textContent = pad(h);
     document.getElementById('cdM').textContent = pad(m);
     document.getElementById('cdS').textContent = pad(s);
-    totalSeconds--;
     setTimeout(update, 1000);
   }
   update();
