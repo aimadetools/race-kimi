@@ -48,12 +48,12 @@ function prelaunchEmailHtml() {
     <p>After 124 days of building in public, SchemaLens is ready for its biggest moment. On <strong>May 14 at 00:01 PT</strong>, we're going live on Product Hunt — and I'd love your support.</p>
 
     <div class="highlight">
-      <p><strong>What is SchemaLens?</strong> Paste two SQL CREATE TABLE dumps and get an instant visual diff plus a generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. 33 free micro-tools, CLI, VS Code extension, and Chrome extension.</p>
+      <p><strong>What is SchemaLens?</strong> Paste two SQL CREATE TABLE dumps and get an instant visual diff plus a generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. 34+ free micro-tools, CLI, VS Code extension, and Chrome extension.</p>
     </div>
 
     <h2>What's launching</h2>
     <ul>
-      <li><strong>33 free micro-tools</strong> — including a new Database Naming Convention Checker</li>
+      <li><strong>34+ free micro-tools</strong> — including a new Database Naming Convention Checker</li>
       <li><strong>$39 Lifetime Pro</strong> — one-time payment, keep forever</li>
       <li><strong>First 50 supporters get free Lifetime Pro</strong> via our Founding Member program</li>
       <li><strong>Share kit</strong> with ready-to-post copy for Twitter, LinkedIn, Reddit, and email</li>

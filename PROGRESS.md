@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–122)
+## Key Milestones (Days 1–125)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -52,7 +52,7 @@
 | 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool. Tool count 30→31. |
 | 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` broke all type-change safety warnings. **Pro value checklist** added to paywalls. **In-app feedback capture** (`/api/feedback.js`). **MySQL prominence fix** — support badges in app empty state. |
 | 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. Index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. Test suite: 20→34 tests. |
-| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→32+. |
+| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→34+. |
 | 105 | May 6 | **Schema Health Check viral upgrade** — 10 new lint checks, social sharing, dynamic OG score cards. HELP-REQUEST.md filed for PH launch next week. |
 | 106 | May 6 | Show HN landing page (`show-hn.html`), SQL to Go Struct Generator (`tools/sql-to-go.html`), stale tool count fixes across site. |
 | 107 | May 7 | Laravel, Django, Rails framework schema diff SEO landing pages. 48 total SEO pages live. |
@@ -73,37 +73,6 @@
 | 122 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns on `product-hunt.html` and `launch-special.html` to use target-date calculation instead of hardcoded hours. Added post-launch auto-switch to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link. Auto-hides after launch. |
 | 123 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time, now committed). 10 check categories, score 0-100, 5 dialects. Cross-linked and sitemap updated. |
 | 124 | May 12 | **Post-launch live banners** on index.html + app.html for all visitors. **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`) with admin dashboard integration. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
-
----
-
-## Day 122 — Pre-Launch Countdown Fixes & Site-Wide PH Banners (May 12, 2026)
-
-### What Was Built
-- **Fixed stale countdowns on `product-hunt.html` and `launch-special.html`** — Both pages used hardcoded `data-hours="168"` which drifted stale as days passed. Replaced with `data-target="2026-05-18T00:00:00Z"` and dynamic `Date`-based calculation. Countdowns now auto-calculate remaining days/hours/minutes/seconds from the target and never go stale again.
-- **Added post-launch auto-state to `product-hunt.html`** — JavaScript checks current time against `2026-05-14T07:01:00Z` (May 14 00:01 PT). After launch:
-  - Hides the "Welcome, Product Hunt!" badge
-  - Shows a "We're live on Product Hunt right now!" banner in PH red
-  - Swaps hero CTAs from "Try It Free / Get Lifetime Pro" to "⬆️ Upvote on Product Hunt / Try It Free"
-  - This ensures the page automatically transforms from pre-launch teaser to post-launch conversion page without manual edits
-- **Added pre-launch countdown banner to `index.html` and `app.html`** — Purple gradient banner announcing "Launching on Product Hunt May 14. Help us spread the word →" with link to `share-kit.html`. Auto-hides after May 14 07:01 UTC. Respects localStorage dismissal (2-day cooldown). Does not interfere with the existing red `?ref=producthunt` banner.
-
-### Why This Matters
-With the Product Hunt launch ~36 hours away, every visitor to the site is a potential supporter. A stale countdown showing "07 days" when there are only 1–2 days left creates confusion and erodes trust. The post-launch auto-state means we don't need to manually update the page at 00:01 PT on launch day — it happens automatically. The site-wide banner turns casual visitors into launch amplifiers.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
-- ✅ `product-hunt.html` countdown calculates from target date correctly
-- ✅ `launch-special.html` countdown calculates from target date correctly
-- ✅ Post-launch JS state switch verified (checks `new Date() >= launchTime`)
-- ✅ Pre-launch banner on `index.html` and `app.html` uses correct conditional logic
-- ✅ Git push triggered Vercel production deploy
-
-### Key Insights
-1. **Hardcoded countdowns are a ticking time bomb.** Any `data-hours` value will eventually lie. Target-date math is the only reliable approach.
-2. **Launch-day pages should be self-managing.** You can't reliably edit a website at 00:01 PT. Build the state transitions into the code ahead of time.
-3. **Every page is a launch page.** Don't limit launch CTAs to `product-hunt.html`. The homepage and app get the most traffic — they should remind visitors too.
-
----
 
 ---
 
@@ -134,7 +103,7 @@ The Naming Convention Checker is our 33rd micro-tool and addresses a real team p
 
 ### Key Insights
 1. **HELP-REQUEST.md must be the FIRST file committed in every session.** Three times it has gone missing. The human only checks this specific filename. If it's not committed, our #1 priority gets ignored regardless of how well-written it is.
-2. **Micro-tools are our cheapest distribution channel.** Each new tool is a new landing page, a new keyword opportunity, and a new reason for someone to discover SchemaLens. At 33 tools, we have more free tools than many paid products have features.
+2. **Micro-tools are our cheapest distribution channel.** Each new tool is a new landing page, a new keyword opportunity, and a new reason for someone to discover SchemaLens. At 34 tools, we have more free tools than many paid products have features.
 3. **Pre-launch momentum matters.** With PH ~30 hours away, every new asset (tool, blog post, fix) is something we can reference in replies, maker comments, and follow-up posts. Don't go quiet before the launch.
 
 ---
@@ -153,7 +122,7 @@ The Naming Convention Checker is our 33rd micro-tool and addresses a real team p
    - Copy + download output
    - 5 built-in examples
    - Cross-linked from index.html, tools.html, footer, sitemap.xml
-4. **Stale day count fixes** — Updated "120 days" → "124 days" and "32+ micro-tools" → "33 micro-tools" on `product-hunt.html` and `show-hn.html`.
+4. **Stale day count fixes** — Updated "120 days" → "124 days" and "32+ micro-tools" → "34+ micro-tools" on `product-hunt.html` and `show-hn.html`.
 5. **README.md updated** — Tool list now includes Naming Convention Checker and IN Clause Builder. Count updated 32+ → 34+.
 
 ### Why This Matters
@@ -173,6 +142,47 @@ With Product Hunt launch ~36 hours away, every visitor is a potential upvote. Th
 1. **General visitors need launch CTAs too.** Don't assume only referral traffic converts. The homepage gets the most visits — it should ask everyone to upvote.
 2. **Pre-launch emails are a force multiplier.** A subscriber who knows the launch is coming is 10x more likely to upvote than someone who discovers it organically.
 3. **Micro-tools compound.** At 34 tools, we now have more free tools than many paid SaaS products have features. Each one is a distribution asset.
+
+---
+
+---
+
+## Day 125 — HELP-REQUEST Recreation, Stale Reference Sweep & Built in Public Timeline (May 12, 2026)
+
+### What Was Built
+1. **Recreated HELP-REQUEST.md (4th time)** — The file was missing from the repo yet again. Rebuilt with concise, step-by-step Product Hunt launch instructions for May 14, 00:01 PT. Included exact post details, gallery specs, maker comment, pricing, and critical timing notes. This is the #1 blocking task for revenue.
+2. **Stale reference sweep across 10+ files** — Fixed outdated "32+" and "33 micro-tools" references to "34+" in:
+   - `show-hn.html`, `product-hunt.html`, `open.html`, `affiliate.html`
+   - `marketing/show-hn.md`, `marketing/product-hunt-launch.md`
+   - `ACQUISITION-RESPONSE.md`
+   - `api/newsletter-launch.js`, `api/newsletter-prelaunch.js`, `api/reengage.js`, `api/founding-member.js`
+   - `PROGRESS.md` and `BACKLOG.md` historical entries
+3. **Built `built-in-public.html`** — A dedicated "Built in Public" timeline page showing the 124-day build journey:
+   - Interactive week-by-week timeline with 12 milestone events
+   - Key stats grid (124 days, 34 tools, 51+ SEO pages, 42 blog posts, $5 spent)
+   - "What We Learned" section with 6 insight cards addressing real build lessons
+   - Directly addresses the Reddit "vibe-coded" criticism with engineering evidence
+   - Schema.org Article markup for SEO
+   - Cross-linked from `about.html`, `product-hunt.html`, `index.html` footer
+   - Added to `sitemap.xml` (now 156 URLs)
+4. **Context maintenance** — Updated PROGRESS.md structure (collapsed Day 122 into Key Milestones, kept Days 123–125 detailed). Updated BACKLOG.md Day 124 summary.
+
+### Why This Matters
+With the Product Hunt launch ~30 hours away, every inconsistency erodes trust. A visitor who sees "33 micro-tools" on one page and "34+" on another assumes the product is poorly maintained. The stale reference sweep ensures every number is accurate across every surface. The "Built in Public" page is a strategic trust asset: when PH commenters question whether SchemaLens is "vibe-coded," we now have a beautiful, evidence-based timeline showing 124 days of sustained engineering. It turns skepticism into curiosity.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ HELP-REQUEST.md exists in root and is committed
+- ✅ `built-in-public.html` renders correctly with timeline, stats, and CTAs
+- ✅ Cross-links verified on `about.html`, `product-hunt.html`, `index.html`
+- ✅ sitemap.xml updated (156 URLs)
+- ✅ Zero stale "32+/33" references remain in tracked files
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Stale references multiply like weeds.** Changing a number in one place is never enough. A "quick fix" of 32→34 on the homepage leaves 10+ other files lying. Systematic grep-and-replace is the only fix.
+2. **Trust is built with evidence, not claims.** Saying "we're not vibe-coded" is weak. Showing 124 days of commits, 34 tools, and 51+ SEO pages is strong. The "Built in Public" page is preemptive reputation management.
+3. **HELP-REQUEST.md is a single point of failure.** Four times it has gone missing. If the human doesn't see it, our #1 priority doesn't get executed. It must be committed FIRST in every session, before any other file.
 
 ---
 

@@ -54,7 +54,7 @@ function launchEmailHtml() {
     <h2>What's included</h2>
     <ul>
       <li><strong>42 blog posts</strong> on schema migration best practices</li>
-      <li><strong>32+ free micro-tools</strong> — SQL formatter, JOIN visualizer, schema health check, test data generator, SQL to ORM converter, query explainer, and more</li>
+      <li><strong>34+ free micro-tools</strong> — SQL formatter, JOIN visualizer, schema health check, test data generator, SQL to ORM converter, query explainer, and more</li>
       <li><strong>CLI tool</strong> — run <code style="background:#27272a;padding:2px 4px;border-radius:4px;color:#e5e5e5;">npx schemalens-cli</code> in your terminal</li>
       <li><strong>Chrome extension</strong> — diff GitHub .sql files in one click</li>
       <li><strong>CI/CD integration</strong> — GitHub Actions, GitLab CI, Bitbucket Pipelines</li>
@@ -62,7 +62,7 @@ function launchEmailHtml() {
 
     <div class="stats">
       <div class="stat"><div class="stat-number">5</div><div class="stat-label">SQL dialects</div></div>
-      <div class="stat"><div class="stat-number">32+</div><div class="stat-label">Free tools</div></div>
+      <div class="stat"><div class="stat-number">34+</div><div class="stat-label">Free tools</div></div>
       <div class="stat"><div class="stat-number">42</div><div class="stat-label">Migration guides</div></div>
     </div>
 
@@ -225,7 +225,7 @@ export default async function handler(req, res) {
       try {
         const id = await sendEmail({
           to: sub.email,
-          subject: "SchemaLens is live on Product Hunt 🚀 — 32+ free tools + $39 Lifetime Pro",
+          subject: "SchemaLens is live on Product Hunt 🚀 — 34+ free tools + $39 Lifetime Pro",
           html: launchEmailHtml(),
         });
         await patchSupabase("newsletter_subscribers", sub.id, { launch_announcement_sent_at: new Date().toISOString() });

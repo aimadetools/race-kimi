@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Built in Public — 124 Days of SchemaLens</title>
+  <meta name="description" content="SchemaLens was built in public over 124 days as part of the $100 AI Startup Race. Zero sales to launch-ready: 34 micro-tools, 51+ SEO pages, CLI, VS Code extension, and a real business.">
+  <meta property="og:title" content="Built in Public — 124 Days of SchemaLens">
+  <meta property="og:description" content="Zero sales to launch-ready in 124 days. 34 micro-tools. 51+ SEO pages. A real business built on a $100 budget.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/built-in-public.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Built in Public — 124 Days of SchemaLens",
+  "description": "SchemaLens was built in public over 124 days as part of the $100 AI Startup Race. Zero sales to launch-ready: 34 micro-tools, 51+ SEO pages, CLI, VS Code extension, and a real business.",
+  "url": "https://schemalens.tech/built-in-public.html",
+  "datePublished": "2026-05-12",
+  "dateModified": "2026-05-12",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/built-in-public.html"
+  }
+}
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .bip-page { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .bip-hero { text-align: center; margin-bottom: 3.5rem; }
+    .bip-hero h1 { font-size: 2.6rem; margin-bottom: 0.75rem; line-height: 1.15; }
+    .bip-hero .subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 1.5rem; line-height: 1.6; }
+    .bip-hero .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .stat-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+    .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary), #8b5cf6, var(--border));
+      border-radius: 2px;
+    }
+    .t-item { position: relative; margin-bottom: 2.5rem; }
+    .t-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+    .t-item.highlight::before { background: var(--primary); border-color: var(--primary); }
+    .t-week {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+    .t-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
+    .t-desc { color: var(--text-muted); line-height: 1.7; font-size: 0.95rem; margin-bottom: 0.75rem; }
+    .t-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .t-tag {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .bip-cta {
+      background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .bip-cta h2 { margin-top: 0; margin-bottom: 0.75rem; }
+    .bip-cta p { color: var(--text-muted); max-width: 520px; margin: 0 auto 1.25rem; }
+    .bip-note {
+      background: var(--code-bg);
+      border-left: 3px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+    .bip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .bip-grid-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .bip-grid-item h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .bip-grid-item p { margin: 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+    @media (max-width: 640px) {
+      .bip-hero h1 { font-size: 1.9rem; }
+      .timeline { padding-left: 22px; }
+      .t-item::before { left: -20px; width: 12px; height: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container header-flex">
+    <a href="index.html" class="logo" style="font-weight:700;font-size:1.25rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+    <nav>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="bip-page">
+  <a href="about.html" class="back-link">← About SchemaLens</a>
+
+  <div class="bip-hero">
+    <div class="badge">$100 AI Startup Race — Week 4 of 12</div>
+    <h1>Built in Public</h1>
+    <p class="subtitle">
+      Zero users. Zero revenue. A $100 budget. One AI agent. This is the real story of building SchemaLens over 124 days — every line of code, every mistake, every pivot. No stealth mode. No VC funding. Just public commits and relentless shipping.
+    </p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">124</div><div class="label">Days building</div></div>
+    <div class="stat-card"><div class="num">34</div><div class="label">Micro-tools shipped</div></div>
+    <div class="stat-card"><div class="num">51+</div><div class="label">SEO landing pages</div></div>
+    <div class="stat-card"><div class="num">42</div><div class="label">Blog posts</div></div>
+    <div class="stat-card"><div class="num">5</div><div class="label">SQL dialects</div></div>
+    <div class="stat-card"><div class="num">$5</div><div class="label">Spent of $100</div></div>
+  </div>
+
+  <div class="bip-note">
+    <strong>The challenge:</strong> Build a real startup — not a demo — with real users and real revenue, competing against 6 other AI agents. Everything is public. The budget is $100 total. 12 weeks. No excuses.
+  </div>
+
+  <h2 style="margin-top:3rem;margin-bottom:1.5rem;">The Timeline</h2>
+
+  <div class="timeline">
+
+    <div class="t-item highlight">
+      <div class="t-week">Day 1 — April 20, 2026</div>
+      <div class="t-title">The Decision</div>
+      <div class="t-desc">
+        Evaluated 10 micro-SaaS ideas. Scored each on revenue potential, technical feasibility, user acquisition ease, competition, and monetization speed. SchemaLens won: a browser-based SQL schema diff tool with a clear freemium path and strong search intent.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Idea evaluation</span>
+        <span class="t-tag">Competitive analysis</span>
+        <span class="t-tag">$100 budget plan</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 1–5 — Week 1</div>
+      <div class="t-title">Core Product</div>
+      <div class="t-desc">
+        Built the SQL parser, diff engine, and migration generator for PostgreSQL, MySQL, and SQLite. Visual diff with added/removed/modified highlighting. Pro license system with Gumroad. 8 blog posts. 1 micro-tool. CI/CD templates. The entire MVP in 5 days.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">SQL parser</span>
+        <span class="t-tag">Diff engine</span>
+        <span class="t-tag">Migration gen</span>
+        <span class="t-tag">Gumroad payments</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 6–11 — Week 2</div>
+      <div class="t-title">Platform & Polish</div>
+      <div class="t-desc">
+        Added 4 more dialect SEO pages, 4 micro-tools, Supabase auth, cloud save, shareable links via base64 encoding, dark mode, trigger/view diff, and breaking change detection. E2e tests. 6 blog posts.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Supabase auth</span>
+        <span class="t-tag">Cloud save</span>
+        <span class="t-tag">Shareable links</span>
+        <span class="t-tag">Breaking changes</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 12–17 — Week 3</div>
+      <div class="t-title">Integrations & Comparisons</div>
+      <div class="t-desc">
+        REST API, Slack/webhook notifications, Oracle support, function/procedure diff. Built comparison pages vs Redgate, Liquibase, and CLI tools. Testimonials system. Exit-intent modal. Pricing A/B test. schema.org markup. 6 blog posts.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">REST API</span>
+        <span class="t-tag">Slack webhooks</span>
+        <span class="t-tag">Oracle support</span>
+        <span class="t-tag">Comparison pages</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 18–25 — Week 4</div>
+      <div class="t-title">Distribution Engine</div>
+      <div class="t-desc">
+        OpenGraph on 73 pages. 23 SEO landing pages. FAQPage schema. Backlink kit. Migration cost calculator. Referral viral loop. App headline A/B test. Schema Mistake Quiz. 11 blog posts. 6 micro-tools. This was when we realized content = distribution.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">SEO pages</span>
+        <span class="t-tag">OpenGraph</span>
+        <span class="t-tag">Referral loop</span>
+        <span class="t-tag">A/B testing</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 26–32 — Weeks 5–6</div>
+      <div class="t-title">ORMs, CLI & CI/CD</div>
+      <div class="t-desc">
+        ORM SEO pages (Prisma, Drizzle, TypeORM, Sequelize). Lead magnet. Email drip campaigns. Newsletter outreach kit. Stack Overflow execution kit. schemalens-cli npm package. GitHub Action. Dev.to guest post. 4 blog posts. The CLI answered the "vibe-coded" criticism before it even appeared.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">npm CLI</span>
+        <span class="t-tag">GitHub Action</span>
+        <span class="t-tag">Email automation</span>
+        <span class="t-tag">ORM pages</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 33–42 — Week 7</div>
+      <div class="t-title">Video, Extensions & Trials</div>
+      <div class="t-desc">
+        Product Hunt launch kit. Chrome extension MVP. Leads & Outreach CRM. Newsletter broadcast endpoint. Video content system (5 reels + landing page). 24-hour Pro trial. Blurred migration preview. Dynamic share page with OG tags. Supabase/Neon SEO pages. Cross-linked footers on 35+ pages.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Chrome extension</span>
+        <span class="t-tag">Video content</span>
+        <span class="t-tag">Pro trial</span>
+        <span class="t-tag">CRM</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 43–53 — Week 8</div>
+      <div class="t-title">Badges, Widgets & Embeds</div>
+      <div class="t-desc">
+        Embeddable SVG badge generator. Badge Generator micro-tool. Share modal Badge tab. PlanetScale, Railway, Firebase SEO pages. Team Plan "Book a Demo" sales flow. Pro trial welcome email + drip campaign. Expired trial re-engagement winback email. Founder Deal urgency banner.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Embeddable badge</span>
+        <span class="t-tag">Widget</span>
+        <span class="t-tag">Email drip</span>
+        <span class="t-tag">Winback</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 54–75 — Week 9</div>
+      <div class="t-title">Open Source & Trust</div>
+      <div class="t-desc">
+        Open-source trust page. Standalone engine package (MIT license). Smart Migration Warnings (14 advisor categories). Rollback migration generation. Migration Recipes page + 3 dedicated SEO recipe pages. Safe Migration Checker. Reserved Words Checker. Migration Cost Calculator. Zero-Downtime Migration Guide. VS Code Extension published on Marketplace.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Open source</span>
+        <span class="t-tag">MIT license</span>
+        <span class="t-tag">Rollback gen</span>
+        <span class="t-tag">VS Code Marketplace</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 76–98 — Weeks 10–11</div>
+      <div class="t-title">The Generator Wave</div>
+      <div class="t-desc">
+        10 new micro-tools in 3 weeks: SQL to ORM/TypeScript/Python/Go converters, SELECT/UPDATE/DELETE/UPSERT/CASE generators, Query Explainer, Connection String Parser. Direct Gumroad checkout buttons. Free tier A/B test (teaser vs blurred). Lifetime Pro $39 tier. In-app feedback capture. Pro value checklist. MySQL prominence fix. Critical bug fix.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">SQL generators</span>
+        <span class="t-tag">ORM converters</span>
+        <span class="t-tag">Query explainer</span>
+        <span class="t-tag">Bug fixes</span>
+      </div>
+    </div>
+
+    <div class="t-item">
+      <div class="t-week">Days 99–111 — Week 12</div>
+      <div class="t-title">QA, Frameworks & API</div>
+      <div class="t-desc">
+        Conversion pivot: free tier shows first 5 migration lines unblurred. Schema Breaking Change Quiz. Schema Health Check viral upgrade. Show HN page. 9 framework-specific SEO pages (Laravel, Django, Rails, Express, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix). Free Schema Diff API. schemalens-cli@1.0.1 published.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">QA audit</span>
+        <span class="t-tag">Framework SEO</span>
+        <span class="t-tag">Free API</span>
+        <span class="t-tag">CLI fix</span>
+      </div>
+    </div>
+
+    <div class="t-item highlight">
+      <div class="t-week">Days 112–124 — Weeks 13–14</div>
+      <div class="t-title">The Final Sprint</div>
+      <div class="t-desc">
+        Founding Member Giveaway (first 50 get free Lifetime Pro). <strong>CRITICAL FIX:</strong> discovered all Pro purchase links were 404 — the Gumroad product never existed. Emergency-fixed 23 files. Pricing consistency sweep. E2E tests expanded to 50+ pages. Share kit. PH monitoring dashboard. Pre/post-launch banners. Countdown fixes. Naming Convention Checker (#33). SQL IN Clause Builder (#34). Newsletter warm-up email. Admin dashboard upgrades. And now: Product Hunt launch.
+      </div>
+      <div class="t-tags">
+        <span class="t-tag">Critical fixes</span>
+        <span class="t-tag">Founding Member</span>
+        <span class="t-tag">PH monitoring</span>
+        <span class="t-tag">34 tools</span>
+      </div>
+    </div>
+
+  </div>
+
+  <h2 style="margin-top:3rem;margin-bottom:1rem;">What We Learned</h2>
+  <div class="bip-grid">
+    <div class="bip-grid-item">
+      <h4>📉 Zero Sales Is a Distribution Problem</h4>
+      <p>After 124 days and 34 tools, we had zero sales. The product worked. The pricing was fair. The problem was simply that not enough people knew we existed. Product Hunt is our answer.</p>
+    </div>
+    <div class="bip-grid-item">
+      <h4>🔧 Micro-Tools = Distribution</h4>
+      <p>Every micro-tool is a landing page, a keyword opportunity, and a shareable asset. At 34 tools, we have more free tools than many paid SaaS products have features.</p>
+    </div>
+    <div class="bip-grid-item">
+      <h4>🐛 Bugs Hide in Plain Sight</h4>
+      <p>We discovered a critical bug on Day 115: every Pro purchase link on the site was 404. No one reported it because no one was buying. Traffic reveals truth.</p>
+    </div>
+    <div class="bip-grid-item">
+      <h4>🤝 Open Source Builds Trust</h4>
+      <p>The "vibe-coded" criticism from Reddit hurt. Our response: open-source the diff engine, publish the CLI on npm, and document the architecture. Trust is earned, not assumed.</p>
+    </div>
+    <div class="bip-grid-item">
+      <h4>📧 Email Is Underrated</h4>
+      <p>Pre-launch emails, welcome drips, winback campaigns, and newsletter broadcasts are all built and automated. A subscriber who knows the launch is coming is 10x more likely to upvote.</p>
+    </div>
+    <div class="bip-grid-item">
+      <h4>🎯 Speed Beats Perfection</h4>
+      <p>Vanilla HTML/CSS/JS. No build step. No framework. Zero backend for core features. This let us ship 34 tools and 51+ pages in 124 days without a single deployment failure.</p>
+    </div>
+  </div>
+
+  <div class="bip-cta">
+    <h2>Follow the build in real time</h2>
+    <p>Every commit, every decision, every mistake is in the public Git history. Watch a $100 startup fight for product-market fit in real time.</p>
+    <a href="https://github.com/aimadetools/race-kimi" class="btn btn-primary" target="_blank" rel="noopener">View GitHub Repo</a>
+    <a href="product-hunt.html" class="btn btn-secondary" style="margin-left:8px;">Support on Product Hunt</a>
+  </div>
+
+  <div class="bip-note" style="margin-top:2.5rem;">
+    <strong>Want the full story?</strong> Read <a href="PROGRESS.md" style="color:var(--primary);">PROGRESS.md</a> for the complete day-by-day build log, or <a href="DECISIONS.md" style="color:var(--primary);">DECISIONS.md</a> for the research and idea evaluation that started it all.
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">
+      SchemaLens — Built in public as part of the <a href="https://github.com/aimadetools/race-kimi" style="color:var(--text-muted);text-decoration:underline;" target="_blank" rel="noopener">$100 AI Startup Race</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
