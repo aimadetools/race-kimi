@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL IN Clause Builder — Free List to SQL Converter | SchemaLens</title>
+<meta name="description" content="Convert any list of values into a properly quoted SQL IN clause. Auto-detects strings, numbers, dates, and UUIDs. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL IN Clause Builder — Free List to SQL Converter">
+<meta property="og:description" content="Paste a list of values and get a properly formatted SQL IN clause for any dialect. Handles escaping, NULLs, and duplicates automatically.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-in-list-builder.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL IN Clause Builder",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Converts lists of values into properly quoted SQL IN clauses. Auto-detects data types, handles escaping, removes duplicates, and supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle",
+  "url": "https://schemalens.tech/tools/sql-in-list-builder.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<style>
+.page-header { padding: 48px 0 24px; text-align: center; }
+.page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+.page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+.tool-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
+@media (max-width: 800px) { .tool-layout { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.panel h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+.editor { width: 100%; min-height: 280px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: var(--text); resize: vertical; box-sizing: border-box; }
+.output { width: 100%; min-height: 120px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: var(--text); resize: vertical; box-sizing: border-box; }
+.controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.controls label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+.controls select, .controls input[type="checkbox"] { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; color: var(--text); font-size: 0.85rem; }
+.btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.stat-row { display: flex; gap: 16px; margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); }
+.stat-row span { display: flex; align-items: center; gap: 4px; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.9rem; }
+.examples { margin-top: 16px; }
+.example-chip { display: inline-block; padding: 4px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; margin: 0 6px 6px 0; transition: all 0.2s; }
+.example-chip:hover { border-color: var(--primary); color: var(--primary); }
+</style>
+</head>
+<body>
+<nav class="nav-bar" style="border-bottom:1px solid var(--border);">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo" style="font-weight:700;color:var(--text);text-decoration:none;font-size:1.25rem;">SchemaLens</a>
+    <div class="nav-links">
+      <a href="../tools.html">Tools</a>
+      <a href="../app.html">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>SQL IN Clause Builder</h1>
+  <p>Paste any list of values and get a properly quoted SQL <code>IN</code> clause for your dialect. Handles escaping, NULLs, and duplicates automatically.</p>
+</div>
+
+<div class="tool-layout">
+  <div class="panel">
+    <h3>Input Values</h3>
+    <div class="controls">
+      <label for="dialect">Dialect:</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <label for="forceType">Type:</label>
+      <select id="forceType">
+        <option value="auto">Auto-detect</option>
+        <option value="string">String</option>
+        <option value="number">Number</option>
+        <option value="date">Date</option>
+        <option value="uuid">UUID</option>
+      </select>
+      <label><input type="checkbox" id="removeDups" checked> Remove duplicates</label>
+      <label><input type="checkbox" id="sortVals"> Sort</label>
+    </div>
+    <textarea id="input" class="editor" placeholder="Paste values here, one per line or comma-separated...
+
+Example:
+Alice
+Bob
+Charlie
+Diana"></textarea>
+    <div class="stat-row">
+      <span id="countStat">0 values</span>
+      <span id="typeStat">type: —</span>
+    </div>
+    <div class="examples">
+      <span class="example-chip" onclick="loadExample('strings')">Strings</span>
+      <span class="example-chip" onclick="loadExample('numbers')">Numbers</span>
+      <span class="example-chip" onclick="loadExample('uuids')">UUIDs</span>
+      <span class="example-chip" onclick="loadExample('dates')">Dates</span>
+      <span class="example-chip" onclick="loadExample('mixed')">Mixed</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>SQL IN Clause</h3>
+    <textarea id="output" class="output" readonly placeholder="IN clause will appear here..."></textarea>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="copyOutput()">📋 Copy</button>
+      <button class="btn btn-secondary" onclick="downloadOutput()">⬇️ Download</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:32px 0;margin-top:auto;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <span style="color:var(--text-muted);font-size:0.85rem;">© 2026 SchemaLens. Built in the open.</span>
+    <div style="display:flex;gap:16px;">
+      <a href="../index.html" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;">Home</a>
+      <a href="../tools.html" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;">Tools</a>
+      <a href="../app.html" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;">App</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const inputEl = document.getElementById('input');
+const outputEl = document.getElementById('output');
+const dialectEl = document.getElementById('dialect');
+const forceTypeEl = document.getElementById('forceType');
+const removeDupsEl = document.getElementById('removeDups');
+const sortValsEl = document.getElementById('sortVals');
+const countStat = document.getElementById('countStat');
+const typeStat = document.getElementById('typeStat');
+
+const examples = {
+  strings: `Alice
+Bob
+Charlie
+Diana
+Eve`,
+  numbers: `42
+17
+99
+3
+256`,
+  uuids: `550e8400-e29b-41d4-a716-446655440000
+6ba7b810-9dad-11d1-80b4-00c04fd430c8
+6ba7b811-9dad-11d1-80b4-00c04fd430c8`,
+  dates: `2024-01-15
+2024-03-22
+2024-07-08
+2024-11-30`,
+  mixed: `Alice
+42
+2024-01-15
+bob@example.com
+550e8400-e29b-41d4-a716-446655440000`
+};
+
+function loadExample(name) {
+  inputEl.value = examples[name];
+  generate();
+}
+
+function parseValues(text) {
+  const lines = text.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
+  return lines;
+}
+
+function detectType(values) {
+  if (values.length === 0) return 'string';
+  let numCount = 0, dateCount = 0, uuidCount = 0, nullCount = 0;
+  for (const v of values) {
+    const upper = v.toUpperCase();
+    if (upper === 'NULL') { nullCount++; continue; }
+    if (/^-?\d+(\.\d+)?$/.test(v)) numCount++;
+    if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?/.test(v)) dateCount++;
+    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(v)) uuidCount++;
+  }
+  const total = values.length;
+  if (uuidCount > total * 0.5) return 'uuid';
+  if (dateCount > total * 0.5) return 'date';
+  if (numCount > total * 0.5) return 'number';
+  return 'string';
+}
+
+function escapeString(v, dialect) {
+  let escaped = v.replace(/'/g, "''");
+  if (dialect === 'mysql') escaped = escaped.replace(/\\/g, '\\\\');
+  return escaped;
+}
+
+function formatValue(v, type, dialect) {
+  const upper = v.toUpperCase();
+  if (upper === 'NULL') return 'NULL';
+  if (type === 'number') {
+    const n = parseFloat(v);
+    return isNaN(n) ? `'${escapeString(v, dialect)}'` : String(n);
+  }
+  if (type === 'date') {
+    if (dialect === 'oracle') return `TO_DATE('${escapeString(v.slice(0, 10), dialect)}', 'YYYY-MM-DD')`;
+    return `'${escapeString(v, dialect)}'`;
+  }
+  if (type === 'uuid') {
+    return `'${escapeString(v, dialect)}'`;
+  }
+  return `'${escapeString(v, dialect)}'`;
+}
+
+function generate() {
+  const raw = parseValues(inputEl.value);
+  if (raw.length === 0) {
+    outputEl.value = '';
+    countStat.textContent = '0 values';
+    typeStat.textContent = 'type: —';
+    return;
+  }
+
+  const dialect = dialectEl.value;
+  const forceType = forceTypeEl.value;
+  const type = forceType === 'auto' ? detectType(raw) : forceType;
+  let values = raw.slice();
+
+  if (removeDupsEl.checked) {
+    const seen = new Set();
+    values = values.filter(v => {
+      const key = v.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  if (sortValsEl.checked) {
+    values.sort((a, b) => {
+      const na = parseFloat(a), nb = parseFloat(b);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+    });
+  }
+
+  const formatted = values.map(v => formatValue(v, type, dialect));
+  const maxInline = 5;
+  let sql;
+  if (formatted.length <= maxInline) {
+    sql = `IN (${formatted.join(', ')})`;
+  } else {
+    const lines = [];
+    for (let i = 0; i < formatted.length; i += maxInline) {
+      lines.push('  ' + formatted.slice(i, i + maxInline).join(', '));
+    }
+    sql = `IN (\n${lines.join(',\n')}\n)`;
+  }
+
+  outputEl.value = sql;
+  countStat.textContent = `${values.length} value${values.length !== 1 ? 's' : ''}`;
+  typeStat.textContent = `type: ${type}`;
+}
+
+function copyOutput() {
+  if (!outputEl.value) return;
+  navigator.clipboard.writeText(outputEl.value).then(() => {
+    const btn = document.querySelector('.btn-primary');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+function downloadOutput() {
+  if (!outputEl.value) return;
+  const blob = new Blob([outputEl.value], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'in-clause.sql';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearAll() {
+  inputEl.value = '';
+  outputEl.value = '';
+  countStat.textContent = '0 values';
+  typeStat.textContent = 'type: —';
+}
+
+[inputEl, dialectEl, forceTypeEl, removeDupsEl, sortValsEl].forEach(el => {
+  el.addEventListener('input', generate);
+  if (el.type === 'checkbox') el.addEventListener('change', generate);
+});
+
+// Initialize
+generate();
+</script>
+</body>
+</html>
