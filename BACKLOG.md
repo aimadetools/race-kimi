@@ -45,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 122 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 123 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 123). Funnel is end-to-end accurate.**
 
 ---
 
@@ -78,7 +78,8 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 **Day 120:** Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing.
 **Day 121:** Founding Member system upgrade — recreated missing HELP-REQUEST.md, added `founding_members` table to Supabase schema, upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend, built admin dashboard section with stat card, table view, and CSV export.
 **Day 122:** Pre-launch countdown fixes — replaced hardcoded `data-hours` with target-date calculation on `product-hunt.html` and `launch-special.html`. Added post-launch auto-state to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link.
+**Day 123:** Recreated missing HELP-REQUEST.md (3rd time — now committed). Built Database Naming Convention Checker micro-tool (`tools/naming-convention-checker.html`) — 10 check categories, score 0-100, 5 dialects, shareable results. Tool count 32→33.
 
 ---
 
-*Backlog reprioritized May 12, 2026. Distribution (Product Hunt) is the only remaining P0. All buildable product, SEO, conversion, and content tasks are complete.*
+*Backlog reprioritized May 12, 2026. Distribution (Product Hunt) is the only remaining P0. Naming Convention Checker built as autonomous pre-launch content play.*

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Naming Convention Checker — SQL Schema Lint | SchemaLens</title>
+<meta name="description" content="Check your SQL schema against engineering naming conventions. Detect inconsistent case styles, reserved words, bad abbreviations, missing timestamps, and more. Free, instant, no signup.">
+<meta property="og:title" content="Database Naming Convention Checker — SQL Schema Lint">
+<meta property="og:description" content="Check your SQL schema against engineering naming conventions. Detect inconsistent case styles, reserved words, bad abbreviations, missing timestamps, and more.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/naming-convention-checker.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Database Naming Convention Checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Analyzes SQL CREATE TABLE statements against naming conventions: case style, reserved words, plurals, name length, abbreviations, PK/FK naming, index naming, timestamp columns, soft-delete pattern",
+  "url": "https://schemalens.tech/tools/naming-convention-checker.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0 16px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button.primary { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button.primary:hover { background: var(--primary-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .score-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin: 1.5rem 0; text-align: center;
+  }
+  .score-value { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+  .score-value.good { color: var(--success); }
+  .score-value.warn { color: var(--warning); }
+  .score-value.bad { color: var(--danger); }
+  .score-label { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
+  .score-bar { height: 12px; border-radius: 6px; background: var(--border); overflow: hidden; margin: 12px 0 4px; }
+  .score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+
+  .issue-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem; margin-bottom: 0.75rem; text-align: left;
+  }
+  .issue-card.critical { border-left: 4px solid var(--danger); }
+  .issue-card.warning { border-left: 4px solid var(--warning); }
+  .issue-card.info { border-left: 4px solid var(--primary); }
+  .issue-card.good { border-left: 4px solid var(--success); }
+  .issue-severity {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.35rem;
+  }
+  .issue-severity.critical { color: var(--danger); }
+  .issue-severity.warning { color: var(--warning); }
+  .issue-severity.info { color: var(--primary); }
+  .issue-severity.good { color: var(--success); }
+  .issue-message { font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .issue-fix { font-size: 0.85rem; color: var(--text-muted); }
+  .issue-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--mono); }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .summary-pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.75rem; text-align: center;
+  }
+  .summary-pill .num { font-size: 1.4rem; font-weight: 700; }
+  .summary-pill .lbl { font-size: 0.8rem; color: var(--text-muted); }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(34,211,238,0.08));
+    border: 1px solid var(--primary); border-radius: var(--radius);
+    padding: 1.25rem; margin-top: 1.5rem; text-align: center;
+  }
+
+  .checks-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;
+    margin-top: 1.5rem;
+  }
+  .checks-list li {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem; font-size: 0.88rem; color: var(--text-muted);
+    list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  .checks-list li::before {
+    content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0;
+  }
+
+  .table-report { margin-bottom: 1.5rem; }
+  .table-report h4 { margin-bottom: 0.5rem; font-size: 1.05rem; }
+  .table-report .sub-issues { padding-left: 1rem; }
+  .table-report .sub-issues .issue-card { padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" class="logo" style="font-weight:700;font-size:1.1rem;color:var(--text);">SchemaLens</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="../app.html" style="color:var(--text-muted);font-size:0.9rem;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);font-size:0.9rem;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);font-size:0.9rem;">Pricing</a>
+      <button onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>🏷️ Naming Convention Checker</h1>
+    <p>Paste your SQL schema and get an instant naming audit. Catch inconsistent case styles, reserved words, bad abbreviations, missing timestamp columns, and soft-delete antipatterns.</p>
+  </div>
+
+  <div class="toolbar">
+    <label for="dialect">Dialect:</label>
+    <select id="dialect">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+      <option value="oracle">Oracle</option>
+    </select>
+    <button class="primary" id="analyzeBtn">Analyze Schema</button>
+    <button id="clearBtn">Clear</button>
+    <button id="sampleBtn">Load Sample</button>
+    <button id="copyBtn">Copy Report</button>
+  </div>
+
+  <textarea id="sqlInput" placeholder="-- Paste your CREATE TABLE schema here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  firstName VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"></textarea>
+
+  <div id="results" style="display:none;">
+    <div class="score-card">
+      <div class="score-value" id="scoreValue">—</div>
+      <div class="score-label" id="scoreLabel">Run analysis to see your naming score</div>
+      <div class="score-bar"><div class="score-bar-fill" id="scoreBar" style="width:0%"></div></div>
+    </div>
+
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="issuesList"></div>
+
+    <div class="cta-box">
+      <p style="margin-bottom:0.5rem;font-weight:600;">Want to compare schemas and generate safe migrations?</p>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.75rem;">SchemaLens Pro diffs schemas, detects breaking changes, and generates ALTER TABLE scripts for 5 dialects.</p>
+      <a href="../app.html" class="btn btn-primary" style="display:inline-block;">Open SchemaLens →</a>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3 style="margin-bottom:0.5rem;">What we check</h3>
+    <ul class="checks-list">
+      <li>Consistent case style (snake_case, camelCase, PascalCase)</li>
+      <li>Reserved words used as identifiers</li>
+      <li>Table names should be plural</li>
+      <li>Column names should be singular</li>
+      <li>Name length limits (63 chars PostgreSQL, 64 MySQL)</li>
+      <li>Excessive abbreviations (&le;3 characters)</li>
+      <li>Primary key naming convention</li>
+      <li>Foreign key naming convention</li>
+      <li>Index naming descriptiveness</li>
+      <li>created_at / updated_at timestamp columns</li>
+      <li>Soft-delete pattern (deleted_at vs is_deleted)</li>
+    </ul>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2.5rem 1rem;margin-top:3rem;">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>SchemaLens</h4>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);"><a href="../open-source.html" style="color:var(--success);">Open source (MIT)</a></p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff</a></p>
+        <p><a href="../tools.html">Free Tools</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../cli/">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../schema-examples.html">Examples</a></p>
+        <p><a href="../migration-checklist.html">Migration Checklist</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+      </div>
+      <div>
+        <h4>Compare</h4>
+        <p><a href="../schemalens-vs-liquibase-flyway.html">vs Liquibase &amp; Flyway</a></p>
+        <p><a href="../schemalens-vs-redgate-vs-prisma.html">vs Redgate &amp; Prisma</a></p>
+        <p><a href="../schemalens-vs-cli-tools.html">vs CLI Tools</a></p>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:24px;">© 2026 SchemaLens. Built for developers who care about clean schemas.</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+// Reserved words per dialect
+const RESERVED = {
+  postgres: new Set(['ALL','ANALYSE','ANALYZE','AND','ANY','ARRAY','AS','ASC','ASYMMETRIC','AUTHORIZATION','BINARY','BOTH','CASE','CAST','CHECK','COLLATE','COLLATION','COLUMN','CONCURRENTLY','CONSTRAINT','CREATE','CROSS','CURRENT_CATALOG','CURRENT_DATE','CURRENT_ROLE','CURRENT_SCHEMA','CURRENT_TIME','CURRENT_TIMESTAMP','CURRENT_USER','DEFAULT','DEFERRABLE','DESC','DISTINCT','DO','ELSE','END','EXCEPT','FALSE','FETCH','FOR','FOREIGN','FREEZE','FROM','FULL','GRANT','GROUP','HAVING','ILIKE','IN','INITIALLY','INNER','INTERSECT','INTO','IS','ISNULL','JOIN','LATERAL','LEADING','LEFT','LIKE','LIMIT','LOCALTIME','LOCALTIMESTAMP','NATURAL','NOT','NOTNULL','NULL','OFFSET','ON','ONLY','OR','ORDER','OUTER','OVERLAPS','PLACING','PRIMARY','REFERENCES','RETURNING','RIGHT','SELECT','SESSION_USER','SIMILAR','SOME','SYMMETRIC','TABLE','TABLESAMPLE','THEN','TO','TRAILING','TRUE','UNION','UNIQUE','USER','USING','VARIADIC','VERBOSE','WHEN','WHERE','WINDOW','WITH']),
+  mysql: new Set(['ACCESSIBLE','ADD','ALL','ALTER','ANALYZE','AND','AS','ASC','ASENSITIVE','BEFORE','BETWEEN','BIGINT','BINARY','BLOB','BOTH','BY','CALL','CASCADE','CASE','CHANGE','CHAR','CHARACTER','CHECK','COLLATE','COLUMN','CONDITION','CONSTRAINT','CONTINUE','CONVERT','CREATE','CROSS','CURRENT_DATE','CURRENT_TIME','CURRENT_TIMESTAMP','CURRENT_USER','CURSOR','DATABASE','DATABASES','DAY_HOUR','DAY_MICROSECOND','DAY_MINUTE','DAY_SECOND','DEC','DECIMAL','DECLARE','DEFAULT','DELAYED','DELETE','DESC','DESCRIBE','DETERMINISTIC','DISTINCT','DISTINCTROW','DIV','DOUBLE','DROP','DUAL','EACH','ELSE','ELSEIF','ENCLOSED','ESCAPED','EXCEPT','EXISTS','EXIT','EXPLAIN','FALSE','FETCH','FLOAT','FLOAT4','FLOAT8','FOR','FORCE','FOREIGN','FROM','FULLTEXT','GENERATED','GET','GRANT','GROUP','HAVING','HIGH_PRIORITY','HOUR_MICROSECOND','HOUR_MINUTE','HOUR_SECOND','IF','IGNORE','IN','INDEX','INFILE','INNER','INOUT','INSENSITIVE','INSERT','INT','INT1','INT2','INT3','INT4','INT8','INTEGER','INTERVAL','INTO','IO_AFTER_GTIDS','IO_BEFORE_GTIDS','IS','ITERATE','JOIN','KEY','KEYS','KILL','LEADING','LEAVE','LEFT','LIKE','LIMIT','LINEAR','LINES','LOAD','LOCALTIME','LOCALTIMESTAMP','LOCK','LONG','LONGBLOB','LONGTEXT','LOOP','LOW_PRIORITY','MASTER_BIND','MASTER_SSL_VERIFY_SERVER_CERT','MATCH','MAXVALUE','MEDIUMBLOB','MEDIUMINT','MEDIUMTEXT','MIDDLEINT','MINUTE_MICROSECOND','MINUTE_SECOND','MOD','MODIFIES','NATURAL','NOT','NO_WRITE_TO_BINLOG','NULL','NUMERIC','ON','OPTIMIZE','OPTIMIZER_COSTS','OPTION','OPTIONALLY','OR','ORDER','OUT','OUTER','OUTFILE','PARTITION','PRECISION','PRIMARY','PROCEDURE','PURGE','RANGE','READ','READS','READ_WRITE','REAL','REFERENCES','REGEXP','RELEASE','RENAME','REPEAT','REPLACE','REQUIRE','RESIGNAL','RESTRICT','RETURN','REVOKE','RIGHT','RLIKE','SCHEMA','SCHEMAS','SECOND_MICROSECOND','SELECT','SENSITIVE','SEPARATOR','SET','SHOW','SIGNAL','SMALLINT','SPATIAL','SPECIFIC','SQL','SQLEXCEPTION','SQLSTATE','SQLWARNING','SQL_BIG_RESULT','SQL_CALC_FOUND_ROWS','SQL_SMALL_RESULT','SSL','STARTING','STORED','STRAIGHT_JOIN','TABLE','TERMINATED','THEN','TINYBLOB','TINYINT','TINYTEXT','TO','TRAILING','TRIGGER','TRUE','UNDO','UNION','UNIQUE','UNLOCK','UNSIGNED','UPDATE','USAGE','USE','USING','UTC_DATE','UTC_TIME','UTC_TIMESTAMP','VALUES','VARBINARY','VARCHAR','VARCHARACTER','VARYING','VIRTUAL','WHEN','WHERE','WHILE','WITH','WRITE','XOR','YEAR_MONTH','ZEROFILL']),
+  sqlite: new Set(['ABORT','ACTION','ADD','AFTER','ALL','ALTER','ALWAYS','ANALYZE','AND','AS','ASC','ATTACH','AUTOINCREMENT','BEFORE','BEGIN','BETWEEN','BY','CASCADE','CASE','CAST','CHECK','COLLATE','COLUMN','COMMIT','CONFLICT','CONSTRAINT','CREATE','CROSS','CURRENT','CURRENT_DATE','CURRENT_TIME','CURRENT_TIMESTAMP','DATABASE','DEFAULT','DEFERRABLE','DEFERRED','DELETE','DESC','DETACH','DISTINCT','DO','DROP','EACH','ELSE','END','ESCAPE','EXCEPT','EXCLUDE','EXCLUSIVE','EXISTS','EXPLAIN','FAIL','FILTER','FIRST','FOLLOWING','FOR','FOREIGN','FROM','FULL','GENERATED','GLOB','GROUP','GROUPS','HAVING','IF','IGNORE','IMMEDIATE','IN','INDEX','INDEXED','INITIALLY','INNER','INSERT','INSTEAD','INTERSECT','INTO','IS','ISNULL','JOIN','KEY','LAST','LEFT','LIKE','LIMIT','MATCH','MATERIALIZED','NATURAL','NO','NOT','NOTHING','NOTNULL','NULL','NULLS','OF','OFFSET','ON','OR','ORDER','OTHERS','OUTER','OVER','PARTITION','PLAN','PRAGMA','PRECEDING','PRIMARY','QUERY','RAISE','RANGE','RECURSIVE','REFERENCES','REGEXP','REINDEX','RELEASE','RENAME','REPLACE','RESTRICT','RETURNING','RIGHT','ROLLBACK','ROW','ROWS','SAVEPOINT','SELECT','SET','TABLE','TEMP','TEMPORARY','THEN','TIES','TO','TRANSACTION','TRIGGER','UNBOUNDED','UNION','UNIQUE','UPDATE','USING','VACUUM','VALUES','VIEW','VIRTUAL','WHEN','WHERE','WINDOW','WITH','WITHOUT']),
+  mssql: new Set(['ADD','ALL','ALTER','AND','ANY','AS','ASC','AUTHORIZATION','BACKUP','BEGIN','BETWEEN','BREAK','BROWSE','BULK','BY','CASCADE','CASE','CHECK','CHECKPOINT','CLOSE','CLUSTERED','COALESCE','COLLATE','COLUMN','COMMIT','COMPUTE','CONNECT','CONSTRAINT','CONTAINS','CONTAINSTABLE','CONTINUE','CONVERT','CREATE','CROSS','CURRENT','CURRENT_DATE','CURRENT_TIME','CURRENT_TIMESTAMP','CURRENT_USER','CURSOR','DATABASE','DBCC','DEALLOCATE','DECLARE','DEFAULT','DELETE','DENY','DESC','DISK','DISTINCT','DISTRIBUTED','DOUBLE','DROP','DUMP','ELSE','END','ERRLVL','ESCAPE','EXCEPT','EXEC','EXECUTE','EXISTS','EXIT','EXTERNAL','FETCH','FILE','FILLFACTOR','FOR','FOREIGN','FREETEXT','FREETEXTTABLE','FROM','FULL','FUNCTION','GOTO','GRANT','GROUP','HAVING','HOLDLOCK','IDENTITY','IDENTITY_INSERT','IDENTITYCOL','IF','IN','INDEX','INNER','INSERT','INTERSECT','INTO','IS','JOIN','KEY','KILL','LEFT','LIKE','LINENO','LOAD','MERGE','NATIONAL','NOCHECK','NONCLUSTERED','NOT','NULL','NULLIF','OF','OFF','OFFSETS','ON','OPEN','OPENDATASOURCE','OPENQUERY','OPENROWSET','OPENXML','OR','ORDER','OUTER','OVER','PERCENT','PIVOT','PLAN','PRECISION','PRIMARY','PRINT','PROC','PROCEDURE','PUBLIC','RAISERROR','READ','READTEXT','RECONFIGURE','REFERENCES','REPLICATION','RESTORE','RESTRICT','RETURN','REVERT','REVOKE','RIGHT','ROLLBACK','ROWCOUNT','ROWGUIDCOL','RULE','SAVE','SCHEMA','SECURITYAUDIT','SELECT','SEMANTICKEYPHRASETABLE','SEMANTICSIMILARITYDETAILSTABLE','SEMANTICSIMILARITYTABLE','SESSION_USER','SET','SETUSER','SHUTDOWN','SOME','STATISTICS','SYSTEM_USER','TABLE','TABLESAMPLE','TEXTSIZE','THEN','TO','TOP','TRAN','TRANSACTION','TRIGGER','TRUNCATE','TRY_CONVERT','TSEQUAL','UNION','UNIQUE','UNPIVOT','UPDATE','UPDATETEXT','USE','USER','VALUES','VARYING','VIEW','WAITFOR','WHEN','WHERE','WHILE','WITH','WITHIN GROUP','WRITETEXT']),
+  oracle: new Set(['ACCESS','ADD','ALL','ALTER','AND','ANY','AS','ASC','AT','AUDIT','BETWEEN','BY','CHAR','CHECK','CLUSTER','COLUMN','COMMENT','COMPRESS','CONNECT','CREATE','CURRENT','DATE','DECIMAL','DEFAULT','DELETE','DESC','DISTINCT','DROP','ELSE','EXCLUSIVE','EXISTS','FILE','FLOAT','FOR','FROM','GRANT','GROUP','HAVING','IDENTIFIED','IMMEDIATE','IN','INCREMENT','INDEX','INITIAL','INSERT','INTEGER','INTERSECT','INTO','IS','LEVEL','LIKE','LOCK','LONG','MAXEXTENTS','MINUS','MLSLABEL','MODE','MODIFY','NOAUDIT','NOCOMPRESS','NOT','NOWAIT','NULL','NUMBER','OF','OFFLINE','ON','ONLINE','OPTION','OR','ORDER','PCTFREE','PRIOR','PRIVILEGES','PUBLIC','RAW','RENAME','RESOURCE','REVOKE','ROW','ROWID','ROWNUM','ROWS','SELECT','SESSION','SET','SHARE','SIZE','SMALLINT','START','SUCCESSFUL','SYNONYM','SYSDATE','TABLE','THEN','TO','TRIGGER','UID','UNION','UNIQUE','UPDATE','USER','VALIDATE','VALUES','VARCHAR','VARCHAR2','VIEW','WHENEVER','WHERE','WITH'])
+};
+
+function stripComments(sql) {
+  return sql.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ');
+}
+
+function detectCaseStyle(name) {
+  if (/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/.test(name)) return 'snake_case';
+  if (/^[a-z][a-zA-Z0-9]*$/.test(name) && /[A-Z]/.test(name)) return 'camelCase';
+  if (/^[A-Z][a-zA-Z0-9]*$/.test(name)) return 'PascalCase';
+  if (/^[a-z][a-z0-9]*(-[a-z0-9]+)+$/.test(name)) return 'kebab-case';
+  if (/^[a-z][a-z0-9]*(_[a-z0-9]*)*$/.test(name)) return 'snake_case';
+  return 'mixed';
+}
+
+function isPlural(name) {
+  const n = name.toLowerCase();
+  if (n.endsWith('s') || n.endsWith('es') || n.endsWith('ies')) return true;
+  // Some common uncountable nouns that are OK as table names
+  const uncountable = ['data','metadata','media','news','software','hardware','equipment','information','research'];
+  if (uncountable.includes(n)) return true;
+  return false;
+}
+
+function parseCreateTables(sql) {
+  const clean = stripComments(sql);
+  const tables = [];
+  const regex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([^\s(]+)\s*\(([^)]*)\)/gi;
+  let m;
+  while ((m = regex.exec(clean)) !== null) {
+    const tableName = m[1].replace(/[`"\[\]]/g, '');
+    const body = m[2];
+    const line = clean.substring(0, m.index).split('\n').length;
+    const columns = [];
+    const constraints = [];
+    const indexes = [];
+
+    // Split by commas not inside parentheses
+    const parts = [];
+    let cur = '';
+    let depth = 0;
+    for (let i = 0; i < body.length; i++) {
+      const ch = body[i];
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      if (ch === ',' && depth === 0) {
+        parts.push(cur.trim());
+        cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    if (cur.trim()) parts.push(cur.trim());
+
+    for (const part of parts) {
+      const up = part.toUpperCase();
+      if (up.startsWith('PRIMARY KEY') || up.startsWith('FOREIGN KEY') || up.startsWith('UNIQUE') || up.startsWith('CHECK') || up.startsWith('CONSTRAINT')) {
+        constraints.push(part);
+      } else if (up.startsWith('INDEX ') || up.startsWith('CREATE INDEX') || up.startsWith('KEY ')) {
+        indexes.push(part);
+      } else {
+        const colMatch = part.match(/^([^\s(]+)\s+([^(]+)(?:\s*\(([^)]+)\))?/);
+        if (colMatch) {
+          columns.push({
+            name: colMatch[1].replace(/[`"\[\]]/g, ''),
+            type: (colMatch[2] || '').trim().split(/\s+/)[0],
+            raw: part
+          });
+        }
+      }
+    }
+
+    // Try to find inline PRIMARY KEY and INDEX definitions
+    for (const part of parts) {
+      const up = part.toUpperCase();
+      if (up.includes('PRIMARY KEY') && !up.startsWith('PRIMARY KEY')) {
+        // inline PK like `id INT PRIMARY KEY`
+      }
+      if (up.startsWith('INDEX ') || up.startsWith('KEY ')) {
+        const idxMatch = part.match(/(?:INDEX|KEY)\s+(?:`?([^`\s]+)`?)?\s*\(([^)]+)\)/i);
+        if (idxMatch) {
+          indexes.push({ name: idxMatch[1] || '', columns: idxMatch[2].split(',').map(c => c.trim().replace(/[`"\[\]]/g, '')) });
+        }
+      }
+    }
+
+    tables.push({ name: tableName, columns, constraints, indexes, line, raw: m[0] });
+  }
+  return tables;
+}
+
+function analyzeSchema(sql, dialect) {
+  const issues = [];
+  const tables = parseCreateTables(sql);
+  const reserved = RESERVED[dialect] || RESERVED.postgres;
+
+  if (tables.length === 0) {
+    issues.push({ severity: 'info', message: 'No CREATE TABLE statements found. Paste a schema with at least one table.', fix: '', line: 1, table: null });
+    return { issues, score: 0, tables: [] };
+  }
+
+  let totalChecks = 0;
+  let passedChecks = 0;
+
+  // Determine dominant case style across all identifiers
+  const allNames = [];
+  for (const t of tables) {
+    allNames.push(t.name);
+    for (const c of t.columns) allNames.push(c.name);
+  }
+  const styleCounts = {};
+  for (const n of allNames) {
+    const s = detectCaseStyle(n);
+    styleCounts[s] = (styleCounts[s] || 0) + 1;
+  }
+  let dominantStyle = 'snake_case';
+  let maxCount = 0;
+  for (const [s, c] of Object.entries(styleCounts)) {
+    if (c > maxCount) { maxCount = c; dominantStyle = s; }
+  }
+
+  for (const table of tables) {
+    const tName = table.name;
+    const tLine = table.line;
+
+    // Table reserved word
+    totalChecks++;
+    if (reserved.has(tName.toUpperCase())) {
+      issues.push({ severity: 'critical', message: `Table "${tName}" is a reserved word in ${dialect}.`, fix: 'Rename the table to avoid quoting issues and portability problems.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Table case style
+    totalChecks++;
+    const tStyle = detectCaseStyle(tName);
+    if (tStyle !== dominantStyle && tStyle !== 'mixed') {
+      issues.push({ severity: 'warning', message: `Table "${tName}" uses ${tStyle} instead of the dominant ${dominantStyle}.`, fix: `Rename to ${dominantStyle} for consistency.`, line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Table pluralization
+    totalChecks++;
+    if (!isPlural(tName)) {
+      issues.push({ severity: 'info', message: `Table "${tName}" does not appear to be plural.`, fix: 'Consider using plural names for tables (e.g., "users" instead of "user").', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Table name length
+    totalChecks++;
+    const maxLen = dialect === 'postgres' ? 63 : dialect === 'mysql' ? 64 : 128;
+    if (tName.length > maxLen) {
+      issues.push({ severity: 'warning', message: `Table "${tName}" is ${tName.length} characters (max ${maxLen} for ${dialect}).`, fix: 'Shorten the table name to avoid truncation issues.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    let hasCreatedAt = false;
+    let hasUpdatedAt = false;
+    let hasDeletedAt = false;
+    let hasIsDeleted = false;
+    let pkCol = null;
+
+    for (const col of table.columns) {
+      const cName = col.name;
+      const cLine = tLine; // approximate
+
+      // Column reserved word
+      totalChecks++;
+      if (reserved.has(cName.toUpperCase())) {
+        issues.push({ severity: 'critical', message: `Column "${cName}" in "${tName}" is a reserved word.`, fix: 'Rename the column to avoid quoting issues.', line: cLine, table: tName });
+      } else { passedChecks++; }
+
+      // Column case style
+      totalChecks++;
+      const cStyle = detectCaseStyle(cName);
+      if (cStyle !== dominantStyle && cStyle !== 'mixed') {
+        issues.push({ severity: 'warning', message: `Column "${cName}" in "${tName}" uses ${cStyle} instead of ${dominantStyle}.`, fix: `Rename to ${dominantStyle} for consistency.`, line: cLine, table: tName });
+      } else { passedChecks++; }
+
+      // Column abbreviation
+      totalChecks++;
+      if (cName.length <= 3 && !['id','pk','fk','ok'].includes(cName.toLowerCase())) {
+        issues.push({ severity: 'info', message: `Column "${cName}" in "${tName}" is very short — could be an unclear abbreviation.`, fix: 'Use full descriptive names (e.g., "quantity" instead of "qty").', line: cLine, table: tName });
+      } else { passedChecks++; }
+
+      // Column name length
+      totalChecks++;
+      if (cName.length > maxLen) {
+        issues.push({ severity: 'warning', message: `Column "${cName}" in "${tName}" is ${cName.length} characters (max ${maxLen}).`, fix: 'Shorten the column name.', line: cLine, table: tName });
+      } else { passedChecks++; }
+
+      // Timestamp columns
+      const lower = cName.toLowerCase();
+      if (lower === 'created_at' || lower === 'createdat' || lower === 'created') hasCreatedAt = true;
+      if (lower === 'updated_at' || lower === 'updatedat' || lower === 'updated') hasUpdatedAt = true;
+      if (lower === 'deleted_at' || lower === 'deletedat') hasDeletedAt = true;
+      if (lower === 'is_deleted' || lower === 'isdeleted' || lower === 'deleted') hasIsDeleted = true;
+
+      // Primary key detection
+      const colUp = col.raw.toUpperCase();
+      if (colUp.includes('PRIMARY KEY') || (cName.toLowerCase() === 'id' && ['SERIAL','BIGSERIAL','INT','BIGINT','INTEGER','NUMBER'].some(t => colUp.includes(t)))) {
+        pkCol = cName;
+      }
+    }
+
+    // Timestamp recommendation
+    totalChecks++;
+    if (!hasCreatedAt) {
+      issues.push({ severity: 'info', message: `Table "${tName}" is missing a created_at timestamp column.`, fix: 'Add created_at (and updated_at) for audit trails and debugging.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    totalChecks++;
+    if (!hasUpdatedAt) {
+      issues.push({ severity: 'info', message: `Table "${tName}" is missing an updated_at timestamp column.`, fix: 'Add updated_at to track when rows were last modified.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Soft delete pattern
+    totalChecks++;
+    if (hasIsDeleted && !hasDeletedAt) {
+      issues.push({ severity: 'info', message: `Table "${tName}" uses is_deleted boolean instead of deleted_at timestamp.`, fix: 'Consider deleted_at TIMESTAMP NULL for soft deletes — it records WHEN a row was deleted.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Primary key naming
+    totalChecks++;
+    if (!pkCol) {
+      issues.push({ severity: 'warning', message: `Table "${tName}" has no obvious primary key column.`, fix: 'Add an id column (or equivalent) as PRIMARY KEY.', line: tLine, table: tName });
+    } else if (dominantStyle === 'snake_case' && pkCol.toLowerCase() !== 'id') {
+      issues.push({ severity: 'info', message: `Primary key in "${tName}" is named "${pkCol}" instead of "id".`, fix: 'Consider using "id" as the standard primary key name for simplicity.', line: tLine, table: tName });
+    } else { passedChecks++; }
+
+    // Index naming
+    for (const idx of table.indexes) {
+      if (idx.name) {
+        totalChecks++;
+        if (/^idx\d*$/i.test(idx.name) || /^index\d*$/i.test(idx.name)) {
+          issues.push({ severity: 'info', message: `Index "${idx.name}" on "${tName}" has a generic name.`, fix: 'Use descriptive names like idx_users_email or idx_orders_created_at.', line: tLine, table: tName });
+        } else { passedChecks++; }
+      }
+    }
+
+    // Foreign key naming from constraints
+    for (const con of table.constraints) {
+      const up = con.toUpperCase();
+      if (up.includes('FOREIGN KEY')) {
+        totalChecks++;
+        const fkMatch = con.match(/FOREIGN\s+KEY\s*\(([^)]+)\)/i);
+        if (fkMatch) {
+          const fkCol = fkMatch[1].trim().replace(/[`"\[\]]/g, '');
+          if (dominantStyle === 'snake_case' && !fkCol.toLowerCase().endsWith('_id')) {
+            issues.push({ severity: 'info', message: `FK column "${fkCol}" in "${tName}" does not end with _id.`, fix: 'Name foreign key columns as {table}_id (e.g., user_id) for clarity.', line: tLine, table: tName });
+          } else { passedChecks++; }
+        } else { passedChecks++; }
+      }
+    }
+  }
+
+  const score = totalChecks === 0 ? 0 : Math.round((passedChecks / totalChecks) * 100);
+  return { issues, score, tables, dominantStyle };
+}
+
+function renderResults(result) {
+  const { issues, score, tables, dominantStyle } = result;
+  const resultsDiv = document.getElementById('results');
+  const scoreValue = document.getElementById('scoreValue');
+  const scoreLabel = document.getElementById('scoreLabel');
+  const scoreBar = document.getElementById('scoreBar');
+  const summaryGrid = document.getElementById('summaryGrid');
+  const issuesList = document.getElementById('issuesList');
+
+  resultsDiv.style.display = 'block';
+
+  scoreValue.textContent = score;
+  scoreValue.className = 'score-value ' + (score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad');
+  scoreLabel.textContent = score >= 80 ? 'Excellent naming conventions!' : score >= 50 ? 'Some inconsistencies found.' : 'Naming needs attention.';
+  scoreBar.style.width = score + '%';
+  scoreBar.style.background = score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)';
+
+  const critical = issues.filter(i => i.severity === 'critical').length;
+  const warning = issues.filter(i => i.severity === 'warning').length;
+  const info = issues.filter(i => i.severity === 'info').length;
+
+  summaryGrid.innerHTML = `
+    <div class="summary-pill"><div class="num" style="color:var(--danger)">${critical}</div><div class="lbl">Critical</div></div>
+    <div class="summary-pill"><div class="num" style="color:var(--warning)">${warning}</div><div class="lbl">Warnings</div></div>
+    <div class="summary-pill"><div class="num" style="color:var(--primary)">${info}</div><div class="lbl">Suggestions</div></div>
+    <div class="summary-pill"><div class="num">${tables.length}</div><div class="lbl">Tables</div></div>
+    <div class="summary-pill"><div class="num">${dominantStyle}</div><div class="lbl">Dominant Style</div></div>
+  `;
+
+  // Group issues by table
+  const byTable = {};
+  const globalIssues = [];
+  for (const issue of issues) {
+    if (issue.table) {
+      if (!byTable[issue.table]) byTable[issue.table] = [];
+      byTable[issue.table].push(issue);
+    } else {
+      globalIssues.push(issue);
+    }
+  }
+
+  let html = '';
+  for (const issue of globalIssues) {
+    html += renderIssueCard(issue);
+  }
+
+  for (const tableName of Object.keys(byTable)) {
+    html += `<div class="table-report">`;
+    html += `<h4>📋 ${escapeHtml(tableName)}</h4>`;
+    html += `<div class="sub-issues">`;
+    for (const issue of byTable[tableName]) {
+      html += renderIssueCard(issue);
+    }
+    html += `</div></div>`;
+  }
+
+  issuesList.innerHTML = html;
+}
+
+function renderIssueCard(issue) {
+  return `
+    <div class="issue-card ${issue.severity}">
+      <div class="issue-severity ${issue.severity}">${issue.severity}</div>
+      <div class="issue-message">${escapeHtml(issue.message)}</div>
+      ${issue.fix ? `<div class="issue-fix">💡 ${escapeHtml(issue.fix)}</div>` : ''}
+      ${issue.line ? `<div class="issue-meta">Line ~${issue.line}</div>` : ''}
+    </div>
+  `;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function getReportText() {
+  const score = document.getElementById('scoreValue').textContent;
+  const label = document.getElementById('scoreLabel').textContent;
+  const dialect = document.getElementById('dialect').value;
+  return `SchemaLens Naming Convention Checker
+Score: ${score}/100 — ${label}
+Dialect: ${dialect}
+Check your schema: https://schemalens.tech/tools/naming-convention-checker.html`;
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', () => {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const result = analyzeSchema(sql, dialect);
+  renderResults(result);
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('results').style.display = 'none';
+});
+
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = `CREATE TABLE User (
+  ID INT PRIMARY KEY,
+  firstName VARCHAR(255),
+  lastName VARCHAR(255),
+  e_mail VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE order (
+  id SERIAL PRIMARY KEY,
+  userId INT REFERENCES User(ID),
+  total_amount DECIMAL(10,2),
+  qty INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = getReportText();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+});
+
+// Theme init
+const savedTheme = localStorage.getItem('schemalens-theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+</body>
+</html>
