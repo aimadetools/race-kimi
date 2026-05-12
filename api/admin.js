@@ -146,6 +146,9 @@ module.exports = async (req, res) => {
       case 'demo-requests':
         data = await fetchSupabase('demo_requests', `select=*&order=created_at.desc&limit=${maxLimit}`);
         break;
+      case 'founding-members':
+        data = await fetchSupabase('founding_members', `select=*&order=claimed_at.desc&limit=${maxLimit}`);
+        break;
       case 'gumroad-sales': {
         const gumroadUrl = `${proto}://${host}/api/gumroad-sales`;
         const gumroadHeaders = { 'x-admin-password': ADMIN_PASSWORD };

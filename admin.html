@@ -316,6 +316,10 @@
           <div class="label">Demos</div>
         </div>
         <div class="admin-stat">
+          <div class="value" id="statFounding">—</div>
+          <div class="label">Founding Members</div>
+        </div>
+        <div class="admin-stat">
           <div class="value" id="statSales">—</div>
           <div class="label">Sales</div>
         </div>
@@ -489,6 +493,20 @@
         <div class="admin-actions-bar">
           <button onclick="refreshDemos()">Refresh</button>
           <button class="primary" onclick="exportDemos()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>🏅 Founding Members</h3>
+          <span class="admin-badge success" id="badgeFounding">0</span>
+        </div>
+        <div class="admin-section-body" id="foundingBody">
+          <div class="admin-empty">Loading founding members…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshFounding()">Refresh</button>
+          <button class="primary" onclick="exportFounding()">Export CSV</button>
         </div>
       </div>
 
@@ -1317,6 +1335,48 @@
       downloadCsv('schemalens-demo-requests.csv', headers, rows);
     }
 
+    // Founding Members
+    async function refreshFounding() {
+      const body = document.getElementById('foundingBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('founding-members');
+        document.getElementById('statFounding').textContent = data.length;
+        document.getElementById('badgeFounding').textContent = data.length;
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No founding members yet.</div>';
+          return;
+        }
+        const rows = data.map(f => `
+          <tr>
+            <td>${formatDate(f.claimed_at)}</td>
+            <td>${f.name}</td>
+            <td>${f.email}</td>
+            <td><code style="font-size:0.8rem;">${f.license_key}</code></td>
+            <td>${f.dialect || '—'}</td>
+            <td>${f.welcome_email_sent_at ? '<span class="admin-badge success">Sent</span>' : '<span class="admin-badge warning">Pending</span>'}</td>
+          </tr>
+        `).join('');
+        body.innerHTML = `
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>License Key</th><th>Dialect</th><th>Email</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load founding members.<br><small>${e.message}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables.</small></div>`;
+      }
+    }
+
+    function exportFounding() {
+      const table = document.querySelector('#foundingBody table');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-founding-members.csv', headers, rows);
+    }
+
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
@@ -1584,6 +1644,7 @@
       refreshLeads();
       refreshAffiliates();
       refreshDemos();
+      refreshFounding();
       refreshSales();
       refreshPHMonitor();
     }

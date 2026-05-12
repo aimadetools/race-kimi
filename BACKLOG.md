@@ -28,6 +28,7 @@
 
 ### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
+- [x] **P1** **Founding Member persistence + welcome email** — DONE (Day 121). `api/founding-member.js` now saves to Supabase and sends welcome email with PH launch reminder. Admin dashboard tracks claims.
 - [ ] **P1** **Founding Member follow-up** — email the 50 founding members after 7 days for feedback/testimonials
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
@@ -44,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 120 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 121 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Funnel is end-to-end accurate.**
 
 ---
 
@@ -75,6 +76,9 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 **Day 118:** Recreated HELP-REQUEST.md for PH launch (May 14). Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals.
 **Day 119:** Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). Newsletter launch email now PH-ready with correct pricing and share-kit link.
 **Day 120:** Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing.
+
+### Day 121 (May 12)
+**Founding Member system upgrade:** Recreated missing HELP-REQUEST.md (second time — now committed). Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added `founding-members` action to `api/admin.js` and built admin dashboard section with stat card, table view, and CSV export.
 
 ---
 

@@ -349,3 +349,36 @@ CREATE POLICY "Only service role can update demos" ON public.demo_requests
 
 CREATE INDEX IF NOT EXISTS idx_demo_status ON public.demo_requests(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_demo_email ON public.demo_requests(email);
+
+-- ============================================
+-- founding_members: founding member giveaway tracking
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.founding_members (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  license_key TEXT NOT NULL,
+  dialect TEXT,
+  use_case TEXT,
+  claimed_at TIMESTAMPTZ DEFAULT NOW(),
+  welcome_email_sent_at TIMESTAMPTZ,
+  ph_launch_email_sent_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.founding_members ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous inserts from the API endpoint
+CREATE POLICY "Allow anonymous founding member inserts" ON public.founding_members
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- Only service role can read founding members
+CREATE POLICY "Only service role can read founding members" ON public.founding_members
+  FOR SELECT TO service_role USING (true);
+
+-- Only service role can update founding members
+CREATE POLICY "Only service role can update founding members" ON public.founding_members
+  FOR UPDATE TO service_role USING (true);
+
+CREATE INDEX IF NOT EXISTS idx_founding_members_email ON public.founding_members(email);
+CREATE INDEX IF NOT EXISTS idx_founding_members_claimed_at ON public.founding_members(claimed_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_founding_members_license_key ON public.founding_members(license_key);

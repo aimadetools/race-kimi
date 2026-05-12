@@ -6,10 +6,16 @@
  * Generates a valid Pro license key (SL-XXXX-XXXX-XXXX-XXXX) using the same
  * checksum algorithm as client-side validation. Rate limited to 5 requests
  * per IP per hour. Logs claims to stdout for Vercel log collection.
+ * Persists to Supabase and sends welcome email via Resend.
  */
 
 const LICENSE_SALT = "SchemaLensPro2026";
 const MAX_CLAIMS = 50;
+
+const SUPABASE_URL = process.env.SUPABASE_URL || "https://fmfwdwwvvcdtreduncev.supabase.co";
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw";
+const EMAIL_API_KEY = process.env.EMAIL_API_KEY || "";
+const EMAIL_FROM = process.env.EMAIL_FROM || "hello@schemalens.tech";
 
 // Simple in-memory rate limiter (sufficient for low traffic)
 const rateLimitMap = new Map(); // ip -> { count, resetAt }
@@ -76,6 +82,93 @@ function checkRateLimit(ip) {
   return { allowed: true, remaining: 5 - entry.count };
 }
 
+async function persistToSupabase(record) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/founding_members`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(record),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.log(`FOUNDING_MEMBER_DB_FAILED: ${res.status} ${text}`);
+    }
+    return res.ok;
+  } catch (e) {
+    console.log(`FOUNDING_MEMBER_DB_ERROR: ${e.message}`);
+    return false;
+  }
+}
+
+async function sendWelcomeEmail(record) {
+  if (!EMAIL_API_KEY) return { sent: false, reason: "EMAIL_API_KEY not configured" };
+  try {
+    const html = `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:0 auto;color:#111;">
+        <h2 style="color:#0f0f0f;">Welcome to the SchemaLens Founding Member program, ${record.name}!</h2>
+        <p>You're one of the first 50 developers to get a <strong>free lifetime Pro license</strong> for SchemaLens. Thank you for joining us early.</p>
+        
+        <div style="background:#f3f4f6;border-radius:8px;padding:16px;margin:20px 0;">
+          <p style="margin:0 0 8px;font-weight:600;">Your license key:</p>
+          <code style="font-size:1.1rem;background:#fff;padding:8px 12px;border-radius:6px;display:inline-block;border:1px solid #e5e7eb;">${record.license_key}</code>
+          <p style="margin:12px 0 0;font-size:0.9rem;"><a href="${record.activation_url}" style="color:#6366f1;">Activate now →</a></p>
+        </div>
+        
+        <p><strong>What's next:</strong></p>
+        <ul>
+          <li><a href="https://schemalens.tech/app.html?license=${encodeURIComponent(record.license_key)}" style="color:#6366f1;">Open SchemaLens Pro</a> and run your first diff</li>
+          <li>Explore 32+ free micro-tools at <a href="https://schemalens.tech/tools.html" style="color:#6366f1;">schemalens.tech/tools</a></li>
+          <li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens" style="color:#6366f1;">VS Code extension</a> for in-editor diffs</li>
+        </ul>
+        
+        <div style="background:#e0e7ff;border-radius:8px;padding:16px;margin:20px 0;">
+          <p style="margin:0 0 8px;font-weight:600;color:#4338ca;">🚀 Product Hunt Launch — May 14</p>
+          <p style="margin:0;color:#4338ca;font-size:0.9rem;">SchemaLens launches on Product Hunt this Wednesday. As a Founding Member, your upvote and comment would mean the world. We'll email you the link on launch day.</p>
+        </div>
+        
+        <p>Have feedback? Just reply to this email or use the feedback widget in the app.</p>
+        
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+        <p style="font-size:0.85rem;color:#6b7280;">SchemaLens — Compare SQL schemas and generate migrations in your browser.<br>
+        <a href="https://schemalens.tech">schemalens.tech</a> · <a href="mailto:schemalens@proton.me">schemalens@proton.me</a></p>
+      </div>
+    `;
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${EMAIL_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: EMAIL_FROM,
+        to: record.email,
+        subject: "Welcome, Founding Member! Your SchemaLens Pro license is ready",
+        html,
+      }),
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error(`FOUNDING_EMAIL_ERROR: ${res.status} ${text}`);
+      return { sent: false, reason: text };
+    }
+    const data = await res.json().catch(() => ({}));
+    console.log(`FOUNDING_EMAIL_SENT: ${data.id || "unknown"} to ${record.email}`);
+    return { sent: true, id: data.id };
+  } catch (err) {
+    console.error(`FOUNDING_EMAIL_EXCEPTION: ${err.message}`);
+    return { sent: false, reason: err.message };
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -123,11 +216,27 @@ export default async function handler(req, res) {
 
   const activationUrl = `https://schemalens.tech/app.html?license=${encodeURIComponent(key)}`;
 
+  // Persist to Supabase (fire-and-forget, don't block response on DB errors)
+  const dbRecord = {
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    license_key: key,
+    dialect: normalizedDialect,
+    use_case: normalizedUseCase,
+    claimed_at: new Date().toISOString(),
+  };
+  const dbOk = await persistToSupabase(dbRecord);
+
+  // Send welcome email (fire-and-forget, don't block response on email errors)
+  const emailResult = await sendWelcomeEmail({ ...dbRecord, activation_url: activationUrl });
+
   console.log(
     `FOUNDING_MEMBER_CLAIM: ${name.trim()} <${email.trim().toLowerCase()}> ` +
     `dialect=${normalizedDialect || "n/a"} ` +
     `ip=${clientIp} ` +
     `key=${key} ` +
+    `db=${dbOk ? "ok" : "fail"} ` +
+    `email=${emailResult.sent ? "sent" : "fail"} ` +
     `remaining_requests=${limit.remaining}`
   );
 
@@ -135,7 +244,7 @@ export default async function handler(req, res) {
     success: true,
     key,
     activation_url: activationUrl,
-    message: "Welcome to the Founding Member program! Your free lifetime Pro license is ready.",
+    message: "Welcome to the Founding Member program! Your free lifetime Pro license is ready. Check your email for details.",
     remaining_requests: limit.remaining,
   });
 }

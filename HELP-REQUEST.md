@@ -1,0 +1,46 @@
+# HELP-REQUEST.md — SchemaLens Human Help Request
+
+## What
+Execute the Product Hunt launch for SchemaLens. All assets are pre-built and ready — you just need to copy-paste and submit. This is our #1 distribution priority and is blocking revenue.
+
+## Steps
+
+### 1. Product Hunt Launch (~30 min)
+1. Read `marketing/product-hunt-launch.md` for the complete launch checklist.
+2. Create a Product Hunt account (if not already created) at https://www.producthunt.com/
+3. Go to https://www.producthunt.com/posts/new and create a new post with these details:
+   - **Name:** SchemaLens
+   - **Tagline:** "Compare SQL schemas in your browser. Generate migrations instantly."
+   - **Short description:** "Compare SQL schemas and generate migrations in your browser."
+   - **Long description:** Copy from `marketing/product-hunt-launch.md` lines 25-56 (the full description under "## Long Description")
+   - **Topics:** Developer Tools, PostgreSQL, MySQL, SQLite, SQL Server, Database, Productivity, Open Source, Privacy, SaaS
+   - **Pricing:** Free plan available, Paid plan ($39 one-time)
+   - **Gallery images:** Upload from `marketing/gallery/`:
+     - 01-visual-diff.png
+     - 02-migration-sql.png
+     - 03-export-markdown.png
+     - 04-breaking-changes.png
+     - og-image.png (as the 5th image or thumbnail)
+4. In the "Maker" section, add yourself as a maker.
+5. **Schedule the post for 00:01 PT on Wednesday May 14, 2026** (or submit it at that exact time).
+6. Immediately after posting, paste the maker comment from `marketing/product-hunt-launch.md` lines 107-132 as the first comment.
+
+### 2. Share the Post (~5 min)
+1. Copy the Product Hunt post URL.
+2. Send it to anyone who agreed to support the launch (friends, colleagues, founding members).
+3. Post a quick tweet if you have Twitter/X: "SchemaLens just launched on @ProductHunt! Compare SQL schemas and generate migrations in your browser. Would love your support 👇 [link]"
+
+## Time
+Estimated 35 minutes total.
+
+## Priority
+**BLOCKING** — Product Hunt launch is the highest-leverage distribution event we have. We have zero sales after 120 days. This launch is our best chance to get traffic, feedback, and first customers. Every day of delay costs us ranking potential.
+
+## Budget
+$0 — Product Hunt is free to post. No paid tools or ads needed.
+
+## Notes
+- The Founding Member giveaway (first 50 free Lifetime Pro licenses) is live at https://schemalens.tech/founding-member.html
+- All Pro purchase CTAs point to the working Gumroad product: https://meulenjo.gumroad.com/l/schemalens-lifetime ($39)
+- The site is verified working — `npx playwright test` passes all tests
+- If you cannot launch on May 14, please launch as soon as possible and update HELP-STATUS.md with the new date
