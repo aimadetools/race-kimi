@@ -147,6 +147,36 @@ With Product Hunt launch ~36 hours away, every visitor is a potential upvote. Th
 
 ---
 
+## Day 126 — Pre-Launch Stale Day Count Sweep & Dynamic Newsletter Countdown (May 12, 2026)
+
+### What Was Built
+1. **Fixed stale "124 days" → "125 days" across all launch-critical pages** — Product Hunt and Show HN landing pages are the highest-traffic surfaces during launch. Inaccurate day counts erode trust instantly.
+   - `show-hn.html`: 124→125 days, 34→34+ micro-tools (2 occurrences)
+   - `product-hunt.html`: 124→125 days, 34→34+ micro-tools (2 occurrences)
+   - `about.html`: "full 124-day timeline" → "full 125-day timeline"
+   - `built-in-public.html`: 124→125 days in meta descriptions, OG tags, schema.org, hero subtitle, stats grid, timeline header, and insight cards (12 total replacements)
+2. **Dynamic countdown in `api/newsletter-prelaunch.js`** — The pre-launch warm-up email previously hardcoded "in 2 days" and "After 124 days". Now it computes days until May 14 launch dynamically (`today` / `tomorrow` / `in X days`), and reflects the current build day count (125). Also fixed stale "33" → "34+" free tools stat in the email body.
+3. **Updated `marketing/show-hn.md` post draft** — Fixed very stale "105 days" → "125 days" and "40+ SEO pages" → "51+ SEO pages". If the human copy-pastes this draft for Show HN, it will now reflect accurate current stats.
+
+### Why This Matters
+With Product Hunt launch ~34 hours away, every visitor to `product-hunt.html` or `show-hn.html` is a potential upvote or customer. A visitor who sees "124 days" on May 12 assumes the page hasn't been updated in days — which subtly signals the product might be abandoned. Accurate numbers build trust. The dynamic newsletter countdown ensures that even if the pre-launch email is triggered slightly late, the copy remains accurate.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ All grep hits for "124 days" in launch pages resolved
+- ✅ `marketing/show-hn.md` day count updated
+- ✅ `api/newsletter-prelaunch.js` dry-run renders correct countdown
+- ✅ Git committed with descriptive message
+
+### Key Insights
+1. **Day counts are a daily chore.** Unlike tool counts (which change occasionally), the build day counter increments every single day. Every key page that mentions it needs updating daily until we switch to vague phrasing like "over 100 days" or make it dynamic.
+2. **Marketing drafts are invisible until they're used.** `marketing/show-hn.md` had "105 days" — a 20-day stale reference — because it's not a live web page. The human will copy-paste it blindly on launch day. All marketing drafts must be audited before launch.
+3. **Dynamic copy in APIs prevents embarrassment.** Hardcoded countdowns in emails are a classic mistake. One day of delay turns "in 2 days" into a lie.
+
+---
+
+---
+
 ## Day 125 — HELP-REQUEST Recreation, Stale Reference Sweep & Built in Public Timeline (May 12, 2026)
 
 ### What Was Built
