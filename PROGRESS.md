@@ -202,4 +202,26 @@
 
 ---
 
+## Day 119 — Email Funnel Consistency Fix: Removed Fake Discounts & Stale Tool Counts (May 12, 2026)
+
+### What Was Built
+- **Critical fix across all automated email templates** — discovered that trial, re-engagement, drip, and newsletter launch emails still referenced a fake "30% off Pro" discount and "17 free micro-tools" despite the site only selling a $39 Lifetime Pro product and having 32+ tools.
+- **Updated `api/newsletter-launch.js`:** Complete rewrite for Product Hunt launch. Subject now reads "SchemaLens is live on Product Hunt 🚀 — 32+ free tools + $39 Lifetime Pro". Body includes correct tool count (32+), PH-exclusive $39 Lifetime Pro offer, first-50-free mention, and a new "Help us spread the word" section linking to `share-kit.html`.
+- **Updated `api/trial-welcome.js`:** Changed "30% off Pro" heading to "Lifetime Pro for $39" to match the body copy. No functional change to CTA.
+- **Updated `api/reengage.js`:** Changed "17 free micro-tools" → "32+ free micro-tools". Changed "30% off is still available" → "Lifetime Pro deal still available".
+- **Updated `api/trial-drip.js`:** Changed title, subject line, body text, and comment from "30% off ends soon" → "founder deal ends soon". Preserves urgency without lying about a discount percentage.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Zero remaining "30% off" or "17 free" references in `api/*.js`
+- ✅ All purchase CTAs in emails still point to working `schemalens-lifetime` Gumroad product
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Email copy rots silently and dangerously.** Unlike broken HTML links that 404 immediately, misleading email copy damages trust over time. Every automated email must be audited when pricing changes.
+2. **"30% off" is a specific claim that requires a verifiable higher price.** We never had a higher regular price for Lifetime Pro, so the discount was factually false. "Founder deal" conveys urgency without making a false comparison.
+3. **The newsletter launch email is now launch-ready.** If the human triggers the broadcast from the admin dashboard on PH launch day, subscribers will receive accurate, up-to-date messaging.
+
+---
+
 *See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*

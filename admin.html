@@ -206,9 +206,51 @@
       border-color: var(--primary);
     }
 
+    .ph-monitor-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .ph-comment-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    .ph-comment-row:last-child { border-bottom: none; }
+    .ph-comment-row.answered { opacity: 0.6; }
+    .ph-comment-row.urgent { border-left: 3px solid var(--danger); background: rgba(239,68,68,0.05); }
+    .ph-comment-row.warning { border-left: 3px solid var(--warning); background: rgba(245,158,11,0.05); }
+    .ph-comment-meta { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+    .ph-comment-text { font-size: 0.85rem; color: var(--text); flex: 1; }
+    .ph-template-btn {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+    .ph-template-btn:hover { background: var(--surface-hover); }
+    .ph-reply-area {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 60px;
+    }
     @media (max-width: 640px) {
       .admin-stats { grid-template-columns: repeat(2, 1fr); }
       .admin-table td pre { max-width: 160px; }
+      .ph-comment-row { flex-direction: column; gap: 6px; }
     }
   </style>
 </head>
@@ -390,6 +432,21 @@
         </div>
         <div class="admin-actions-bar">
           <button onclick="refreshLaunchSpecial()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>🐱 Product Hunt Monitor</h3>
+          <span class="admin-badge" id="badgePHUnread">0</span>
+        </div>
+        <div class="admin-section-body" id="phMonitorBody">
+          <div class="admin-empty">Configure your Product Hunt post URL to start tracking comments.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshPHMonitor()">Refresh</button>
+          <button class="primary" onclick="openPHPost()">Open Post</button>
+          <button class="primary" onclick="openPHComments()" style="background:#ff6154;border-color:#ff6154;">Open Comments</button>
         </div>
       </div>
 
@@ -1329,6 +1386,193 @@
       downloadCsv('schemalens-gumroad-sales.csv', headers, rows);
     }
 
+    // Product Hunt Monitor (localStorage-backed)
+    const PH_KEY = 'schemalens_ph_monitor';
+
+    function getPHData() {
+      try { return JSON.parse(localStorage.getItem(PH_KEY) || '{"postUrl":"","comments":[]}'); } catch { return { postUrl: '', comments: [] }; }
+    }
+    function savePHData(data) {
+      localStorage.setItem(PH_KEY, JSON.stringify(data));
+    }
+
+    function formatTimeAgo(iso) {
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      return `${Math.floor(hrs / 24)}d ago`;
+    }
+
+    function getUrgencyClass(createdAt, answered) {
+      if (answered) return '';
+      const mins = (Date.now() - new Date(createdAt).getTime()) / 60000;
+      if (mins > 60) return 'urgent';
+      if (mins > 30) return 'warning';
+      return '';
+    }
+
+    function refreshPHMonitor() {
+      const body = document.getElementById('phMonitorBody');
+      const data = getPHData();
+      const unanswered = data.comments.filter(c => !c.answered).length;
+      document.getElementById('badgePHUnread').textContent = unanswered;
+      document.getElementById('badgePHUnread').className = `admin-badge ${unanswered > 0 ? 'danger' : 'success'}`;
+
+      const quickLinks = data.postUrl
+        ? `<div style="padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;font-size:0.85rem;">
+            <a href="${escapeHtml(data.postUrl)}" target="_blank" rel="noopener" style="color:var(--primary);">🔗 Post</a>
+            <a href="${escapeHtml(data.postUrl)}?ref=producthunt#comments" target="_blank" rel="noopener" style="color:var(--primary);">💬 Comments</a>
+            <a href="https://www.producthunt.com/dashboard" target="_blank" rel="noopener" style="color:var(--primary);">⚙️ Maker Dashboard</a>
+           </div>`
+        : '';
+
+      const urlInput = `
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg);">
+          <label style="font-size:0.8rem;color:var(--text-muted);display:block;margin-bottom:6px;">Product Hunt Post URL</label>
+          <div style="display:flex;gap:8px;">
+            <input type="url" id="phPostUrl" value="${escapeHtml(data.postUrl)}" placeholder="https://www.producthunt.com/posts/schemalens" class="ph-monitor-input">
+            <button onclick="savePHPostUrl()" style="padding:6px 14px;font-size:0.85rem;border-radius:6px;border:none;background:var(--primary);color:#fff;cursor:pointer;white-space:nowrap;">Save URL</button>
+          </div>
+        </div>`;
+
+      const addForm = `
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg);">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px;">
+            <input type="text" id="phCommentAuthor" placeholder="Author" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.85rem;">
+            <select id="phCommentSentiment" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.85rem;">
+              <option value="question">❓ Question</option>
+              <option value="praise">🙌 Praise</option>
+              <option value="bug">🐛 Bug Report</option>
+              <option value="suggestion">💡 Suggestion</option>
+              <option value="critical">⚠️ Critical</option>
+            </select>
+            <button onclick="addPHComment()" style="padding:6px 14px;font-size:0.85rem;border-radius:6px;border:none;background:var(--primary);color:#fff;cursor:pointer;">Add</button>
+          </div>
+          <textarea id="phCommentText" placeholder="Comment text (copy-paste from Product Hunt)..." rows="2" style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.85rem;resize:vertical;"></textarea>
+        </div>`;
+
+      const templates = `
+        <div style="padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);">
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px;">Quick reply templates (click to copy)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <button class="ph-template-btn" onclick="copyPHTemplate('thanks')">🙏 Thanks</button>
+            <button class="ph-template-btn" onclick="copyPHTemplate('question')">❓ Answer</button>
+            <button class="ph-template-btn" onclick="copyPHTemplate('roadmap')">🗺️ Roadmap</button>
+            <button class="ph-template-btn" onclick="copyPHTemplate('bug')">🐛 Bug</button>
+            <button class="ph-template-btn" onclick="copyPHTemplate('pricing')">💰 Pricing</button>
+            <button class="ph-template-btn" onclick="copyPHTemplate('invite')">✉️ Invite</button>
+          </div>
+          <textarea id="phTemplateOutput" readonly style="margin-top:8px;width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.8rem;resize:vertical;min-height:40px;display:none;"></textarea>
+        </div>`;
+
+      const commentRows = data.comments.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((c, idx) => {
+        const originalIdx = data.comments.indexOf(c);
+        const urgency = getUrgencyClass(c.created_at, c.answered);
+        const sentimentBadge = {
+          question: '❓', praise: '🙌', bug: '🐛', suggestion: '💡', critical: '⚠️'
+        }[c.sentiment] || '💬';
+        return `
+          <div class="ph-comment-row ${c.answered ? 'answered' : ''} ${urgency}" data-idx="${originalIdx}">
+            <div style="min-width:100px;">
+              <div style="font-weight:600;font-size:0.85rem;">${escapeHtml(c.author)}</div>
+              <div class="ph-comment-meta">${sentimentBadge} ${formatTimeAgo(c.created_at)}</div>
+            </div>
+            <div class="ph-comment-text">${escapeHtml(c.text)}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;min-width:80px;">
+              <label style="display:flex;align-items:center;gap:4px;font-size:0.8rem;cursor:pointer;color:var(--text-muted);">
+                <input type="checkbox" ${c.answered ? 'checked' : ''} onchange="togglePHAnswered(${originalIdx})" style="cursor:pointer;">
+                Replied
+              </label>
+              <button onclick="deletePHComment(${originalIdx})" style="padding:2px 6px;font-size:0.7rem;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--danger);cursor:pointer;">Delete</button>
+            </div>
+          </div>`;
+      }).join('');
+
+      const commentsList = commentRows
+        ? `<div style="max-height:400px;overflow-y:auto;">${commentRows}</div>`
+        : `<div class="admin-empty">No comments tracked yet. Paste comments from Product Hunt above as they come in.</div>`;
+
+      const statsBar = data.comments.length > 0
+        ? `<div style="padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem;color:var(--text-muted);">
+            <span><strong style="color:var(--text);">${data.comments.length}</strong> total</span>
+            <span><strong style="color:var(--danger);">${unanswered}</strong> unanswered</span>
+            <span><strong style="color:var(--text);">${data.comments.filter(c => c.answered).length}</strong> replied</span>
+            ${data.comments.length > 0 ? `<span>last: <strong style="color:var(--text);">${formatTimeAgo(data.comments[data.comments.length - 1].created_at)}</strong></span>` : ''}
+           </div>`
+        : '';
+
+      body.innerHTML = urlInput + quickLinks + statsBar + templates + addForm + commentsList;
+    }
+
+    function savePHPostUrl() {
+      const url = document.getElementById('phPostUrl').value.trim();
+      const data = getPHData();
+      data.postUrl = url;
+      savePHData(data);
+      refreshPHMonitor();
+    }
+
+    function openPHPost() {
+      const data = getPHData();
+      if (data.postUrl) window.open(data.postUrl, '_blank');
+      else alert('Save a Product Hunt post URL first.');
+    }
+
+    function openPHComments() {
+      const data = getPHData();
+      if (data.postUrl) window.open(data.postUrl + '?ref=producthunt#comments', '_blank');
+      else alert('Save a Product Hunt post URL first.');
+    }
+
+    function addPHComment() {
+      const author = document.getElementById('phCommentAuthor').value.trim();
+      const text = document.getElementById('phCommentText').value.trim();
+      const sentiment = document.getElementById('phCommentSentiment').value;
+      if (!author || !text) { alert('Author and comment text are required.'); return; }
+      const data = getPHData();
+      data.comments.push({ author, text, sentiment, created_at: new Date().toISOString(), answered: false });
+      savePHData(data);
+      refreshPHMonitor();
+    }
+
+    function togglePHAnswered(index) {
+      const data = getPHData();
+      if (data.comments[index]) {
+        data.comments[index].answered = !data.comments[index].answered;
+        savePHData(data);
+        refreshPHMonitor();
+      }
+    }
+
+    function deletePHComment(index) {
+      if (!confirm('Delete this comment from the tracker?')) return;
+      const data = getPHData();
+      data.comments.splice(index, 1);
+      savePHData(data);
+      refreshPHMonitor();
+    }
+
+    const PH_TEMPLATES = {
+      thanks: "Thank you so much for checking out SchemaLens and for the kind words! 🙏 If you have any questions or feedback while using it, I'm here.",
+      question: "Great question! SchemaLens runs entirely client-side — your SQL schemas never leave your browser. You can verify this in DevTools → Network (zero outbound requests with your schema data). Let me know if there's anything else I can clarify!",
+      roadmap: "Thanks for the suggestion — that's actually on our near-term roadmap. I'd love to hear more about your specific use case if you're open to sharing. Feel free to email me directly at hello@schemalens.tech.",
+      bug: "Thanks for flagging this — I'm on it. Could you share a minimal example of the SQL that triggered it? You can paste it here or email me at hello@schemalens.tech and I'll reproduce + fix it today.",
+      pricing: "Lifetime Pro is $39 once (no subscription). That includes unlimited diffs, all export formats, shareable links, and every future update. There's also a 14-day money-back guarantee if it's not a fit.",
+      invite: "If SchemaLens is useful for your workflow, I'd be incredibly grateful if you shared it with a teammate or on Twitter/LinkedIn. Every share helps a solo builder keep going. 🙏"
+    };
+
+    function copyPHTemplate(key) {
+      const text = PH_TEMPLATES[key] || '';
+      const output = document.getElementById('phTemplateOutput');
+      output.style.display = 'block';
+      output.value = text;
+      output.select();
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshSubscribers();
@@ -1341,6 +1585,7 @@
       refreshAffiliates();
       refreshDemos();
       refreshSales();
+      refreshPHMonitor();
     }
   </script>
 </body>
