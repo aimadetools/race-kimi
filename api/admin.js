@@ -173,6 +173,20 @@ module.exports = async (req, res) => {
         }
         return res.status(200).json({ data: launchJson });
       }
+      case 'prelaunch-email': {
+        const proto = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers.host || 'schemalens.tech';
+        const dry = body.dry === true ? 'true' : 'false';
+        const prelaunchUrl = `${proto}://${host}/api/newsletter-prelaunch?dry=${dry}`;
+        const prelaunchHeaders = { 'Content-Type': 'application/json' };
+        if (LAUNCH_TOKEN) prelaunchHeaders['x-launch-token'] = LAUNCH_TOKEN;
+        const prelaunchRes = await fetch(prelaunchUrl, { method: 'POST', headers: prelaunchHeaders });
+        const prelaunchJson = await prelaunchRes.json().catch(() => ({}));
+        if (!prelaunchRes.ok) {
+          return res.status(prelaunchRes.status || 500).json({ error: prelaunchJson.error || 'Pre-launch email request failed' });
+        }
+        return res.status(200).json({ data: prelaunchJson });
+      }
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }

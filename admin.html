@@ -359,6 +359,20 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🔥 Pre-Launch Warm-Up</h3>
+        </div>
+        <div class="admin-section-body" id="prelaunchBody">
+          <div class="admin-empty">Send a pre-launch warm-up email to all subscribers before the Product Hunt launch. Builds anticipation and drives early upvotes.</div>
+          <div style="margin-top:12px;">
+            <button onclick="previewPrelaunchEmail()">Preview (Dry Run)</button>
+            <button class="primary" onclick="sendPrelaunchEmail()" style="background:#dc2626;">Send Pre-Launch Email</button>
+          </div>
+          <pre id="prelaunchResult" style="margin-top:12px;background:var(--surface);padding:12px;border-radius:6px;font-size:0.8rem;overflow:auto;max-height:300px;display:none;"></pre>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>🚀 Launch Announcement</h3>
         </div>
         <div class="admin-section-body" id="launchBody">
@@ -711,6 +725,41 @@
         Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
       );
       downloadCsv('schemalens-subscribers.csv', headers, rows);
+    }
+
+    async function previewPrelaunchEmail() {
+      const result = document.getElementById('prelaunchResult');
+      result.style.display = 'block';
+      result.textContent = 'Running dry run…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'prelaunch-email', password: ADMIN_PASSWORD_HASH, dry: true })
+        });
+        const json = await res.json().catch(() => ({}));
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendPrelaunchEmail() {
+      if (!confirm('Send pre-launch warm-up email to ALL unsubscribed subscribers? This cannot be undone.')) return;
+      const result = document.getElementById('prelaunchResult');
+      result.style.display = 'block';
+      result.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'prelaunch-email', password: ADMIN_PASSWORD_HASH, dry: false })
+        });
+        const json = await res.json().catch(() => ({}));
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
     }
 
     async function previewLaunchEmail() {
