@@ -13,7 +13,18 @@ const EMAIL_API_KEY = process.env.EMAIL_API_KEY;
 const EMAIL_FROM = process.env.EMAIL_FROM || "hello@schemalens.tech";
 const LAUNCH_TOKEN = process.env.LAUNCH_TOKEN;
 
+function getLaunchCountdown() {
+  const launchDate = new Date("2026-05-14T07:00:00Z");
+  const now = new Date();
+  const diffMs = launchDate - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays <= 0) return "today";
+  if (diffDays === 1) return "tomorrow";
+  return `in ${diffDays} days`;
+}
+
 function prelaunchEmailHtml() {
+  const countdown = getLaunchCountdown();
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,8 +55,8 @@ function prelaunchEmailHtml() {
 <body>
   <div class="container">
     <div class="logo">SchemaLens</div>
-    <h1>We're launching on Product Hunt in 2 days 🚀</h1>
-    <p>After 124 days of building in public, SchemaLens is ready for its biggest moment. On <strong>May 14 at 00:01 PT</strong>, we're going live on Product Hunt — and I'd love your support.</p>
+    <h1>We're launching on Product Hunt ${getLaunchCountdown()} 🚀</h1>
+    <p>After 125 days of building in public, SchemaLens is ready for its biggest moment. On <strong>May 14 at 00:01 PT</strong>, we're going live on Product Hunt — and I'd love your support.</p>
 
     <div class="highlight">
       <p><strong>What is SchemaLens?</strong> Paste two SQL CREATE TABLE dumps and get an instant visual diff plus a generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. 34+ free micro-tools, CLI, VS Code extension, and Chrome extension.</p>
@@ -61,7 +72,7 @@ function prelaunchEmailHtml() {
 
     <div class="stats">
       <div class="stat"><div class="stat-number">5</div><div class="stat-label">SQL dialects</div></div>
-      <div class="stat"><div class="stat-number">33</div><div class="stat-label">Free tools</div></div>
+      <div class="stat"><div class="stat-number">34+</div><div class="stat-label">Free tools</div></div>
       <div class="stat"><div class="stat-number">42</div><div class="stat-label">Migration guides</div></div>
     </div>
 
@@ -224,7 +235,7 @@ export default async function handler(req, res) {
       try {
         const id = await sendEmail({
           to: sub.email,
-          subject: "SchemaLens launches on Product Hunt in 2 days 🚀 — here's how to help",
+          subject: `SchemaLens launches on Product Hunt ${getLaunchCountdown()} 🚀 — here's how to help`,
           html: prelaunchEmailHtml(),
         });
         await patchSupabase("newsletter_subscribers", sub.id, { prelaunch_announcement_sent_at: new Date().toISOString() });
