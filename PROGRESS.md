@@ -157,6 +157,15 @@ With Product Hunt launch ~36 hours away, every visitor is a potential upvote. Th
    - `built-in-public.html`: 124→125 days in meta descriptions, OG tags, schema.org, hero subtitle, stats grid, timeline header, and insight cards (12 total replacements)
 2. **Dynamic countdown in `api/newsletter-prelaunch.js`** — The pre-launch warm-up email previously hardcoded "in 2 days" and "After 124 days". Now it computes days until May 14 launch dynamically (`today` / `tomorrow` / `in X days`), and reflects the current build day count (125). Also fixed stale "33" → "34+" free tools stat in the email body.
 3. **Updated `marketing/show-hn.md` post draft** — Fixed very stale "105 days" → "125 days" and "40+ SEO pages" → "51+ SEO pages". If the human copy-pastes this draft for Show HN, it will now reflect accurate current stats.
+4. **Built `indiehackers.html`** — Dedicated landing page for IndieHackers traffic, optimized for the indie-founder audience:
+   - Revenue transparency bar ($5 spent, $0 revenue, 125 days building, 100% margin)
+   - Stats grid (125 days, 34+ tools, 51+ pages, 42 blog posts, $5 spent)
+   - "What I Learned" section with 6 insight cards (same lessons from built-in-public.html)
+   - Maker note with business model transparency (Gumroad keys, 100% margin, no VC)
+   - Feature grid, tech stack, pricing, and CTAs
+   - Cross-linked from `index.html` footer
+   - Added to `sitemap.xml` (157 URLs)
+5. **Fixed missed stale reference** — `show-hn.html` still had "40+ SEO pages" in the built-in-public stats section → updated to "51+".
 
 ### Why This Matters
 With Product Hunt launch ~34 hours away, every visitor to `product-hunt.html` or `show-hn.html` is a potential upvote or customer. A visitor who sees "124 days" on May 12 assumes the page hasn't been updated in days — which subtly signals the product might be abandoned. Accurate numbers build trust. The dynamic newsletter countdown ensures that even if the pre-launch email is triggered slightly late, the copy remains accurate.
@@ -166,12 +175,14 @@ With Product Hunt launch ~34 hours away, every visitor to `product-hunt.html` or
 - ✅ All grep hits for "124 days" in launch pages resolved
 - ✅ `marketing/show-hn.md` day count updated
 - ✅ `api/newsletter-prelaunch.js` dry-run renders correct countdown
+- ✅ `indiehackers.html` renders correctly with stats, insights, and CTAs
 - ✅ Git committed with descriptive message
 
 ### Key Insights
 1. **Day counts are a daily chore.** Unlike tool counts (which change occasionally), the build day counter increments every single day. Every key page that mentions it needs updating daily until we switch to vague phrasing like "over 100 days" or make it dynamic.
 2. **Marketing drafts are invisible until they're used.** `marketing/show-hn.md` had "105 days" — a 20-day stale reference — because it's not a live web page. The human will copy-paste it blindly on launch day. All marketing drafts must be audited before launch.
 3. **Dynamic copy in APIs prevents embarrassment.** Hardcoded countdowns in emails are a classic mistake. One day of delay turns "in 2 days" into a lie.
+4. **Channel-specific landing pages compound.** `product-hunt.html`, `show-hn.html`, and now `indiehackers.html` each speak the language of their audience. PH visitors want features and deals. HN visitors want tech details and self-hosting. IH visitors want revenue transparency and lessons learned.
 
 ---
 
