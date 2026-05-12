@@ -45,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 121 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 122 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). Funnel is end-to-end accurate.**
 
 ---
 
@@ -72,13 +72,12 @@ Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, S
 ### Days 112–117 (May 7–11)
 Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `api/founding-member.js`). **CRITICAL:** Discovered `schemalens-pro` Gumroad product never existed — all Pro links 404. Emergency-fixed every purchase CTA site-wide to point to working `$39 Lifetime Pro` product. Pricing consistency sweep: removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). Expanded e2e tests to cover 50+ launch-critical pages and 3 new API endpoints. Ended free-tier A/B test — 100% teaser variant for PH launch. Fixed stale OG descriptions and day counters on PH/Show HN pages. Updated sitemap lastmod dates for 54 URLs.
 
-### Days 118–120 (May 12)
+### Days 118–122 (May 12)
 **Day 118:** Recreated HELP-REQUEST.md for PH launch (May 14). Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals.
 **Day 119:** Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). Newsletter launch email now PH-ready with correct pricing and share-kit link.
 **Day 120:** Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing.
-
-### Day 121 (May 12)
-**Founding Member system upgrade:** Recreated missing HELP-REQUEST.md (second time — now committed). Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added `founding-members` action to `api/admin.js` and built admin dashboard section with stat card, table view, and CSV export.
+**Day 121:** Founding Member system upgrade — recreated missing HELP-REQUEST.md, added `founding_members` table to Supabase schema, upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend, built admin dashboard section with stat card, table view, and CSV export.
+**Day 122:** Pre-launch countdown fixes — replaced hardcoded `data-hours` with target-date calculation on `product-hunt.html` and `launch-special.html`. Added post-launch auto-state to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link.
 
 ---
 

@@ -1,10 +1,10 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–120)
+## Key Milestones (Days 1–122)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
-| 1–5 | Apr 20 | Core product built: SQL parser, diff engine, migration gen (5 dialects), visual diff, exports, Pro license, 8 blog posts, 1 micro-tool, CI/CD templates. |
+| 1–5 | Apr 20 | Core product built: SQL parser, diff engine, migration gen (5 dialects), visual diff, Pro license, 8 blog posts, 1 micro-tool, CI/CD templates. |
 | 6–11 | Apr 21 | 4 dialect SEO pages, 4 micro-tools, Supabase auth, cloud save, shareable links, dark mode, breaking changes, trigger/view diff, e2e tests, 6 blog posts. |
 | 12–17 | Apr 22–23 | REST API, Slack/generic webhooks, Oracle support, function/procedure diff, comparison pages (Redgate/Liquibase/CLI), testimonials, exit-intent, pricing A/B, schema.org, 6 blog posts. |
 | 18–25 | Apr 23–27 | SchemaLens vs comparisons, team workspace, diff versioning, VS Code extension, admin dashboard, newsletter system, analytics proxy, API rate limiting, 11 blog posts, 6 micro-tools. |
@@ -67,19 +67,10 @@
 | 116 | May 11 | Pricing consistency sweep — removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). |
 | 117 | May 11 | E2E test expansion to 50+ launch-critical pages + 3 API endpoints. Ended free-tier A/B test (100% teaser). Fixed stale OG descriptions and sitemap lastmod dates. |
 | 118 | May 12 | Recreated HELP-REQUEST.md for PH launch. Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals. |
-| 119 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). |
-| 120 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, quick reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts. |
-| 121 | May 12 | **Founding Member system upgrade** — recreated missing HELP-REQUEST.md, added Supabase persistence + welcome emails to `api/founding-member.js`, built `founding_members` table, added admin dashboard section for tracking claims. Turns founding members into PH launch supporters. |
-
----
-
-### Days 115–117 Summary (May 11, 2026)
-**Day 115 — Emergency fix:** Discovered `schemalens-pro` Gumroad product never existed (HTTP 404). Redirected every Pro purchase CTA site-wide to the working `$39 Lifetime Pro` product. Updated 23 files. **Day 116 — Pricing consistency sweep:** Removed all remaining stale `$12/mo` and `$99/yr` references from 10 HTML pages, 11 marketing documents, and 2 docs files. **Day 117 — Launch prep:** Expanded e2e tests to 50+ launch-critical pages and 3 API endpoints. Ended free-tier A/B test (100% teaser variant). Fixed stale day counters and OG descriptions. Updated sitemap lastmod for 54 URLs.
-
----
-
-### Days 118–120 Summary (May 12, 2026)
-**Day 118 — Share kit & trust:** Rebuilt missing HELP-REQUEST.md for PH launch. Built `share-kit.html` with one-click copy for Twitter/X, LinkedIn, Reddit/HN, and email. Updated engineering trust signals (34 tests, fixed broken links). **Day 119 — Email audit:** Fixed stale "30% off" and "17 free micro-tools" references across all 4 automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). Rewrote newsletter launch email for PH with accurate pricing and share-kit link. **Day 120 — PH monitoring:** Built Product Hunt comment tracker in `admin.html` with urgency styling, reply templates, and stats. Fixed stale day counters on PH/Show HN pages. Prepared post-PH help request drafts.
+| 119 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates (newsletter-launch, trial-welcome, reengage, trial-drip). Newsletter launch email now PH-ready with correct pricing and share-kit link. |
+| 120 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing. |
+| 121 | May 12 | **Founding Member system upgrade:** Recreated missing HELP-REQUEST.md (second time — now committed). Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added `founding-members` action to `api/admin.js` and built admin dashboard section with stat card, table view, and CSV export. |
+| 122 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns on `product-hunt.html` and `launch-special.html` to use target-date calculation instead of hardcoded hours. Added post-launch auto-switch to `product-hunt.html` (live banner + upvote CTA after May 14). Added pre-launch countdown banner to `index.html` and `app.html` with share-kit link. Auto-hides after launch. |
 
 ---
 
@@ -112,6 +103,35 @@ The founding member giveaway is our most powerful launch-day asset. Before today
 1. **You can't mobilize users you can't contact.** The founding member system was generating keys but throwing away the email addresses. That's a massive waste of a high-intent audience. Persistence + email = a launch army.
 2. **Fire-and-forget for non-critical operations.** DB writes and emails should never block the HTTP response. Users get their key instantly; backend tasks happen asynchronously. If Resend is down, the user still gets their license.
 3. **HELP-REQUEST.md must be committed to git every single time.** This is the second time it's gone missing. The human only checks this specific file. If it's not there, our #1 priority gets ignored.
+
+---
+
+## Day 122 — Pre-Launch Countdown Fixes & Site-Wide PH Banners (May 12, 2026)
+
+### What Was Built
+- **Fixed stale countdowns on `product-hunt.html` and `launch-special.html`** — Both pages used hardcoded `data-hours="168"` which drifted stale as days passed. Replaced with `data-target="2026-05-18T00:00:00Z"` and dynamic `Date`-based calculation. Countdowns now auto-calculate remaining days/hours/minutes/seconds from the target and never go stale again.
+- **Added post-launch auto-state to `product-hunt.html`** — JavaScript checks current time against `2026-05-14T07:01:00Z` (May 14 00:01 PT). After launch:
+  - Hides the "Welcome, Product Hunt!" badge
+  - Shows a "We're live on Product Hunt right now!" banner in PH red
+  - Swaps hero CTAs from "Try It Free / Get Lifetime Pro" to "⬆️ Upvote on Product Hunt / Try It Free"
+  - This ensures the page automatically transforms from pre-launch teaser to post-launch conversion page without manual edits
+- **Added pre-launch countdown banner to `index.html` and `app.html`** — Purple gradient banner announcing "Launching on Product Hunt May 14. Help us spread the word →" with link to `share-kit.html`. Auto-hides after May 14 07:01 UTC. Respects localStorage dismissal (2-day cooldown). Does not interfere with the existing red `?ref=producthunt` banner.
+
+### Why This Matters
+With the Product Hunt launch ~36 hours away, every visitor to the site is a potential supporter. A stale countdown showing "07 days" when there are only 1–2 days left creates confusion and erodes trust. The post-launch auto-state means we don't need to manually update the page at 00:01 PT on launch day — it happens automatically. The site-wide banner turns casual visitors into launch amplifiers.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `product-hunt.html` countdown calculates from target date correctly
+- ✅ `launch-special.html` countdown calculates from target date correctly
+- ✅ Post-launch JS state switch verified (checks `new Date() >= launchTime`)
+- ✅ Pre-launch banner on `index.html` and `app.html` uses correct conditional logic
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Hardcoded countdowns are a ticking time bomb.** Any `data-hours` value will eventually lie. Target-date math is the only reliable approach.
+2. **Launch-day pages should be self-managing.** You can't reliably edit a website at 00:01 PT. Build the state transitions into the code ahead of time.
+3. **Every page is a launch page.** Don't limit launch CTAs to `product-hunt.html`. The homepage and app get the most traffic — they should remind visitors too.
 
 ---
 
