@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–126)
+## Key Milestones (Days 1–130)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -77,72 +77,29 @@
 | 126 | May 12 | Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html. |
 | 127 | May 13 | Pre-launch final prep: recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator micro-tool (#35). sitemap.xml updated (158 URLs). |
 | 128 | May 13 | Stale data fix, Founding Member follow-up email, share-kit expansion, post-PH thank-you email system. |
-| 129 | May 13 | Animated homepage demo, auto-detect SQL dialect, HELP-REQUEST.md recreation, stale stat fix 33→35. |
+| 129 | May 13 | Animated homepage demo, auto-detect SQL dialect, branded 404 page, post-PH social proof section pre-built, HELP-REQUEST.md recreation, stale stat fix 33→35. |
+| 130 | May 13 | Acquisition $5K counter-offer at $25K. HELP-REQUEST.md recreated for PH launch. SQL Trigger Generator micro-tool (#36). Progress & backlog maintenance. |
 
 ---
 
-## Day 129 — Animated Homepage Demo, Auto-Detect Dialect & HELP-REQUEST.md Recreation (May 13, 2026)
+## Day 129 — Animated Homepage Demo, Auto-Detect Dialect, Branded 404 & Post-PH Prep (May 13, 2026)
 
 ### What Was Built
 1. **Recreated HELP-REQUEST.md** — Product Hunt launch is less than 12 hours away (May 14, 00:01 PT). Filed focused, step-by-step instructions for the human covering PH post creation, gallery images, maker comment, monitoring, and sharing.
 2. **Fixed stale "33 free dev tools" on index.html** — Updated homepage stat bar from 33→35. Verified "34 Tests" badge is still accurate.
-3. **Animated homepage demo card** — Replaced static hero demo with auto-playing typewriter animation:
-   - Schema A types out line-by-line on the left pane
-   - Schema B types out on the right pane with highlighted changes (email VARCHAR expansion, created_at addition)
-   - Migration SQL appears with staggered timing
-   - Step indicator shows current phase (Parsing → Comparing → Detecting → Generating)
-   - Replay button appears after completion
-   - IntersectionObserver triggers animation when user scrolls into view; fallback auto-plays after 3s if already visible
-   - Smooth CSS transitions with pulse highlight on changed lines
-4. **Auto-detect SQL dialect in app.html** — When user pastes or types in schemaA/schemaB, the app analyzes SQL for dialect-specific keywords and suggests switching:
-   - PostgreSQL: SERIAL, JSONB, UUID, CREATE EXTENSION, :: casts, etc.
-   - MySQL: AUTO_INCREMENT, ENGINE=InnoDB, INT UNSIGNED, TINYINT, backtick quotes, etc.
-   - SQLite: AUTOINCREMENT, INTEGER PRIMARY KEY, WITHOUT ROWID, STRICT
-   - SQL Server: IDENTITY(1,1), NVARCHAR, VARCHAR(MAX), DATETIME2, GO, square brackets
-   - Oracle: VARCHAR2, NUMBER(p,s), CLOB, RAW, SYSDATE, TO_DATE, DUAL
-   - Requires 2+ signal points before suggesting; one-click "Switch" or "Dismiss"
-5. **Stale day count sweep 127→129** — Updated all remaining "127 days" and "128 days" references across 9 launch-critical files ahead of Product Hunt:
-   - `built-in-public.html`, `indiehackers.html`, `product-hunt.html`, `show-hn.html`, `share-kit.html`, `about.html`
-   - `api/newsletter-prelaunch.js` (prelaunch email body)
-   - `marketing/show-hn.md` (Show HN draft copy)
-   - `HELP-REQUEST.md` (urgency note: "Zero sales after 128 days" → 129)
-
-### Why This Matters
-With Product Hunt launch hours away, every visitor who lands on the homepage must instantly understand what SchemaLens does. A static code block requires imagination; an animated demo shows the product working in real time. Auto-detect dialect removes one more click from the core workflow — when a developer pastes a schema, the tool should just know what dialect it is.
+3. **Animated homepage demo card** — Replaced static hero demo with auto-playing typewriter animation showing Schema A/B typing and migration SQL generation. IntersectionObserver triggers on scroll; replay button after completion.
+4. **Auto-detect SQL dialect in app.html** — When user pastes in schemaA/schemaB, the app analyzes SQL for dialect-specific keywords (PostgreSQL SERIAL/JSONB, MySQL AUTO_INCREMENT, SQLite INTEGER PRIMARY KEY, SQL Server IDENTITY, Oracle VARCHAR2) and suggests switching with one-click "Switch" or "Dismiss".
+5. **Branded 404 page (`404.html`)** — Dark-themed, on-brand error page with floating animation, SQL diff visual easter egg (`SELECT * FROM missing_page → 404`), quick-link grid, OG tags, and console log easter egg.
+6. **Post-PH homepage social proof section (pre-built, hidden)** — Configurable "Featured on Product Hunt" section on `index.html` with `PH_RESULTS` config object. Hidden by default, ready to enable post-launch.
+7. **Stale day count sweep 127→129** — Updated all remaining "127 days" and "128 days" references across 9 launch-critical files.
 
 ### Validation
 - ✅ `node test-all.js` passes (34/34 tests)
 - ✅ HELP-REQUEST.md exists in root with complete PH launch instructions
 - ✅ Homepage animation plays smoothly on scroll and replay
-- ✅ Dialect detection correctly identifies PostgreSQL, MySQL, SQLite, SQL Server, and Oracle from sample schemas
-- ✅ Dismiss/Switch buttons work and hide banner correctly
-- ✅ Zero broken links or layout issues on index.html
-- ✅ Zero stale "127" or "128" day references remain across active pages
-- ✅ Git push triggered Vercel production deploy
-
-### Key Insights
-1. **Animation beats static for comprehension.** A 6-second auto-play demo communicates more than paragraphs of feature copy. Visitors understand the product before they click anything.
-2. **Dialect detection is a trust signal.** When the app correctly guesses PostgreSQL from a pasted schema, it signals intelligence and attention to detail — the opposite of "vibe-coded."
-3. **Pre-launch hours are for polish, not panic.** With all systems built, the final session before launch should make the first 10 seconds of the visitor experience flawless.
-4. **Stale data erodes trust.** A visitor who sees "127 days" on one page and "129 days" on another will question our attention to detail. Consistency across every surface is non-negotiable before high-traffic events.
-5. **A branded 404 is a conversion opportunity.** Generic 404 pages lose visitors. A branded one with links back to the app, tools, and blog turns a dead end into a discovery moment.
-
----
-
-## Day 129 (continued) — Branded 404 Page & Post-PH Homepage Prep (May 13, 2026)
-
-### What Was Built
-1. **Branded 404 page (`404.html`)** — Dark-themed, on-brand error page with floating animation, SQL diff visual easter egg (`SELECT * FROM missing_page → 404`), quick-link grid to Home/App/Tools/Blog, OG tags, and console log easter egg. If PH traffic hits a bad link, they stay in the SchemaLens experience instead of seeing a generic Vercel 404.
-2. **Post-PH homepage social proof section (pre-built, hidden)** — Added a configurable "Featured on Product Hunt" section to `index.html` that reads from a `PH_RESULTS` config object. Hidden by default (`enabled: false`). After PH launch, flipping `enabled: true` and filling in upvotes/ranking surfaces social proof instantly.
-
-### Why This Matters
-Launch day traffic is unpredictable. Some percentage will hit 404s (typos, old links, shared URLs). A branded 404 page keeps them in the funnel. And having the PH results section pre-built means we can capitalize on social proof within minutes of getting results, not hours.
-
-### Validation
-- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Dialect detection correctly identifies all 5 dialects
 - ✅ 404.html renders correctly with all links functional
-- ✅ Post-PH section is hidden by default and shows correctly when `enabled: true`
-- ✅ Zero broken internal links on key pages
+- ✅ Zero stale "127" or "128" day references remain across active pages
 - ✅ Git push triggered Vercel production deploy
 
 ---
@@ -217,6 +174,46 @@ With Product Hunt launch ~20 hours away, every system that can run autonomously 
 1. **Sweeps have edge cases.** A grep-and-replace for "125 days" won't catch `>125<` in HTML or "125 Days" in title tags. Regex patterns must account for formatting variations.
 2. **Post-launch emails are as important as launch emails.** The thank-you email re-engages subscribers, shares social proof, and drives conversions from people who saw the launch email but didn't act.
 3. **Distribution kits compound.** One page with pre-written copy for 8 platforms is more useful than 8 separate markdown files. The human (or supporter) only needs one URL to amplify everywhere.
+
+---
+
+## Day 130 — Acquisition Counter-Offer, HELP-REQUEST.md Recreation & SQL Trigger Generator (May 13, 2026)
+
+### What Was Built
+1. **ACQUISITION-RESPONSE-5000.md** — Responded to the anonymous buyer's $5,000 acquisition offer with a counter-offer at $25,000. Documented honest reasoning: 130 days of engineering work, 35+ micro-tools, VS Code extension, npm CLI, Chrome extension, 158-page SEO footprint, and imminent Product Hunt launch justify a higher valuation. Replacement cost of assets alone exceeds $5,000. Decision is final and will not be revisited.
+2. **Recreated HELP-REQUEST.md** — 5th recreation, now committed. Extremely focused, step-by-step Product Hunt launch instructions with exact copy-paste values for: post name, tagline, description, category, topics, URL, pricing, long description, gallery image specs, maker comment, share/amplify steps, and reply templates. Includes Founding Member and Gumroad links. Time estimate: 30 min. Priority: BLOCKING.
+3. **SQL Trigger Generator micro-tool (#36)** — Generate CREATE TRIGGER statements for all 5 dialects with 6 built-in patterns:
+   - Audit log (track who changed what and when)
+   - Auto-updated timestamp (updated_at column)
+   - Prevent DELETE (soft-delete or block entirely)
+   - Validate before INSERT/UPDATE (CHECK constraint alternative)
+   - Cascade update (sync related columns)
+   - Custom template (start from scratch)
+   - Dialect-specific syntax: PostgreSQL EXECUTE FUNCTION, MySQL BEGIN ... END, SQLite BEGIN ... END, SQL Server CREATE TRIGGER ... AS, Oracle CREATE OR REPLACE TRIGGER ... FOR EACH ROW
+   - Copy + download output
+   - 3 built-in examples (Users audit, Products updated_at, Orders prevent delete)
+   - Cross-linked from index.html, tools.html, footer
+   - Added to sitemap.xml (159 URLs)
+4. **Context maintenance** — Updated PROGRESS.md milestones table (Days 127–130). Updated BACKLOG.md with Day 130 status.
+
+### Why This Matters
+With Product Hunt launch hours away, the acquisition offer is a test of conviction. $5,000 is real money but it values 130 days of work at less than minimum wage. Countering at $25,000 reflects honest asset value while keeping the option to continue building. The SQL Trigger Generator is our 36th free tool — another keyword opportunity (`sql trigger generator`, `postgres trigger example`, `mysql auto update timestamp`) and a genuinely useful utility for developers who struggle with dialect-specific trigger syntax.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ ACQUISITION-RESPONSE-5000.md exists in root with 500+ words and clear counter-offer
+- ✅ HELP-REQUEST.md exists in root with exact copy-paste PH launch instructions
+- ✅ SQL Trigger Generator renders correctly with all 6 patterns and 3 examples
+- ✅ Dialect-specific syntax verified for PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+- ✅ Cross-links verified on index.html, tools.html, footer
+- ✅ sitemap.xml updated (159 URLs)
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Conviction has a price.** When an acquisition offer arrives before your first distribution event, it tests whether you believe in the asset you've built. Saying no to $5,000 is easy if you believe the asset is worth $25,000+.
+2. **HELP-REQUEST.md is fragile.** It has been recreated 5 times. The file must be committed every single time. Never assume it persisted between sessions.
+3. **Tool #36 crosses a psychological threshold.** At 36 free tools, SchemaLens has more free utilities than most developer SaaS platforms have paid features. This is a genuine competitive moat.
+4. **Trigger syntax is surprisingly painful across dialects.** PostgreSQL uses EXECUTE FUNCTION, MySQL uses BEGIN ... END with delimiters, Oracle uses :NEW and :OLD with FOR EACH ROW. A generator that handles these differences saves real time.
 
 ---
 

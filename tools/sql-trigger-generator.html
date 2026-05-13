@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL Trigger Generator — SchemaLens</title>
+  <meta name="description" content="Generate CREATE TRIGGER statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Audit logs, auto-updated timestamps, prevent deletes, validation, and more.">
+  <meta property="og:title" content="Free SQL Trigger Generator — SchemaLens">
+  <meta property="og:description" content="Generate CREATE TRIGGER statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Audit logs, auto-updated timestamps, prevent deletes, validation, and more.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-trigger-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL Trigger Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate CREATE TRIGGER statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle with audit logs, auto-updated timestamps, prevent deletes, validation, and custom templates",
+    "url": "https://schemalens.tech/tools/sql-trigger-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .generator-wrap { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.1rem; margin-bottom: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--input-bg, #0f1117);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    textarea { min-height: 120px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .option-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .option-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .output-area {
+      background: var(--code-bg, #0a0c10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      min-height: 180px;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+    .example-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .example-card:hover { border-color: var(--accent); }
+    .example-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .example-card p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+    .tag { display: inline-block; background: rgba(99,102,241,.15); color: #a5b4fc; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="../index.html" class="logo">SchemaLens</a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>SQL Trigger Generator</h1>
+      <p>Generate CREATE TRIGGER statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Pick a pattern, customize, and copy the code.</p>
+    </div>
+
+    <div class="generator-wrap">
+      <div class="card">
+        <h3>1. Choose Pattern</h3>
+        <div class="options" id="patternOptions">
+          <span class="option-chip active" data-pattern="audit">Audit Log</span>
+          <span class="option-chip" data-pattern="timestamp">Auto Updated At</span>
+          <span class="option-chip" data-pattern="preventDelete">Prevent DELETE</span>
+          <span class="option-chip" data-pattern="validate">Validate Data</span>
+          <span class="option-chip" data-pattern="cascade">Cascade Update</span>
+          <span class="option-chip" data-pattern="custom">Custom Template</span>
+        </div>
+        <p class="hint" id="patternHint">Tracks INSERT, UPDATE, DELETE on a table into an audit log table with who and when.</p>
+      </div>
+
+      <div class="card">
+        <h3>2. Dialect & Settings</h3>
+        <div class="form-row">
+          <div>
+            <label for="dialect">SQL Dialect</label>
+            <select id="dialect">
+              <option value="postgresql">PostgreSQL</option>
+              <option value="mysql">MySQL / MariaDB</option>
+              <option value="sqlite">SQLite</option>
+              <option value="sqlserver">SQL Server (T-SQL)</option>
+              <option value="oracle">Oracle</option>
+            </select>
+          </div>
+          <div>
+            <label for="triggerName">Trigger Name</label>
+            <input type="text" id="triggerName" value="trg_users_audit">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="tableName">Table Name</label>
+            <input type="text" id="tableName" value="users">
+          </div>
+          <div>
+            <label for="timing">Timing</label>
+            <select id="timing">
+              <option value="BEFORE">BEFORE</option>
+              <option value="AFTER">AFTER</option>
+              <option value="INSTEAD OF">INSTEAD OF</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="events">Events</label>
+            <select id="events">
+              <option value="INSERT">INSERT</option>
+              <option value="UPDATE">UPDATE</option>
+              <option value="DELETE">DELETE</option>
+              <option value="INSERT OR UPDATE">INSERT OR UPDATE</option>
+              <option value="UPDATE OR DELETE">UPDATE OR DELETE</option>
+              <option value="INSERT OR UPDATE OR DELETE">INSERT OR UPDATE OR DELETE</option>
+            </select>
+          </div>
+          <div>
+            <label for="columnName">Column (for patterns that need one)</label>
+            <input type="text" id="columnName" value="updated_at">
+          </div>
+        </div>
+        <div class="form-row" id="customRow" style="display:none;">
+          <div style="grid-column: 1 / -1;">
+            <label for="customBody">Custom Trigger Body</label>
+            <textarea id="customBody" placeholder="-- Write your trigger logic here
+RAISE NOTICE 'Row modified';"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Generated SQL</h3>
+        <div class="output-area" id="output">-- Select a pattern and configure settings above</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copyBtn">Copy SQL</button>
+          <button class="btn btn-secondary" id="downloadBtn">Download .sql</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick Examples</h3>
+        <div class="examples">
+          <div class="example-card" data-ex="audit">
+            <h4>Users Audit Log</h4>
+            <p>Track every change on a users table into an audit table.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">Audit</span></div>
+          </div>
+          <div class="example-card" data-ex="timestamp">
+            <h4>Products Updated At</h4>
+            <p>Automatically set updated_at before every UPDATE.</p>
+            <div style="margin-top:8px"><span class="tag">MySQL</span><span class="tag">Timestamp</span></div>
+          </div>
+          <div class="example-card" data-ex="prevent">
+            <h4>Orders Prevent Delete</h4>
+            <p>Block DELETE operations on an orders table entirely.</p>
+            <div style="margin-top:8px"><span class="tag">SQL Server</span><span class="tag">Security</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">SchemaLens</div>
+        <p style="color:var(--text-muted);font-size:.9rem">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Free Tools</a>
+        <a href="../vscode-extension.html">VS Code Extension</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../api-guide.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+        <a href="../about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="../privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:20px;color:var(--text-muted);font-size:.85rem">
+      &copy; 2026 SchemaLens. Built for engineers.
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let currentPattern = 'audit';
+
+    const hints = {
+      audit: 'Tracks INSERT, UPDATE, DELETE on a table into an audit log table with who and when.',
+      timestamp: 'Automatically sets a timestamp column (e.g. updated_at) to CURRENT_TIMESTAMP before UPDATE.',
+      preventDelete: 'Raises an error when anyone tries to DELETE a row, effectively making the table append-only.',
+      validate: 'Checks a condition before INSERT/UPDATE and raises an error if the condition fails.',
+      cascade: 'Updates a related column in the same row when another column changes.',
+      custom: 'Start from a minimal template and write your own trigger logic.'
+    };
+
+    const examples = {
+      audit: { table: 'users', trigger: 'trg_users_audit', column: 'updated_at', timing: 'AFTER', events: 'INSERT OR UPDATE OR DELETE' },
+      timestamp: { table: 'products', trigger: 'trg_products_updated_at', column: 'updated_at', timing: 'BEFORE', events: 'UPDATE' },
+      prevent: { table: 'orders', trigger: 'trg_orders_prevent_delete', column: 'updated_at', timing: 'INSTEAD OF', events: 'DELETE' }
+    };
+
+    function generate() {
+      const dialect = $('dialect').value;
+      const table = $('tableName').value.trim() || 'users';
+      const trigger = $('triggerName').value.trim() || 'trg_users_audit';
+      const col = $('columnName').value.trim() || 'updated_at';
+      const timing = $('timing').value;
+      const events = $('events').value;
+      let sql = '';
+
+      if (currentPattern === 'audit') {
+        sql = generateAudit(dialect, table, trigger, timing, events);
+      } else if (currentPattern === 'timestamp') {
+        sql = generateTimestamp(dialect, table, trigger, col, timing);
+      } else if (currentPattern === 'preventDelete') {
+        sql = generatePreventDelete(dialect, table, trigger, timing);
+      } else if (currentPattern === 'validate') {
+        sql = generateValidate(dialect, table, trigger, timing, events, col);
+      } else if (currentPattern === 'cascade') {
+        sql = generateCascade(dialect, table, trigger, timing, events, col);
+      } else if (currentPattern === 'custom') {
+        sql = generateCustom(dialect, table, trigger, timing, events);
+      }
+
+      $('output').textContent = sql;
+    }
+
+    function generateAudit(d, table, trigger, timing, events) {
+      const auditTable = table + '_audit';
+      if (d === 'postgresql') {
+        return `-- Audit log trigger for ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    INSERT INTO ${auditTable} (operation, old_data, changed_at, changed_by)
+    VALUES ('DELETE', row_to_json(OLD), NOW(), CURRENT_USER);
+    RETURN OLD;
+  ELSIF (TG_OP = 'UPDATE') THEN
+    INSERT INTO ${auditTable} (operation, old_data, new_data, changed_at, changed_by)
+    VALUES ('UPDATE', row_to_json(OLD), row_to_json(NEW), NOW(), CURRENT_USER);
+    RETURN NEW;
+  ELSIF (TG_OP = 'INSERT') THEN
+    INSERT INTO ${auditTable} (operation, new_data, changed_at, changed_by)
+    VALUES ('INSERT', row_to_json(NEW), NOW(), CURRENT_USER);
+    RETURN NEW;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Audit log trigger for ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    INSERT INTO ${auditTable} (operation, old_id, changed_at, changed_by)
+    VALUES ('DELETE', OLD.id, NOW(), CURRENT_USER());
+  ELSEIF (TG_OP = 'UPDATE') THEN
+    INSERT INTO ${auditTable} (operation, old_id, new_id, changed_at, changed_by)
+    VALUES ('UPDATE', OLD.id, NEW.id, NOW(), CURRENT_USER());
+  ELSEIF (TG_OP = 'INSERT') THEN
+    INSERT INTO ${auditTable} (operation, new_id, changed_at, changed_by)
+    VALUES ('INSERT', NEW.id, NOW(), CURRENT_USER());
+  END IF;
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Audit log trigger for ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+${timing.toLowerCase()} ${events.toLowerCase().replace(/ or /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  INSERT INTO ${auditTable} (operation, changed_at)
+  VALUES (CASE WHEN OLD.id IS NULL THEN 'INSERT' WHEN NEW.id IS NULL THEN 'DELETE' ELSE 'UPDATE' END, datetime('now'));
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Audit log trigger for ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+${timing} ${events.replace(/ OR /g, ', ')}
+AS
+BEGIN
+  SET NOCOUNT ON;
+  IF EXISTS (SELECT 1 FROM deleted) AND EXISTS (SELECT 1 FROM inserted)
+    INSERT INTO ${auditTable} (operation, changed_at, changed_by)
+    SELECT 'UPDATE', GETDATE(), SUSER_SNAME() FROM inserted;
+  ELSE IF EXISTS (SELECT 1 FROM deleted)
+    INSERT INTO ${auditTable} (operation, changed_at, changed_by)
+    SELECT 'DELETE', GETDATE(), SUSER_SNAME() FROM deleted;
+  ELSE
+    INSERT INTO ${auditTable} (operation, changed_at, changed_by)
+    SELECT 'INSERT', GETDATE(), SUSER_SNAME() FROM inserted;
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Audit log trigger for ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events.replace(/ OR /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  IF DELETING THEN
+    INSERT INTO ${auditTable} (operation, old_id, changed_at, changed_by)
+    VALUES ('DELETE', :OLD.id, SYSDATE, USER);
+  ELSIF UPDATING THEN
+    INSERT INTO ${auditTable} (operation, old_id, new_id, changed_at, changed_by)
+    VALUES ('UPDATE', :OLD.id, :NEW.id, SYSDATE, USER);
+  ELSIF INSERTING THEN
+    INSERT INTO ${auditTable} (operation, new_id, changed_at, changed_by)
+    VALUES ('INSERT', :NEW.id, SYSDATE, USER);
+  END IF;
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    function generateTimestamp(d, table, trigger, col, timing) {
+      if (d === 'postgresql') {
+        return `-- Auto-update ${col} trigger for ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.${col} = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} UPDATE ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Auto-update ${col} trigger for ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+${timing} UPDATE ON ${table}
+FOR EACH ROW
+BEGIN
+  SET NEW.${col} = CURRENT_TIMESTAMP;
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Auto-update ${col} trigger for ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+${timing.toLowerCase()} UPDATE ON ${table}
+FOR EACH ROW
+BEGIN
+  UPDATE ${table} SET ${col} = datetime('now') WHERE id = NEW.id;
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Auto-update ${col} trigger for ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+${timing} UPDATE
+AS
+BEGIN
+  SET NOCOUNT ON;
+  UPDATE t SET ${col} = GETDATE()
+  FROM ${table} t
+  INNER JOIN inserted i ON t.id = i.id;
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Auto-update ${col} trigger for ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} UPDATE ON ${table}
+FOR EACH ROW
+BEGIN
+  :NEW.${col} := SYSTIMESTAMP;
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    function generatePreventDelete(d, table, trigger, timing) {
+      const t = timing === 'INSTEAD OF' ? 'INSTEAD OF' : 'BEFORE';
+      if (d === 'postgresql') {
+        return `-- Prevent DELETE on ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  RAISE EXCEPTION 'Deleting from ${table} is not allowed.';
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${t} DELETE ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Prevent DELETE on ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+BEFORE DELETE ON ${table}
+FOR EACH ROW
+BEGIN
+  SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Deleting from ${table} is not allowed.';
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Prevent DELETE on ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+BEFORE DELETE ON ${table}
+FOR EACH ROW
+BEGIN
+  SELECT RAISE(ABORT, 'Deleting from ${table} is not allowed.');
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Prevent DELETE on ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+INSTEAD OF DELETE
+AS
+BEGIN
+  SET NOCOUNT ON;
+  RAISERROR ('Deleting from ${table} is not allowed.', 16, 1);
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Prevent DELETE on ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+BEFORE DELETE ON ${table}
+FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20001, 'Deleting from ${table} is not allowed.');
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    function generateValidate(d, table, trigger, timing, events, col) {
+      if (d === 'postgresql') {
+        return `-- Validate data before ${events} on ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.${col} IS NULL OR NEW.${col} = '' THEN
+    RAISE EXCEPTION 'Validation failed: ${col} cannot be empty';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Validate data before ${events} on ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+BEGIN
+  IF NEW.${col} IS NULL OR NEW.${col} = '' THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Validation failed: ${col} cannot be empty';
+  END IF;
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Validate data before ${events} on ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+${timing.toLowerCase()} ${events.toLowerCase().replace(/ or /g, ' OR ')} ON ${table}
+FOR EACH ROW
+WHEN (NEW.${col} IS NULL OR NEW.${col} = '')
+BEGIN
+  SELECT RAISE(ABORT, 'Validation failed: ${col} cannot be empty');
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Validate data before ${events} on ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+${timing} ${events.replace(/ OR /g, ', ')}
+AS
+BEGIN
+  SET NOCOUNT ON;
+  IF EXISTS (SELECT 1 FROM inserted WHERE ${col} IS NULL OR ${col} = '')
+  BEGIN
+    RAISERROR ('Validation failed: ${col} cannot be empty', 16, 1);
+    ROLLBACK;
+  END
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Validate data before ${events} on ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events.replace(/ OR /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  IF :NEW.${col} IS NULL OR :NEW.${col} = '' THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Validation failed: ${col} cannot be empty');
+  END IF;
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    function generateCascade(d, table, trigger, timing, events, col) {
+      if (d === 'postgresql') {
+        return `-- Cascade update on ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.${col} = CONCAT(NEW.first_name, ' ', NEW.last_name);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Cascade update on ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+BEGIN
+  SET NEW.${col} = CONCAT(NEW.first_name, ' ', NEW.last_name);
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Cascade update on ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+${timing.toLowerCase()} ${events.toLowerCase().replace(/ or /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  UPDATE ${table} SET ${col} = NEW.first_name || ' ' || NEW.last_name WHERE id = NEW.id;
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Cascade update on ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+${timing} ${events.replace(/ OR /g, ', ')}
+AS
+BEGIN
+  SET NOCOUNT ON;
+  UPDATE t SET ${col} = i.first_name + ' ' + i.last_name
+  FROM ${table} t
+  INNER JOIN inserted i ON t.id = i.id;
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Cascade update on ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events.replace(/ OR /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  :NEW.${col} := :NEW.first_name || ' ' || :NEW.last_name;
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    function generateCustom(d, table, trigger, timing, events) {
+      const body = $('customBody').value.trim() || "-- Your custom logic here\nRAISE NOTICE 'Triggered';";
+      if (d === 'postgresql') {
+        return `-- Custom trigger for ${table}
+CREATE OR REPLACE FUNCTION fn_${trigger}()
+RETURNS TRIGGER AS $$
+BEGIN
+  ${body.replace(/\n/g, '\n  ')}
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+EXECUTE FUNCTION fn_${trigger}();`;
+      }
+      if (d === 'mysql') {
+        return `-- Custom trigger for ${table}
+DELIMITER $$
+
+CREATE TRIGGER ${trigger}
+${timing} ${events} ON ${table}
+FOR EACH ROW
+BEGIN
+  ${body.replace(/\n/g, '\n  ')}
+END$$
+
+DELIMITER ;`;
+      }
+      if (d === 'sqlite') {
+        return `-- Custom trigger for ${table}
+CREATE TRIGGER IF NOT EXISTS ${trigger}
+${timing.toLowerCase()} ${events.toLowerCase().replace(/ or /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  ${body.replace(/\n/g, '\n  ')}
+END;`;
+      }
+      if (d === 'sqlserver') {
+        return `-- Custom trigger for ${table}
+CREATE TRIGGER ${trigger}
+ON ${table}
+${timing} ${events.replace(/ OR /g, ', ')}
+AS
+BEGIN
+  SET NOCOUNT ON;
+  ${body.replace(/\n/g, '\n  ')}
+END;`;
+      }
+      if (d === 'oracle') {
+        return `-- Custom trigger for ${table}
+CREATE OR REPLACE TRIGGER ${trigger}
+${timing} ${events.replace(/ OR /g, ' OR ')} ON ${table}
+FOR EACH ROW
+BEGIN
+  ${body.replace(/\n/g, '\n  ')}
+END;
+/`;
+      }
+      return '-- Unsupported dialect';
+    }
+
+    // Event listeners
+    document.querySelectorAll('#patternOptions .option-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#patternOptions .option-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentPattern = chip.dataset.pattern;
+        $('patternHint').textContent = hints[currentPattern];
+        $('customRow').style.display = currentPattern === 'custom' ? 'grid' : 'none';
+        generate();
+      });
+    });
+
+    ['dialect','triggerName','tableName','timing','events','columnName','customBody'].forEach(id => {
+      $(id).addEventListener('input', generate);
+      $(id).addEventListener('change', generate);
+    });
+
+    document.querySelectorAll('.example-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const ex = card.dataset.ex;
+        const data = examples[ex];
+        if (!data) return;
+        $('tableName').value = data.table;
+        $('triggerName').value = data.trigger;
+        $('columnName').value = data.column;
+        $('timing').value = data.timing;
+        $('events').value = data.events;
+        if (ex === 'audit') {
+          document.querySelector('[data-pattern="audit"]').click();
+          $('dialect').value = 'postgresql';
+        } else if (ex === 'timestamp') {
+          document.querySelector('[data-pattern="timestamp"]').click();
+          $('dialect').value = 'mysql';
+        } else if (ex === 'prevent') {
+          document.querySelector('[data-pattern="preventDelete"]').click();
+          $('dialect').value = 'sqlserver';
+        }
+        generate();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    $('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText($('output').textContent).then(() => {
+        const btn = $('copyBtn');
+        const old = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = old, 1500);
+      });
+    });
+
+    $('downloadBtn').addEventListener('click', () => {
+      const blob = new Blob([$('output').textContent], { type: 'text/sql' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${$('triggerName').value || 'trigger'}.sql`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Init
+    generate();
+  </script>
+</body>
+</html>
