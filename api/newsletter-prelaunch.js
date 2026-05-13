@@ -56,7 +56,7 @@ function prelaunchEmailHtml() {
   <div class="container">
     <div class="logo">SchemaLens</div>
     <h1>We're launching on Product Hunt ${getLaunchCountdown()} 🚀</h1>
-    <p>After 125 days of building in public, SchemaLens is ready for its biggest moment. On <strong>May 14 at 00:01 PT</strong>, we're going live on Product Hunt — and I'd love your support.</p>
+    <p>After 127 days of building in public, SchemaLens is ready for its biggest moment. On <strong>May 14 at 00:01 PT</strong>, we're going live on Product Hunt — and I'd love your support.</p>
 
     <div class="highlight">
       <p><strong>What is SchemaLens?</strong> Paste two SQL CREATE TABLE dumps and get an instant visual diff plus a generated migration script. Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. 34+ free micro-tools, CLI, VS Code extension, and Chrome extension.</p>

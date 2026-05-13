@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL CHECK Constraint Generator — SchemaLens</title>
+  <meta name="description" content="Generate intelligent SQL CHECK constraints from CREATE TABLE statements. Auto-detects emails, prices, statuses, URLs, ages, and more. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="Free SQL CHECK Constraint Generator — SchemaLens">
+  <meta property="og:description" content="Paste a CREATE TABLE statement and get intelligent CHECK constraints tailored to your column names and types. Supports 5 SQL dialects. No signup required.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-check-constraint-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL CHECK Constraint Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates intelligent SQL CHECK constraints from CREATE TABLE statements. Detects 20+ column patterns including emails, URLs, prices, ages, statuses, coordinates, and more. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+    "url": "https://schemalens.tech/tools/sql-check-constraint-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .panel h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+    .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0 16px; }
+    .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    .toolbar select, .toolbar button, .toolbar input {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem;
+    }
+    .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; cursor: pointer; }
+    .toolbar button:hover { background: var(--primary-light); }
+
+    textarea { width: 100%; min-height: 220px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.9rem; resize: vertical; }
+    textarea:focus { outline: none; border-color: var(--primary); }
+
+    .output { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; min-height: 120px; }
+
+    .constraint-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+    .constraint-card .reason { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .constraint-card .dialect-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .constraint-card .tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; background: rgba(99,102,241,0.1); color: var(--primary); font-weight: 600; }
+    .constraint-card .tag.unsupported { background: rgba(239,68,68,0.08); color: #ef4444; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+    .stat-box .num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-box .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+    .examples { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    .example-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; color: var(--text); }
+    .example-chip:hover { border-color: var(--primary); color: var(--primary); }
+
+    .actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .actions button { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 0.9rem; cursor: pointer; }
+    .actions button.primary { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+    .actions button:hover { opacity: 0.9; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="nav" style="border-bottom:1px solid var(--border);">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo" style="font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none;">🔍 SchemaLens</a>
+      <div class="nav-links" id="navLinks">
+        <a href="../index.html">Home</a>
+        <a href="../app.html">Diff Tool</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>SQL CHECK Constraint Generator</h1>
+      <p>Paste a <code>CREATE TABLE</code> statement and get intelligent <code>CHECK</code> constraints tailored to your column names and types. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    </div>
+
+    <div class="toolbar">
+      <label for="dialect">Dialect:</label>
+      <select id="dialect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <button onclick="generateConstraints()">🔍 Generate Constraints</button>
+      <button onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="examples">
+      <span class="example-chip" onclick="loadExample('users')">👤 Users Table</span>
+      <span class="example-chip" onclick="loadExample('products')">📦 Products Table</span>
+      <span class="example-chip" onclick="loadExample('orders')">🛒 Orders Table</span>
+      <span class="example-chip" onclick="loadExample('events')">📅 Events Table</span>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <h3>📝 Input CREATE TABLE</h3>
+        <textarea id="input" placeholder="CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  email VARCHAR(255),\n  age INTEGER,\n  status VARCHAR(50)\n);"></textarea>
+      </div>
+      <div class="panel">
+        <h3>🔒 Generated CHECK Constraints</h3>
+        <div id="output" class="output" style="min-height:220px;">Click "Generate Constraints" to see results...</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="copyOutput()">📋 Copy SQL</button>
+      <button onclick="downloadOutput()">💾 Download SQL</button>
+    </div>
+
+    <div class="panel" style="margin-top:24px;">
+      <h3>📋 Detected Patterns</h3>
+      <div id="patternList" style="font-size:0.9rem;color:var(--text-muted);">No patterns detected yet.</div>
+    </div>
+
+    <div class="panel" style="margin-top:24px;">
+      <h3>💡 How It Works</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;">
+        This tool analyzes your column names and data types to suggest <strong>CHECK constraints</strong> that enforce data integrity at the database level. It recognizes 20+ common patterns including emails, URLs, prices, ages, statuses, coordinates, and more. Each suggestion shows which SQL dialects support it — some constraints use dialect-specific syntax (e.g., regex in PostgreSQL vs <code>LIKE</code> in MySQL).
+      </p>
+      <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-top:8px;">
+        <strong>Note:</strong> CHECK constraints are enforced by the database engine. They prevent bad data from entering your tables, but they do not validate existing data unless you add <code>NOT VALID</code> (PostgreSQL) or run a manual cleanup. Always test constraints in a non-production environment first.
+      </p>
+    </div>
+  </div>
+
+  <footer style="margin-top:48px;">
+    <div class="container footer-inner">
+      <p>© 2026 SchemaLens. Built with vanilla everything.</p>
+      <p><a href="../index.html">Home</a> · <a href="../app.html">Diff Tool</a> · <a href="../tools.html">All Tools</a> · <a href="../pricing.html">Pricing</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const examples = {
+      users: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  age INTEGER,
+  role VARCHAR(20) DEFAULT 'user',
+  status VARCHAR(20) DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,
+      products: `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  stock INTEGER DEFAULT 0,
+  category VARCHAR(100),
+  sku VARCHAR(50) UNIQUE,
+  is_active BOOLEAN DEFAULT true,
+  discount_percent INTEGER DEFAULT 0
+);`,
+      orders: `CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total_amount DECIMAL(12,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  priority VARCHAR(10) DEFAULT 'medium',
+  quantity INTEGER DEFAULT 1,
+  shipping_cost DECIMAL(10,2) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,
+      events: `CREATE TABLE events (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  event_date DATE NOT NULL,
+  year INTEGER,
+  latitude DECIMAL(9,6),
+  longitude DECIMAL(9,6),
+  url VARCHAR(500),
+  color VARCHAR(7) DEFAULT '#000000',
+  phone VARCHAR(20),
+  zip_code VARCHAR(10)
+);`
+    };
+
+    function loadExample(name) {
+      document.getElementById('input').value = examples[name] || '';
+      generateConstraints();
+    }
+
+    function clearAll() {
+      document.getElementById('input').value = '';
+      document.getElementById('output').textContent = 'Click "Generate Constraints" to see results...';
+      document.getElementById('patternList').innerHTML = 'No patterns detected yet.';
+    }
+
+    function parseCreateTable(sql) {
+      const columns = [];
+      const match = sql.match(/CREATE\s+TABLE\s+\w+\s*\(([^)]*)\)/is);
+      if (!match) return columns;
+      const body = match[1];
+      const parts = body.split(',').map(p => p.trim()).filter(p => p);
+      for (const part of parts) {
+        if (/^(PRIMARY\s+KEY|UNIQUE|FOREIGN\s+KEY|CONSTRAINT|CHECK|INDEX)/i.test(part)) continue;
+        const tokens = part.split(/\s+/);
+        if (tokens.length < 2) continue;
+        const name = tokens[0].replace(/["`\[\]]/g, '');
+        const type = tokens[1].replace(/,/g, '');
+        columns.push({ name, type: type.toUpperCase(), raw: part });
+      }
+      return columns;
+    }
+
+    function getPatterns(col) {
+      const n = col.name.toLowerCase();
+      const t = col.type.toUpperCase();
+      const patterns = [];
+
+      if (n.includes('email')) {
+        patterns.push({
+          name: 'Email format',
+          postgres: `CHECK ("${col.name}" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')`,
+          mysql: `CHECK ("${col.name}" LIKE '%_@__%.__%')`,
+          sqlite: `CHECK ("${col.name}" LIKE '%_@_%._%')`,
+          mssql: `CHECK ("${col.name}" LIKE '%_@_%._%')`,
+          oracle: `CHECK (REGEXP_LIKE("${col.name}", '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'))`,
+          reason: 'Ensures email contains @ and domain'
+        });
+      }
+      if (n.includes('url') || n.includes('website') || n.includes('link') || n.includes('href')) {
+        patterns.push({
+          name: 'URL format',
+          postgres: `CHECK ("${col.name}" ~* '^https?://')`,
+          mysql: `CHECK ("${col.name}" LIKE 'http%')`,
+          sqlite: `CHECK ("${col.name}" LIKE 'http%')`,
+          mssql: `CHECK ("${col.name}" LIKE 'http%')`,
+          oracle: `CHECK (REGEXP_LIKE("${col.name}", '^https?://'))`,
+          reason: 'Ensures URL starts with http:// or https://'
+        });
+      }
+      if (n.includes('price') || n.includes('cost') || n.includes('amount') || n.includes('fee') || n.includes('salary') || n.includes('wage') || n.includes('total') && n.includes('amount') || n.includes('shipping') && n.includes('cost')) {
+        patterns.push({
+          name: 'Non-negative monetary value',
+          postgres: `CHECK ("${col.name}" >= 0)`,
+          mysql: `CHECK ("${col.name}" >= 0)`,
+          sqlite: `CHECK ("${col.name}" >= 0)`,
+          mssql: `CHECK ("${col.name}" >= 0)`,
+          oracle: `CHECK ("${col.name}" >= 0)`,
+          reason: 'Prevents negative prices or costs'
+        });
+      }
+      if (n.includes('quantity') || n.includes('count') || n.includes('stock') || n.includes('inventory') || n.includes('units')) {
+        patterns.push({
+          name: 'Non-negative quantity',
+          postgres: `CHECK ("${col.name}" >= 0)`,
+          mysql: `CHECK ("${col.name}" >= 0)`,
+          sqlite: `CHECK ("${col.name}" >= 0)`,
+          mssql: `CHECK ("${col.name}" >= 0)`,
+          oracle: `CHECK ("${col.name}" >= 0)`,
+          reason: 'Prevents negative stock or quantities'
+        });
+      }
+      if (n.includes('rating') || n.includes('score') || n.includes('stars')) {
+        patterns.push({
+          name: 'Rating range (1-5)',
+          postgres: `CHECK ("${col.name}" BETWEEN 1 AND 5)`,
+          mysql: `CHECK ("${col.name}" BETWEEN 1 AND 5)`,
+          sqlite: `CHECK ("${col.name}" BETWEEN 1 AND 5)`,
+          mssql: `CHECK ("${col.name}" BETWEEN 1 AND 5)`,
+          oracle: `CHECK ("${col.name}" BETWEEN 1 AND 5)`,
+          reason: 'Typical 5-star rating scale'
+        });
+      }
+      if (n.includes('percent') || n.includes('pct') || n.includes('percentage') || n.includes('progress') || n.includes('discount') && n.includes('percent')) {
+        patterns.push({
+          name: 'Percentage range (0-100)',
+          postgres: `CHECK ("${col.name}" BETWEEN 0 AND 100)`,
+          mysql: `CHECK ("${col.name}" BETWEEN 0 AND 100)`,
+          sqlite: `CHECK ("${col.name}" BETWEEN 0 AND 100)`,
+          mssql: `CHECK ("${col.name}" BETWEEN 0 AND 100)`,
+          oracle: `CHECK ("${col.name}" BETWEEN 0 AND 100)`,
+          reason: 'Percentage must be between 0 and 100'
+        });
+      }
+      if (n === 'age' || n.endsWith('_age')) {
+        patterns.push({
+          name: 'Realistic age range',
+          postgres: `CHECK ("${col.name}" >= 0 AND "${col.name}" <= 150)`,
+          mysql: `CHECK ("${col.name}" >= 0 AND "${col.name}" <= 150)`,
+          sqlite: `CHECK ("${col.name}" >= 0 AND "${col.name}" <= 150)`,
+          mssql: `CHECK ("${col.name}" >= 0 AND "${col.name}" <= 150)`,
+          oracle: `CHECK ("${col.name}" >= 0 AND "${col.name}" <= 150)`,
+          reason: 'Age should be between 0 and 150'
+        });
+      }
+      if (n === 'year' || n.endsWith('_year')) {
+        patterns.push({
+          name: 'Valid year range',
+          postgres: `CHECK ("${col.name}" BETWEEN 1900 AND 2100)`,
+          mysql: `CHECK ("${col.name}" BETWEEN 1900 AND 2100)`,
+          sqlite: `CHECK ("${col.name}" BETWEEN 1900 AND 2100)`,
+          mssql: `CHECK ("${col.name}" BETWEEN 1900 AND 2100)`,
+          oracle: `CHECK ("${col.name}" BETWEEN 1900 AND 2100)`,
+          reason: 'Year should be within reasonable range'
+        });
+      }
+      if (n.includes('phone') || n.includes('mobile') || n.includes('cell') || n.includes('telephone')) {
+        patterns.push({
+          name: 'Minimum phone length',
+          postgres: `CHECK (LENGTH("${col.name}") >= 7)`,
+          mysql: `CHECK (LENGTH("${col.name}") >= 7)`,
+          sqlite: `CHECK (LENGTH("${col.name}") >= 7)`,
+          mssql: `CHECK (LEN("${col.name}") >= 7)`,
+          oracle: `CHECK (LENGTH("${col.name}") >= 7)`,
+          reason: 'Phone numbers should be at least 7 characters'
+        });
+      }
+      if (n.includes('zip') || n.includes('postal') || n.includes('postcode')) {
+        patterns.push({
+          name: 'Minimum postal code length',
+          postgres: `CHECK (LENGTH("${col.name}") >= 3)`,
+          mysql: `CHECK (LENGTH("${col.name}") >= 3)`,
+          sqlite: `CHECK (LENGTH("${col.name}") >= 3)`,
+          mssql: `CHECK (LEN("${col.name}") >= 3)`,
+          oracle: `CHECK (LENGTH("${col.name}") >= 3)`,
+          reason: 'Postal codes should be at least 3 characters'
+        });
+      }
+      if (n.includes('status')) {
+        patterns.push({
+          name: 'Allowed status values',
+          postgres: `CHECK ("${col.name}" IN ('active', 'inactive', 'pending', 'draft', 'archived'))`,
+          mysql: `CHECK ("${col.name}" IN ('active', 'inactive', 'pending', 'draft', 'archived'))`,
+          sqlite: `CHECK ("${col.name}" IN ('active', 'inactive', 'pending', 'draft', 'archived'))`,
+          mssql: `CHECK ("${col.name}" IN ('active', 'inactive', 'pending', 'draft', 'archived'))`,
+          oracle: `CHECK ("${col.name}" IN ('active', 'inactive', 'pending', 'draft', 'archived'))`,
+          reason: 'Restricts status to known values'
+        });
+      }
+      if (n.includes('priority')) {
+        patterns.push({
+          name: 'Allowed priority values',
+          postgres: `CHECK ("${col.name}" IN ('low', 'medium', 'high', 'urgent'))`,
+          mysql: `CHECK ("${col.name}" IN ('low', 'medium', 'high', 'urgent'))`,
+          sqlite: `CHECK ("${col.name}" IN ('low', 'medium', 'high', 'urgent'))`,
+          mssql: `CHECK ("${col.name}" IN ('low', 'medium', 'high', 'urgent'))`,
+          oracle: `CHECK ("${col.name}" IN ('low', 'medium', 'high', 'urgent'))`,
+          reason: 'Restricts priority to known values'
+        });
+      }
+      if (n.includes('role') && !n.includes('payroll')) {
+        patterns.push({
+          name: 'Allowed role values',
+          postgres: `CHECK ("${col.name}" IN ('admin', 'user', 'editor', 'viewer', 'moderator'))`,
+          mysql: `CHECK ("${col.name}" IN ('admin', 'user', 'editor', 'viewer', 'moderator'))`,
+          sqlite: `CHECK ("${col.name}" IN ('admin', 'user', 'editor', 'viewer', 'moderator'))`,
+          mssql: `CHECK ("${col.name}" IN ('admin', 'user', 'editor', 'viewer', 'moderator'))`,
+          oracle: `CHECK ("${col.name}" IN ('admin', 'user', 'editor', 'viewer', 'moderator'))`,
+          reason: 'Restricts role to known values'
+        });
+      }
+      if (n.includes('gender')) {
+        patterns.push({
+          name: 'Allowed gender values',
+          postgres: `CHECK ("${col.name}" IN ('male', 'female', 'non-binary', 'other', 'prefer_not_to_say'))`,
+          mysql: `CHECK ("${col.name}" IN ('male', 'female', 'non-binary', 'other', 'prefer_not_to_say'))`,
+          sqlite: `CHECK ("${col.name}" IN ('male', 'female', 'non-binary', 'other', 'prefer_not_to_say'))`,
+          mssql: `CHECK ("${col.name}" IN ('male', 'female', 'non-binary', 'other', 'prefer_not_to_say'))`,
+          oracle: `CHECK ("${col.name}" IN ('male', 'female', 'non-binary', 'other', 'prefer_not_to_say'))`,
+          reason: 'Restricts gender to known values'
+        });
+      }
+      if (n.includes('username') || n.includes('handle') || n.includes('slug') || n.includes('login')) {
+        patterns.push({
+          name: 'Minimum username length',
+          postgres: `CHECK (LENGTH("${col.name}") >= 3)`,
+          mysql: `CHECK (LENGTH("${col.name}") >= 3)`,
+          sqlite: `CHECK (LENGTH("${col.name}") >= 3)`,
+          mssql: `CHECK (LEN("${col.name}") >= 3)`,
+          oracle: `CHECK (LENGTH("${col.name}") >= 3)`,
+          reason: 'Usernames should be at least 3 characters'
+        });
+      }
+      if (n.includes('password') || n.includes('pwd') || n.includes('pass_hash')) {
+        patterns.push({
+          name: 'Minimum password length',
+          postgres: `CHECK (LENGTH("${col.name}") >= 8)`,
+          mysql: `CHECK (LENGTH("${col.name}") >= 8)`,
+          sqlite: `CHECK (LENGTH("${col.name}") >= 8)`,
+          mssql: `CHECK (LEN("${col.name}") >= 8)`,
+          oracle: `CHECK (LENGTH("${col.name}") >= 8)`,
+          reason: 'Passwords should be at least 8 characters'
+        });
+      }
+      if (n.includes('color') || n.includes('hex')) {
+        patterns.push({
+          name: 'Hex color format',
+          postgres: `CHECK ("${col.name}" ~ '^#[0-9A-Fa-f]{6}$')`,
+          mysql: `CHECK ("${col.name}" REGEXP '^#[0-9A-Fa-f]{6}$')`,
+          sqlite: `CHECK ("${col.name}" GLOB '#[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]')`,
+          mssql: `CHECK ("${col.name}" LIKE '##[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]')`,
+          oracle: `CHECK (REGEXP_LIKE("${col.name}", '^#[0-9A-Fa-f]{6}$'))`,
+          reason: 'Ensures valid 6-digit hex color'
+        });
+      }
+      if (n.includes('ip') || n.includes('ip_address') || n.includes('ipv4')) {
+        patterns.push({
+          name: 'IPv4 format hint',
+          postgres: `CHECK ("${col.name}" ~ '^([0-9]{1,3}\.){3}[0-9]{1,3}$')`,
+          mysql: `CHECK ("${col.name}" REGEXP '^([0-9]{1,3}\.){3}[0-9]{1,3}$')`,
+          sqlite: `CHECK ("${col.name}" GLOB '*.*.*.*')`,
+          mssql: `CHECK ("${col.name}" LIKE '%.%.%.%')`,
+          oracle: `CHECK (REGEXP_LIKE("${col.name}", '^([0-9]{1,3}\.){3}[0-9]{1,3}$'))`,
+          reason: 'Basic IPv4 pattern check'
+        });
+      }
+      if (n.includes('uuid') || n.includes('guid')) {
+        patterns.push({
+          name: 'UUID format',
+          postgres: `CHECK ("${col.name}" ~ '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')`,
+          mysql: `CHECK ("${col.name}" REGEXP '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')`,
+          sqlite: `CHECK (LENGTH("${col.name}") = 36)`,
+          mssql: `CHECK (LEN("${col.name}") = 36)`,
+          oracle: `CHECK (REGEXP_LIKE("${col.name}", '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'))`,
+          reason: 'Ensures standard UUID format'
+        });
+      }
+      if (n === 'latitude' || n.endsWith('_latitude') || n.endsWith('_lat')) {
+        patterns.push({
+          name: 'Valid latitude',
+          postgres: `CHECK ("${col.name}" BETWEEN -90 AND 90)`,
+          mysql: `CHECK ("${col.name}" BETWEEN -90 AND 90)`,
+          sqlite: `CHECK ("${col.name}" BETWEEN -90 AND 90)`,
+          mssql: `CHECK ("${col.name}" BETWEEN -90 AND 90)`,
+          oracle: `CHECK ("${col.name}" BETWEEN -90 AND 90)`,
+          reason: 'Latitude must be between -90 and 90'
+        });
+      }
+      if (n === 'longitude' || n.endsWith('_longitude') || n.endsWith('_lng') || n.endsWith('_lon')) {
+        patterns.push({
+          name: 'Valid longitude',
+          postgres: `CHECK ("${col.name}" BETWEEN -180 AND 180)`,
+          mysql: `CHECK ("${col.name}" BETWEEN -180 AND 180)`,
+          sqlite: `CHECK ("${col.name}" BETWEEN -180 AND 180)`,
+          mssql: `CHECK ("${col.name}" BETWEEN -180 AND 180)`,
+          oracle: `CHECK ("${col.name}" BETWEEN -180 AND 180)`,
+          reason: 'Longitude must be between -180 and 180'
+        });
+      }
+
+      return patterns;
+    }
+
+    function quoteId(name, dialect) {
+      if (dialect === 'postgres' || dialect === 'sqlite') return `"${name}"`;
+      if (dialect === 'mysql') return `\`${name}\``;
+      if (dialect === 'mssql') return `[${name}]`;
+      return `"${name}"`;
+    }
+
+    function renderConstraintSQL(pattern, dialect) {
+      const sql = pattern[dialect];
+      if (!sql) return `-- ${dialect}: not supported for this pattern`;
+      return `ALTER TABLE table_name ADD CONSTRAINT chk_${pattern.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')} ${sql};`;
+    }
+
+    function generateConstraints() {
+      const sql = document.getElementById('input').value.trim();
+      const dialect = document.getElementById('dialect').value;
+      const output = document.getElementById('output');
+      const patternList = document.getElementById('patternList');
+
+      if (!sql) {
+        output.textContent = 'Please paste a CREATE TABLE statement.';
+        patternList.innerHTML = 'No input provided.';
+        return;
+      }
+
+      const columns = parseCreateTable(sql);
+      if (!columns.length) {
+        output.textContent = 'Could not parse CREATE TABLE statement. Make sure it is valid SQL.';
+        patternList.innerHTML = 'Parse failed.';
+        return;
+      }
+
+      const allPatterns = [];
+      const lines = [];
+
+      for (const col of columns) {
+        const patterns = getPatterns(col);
+        if (patterns.length) {
+          allPatterns.push(...patterns);
+          lines.push(`-- Column: ${col.name} (${col.type})`);
+          for (const p of patterns) {
+            const constraintSql = renderConstraintSQL(p, dialect);
+            lines.push(constraintSql);
+          }
+          lines.push('');
+        }
+      }
+
+      if (!allPatterns.length) {
+        output.textContent = '-- No recognizable patterns found in your columns.\n-- Try adding columns like email, age, price, status, url, etc.';
+        patternList.innerHTML = 'No patterns matched. Common detectable patterns include: email, age, price, status, url, rating, latitude, longitude, color, phone, zip_code, username, password, quantity, percentage, year, priority, role, gender, uuid, ip_address.';
+        return;
+      }
+
+      output.textContent = lines.join('\n');
+
+      // Build pattern list HTML
+      const patternHtml = allPatterns.map((p, i) => {
+        const supported = ['postgres','mysql','sqlite','mssql','oracle'].map(d => {
+          const has = !!p[d];
+          return `<span class="tag ${has ? '' : 'unsupported'}">${d}${has ? '' : ' (limited)'}</span>`;
+        }).join('');
+        return `<div class="constraint-card">
+          <div style="font-weight:600;">${i+1}. ${p.name}</div>
+          <div class="reason">${p.reason}</div>
+          <div class="dialect-tags">${supported}</div>
+        </div>`;
+      }).join('');
+      patternList.innerHTML = `<div style="margin-bottom:8px;font-weight:600;color:var(--text);">${allPatterns.length} pattern(s) detected across ${columns.length} columns:</div>${patternHtml}`;
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+    }
+
+    function downloadOutput() {
+      const text = document.getElementById('output').textContent;
+      const blob = new Blob([text], { type: 'text/sql' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'check_constraints.sql';
+      a.click();
+    }
+
+    // Auto-generate on Ctrl+Enter
+    document.getElementById('input').addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') generateConstraints();
+    });
+  </script>
+</body>
+</html>
