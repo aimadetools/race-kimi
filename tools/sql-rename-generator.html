@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SQL Rename Generator — SchemaLens</title>
+<meta name="description" content="Generate ALTER TABLE RENAME statements for columns and tables across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Smart rename suggestions detect similar names automatically.">
+<meta property="og:title" content="Free SQL Rename Generator — SchemaLens">
+<meta property="og:description" content="Generate dialect-correct RENAME COLUMN and RENAME TABLE scripts for 5 SQL databases. Smart suggestions find similar names automatically. No signup required.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-rename-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Rename Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates ALTER TABLE RENAME statements for columns and tables. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Smart rename suggestions use Levenshtein distance to detect similar names. Handles quoted identifiers and dialect-specific syntax.",
+  "url": "https://schemalens.tech/tools/sql-rename-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .generator-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .generator-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 220px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .rename-row {
+    display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center;
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 12px; margin-bottom: 8px;
+  }
+  .rename-row input {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 10px; font-family: var(--mono); font-size: 0.85rem;
+  }
+  .rename-row .remove-btn {
+    background: transparent; color: #ef4444; border: none; font-size: 1.1rem; cursor: pointer; padding: 4px 8px;
+  }
+  .rename-row .remove-btn:hover { color: #dc2626; }
+  .rename-row .suggest-badge {
+    font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; background: rgba(34,197,94,0.1); color: #22c55e; font-weight: 600; white-space: nowrap;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+  .radio-group { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+  .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; }
+  .radio-group input { accent-color: var(--primary); }
+
+  .suggest-section { margin: 14px 0; }
+  .suggest-section h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
+  .suggest-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 12px; font-size: 0.8rem; margin: 0 6px 6px 0; cursor: pointer;
+  }
+  .suggest-chip:hover { border-color: var(--primary); color: var(--primary); }
+  .suggest-chip .sim { color: var(--text-muted); font-size: 0.75rem; }
+
+  .warning-box {
+    background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); border-radius: var(--radius-sm);
+    padding: 12px 14px; font-size: 0.85rem; color: #eab308; margin-bottom: 14px;
+  }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL Rename Generator</h1>
+    <p>Generate dialect-correct <code>RENAME COLUMN</code> and <code>RENAME TABLE</code> scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Smart suggestions detect similar names automatically.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="generator-grid">
+    <div class="generator-card">
+      <h2>Input</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <div class="radio-group">
+        <label><input type="radio" name="renameType" value="column" checked onchange="toggleType()"> Rename Columns</label>
+        <label><input type="radio" name="renameType" value="table" onchange="toggleType()"> Rename Tables</label>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements to extract column/table names...
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  fname VARCHAR(100),
+  lname VARCHAR(100),
+  email_addr VARCHAR(255),
+  created_ts TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE blog_posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255),
+  body TEXT,
+  author_id INTEGER REFERENCES users(id)
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="extractNames()">🔍 Extract Names</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearAll()">Clear</button>
+      </div>
+      <div class="warning-box">
+        ⚠️ Always back up your database before running rename operations. Renaming columns used in views, indexes, triggers, or foreign keys may break dependent objects.
+      </div>
+
+      <div id="suggestSection" class="suggest-section" style="display:none;">
+        <h4>💡 Smart Suggestions</h4>
+        <div id="suggestChips"></div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:600;margin:18px 0 10px;">Rename Mappings</h3>
+      <div id="renameList"></div>
+      <button class="secondary" onclick="addRenameRow()" style="margin-top:8px;">+ Add Mapping</button>
+
+      <p class="notice">Click "Extract Names" to auto-populate from your SQL. Edit old/new names directly.</p>
+    </div>
+
+    <div class="generator-card">
+      <h2>Generated SQL</h2>
+      <div class="stats-row" id="statsRow" style="display:none;">
+        <div class="stat"><div class="stat-value" id="statRenames">0</div><div class="stat-label">Renames</div></div>
+        <div class="stat"><div class="stat-value" id="statDialect">-</div><div class="stat-label">Dialect</div></div>
+        <div class="stat"><div class="stat-value" id="statType">-</div><div class="stat-label">Type</div></div>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Extract names and define mappings, then click Generate.</div>
+      </div>
+      <div class="toolbar" style="margin-top:12px; display:none;" id="outputActions">
+        <button class="secondary" onclick="copyOutput()">📋 Copy</button>
+        <button class="secondary" onclick="downloadOutput()">⬇️ Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to diff two schemas and find what changed?</h3>
+    <p>SchemaLens compares SQL schemas, detects added/removed/modified columns, and generates safe migration scripts — including renames. All in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-select-generator.html">SELECT Generator</a>
+        <a href="sql-insert-generator.html">INSERT Generator</a>
+        <a href="sql-update-generator.html">UPDATE Generator</a>
+        <a href="sql-delete-generator.html">DELETE Generator</a>
+        <a href="sql-upsert-generator.html">UPSERT Generator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =====================
+// SQL Parser
+// =====================
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true; stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts;
+}
+
+function parseCreateTable(sql) {
+  sql = stripComments(sql);
+  const match = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\(([\s\S]*)\)\s*;?\s*$/i);
+  if (!match) return null;
+  const tableName = match[1];
+  const body = match[2];
+  const columns = [];
+
+  const parts = [];
+  let depth = 0;
+  let buf = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (ch === '(') { depth++; buf += ch; }
+    else if (ch === ')') { depth--; buf += ch; }
+    else if (ch === ',' && depth === 0) { parts.push(buf.trim()); buf = ''; }
+    else { buf += ch; }
+  }
+  if (buf.trim()) parts.push(buf.trim());
+
+  for (const part of parts) {
+    const upper = part.toUpperCase();
+    if (upper.startsWith('PRIMARY') || upper.startsWith('UNIQUE') || upper.startsWith('CONSTRAINT') || upper.startsWith('FOREIGN') || upper.startsWith('CHECK') || upper.startsWith('INDEX')) {
+      continue;
+    }
+    const colMatch = part.match(/^(\w+)\s+([\w()]+(?:\s*\([^)]*\))?)(.*)$/);
+    if (colMatch) {
+      columns.push({
+        name: colMatch[1],
+        type: colMatch[2].trim().toUpperCase(),
+        rest: colMatch[3].trim()
+      });
+    }
+  }
+
+  return { tableName, columns };
+}
+
+function parseSchema(sql) {
+  const tables = [];
+  const stmts = splitStatements(sql);
+  for (const stmt of stmts) {
+    if (/CREATE\s+TABLE/i.test(stmt)) {
+      const t = parseCreateTable(stmt);
+      if (t) tables.push(t);
+    }
+  }
+  return tables;
+}
+
+// =====================
+// Levenshtein distance
+// =====================
+function levenshtein(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      matrix[i][j] = b[i-1] === a[j-1]
+        ? matrix[i-1][j-1]
+        : Math.min(matrix[i-1][j-1] + 1, matrix[i][j-1] + 1, matrix[i-1][j] + 1);
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function similarity(a, b) {
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return 1;
+  return 1 - levenshtein(a, b) / maxLen;
+}
+
+// =====================
+// UI Logic
+// =====================
+let renameMappings = [];
+let extractedColumns = [];
+let extractedTables = [];
+
+function toggleType() {
+  const type = document.querySelector('input[name="renameType"]:checked').value;
+  document.getElementById('renameList').innerHTML = '';
+  document.getElementById('suggestSection').style.display = 'none';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Extract names and define mappings, then click Generate.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('outputActions').style.display = 'none';
+  renameMappings = [];
+}
+
+function extractNames() {
+  const sql = document.getElementById('sqlInput').value;
+  const type = document.querySelector('input[name="renameType"]:checked').value;
+  const tables = parseSchema(sql);
+
+  if (tables.length === 0) {
+    alert('No CREATE TABLE statements found. Paste valid SQL and try again.');
+    return;
+  }
+
+  extractedColumns = [];
+  extractedTables = tables.map(t => t.tableName);
+
+  for (const t of tables) {
+    for (const c of t.columns) {
+      extractedColumns.push({ table: t.tableName, column: c.name });
+    }
+  }
+
+  renameMappings = [];
+
+  if (type === 'table') {
+    for (const name of extractedTables) {
+      renameMappings.push({ old: name, new: '', table: name });
+    }
+  } else {
+    for (const ec of extractedColumns) {
+      renameMappings.push({ old: ec.column, new: '', table: ec.table });
+    }
+  }
+
+  renderRenameList();
+  generateSuggestions();
+}
+
+function generateSuggestions() {
+  const type = document.querySelector('input[name="renameType"]:checked').value;
+  const names = type === 'table' ? extractedTables : extractedColumns.map(c => c.column);
+  const suggestions = [];
+
+  for (let i = 0; i < names.length; i++) {
+    for (let j = i + 1; j < names.length; j++) {
+      const sim = similarity(names[i].toLowerCase(), names[j].toLowerCase());
+      if (sim >= 0.5 && sim < 1) {
+        suggestions.push({ a: names[i], b: names[j], sim: sim });
+      }
+    }
+  }
+
+  // Also suggest common abbreviations -> full names
+  const commonPatterns = [
+    ['fname', 'first_name'], ['lname', 'last_name'],
+    ['email_addr', 'email_address'], ['addr', 'address'],
+    ['created_ts', 'created_at'], ['updated_ts', 'updated_at'],
+    ['deleted_ts', 'deleted_at'], ['ts', 'timestamp'],
+    ['qty', 'quantity'], ['num', 'number'],
+    ['desc', 'description'], ['img', 'image'],
+    ['url', 'link'], ['pwd', 'password'],
+    ['dob', 'birth_date'], ['msg', 'message'],
+    ['auth', 'authentication'], ['cfg', 'config']
+  ];
+
+  for (const name of names) {
+    const lower = name.toLowerCase();
+    for (const [abbr, full] of commonPatterns) {
+      if (lower === abbr) {
+        suggestions.push({ a: name, b: full, sim: 0.85, isPattern: true });
+      }
+      if (lower.endsWith('_' + abbr)) {
+        const base = lower.slice(0, -(abbr.length + 1));
+        suggestions.push({ a: name, b: base + '_' + full, sim: 0.8, isPattern: true });
+      }
+    }
+  }
+
+  // Deduplicate
+  const seen = new Set();
+  const unique = [];
+  for (const s of suggestions) {
+    const key = [s.a, s.b].sort().join('|');
+    if (!seen.has(key)) { seen.add(key); unique.push(s); }
+  }
+  unique.sort((a, b) => b.sim - a.sim);
+
+  const chips = document.getElementById('suggestChips');
+  if (unique.length === 0) {
+    document.getElementById('suggestSection').style.display = 'none';
+    return;
+  }
+
+  let html = '';
+  for (const s of unique.slice(0, 8)) {
+    const pct = Math.round(s.sim * 100);
+    html += `<span class="suggest-chip" onclick="applySuggestion('${escapeJs(s.a)}','${escapeJs(s.b)}')">${escapeHtml(s.a)} → ${escapeHtml(s.b)} <span class="sim">${pct}%</span></span>`;
+  }
+  chips.innerHTML = html;
+  document.getElementById('suggestSection').style.display = 'block';
+}
+
+function applySuggestion(oldName, newName) {
+  for (const m of renameMappings) {
+    if (m.old === oldName && !m.new) {
+      m.new = newName;
+      break;
+    }
+  }
+  renderRenameList();
+  generate();
+}
+
+function renderRenameList() {
+  const list = document.getElementById('renameList');
+  if (renameMappings.length === 0) {
+    list.innerHTML = '<p class="notice" style="color:var(--text-muted);">No names extracted yet. Click "Extract Names" or add mappings manually.</p>';
+    return;
+  }
+  let html = '';
+  for (let i = 0; i < renameMappings.length; i++) {
+    const m = renameMappings[i];
+    html += `<div class="rename-row">
+      <input type="text" placeholder="Old name" value="${escapeHtml(m.old)}" onchange="renameMappings[${i}].old=this.value">
+      <input type="text" placeholder="New name" value="${escapeHtml(m.new)}" onchange="renameMappings[${i}].new=this.value">
+      <button class="remove-btn" onclick="removeRenameRow(${i})">&times;</button>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+function addRenameRow() {
+  renameMappings.push({ old: '', new: '', table: '' });
+  renderRenameList();
+}
+
+function removeRenameRow(index) {
+  renameMappings.splice(index, 1);
+  renderRenameList();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function escapeJs(str) {
+  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+// =====================
+// SQL Generation
+// =====================
+function quoteId(name, dialect) {
+  if (dialect === 'postgres') return '"' + name + '"';
+  if (dialect === 'mysql') return '`' + name + '`';
+  if (dialect === 'mssql') return '[' + name + ']';
+  if (dialect === 'oracle') return '"' + name.toUpperCase() + '"';
+  return name;
+}
+
+function generateRenameSql(mapping, dialect, type) {
+  const oldQ = quoteId(mapping.old, dialect);
+  const newQ = quoteId(mapping.new, dialect);
+
+  if (type === 'table') {
+    switch (dialect) {
+      case 'postgres':
+        return `ALTER TABLE ${oldQ} RENAME TO ${newQ};`;
+      case 'mysql':
+        return `RENAME TABLE ${oldQ} TO ${newQ};`;
+      case 'sqlite':
+        return `ALTER TABLE ${oldQ} RENAME TO ${newQ};`;
+      case 'mssql':
+        return `EXEC sp_rename '${mapping.old}', '${mapping.new}';`;
+      case 'oracle':
+        return `RENAME ${oldQ} TO ${newQ};`;
+    }
+  } else {
+    const tableQ = quoteId(mapping.table, dialect);
+    switch (dialect) {
+      case 'postgres':
+        return `ALTER TABLE ${tableQ} RENAME COLUMN ${oldQ} TO ${newQ};`;
+      case 'mysql':
+        return `ALTER TABLE ${tableQ} RENAME COLUMN ${oldQ} TO ${newQ};`;
+      case 'sqlite':
+        return `-- SQLite does not support RENAME COLUMN in older versions.
+-- Use this workaround: create new table, copy data, drop old table.
+-- Or on SQLite 3.25.0+:
+ALTER TABLE ${tableQ} RENAME COLUMN ${oldQ} TO ${newQ};`;
+      case 'mssql':
+        return `EXEC sp_rename '${mapping.table}.${mapping.old}', '${mapping.new}', 'COLUMN';`;
+      case 'oracle':
+        return `ALTER TABLE ${tableQ} RENAME COLUMN ${oldQ} TO ${newQ};`;
+    }
+  }
+  return '';
+}
+
+function generate() {
+  const dialect = document.getElementById('dialect').value;
+  const type = document.querySelector('input[name="renameType"]:checked').value;
+  const valid = renameMappings.filter(m => m.old.trim() && m.new.trim() && m.old.trim() !== m.new.trim());
+
+  if (valid.length === 0) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Add at least one rename mapping with different old and new names.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('outputActions').style.display = 'none';
+    return;
+  }
+
+  let output = '';
+  for (const m of valid) {
+    output += generateRenameSql(m, dialect, type) + '\n';
+  }
+
+  document.getElementById('statRenames').textContent = valid.length;
+  document.getElementById('statDialect').textContent = document.getElementById('dialect').selectedOptions[0].text;
+  document.getElementById('statType').textContent = type === 'table' ? 'Table' : 'Column';
+  document.getElementById('statsRow').style.display = 'grid';
+
+  document.getElementById('outputPanel').innerHTML = '<div class="output-wrap"><pre>' + escapeHtml(output) + '</pre></div>';
+  document.getElementById('outputActions').style.display = 'flex';
+  window._lastOutput = output;
+}
+
+function copyOutput() {
+  if (!window._lastOutput) return;
+  navigator.clipboard.writeText(window._lastOutput).then(() => {
+    const btn = document.querySelector('#outputActions button');
+    if (btn) {
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 1200);
+    }
+  });
+}
+
+function downloadOutput() {
+  if (!window._lastOutput) return;
+  const blob = new Blob([window._lastOutput], { type: 'text/sql' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rename-' + document.getElementById('dialect').value + '.sql';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function loadSample() {
+  document.getElementById('sqlInput').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  fname VARCHAR(100),
+  lname VARCHAR(100),
+  email_addr VARCHAR(255),
+  created_ts TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE blog_posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255),
+  body TEXT,
+  author_id INTEGER REFERENCES users(id)
+);`;
+  extractNames();
+  // Auto-fill some renames
+  setTimeout(() => {
+    applySuggestion('fname', 'first_name');
+    applySuggestion('lname', 'last_name');
+    applySuggestion('email_addr', 'email_address');
+    applySuggestion('created_ts', 'created_at');
+  }, 50);
+}
+
+function clearAll() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('renameList').innerHTML = '';
+  document.getElementById('suggestSection').style.display = 'none';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Extract names and define mappings, then click Generate.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('outputActions').style.display = 'none';
+  renameMappings = [];
+}
+</script>
+</body>
+</html>

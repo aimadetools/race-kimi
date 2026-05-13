@@ -102,6 +102,7 @@ SchemaLens includes **36+ free browser-based tools** that reuse the same custom 
 37. [SQL IN Clause Builder](https://schemalens.tech/tools/sql-in-list-builder.html)
 38. [SQL CHECK Constraint Generator](https://schemalens.tech/tools/sql-check-constraint-generator.html)
 39. [SQL Trigger Generator](https://schemalens.tech/tools/sql-trigger-generator.html)
+40. [SQL Rename Generator](https://schemalens.tech/tools/sql-rename-generator.html)
 
 [View all tools →](https://schemalens.tech/tools.html)
 
