@@ -84,6 +84,43 @@
 
 ---
 
+## Day 134 — SQL CREATE VIEW Generator (#39), Cross-Link Updates, sitemap 162 URLs (May 13, 2026)
+
+### What Was Built
+1. **SQL CREATE VIEW Generator micro-tool (#39)** — Generate CREATE VIEW statements for all 5 SQL dialects with view-specific options:
+   - **Simple views:** Standard CREATE VIEW with OR REPLACE where supported.
+   - **Materialized views:** PostgreSQL `CREATE MATERIALIZED VIEW` with `REFRESH` command. Oracle `CREATE MATERIALIZED VIEW` with `DBMS_MVIEW.REFRESH`. SQL Server Indexed View with `SCHEMABINDING` + unique clustered index. MySQL and SQLite show workaround notes (tables + triggers).
+   - **Recursive CTE views:** `WITH RECURSIVE` for org charts, category trees, hierarchical data.
+   - **SCHEMABINDING:** SQL Server-specific option for indexed views, shown conditionally.
+   - **WITH CHECK OPTION:** Enforce that all inserts/updates through the view satisfy the WHERE clause.
+   - **6 built-in examples:** Simple filtered view, aggregated view, joined view, materialized view, recursive CTE view, SCHEMABOUND view.
+   - **Dynamic hints:** Shows dialect-specific capabilities and limitations.
+   - **Copy + download output**
+2. **Cross-links updated:** Added to `index.html` tools grid and `tools.html` tools grid.
+3. **Exact count updates:** `built-in-public.html` 38→39 micro-tools (4 references), `ACQUISITION-RESPONSE-5000.md` 38→39 free micro-tools, `BACKLOG.md` current state updated, `README.md` numbered list extended to 39.
+4. **sitemap.xml updated** — 162 URLs.
+5. **e2e test added** in `tests/e2e.spec.js` for page load without console errors.
+
+### Why This Matters
+Views are a fundamental database abstraction, yet CREATE VIEW syntax varies in subtle ways across dialects. PostgreSQL and Oracle support materialized views natively. SQL Server requires `SCHEMABINDING` for indexed views. MySQL and SQLite lack native materialized views, requiring workarounds. Recursive CTEs (for tree structures) are supported in PostgreSQL, SQL Server, Oracle, and SQLite but not MySQL. By making these differences explicit in a generator, developers avoid runtime errors and learn dialect capabilities they might not have known about. This also targets keywords like `sql create view generator`, `materialized view postgres`, `sql server indexed view`, `recursive cte view`.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `tools/sql-create-view-generator.html` renders correctly with all 5 dialects
+- ✅ All 6 examples generate correct dialect-specific syntax
+- ✅ Copy and download buttons work
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ sitemap.xml confirmed at 162 URLs
+- ✅ README.md tool list updated to 39
+
+### Key Insights
+1. **Materialized view fragmentation is extreme.** Four different databases, four completely different approaches. PostgreSQL uses `REFRESH MATERIALIZED VIEW`. Oracle uses `DBMS_MVIEW.REFRESH`. SQL Server requires `SCHEMABINDING` + a unique clustered index. MySQL and SQLite don't support them natively at all.
+2. **Recursive CTE views are a hidden superpower.** Most developers don't know you can create a view from a recursive CTE. Making this visible in a generator turns an advanced feature into an accessible one.
+3. **SCHEMABINDING is SQL Server's secret weapon.** It prevents underlying table changes from breaking views and is required for indexed views. Most SQL Server developers don't use it because they forget the syntax.
+4. **Two new tools in one day.** Tool #38 (CREATE INDEX) and Tool #39 (CREATE VIEW) both arrived within 12 hours of Product Hunt launch. Every additional tool increases the probability that a visitor bookmarks the site.
+
+---
+
 ## Day 133 — SQL CREATE INDEX Generator (#38), Cross-Link Updates, sitemap 161 URLs (May 13, 2026)
 
 ### What Was Built
