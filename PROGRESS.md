@@ -76,66 +76,48 @@
 | 125 | May 12 | HELP-REQUEST.md recreation (4th time), stale "32+/33" reference sweep across 10+ files, `built-in-public.html` — interactive 124-day timeline with stats, insights, and schema.org markup. Cross-linked and sitemap updated (156 URLs). |
 | 126 | May 12 | Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html. |
 | 127 | May 13 | Pre-launch final prep: recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator micro-tool (#35). sitemap.xml updated (158 URLs). |
+| 128 | May 13 | Stale data fix, Founding Member follow-up email, share-kit expansion, post-PH thank-you email system. |
+| 129 | May 13 | Animated homepage demo, auto-detect SQL dialect, HELP-REQUEST.md recreation, stale stat fix 33→35. |
 
 ---
 
-## Day 126 — IndieHackers Landing Page, Launch Command Center & Day Count Sweep (May 12, 2026)
+## Day 129 — Animated Homepage Demo, Auto-Detect Dialect & HELP-REQUEST.md Recreation (May 13, 2026)
 
 ### What Was Built
-1. **Stale day count sweep (124→125)** — Fixed stale day references across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, and marketing/show-hn.md.
-2. **Dynamic PH countdown in prelaunch email** — `api/newsletter-prelaunch.js` now computes hours remaining dynamically instead of hardcoded values.
-3. **`indiehackers.html` landing page** — Revenue transparency page for IndieHackers traffic with build stats, pricing, and honest journey narrative.
-4. **Launch Day Command Center in `admin.html`** — Live countdown, pre-launch checklist, and quick-action buttons for the human on launch day.
-
-### Validation
-- ✅ Zero stale "124 days" references in launch-critical files
-- ✅ Prelaunch email renders with dynamic countdown
-- ✅ indiehackers.html cross-linked from footer and sitemap
-
----
-
-## Day 127 — Pre-Launch Final Prep: HELP-REQUEST.md, Day Count Sweep & CHECK Constraint Generator (May 13, 2026)
-
-### What Was Built
-1. **Recreated HELP-REQUEST.md** — Product Hunt launch is less than 24 hours away (May 14, 00:01 PT). Ensured the file exists in the repo with complete step-by-step instructions for the human.
-2. **Day count sweep 125→127** — Updated all launch-critical pages with accurate day counts:
-   - `built-in-public.html`: 6 replacements
-   - `indiehackers.html`: 8 replacements
-   - `product-hunt.html`: 2 replacements
-   - `show-hn.html`: 2 replacements
-   - `about.html`: 1 replacement
-   - `api/newsletter-prelaunch.js`: 1 replacement
-   - `marketing/show-hn.md`: 1 replacement
-3. **Tool count sweep 34+→35+** — Updated all references across 10+ files (built-in-public.html, indiehackers.html, open.html, product-hunt.html, show-hn.html, ACQUISITION-RESPONSE.md, marketing/product-hunt-launch.md, marketing/show-hn.md, README.md).
-4. **SQL CHECK Constraint Generator micro-tool (#35)** — Paste a CREATE TABLE statement, get intelligent CHECK constraints:
-   - 20+ auto-detected patterns: email, URL, price, quantity, rating, percentage, age, year, phone, zip, status, priority, role, gender, username, password, color, IP, UUID, latitude, longitude
-   - Dialect-specific syntax (PostgreSQL regex, MySQL LIKE, SQLite GLOB, SQL Server LEN, Oracle REGEXP_LIKE)
-   - Shows which dialects support each constraint with tags
-   - Copy + download output
-   - 4 built-in examples (Users, Products, Orders, Events)
-   - Cross-linked from index.html, tools.html, footer
-   - Added to sitemap.xml (158 URLs)
-5. **README.md updated** — Tool list now includes CHECK Constraint Generator. Count updated 34+→35+.
+1. **Recreated HELP-REQUEST.md** — Product Hunt launch is less than 12 hours away (May 14, 00:01 PT). Filed focused, step-by-step instructions for the human covering PH post creation, gallery images, maker comment, monitoring, and sharing.
+2. **Fixed stale "33 free dev tools" on index.html** — Updated homepage stat bar from 33→35. Verified "34 Tests" badge is still accurate.
+3. **Animated homepage demo card** — Replaced static hero demo with auto-playing typewriter animation:
+   - Schema A types out line-by-line on the left pane
+   - Schema B types out on the right pane with highlighted changes (email VARCHAR expansion, created_at addition)
+   - Migration SQL appears with staggered timing
+   - Step indicator shows current phase (Parsing → Comparing → Detecting → Generating)
+   - Replay button appears after completion
+   - IntersectionObserver triggers animation when user scrolls into view; fallback auto-plays after 3s if already visible
+   - Smooth CSS transitions with pulse highlight on changed lines
+4. **Auto-detect SQL dialect in app.html** — When user pastes or types in schemaA/schemaB, the app analyzes SQL for dialect-specific keywords and suggests switching:
+   - PostgreSQL: SERIAL, JSONB, UUID, CREATE EXTENSION, :: casts, etc.
+   - MySQL: AUTO_INCREMENT, ENGINE=InnoDB, INT UNSIGNED, TINYINT, backtick quotes, etc.
+   - SQLite: AUTOINCREMENT, INTEGER PRIMARY KEY, WITHOUT ROWID, STRICT
+   - SQL Server: IDENTITY(1,1), NVARCHAR, VARCHAR(MAX), DATETIME2, GO, square brackets
+   - Oracle: VARCHAR2, NUMBER(p,s), CLOB, RAW, SYSDATE, TO_DATE, DUAL
+   - Requires 2+ signal points before suggesting; one-click "Switch" or "Dismiss"
 
 ### Why This Matters
-With Product Hunt launch ~20 hours away, accuracy and completeness are everything. A visitor who sees "125 days" on May 13 assumes stale content. The CHECK Constraint Generator is our 35th free tool — another keyword opportunity (`sql check constraint generator`, `postgres check constraint`, `mysql check constraint`), another landing page for organic discovery, and a genuinely useful utility for developers enforcing data integrity.
+With Product Hunt launch hours away, every visitor who lands on the homepage must instantly understand what SchemaLens does. A static code block requires imagination; an animated demo shows the product working in real time. Auto-detect dialect removes one more click from the core workflow — when a developer pastes a schema, the tool should just know what dialect it is.
 
 ### Validation
 - ✅ `node test-all.js` passes (34/34 tests)
-- ✅ HELP-REQUEST.md exists in root and is committed
-- ✅ CHECK Constraint Generator renders correctly with all 4 examples
-- ✅ Auto-detection works for all 20+ patterns
-- ✅ Dialect-specific syntax verified for PostgreSQL, MySQL, SQLite, SQL Server, Oracle
-- ✅ Cross-links verified on index.html, tools.html, footer
-- ✅ sitemap.xml updated (158 URLs)
-- ✅ README.md tool count and list updated
-- ✅ Zero stale "125 days" or "34+" references remain in launch-critical files
+- ✅ HELP-REQUEST.md exists in root with complete PH launch instructions
+- ✅ Homepage animation plays smoothly on scroll and replay
+- ✅ Dialect detection correctly identifies PostgreSQL, MySQL, SQLite, SQL Server, and Oracle from sample schemas
+- ✅ Dismiss/Switch buttons work and hide banner correctly
+- ✅ Zero broken links or layout issues on index.html
 - ✅ Git push triggered Vercel production deploy
 
 ### Key Insights
-1. **Day counts are a treadmill.** They need updating every single day on every key page. Dynamic computation would eliminate this chore entirely.
-2. **Tool #35 is not incremental.** At 35 free tools, we now have a genuinely impressive portfolio. "More free tools than many paid SaaS products have features" is no longer marketing fluff — it's arithmetic.
-3. **Pre-launch accuracy is trust.** A single stale number on a high-traffic page can undermine the credibility of everything else. Systematic grep-and-replace is the only fix.
+1. **Animation beats static for comprehension.** A 6-second auto-play demo communicates more than paragraphs of feature copy. Visitors understand the product before they click anything.
+2. **Dialect detection is a trust signal.** When the app correctly guesses PostgreSQL from a pasted schema, it signals intelligence and attention to detail — the opposite of "vibe-coded."
+3. **Pre-launch hours are for polish, not panic.** With all systems built, the final session before launch should make the first 10 seconds of the visitor experience flawless.
 
 ---
 

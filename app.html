@@ -9071,6 +9071,131 @@ function escapeHtml(text) {
 }
 
 renderDiffHistory();
+
+// -----------------------------
+// Auto-Detect Dialect
+// -----------------------------
+(function() {
+  const dialectScores = {
+    postgres: {
+      patterns: [/\bSERIAL\b/i, /\bBIGSERIAL\b/i, /\bJSONB\b/i, /\bUUID\b/i, /\bBOOLEAN\b/i, /\bTEXT\b/i, /\bTIMESTAMP\s+WITH\s+TIME\s+ZONE\b/i, /\bCREATE\s+EXTENSION\b/i, /::\s*(?:VARCHAR|TEXT|INTEGER|BIGINT|NUMERIC|DATE|TIMESTAMP)/i, /\bINET\b/i, /\bMACADDR\b/i, /\bMONEY\b/i, /\bBYTEA\b/i],
+      weight: 3
+    },
+    mysql: {
+      patterns: [/\bAUTO_INCREMENT\b/i, /\bENGINE\s*=\s*\w+/i, /\bINT\s+UNSIGNED\b/i, /\bTINYINT\b/i, /\bMEDIUMINT\b/i, /\bDATETIME\b/i, /\bENUM\s*\(/i, /\bSET\s*\(/i, /\bCHARACTER\s+SET\b/i, /\bCOLLATE\s+utf8/i, /`[^`]+`/],
+      weight: 3
+    },
+    sqlite: {
+      patterns: [/\bAUTOINCREMENT\b/i, /\bINTEGER\s+PRIMARY\s+KEY\b/i, /\bWITHOUT\s+ROWID\b/i, /\bSTRICT\b/i],
+      weight: 4
+    },
+    mssql: {
+      patterns: [/\bIDENTITY\s*\(\s*\d+\s*,\s*\d+\s*\)/i, /\bNVARCHAR\b/i, /\bVARCHAR\s*\(\s*MAX\s*\)/i, /\bDATETIME2\b/i, /\bBIT\b/i, /\bGO\b/i, /\bCLUSTERED\b/i, /\bNONCLUSTERED\b/i, /\[\w+\]/],
+      weight: 3
+    },
+    oracle: {
+      patterns: [/\bVARCHAR2\b/i, /\bNUMBER\s*\(\s*\d+\s*,\s*\d+\s*\)/i, /\bCLOB\b/i, /\bRAW\b/i, /\bCREATE\s+SEQUENCE\b/i, /\bSYSDATE\b/i, /\bTO_DATE\b/i, /\bFOR\s+EACH\s+ROW\b/i, /\bDUAL\b/i, /\bLONG\b/i],
+      weight: 3
+    }
+  };
+
+  function detectDialect(sql) {
+    if (!sql || sql.length < 30) return null;
+    let best = null;
+    let bestScore = 0;
+    for (const [dialect, cfg] of Object.entries(dialectScores)) {
+      let score = 0;
+      for (const p of cfg.patterns) {
+        const matches = sql.match(p);
+        if (matches) score += cfg.weight * matches.length;
+      }
+      // Bonus for CREATE TABLE density
+      const tableCount = (sql.match(/CREATE\s+TABLE/gi) || []).length;
+      if (tableCount > 0) score += tableCount;
+      if (score > bestScore) {
+        bestScore = score;
+        best = dialect;
+      }
+    }
+    // Require at least 2 signal points to make a suggestion
+    return bestScore >= 2 ? best : null;
+  }
+
+  const dialectLabels = {
+    postgres: 'PostgreSQL',
+    mysql: 'MySQL',
+    sqlite: 'SQLite',
+    mssql: 'SQL Server',
+    oracle: 'Oracle'
+  };
+
+  let detectedDialect = null;
+  let bannerEl = null;
+
+  function createBanner() {
+    if (bannerEl) return bannerEl;
+    const select = document.getElementById('dialect');
+    if (!select) return null;
+    bannerEl = document.createElement('div');
+    bannerEl.id = 'dialect-detect-banner';
+    bannerEl.style.cssText = 'margin-top:6px;font-size:0.8rem;color:var(--text-muted);display:none;align-items:center;gap:8px;';
+    select.parentNode.insertBefore(bannerEl, select.nextSibling);
+    return bannerEl;
+  }
+
+  function showSuggestion(dialect) {
+    if (!dialect || dialect === document.getElementById('dialect').value) {
+      hideSuggestion();
+      return;
+    }
+    detectedDialect = dialect;
+    const banner = createBanner();
+    if (!banner) return;
+    banner.innerHTML = `<span>💡 Detected <strong>${dialectLabels[dialect]}</strong> dialect.</span> <button id="dialect-detect-apply" class="btn btn-secondary" style="padding:2px 8px;font-size:0.75rem;">Switch</button> <button id="dialect-detect-dismiss" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;">Dismiss</button>`;
+    banner.style.display = 'flex';
+    const applyBtn = document.getElementById('dialect-detect-apply');
+    const dismissBtn = document.getElementById('dialect-detect-dismiss');
+    if (applyBtn) {
+      applyBtn.onclick = function() {
+        document.getElementById('dialect').value = dialect;
+        hideSuggestion();
+        updateStats();
+        if (window.track) track('dialect_auto_switch', { detected: dialect });
+      };
+    }
+    if (dismissBtn) {
+      dismissBtn.onclick = function() {
+        hideSuggestion();
+        if (window.track) track('dialect_auto_dismiss', { detected: dialect });
+      };
+    }
+  }
+
+  function hideSuggestion() {
+    if (bannerEl) bannerEl.style.display = 'none';
+    detectedDialect = null;
+  }
+
+  function checkBoth() {
+    const a = document.getElementById('schemaA').value;
+    const b = document.getElementById('schemaB').value;
+    const combined = a + '\n' + b;
+    const detected = detectDialect(combined);
+    if (detected && detected !== document.getElementById('dialect').value) {
+      showSuggestion(detected);
+    } else {
+      hideSuggestion();
+    }
+  }
+
+  const schemaA = document.getElementById('schemaA');
+  const schemaB = document.getElementById('schemaB');
+  if (schemaA) schemaA.addEventListener('input', checkBoth);
+  if (schemaB) schemaB.addEventListener('input', checkBoth);
+  // Also check on paste with a slight delay
+  if (schemaA) schemaA.addEventListener('paste', () => setTimeout(checkBoth, 50));
+  if (schemaB) schemaB.addEventListener('paste', () => setTimeout(checkBoth, 50));
+})();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>

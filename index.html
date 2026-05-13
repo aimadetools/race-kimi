@@ -200,6 +200,73 @@
     .demo-card .btn {
       width: 100%;
     }
+    /* Animated demo */
+    .demo-controls {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .demo-step {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .demo-step.visible { opacity: 1; }
+    .demo-replay {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s, border-color 0.2s, color 0.2s;
+    }
+    .demo-replay.visible { opacity: 1; }
+    .demo-replay:hover { border-color: var(--primary); color: var(--text); }
+    .demo-line {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: pre;
+    }
+    .demo-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .demo-line.demo-highlight.visible {
+      animation: demoPulse 1.2s ease 0.3s 2;
+    }
+    @keyframes demoPulse {
+      0%, 100% { background: transparent; }
+      50% { background: rgba(99,102,241,0.12); }
+    }
+    .demo-spacer {
+      height: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .demo-spacer.visible { opacity: 1; }
+    .demo-pane .changed {
+      color: var(--warning);
+      font-weight: 600;
+    }
+    .demo-cta {
+      margin-top: 20px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .demo-cta.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .demo-pane { min-height: 180px; }
   </style>
 </head>
 <body>
@@ -341,37 +408,44 @@
         <a href="vscode-extension.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Learn more →</a>
       </div>
 
-      <div class="demo-card">
+      <div class="demo-card" id="hero-demo">
         <div class="demo-header">
           <span class="demo-dot red"></span>
           <span class="demo-dot yellow"></span>
           <span class="demo-dot green"></span>
+          <div class="demo-controls">
+            <span class="demo-step" id="demo-step">Initializing...</span>
+            <button class="demo-replay" id="demo-replay" onclick="replayDemo()" aria-label="Replay demo">↻ Replay</button>
+          </div>
         </div>
         <div class="demo-body">
-          <div class="demo-pane">
-<span class="comment">-- Schema A (Old)</span>
-<span class="keyword">CREATE TABLE</span> users (
-  id <span class="keyword">SERIAL PRIMARY KEY</span>,
-  name <span class="keyword">VARCHAR</span>(100),
-  email <span class="keyword">VARCHAR</span>(100)
-);
+          <div class="demo-pane" id="demo-pane-a">
+            <div class="demo-line" data-delay="0"><span class="comment">-- Schema A (Old)</span></div>
+            <div class="demo-line" data-delay="300"><span class="keyword">CREATE TABLE</span> users (</div>
+            <div class="demo-line" data-delay="600">  id <span class="keyword">SERIAL PRIMARY KEY</span>,</div>
+            <div class="demo-line" data-delay="900">  name <span class="keyword">VARCHAR</span>(100),</div>
+            <div class="demo-line" data-delay="1200">  email <span class="keyword">VARCHAR</span>(100)</div>
+            <div class="demo-line" data-delay="1500">);</div>
           </div>
-          <div class="demo-arrow">→</div>
-          <div class="demo-pane">
-<span class="comment">-- Schema B (New)</span>
-<span class="keyword">CREATE TABLE</span> users (
-  id <span class="keyword">SERIAL PRIMARY KEY</span>,
-  name <span class="keyword">VARCHAR</span>(100),
-  email <span class="keyword">VARCHAR</span>(255),
-  <span class="added">created_at TIMESTAMP</span>
-);
-
-<span class="comment">-- Generated Migration</span>
-<span class="keyword">ALTER TABLE</span> users
-  <span class="keyword">ALTER COLUMN</span> email <span class="keyword">TYPE VARCHAR</span>(255);
-<span class="keyword">ALTER TABLE</span> users
-  <span class="keyword">ADD COLUMN</span> created_at <span class="keyword">TIMESTAMP</span>;
+          <div class="demo-arrow" id="demo-arrow">→</div>
+          <div class="demo-pane" id="demo-pane-b">
+            <div class="demo-line" data-delay="1800"><span class="comment">-- Schema B (New)</span></div>
+            <div class="demo-line" data-delay="2100"><span class="keyword">CREATE TABLE</span> users (</div>
+            <div class="demo-line" data-delay="2400">  id <span class="keyword">SERIAL PRIMARY KEY</span>,</div>
+            <div class="demo-line" data-delay="2700">  name <span class="keyword">VARCHAR</span>(100),</div>
+            <div class="demo-line demo-highlight" data-delay="3000">  email <span class="keyword">VARCHAR</span>(<span class="changed">255</span>)</div>
+            <div class="demo-line demo-highlight" data-delay="3300">  <span class="added">created_at TIMESTAMP</span></div>
+            <div class="demo-line" data-delay="3600">);</div>
+            <div class="demo-spacer" data-delay="3900"></div>
+            <div class="demo-line" data-delay="4200"><span class="comment">-- Generated Migration</span></div>
+            <div class="demo-line" data-delay="4500"><span class="keyword">ALTER TABLE</span> users</div>
+            <div class="demo-line" data-delay="4800">  <span class="keyword">ALTER COLUMN</span> email <span class="keyword">TYPE VARCHAR</span>(255);</div>
+            <div class="demo-line" data-delay="5100"><span class="keyword">ALTER TABLE</span> users</div>
+            <div class="demo-line" data-delay="5400">  <span class="keyword">ADD COLUMN</span> created_at <span class="keyword">TIMESTAMP</span>;</div>
           </div>
+        </div>
+        <div class="demo-cta" id="demo-cta" style="display:none;">
+          <a href="app.html?demo=postgres" class="btn btn-primary">Try it yourself →</a>
         </div>
       </div>
     </div>
@@ -381,7 +455,7 @@
     <div class="container">
       <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center;">
         <div>
-          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">33</div>
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">35</div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">Free dev tools</div>
         </div>
         <div>
@@ -1152,5 +1226,92 @@
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script>
+(function() {
+  const demo = document.getElementById('hero-demo');
+  if (!demo) return;
+  const lines = demo.querySelectorAll('.demo-line, .demo-spacer');
+  const stepEl = document.getElementById('demo-step');
+  const replayBtn = document.getElementById('demo-replay');
+  const cta = document.getElementById('demo-cta');
+  const arrow = document.getElementById('demo-arrow');
+  let timeouts = [];
+  let hasPlayed = false;
+
+  function clearTimeouts() {
+    timeouts.forEach(clearTimeout);
+    timeouts = [];
+  }
+
+  function resetDemo() {
+    clearTimeouts();
+    lines.forEach(l => l.classList.remove('visible'));
+    if (cta) cta.classList.remove('visible');
+    if (cta) cta.style.display = 'none';
+    if (stepEl) { stepEl.textContent = 'Initializing...'; stepEl.classList.remove('visible'); }
+    if (replayBtn) replayBtn.classList.remove('visible');
+    if (arrow) arrow.style.opacity = '0.3';
+  }
+
+  function playDemo() {
+    resetDemo();
+    hasPlayed = true;
+    if (stepEl) stepEl.classList.add('visible');
+
+    lines.forEach(function(line) {
+      const delay = parseInt(line.dataset.delay || '0', 10);
+      timeouts.push(setTimeout(function() {
+        line.classList.add('visible');
+        // Update step label based on delay ranges
+        if (delay < 1500) {
+          stepEl.textContent = '1. Parsing Schema A...';
+        } else if (delay < 3600) {
+          stepEl.textContent = '2. Comparing Schema B...';
+          if (arrow) arrow.style.opacity = '1';
+        } else if (delay < 4200) {
+          stepEl.textContent = '3. Detecting changes...';
+        } else {
+          stepEl.textContent = '4. Generating migration...';
+        }
+      }, delay));
+    });
+
+    timeouts.push(setTimeout(function() {
+      if (cta) { cta.style.display = 'block'; }
+      // force reflow
+      if (cta) { void cta.offsetWidth; }
+      if (cta) { cta.classList.add('visible'); }
+      if (stepEl) { stepEl.textContent = 'Done. Try it free →'; }
+      if (replayBtn) { replayBtn.classList.add('visible'); }
+    }, 5800));
+  }
+
+  window.replayDemo = function() {
+    resetDemo();
+    setTimeout(playDemo, 300);
+  };
+
+  // Auto-play when scrolled into view
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !hasPlayed) {
+        playDemo();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(demo);
+
+  // Also auto-play after 3s if already in viewport on load
+  setTimeout(function() {
+    if (!hasPlayed) {
+      const rect = demo.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        playDemo();
+      }
+    }
+  }, 3000);
+})();
+</script>
 </body>
 </html>
