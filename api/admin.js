@@ -202,6 +202,23 @@ module.exports = async (req, res) => {
         }
         return res.status(200).json({ data: followupJson });
       }
+      case 'newsletter-thanks': {
+        const proto = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers.host || 'schemalens.tech';
+        const dry = body.dry === true ? 'true' : 'false';
+        const upvotes = body.upvotes || '';
+        const ranking = body.ranking || '';
+        const comments = body.comments || '';
+        const thanksUrl = `${proto}://${host}/api/newsletter-thanks?dry=${dry}&upvotes=${encodeURIComponent(upvotes)}&ranking=${encodeURIComponent(ranking)}&comments=${encodeURIComponent(comments)}`;
+        const thanksHeaders = { 'Content-Type': 'application/json' };
+        if (LAUNCH_TOKEN) thanksHeaders['x-launch-token'] = LAUNCH_TOKEN;
+        const thanksRes = await fetch(thanksUrl, { method: 'POST', headers: thanksHeaders });
+        const thanksJson = await thanksRes.json().catch(() => ({}));
+        if (!thanksRes.ok) {
+          return res.status(thanksRes.status || 500).json({ error: thanksJson.error || 'Thank-you email request failed' });
+        }
+        return res.status(200).json({ data: thanksJson });
+      }
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }

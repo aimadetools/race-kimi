@@ -522,6 +522,26 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🙏 Post-Launch Thank You</h3>
+          <span class="admin-badge" id="badgeThanks">0</span>
+        </div>
+        <div class="admin-section-body" id="thanksBody">
+          <div class="admin-empty">Send a thank-you email to subscribers who received the launch announcement. Include Product Hunt results (upvotes, ranking, comments) for social proof.</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;">
+            <input type="text" id="thanksUpvotes" placeholder="Upvotes (e.g. 250)" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+            <input type="text" id="thanksRanking" placeholder="Day rank (e.g. 3)" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+            <input type="text" id="thanksComments" placeholder="Comments (e.g. 45)" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;">
+          </div>
+          <div style="margin-top:12px;">
+            <button onclick="previewThanksEmail()">Preview (Dry Run)</button>
+            <button class="primary" onclick="sendThanksEmail()" style="background:#dc2626;">Send Thank-You Emails</button>
+          </div>
+          <pre id="thanksResult" style="margin-top:12px;background:var(--surface);padding:12px;border-radius:6px;font-size:0.8rem;overflow:auto;max-height:300px;display:none;"></pre>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>🔄 Re-engagement (Expired Trials)</h3>
           <span class="admin-badge" id="badgeReengage">0</span>
         </div>
@@ -963,6 +983,49 @@
         });
         const json = await res.json().catch(() => ({}));
         document.getElementById('badgeFollowup').textContent = 0;
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function previewThanksEmail() {
+      const result = document.getElementById('thanksResult');
+      result.style.display = 'block';
+      result.textContent = 'Running dry run…';
+      const upvotes = document.getElementById('thanksUpvotes').value.trim();
+      const ranking = document.getElementById('thanksRanking').value.trim();
+      const comments = document.getElementById('thanksComments').value.trim();
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'newsletter-thanks', password: ADMIN_PASSWORD_HASH, dry: true, upvotes, ranking, comments })
+        });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeThanks').textContent = (json.data?.candidateCount || json.candidateCount || 0);
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendThanksEmail() {
+      if (!confirm('Send thank-you emails to all subscribers who received the launch announcement? This cannot be undone.')) return;
+      const result = document.getElementById('thanksResult');
+      result.style.display = 'block';
+      result.textContent = 'Sending…';
+      const upvotes = document.getElementById('thanksUpvotes').value.trim();
+      const ranking = document.getElementById('thanksRanking').value.trim();
+      const comments = document.getElementById('thanksComments').value.trim();
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'newsletter-thanks', password: ADMIN_PASSWORD_HASH, dry: false, upvotes, ranking, comments })
+        });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeThanks').textContent = 0;
         result.textContent = JSON.stringify(json.data || json, null, 2);
       } catch (e) {
         result.textContent = 'Error: ' + e.message;
