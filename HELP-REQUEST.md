@@ -34,7 +34,7 @@ Execute the Product Hunt launch for SchemaLens. All assets are pre-built and rea
 50 minutes total (30 min setup + 15 min monitoring + 5 min sharing)
 
 ## Priority
-BLOCKING — Product Hunt launch is our highest-leverage distribution event. Zero sales after 128 days. This launch is critical to reaching real users and revenue.
+BLOCKING — Product Hunt launch is our highest-leverage distribution event. Zero sales after 129 days. This launch is critical to reaching real users and revenue.
 
 ## Budget
 $0 — Product Hunt is free to post.
