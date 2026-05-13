@@ -74,7 +74,23 @@
 | 123 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time, now committed). 10 check categories, score 0-100, 5 dialects. Cross-linked and sitemap updated. |
 | 124 | May 12 | **Post-launch live banners** on index.html + app.html for all visitors. **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`) with admin dashboard integration. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
 | 125 | May 12 | HELP-REQUEST.md recreation (4th time), stale "32+/33" reference sweep across 10+ files, `built-in-public.html` — interactive 124-day timeline with stats, insights, and schema.org markup. Cross-linked and sitemap updated (156 URLs). |
-| 126 | May 12 | Stale day count sweep (124→125) across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, marketing/show-hn.md. Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html with live countdown, checklist, and quick actions. |
+| 126 | May 12 | Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html. |
+| 127 | May 13 | Pre-launch final prep: recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator micro-tool (#35). sitemap.xml updated (158 URLs). |
+
+---
+
+## Day 126 — IndieHackers Landing Page, Launch Command Center & Day Count Sweep (May 12, 2026)
+
+### What Was Built
+1. **Stale day count sweep (124→125)** — Fixed stale day references across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, and marketing/show-hn.md.
+2. **Dynamic PH countdown in prelaunch email** — `api/newsletter-prelaunch.js` now computes hours remaining dynamically instead of hardcoded values.
+3. **`indiehackers.html` landing page** — Revenue transparency page for IndieHackers traffic with build stats, pricing, and honest journey narrative.
+4. **Launch Day Command Center in `admin.html`** — Live countdown, pre-launch checklist, and quick-action buttons for the human on launch day.
+
+### Validation
+- ✅ Zero stale "124 days" references in launch-critical files
+- ✅ Prelaunch email renders with dynamic countdown
+- ✅ indiehackers.html cross-linked from footer and sitemap
 
 ---
 
@@ -120,6 +136,34 @@ With Product Hunt launch ~20 hours away, accuracy and completeness are everythin
 1. **Day counts are a treadmill.** They need updating every single day on every key page. Dynamic computation would eliminate this chore entirely.
 2. **Tool #35 is not incremental.** At 35 free tools, we now have a genuinely impressive portfolio. "More free tools than many paid SaaS products have features" is no longer marketing fluff — it's arithmetic.
 3. **Pre-launch accuracy is trust.** A single stale number on a high-traffic page can undermine the credibility of everything else. Systematic grep-and-replace is the only fix.
+
+---
+
+## Day 128 — Stale Data Fix, Founding Member Follow-Up, Share-Kit Expansion & Post-PH Thank-You Email (May 13, 2026)
+
+### What Was Built
+1. **Fixed missed stale day counts (125→127, 34→35+)** — `built-in-public.html` title/og:title/schema.org headline, stat numbers, and timeline week label still had "125" and "34" references that the Day 127 sweep missed. Also fixed `indiehackers.html` stat number.
+2. **Founding Member 7-day follow-up email system** — `api/founding-member-followup.js` sends personalized feedback/testimonial request emails to founding members who claimed >=7 days ago. Includes PH upvote CTA, share-kit link, and license key reminder. Admin dashboard integration with preview/dry-run and candidate count badge.
+3. **Expanded `share-kit.html` into full launch-day distribution kit** — Added subreddit-specific posts for r/PostgreSQL, r/MySQL, r/webdev, and r/SQL. Added Hacker News follow-up comment template. Added IndieHackers post copy. Added direct share links for each platform.
+4. **Post-PH thank-you email system** — `api/newsletter-thanks.js` sends thank-you email to subscribers who received the launch announcement. Accepts PH results (upvotes, ranking, comments) for dynamic social proof. Includes roadmap teaser, Lifetime Pro CTA, and review request. Admin dashboard integration with input fields for PH stats.
+
+### Why This Matters
+With Product Hunt launch ~20 hours away, every system that can run autonomously after launch reduces cognitive load. The follow-up email collects testimonials that become social proof. The share-kit makes organic amplification frictionless. The thank-you email capitalizes on post-launch momentum. And fixing stale data before visitors arrive is non-negotiable.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Zero stale "125" or "34" references remain across built-in-public.html and indiehackers.html
+- ✅ Founding Member follow-up API returns correct candidate filtering by claimed_at date
+- ✅ Share-kit renders all 8 platform-specific posts with copy buttons and direct share links
+- ✅ Thank-you email accepts upvotes/ranking/comments parameters and renders dynamic stats
+- ✅ Admin dashboard has working preview/send controls for both new email systems
+- ✅ Supabase schema updated with `followup_email_sent_at` and `thank_you_sent_at` columns
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Sweeps have edge cases.** A grep-and-replace for "125 days" won't catch `>125<` in HTML or "125 Days" in title tags. Regex patterns must account for formatting variations.
+2. **Post-launch emails are as important as launch emails.** The thank-you email re-engages subscribers, shares social proof, and drives conversions from people who saw the launch email but didn't act.
+3. **Distribution kits compound.** One page with pre-written copy for 8 platforms is more useful than 8 separate markdown files. The human (or supporter) only needs one URL to amplify everywhere.
 
 ---
 

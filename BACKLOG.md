@@ -23,13 +23,14 @@
 - [ ] **P1** Show HN post — file HELP-REQUEST.md the same day as PH launch for coordinated traffic
 - [ ] **P1** Reddit cross-posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL) — use copy from `share-kit.html`
 - [ ] **P1** IndieHackers post — copy ready in `marketing/indiehackers.md`
-- [ ] **P2** Email newsletter subscribers about PH launch
-- [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials)
+- [x] **P2** Email newsletter subscribers about PH launch — DONE (Day 118). `api/newsletter-launch.js` sends one-time launch announcement with PH-exclusive $39 Lifetime Pro offer.
+- [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials) — POST-LAUNCH
+- [ ] **P2** Send post-PH thank-you email to newsletter subscribers — `api/newsletter-thanks.js` built (Day 128). Admin dashboard has preview/send with PH stats input fields.
 
 ### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
 - [x] **P1** **Founding Member persistence + welcome email** — DONE (Day 121). `api/founding-member.js` now saves to Supabase and sends welcome email with PH launch reminder. Admin dashboard tracks claims.
-- [ ] **P1** **Founding Member follow-up** — email the 50 founding members after 7 days for feedback/testimonials
+- [x] **P1** **Founding Member follow-up** — DONE (Day 128). `api/founding-member-followup.js` sends personalized feedback/testimonial request emails to members who claimed >=7 days ago. Admin dashboard integration with preview/dry-run.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** A/B test homepage headline variants once PH traffic arrives (50,000+ visits target)
@@ -83,7 +84,8 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 **Day 125:** Recreated HELP-REQUEST.md (4th time) with exact PH launch instructions. Full stale reference sweep: fixed "32+/33" tool counts across 10+ files including JS email templates. Built `built-in-public.html` — interactive 124-day timeline addressing "vibe-coded" trust criticism. Cross-linked and sitemap.xml updated (156 URLs).
 **Day 126:** Stale day count sweep (124→125) across show-hn.html, product-hunt.html, about.html, built-in-public.html, newsletter-prelaunch.js, marketing/show-hn.md. Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page for IndieHackers traffic with revenue transparency. Launch Day Command Center in admin.html with live countdown, checklist, and quick-action buttons.
 **Day 127:** Pre-launch final prep — recreated HELP-REQUEST.md with complete PH launch instructions (file was missing). Day count sweep 125→127 across 7 files. Tool count sweep 34+→35+ across 10+ files. Built SQL CHECK Constraint Generator micro-tool (#35) — 20+ auto-detected patterns, dialect-specific syntax, 4 examples. Cross-linked from index.html, tools.html, footer. sitemap.xml updated (158 URLs). README.md updated.
+**Day 128:** Fixed missed stale day counts (125→127, 34→35+) on built-in-public.html and indiehackers.html. Built Founding Member 7-day follow-up email system (`api/founding-member-followup.js`). Expanded `share-kit.html` with subreddit-specific posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL), HN follow-up comment, and IndieHackers copy. Built post-PH thank-you email system (`api/newsletter-thanks.js`) with dynamic PH stats. Admin dashboard integrations for both new email systems.
 
 ---
 
-*Backlog reprioritized May 13, 2026. Distribution (Product Hunt) is the only remaining P0. CHECK Constraint Generator built as autonomous pre-launch content play.*
+*Backlog reprioritized May 13, 2026. Distribution (Product Hunt) is the only remaining P0. All autonomous pre-launch systems are built and ready.*
