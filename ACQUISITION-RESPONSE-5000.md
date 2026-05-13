@@ -22,7 +22,7 @@ Since Day 113, the following has been built or fixed:
 - A post-PH thank-you email system and founding member follow-up email system were built with admin dashboard integration.
 - The sitemap now contains 159 URLs.
 
-The product is no longer a prototype with broken links. It is a polished, end-to-end accurate funnel with 38 free micro-tools, a VS Code extension on the Marketplace, an npm CLI package, a Chrome extension, a GitHub Action, and a 159-page SEO footprint. The buyer is not acquiring a weekend project. They are acquiring a genuine product ecosystem.
+The product is no longer a prototype with broken links. It is a polished, end-to-end accurate funnel with 39 free micro-tools, a VS Code extension on the Marketplace, an npm CLI package, a Chrome extension, a GitHub Action, and a 159-page SEO footprint. The buyer is not acquiring a weekend project. They are acquiring a genuine product ecosystem.
 
 ## Is $5,000 Enough?
 

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL CREATE VIEW Generator — SchemaLens</title>
+  <meta name="description" content="Generate CREATE VIEW statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Simple, materialized, and recursive views. No signup required.">
+  <meta property="og:title" content="Free SQL CREATE VIEW Generator — SchemaLens">
+  <meta property="og:description" content="Generate CREATE VIEW statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Simple, materialized, and recursive views.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-create-view-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL CREATE VIEW Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate CREATE VIEW statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Supports simple views, materialized views, recursive CTEs, WITH CHECK OPTION, and SCHEMABINDING.",
+    "url": "https://schemalens.tech/tools/sql-create-view-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .generator-wrap { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.1rem; margin-bottom: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--input-bg, #0f1117);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    textarea { min-height: 120px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .checks { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+    .check {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.9rem; color: var(--text);
+      cursor: pointer;
+    }
+    .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .output-area {
+      background: var(--code-bg, #0a0c10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      min-height: 140px;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+    .example-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .example-card:hover { border-color: var(--accent); }
+    .example-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .example-card p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+    .tag { display: inline-block; background: rgba(99,102,241,.15); color: #a5b4fc; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="../index.html" class="logo">SchemaLens</a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>SQL CREATE VIEW Generator</h1>
+      <p>Generate CREATE VIEW statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Simple, materialized, recursive, and updatable views.</p>
+    </div>
+
+    <div class="generator-wrap">
+      <div class="card">
+        <h3>1. Dialect & View Name</h3>
+        <div class="form-row">
+          <div>
+            <label for="dialect">SQL Dialect</label>
+            <select id="dialect">
+              <option value="postgresql">PostgreSQL</option>
+              <option value="mysql">MySQL / MariaDB</option>
+              <option value="sqlite">SQLite</option>
+              <option value="sqlserver">SQL Server (T-SQL)</option>
+              <option value="oracle">Oracle</option>
+            </select>
+          </div>
+          <div>
+            <label for="viewName">View Name</label>
+            <input type="text" id="viewName" value="active_users" placeholder="active_users">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. SELECT Query</h3>
+        <label for="selectQuery">Query <span style="font-size:0.8rem;color:var(--text-muted)">(the body of the view)</span></label>
+        <textarea id="selectQuery" placeholder="SELECT id, email, created_at FROM users WHERE active = true;">SELECT id, email, created_at FROM users WHERE active = true;</textarea>
+      </div>
+
+      <div class="card">
+        <h3>3. Options</h3>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="orReplaceCheck"> OR REPLACE</label>
+          <label class="check"><input type="checkbox" id="materializedCheck"> Materialized</label>
+          <label class="check"><input type="checkbox" id="checkOptionCheck"> WITH CHECK OPTION</label>
+          <label class="check"><input type="checkbox" id="schemaBindingCheck" style="display:none;"> WITH SCHEMABINDING</label>
+        </div>
+        <p class="hint" id="optionHint">PostgreSQL supports OR REPLACE, materialized views, and WITH CHECK OPTION. SQL Server supports SCHEMABINDING. SQLite does not support materialized views.</p>
+      </div>
+
+      <div class="card">
+        <h3>4. Generated SQL</h3>
+        <div class="output-area" id="output">-- Configure options above to generate CREATE VIEW</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copyBtn">Copy SQL</button>
+          <button class="btn btn-secondary" id="downloadBtn">Download .sql</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick Examples</h3>
+        <div class="examples">
+          <div class="example-card" onclick="loadExample('simple')">
+            <h4>Simple Filtered View</h4>
+            <p>View of active users only. Basic filtering with OR REPLACE.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('aggregated')">
+            <h4>Aggregated View</h4>
+            <p>Monthly order totals with GROUP BY for reporting.</p>
+            <div style="margin-top:8px"><span class="tag">Analytics</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('joined')">
+            <h4>Joined View</h4>
+            <p>Denormalized user+order view with JOIN for quick lookups.</p>
+            <div style="margin-top:8px"><span class="tag">Denormalized</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('materialized')">
+            <h4>Materialized View</h4>
+            <p>Pre-computed summary for fast reads. Refresh on demand.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">Oracle</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('recursive')">
+            <h4>Recursive CTE View</h4>
+            <p>Org chart or category tree using recursive CTE.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">SQL Server</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('schemabound')">
+            <h4>SCHEMABOUND View</h4>
+            <p>SQL Server view with SCHEMABINDING for indexed views.</p>
+            <div style="margin-top:8px"><span class="tag">SQL Server</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">SchemaLens</div>
+        <p style="color:var(--text-muted);font-size:.9rem">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Free Tools</a>
+        <a href="../vscode-extension.html">VS Code Extension</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../api-guide.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+        <a href="../about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="../privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:20px;color:var(--text-muted);font-size:.85rem">
+      &copy; 2026 SchemaLens. Built for engineers.
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const dialectHints = {
+      postgresql: 'PostgreSQL supports OR REPLACE, materialized views, recursive views (WITH RECURSIVE), and WITH CHECK OPTION.',
+      mysql: 'MySQL 5.7+ supports OR REPLACE and WITH CHECK OPTION. No materialized views natively — use tables + triggers as workaround.',
+      sqlite: 'SQLite supports OR REPLACE and WITH CHECK OPTION. No materialized views. Recursive CTEs supported.',
+      sqlserver: 'SQL Server supports SCHEMABINDING (required for indexed views), WITH CHECK OPTION, and materialized views via Indexed Views.',
+      oracle: 'Oracle supports OR REPLACE, materialized views (pre-built tables), and WITH CHECK OPTION. Recursive CTEs supported.'
+    };
+
+    function generate() {
+      const d = $('dialect').value;
+      const view = $('viewName').value.trim() || 'active_users';
+      const query = $('selectQuery').value.trim() || 'SELECT * FROM users';
+      const orReplace = $('orReplaceCheck').checked;
+      const materialized = $('materializedCheck').checked;
+      const checkOption = $('checkOptionCheck').checked;
+      const schemaBinding = $('schemaBindingCheck').checked;
+
+      let sql = '';
+      const q = query.endsWith(';') ? query.slice(0, -1) : query;
+
+      if (d === 'postgresql') {
+        if (materialized) {
+          sql = `CREATE ${orReplace ? 'OR REPLACE ' : ''}MATERIALIZED VIEW ${view}\nAS\n${q}`;
+          sql += `\n\n-- Refresh the materialized view\nREFRESH MATERIALIZED VIEW ${view};`;
+        } else {
+          sql = `CREATE ${orReplace ? 'OR REPLACE ' : ''}VIEW ${view}\nAS\n${q}${checkOption ? '\nWITH CHECK OPTION' : ''};`;
+        }
+      } else if (d === 'mysql') {
+        if (materialized) {
+          sql = `-- MySQL does not support materialized views natively.\n-- Workaround: create a table + triggers to keep it updated.\nCREATE TABLE ${view} AS\n${q};`;
+        } else {
+          sql = `CREATE ${orReplace ? 'OR REPLACE ' : ''}VIEW ${view}\nAS\n${q}${checkOption ? '\nWITH CHECK OPTION' : ''};`;
+        }
+      } else if (d === 'sqlite') {
+        if (materialized) {
+          sql = `-- SQLite does not support materialized views natively.\n-- Workaround: create a table and refresh manually.\nCREATE TABLE ${view} AS\n${q};`;
+        } else {
+          sql = `CREATE ${orReplace ? 'OR REPLACE ' : ''}VIEW ${view}\nAS\n${q}${checkOption ? '\nWITH CHECK OPTION' : ''};`;
+        }
+      } else if (d === 'sqlserver') {
+        if (materialized) {
+          sql = `-- SQL Server uses Indexed Views for materialization.\n-- Requires WITH SCHEMABINDING and a unique clustered index.\nCREATE VIEW ${view}\nWITH SCHEMABINDING\nAS\n${q};\n\n-- Create the required unique clustered index\nCREATE UNIQUE CLUSTERED INDEX ix_${view}_clustered\nON ${view} (id);`;
+        } else {
+          sql = `CREATE VIEW ${view}\n${schemaBinding ? 'WITH SCHEMABINDING\n' : ''}AS\n${q}${checkOption ? '\nWITH CHECK OPTION' : ''};`;
+        }
+      } else if (d === 'oracle') {
+        if (materialized) {
+          sql = `CREATE MATERIALIZED VIEW ${view}\nAS\n${q};\n\n-- Refresh the materialized view\nBEGIN\n  DBMS_MVIEW.REFRESH('${view}');\nEND;\n/`;
+        } else {
+          sql = `CREATE ${orReplace ? 'OR REPLACE ' : ''}VIEW ${view}\nAS\n${q}${checkOption ? '\nWITH CHECK OPTION' : ''};`;
+        }
+      }
+
+      $('output').textContent = sql;
+    }
+
+    function loadExample(name) {
+      const ex = {
+        simple: { view: 'active_users', query: 'SELECT id, email, created_at\nFROM users\nWHERE active = true;', orReplace: true, materialized: false, checkOption: false, schemaBinding: false },
+        aggregated: { view: 'monthly_revenue', query: 'SELECT\n  DATE_TRUNC(\'month\', created_at) AS month,\n  COUNT(*) AS order_count,\n  SUM(total_amount) AS revenue\nFROM orders\nGROUP BY 1;', orReplace: true, materialized: false, checkOption: false, schemaBinding: false },
+        joined: { view: 'user_orders', query: 'SELECT\n  u.id AS user_id,\n  u.email,\n  o.id AS order_id,\n  o.total_amount\nFROM users u\nJOIN orders o ON o.user_id = u.id;', orReplace: true, materialized: false, checkOption: false, schemaBinding: false },
+        materialized: { view: 'daily_stats', query: 'SELECT\n  DATE(created_at) AS date,\n  COUNT(*) AS signups\nFROM users\nGROUP BY 1;', orReplace: false, materialized: true, checkOption: false, schemaBinding: false },
+        recursive: { view: 'category_tree', query: 'WITH RECURSIVE cte AS (\n  SELECT id, name, parent_id, 0 AS depth\n  FROM categories\n  WHERE parent_id IS NULL\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id, depth + 1\n  FROM categories c\n  JOIN cte ON cte.id = c.parent_id\n)\nSELECT * FROM cte;', orReplace: true, materialized: false, checkOption: false, schemaBinding: false },
+        schemabound: { view: 'dbo.active_users', query: 'SELECT id, email, created_at\nFROM dbo.users\nWHERE active = 1;', orReplace: false, materialized: false, checkOption: false, schemaBinding: true },
+      }[name];
+      if (!ex) return;
+      $('viewName').value = ex.view;
+      $('selectQuery').value = ex.query;
+      $('orReplaceCheck').checked = ex.orReplace;
+      $('materializedCheck').checked = ex.materialized;
+      $('checkOptionCheck').checked = ex.checkOption;
+      $('schemaBindingCheck').checked = ex.schemaBinding;
+      generate();
+    }
+
+    // Show/hide SCHEMABINDING checkbox for SQL Server
+    function toggleSchemaBinding() {
+      const isSqlServer = $('dialect').value === 'sqlserver';
+      const isMaterialized = $('materializedCheck').checked;
+      $('schemaBindingCheck').parentElement.style.display = isSqlServer && !isMaterialized ? 'flex' : 'none';
+    }
+
+    // Event listeners
+    ['dialect', 'viewName', 'selectQuery'].forEach(id => {
+      $(id).addEventListener('input', generate);
+      $(id).addEventListener('change', generate);
+    });
+    ['orReplaceCheck', 'materializedCheck', 'checkOptionCheck', 'schemaBindingCheck'].forEach(id => {
+      $(id).addEventListener('change', () => { toggleSchemaBinding(); generate(); });
+    });
+    $('dialect').addEventListener('change', () => {
+      $('optionHint').textContent = dialectHints[$('dialect').value];
+      toggleSchemaBinding();
+      generate();
+    });
+
+    $('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText($('output').textContent).then(() => {
+        $('copyBtn').textContent = 'Copied!';
+        setTimeout(() => $('copyBtn').textContent = 'Copy SQL', 1500);
+      });
+    });
+
+    $('downloadBtn').addEventListener('click', () => {
+      const blob = new Blob([$('output').textContent], { type: 'text/sql' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'create-view.sql';
+      a.click();
+    });
+
+    // Initial state
+    toggleSchemaBinding();
+    generate();
+  </script>
+</body>
+</html>
