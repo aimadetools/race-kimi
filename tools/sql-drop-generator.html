@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL DROP Statement Generator — SchemaLens</title>
+  <meta name="description" content="Generate safe DROP statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Tables, columns, indexes, views, triggers, and functions with IF EXISTS and dependency warnings.">
+  <meta property="og:title" content="Free SQL DROP Statement Generator — SchemaLens">
+  <meta property="og:description" content="Generate safe DROP statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Tables, columns, indexes, views, triggers, and functions with IF EXISTS and dependency warnings.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-drop-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL DROP Statement Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate safe DROP statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Supports tables, columns, indexes, views, triggers, and functions with IF EXISTS, CASCADE, and dependency warnings.",
+    "url": "https://schemalens.tech/tools/sql-drop-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .generator-wrap { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.1rem; margin-bottom: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--input-bg, #0f1117);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .checks { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+    .check {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.9rem; color: var(--text);
+      cursor: pointer;
+    }
+    .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .output-area {
+      background: var(--code-bg, #0a0c10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      min-height: 160px;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+    .example-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .example-card:hover { border-color: var(--accent); }
+    .example-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .example-card p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+    .tag { display: inline-block; background: rgba(99,102,241,.15); color: #a5b4fc; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+    .warning-box {
+      background: rgba(239,68,68,0.08);
+      border-left: 3px solid var(--danger, #ef4444);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .warning-box strong { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="../index.html" class="logo">SchemaLens</a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>SQL DROP Statement Generator</h1>
+      <p>Generate safe DROP statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Tables, columns, indexes, views, triggers, and functions with dependency warnings.</p>
+    </div>
+
+    <div class="generator-wrap">
+      <div class="card">
+        <h3>1. Dialect & Object</h3>
+        <div class="form-row">
+          <div>
+            <label for="dialect">SQL Dialect</label>
+            <select id="dialect">
+              <option value="postgresql">PostgreSQL</option>
+              <option value="mysql">MySQL / MariaDB</option>
+              <option value="sqlite">SQLite</option>
+              <option value="sqlserver">SQL Server (T-SQL)</option>
+              <option value="oracle">Oracle</option>
+            </select>
+          </div>
+          <div>
+            <label for="objectType">Object Type</label>
+            <select id="objectType">
+              <option value="table">TABLE</option>
+              <option value="column">COLUMN</option>
+              <option value="index">INDEX</option>
+              <option value="view">VIEW</option>
+              <option value="trigger">TRIGGER</option>
+              <option value="function">FUNCTION / PROCEDURE</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="objectName">Object Name</label>
+            <input type="text" id="objectName" value="old_users" placeholder="old_users">
+          </div>
+          <div id="tableNameWrap">
+            <label for="tableName">Table Name <span style="font-size:0.8rem;color:var(--text-muted)">(for COLUMN and INDEX)</span></label>
+            <input type="text" id="tableName" value="users" placeholder="users">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Options</h3>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="ifExistsCheck"> IF EXISTS</label>
+          <label class="check"><input type="checkbox" id="cascadeCheck"> CASCADE / WITH dependents</label>
+        </div>
+        <div class="warning-box" id="warningBox">
+          <strong>⚠️ Safety Warning:</strong> Dropping a table permanently deletes all data. Check for foreign keys, views, triggers, and functions that reference this object before dropping.
+        </div>
+        <p class="hint" id="optionHint">PostgreSQL supports IF EXISTS and CASCADE on most objects. MySQL supports IF EXISTS. SQL Server uses DROP IF EXISTS syntax in 2016+. Oracle supports CASCADE CONSTRAINTS.</p>
+      </div>
+
+      <div class="card">
+        <h3>3. Generated SQL</h3>
+        <div class="output-area" id="output">-- Select an object type and configure options above</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copyBtn">Copy SQL</button>
+          <button class="btn btn-secondary" id="downloadBtn">Download .sql</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick Examples</h3>
+        <div class="examples">
+          <div class="example-card" onclick="loadExample('table')">
+            <h4>Drop Table</h4>
+            <p>Safe DROP TABLE IF EXISTS with CASCADE for referenced objects.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('column')">
+            <h4>Drop Column</h4>
+            <p>Remove a column safely with IF EXISTS where supported.</p>
+            <div style="margin-top:8px"><span class="tag">All Dialects</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('index')">
+            <h4>Drop Index</h4>
+            <p>Remove an index without affecting table data.</p>
+            <div style="margin-top:8px"><span class="tag">Performance</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('view')">
+            <h4>Drop View</h4>
+            <p>Remove a view that is no longer needed.</p>
+            <div style="margin-top:8px"><span class="tag">Safe</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('trigger')">
+            <h4>Drop Trigger</h4>
+            <p>Remove a trigger without touching the table.</p>
+            <div style="margin-top:8px"><span class="tag">Maintenance</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('function')">
+            <h4>Drop Function</h4>
+            <p>Remove a stored function or procedure.</p>
+            <div style="margin-top:8px"><span class="tag">Cleanup</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">SchemaLens</div>
+        <p style="color:var(--text-muted);font-size:.9rem">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Free Tools</a>
+        <a href="../vscode-extension.html">VS Code Extension</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../api-guide.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+        <a href="../about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="../privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:20px;color:var(--text-muted);font-size:.85rem">
+      &copy; 2026 SchemaLens. Built for engineers.
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const dialectHints = {
+      postgresql: 'PostgreSQL supports IF EXISTS and CASCADE on most objects. CASCADE also drops dependent objects.',
+      mysql: 'MySQL 8.0+ supports IF EXISTS on most DROP statements. CASCADE is not used in MySQL.',
+      sqlite: 'SQLite supports IF EXISTS on TABLE, INDEX, TRIGGER, VIEW. No CASCADE. Column drops require table recreation.',
+      sqlserver: 'SQL Server 2016+ supports DROP IF EXISTS. No CASCADE keyword — use explicit drops in reverse dependency order.',
+      oracle: 'Oracle supports DROP IF EXISTS in 23c+. Use CASCADE CONSTRAINTS for tables with foreign keys.'
+    };
+    const warnings = {
+      table: 'Dropping a table permanently deletes all data. Check for foreign keys, views, triggers, and functions that reference this table.',
+      column: 'Dropping a column removes all data in that column. Check for indexes, views, triggers, and application code referencing this column.',
+      index: 'Dropping an index may cause query performance degradation. Verify the index is not used by critical queries.',
+      view: 'Dropping a view may break queries, reports, and application code that reference it.',
+      trigger: 'Dropping a trigger removes automated logic (audit, validation, cascades). Ensure nothing depends on this trigger.',
+      function: 'Dropping a function or procedure may break triggers, views, and application code that call it.'
+    };
+
+    function toggleTableWrap() {
+      const type = $('objectType').value;
+      $('tableNameWrap').style.display = (type === 'column' || type === 'index') ? 'block' : 'none';
+      $('warningBox').innerHTML = '<strong>⚠️ Safety Warning:</strong> ' + warnings[type];
+    }
+
+    function generate() {
+      const d = $('dialect').value;
+      const type = $('objectType').value;
+      const obj = $('objectName').value.trim() || 'object_name';
+      const table = $('tableName').value.trim() || 'users';
+      const ifExists = $('ifExistsCheck').checked;
+      const cascade = $('cascadeCheck').checked;
+
+      let sql = '';
+      const ife = ifExists ? 'IF EXISTS ' : '';
+
+      if (type === 'table') {
+        if (d === 'postgresql') {
+          sql = `DROP TABLE ${ife}${obj}${cascade ? ' CASCADE' : ''};`;
+          sql += `\n\n-- Verify dependencies first\n-- SELECT * FROM information_schema.table_constraints WHERE table_name = '${obj}';`;
+        } else if (d === 'mysql') {
+          sql = `DROP TABLE ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: MySQL does not support CASCADE. Drop referencing foreign keys first.`;
+        } else if (d === 'sqlite') {
+          sql = `DROP TABLE ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: SQLite does not support CASCADE. Drop referencing objects first.`;
+        } else if (d === 'sqlserver') {
+          sql = `DROP TABLE ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: SQL Server does not support CASCADE. Drop referencing objects in reverse dependency order first.`;
+        } else if (d === 'oracle') {
+          sql = `DROP TABLE ${obj}${cascade ? ' CASCADE CONSTRAINTS' : ''};`;
+        }
+      } else if (type === 'column') {
+        if (d === 'postgresql') {
+          sql = `ALTER TABLE ${table} DROP COLUMN ${ife}${obj};`;
+        } else if (d === 'mysql') {
+          sql = `ALTER TABLE ${table} DROP COLUMN ${obj};`;
+          if (ifExists) sql = `-- MySQL does not support IF EXISTS for DROP COLUMN directly\n` + sql;
+        } else if (d === 'sqlite') {
+          sql = `-- SQLite does not support DROP COLUMN directly (until 3.35.0)\n-- You must recreate the table without the column:\n-- 1. CREATE TABLE new_table AS SELECT col1, col2 FROM ${table};\n-- 2. DROP TABLE ${table};\n-- 3. ALTER TABLE new_table RENAME TO ${table};`;
+          if (ifExists) sql = `-- IF EXISTS not applicable for SQLite column workaround\n` + sql;
+        } else if (d === 'sqlserver') {
+          sql = `ALTER TABLE ${table} DROP COLUMN ${obj};`;
+          if (ifExists) sql = `-- SQL Server does not support IF EXISTS for DROP COLUMN\n` + sql;
+        } else if (d === 'oracle') {
+          sql = `ALTER TABLE ${table} DROP COLUMN ${obj};`;
+          if (ifExists) sql = `-- Oracle does not support IF EXISTS for DROP COLUMN\n` + sql;
+        }
+      } else if (type === 'index') {
+        if (d === 'postgresql') {
+          sql = `DROP INDEX ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: CASCADE on DROP INDEX is rarely needed in PostgreSQL.`;
+        } else if (d === 'mysql') {
+          sql = `DROP INDEX ${obj} ON ${table};`;
+          if (ifExists) sql = `-- MySQL does not support IF EXISTS for DROP INDEX\n` + sql;
+        } else if (d === 'sqlite') {
+          sql = `DROP INDEX ${ife}${obj};`;
+        } else if (d === 'sqlserver') {
+          sql = `DROP INDEX ${obj} ON ${table};`;
+          if (ifExists) sql = `-- SQL Server does not support IF EXISTS for DROP INDEX\n` + sql;
+        } else if (d === 'oracle') {
+          sql = `DROP INDEX ${obj};`;
+          if (ifExists) sql = `-- Oracle does not support IF EXISTS for DROP INDEX\n` + sql;
+        }
+      } else if (type === 'view') {
+        if (d === 'postgresql') {
+          sql = `DROP VIEW ${ife}${obj}${cascade ? ' CASCADE' : ''};`;
+        } else if (d === 'mysql') {
+          sql = `DROP VIEW ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: MySQL does not support CASCADE on DROP VIEW.`;
+        } else if (d === 'sqlite') {
+          sql = `DROP VIEW ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: SQLite does not support CASCADE.`;
+        } else if (d === 'sqlserver') {
+          sql = `DROP VIEW ${ife}${obj};`;
+          if (cascade) sql += `\n-- Note: SQL Server does not support CASCADE. Drop referencing objects first.`;
+        } else if (d === 'oracle') {
+          sql = `DROP VIEW ${obj};`;
+          if (ifExists) sql = `-- Oracle does not support IF EXISTS for DROP VIEW\n` + sql;
+        }
+      } else if (type === 'trigger') {
+        if (d === 'postgresql') {
+          sql = `DROP TRIGGER ${ife}${obj} ON ${table};`;
+        } else if (d === 'mysql') {
+          sql = `DROP TRIGGER ${ife}${obj};`;
+        } else if (d === 'sqlite') {
+          sql = `DROP TRIGGER ${ife}${obj};`;
+        } else if (d === 'sqlserver') {
+          sql = `DROP TRIGGER ${ife}${obj};`;
+        } else if (d === 'oracle') {
+          sql = `DROP TRIGGER ${obj};`;
+          if (ifExists) sql = `-- Oracle does not support IF EXISTS for DROP TRIGGER\n` + sql;
+        }
+      } else if (type === 'function') {
+        if (d === 'postgresql') {
+          sql = `DROP FUNCTION ${ife}${obj}();`;
+          if (cascade) sql += `\n-- CASCADE will also drop triggers/views that depend on this function.`;
+        } else if (d === 'mysql') {
+          sql = `DROP FUNCTION ${ife}${obj};`;
+        } else if (d === 'sqlite') {
+          sql = `-- SQLite does not support user-defined functions natively.`;
+        } else if (d === 'sqlserver') {
+          sql = `DROP FUNCTION ${ife}${obj};`;
+        } else if (d === 'oracle') {
+          sql = `DROP FUNCTION ${obj};`;
+          if (ifExists) sql = `-- Oracle does not support IF EXISTS for DROP FUNCTION\n` + sql;
+        }
+      }
+
+      $('output').textContent = sql;
+    }
+
+    function loadExample(name) {
+      const ex = {
+        table: { type: 'table', obj: 'old_users', table: 'users', ife: true, cascade: true },
+        column: { type: 'column', obj: 'legacy_field', table: 'users', ife: true, cascade: false },
+        index: { type: 'index', obj: 'idx_users_old', table: 'users', ife: true, cascade: false },
+        view: { type: 'view', obj: 'v_old_report', table: 'users', ife: true, cascade: false },
+        trigger: { type: 'trigger', obj: 'trg_users_old', table: 'users', ife: true, cascade: false },
+        function: { type: 'function', obj: 'fn_old_calc', table: 'users', ife: true, cascade: false },
+      }[name];
+      if (!ex) return;
+      $('objectType').value = ex.type;
+      $('objectName').value = ex.obj;
+      $('tableName').value = ex.table;
+      $('ifExistsCheck').checked = ex.ife;
+      $('cascadeCheck').checked = ex.cascade;
+      toggleTableWrap();
+      generate();
+    }
+
+    // Event listeners
+    ['dialect', 'objectType', 'objectName', 'tableName'].forEach(id => {
+      $(id).addEventListener('input', generate);
+      $(id).addEventListener('change', generate);
+    });
+    ['ifExistsCheck', 'cascadeCheck'].forEach(id => {
+      $(id).addEventListener('change', generate);
+    });
+    $('objectType').addEventListener('change', () => { toggleTableWrap(); generate(); });
+    $('dialect').addEventListener('change', () => {
+      $('optionHint').textContent = dialectHints[$('dialect').value];
+      generate();
+    });
+
+    $('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText($('output').textContent).then(() => {
+        $('copyBtn').textContent = 'Copied!';
+        setTimeout(() => $('copyBtn').textContent = 'Copy SQL', 1500);
+      });
+    });
+
+    $('downloadBtn').addEventListener('click', () => {
+      const blob = new Blob([$('output').textContent], { type: 'text/sql' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'drop-statement.sql';
+      a.click();
+    });
+
+    // Initial state
+    toggleTableWrap();
+    generate();
+  </script>
+</body>
+</html>
