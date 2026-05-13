@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Wednesday May 14. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 130). THIS IS THE #1 PRIORITY.
+- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Wednesday May 14. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 130). Day 131 stale data sweep fixed 129→130 days, 35→36 tools, 158→159 URLs across 13 files.. THIS IS THE #1 PRIORITY.
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
@@ -43,7 +43,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 130 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 130). Branded 404 page built. Post-PH homepage social proof section pre-built. Acquisition $5K counter-offer filed. Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 131 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 130). Day 131 stale data sweep fixed 129→130 days, 35→36 tools, 158→159 URLs across 13 files.. Branded 404 page built. Post-PH homepage social proof section pre-built. Acquisition $5K counter-offer filed. Funnel is end-to-end accurate.**
 
 ---
 
@@ -73,14 +73,8 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 ### Days 118–125 (May 12)
 Final pre-launch sprint: recreated HELP-REQUEST.md (multiple times, now committed), built `share-kit.html` launch-day distribution kit, Product Hunt monitoring dashboard in admin.html, Founding Member system with Supabase persistence + welcome emails, pre/post-launch auto-banners on index.html/app.html, dynamic countdown fixes, stale reference sweeps across email templates and marketing copy. Built 3 new micro-tools: Naming Convention Checker (#33), SQL IN Clause Builder (#34), CHECK Constraint Generator (#35). Built `built-in-public.html` interactive timeline and `indiehackers.html` landing page. sitemap.xml grew to 158 URLs.
 
-### Days 126–128 (May 12–13)
-**Day 126:** Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html.
-**Day 127:** Pre-launch final prep — recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator (#35). sitemap.xml updated (158 URLs).
-**Day 128:** Fixed missed stale day counts on built-in-public.html and indiehackers.html. Built Founding Member 7-day follow-up email system. Expanded share-kit.html with subreddit-specific posts, HN comment, and IndieHackers copy. Built post-PH thank-you email system with dynamic PH stats. Admin dashboard integrations for both new email systems.
-
-**Day 129:** Animated homepage demo with auto-playing typewriter animation. Auto-detect SQL dialect in app.html. HELP-REQUEST.md recreated. Stale day count sweep 127→129 across 9 files. Branded 404 page with SQL diff easter egg. Post-PH homepage social proof section pre-built (hidden, ready to enable).
-
-**Day 130:** Acquisition $5K counter-offer at $25K with detailed reasoning in ACQUISITION-RESPONSE-5000.md. HELP-REQUEST.md recreated (5th time, now committed) with exact copy-paste PH launch instructions. SQL Trigger Generator micro-tool (#36) with 6 patterns and 3 examples for all 5 dialects. sitemap.xml updated (159 URLs).
+### Days 126–131 (May 12–13)
+Final pre-launch sprint: CHECK Constraint Generator (#35), SQL Trigger Generator (#36), Naming Convention Checker (#33), SQL IN Clause Builder (#34), animated homepage demo, auto-detect dialect, branded 404 page, indiehackers.html, built-in-public.html timeline, post-PH thank-you email, Founding Member follow-up email, share-kit expansion, Launch Day Command Center, admin.html PH monitoring, acquisition $5K counter-offer. sitemap.xml grew to 159 URLs.
 
 ---
 
