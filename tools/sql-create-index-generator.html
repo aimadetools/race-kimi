@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Free SQL CREATE INDEX Generator — SchemaLens</title>
+  <meta name="description" content="Generate CREATE INDEX statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Unique, partial, covering, and concurrent indexes. No signup required.">
+  <meta property="og:title" content="Free SQL CREATE INDEX Generator — SchemaLens">
+  <meta property="og:description" content="Generate CREATE INDEX statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Unique, partial, covering, and concurrent indexes.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/sql-create-index-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SQL CREATE INDEX Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate CREATE INDEX statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Supports unique indexes, partial indexes, covering indexes, concurrent creation, and multi-column indexes.",
+    "url": "https://schemalens.tech/tools/sql-create-index-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .generator-wrap { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.1rem; margin-bottom: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--input-bg, #0f1117);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    textarea { min-height: 80px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .option-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .option-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .checks { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+    .check {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.9rem; color: var(--text);
+      cursor: pointer;
+    }
+    .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .output-area {
+      background: var(--code-bg, #0a0c10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      min-height: 140px;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+    .example-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .example-card:hover { border-color: var(--accent); }
+    .example-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .example-card p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+    .tag { display: inline-block; background: rgba(99,102,241,.15); color: #a5b4fc; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; }
+    .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+    .col-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .col-row input { flex: 1; }
+    .col-row select { width: 100px; flex: none; }
+    .col-row button {
+      background: var(--danger, #ef4444);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .add-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="../index.html" class="logo">SchemaLens</a>
+      <nav class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>SQL CREATE INDEX Generator</h1>
+      <p>Generate CREATE INDEX statements for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Unique, partial, covering, and concurrent indexes.</p>
+    </div>
+
+    <div class="generator-wrap">
+      <div class="card">
+        <h3>1. Dialect & Table</h3>
+        <div class="form-row">
+          <div>
+            <label for="dialect">SQL Dialect</label>
+            <select id="dialect">
+              <option value="postgresql">PostgreSQL</option>
+              <option value="mysql">MySQL / MariaDB</option>
+              <option value="sqlite">SQLite</option>
+              <option value="sqlserver">SQL Server (T-SQL)</option>
+              <option value="oracle">Oracle</option>
+            </select>
+          </div>
+          <div>
+            <label for="tableName">Table Name</label>
+            <input type="text" id="tableName" value="users" placeholder="users">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="indexName">Index Name <span style="font-size:0.8rem;color:var(--text-muted)">(auto-suggests idx_users_email)</span></label>
+            <input type="text" id="indexName" value="idx_users_email" placeholder="idx_users_email">
+          </div>
+          <div>
+            <label for="indexType">Index Type</label>
+            <select id="indexType">
+              <option value="">Default (B-tree)</option>
+              <option value="btree">B-tree</option>
+              <option value="hash">Hash</option>
+              <option value="gin">GIN</option>
+              <option value="gist">GiST</option>
+              <option value="brin">BRIN</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Columns</h3>
+        <div id="columnsWrap">
+          <div class="col-row">
+            <input type="text" class="colName" value="email" placeholder="column_name">
+            <select class="colOrder">
+              <option value="ASC">ASC</option>
+              <option value="DESC">DESC</option>
+            </select>
+            <button onclick="removeCol(this)">Remove</button>
+          </div>
+        </div>
+        <button class="add-btn" onclick="addCol()">+ Add Column</button>
+      </div>
+
+      <div class="card">
+        <h3>3. Options</h3>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="uniqueCheck"> UNIQUE</label>
+          <label class="check"><input type="checkbox" id="ifNotExistsCheck"> IF NOT EXISTS</label>
+          <label class="check"><input type="checkbox" id="concurrentCheck"> Create Concurrently / ONLINE</label>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="whereClause">Partial Index WHERE Clause <span style="font-size:0.8rem;color:var(--text-muted)">(optional)</span></label>
+            <input type="text" id="whereClause" value="" placeholder="e.g. active = true">
+          </div>
+          <div>
+            <label for="includeCols">Covering INCLUDE Columns <span style="font-size:0.8rem;color:var(--text-muted)">(comma-separated, optional)</span></label>
+            <input type="text" id="includeCols" value="" placeholder="e.g. first_name, last_name">
+          </div>
+        </div>
+        <p class="hint" id="optionHint">PostgreSQL supports CONCURRENTLY, partial indexes (WHERE), and INCLUDE. MySQL supports ALGORITHM=INPLACE. SQL Server supports ONLINE=ON and INCLUDE.</p>
+      </div>
+
+      <div class="card">
+        <h3>4. Generated SQL</h3>
+        <div class="output-area" id="output">-- Configure options above to generate CREATE INDEX</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copyBtn">Copy SQL</button>
+          <button class="btn btn-secondary" id="downloadBtn">Download .sql</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick Examples</h3>
+        <div class="examples">
+          <div class="example-card" onclick="loadExample('basic')">
+            <h4>Basic Single-Column</h4>
+            <p>Standard B-tree index on users(email).</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('unique')">
+            <h4>Unique Index</h4>
+            <p>Enforce uniqueness on orders.order_number.</p>
+            <div style="margin-top:8px"><span class="tag">All Dialects</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('composite')">
+            <h4>Composite Index</h4>
+            <p>Multi-column index on products(category_id, price DESC).</p>
+            <div style="margin-top:8px"><span class="tag">Performance</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('partial')">
+            <h4>Partial Index</h4>
+            <p>Index only active users to save space and improve speed.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">SQLite</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('covering')">
+            <h4>Covering Index</h4>
+            <p>Include extra columns to satisfy queries without table lookups.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">SQL Server</span></div>
+          </div>
+          <div class="example-card" onclick="loadExample('concurrent')">
+            <h4>Concurrent Creation</h4>
+            <p>Build index without locking the table on large datasets.</p>
+            <div style="margin-top:8px"><span class="tag">PostgreSQL</span><span class="tag">SQL Server</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">SchemaLens</div>
+        <p style="color:var(--text-muted);font-size:.9rem">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff App</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../tools.html">Free Tools</a>
+        <a href="../vscode-extension.html">VS Code Extension</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="../blog.html">Blog</a>
+        <a href="../api-guide.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+        <a href="../about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="../privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:20px;color:var(--text-muted);font-size:.85rem">
+      &copy; 2026 SchemaLens. Built for engineers.
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const dialectHints = {
+      postgresql: 'PostgreSQL supports CONCURRENTLY, partial indexes (WHERE), INCLUDE covering columns, and index types: B-tree, Hash, GIN, GiST, BRIN.',
+      mysql: 'MySQL supports ALGORITHM=INPLACE / LOCK=NONE for online index creation. Index types: BTREE, HASH. No partial indexes. No INCLUDE.',
+      sqlite: 'SQLite supports partial indexes (WHERE) and UNIQUE. No concurrent creation. No INCLUDE. Index types: BINARY, NOCASE, RTRIM.',
+      sqlserver: 'SQL Server supports ONLINE=ON, INCLUDE covering columns, and filtered indexes (WHERE). Index types: CLUSTERED, NONCLUSTERED, HASH.',
+      oracle: 'Oracle supports ONLINE, reverse indexes, and function-based indexes. No partial indexes. No INCLUDE.'
+    };
+
+    function addCol(name = '', order = 'ASC') {
+      const wrap = $('columnsWrap');
+      const div = document.createElement('div');
+      div.className = 'col-row';
+      div.innerHTML = `
+        <input type="text" class="colName" value="${name}" placeholder="column_name">
+        <select class="colOrder">
+          <option value="ASC" ${order === 'ASC' ? 'selected' : ''}>ASC</option>
+          <option value="DESC" ${order === 'DESC' ? 'selected' : ''}>DESC</option>
+        </select>
+        <button onclick="removeCol(this)">Remove</button>
+      `;
+      wrap.appendChild(div);
+    }
+
+    function removeCol(btn) {
+      btn.parentElement.remove();
+      generate();
+    }
+
+    function getCols() {
+      const rows = document.querySelectorAll('#columnsWrap .col-row');
+      const cols = [];
+      rows.forEach(row => {
+        const name = row.querySelector('.colName').value.trim();
+        const order = row.querySelector('.colOrder').value;
+        if (name) cols.push({ name, order });
+      });
+      return cols;
+    }
+
+    function suggestIndexName() {
+      const table = $('tableName').value.trim() || 'table';
+      const cols = getCols();
+      const firstCol = cols[0]?.name || 'column';
+      return `idx_${table}_${firstCol}`;
+    }
+
+    function generate() {
+      const d = $('dialect').value;
+      const table = $('tableName').value.trim() || 'users';
+      const index = $('indexName').value.trim() || suggestIndexName();
+      const cols = getCols();
+      const unique = $('uniqueCheck').checked;
+      const ifNotExists = $('ifNotExistsCheck').checked;
+      const concurrent = $('concurrentCheck').checked;
+      const where = $('whereClause').value.trim();
+      const include = $('includeCols').value.trim();
+      const type = $('indexType').value;
+
+      if (cols.length === 0) {
+        $('output').textContent = '-- Add at least one column to generate CREATE INDEX';
+        return;
+      }
+
+      const colPart = cols.map(c => `${c.name} ${c.order}`).join(', ');
+      let sql = '';
+
+      if (d === 'postgresql') {
+        const uniq = unique ? 'UNIQUE ' : '';
+        const ifne = ifNotExists ? 'IF NOT EXISTS ' : '';
+        const conc = concurrent ? 'CONCURRENTLY ' : '';
+        const using = type ? ` USING ${type.toUpperCase()}` : '';
+        const inc = include ? `\nINCLUDE (${include})` : '';
+        const wh = where ? `\nWHERE ${where}` : '';
+        sql = `CREATE ${uniq}INDEX ${conc}${ifne}${index}\nON ${table}${using} (${colPart})${inc}${wh};`;
+        if (concurrent && unique) {
+          sql = `-- Note: CREATE UNIQUE INDEX CONCURRENTLY is supported in PostgreSQL 9.2+\n` + sql;
+        }
+      } else if (d === 'mysql') {
+        const uniq = unique ? 'UNIQUE ' : '';
+        const ifne = ifNotExists ? 'IF NOT EXISTS ' : '';
+        const using = type ? ` USING ${type.toUpperCase()}` : '';
+        const algo = concurrent ? 'ALGORITHM=INPLACE, LOCK=NONE, ' : '';
+        sql = `CREATE ${uniq}INDEX ${ifne}${index}\nON ${table} (${colPart})${using};`;
+        if (concurrent) {
+          sql = `-- Online index creation in MySQL 5.6+ (InnoDB)\nALTER TABLE ${table} ADD ${uniq}INDEX ${index} (${colPart}) ${algo}LOCK=NONE;`;
+        }
+        if (where) {
+          sql += `\n-- Note: MySQL does not support partial indexes. Consider a generated column or partition instead.`;
+        }
+        if (include) {
+          sql += `\n-- Note: MySQL 8.0.13+ supports covering indexes natively via the column list.`;
+        }
+      } else if (d === 'sqlite') {
+        const uniq = unique ? 'UNIQUE ' : '';
+        const ifne = ifNotExists ? 'IF NOT EXISTS ' : '';
+        const wh = where ? ` WHERE ${where}` : '';
+        sql = `CREATE ${uniq}INDEX ${ifne}${index}\nON ${table} (${colPart})${wh};`;
+        if (concurrent) {
+          sql = `-- Note: SQLite does not support concurrent index creation.\n` + sql;
+        }
+        if (include) {
+          sql += `\n-- Note: SQLite does not support INCLUDE covering indexes.`;
+        }
+      } else if (d === 'sqlserver') {
+        const uniq = unique ? 'UNIQUE ' : '';
+        const online = concurrent ? ' WITH (ONLINE = ON)' : '';
+        const inc = include ? `\nINCLUDE (${include})` : '';
+        const wh = where ? `\nWHERE ${where}` : '';
+        sql = `CREATE ${uniq}INDEX ${index}\nON ${table} (${colPart})${online}${inc}${wh};`;
+      } else if (d === 'oracle') {
+        const uniq = unique ? 'UNIQUE ' : '';
+        const online = concurrent ? ' ONLINE' : '';
+        sql = `CREATE ${uniq}INDEX ${index}\nON ${table} (${colPart})${online};`;
+        if (where) {
+          sql += `\n-- Note: Oracle supports function-based indexes but not standard partial indexes. Consider a function-based index with a CASE expression.`;
+        }
+        if (include) {
+          sql += `\n-- Note: Oracle does not support INCLUDE. Use index-organized tables or covering indexes via column list instead.`;
+        }
+      }
+
+      $('output').textContent = sql;
+    }
+
+    function loadExample(name) {
+      const ex = {
+        basic: { table: 'users', index: 'idx_users_email', cols: [['email', 'ASC']], unique: false, ifne: true, concurrent: false, where: '', include: '', type: '' },
+        unique: { table: 'orders', index: 'idx_orders_order_number', cols: [['order_number', 'ASC']], unique: true, ifne: true, concurrent: false, where: '', include: '', type: '' },
+        composite: { table: 'products', index: 'idx_products_category_price', cols: [['category_id', 'ASC'], ['price', 'DESC']], unique: false, ifne: true, concurrent: false, where: '', include: '', type: '' },
+        partial: { table: 'users', index: 'idx_users_active_email', cols: [['email', 'ASC']], unique: false, ifne: true, concurrent: false, where: 'active = true', include: '', type: '' },
+        covering: { table: 'orders', index: 'idx_orders_user_id', cols: [['user_id', 'ASC']], unique: false, ifne: true, concurrent: false, where: '', include: 'status, total_amount', type: '' },
+        concurrent: { table: 'events', index: 'idx_events_created_at', cols: [['created_at', 'DESC']], unique: false, ifne: true, concurrent: true, where: '', include: '', type: '' },
+      }[name];
+      if (!ex) return;
+      $('tableName').value = ex.table;
+      $('indexName').value = ex.index;
+      $('uniqueCheck').checked = ex.unique;
+      $('ifNotExistsCheck').checked = ex.ifne;
+      $('concurrentCheck').checked = ex.concurrent;
+      $('whereClause').value = ex.where;
+      $('includeCols').value = ex.include;
+      $('indexType').value = ex.type;
+      $('columnsWrap').innerHTML = '';
+      ex.cols.forEach(c => addCol(c[0], c[1]));
+      generate();
+    }
+
+    // Event listeners
+    ['dialect', 'tableName', 'indexName', 'whereClause', 'includeCols', 'indexType'].forEach(id => {
+      $(id).addEventListener('input', generate);
+      $(id).addEventListener('change', generate);
+    });
+    ['uniqueCheck', 'ifNotExistsCheck', 'concurrentCheck'].forEach(id => {
+      $(id).addEventListener('change', generate);
+    });
+    $('dialect').addEventListener('change', () => {
+      $('optionHint').textContent = dialectHints[$('dialect').value];
+      generate();
+    });
+
+    $('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText($('output').textContent).then(() => {
+        $('copyBtn').textContent = 'Copied!';
+        setTimeout(() => $('copyBtn').textContent = 'Copy SQL', 1500);
+      });
+    });
+
+    $('downloadBtn').addEventListener('click', () => {
+      const blob = new Blob([$('output').textContent], { type: 'text/sql' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'create-index.sql';
+      a.click();
+    });
+
+    // Auto-suggest index name when table or columns change
+    $('tableName').addEventListener('input', () => {
+      if (!$('indexName').value.trim() || $('indexName').value.startsWith('idx_')) {
+        $('indexName').value = suggestIndexName();
+      }
+    });
+
+    // Initial generate
+    generate();
+  </script>
+</body>
+</html>

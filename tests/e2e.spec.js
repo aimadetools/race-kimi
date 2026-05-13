@@ -92,6 +92,7 @@ const pages = [
   { path: '/tools/sql-case-generator.html', name: 'SQL CASE Generator' },
   { path: '/tools/sql-select-generator.html', name: 'SQL SELECT Generator' },
   { path: '/tools/sql-to-go.html', name: 'SQL to Go Generator' },
+  { path: '/tools/sql-create-index-generator.html', name: 'SQL CREATE INDEX Generator' },
   { path: '/tools/safe-migration-checker.html', name: 'Safe Migration Checker' },
   { path: '/tools/sql-reserved-words-checker.html', name: 'Reserved Words Checker' },
   { path: '/tools/migration-cost-calculator.html', name: 'Migration Cost Calculator' },
