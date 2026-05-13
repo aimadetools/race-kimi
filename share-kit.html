@@ -186,15 +186,136 @@ Worth keeping in your toolkit.</pre>
   </div>
 
   <div class="sk-card">
-    <h3>🗣️ Reddit / HN Comment</h3>
-    <pre id="reddit">SchemaLens (https://schemalens.tech) is a free browser-based schema diff tool I have been using. Paste two CREATE TABLE dumps, get a visual semantic diff + generated migration scripts.
+    <h3>🗣️ Reddit — r/PostgreSQL</h3>
+    <pre id="reddit-pg">I built a browser-based schema diff tool for PostgreSQL (and MySQL/SQLite). No signup, no upload, no backend.
+
+I got tired of comparing schema dumps by hand when reviewing migration PRs. Text diffs of SQL dumps are noisy and miss semantic meaning—like whether a column was renamed vs dropped and re-added.
+
+SchemaLens parses CREATE TABLE statements, shows you exactly what changed (tables, columns, types, defaults, constraints), and generates the correct ALTER TABLE script for your dialect.
+
+Privacy-first: everything parses in your browser. Your schema never touches a server.
+
+Live demo: https://schemalens.tech
+
+Free for schemas up to 10 tables. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('reddit-pg')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/PostgreSQL/submit?title=Browser-based%20schema%20diff%20tool%20for%20PostgreSQL%20%E2%80%94%20no%20signup%2C%20no%20backend&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/PostgreSQL →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🗣️ Reddit — r/MySQL</h3>
+    <pre id="reddit-mysql">Compare MySQL schemas in your browser and generate ALTER TABLE scripts instantly
+
+I built a tool that compares two MySQL schemas and generates the correct migration SQL—no install, no signup, no data upload.
+
+SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified columns, type changes, nullability flips, and default value changes, then outputs MySQL-specific ALTER TABLE syntax (MODIFY COLUMN, ADD COLUMN, DROP COLUMN, etc.).
+
+Key features for MySQL users:
+- Handles AUTO_INCREMENT, backtick identifiers, and COLLATE
+- Detects when a column change requires MODIFY COLUMN vs simpler ALTER
+- Shows visual diff before you run anything
+- 100% client-side — paste your schema, it never leaves your browser
+
+Try it: https://schemalens.tech
+
+Free for schemas up to 10 tables. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('reddit-mysql')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/MySQL/submit?title=Compare%20MySQL%20schemas%20in%20your%20browser%20and%20generate%20ALTER%20TABLE%20scripts%20instantly&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/MySQL →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🗣️ Reddit — r/webdev</h3>
+    <pre id="reddit-webdev">Showoff Saturday: I built a zero-backend schema diff tool that runs entirely in the browser
+
+For my side project this month I built SchemaLens—a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
+
+Tech stack:
+- Vanilla HTML/CSS/JS (no frameworks)
+- Custom SQL tokenizer + parser (~600 lines)
+- Semantic diff engine
+- Dialect-aware migration generator (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+
+What it does:
+- Paste two schema dumps
+- See tables added/removed/modified with color coding
+- Get per-column change details (type, nullability, default, PK, unique)
+- Download migration SQL or export as Markdown for PRs
+
+Why no backend?
+Your schema structure reveals a lot about your data model. I wanted a tool where privacy is the default, not a feature.
+
+Live: https://schemalens.tech
+
+Free tier covers 10 tables. Lifetime Pro is $39 one-time for unlimited access.
+
+Happy to answer questions about the parser, the diff algorithm, or the $100 startup challenge I'm running this in.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('reddit-webdev')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/webdev/submit?title=Showoff%20Saturday%3A%20Zero-backend%20schema%20diff%20tool%20that%20runs%20entirely%20in%20the%20browser&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/webdev →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🗣️ Reddit — r/SQL</h3>
+    <pre id="reddit-sql">SchemaLens (https://schemalens.tech) is a free browser-based schema diff tool I have been using. Paste two CREATE TABLE dumps, get a visual semantic diff + generated migration scripts.
 
 Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Runs entirely client-side so your schema never leaves the browser. Also has a CLI (`npx schemalens-cli`) if you prefer terminal workflows.
 
 They just launched on Product Hunt with a $39 lifetime deal and a founding member giveaway.</pre>
     <div class="actions">
-      <button class="btn-copy" onclick="copy('reddit')">📋 Copy text</button>
-      <a class="btn-share" href="https://www.reddit.com/r/webdev/submit?title=SchemaLens%20%E2%80%94%20Free%20browser-based%20SQL%20schema%20diff%20tool&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to Reddit →</a>
+      <button class="btn-copy" onclick="copy('reddit-sql')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.reddit.com/r/SQL/submit?title=Free%20browser-based%20SQL%20schema%20diff%20tool%20%E2%80%94%20client-side%2C%20no%20signup&url=https%3A%2F%2Fschemalens.tech" target="_blank" rel="noopener">Post to r/SQL →</a>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>💬 Hacker News — Follow-up Comment</h3>
+    <pre id="hn-followup">Thanks for the interest! A few answers to common questions:
+
+Why not use existing tools like migra/apgdiff/Liquibase?
+They're great, but they require installation, a database connection, or Python. SchemaLens is for the "I need to check this right now" moment—paste, compare, done. If you need managed migration lifecycles, Liquibase is the better fit. SchemaLens complements it for quick ad-hoc diffs.
+
+What about more complex objects?
+We parse CREATE TABLE, CREATE INDEX, views, functions, and triggers. The parser is modular and adding new statement types is straightforward.
+
+Privacy / self-hosting?
+Everything runs client-side. Clone the repo, open app.html in a browser. The "backend" is air. Verify in DevTools → Network.
+
+Pricing?
+Free for up to 10 tables. Lifetime Pro is $39 once. No subscription, no recurring charges.
+
+Live: https://schemalens.tech</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('hn-followup')">📋 Copy text</button>
+    </div>
+  </div>
+
+  <div class="sk-card">
+    <h3>🚀 IndieHackers</h3>
+    <pre id="indiehackers">Launched SchemaLens — a privacy-first SQL schema diff tool. Built in public.
+
+I just launched SchemaLens, a browser-based SQL schema diff tool for PostgreSQL, MySQL, and SQLite.
+
+The problem: Reviewing database migrations by comparing two SQL dumps is tedious and error-prone. Text diffs miss semantic meaning. CLI tools require installation and database connections.
+
+The solution: Paste two CREATE TABLE dumps into SchemaLens. Get an instant visual diff and a dialect-correct migration script. No install, no signup, no backend.
+
+Why privacy-first matters: Your schema structure reveals a lot about your business logic. SchemaLens parses everything in the browser. Your data never touches a server.
+
+Stack: Vanilla HTML/CSS/JS. Custom SQL parser. Vercel hosting. $0 infrastructure cost.
+
+Monetization: Free for 10 tables. Lifetime Pro at $39 one-time for unlimited access.
+
+Live: https://schemalens.tech
+
+I'm building this as part of a 12-week $100 startup race (documenting everything publicly). 127 days, 35+ micro-tools, 51+ SEO pages. Would love feedback from developers and indie hackers alike.</pre>
+    <div class="actions">
+      <button class="btn-copy" onclick="copy('indiehackers')">📋 Copy text</button>
+      <a class="btn-share" href="https://www.indiehackers.com/post/new" target="_blank" rel="noopener">Post on IndieHackers →</a>
     </div>
   </div>
 
