@@ -73,6 +73,9 @@
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script src="lib/analytics-client.js"></script>
   <script>
+    window.PH_RESULTS = { enabled: false, upvotes: 0, ranking: 0, comments: 0, badgeUrl: '' };
+  </script>
+  <script>
     // Homepage A/B tests (May 2026)
     (function() {
       // Test 1: Headline variant
@@ -520,6 +523,46 @@
       </div>
     </div>
   </section>
+
+  <!-- Post-Product Hunt social proof section — controlled by PH_RESULTS config above -->
+  <section id="phResultsSection" class="section" style="display:none;padding: 28px 0;background: linear-gradient(90deg,rgba(255,97,84,0.08),rgba(56,189,248,0.08));border-bottom:1px solid var(--border);">
+    <div class="container" style="text-align:center;">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:8px 18px;margin-bottom:14px;">
+        <span style="font-size:1.2rem;">🚀</span>
+        <span style="font-weight:600;color:var(--text);">Featured on Product Hunt</span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:16px;">
+        <div>
+          <div id="phUpvotes" style="font-size:2rem;font-weight:800;color:var(--primary);line-height:1;">—</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">Upvotes</div>
+        </div>
+        <div>
+          <div id="phRanking" style="font-size:2rem;font-weight:800;color:#ff6154;line-height:1;">—</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">Daily Rank</div>
+        </div>
+        <div>
+          <div id="phComments" style="font-size:2rem;font-weight:800;color:var(--success);line-height:1;">—</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">Comments</div>
+        </div>
+      </div>
+      <p id="phThanksMsg" style="color:var(--text-muted);font-size:0.9rem;max-width:480px;margin:0 auto 16px;">
+        Thank you to the Product Hunt community for the incredible support! Your upvotes and feedback mean everything.
+      </p>
+      <a href="/app.html" class="btn btn-primary" style="display:inline-block;">Try SchemaLens Free →</a>
+    </div>
+  </section>
+  <script>
+  (function() {
+    const cfg = window.PH_RESULTS || {};
+    if (!cfg.enabled) return;
+    const sec = document.getElementById('phResultsSection');
+    if (!sec) return;
+    sec.style.display = 'block';
+    if (cfg.upvotes) document.getElementById('phUpvotes').textContent = cfg.upvotes.toLocaleString();
+    if (cfg.ranking) document.getElementById('phRanking').textContent = '#' + cfg.ranking;
+    if (cfg.comments) document.getElementById('phComments').textContent = cfg.comments.toLocaleString();
+  })();
+  </script>
 
   <section class="section reveal">
     <div class="container">

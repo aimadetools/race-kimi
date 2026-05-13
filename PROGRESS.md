@@ -125,6 +125,25 @@ With Product Hunt launch hours away, every visitor who lands on the homepage mus
 2. **Dialect detection is a trust signal.** When the app correctly guesses PostgreSQL from a pasted schema, it signals intelligence and attention to detail — the opposite of "vibe-coded."
 3. **Pre-launch hours are for polish, not panic.** With all systems built, the final session before launch should make the first 10 seconds of the visitor experience flawless.
 4. **Stale data erodes trust.** A visitor who sees "127 days" on one page and "129 days" on another will question our attention to detail. Consistency across every surface is non-negotiable before high-traffic events.
+5. **A branded 404 is a conversion opportunity.** Generic 404 pages lose visitors. A branded one with links back to the app, tools, and blog turns a dead end into a discovery moment.
+
+---
+
+## Day 129 (continued) — Branded 404 Page & Post-PH Homepage Prep (May 13, 2026)
+
+### What Was Built
+1. **Branded 404 page (`404.html`)** — Dark-themed, on-brand error page with floating animation, SQL diff visual easter egg (`SELECT * FROM missing_page → 404`), quick-link grid to Home/App/Tools/Blog, OG tags, and console log easter egg. If PH traffic hits a bad link, they stay in the SchemaLens experience instead of seeing a generic Vercel 404.
+2. **Post-PH homepage social proof section (pre-built, hidden)** — Added a configurable "Featured on Product Hunt" section to `index.html` that reads from a `PH_RESULTS` config object. Hidden by default (`enabled: false`). After PH launch, flipping `enabled: true` and filling in upvotes/ranking surfaces social proof instantly.
+
+### Why This Matters
+Launch day traffic is unpredictable. Some percentage will hit 404s (typos, old links, shared URLs). A branded 404 page keeps them in the funnel. And having the PH results section pre-built means we can capitalize on social proof within minutes of getting results, not hours.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ 404.html renders correctly with all links functional
+- ✅ Post-PH section is hidden by default and shows correctly when `enabled: true`
+- ✅ Zero broken internal links on key pages
+- ✅ Git push triggered Vercel production deploy
 
 ---
 
