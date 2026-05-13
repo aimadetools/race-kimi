@@ -84,6 +84,47 @@
 
 ---
 
+## Day 135 — SQL DROP Statement Generator (#40), Cross-Link Updates, sitemap 163 URLs (May 13, 2026)
+
+### What Was Built
+1. **SQL DROP Statement Generator micro-tool (#40)** — Generate safe DROP statements for all 5 SQL dialects with dependency warnings:
+   - **Object types:** TABLE, COLUMN, INDEX, VIEW, TRIGGER, FUNCTION/PROCEDURE.
+   - **IF EXISTS:** Supported where available (PostgreSQL, MySQL 8.0+, SQLite, SQL Server 2016+). Shows compatibility notes for dialects that don't support it.
+   - **CASCADE:** PostgreSQL `CASCADE`, Oracle `CASCADE CONSTRAINTS`. Shows explicit notes for dialects without native CASCADE (MySQL, SQL Server, SQLite).
+   - **Safety warnings:** Dynamic warning box changes based on object type — warns about data loss, foreign key dependencies, broken queries, removed automation logic, etc.
+   - **Dialect-specific handling:**
+     - SQLite column drops show the table recreation workaround (since SQLite < 3.35 doesn't support DROP COLUMN).
+     - PostgreSQL table drops include a query to verify dependencies first.
+     - SQL Server indexed views show the full indexed view drop pattern.
+     - Oracle notes IF EXISTS is only available in 23c+.
+     - MySQL index drops require `ON table_name` syntax.
+   - **6 built-in examples:** Drop table, drop column, drop index, drop view, drop trigger, drop function.
+   - **Copy + download output**
+2. **Cross-links updated:** Added to `index.html` tools grid and `tools.html` tools grid.
+3. **Exact count updates:** `built-in-public.html` 39→40 micro-tools (4 references), `ACQUISITION-RESPONSE-5000.md` 39→40 free micro-tools, `BACKLOG.md` current state updated, `README.md` numbered list extended to 40.
+4. **sitemap.xml updated** — 163 URLs.
+5. **e2e test added** in `tests/e2e.spec.js` for page load without console errors.
+
+### Why This Matters
+Schema diffs often show dropped objects, but executing those drops safely requires knowing dialect-specific syntax and dependencies. `DROP TABLE CASCADE` in PostgreSQL automatically removes dependent views and foreign keys. Oracle uses `CASCADE CONSTRAINTS`. SQL Server and MySQL have no CASCADE keyword at all — you must drop referencing objects in reverse dependency order. SQLite doesn't even support DROP COLUMN directly (until 3.35). This generator turns a dangerous operation into a guided, informed one. It also targets keywords like `sql drop table if exists`, `sql safe drop column`, `sql drop index generator`, `sqlite drop column workaround`.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `tools/sql-drop-generator.html` renders correctly with all 5 dialects and 6 object types
+- ✅ All 6 examples generate correct dialect-specific syntax with appropriate warnings
+- ✅ Copy and download buttons work
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ sitemap.xml confirmed at 163 URLs
+- ✅ README.md tool list updated to 40
+
+### Key Insights
+1. **DROP is the most dangerous schema operation.** A single `DROP TABLE` can cascade through foreign keys, views, and triggers. Making the safety warnings object-type-specific turns a generic generator into a genuine safety tool.
+2. **SQLite is the odd one out.** No DROP COLUMN support (pre-3.35), no CASCADE, limited IF EXISTS. The workaround (recreate table) is something many SQLite developers don't know.
+3. **"40 tools" is a psychological milestone.** Round numbers matter in marketing. "40 free micro-tools" sounds more impressive than "39" and creates a memorable anchor for Product Hunt visitors.
+4. **Three tools in one day.** CREATE INDEX (#38), CREATE VIEW (#39), and DROP (#40) were all built within hours of each other. This is possible because the tool template, cross-link pattern, and sitemap update process are now fully systematized.
+
+---
+
 ## Day 134 — SQL CREATE VIEW Generator (#39), Cross-Link Updates, sitemap 162 URLs (May 13, 2026)
 
 ### What Was Built
