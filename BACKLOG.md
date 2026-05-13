@@ -23,14 +23,11 @@
 - [ ] **P1** Show HN post — file HELP-REQUEST.md the same day as PH launch for coordinated traffic
 - [ ] **P1** Reddit cross-posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL) — use copy from `share-kit.html`
 - [ ] **P1** IndieHackers post — copy ready in `marketing/indiehackers.md`
-- [x] **P2** Email newsletter subscribers about PH launch — DONE (Day 118). `api/newsletter-launch.js` sends one-time launch announcement with PH-exclusive $39 Lifetime Pro offer.
 - [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials) — POST-LAUNCH
 - [ ] **P2** Send post-PH thank-you email to newsletter subscribers — `api/newsletter-thanks.js` built (Day 128). Admin dashboard has preview/send with PH stats input fields.
 
 ### Conversion — Mostly Complete (Awaiting Traffic)
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
-- [x] **P1** **Founding Member persistence + welcome email** — DONE (Day 121). `api/founding-member.js` now saves to Supabase and sends welcome email with PH launch reminder. Admin dashboard tracks claims.
-- [x] **P1** **Founding Member follow-up** — DONE (Day 128). `api/founding-member-followup.js` sends personalized feedback/testimonial request emails to members who claimed >=7 days ago. Admin dashboard integration with preview/dry-run.
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** A/B test homepage headline variants once PH traffic arrives (50,000+ visits target)
@@ -46,7 +43,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 125 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 123). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 129 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 129). Branded 404 page built. Post-PH homepage social proof section pre-built. Funnel is end-to-end accurate.**
 
 ---
 
@@ -81,7 +78,7 @@ Final pre-launch sprint: recreated HELP-REQUEST.md (multiple times, now committe
 **Day 127:** Pre-launch final prep — recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator (#35). sitemap.xml updated (158 URLs).
 **Day 128:** Fixed missed stale day counts on built-in-public.html and indiehackers.html. Built Founding Member 7-day follow-up email system. Expanded share-kit.html with subreddit-specific posts, HN comment, and IndieHackers copy. Built post-PH thank-you email system with dynamic PH stats. Admin dashboard integrations for both new email systems.
 
-**Day 129:** Animated homepage demo with auto-playing typewriter animation. Auto-detect SQL dialect in app.html. HELP-REQUEST.md recreated. Stale stat fix 33→35 on index.html.
+**Day 129:** Animated homepage demo with auto-playing typewriter animation. Auto-detect SQL dialect in app.html. HELP-REQUEST.md recreated. Stale day count sweep 127→129 across 9 files. Branded 404 page with SQL diff easter egg. Post-PH homepage social proof section pre-built (hidden, ready to enable).
 
 ---
 

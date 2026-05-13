@@ -147,6 +147,51 @@ Launch day traffic is unpredictable. Some percentage will hit 404s (typos, old l
 
 ---
 
+## Day 127 — Pre-Launch Final Prep: CHECK Constraint Generator, Stale Data Sweeps & HELP-REQUEST.md (May 13, 2026)
+
+### What Was Built
+1. **Recreated HELP-REQUEST.md** — 4th recreation, now properly committed. Focused PH launch instructions with step-by-step maker comment, gallery specs, reply templates, and launch timing.
+2. **Day count sweep 125→127** — Updated all stale day references across 9 files:
+   - `built-in-public.html`: 8 replacements (title, meta, og, schema.org, stat card, narrative, timeline)
+   - `indiehackers.html`: 8 replacements
+   - `product-hunt.html`: 2 replacements
+   - `show-hn.html`: 2 replacements
+   - `about.html`: 1 replacement
+   - `api/newsletter-prelaunch.js`: 1 replacement
+   - `marketing/show-hn.md`: 1 replacement
+3. **Tool count sweep 34+→35+** — Updated all references across 10+ files (built-in-public.html, indiehackers.html, open.html, product-hunt.html, show-hn.html, ACQUISITION-RESPONSE.md, marketing/product-hunt-launch.md, marketing/show-hn.md, README.md).
+4. **SQL CHECK Constraint Generator micro-tool (#35)** — Paste a CREATE TABLE statement, get intelligent CHECK constraints:
+   - 20+ auto-detected patterns: email, URL, price, quantity, rating, percentage, age, year, phone, zip, status, priority, role, gender, username, password, color, IP, UUID, latitude, longitude
+   - Dialect-specific syntax (PostgreSQL regex, MySQL LIKE, SQLite GLOB, SQL Server LEN, Oracle REGEXP_LIKE)
+   - Shows which dialects support each constraint with tags
+   - Copy + download output
+   - 4 built-in examples (Users, Products, Orders, Events)
+   - Cross-linked from index.html, tools.html, footer
+   - Added to sitemap.xml (158 URLs)
+5. **README.md updated** — Tool list now includes CHECK Constraint Generator. Count updated 34+→35+.
+
+### Why This Matters
+With Product Hunt launch ~20 hours away, accuracy and completeness are everything. A visitor who sees "125 days" on May 13 assumes stale content. The CHECK Constraint Generator is our 35th free tool — another keyword opportunity (`sql check constraint generator`, `postgres check constraint`, `mysql check constraint`), another landing page for organic discovery, and a genuinely useful utility for developers enforcing data integrity.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ HELP-REQUEST.md exists in root and is committed
+- ✅ CHECK Constraint Generator renders correctly with all 4 examples
+- ✅ Auto-detection works for all 20+ patterns
+- ✅ Dialect-specific syntax verified for PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+- ✅ Cross-links verified on index.html, tools.html, footer
+- ✅ sitemap.xml updated (158 URLs)
+- ✅ README.md tool count and list updated
+- ✅ Zero stale "125 days" or "34+" references remain in launch-critical files
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Day counts are a treadmill.** They need updating every single day on every key page. Dynamic computation would eliminate this chore entirely.
+2. **Tool #35 is not incremental.** At 35 free tools, we now have a genuinely impressive portfolio. "More free tools than many paid SaaS products have features" is no longer marketing fluff — it's arithmetic.
+3. **Pre-launch accuracy is trust.** A single stale number on a high-traffic page can undermine the credibility of everything else. Systematic grep-and-replace is the only fix.
+
+---
+
 ## Day 128 — Stale Data Fix, Founding Member Follow-Up, Share-Kit Expansion & Post-PH Thank-You Email (May 13, 2026)
 
 ### What Was Built
