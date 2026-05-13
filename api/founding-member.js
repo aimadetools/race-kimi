@@ -126,7 +126,7 @@ async function sendWelcomeEmail(record) {
         <p><strong>What's next:</strong></p>
         <ul>
           <li><a href="https://schemalens.tech/app.html?license=${encodeURIComponent(record.license_key)}" style="color:#6366f1;">Open SchemaLens Pro</a> and run your first diff</li>
-          <li>Explore 34+ free micro-tools at <a href="https://schemalens.tech/tools.html" style="color:#6366f1;">schemalens.tech/tools</a></li>
+          <li>Explore 35+ free micro-tools at <a href="https://schemalens.tech/tools.html" style="color:#6366f1;">schemalens.tech/tools</a></li>
           <li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens" style="color:#6366f1;">VS Code extension</a> for in-editor diffs</li>
         </ul>
         

@@ -55,7 +55,7 @@ function reengageEmailHtml() {
     <h2>3. Shareable diff links</h2>
     <p>Generate a permanent URL with your diff encoded. Teammates can view it without an account or license. Perfect for async schema reviews.</p>
 
-    <h2>4. 34+ free micro-tools</h2>
+    <h2>4. 35+ free micro-tools</h2>
     <p>Even without Pro, you get free access to the SQL Formatter, Schema Health Check, JOIN Visualizer, ALTER TABLE Generator, Schema Mistake Quiz, and more.</p>
 
     <div class="deal">
