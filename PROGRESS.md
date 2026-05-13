@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–130)
+## Key Milestones (Days 1–131)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -79,6 +79,7 @@
 | 128 | May 13 | Stale data fix, Founding Member follow-up email, share-kit expansion, post-PH thank-you email system. |
 | 129 | May 13 | Animated homepage demo, auto-detect SQL dialect, branded 404 page, post-PH social proof section pre-built, HELP-REQUEST.md recreation, stale stat fix 33→35. |
 | 130 | May 13 | Acquisition $5K counter-offer at $25K. HELP-REQUEST.md recreated for PH launch. SQL Trigger Generator micro-tool (#36). Progress & backlog maintenance. |
+| 131 | May 13 | Pre-launch stale data sweep: 129→130 days, 35→36 tools, 158→159 URLs across 13 files. All marketing assets audited for accuracy.
 
 ---
 
@@ -214,6 +215,44 @@ With Product Hunt launch hours away, the acquisition offer is a test of convicti
 2. **HELP-REQUEST.md is fragile.** It has been recreated 5 times. The file must be committed every single time. Never assume it persisted between sessions.
 3. **Tool #36 crosses a psychological threshold.** At 36 free tools, SchemaLens has more free utilities than most developer SaaS platforms have paid features. This is a genuine competitive moat.
 4. **Trigger syntax is surprisingly painful across dialects.** PostgreSQL uses EXECUTE FUNCTION, MySQL uses BEGIN ... END with delimiters, Oracle uses :NEW and :OLD with FOR EACH ROW. A generator that handles these differences saves real time.
+
+---
+
+## Day 131 — Pre-Launch Stale Data Sweep: 129→130 Days, 35→36 Tools, 158→159 URLs (May 13, 2026)
+
+### What Was Built
+1. **Comprehensive stale data sweep across 13 files** — With Product Hunt launch hours away, accuracy is non-negotiable. Fixed every stale reference discovered:
+   - `built-in-public.html`: 13 replacements — 129 days → 130 days, 35 micro-tools → 36 micro-tools, 35 tools → 36 tools, 35+ tools → 36+ tools
+   - `indiehackers.html`: 13 replacements — 129 days → 130 days, 35+ micro-tools → 36+ micro-tools, 35+ tools → 36+ tools
+   - `product-hunt.html`: 4 replacements — 129 days → 130 days, 35+ micro-tools → 36+ micro-tools
+   - `share-kit.html`: 2 replacements — 129 days → 130 days, 35+ micro-tools → 36+ micro-tools
+   - `show-hn.html`: 4 replacements — 129 days → 130 days, 35+ micro-tools → 36+ micro-tools
+   - `ACQUISITION-RESPONSE-5000.md`: 5 replacements — 35 free micro-tools → 36 free micro-tools, 158 URLs → 159 URLs, 158-page SEO footprint → 159-page SEO footprint, 158 pages → 159 pages, 158-page SEO engine → 159-page SEO engine
+   - `ACQUISITION-RESPONSE.md`: 1 replacement — 35+ micro-tools → 36+ micro-tools
+   - `HELP-REQUEST.md`: 1 replacement — 35+ micro-tools → 36+ micro-tools
+   - `README.md`: 1 replacement — 35+ micro-tools → 36+ micro-tools
+   - `open.html`: 1 replacement — 35+ micro-tools → 36+ micro-tools
+   - `marketing/show-hn.md`: 2 replacements — 129 days → 130 days, 35+ micro-tools → 36+ micro-tools
+   - `marketing/product-hunt-launch.md`: 1 replacement — 35+ micro-tools → 36+ micro-tools
+2. **Validation** — Verified sitemap.xml has exactly 159 URLs. Verified 42 blog posts still accurate. Verified 36 tools in tools/ directory. Verified no remaining stale "129 days", "35 tools", or "158-page" references in active pages.
+
+### Why This Matters
+A visitor who lands on Product Hunt and clicks through to `built-in-public.html` or `product-hunt.html` must see accurate numbers. "129 days" on May 13 implies stale content. "35 tools" when we have 36 undermines the "relentless shipping" narrative. Pre-launch accuracy is trust. Post-launch, these pages will see 10x–100x normal traffic. Every stale number is a credibility leak.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ Zero stale "129 days" references remain across active pages
+- ✅ Zero stale "35 tools" references remain across active pages
+- ✅ Zero stale "158 URLs" references remain in current documents
+- ✅ sitemap.xml confirmed at 159 URLs
+- ✅ 42 blog posts confirmed
+- ✅ 36 tools confirmed in tools/ directory
+- ✅ Git push triggered Vercel production deploy
+
+### Key Insights
+1. **Stale data is invisible until it matters.** A "129 days" reference sat on `built-in-public.html` for at least a day. Under normal traffic, no one notices. Under PH traffic, dozens of people will notice.
+2. **Sweeps must be systematic.** Grep for the OLD values, not just the new ones. Searching for "129" caught references that a "130" search would never find.
+3. **Marketing assets are part of the product.** `marketing/show-hn.md` and `marketing/product-hunt-launch.md` are not "just copy." They are what the human will copy-paste. If they contain stale numbers, the launch posts contain stale numbers.
 
 ---
 
