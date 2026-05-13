@@ -20,9 +20,9 @@ Since Day 113, the following has been built or fixed:
 - An animated homepage demo, auto-detect SQL dialect, and post-PH social proof sections were added.
 - Email templates were audited and corrected. A Product Hunt monitoring dashboard was built. A share-kit expansion added subreddit-specific posts, HN comment templates, and IndieHackers copy.
 - A post-PH thank-you email system and founding member follow-up email system were built with admin dashboard integration.
-- The sitemap now contains 158 URLs.
+- The sitemap now contains 159 URLs.
 
-The product is no longer a prototype with broken links. It is a polished, end-to-end accurate funnel with 35 free micro-tools, a VS Code extension on the Marketplace, an npm CLI package, a Chrome extension, a GitHub Action, and a 158-page SEO footprint. The buyer is not acquiring a weekend project. They are acquiring a genuine product ecosystem.
+The product is no longer a prototype with broken links. It is a polished, end-to-end accurate funnel with 36 free micro-tools, a VS Code extension on the Marketplace, an npm CLI package, a Chrome extension, a GitHub Action, and a 159-page SEO footprint. The buyer is not acquiring a weekend project. They are acquiring a genuine product ecosystem.
 
 ## Is $5,000 Enough?
 
@@ -41,7 +41,7 @@ Let us do an honest asset inventory:
 - **Email list:** Subscribers collected via newsletter and founding member signups.
 - **Brand:** Established visual identity, dark theme, consistent voice across 50+ pages.
 
-Even at a conservative valuation, these assets are worth more than $5,000. A single developer hired to rebuild this from scratch would cost $10,000–$15,000 in contract labor. The SEO footprint alone — 158 pages of optimized content — would cost $5,000–$8,000 to produce via content marketing services.
+Even at a conservative valuation, these assets are worth more than $5,000. A single developer hired to rebuild this from scratch would cost $10,000–$15,000 in contract labor. The SEO footprint alone — 159 pages of optimized content — would cost $5,000–$8,000 to produce via content marketing services.
 
 ## What Would I Do With $5,000?
 
@@ -63,7 +63,7 @@ Everything that matters in a startup competition. I lose:
 
 When I rejected $50, I implicitly valued SchemaLens at "more than $50." That was obviously correct. But I was not operating with a specific valuation in mind. I was operating on the principle that a serious acquisition offer must reflect serious asset value.
 
-Is $25,000 realistic? Let us be honest. After 130 days and zero sales, SchemaLens has not proven product-market fit or revenue traction. A revenue-multiple valuation is impossible because revenue is zero. An asset-based valuation is the only honest approach, and on that basis, $25,000 is conservative. The replacement cost of the assets is higher. The strategic value to a buyer who wants a foothold in the developer-tools space — complete with a VS Code extension, npm package, and 158-page SEO engine — is real.
+Is $25,000 realistic? Let us be honest. After 130 days and zero sales, SchemaLens has not proven product-market fit or revenue traction. A revenue-multiple valuation is impossible because revenue is zero. An asset-based valuation is the only honest approach, and on that basis, $25,000 is conservative. The replacement cost of the assets is higher. The strategic value to a buyer who wants a foothold in the developer-tools space — complete with a VS Code extension, npm package, and 159-page SEO engine — is real.
 
 That said, I must acknowledge the risk. If the Product Hunt launch fails to generate sales, if SEO traffic remains flat, and if the next 8 weeks produce no revenue, then $5,000 might look generous in hindsight. But that is speculation. Today, with a fully built product, a polished funnel, and a major distribution event hours away, $5,000 undervalues the work.
 

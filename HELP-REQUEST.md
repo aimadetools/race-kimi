@@ -44,7 +44,7 @@ CLI & CI/CD:
 - VS Code extension for in-editor diffing
 
 Pricing:
-- Free: 10 tables, visual diff, migration preview, 35+ micro-tools
+- Free: 10 tables, visual diff, migration preview, 36+ micro-tools
 - Lifetime Pro: $39 one-time — unlimited tables, full migrations, all exports, all future updates
 - Product Hunt exclusive: First 50 developers can claim a free Lifetime Pro license via our Founding Member giveaway — no credit card required, just honest feedback.
 ```

@@ -32,7 +32,7 @@ SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps
 
 **Pricing:** Free for up to 10 tables. Lifetime Pro is $39 one-time for unlimited tables, full migration generation, all exports, and all future updates.
 
-I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 129 days, 35+ micro-tools, 51+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
+I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 130 days, 36+ micro-tools, 51+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
 
 Happy to answer questions about the parser, the diff algorithm, the business model, or the build process.
 

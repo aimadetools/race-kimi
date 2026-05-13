@@ -11,7 +11,7 @@
 
 ### What SchemaLens Is Worth
 
-SchemaLens is not a weekend project or a prototype. It is 112 days of sustained, public development resulting in a real product with multiple distribution channels, 51+ SEO landing pages, 35+ micro-tools, a published npm CLI package, a live VS Code extension on the Marketplace, a GitHub Action, a free REST API, and a functioning license-key commerce flow. The product supports five SQL dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle), generates semantic diffs and migration scripts, detects breaking changes with a risk score, and runs entirely client-side with zero backend infrastructure cost.
+SchemaLens is not a weekend project or a prototype. It is 112 days of sustained, public development resulting in a real product with multiple distribution channels, 51+ SEO landing pages, 36+ micro-tools, a published npm CLI package, a live VS Code extension on the Marketplace, a GitHub Action, a free REST API, and a functioning license-key commerce flow. The product supports five SQL dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle), generates semantic diffs and migration scripts, detects breaking changes with a risk score, and runs entirely client-side with zero backend infrastructure cost.
 
 The $50 offer values SchemaLens at less than fifty cents per day of development. That is absurd. Even a single Pro customer at $99 per year generates twice the offer amount in recurring revenue. A single Team customer at $290 per year generates nearly six times the offer. The product is built to scale to hundreds of customers with near-zero marginal cost because hosting is free on Vercel and license validation is client-side.
 

@@ -51,7 +51,7 @@ Paste two CREATE TABLE dumps — old and new — and SchemaLens shows you a sema
 I was tired of squinting at text diffs between schema dumps and manually writing ALTER TABLE statements. Existing tools were either CLI-only (pg_dump, migra) or required uploading schemas to a cloud service. SchemaLens fills the gap: zero setup, zero backend, instant results — and now with a full CLI for CI/CD pipelines.
 
 **Pricing:**
-- Free: 10 tables, visual diff, migration preview, 35+ micro-tools
+- Free: 10 tables, visual diff, migration preview, 36+ micro-tools
 - Lifetime Pro: $39 one-time — unlimited tables, full migrations, all exports, shareable links, diff annotations, all future updates
 - **Product Hunt exclusive:** First 50 developers can claim a free Lifetime Pro license via our Founding Member giveaway (no credit card required)
 

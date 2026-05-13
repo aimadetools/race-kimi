@@ -179,7 +179,7 @@ SchemaLens includes **36+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 35+ micro-tools
+- **Free tool uses:** Growing via 36+ micro-tools
 - **Pro customers:** 0 (pre-launch)
 - **MRR:** $0 (pre-launch)
 - **Blog posts:** 32 published
