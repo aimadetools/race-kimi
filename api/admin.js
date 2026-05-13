@@ -187,6 +187,21 @@ module.exports = async (req, res) => {
         }
         return res.status(200).json({ data: prelaunchJson });
       }
+      case 'founding-member-followup': {
+        const proto = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers.host || 'schemalens.tech';
+        const dry = body.dry === true ? 'true' : 'false';
+        const minDays = body.minDays || 7;
+        const followupUrl = `${proto}://${host}/api/founding-member-followup?dry=${dry}&minDays=${minDays}`;
+        const followupHeaders = { 'Content-Type': 'application/json' };
+        if (LAUNCH_TOKEN) followupHeaders['x-launch-token'] = LAUNCH_TOKEN;
+        const followupRes = await fetch(followupUrl, { method: 'POST', headers: followupHeaders });
+        const followupJson = await followupRes.json().catch(() => ({}));
+        if (!followupRes.ok) {
+          return res.status(followupRes.status || 500).json({ error: followupJson.error || 'Founding member follow-up request failed' });
+        }
+        return res.status(200).json({ data: followupJson });
+      }
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }

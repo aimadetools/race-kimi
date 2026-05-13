@@ -362,7 +362,8 @@ CREATE TABLE IF NOT EXISTS public.founding_members (
   use_case TEXT,
   claimed_at TIMESTAMPTZ DEFAULT NOW(),
   welcome_email_sent_at TIMESTAMPTZ,
-  ph_launch_email_sent_at TIMESTAMPTZ
+  ph_launch_email_sent_at TIMESTAMPTZ,
+  followup_email_sent_at TIMESTAMPTZ
 );
 
 ALTER TABLE public.founding_members ENABLE ROW LEVEL SECURITY;

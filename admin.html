@@ -507,6 +507,21 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>⭐ Founding Member Follow-Up</h3>
+          <span class="admin-badge" id="badgeFollowup">0</span>
+        </div>
+        <div class="admin-section-body" id="followupBody">
+          <div class="admin-empty">Send a 7-day follow-up email to founding members asking for feedback and testimonials. Only sends to members who claimed 7+ days ago and haven't received this email yet.</div>
+          <div style="margin-top:12px;">
+            <button onclick="previewFollowupEmail()">Preview (Dry Run)</button>
+            <button class="primary" onclick="sendFollowupEmail()" style="background:#dc2626;">Send Follow-Up Emails</button>
+          </div>
+          <pre id="followupResult" style="margin-top:12px;background:var(--surface);padding:12px;border-radius:6px;font-size:0.8rem;overflow:auto;max-height:300px;display:none;"></pre>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>🔄 Re-engagement (Expired Trials)</h3>
           <span class="admin-badge" id="badgeReengage">0</span>
         </div>
@@ -911,6 +926,43 @@
           body: JSON.stringify({ action: 'launch-email', password: ADMIN_PASSWORD_HASH, dry: false })
         });
         const json = await res.json().catch(() => ({}));
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function previewFollowupEmail() {
+      const result = document.getElementById('followupResult');
+      result.style.display = 'block';
+      result.textContent = 'Running dry run…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'founding-member-followup', password: ADMIN_PASSWORD_HASH, dry: true })
+        });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeFollowup').textContent = (json.data?.candidateCount || json.candidateCount || 0);
+        result.textContent = JSON.stringify(json.data || json, null, 2);
+      } catch (e) {
+        result.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function sendFollowupEmail() {
+      if (!confirm('Send follow-up emails to founding members who claimed 7+ days ago? This cannot be undone.')) return;
+      const result = document.getElementById('followupResult');
+      result.style.display = 'block';
+      result.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'founding-member-followup', password: ADMIN_PASSWORD_HASH, dry: false })
+        });
+        const json = await res.json().catch(() => ({}));
+        document.getElementById('badgeFollowup').textContent = 0;
         result.textContent = JSON.stringify(json.data || json, null, 2);
       } catch (e) {
         result.textContent = 'Error: ' + e.message;
