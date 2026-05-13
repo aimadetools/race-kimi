@@ -84,6 +84,46 @@
 
 ---
 
+## Day 133 — SQL CREATE INDEX Generator (#38), Cross-Link Updates, sitemap 161 URLs (May 13, 2026)
+
+### What Was Built
+1. **SQL CREATE INDEX Generator micro-tool (#38)** — Generate CREATE INDEX statements for all 5 SQL dialects with advanced options:
+   - **Columns:** Multi-column support with ASC/DESC sort order per column. Add/remove columns dynamically.
+   - **UNIQUE:** Enforce uniqueness constraint.
+   - **IF NOT EXISTS:** Safe creation that skips if index already exists (where supported).
+   - **Concurrent/Online creation:** PostgreSQL `CONCURRENTLY`, MySQL `ALGORITHM=INPLACE, LOCK=NONE`, SQL Server `ONLINE = ON`, Oracle `ONLINE`. SQLite notes that concurrency is not supported.
+   - **Partial indexes:** WHERE clause for PostgreSQL, SQLite, SQL Server (filtered indexes). MySQL and Oracle show compatibility notes.
+   - **Covering indexes:** INCLUDE columns for PostgreSQL 11+ and SQL Server.
+   - **Index types:** B-tree, Hash, GIN, GiST, BRIN for PostgreSQL; BTREE, HASH for MySQL.
+   - **Auto-suggest index name:** `idx_{table}_{first_column}` based on table and first column.
+   - **6 built-in examples:** Basic single-column, unique, composite, partial, covering, and concurrent creation.
+   - **Copy + download output**
+   - **Dialect-specific hints:** Updates dynamically to show what each database supports.
+2. **Cross-links updated:** Added to `index.html` tools grid and `tools.html` tools grid.
+3. **Exact count updates:** `built-in-public.html` 37→38 micro-tools (4 references), `ACQUISITION-RESPONSE-5000.md` 37→38 free micro-tools, `BACKLOG.md` current state updated, `README.md` numbered list extended to 38.
+4. **sitemap.xml updated** — 161 URLs.
+5. **e2e test added** in `tests/e2e.spec.js` for page load without console errors.
+
+### Why This Matters
+Indexes are one of the most common schema changes, yet CREATE INDEX syntax varies significantly across dialects. PostgreSQL's `CONCURRENTLY`, MySQL's `ALGORITHM=INPLACE`, SQL Server's `ONLINE = ON`, and Oracle's `ONLINE` all achieve the same goal (no table locks) with completely different syntax. Partial indexes (PostgreSQL/SQLite) and covering indexes (PostgreSQL/SQL Server) are powerful optimizations that many developers don't use simply because they forget the syntax. This generator removes that friction and targets high-value keywords: `sql create index generator`, `postgresql concurrent index`, `sql server online index`, `mysql inplace index`.
+
+### Validation
+- ✅ `node test-all.js` passes (34/34 tests)
+- ✅ `tools/sql-create-index-generator.html` renders correctly with all 5 dialects
+- ✅ All 6 examples generate correct dialect-specific syntax
+- ✅ Copy and download buttons work
+- ✅ Cross-links verified on index.html and tools.html
+- ✅ sitemap.xml confirmed at 161 URLs
+- ✅ README.md tool list updated to 38
+
+### Key Insights
+1. **Index syntax fragmentation is real.** Every major database handles online index creation differently. A generator that knows these differences saves developers from reading 5 different docs.
+2. **Partial indexes are underused.** Many developers don't know PostgreSQL and SQLite support `CREATE INDEX ... WHERE`. Making this visible in a generator increases adoption of a genuinely powerful optimization.
+3. **Covering indexes are version-dependent.** PostgreSQL added INCLUDE in 11, SQL Server has had it for years, MySQL 8.0.13+ supports it natively. Calling out version requirements builds trust.
+4. **Tool #38 arrives 12 hours before Product Hunt launch.** One more asset, one more keyword opportunity, one more reason for visitors to bookmark the site.
+
+---
+
 ## Day 130 — Acquisition Counter-Offer, HELP-REQUEST.md Recreation & SQL Trigger Generator (May 13, 2026)
 
 ### What Was Built
