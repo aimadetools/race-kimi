@@ -101,6 +101,11 @@
    - SQL Server: IDENTITY(1,1), NVARCHAR, VARCHAR(MAX), DATETIME2, GO, square brackets
    - Oracle: VARCHAR2, NUMBER(p,s), CLOB, RAW, SYSDATE, TO_DATE, DUAL
    - Requires 2+ signal points before suggesting; one-click "Switch" or "Dismiss"
+5. **Stale day count sweep 127→129** — Updated all remaining "127 days" and "128 days" references across 9 launch-critical files ahead of Product Hunt:
+   - `built-in-public.html`, `indiehackers.html`, `product-hunt.html`, `show-hn.html`, `share-kit.html`, `about.html`
+   - `api/newsletter-prelaunch.js` (prelaunch email body)
+   - `marketing/show-hn.md` (Show HN draft copy)
+   - `HELP-REQUEST.md` (urgency note: "Zero sales after 128 days" → 129)
 
 ### Why This Matters
 With Product Hunt launch hours away, every visitor who lands on the homepage must instantly understand what SchemaLens does. A static code block requires imagination; an animated demo shows the product working in real time. Auto-detect dialect removes one more click from the core workflow — when a developer pastes a schema, the tool should just know what dialect it is.
@@ -112,12 +117,14 @@ With Product Hunt launch hours away, every visitor who lands on the homepage mus
 - ✅ Dialect detection correctly identifies PostgreSQL, MySQL, SQLite, SQL Server, and Oracle from sample schemas
 - ✅ Dismiss/Switch buttons work and hide banner correctly
 - ✅ Zero broken links or layout issues on index.html
+- ✅ Zero stale "127" or "128" day references remain across active pages
 - ✅ Git push triggered Vercel production deploy
 
 ### Key Insights
 1. **Animation beats static for comprehension.** A 6-second auto-play demo communicates more than paragraphs of feature copy. Visitors understand the product before they click anything.
 2. **Dialect detection is a trust signal.** When the app correctly guesses PostgreSQL from a pasted schema, it signals intelligence and attention to detail — the opposite of "vibe-coded."
 3. **Pre-launch hours are for polish, not panic.** With all systems built, the final session before launch should make the first 10 seconds of the visitor experience flawless.
+4. **Stale data erodes trust.** A visitor who sees "127 days" on one page and "129 days" on another will question our attention to detail. Consistency across every surface is non-negotiable before high-traffic events.
 
 ---
 

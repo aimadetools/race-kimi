@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page Not Found | SchemaLens</title>
+  <meta name="description" content="This page doesn't exist. Compare SQL schemas, generate migrations, and explore 35+ free developer tools at SchemaLens.">
+  <meta property="og:title" content="404 — Page Not Found | SchemaLens">
+  <meta property="og:description" content="This page doesn't exist. Explore SchemaLens: the privacy-first SQL schema diff tool with 35+ free developer tools.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/404.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --bg-elevated: #111827;
+      --text: #e5e7eb;
+      --text-muted: #9ca3af;
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --danger: #f87171;
+      --border: #1f2937;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .error-code {
+      font-size: clamp(6rem, 15vw, 10rem);
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--primary) 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .error-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 1rem 0 0.5rem;
+      color: var(--text);
+    }
+    .error-desc {
+      color: var(--text-muted);
+      max-width: 420px;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .cta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      max-width: 520px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); }
+    .cta-primary {
+      background: var(--primary);
+      color: #0b0f19;
+    }
+    .cta-primary:hover { box-shadow: 0 6px 20px rgba(56,189,248,0.25); }
+    .cta-secondary {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .cta-secondary:hover { border-color: var(--primary); }
+    .diff-visual {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 2rem 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+    .diff-line {
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+    .diff-line.minus { background: rgba(248,113,113,0.1); color: var(--danger); }
+    .diff-line.plus { background: rgba(74,222,128,0.1); color: #4ade80; }
+    .diff-line.neutral { color: var(--text-muted); }
+    footer {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .floating { animation: float 4s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="floating">
+    <div class="error-code">404</div>
+  </div>
+
+  <h1 class="error-title">Page not found</h1>
+  <p class="error-desc">
+    Looks like this schema diffed itself out of existence. 
+    The table, view, or route you requested doesn't exist.
+  </p>
+
+  <div class="diff-visual">
+    <span class="diff-line minus">- SELECT * FROM missing_page</span>
+    <span class="diff-line neutral">→</span>
+    <span class="diff-line plus">+ SELECT * FROM 404</span>
+  </div>
+
+  <div class="cta-grid">
+    <a href="/" class="cta-btn cta-primary">🏠 Home</a>
+    <a href="/app.html" class="cta-btn cta-secondary">⚡ Open App</a>
+    <a href="/tools.html" class="cta-btn cta-secondary">🛠 Tools</a>
+    <a href="/blog.html" class="cta-btn cta-secondary">📝 Blog</a>
+  </div>
+
+  <footer>
+    <p>SchemaLens — Compare SQL schemas in your browser. <a href="/app.html">Try it free</a>.</p>
+  </footer>
+
+  <script>
+    // Small easter egg: log a schema joke to console
+    console.log('%c SchemaLens ', 'background:#38bdf8;color:#0b0f19;font-weight:bold;padding:4px 8px;border-radius:4px;', '404 — Even our schemas can\'t find this page.');
+  </script>
+</body>
+</html>
