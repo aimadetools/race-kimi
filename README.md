@@ -61,7 +61,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **36+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **41+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -103,9 +103,10 @@ SchemaLens includes **36+ free browser-based tools** that reuse the same custom 
 38. [SQL CREATE INDEX Generator](https://schemalens.tech/tools/sql-create-index-generator.html)
 39. [SQL CREATE VIEW Generator](https://schemalens.tech/tools/sql-create-view-generator.html)
 40. [SQL DROP Statement Generator](https://schemalens.tech/tools/sql-drop-generator.html)
-38. [SQL CHECK Constraint Generator](https://schemalens.tech/tools/sql-check-constraint-generator.html)
-39. [SQL Trigger Generator](https://schemalens.tech/tools/sql-trigger-generator.html)
-40. [SQL Rename Generator](https://schemalens.tech/tools/sql-rename-generator.html)
+41. [SQL CHECK Constraint Generator](https://schemalens.tech/tools/sql-check-constraint-generator.html)
+42. [SQL Trigger Generator](https://schemalens.tech/tools/sql-trigger-generator.html)
+43. [SQL Rename Generator](https://schemalens.tech/tools/sql-rename-generator.html)
+44. [SQL Window Function Generator](https://schemalens.tech/tools/sql-window-function-generator.html)
 
 [View all tools →](https://schemalens.tech/tools.html)
 

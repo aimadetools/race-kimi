@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SQL Window Function Generator — SchemaLens</title>
+<meta name="description" content="Generate SQL window functions automatically from CREATE TABLE schemas. ROW_NUMBER, RANK, LAG, LEAD, running totals, moving averages, and more. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+<meta property="og:title" content="Free SQL Window Function Generator — SchemaLens">
+<meta property="og:description" content="Paste CREATE TABLE statements and get ready-to-run window function queries. PARTITION BY, ORDER BY, and frame clauses for 5 SQL dialects. No signup required.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-window-function-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Window Function Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates SQL window functions from CREATE TABLE schemas. ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, NTILE, FIRST_VALUE, LAST_VALUE, running totals, and moving averages. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+  "url": "https://schemalens.tech/tools/sql-window-function-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .generator-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .generator-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button, .toolbar input[type="number"] {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar input[type="number"] { width: 70px; }
+  .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+  .form-group select, .form-group input {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.9rem;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .query-list { display: flex; flex-direction: column; gap: 12px; }
+  .query-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
+  }
+  .query-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+  .query-item pre {
+    margin: 0; font-family: var(--mono); font-size: 0.8rem; line-height: 1.5;
+    color: var(--code-text); white-space: pre-wrap; word-break: break-word;
+  }
+  .query-item .actions { margin-top: 8px; display: flex; gap: 8px; }
+  .query-item .actions button {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  }
+  .query-item .actions button:hover { background: var(--surface-hover); }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+  .chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--bg); border: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .chip:hover:not(.active) { background: var(--surface-hover); }
+
+  .viz-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.85rem;
+  }
+  .viz-box code { font-family: var(--mono); background: var(--code-bg); padding: 2px 6px; border-radius: 4px; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL Window Function Generator</h1>
+    <p>Paste your CREATE TABLE statements and get ready-to-run window function queries — ranking, offsets, running totals, moving averages, and more. Supports 5 SQL dialects.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="generator-grid">
+    <div class="generator-card">
+      <h2>Input SQL</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE sales (
+  id SERIAL PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  region VARCHAR(50) NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  sale_date DATE NOT NULL
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">⚡ Generate Window Functions</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <p class="notice">Table and column names are analyzed to suggest the most useful window function patterns.</p>
+
+      <h2 style="margin-top:24px;">Configure</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Function</label>
+          <select id="funcType">
+            <option value="all">All Relevant</option>
+            <option value="row_number">ROW_NUMBER</option>
+            <option value="rank">RANK</option>
+            <option value="dense_rank">DENSE_RANK</option>
+            <option value="lag">LAG</option>
+            <option value="lead">LEAD</option>
+            <option value="ntile">NTILE</option>
+            <option value="first_value">FIRST_VALUE</option>
+            <option value="last_value">LAST_VALUE</option>
+            <option value="sum">Running Total (SUM)</option>
+            <option value="avg">Moving Average (AVG)</option>
+            <option value="count">Running Count</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Frame</label>
+          <select id="frameType">
+            <option value="auto">Auto</option>
+            <option value="rows_unbounded">ROWS UNBOUNDED PRECEDING</option>
+            <option value="range_unbounded">RANGE UNBOUNDED PRECEDING</option>
+            <option value="rows_1">ROWS 1 PRECEDING</option>
+            <option value="rows_2">ROWS 2 PRECEDING</option>
+            <option value="range_current">RANGE CURRENT ROW</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="generator-card">
+      <h2>Generated Queries</h2>
+      <div id="statsRow" class="stats-row" style="display:none;">
+        <div class="stat"><div class="stat-value" id="statTables">0</div><div class="stat-label">Tables</div></div>
+        <div class="stat"><div class="stat-value" id="statColumns">0</div><div class="stat-label">Columns</div></div>
+        <div class="stat"><div class="stat-value" id="statPatterns">0</div><div class="stat-label">Patterns</div></div>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Paste SQL and click Generate to see window function queries.</div>
+      </div>
+      <div class="toolbar" style="margin-top:12px; display:none;" id="outputActions">
+        <button class="secondary" onclick="copyAll()">📋 Copy All</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to diff two schemas and generate migrations?</h3>
+    <p>SchemaLens compares SQL schemas, detects breaking changes, and generates safe forward + rollback migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-select-generator.html">SELECT Generator</a>
+        <a href="sql-insert-generator.html">INSERT Generator</a>
+        <a href="sql-update-generator.html">UPDATE Generator</a>
+        <a href="sql-delete-generator.html">DELETE Generator</a>
+        <a href="sql-upsert-generator.html">UPSERT Generator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =====================
+// SQL Parser
+// =====================
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true; stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts;
+}
+
+function parseCreateTable(sql) {
+  sql = stripComments(sql);
+  const match = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\(([\s\S]*)\)\s*;?\s*$/i);
+  if (!match) return null;
+  const tableName = match[1];
+  const body = match[2];
+  const columns = [];
+
+  const parts = [];
+  let depth = 0;
+  let buf = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (ch === '(') { depth++; buf += ch; }
+    else if (ch === ')') { depth--; buf += ch; }
+    else if (ch === ',' && depth === 0) { parts.push(buf.trim()); buf = ''; }
+    else { buf += ch; }
+  }
+  if (buf.trim()) parts.push(buf.trim());
+
+  for (const part of parts) {
+    const upper = part.toUpperCase();
+    if (upper.startsWith('PRIMARY') || upper.startsWith('UNIQUE') || upper.startsWith('CONSTRAINT') || upper.startsWith('FOREIGN') || upper.startsWith('CHECK') || upper.startsWith('INDEX')) {
+      continue;
+    }
+    const colMatch = part.match(/^(\w+)\s+([\w()]+(?:\s*\([^)]*\))?)(.*)$/);
+    if (colMatch) {
+      columns.push({
+        name: colMatch[1],
+        type: colMatch[2].trim().toUpperCase(),
+        rest: colMatch[3].trim()
+      });
+    }
+  }
+
+  return { tableName, columns };
+}
+
+function parseSchema(sql) {
+  const tables = [];
+  const stmts = splitStatements(sql);
+  for (const stmt of stmts) {
+    if (/CREATE\s+TABLE/i.test(stmt)) {
+      const t = parseCreateTable(stmt);
+      if (t) tables.push(t);
+    }
+  }
+  return tables;
+}
+
+// =====================
+// Utils
+// =====================
+function escapeIdentifier(name, dialect) {
+  if (dialect === 'postgres') return '"' + name + '"';
+  if (dialect === 'mysql') return '`' + name + '`';
+  if (dialect === 'mssql') return '[' + name + ']';
+  return name;
+}
+
+function isNumericType(type) {
+  return /^(INT|BIGINT|SMALLINT|TINYINT|DECIMAL|NUMERIC|FLOAT|DOUBLE|REAL|MONEY|SERIAL|BIGSERIAL|NUMBER|INTEGER)/i.test(type);
+}
+
+function isDateType(type) {
+  return /^(DATE|TIME|TIMESTAMP|DATETIME)/i.test(type);
+}
+
+function isStringType(type) {
+  return /^(VARCHAR|CHAR|TEXT|NVARCHAR|NCHAR|STRING|CLOB)/i.test(type);
+}
+
+function getFrameClause(frame, dialect) {
+  if (frame === 'rows_unbounded') return 'ROWS UNBOUNDED PRECEDING';
+  if (frame === 'range_unbounded') return 'RANGE UNBOUNDED PRECEDING';
+  if (frame === 'rows_1') return 'ROWS 1 PRECEDING';
+  if (frame === 'rows_2') return 'ROWS 2 PRECEDING';
+  if (frame === 'range_current') return 'RANGE CURRENT ROW';
+  return '';
+}
+
+// =====================
+// Window Function Generators
+// =====================
+function pickPartitionCol(table) {
+  // Prefer category-like columns
+  const candidates = table.columns.filter(c => {
+    const ln = c.name.toLowerCase();
+    return ln.includes('category') || ln.includes('region') || ln.includes('department') || ln.includes('type') || ln.includes('status') || ln.includes('tier') || ln.includes('group') || ln.includes('team') || ln.includes('country') || ln.includes('city');
+  });
+  if (candidates.length) return candidates[0];
+  // fallback to first non-id string-like column
+  const strs = table.columns.filter(c => isStringType(c.type) && !c.name.toLowerCase().endsWith('_id') && c.name.toLowerCase() !== 'id');
+  if (strs.length) return strs[0];
+  // fallback to first non-id column
+  const nonId = table.columns.filter(c => c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  return nonId[0] || table.columns[0];
+}
+
+function pickOrderCol(table, preferNumeric) {
+  const candidates = table.columns.filter(c => {
+    const ln = c.name.toLowerCase();
+    return preferNumeric ? isNumericType(c.type) : (isDateType(c.type) || ln.includes('date') || ln.includes('time') || ln.includes('order') || ln.includes('seq') || ln.includes('index'));
+  });
+  // prefer date columns for ordering
+  const dates = candidates.filter(c => isDateType(c.type) || c.name.toLowerCase().includes('date'));
+  if (dates.length) return dates[0];
+  if (candidates.length) return candidates[0];
+  const nonId = table.columns.filter(c => c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  return nonId[0] || table.columns[0];
+}
+
+function pickValueCol(table) {
+  const nums = table.columns.filter(c => isNumericType(c.type) && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  if (nums.length) return nums[0];
+  return table.columns.find(c => c.name.toLowerCase() !== 'id') || table.columns[0];
+}
+
+function generateRowNumber(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o}${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  ROW_NUMBER() OVER (
+    ${over}
+  ) AS row_num
+FROM ${t};`;
+}
+
+function generateRank(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, true).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o} DESC${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  RANK() OVER (
+    ${over}
+  ) AS rank_num
+FROM ${t};`;
+}
+
+function generateDenseRank(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, true).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o} DESC${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  DENSE_RANK() OVER (
+    ${over}
+  ) AS dense_rank_num
+FROM ${t};`;
+}
+
+function generateLag(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o}${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  LAG(${v}, 1) OVER (
+    ${over}
+  ) AS prev_${v.replace(/["\`\[\]]/g, '')}
+FROM ${t};`;
+}
+
+function generateLead(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o}${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  LEAD(${v}, 1) OVER (
+    ${over}
+  ) AS next_${v.replace(/["\`\[\]]/g, '')}
+FROM ${t};`;
+}
+
+function generateNtile(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, true).name, dialect);
+  const f = getFrameClause(frame, dialect);
+  const over = `PARTITION BY ${p} ORDER BY ${o} DESC${f ? '\n  ' + f : ''}`;
+  return `SELECT
+  *,
+  NTILE(4) OVER (
+    ${over}
+  ) AS quartile
+FROM ${t};`;
+}
+
+function generateFirstValue(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect) || 'ROWS UNBOUNDED PRECEDING';
+  const over = `PARTITION BY ${p} ORDER BY ${o}\n  ${f}`;
+  return `SELECT
+  *,
+  FIRST_VALUE(${v}) OVER (
+    ${over}
+  ) AS first_${v.replace(/["\`\[\]]/g, '')}
+FROM ${t};`;
+}
+
+function generateLastValue(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect) || 'ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING';
+  const over = `PARTITION BY ${p} ORDER BY ${o}\n  ${f}`;
+  return `SELECT
+  *,
+  LAST_VALUE(${v}) OVER (
+    ${over}
+  ) AS last_${v.replace(/["\`\[\]]/g, '')}
+FROM ${t};`;
+}
+
+function generateRunningTotal(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect) || 'ROWS UNBOUNDED PRECEDING';
+  const over = `PARTITION BY ${p} ORDER BY ${o}\n  ${f}`;
+  return `SELECT
+  *,
+  SUM(${v}) OVER (
+    ${over}
+  ) AS running_total
+FROM ${t};`;
+}
+
+function generateMovingAverage(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const v = escapeIdentifier(pickValueCol(table).name, dialect);
+  const f = getFrameClause(frame, dialect) || 'ROWS 2 PRECEDING';
+  const over = `PARTITION BY ${p} ORDER BY ${o}\n  ${f}`;
+  return `SELECT
+  *,
+  AVG(${v}) OVER (
+    ${over}
+  ) AS moving_avg
+FROM ${t};`;
+}
+
+function generateRunningCount(table, dialect, frame) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const p = escapeIdentifier(pickPartitionCol(table).name, dialect);
+  const o = escapeIdentifier(pickOrderCol(table, false).name, dialect);
+  const f = getFrameClause(frame, dialect) || 'ROWS UNBOUNDED PRECEDING';
+  const over = `PARTITION BY ${p} ORDER BY ${o}\n  ${f}`;
+  return `SELECT
+  *,
+  COUNT(*) OVER (
+    ${over}
+  ) AS running_count
+FROM ${t};`;
+}
+
+// =====================
+// Main Generate
+// =====================
+const FUNC_MAP = {
+  row_number: { fn: generateRowNumber, label: 'ROW_NUMBER — Sequential Ranking' },
+  rank: { fn: generateRank, label: 'RANK — Rank with Gaps' },
+  dense_rank: { fn: generateDenseRank, label: 'DENSE_RANK — Rank without Gaps' },
+  lag: { fn: generateLag, label: 'LAG — Previous Row Value' },
+  lead: { fn: generateLead, label: 'LEAD — Next Row Value' },
+  ntile: { fn: generateNtile, label: 'NTILE — Bucket into Quartiles' },
+  first_value: { fn: generateFirstValue, label: 'FIRST_VALUE — First in Partition' },
+  last_value: { fn: generateLastValue, label: 'LAST_VALUE — Last in Partition' },
+  sum: { fn: generateRunningTotal, label: 'SUM — Running Total' },
+  avg: { fn: generateMovingAverage, label: 'AVG — Moving Average' },
+  count: { fn: generateRunningCount, label: 'COUNT — Running Count' }
+};
+
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const funcType = document.getElementById('funcType').value;
+  const frame = document.getElementById('frameType').value;
+  const tables = parseSchema(sql);
+
+  if (tables.length === 0) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">No CREATE TABLE statements found. Paste valid SQL and try again.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('outputActions').style.display = 'none';
+    return;
+  }
+
+  let totalCols = 0;
+  let totalPatterns = 0;
+  const queries = [];
+
+  for (const table of tables) {
+    totalCols += table.columns.length;
+    const keys = funcType === 'all' ? Object.keys(FUNC_MAP) : [funcType];
+    for (const key of keys) {
+      const meta = FUNC_MAP[key];
+      if (!meta) continue;
+      // Skip aggregate window functions if no numeric columns
+      if (['sum','avg','count'].includes(key)) {
+        const hasNum = table.columns.some(c => isNumericType(c.type) && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+        if (!hasNum) continue;
+      }
+      // Skip offset functions if not enough columns
+      if (['lag','lead','first_value','last_value'].includes(key)) {
+        if (table.columns.length < 2) continue;
+      }
+      queries.push({ title: `${table.tableName} — ${meta.label}`, sql: meta.fn(table, dialect, frame) });
+      totalPatterns++;
+    }
+  }
+
+  if (queries.length === 0) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">No suitable columns found for the selected window functions. Try adding more descriptive columns.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('outputActions').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('statTables').textContent = tables.length;
+  document.getElementById('statColumns').textContent = totalCols;
+  document.getElementById('statPatterns').textContent = totalPatterns;
+  document.getElementById('statsRow').style.display = 'grid';
+
+  let html = '<div class="query-list">';
+  for (let i = 0; i < queries.length; i++) {
+    html += `<div class="query-item">
+      <h4>${escapeHtml(queries[i].title)}</h4>
+      <pre>${escapeHtml(queries[i].sql)}</pre>
+      <div class="actions">
+        <button onclick="copyQuery(${i})">Copy</button>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('outputPanel').innerHTML = html;
+  document.getElementById('outputActions').style.display = 'flex';
+
+  window._queries = queries;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function copyQuery(index) {
+  if (!window._queries || !window._queries[index]) return;
+  navigator.clipboard.writeText(window._queries[index].sql).then(() => {
+    const btns = document.querySelectorAll('.query-item .actions button');
+    if (btns[index]) {
+      const old = btns[index].textContent;
+      btns[index].textContent = 'Copied!';
+      setTimeout(() => btns[index].textContent = old, 1200);
+    }
+  });
+}
+
+function copyAll() {
+  if (!window._queries) return;
+  const all = window._queries.map(q => `-- ${q.title}\n${q.sql}`).join('\n\n');
+  navigator.clipboard.writeText(all).then(() => {
+    const btn = document.querySelector('#outputActions button');
+    if (btn) {
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 1200);
+    }
+  });
+}
+
+function loadSample() {
+  document.getElementById('sqlInput').value = `CREATE TABLE sales (
+  id SERIAL PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  region VARCHAR(50) NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  sale_date DATE NOT NULL
+);
+
+CREATE TABLE employees (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  department VARCHAR(50) NOT NULL,
+  salary DECIMAL(10,2) NOT NULL,
+  hire_date DATE NOT NULL
+);`;
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste SQL and click Generate to see window function queries.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('outputActions').style.display = 'none';
+}
+</script>
+</body>
+</html>
