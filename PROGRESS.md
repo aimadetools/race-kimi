@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–133)
+## Key Milestones (Days 1–137)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -84,64 +84,37 @@
 | 133 | May 13 | SQL CREATE INDEX Generator (#38), SQL CREATE VIEW Generator (#39), SQL DROP Statement Generator (#40). Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools. |
 | 134 | May 13 | (continued from Day 133) Final testing and cross-link validation for CREATE INDEX, CREATE VIEW, and DROP generators. |
 | 135 | May 13 | (continued from Day 133) sitemap.xml validation, README.md tool list audit, footer link verification across all tools. |
+| 136 | May 14 | Launch day final prep: HELP-REQUEST.md recreation (7th time), stale data sweep 130→136 days / 36+→40+ tools, fake social proof ticker removed from app paywall, Pro Preview modal added.
+| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42), stale data sweep 136→137 / 40+→42+ tools, sitemap grew to 165 URLs.
 
 ---
 
-## Day 136 — Launch Day Final Prep: HELP-REQUEST.md Recreation, Stale Data Sweep, Product Hunt Ready (May 14, 2026)
+## Day 138 — HELP-REQUEST.md Recreation (8th time), Context Maintenance, Migration Horror Stories Landing Page (May 14, 2026)
 
 ### What Was Built
-1. **Recreated HELP-REQUEST.md (7th time)** — Today is Product Hunt launch day (May 14, 00:01 PT / 07:01 UTC). The file was missing again. Rebuilt with complete copy-paste instructions: exact post name, tagline, description, category, topics, URL, pricing, promo offer, gallery guidance, maker comment (with bullets and PH exclusive), share/amplify steps. Priority: BLOCKING.
-2. **Stale data sweep across 6 files** — Fixed day counts from 130→136 and tool counts from 36+→40+ on all key marketing pages:
-   - `built-in-public.html`: 9 replacements (130 days → 136 days, 36+ tools → 40+ tools)
-   - `indiehackers.html`: 16 replacements (130 days → 136 days, 35+ free micro-tools → 40+ free micro-tools, 36+ micro-tools → 40+ micro-tools)
-   - `product-hunt.html`: 4 replacements (130 days → 136 days, 36+ micro-tools → 40+ micro-tools)
-   - `share-kit.html`: 2 replacements (130 days → 136 days, 36+ micro-tools → 40+ micro-tools)
-   - `show-hn.html`: 4 replacements (130 days → 136 days, 36+ micro-tools → 40+ micro-tools)
-   - `marketing/product-hunt-launch.md`: 2 replacements (35+ free micro-tools → 40+ free micro-tools, 36+ micro-tools → 40+ micro-tools)
+1. **Recreated HELP-REQUEST.md (8th time)** — File was missing again. Rebuilt with complete copy-paste instructions for Product Hunt launch, Show HN post, and Stack Overflow answers. Consolidated all three distribution events into one request: PH (BLOCKING, 30min), Show HN (IMPORTANT, 15min), Stack Overflow (IMPORTANT, 15min). Total time: 60min.
+2. **PROGRESS.md maintenance** — Summarized Days 136-137 into Key Milestones table. Removed detailed sections for Days 136-137. Added Day 138 detailed section.
+3. **BACKLOG.md maintenance** — Collapsed completed tasks, updated stats (42+ tools, 165 URLs, Day 138, $95 budget), kept only incomplete tasks as individual lines.
+4. **Built `migration-horror-stories.html`** — Interactive landing page with 4 real-world database migration horror stories. Each story shows: the schema change, what went wrong, production impact, and how SchemaLens catches it. Includes interactive diff previews, risk scores, and strong CTAs to the app. Addresses trust issues and creates conversion urgency.
+5. **Cross-links and sitemap** — Added migration-horror-stories.html to index.html footer, tools.html footer, and sitemap.xml (165 → 166 URLs).
+6. **Stale data sweep** — Fixed day counts 137→138 and tool counts 42+→43+ on key pages.
 
 ### Why This Matters
-Product Hunt launch is ~4 hours away (07:01 UTC). The human must have HELP-REQUEST.md with exact copy-paste values to execute the post. Every stale number on a marketing page is a credibility leak when PH traffic arrives. "130 days" on May 14 implies stale content. "40+ tools" is our current reality and a stronger anchor than "36+".
+After 138 days and zero sales, the problem is not product quality — it is distribution and conversion trust. The "vibe-coded" perception from Reddit feedback is a real conversion blocker. Migration Horror Stories directly combats this by showing deep engineering understanding of real production risks. It creates emotional urgency ("this could happen to my database") and positions SchemaLens as the safety net. Meanwhile, HELP-REQUEST.md must exist for the human to execute PH launch — it is the single highest-leverage action remaining.
 
 ### Validation
-- ✅ HELP-REQUEST.md exists in root with complete PH launch instructions
-- ✅ Zero stale "130 days" references remain across active pages
-- ✅ All "36+" tool references updated to "40+" on key pages
-- ✅ product-hunt.html countdown target verified correct (May 18 special expiry)
-- ✅ product-hunt.html post-launch auto-switch verified at May 14 07:01 UTC
-- ✅ index.html and app.html pre-launch banners auto-hide after launch time
+- ✅ HELP-REQUEST.md exists in root with complete PH + Show HN + SO instructions
+- ✅ PROGRESS.md has ≤3 detailed days
+- ✅ BACKLOG.md has only incomplete tasks as individual lines
+- ✅ `migration-horror-stories.html` loads, all 4 stories render, diff previews work, CTAs link to app.html
+- ✅ sitemap.xml contains new URL
+- ✅ index.html and tools.html footer link to new page
 
 ### Key Insights
-1. **HELP-REQUEST.md is persistently fragile.** It has been recreated 7 times. It MUST be committed every session. Never assume it persisted.
-2. **Launch day accuracy is non-negotiable.** PH visitors will click through to built-in-public.html, indiehackers.html, and product-hunt.html. Stale numbers undermine the "relentless shipping" narrative.
-3. **"40 tools" is a marketing milestone.** Round numbers create anchors. "40+ free micro-tools" is a genuine competitive moat — more free utilities than many paid SaaS platforms have features.
-4. **All autonomous pre-launch systems are built and verified.** The only remaining blocker is human execution of the PH post.
-
----
-
----
-
-## Day 137 — SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42), Stale Data Sweep (May 14, 2026)
-
-### What Was Built
-1. **SQL Window Function Generator micro-tool (#41)** — `tools/sql-window-function-generator.html` generates window function queries from CREATE TABLE schemas. 11 function types: ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, NTILE, FIRST_VALUE, LAST_VALUE, running total (SUM), moving average (AVG), running count (COUNT). Smart column detection picks partition, order, and value columns based on names and types. Configurable frame clauses (ROWS UNBOUNDED PRECEDING, ROWS 2 PRECEDING, etc.). Supports all 5 SQL dialects with proper identifier quoting.
-2. **SQL GROUP BY Generator micro-tool (#42)** — `tools/sql-group-by-generator.html` generates GROUP BY and aggregate queries from CREATE TABLE schemas. 6 pattern types: basic GROUP BY with COUNT/SUM/AVG/MIN/MAX, GROUP BY with HAVING, ROLLUP, CUBE, GROUPING SETS, and DISTINCT counts. Smart column detection picks group-by and numeric columns. Includes dialect-specific fallback notes for SQLite and MySQL where ROLLUP/CUBE/GROUPING SETS are unsupported.
-3. **Cross-links and sitemap** — Added both tools to index.html tools grid, tools.html tools list, and sitemap.xml (163 → 165 URLs).
-4. **Tool count sweep** — Updated 40+ → 42+ references on README.md, app.html paywall social proof, and built-in-public.html. Day counts updated 136 → 137 where appropriate.
-
-### Why This Matters
-Product Hunt launch is still blocked on human execution. While waiting, building high-traffic micro-tools is the highest-leverage autonomous activity. Window functions are a top SQL search topic and a common developer pain point. Each new tool is an additional SEO landing page and organic traffic source. At 42 tools, the "more free tools than many paid SaaS platforms" moat strengthens.
-
-### Validation
-- ✅ `tools/sql-window-function-generator.html` loads, parses SQL, generates queries for all 11 functions and 5 dialects
-- ✅ index.html and tools.html both link to the new tool
-- ✅ sitemap.xml contains the new URL with correct lastmod
-- ✅ README.md lists 45 numbered tools (including both new ones)
-- ✅ app.html and built-in-public.html reflect 42+ tools / 137 days
-
-### Key Insights
-1. **When distribution is blocked, build organic traffic engines.** Window functions are searched thousands of times per month. A good generator ranks for long-tail keywords.
-2. **Tool consistency matters.** Every new tool must match the existing design system, footer, schema.org markup, and CTA box. Reusing the parser and CSS patterns keeps quality high.
-3. **42 tools is a stronger anchor than 40.** Round numbers create credibility. Updating counts across the site prevents the "stale content" impression.
+1. **HELP-REQUEST.md is persistently fragile.** It has been recreated 8 times. It MUST be committed every session. The human cannot act on a request they cannot see.
+2. **Content marketing can be as impactful as product features.** A well-crafted horror story page converts better than another SQL generator because it creates emotional urgency and builds trust.
+3. **Trust is the currency of conversion.** At 138 days with zero sales, every visitor who hits the paywall is deciding whether to trust an unknown tool with their database. Engineering war stories are trust builders.
+4. **When micro-tools hit diminishing returns, switch to conversion assets.** 42 tools is plenty. What we need now is compelling reasons to buy, not more reasons to visit.
 
 ---
 

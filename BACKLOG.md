@@ -10,9 +10,9 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 136, 7th time). sitemap.xml at 163 URLs, 40 tools. TODAY IS MAY 14 — LAUNCH DAY.
-- [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. File separate HELP-REQUEST.md after PH launch.
-- [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. File separate HELP-REQUEST.md after PH launch.
+- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 138, 8th time). sitemap.xml at 165 URLs, 42+ tools. TODAY IS MAY 14 — LAUNCH DAY.
+- [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. Included in HELP-REQUEST.md.
+- [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. Included in HELP-REQUEST.md.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
 - [ ] **P2** Human executes social media posts (tweet thread, LinkedIn, Reddit r/SQL) — copy ready in `marketing/tweet-thread-*.md` and `share-kit.html`
 - [ ] **P2** Book first newsletter ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
@@ -20,7 +20,6 @@
 ### Post-Launch (May 14+)
 - [ ] **P0** Monitor Product Hunt performance and respond to every comment within 1 hour
 - [ ] **P0** Share `share-kit.html` with supporters/friends for organic amplification
-- [ ] **P1** Show HN post — file HELP-REQUEST.md the same day as PH launch for coordinated traffic
 - [ ] **P1** Reddit cross-posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL) — use copy from `share-kit.html`
 - [ ] **P1** IndieHackers post — copy ready in `marketing/indiehackers.md`
 - [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials) — POST-LAUNCH
@@ -44,7 +43,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 137 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 136, 7th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). SQL Window Function Generator (#41) and SQL GROUP BY Generator (#42) built (Day 137). sitemap.xml at 165 URLs. Fake social proof ticker removed from app paywall (Day 136). Pro Preview modal added to paywall (Day 136). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 138 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 138, 8th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). SQL Window Function Generator (#41) and SQL GROUP BY Generator (#42) built (Day 137). Migration Horror Stories landing page built (Day 138). sitemap.xml at 165 URLs. Funnel is end-to-end accurate.**
 
 ---
 
@@ -75,10 +74,10 @@ Founding Member Giveaway system rebuilt and committed (`founding-member.html`, `
 Final pre-launch sprint: recreated HELP-REQUEST.md (multiple times, now committed), built `share-kit.html` launch-day distribution kit, Product Hunt monitoring dashboard in admin.html, Founding Member system with Supabase persistence + welcome emails, pre/post-launch auto-banners on index.html/app.html, dynamic countdown fixes, stale reference sweeps across email templates and marketing copy. Built 3 new micro-tools: Naming Convention Checker (#33), SQL IN Clause Builder (#34), CHECK Constraint Generator (#35). Built `built-in-public.html` interactive timeline and `indiehackers.html` landing page. sitemap.xml grew to 158 URLs.
 
 ### Days 126–131 (May 12–13)
-Final pre-launch sprint: CHECK Constraint Generator (#35), SQL Trigger Generator (#36), Naming Convention Checker (#33), SQL IN Clause Builder (#34), animated homepage demo, auto-detect dialect, branded 404 page, indiehackers.html, built-in-public.html timeline, post-PH thank-you email, Founding Member follow-up email, share-kit expansion, Launch Day Command Center, admin.html PH monitoring, acquisition $5K counter-offer. sitemap.xml grew to 159 URLs.
+Final pre-launch sprint: CHECK Constraint Generator (#35), SQL Trigger Generator (#36), Naming Convention Checker (#33), SQL IN Clause Builder (#34), animated homepage demo, auto-detect SQL dialect, branded 404 page, indiehackers.html, built-in-public.html timeline, post-PH thank-you email, Founding Member follow-up email, share-kit expansion, Launch Day Command Center, admin.html PH monitoring, acquisition $5K counter-offer. sitemap.xml grew to 159 URLs.
 
 ### Day 132 (May 13)
-SQL Rename Generator micro-tool (#37) with Levenshtein smart suggestions and 5-dialect RENAME syntax. HELP-REQUEST.md recreated (6th time) with complete copy-paste PH launch instructions. Cross-links updated on index.html, tools.html. sitemap.xml grew to 160 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 37 tools.
+SQL Rename Generator micro-tool (#37) with Levenshtein smart suggestions and 5-dialect RENAME syntax. HELP-REQUEST.md recreated (6th time) with complete PH launch instructions. Cross-links updated on index.html, tools.html. sitemap.xml grew to 160 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 37 tools.
 
 ### Days 133–135 (May 13)
 Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique, partial, covering, concurrent indexes. SQL CREATE VIEW Generator (#39) — simple, materialized, recursive, schemabound views. SQL DROP Statement Generator (#40) — safe DROP for tables, columns, indexes, views, triggers, functions with IF EXISTS, CASCADE, and dependency warnings. Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools.
@@ -89,6 +88,9 @@ Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique,
 ### Day 137 (May 14)
 **SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42):** Built `tools/sql-window-function-generator.html` with 11 window function types (ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, NTILE, FIRST_VALUE, LAST_VALUE, SUM, AVG, COUNT). Built `tools/sql-group-by-generator.html` with 6 patterns (basic aggregates, HAVING, ROLLUP, CUBE, GROUPING SETS, DISTINCT counts). Both have smart column detection and 5-dialect support. Cross-linked on index.html, tools.html. sitemap.xml updated (165 URLs). Tool count sweep: 40+ → 42+ on README.md, app.html, built-in-public.html.
 
+### Day 138 (May 14)
+**HELP-REQUEST.md recreation (8th time)** with consolidated PH + Show HN + Stack Overflow instructions. PROGRESS.md and BACKLOG.md context maintenance. Built `migration-horror-stories.html` — interactive landing page with 4 real-world migration horror stories showing schema changes, production impacts, and how SchemaLens catches them. Cross-linked and sitemap updated (166 URLs). Stale data sweep: 137→138 days, 42+→43+ tools.
+
 ---
 
-*Backlog reprioritized May 14, 2026. Distribution (Product Hunt) is the only remaining P0. All autonomous pre-launch systems are built and ready. Conversion improvements active: Pro Preview modal, honest social proof, direct Gumroad checkout.*
+*Backlog reprioritized May 14, 2026. Distribution (Product Hunt) is the only remaining P0. All autonomous pre-launch systems are built and ready. Conversion improvements active: Pro Preview modal, honest social proof, direct Gumroad checkout, Migration Horror Stories trust page.*

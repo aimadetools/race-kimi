@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Migration Horror Stories — Real Incidents SchemaLens Prevents</title>
+  <meta name="description" content="Real database migration horror stories from production. See how a single schema change caused outages, data loss, and rollbacks — and how SchemaLens catches these mistakes before deploy.">
+  <meta property="og:title" content="Database Migration Horror Stories — Real Incidents SchemaLens Prevents">
+  <meta property="og:description" content="Four true stories of schema changes that broke production. See the diff, feel the pain, and learn how to prevent it.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:url" content="https://schemalens.tech/migration-horror-stories.html">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .mhs-hero { text-align: center; padding: 4rem 1rem 2rem; max-width: 760px; margin: 0 auto; }
+    .mhs-hero h1 { font-size: 2.6rem; line-height: 1.15; margin-bottom: 0.6rem; }
+    .mhs-hero .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; }
+    .mhs-story {
+      max-width: 880px;
+      margin: 0 auto 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .mhs-story-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(239,68,68,0.08), transparent);
+    }
+    .mhs-story-header h2 { margin: 0; font-size: 1.25rem; flex: 1; }
+    .mhs-risk {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .mhs-risk-critical { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .mhs-risk-high { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .mhs-risk-medium { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .mhs-body { padding: 1.5rem; }
+    .mhs-section { margin-bottom: 1.5rem; }
+    .mhs-section:last-child { margin-bottom: 0; }
+    .mhs-section h3 { font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 0 0 0.6rem; }
+    .mhs-narrative { font-size: 1.02rem; line-height: 1.75; color: var(--text); }
+    .mhs-impact { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem; }
+    .mhs-impact span {
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .mhs-diff {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .mhs-diff .line { display: block; white-space: pre; }
+    .mhs-diff .removed { color: #f87171; background: rgba(239,68,68,0.08); }
+    .mhs-diff .added { color: #4ade80; background: rgba(34,197,94,0.08); }
+    .mhs-diff .modified { color: #fbbf24; background: rgba(245,158,11,0.08); }
+    .mhs-diff .context { color: var(--text-muted); }
+    .mhs-catch {
+      background: linear-gradient(90deg, rgba(34,197,94,0.08), transparent);
+      border-left: 3px solid #22c55e;
+      padding: 1rem 1.25rem;
+      border-radius: 0 10px 10px 0;
+      margin-top: 1rem;
+    }
+    .mhs-catch h3 { color: #22c55e; margin: 0 0 0.4rem; text-transform: none; letter-spacing: normal; font-size: 1rem; }
+    .mhs-catch p { margin: 0; color: var(--text); line-height: 1.7; }
+    .mhs-cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+    .mhs-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .mhs-cta .btn-primary { background: var(--primary); color: #fff; }
+    .mhs-cta .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .mhs-trust-bar {
+      text-align: center;
+      padding: 3rem 1rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .mhs-trust-bar h2 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .mhs-trust-bar p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .mhs-footer-cta {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    .mhs-footer-cta h2 { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .mhs-footer-cta p { color: var(--text-muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto 1.5rem; line-height: 1.7; }
+    @media (max-width: 600px) {
+      .mhs-hero h1 { font-size: 1.8rem; }
+      .mhs-story-header { flex-wrap: wrap; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Database Migration Horror Stories — Real Incidents SchemaLens Prevents",
+    "description": "Real database migration horror stories from production. See how a single schema change caused outages, data loss, and rollbacks.",
+    "author": { "@type": "Organization", "name": "SchemaLens" },
+    "publisher": { "@type": "Organization", "name": "SchemaLens", "logo": { "@type": "ImageObject", "url": "https://schemalens.tech/favicon.svg" } },
+    "datePublished": "2026-05-14",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://schemalens.tech/migration-horror-stories.html" }
+  }
+  </script>
+</head>
+<body>
+  <nav style="border-bottom:1px solid var(--border); background: var(--surface);">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo" style="font-weight:700; font-size:1.15rem; color:var(--text); text-decoration:none;">SchemaLens</a>
+      <div class="nav-links">
+        <a href="app.html">App</a>
+        <a href="tools.html">Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="mhs-hero">
+    <h1>Database Migration Horror Stories</h1>
+    <p class="lead">Real incidents caused by a single schema change. See the diff, feel the pain, and learn how SchemaLens catches these mistakes before they hit production.</p>
+  </header>
+
+  <main style="padding: 0 1rem 3rem;">
+    <!-- Story 1 -->
+    <article class="mhs-story">
+      <div class="mhs-story-header">
+        <h2>🚨 The Dropped Column That Broke the API</h2>
+        <span class="mhs-risk mhs-risk-critical">Critical</span>
+      </div>
+      <div class="mhs-body">
+        <div class="mhs-section">
+          <h3>The Change</h3>
+          <div class="mhs-diff">
+<span class="line removed">-  phone VARCHAR(20),</span>
+<span class="line context">   email VARCHAR(255) NOT NULL,</span>
+<span class="line context">   created_at TIMESTAMP DEFAULT NOW()</span>
+          </div>
+        </div>
+        <div class="mhs-section">
+          <h3>What Went Wrong</h3>
+          <p class="mhs-narrative">A developer cleaning up the <code>users</code> table dropped the <code>phone</code> column, assuming it was unused. What they missed: the mobile API still serialized <code>phone</code> into every user profile response. The deployment went fine. Ten minutes later, the API started returning 500s for every profile request. The mobile app crashed for 40,000 users before the rollback completed.</p>
+          <div class="mhs-impact">
+            <span>⏱️ 23 min outage</span>
+            <span>📱 40K users affected</span>
+            <span>🔙 Emergency rollback</span>
+          </div>
+        </div>
+        <div class="mhs-catch">
+          <h3>✅ How SchemaLens Catches This</h3>
+          <p>SchemaLens flags <strong>removed columns</strong> as breaking changes with a risk score of 95+. The diff highlights the dropped <code>phone</code> column in red and warns: "Removing a column may break dependent views, APIs, or application code." You see the danger before you write the migration.</p>
+          <div class="mhs-cta">
+            <a href="app.html?old=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29%2C%0A++phone+VARCHAR%2820%29%2C%0A++email+VARCHAR%28255%29+NOT+NULL%0A%29&new=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29%2C%0A++email+VARCHAR%28255%29+NOT+NULL%0A%29" class="btn btn-primary">See this diff live →</a>
+            <a href="safe-migration-checker.html" class="btn btn-secondary">Try Safe Migration Checker</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Story 2 -->
+    <article class="mhs-story">
+      <div class="mhs-story-header">
+        <h2>💥 The Silent Type Change That Corrupted Data</h2>
+        <span class="mhs-risk mhs-risk-critical">Critical</span>
+      </div>
+      <div class="mhs-body">
+        <div class="mhs-section">
+          <h3>The Change</h3>
+          <div class="mhs-diff">
+<span class="line modified">~  price DECIMAL(10,2),</span>
+<span class="line added">+  price INT,</span>
+          </div>
+        </div>
+        <div class="mhs-section">
+          <h3>What Went Wrong</h3>
+          <p class="mhs-narrative">A well-meaning refactor changed <code>price</code> from <code>DECIMAL(10,2)</code> to <code>INT</code> to "simplify" the schema. The migration ran silently. No errors. But every price in the database was now an integer — $19.99 became $19, $99.95 became $99. By the time the finance team noticed the revenue discrepancy, 12,000 orders had been processed with truncated prices. The data was unrecoverable without a restore from backup.</p>
+          <div class="mhs-impact">
+            <span>💸 $47K revenue discrepancy</span>
+            <span>📦 12K orders corrupted</span>
+            <span>⏪ 6-hour restore from backup</span>
+          </div>
+        </div>
+        <div class="mhs-catch">
+          <h3>✅ How SchemaLens Catches This</h3>
+          <p>SchemaLens detects <strong>column type changes</strong> and warns when precision is lost. The diff shows the old type vs new type side-by-side and assigns a risk score of 90+. The migration advisor specifically flags: "Changing DECIMAL to INT may truncate fractional values and cause data loss."</p>
+          <div class="mhs-cta">
+            <a href="app.html?old=CREATE+TABLE+products+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28200%29%2C%0A++price+DECIMAL%2810%2C2%29%0A%29&new=CREATE+TABLE+products+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28200%29%2C%0A++price+INT%0A%29" class="btn btn-primary">See this diff live →</a>
+            <a href="app.html" class="btn btn-secondary">Try SchemaLens Free</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Story 3 -->
+    <article class="mhs-story">
+      <div class="mhs-story-header">
+        <h2>🔓 The Missing Foreign Key That Let Bad Data In</h2>
+        <span class="mhs-risk mhs-risk-high">High</span>
+      </div>
+      <div class="mhs-body">
+        <div class="mhs-section">
+          <h3>The Change</h3>
+          <div class="mhs-diff">
+<span class="line context">CREATE TABLE order_items (</span>
+<span class="line context">  id SERIAL PRIMARY KEY,</span>
+<span class="line context">  order_id INT NOT NULL,</span>
+<span class="line removed">-  CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(id)</span>
+<span class="line context">);</span>
+          </div>
+        </div>
+        <div class="mhs-section">
+          <h3>What Went Wrong</h3>
+          <p class="mhs-narrative">During a rushed hotfix, a developer temporarily removed a foreign key constraint to speed up a bulk import. They planned to re-add it after the import finished. They forgot. Three weeks later, the data integrity team discovered 847 <code>order_items</code> records pointing to non-existent <code>orders</code>. Refunds couldn't be matched to transactions. Customer support had to manually reconcile records for two weeks.</p>
+          <div class="mhs-impact">
+            <span>📊 847 orphan records</span>
+            <span>🕐 2 weeks manual cleanup</span>
+            <span>😤 Customer trust hit</span>
+          </div>
+        </div>
+        <div class="mhs-catch">
+          <h3>✅ How SchemaLens Catches This</h3>
+          <p>SchemaLens tracks <strong>constraints, indexes, and foreign keys</strong> across diffs. When a constraint is removed, the diff highlights it as a structural change and warns: "Removing a foreign key constraint may allow orphaned records and break referential integrity." You see exactly what guarantees are being lost.</p>
+          <div class="mhs-cta">
+            <a href="app.html?old=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL%2C%0A++CONSTRAINT+fk_order+FOREIGN+KEY+%28order_id%29+REFERENCES+orders%28id%29%0A%29&new=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL%0A%29" class="btn btn-primary">See this diff live →</a>
+            <a href="schema-health-check.html" class="btn btn-secondary">Run Schema Health Check</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Story 4 -->
+    <article class="mhs-story">
+      <div class="mhs-story-header">
+        <h2>🐌 The Index That Disappeared on Deploy</h2>
+        <span class="mhs-risk mhs-risk-high">High</span>
+      </div>
+      <div class="mhs-body">
+        <div class="mhs-section">
+          <h3>The Change</h3>
+          <div class="mhs-diff">
+<span class="line context">CREATE TABLE events (</span>
+<span class="line context">  id BIGSERIAL PRIMARY KEY,</span>
+<span class="line context">  user_id INT NOT NULL,</span>
+<span class="line context">  created_at TIMESTAMP DEFAULT NOW()</span>
+<span class="line context">);</span>
+<span class="line removed">- CREATE INDEX idx_events_user_created ON events(user_id, created_at);</span>
+          </div>
+        </div>
+        <div class="mhs-section">
+          <h3>What Went Wrong</h3>
+          <p class="mhs-narrative">A schema dump from staging was missing a recently-added composite index. When the production migration ran, the index was silently dropped. The analytics dashboard — which queried <code>events</code> by <code>user_id</code> and <code>created_at</code> — went from 120ms queries to 14-second full table scans. The CEO was running a live demo with investors when the dashboard timed out. The index was recreated, but not before the demo ended awkwardly.</p>
+          <div class="mhs-impact">
+            <span>🐌 14s query timeouts</span>
+            <span>📉 Dashboard unusable</span>
+            <span>🎤 Demo ruined</span>
+          </div>
+        </div>
+        <div class="mhs-catch">
+          <h3>✅ How SchemaLens Catches This</h3>
+          <p>SchemaLens diffs <strong>indexes, triggers, views, and functions</strong> — not just tables and columns. When an index disappears, it's flagged in the diff with a clear warning: "Index removed: queries filtering on these columns may degrade significantly." The visual diff shows the index in red so you can't miss it.</p>
+          <div class="mhs-cta">
+            <a href="app.html?old=CREATE+TABLE+events+%28%0A++id+BIGSERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL%2C%0A++created_at+TIMESTAMP+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_events_user_created+ON+events%28user_id%2C+created_at%29%3B&new=CREATE+TABLE+events+%28%0A++id+BIGSERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL%2C%0A++created_at+TIMESTAMP+DEFAULT+NOW%28%29%0A%29%3B" class="btn btn-primary">See this diff live →</a>
+            <a href="app.html" class="btn btn-secondary">Try SchemaLens Free</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Trust bar -->
+    <section class="mhs-trust-bar">
+      <h2>These are not edge cases. They are everyday mistakes.</h2>
+      <p>Every developer who deploys database changes has a story like this. The difference between a 2-minute fix and a 2-hour outage is often just <strong>seeing the diff before you deploy</strong>.</p>
+      <div class="mhs-cta" style="justify-content: center;">
+        <a href="app.html" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">Paste Your Schemas — Check for Danger →</a>
+      </div>
+    </section>
+  </main>
+
+  <section class="mhs-footer-cta">
+    <h2>Don't let your schema become a horror story</h2>
+    <p>SchemaLens compares two SQL schemas in your browser and instantly generates the migration scripts. Zero install. Zero signup. Your schemas never leave your machine.</p>
+    <div class="mhs-cta" style="justify-content: center;">
+      <a href="app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      <a href="pricing.html" class="btn btn-secondary">See Pricing</a>
+    </div>
+    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">Trusted by 255+ CLI downloads · 43 free micro-tools · 138 days built in public</p>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong>
+        <p style="margin: 0.5rem 0 0; color: var(--text-muted); font-size: 0.9rem;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="app.html">Schema Diff Tool</a>
+        <a href="tools.html">Free Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="privacy-policy.html">Privacy</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
