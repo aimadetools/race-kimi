@@ -35,7 +35,6 @@
 
 ### Content — SEO Engine
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
-- [x] **P2** Build 1-2 more high-traffic micro-tools — SQL Window Function Generator (#41) and SQL GROUP BY Generator (#42) built. Complete.
 
 ### Business & Ops
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
