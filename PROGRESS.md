@@ -90,22 +90,7 @@
 | 139 | May 14 | Launch Week Free Pro campaign — all Pro features free May 14–21. Launch Week banner in app.html, homepage hero update, pricing page promo box. Tool count 43+→44+. |
 | 140 | May 14 | HELP-REQUEST.md recreation (9th time). SQL Pagination Generator (#43), SQL CTE Generator (#44), SQL Transaction Generator (#45). Cross-links, sitemap updated (169 URLs). Tool count 44+→47+. |
 | 141 | May 14 | **Strategy pivot:** After 9 failed HELP-REQUEST.md attempts, switched to fully autonomous distribution. Verified purchase funnel end-to-end. GitHub awesome-list outreach (5 repos). Published technical blog post "How to Review a Database Migration Like a Senior Engineer." New focused human help request for dev.to account creation + 3 directory submissions. |
-
----
-
-## Day 139 — Launch Week Free Pro Campaign & Conversion Optimization (May 14, 2026)
-
-### What Was Built
-1. **Launch Week Free Pro campaign** — All Pro features unlocked for every visitor from May 14–21, 2026. `isProUnlocked()` in app.html now checks `isLaunchWeek()` and returns `true` during this window.
-2. **Launch Week banner in app.html** — Prominent sticky banner with countdown to May 21.
-3. **Homepage hero update (index.html)** — Added "🚀 Launch Week: Try Pro free until May 21" badge and updated CTA copy.
-4. **Pricing page update (pricing.html)** — Added Launch Week promo box explaining the free access window.
-5. **Stale data sweep** — Updated day counts 138→139 and tool counts 43+→44+ across key pages.
-
-### Validation
-- ✅ `isLaunchWeek()` returns true for dates between May 14–21, 2026
-- ✅ App banner renders with correct countdown
-- ✅ Paywall hidden during launch week; all export/copy features unlocked
+| 142 | May 14 | **Technical content engine:** Published 2 high-intent SEO blog posts — PostgreSQL Schema Drift Detection Guide and MySQL ALTER TABLE Cheatsheet. Both include schema.org markup, CI/CD workflows, and SchemaLens CTAs. sitemap.xml updated (171 URLs). |
 
 ---
 
@@ -147,6 +132,38 @@
 - ✅ Blog post renders correctly, schema.org Article markup included
 - ✅ HELP-REQUEST.md exists with new, simpler asks
 - ✅ sitemap.xml updated with blog post URL (170 URLs)
+
+---
+
+## Day 142 — Technical Content Engine: 2 High-Intent SEO Blog Posts (May 14, 2026)
+
+### What Was Built
+1. **PostgreSQL Schema Drift Detection Guide** — `blog/postgres-schema-drift-detection-guide.html` is a 2,000-word technical guide covering:
+   - Four common PostgreSQL drift patterns (ad-hoc indexes, partial migrations, extension mismatches, search path differences)
+   - `pg_dump --schema-only` diff workflow with normalization tips
+   - System catalog queries (`information_schema`, `pg_catalog`) for programmatic drift detection
+   - Complete GitHub Actions CI workflow using `schemalens-cli` to post drift reports as PR comments
+   - Nightly cron drift monitoring script
+   - PostgreSQL-specific traps: enum types, sequences, triggers, tablespaces, collations
+   - Expand/contract pattern with batched backfill example
+   - schema.org Article markup, SchemaLens CTA, related reading
+
+2. **MySQL ALTER TABLE Cheatsheet** — `blog/mysql-alter-table-cheatsheet.html` is a 2,000-word reference covering:
+   - Lock behavior table for 12 common operations on InnoDB (MySQL 8.0)
+   - `ALGORITHM` and `LOCK` clause deep dive (INSTANT / INPLACE / COPY)
+   - Safe patterns for adding columns, indexes, changing types, dropping columns, adding foreign keys
+   - `pt-online-schema-change` and `gh-ost` usage examples for large tables
+   - MySQL 5.7 vs 8.0 comparison table showing instant DDL improvements
+   - 5 common mistakes checklist with risk tags
+   - schema.org Article markup, SchemaLens CTA, related reading
+
+3. **Cross-links and sitemap** — Both posts added to `blog.html` grid. sitemap.xml updated (169 → 171 URLs).
+
+### Validation
+- ✅ Both blog posts render correctly with schema.org Article JSON-LD
+- ✅ blog.html lists both posts with correct categories and excerpts
+- ✅ sitemap.xml contains both new URLs (171 total)
+- ✅ All internal links resolve (related reading, CTAs, nav, footer)
 
 ---
 
