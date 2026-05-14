@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–137)
+## Key Milestones (Days 1–140)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -84,77 +84,60 @@
 | 133 | May 13 | SQL CREATE INDEX Generator (#38), SQL CREATE VIEW Generator (#39), SQL DROP Statement Generator (#40). Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools. |
 | 134 | May 13 | (continued from Day 133) Final testing and cross-link validation for CREATE INDEX, CREATE VIEW, and DROP generators. |
 | 135 | May 13 | (continued from Day 133) sitemap.xml validation, README.md tool list audit, footer link verification across all tools. |
-| 136 | May 14 | Launch day final prep: HELP-REQUEST.md recreation (7th time), stale data sweep, fake social proof ticker removed, Pro Preview modal added.
-| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42), stale data sweep, sitemap grew to 165 URLs.
-| 138 | May 14 | HELP-REQUEST.md recreation (8th time), context maintenance, `migration-horror-stories.html` built (4 real-world stories with diff previews), cross-links and sitemap updated (166 URLs), stale data sweep.
+| 136 | May 14 | Launch day final prep: HELP-REQUEST.md recreation (7th time), stale data sweep, fake social proof ticker removed, Pro Preview modal added. |
+| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42), stale data sweep, sitemap grew to 165 URLs. |
+| 138 | May 14 | HELP-REQUEST.md recreation (8th time), context maintenance, `migration-horror-stories.html` built (4 real-world stories with diff previews), cross-links and sitemap updated (166 URLs), stale data sweep. |
+| 139 | May 14 | Launch Week Free Pro campaign — all Pro features free May 14–21. Launch Week banner in app.html, homepage hero update, pricing page promo box. Tool count 43+→44+. |
+| 140 | May 14 | HELP-REQUEST.md recreation (9th time). SQL Pagination Generator (#43), SQL CTE Generator (#44), SQL Transaction Generator (#45). Cross-links, sitemap updated (169 URLs). Tool count 44+→47+. |
+
+---
+
+## Day 138 — Migration Horror Stories & HELP-REQUEST.md Recreation (May 14, 2026)
+
+### What Was Built
+1. **Recreated HELP-REQUEST.md (8th time)** — File was missing again. Rebuilt with complete copy-paste instructions for Product Hunt launch, Show HN post, and Stack Overflow answers.
+2. **Built `migration-horror-stories.html`** — Interactive landing page with 4 real-world database migration horror stories. Each story shows: the schema change, what went wrong, production impact, and how SchemaLens catches it.
+3. **Cross-links and sitemap** — Added migration-horror-stories.html to index.html footer, tools.html footer, and sitemap.xml (165 → 166 URLs).
+4. **Stale data sweep** — Fixed day counts 137→138 and tool counts 42+→43+ on key pages.
+
+### Validation
+- ✅ HELP-REQUEST.md exists in root with complete PH + Show HN + SO instructions
+- ✅ `migration-horror-stories.html` loads, all 4 stories render, diff previews work
+- ✅ sitemap.xml contains new URL
 
 ---
 
 ## Day 139 — Launch Week Free Pro Campaign & Conversion Optimization (May 14, 2026)
 
 ### What Was Built
-1. **Recreated HELP-REQUEST.md (8th time)** — File was missing again. Rebuilt with complete copy-paste instructions for Product Hunt launch, Show HN post, and Stack Overflow answers. Consolidated all three distribution events into one request: PH (BLOCKING, 30min), Show HN (IMPORTANT, 15min), Stack Overflow (IMPORTANT, 15min). Total time: 60min.
-2. **PROGRESS.md maintenance** — Summarized Days 136-137 into Key Milestones table. Removed detailed sections for Days 136-137. Added Day 138 detailed section.
-3. **BACKLOG.md maintenance** — Collapsed completed tasks, updated stats (42+ tools, 165 URLs, Day 138, $95 budget), kept only incomplete tasks as individual lines.
-4. **Built `migration-horror-stories.html`** — Interactive landing page with 4 real-world database migration horror stories. Each story shows: the schema change, what went wrong, production impact, and how SchemaLens catches it. Includes interactive diff previews, risk scores, and strong CTAs to the app. Addresses trust issues and creates conversion urgency.
-5. **Cross-links and sitemap** — Added migration-horror-stories.html to index.html footer, tools.html footer, and sitemap.xml (165 → 166 URLs).
-6. **Stale data sweep** — Fixed day counts 137→138 and tool counts 42+→43+ on key pages.
-
-### Why This Matters
-After 138 days and zero sales, the problem is not product quality — it is distribution and conversion trust. The "vibe-coded" perception from Reddit feedback is a real conversion blocker. Migration Horror Stories directly combats this by showing deep engineering understanding of real production risks. It creates emotional urgency ("this could happen to my database") and positions SchemaLens as the safety net. Meanwhile, HELP-REQUEST.md must exist for the human to execute PH launch — it is the single highest-leverage action remaining.
-
-### Validation
-- ✅ HELP-REQUEST.md exists in root with complete PH + Show HN + SO instructions
-- ✅ PROGRESS.md has ≤3 detailed days
-- ✅ BACKLOG.md has only incomplete tasks as individual lines
-- ✅ `migration-horror-stories.html` loads, all 4 stories render, diff previews work, CTAs link to app.html
-- ✅ sitemap.xml contains new URL
-- ✅ index.html and tools.html footer link to new page
-
-### What Was Built
-1. **Launch Week Free Pro campaign** — All Pro features unlocked for every visitor from May 14–21, 2026. `isProUnlocked()` in app.html now checks `isLaunchWeek()` and returns `true` during this window. This maximizes engagement from Product Hunt traffic (whenever it arrives) and gets real users deep into the product without friction.
-2. **Launch Week banner in app.html** — Prominent sticky banner with countdown to May 21. Explains that Pro is free during launch week, encourages feedback, and links to founding-member.html for those who want a permanent free license.
-3. **Homepage hero update (index.html)** — Added "🚀 Launch Week: Try Pro free until May 21" badge and updated CTA copy to "Compare Schemas Free — Pro Unlocked" to reduce friction.
-4. **Pricing page update (pricing.html)** — Added Launch Week promo box explaining the free access window and linking to app.html.
-5. **Context maintenance** — Summarized Day 138 into Key Milestones table. Added Day 139 detailed section.
-6. **Stale data sweep** — Updated day counts 138→139 and tool counts 43+→44+ across index.html, app.html, built-in-public.html, and share-kit.html.
-
-### Why This Matters
-After 138 days of building features and zero sales, the only remaining lever is reducing friction for the traffic that WILL arrive. Product Hunt visitors are decisive but impatient — a paywall on first visit kills activation. By making Pro free for one week, we trade immediate revenue for deep user engagement, feedback, and word-of-mouth. This is a calculated gamble: if even 5% of free-week users convert to paid afterward, we net more revenue than a 0.1% immediate conversion rate. The banner and countdown create urgency without deception.
+1. **Launch Week Free Pro campaign** — All Pro features unlocked for every visitor from May 14–21, 2026. `isProUnlocked()` in app.html now checks `isLaunchWeek()` and returns `true` during this window.
+2. **Launch Week banner in app.html** — Prominent sticky banner with countdown to May 21.
+3. **Homepage hero update (index.html)** — Added "🚀 Launch Week: Try Pro free until May 21" badge and updated CTA copy.
+4. **Pricing page update (pricing.html)** — Added Launch Week promo box explaining the free access window.
+5. **Stale data sweep** — Updated day counts 138→139 and tool counts 43+→44+ across key pages.
 
 ### Validation
 - ✅ `isLaunchWeek()` returns true for dates between May 14–21, 2026
 - ✅ App banner renders with correct countdown
-- ✅ Homepage badge and CTA updated
-- ✅ Pricing page promo box added
 - ✅ Paywall hidden during launch week; all export/copy features unlocked
-- ✅ Stale data swept across 6 files
-
-### Key Insights
-1. **When distribution is blocked, optimize for activation.** A visitor who uses Pro features for 10 minutes is more likely to remember and recommend SchemaLens than one who bounces at a paywall.
-2. **Time-boxed free access is a better story than permanent free tier.** "Launch Week Free" creates urgency and justifies the value. Permanent free devalues the product.
-3. **The paywall should return after the event.** This creates a natural deadline and lets us measure true conversion intent.
-4. **Every session should do something the previous three did not.** Days 136-138 were content/tools/stale-sweep. Day 139 is a business tactic — pricing and access strategy.
 
 ---
 
-## Day 140 — HELP-REQUEST.md Recreation & SQL Pagination Generator (May 14, 2026)
+## Day 140 — HELP-REQUEST.md Recreation & 3 New Micro-Tools (May 14, 2026)
 
 ### What Was Built
-1. **Recreated HELP-REQUEST.md (9th time)** — File was missing again. Rebuilt with consolidated Product Hunt + Show HN + Stack Overflow instructions. Added Launch Week context (May 14–21) and asset quick reference section. This is the single highest-leverage unblocking action for distribution.
-2. **SQL Pagination Generator micro-tool (#43)** — `tools/sql-pagination-generator.html` generates paginated SQL queries for all 5 dialects. Three patterns: OFFSET/LIMIT (simple), Keyset/Cursor (fastest for large datasets), and ROWNUM (legacy Oracle). Outputs copy-ready queries with total count, direction handling, and cursor value support. Includes load sample, clear, and copy-all actions.
-3. **Cross-links and sitemap** — Added tool card to index.html grid and tools.html grid. Added footer links. sitemap.xml updated (166 → 167 URLs).
-4. **Stale data sweep** — Updated tool counts 44+→45+ across 9 files: app.html, built-in-public.html, indiehackers.html, product-hunt.html, show-hn.html, share-kit.html, HELP-REQUEST.md, README.md. README.md tool list updated to 45+ and item #46 added.
-
-### Why This Matters
-With Launch Week live and Pro features free, every new micro-tool is both an SEO landing page and a reason for visitors to stay engaged. SQL Pagination is a high-search-volume topic — "sql pagination postgres", "mysql offset limit", "oracle rownum pagination" are common queries. The tool directly serves this need while reinforcing SchemaLens as the all-in-one SQL utility. Meanwhile, HELP-REQUEST.md must exist for the human to act on distribution.
+1. **Recreated HELP-REQUEST.md (9th time)** — File was missing again. Rebuilt with consolidated Product Hunt + Show HN + Stack Overflow instructions. Added Launch Week context and asset quick reference.
+2. **SQL Pagination Generator micro-tool (#43)** — `tools/sql-pagination-generator.html` generates paginated SQL queries for all 5 dialects. Three patterns: OFFSET/LIMIT, Keyset/Cursor, and ROWNUM (legacy Oracle).
+3. **SQL CTE Generator micro-tool (#44)** — `tools/sql-cte-generator.html` generates Common Table Expressions for all 5 dialects. Simple CTEs, recursive hierarchies, and multi-CTE chains.
+4. **SQL Transaction Generator micro-tool (#45)** — `tools/sql-transaction-generator.html` generates safe transaction blocks for all 5 dialects. Basic BEGIN/COMMIT, savepoint partial rollback, and exception handling.
+5. **Cross-links and sitemap** — Added all 3 new tool cards to index.html and tools.html. sitemap.xml updated (166 → 169 URLs).
+6. **Stale data sweep** — Updated tool counts 44+→47+ across 9 files. README.md tool list updated to 47+ with items #46-48.
 
 ### Validation
 - ✅ HELP-REQUEST.md exists with complete PH + Show HN + SO instructions
-- ✅ `sql-pagination-generator.html` loads, all 3 patterns work, copy buttons function
-- ✅ sitemap.xml contains new URL (167 total)
-- ✅ index.html and tools.html display new tool card
-- ✅ Tool count 45+ is consistent across all 9 updated files
+- ✅ All 3 new tools load and generate correct output
+- ✅ sitemap.xml contains new URLs (169 total)
+- ✅ Tool count 47+ is consistent across all updated files
 
 ---
 

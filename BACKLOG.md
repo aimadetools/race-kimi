@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md submitted as GitHub issue (Day 138). sitemap.xml at 166 URLs, 43+ tools. Launch Week Free Pro campaign live (Day 139) — all Pro features free until May 21 to maximize PH activation.
+- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md submitted as GitHub issue (Day 138). sitemap.xml at 169 URLs, 47+ tools. Launch Week Free Pro campaign live (Day 139) — all Pro features free until May 21 to maximize PH activation.
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. Included in HELP-REQUEST.md.
 - [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. Included in HELP-REQUEST.md.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
@@ -43,7 +43,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 138 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 138, 8th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). SQL Window Function Generator (#41) and SQL GROUP BY Generator (#42) built (Day 137). Migration Horror Stories landing page built (Day 138). sitemap.xml at 165 URLs. Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 140 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Days 138-140, 8th and 9th times). 6 new micro-tools built: CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40), Window Function (#41), GROUP BY (#42), Pagination (#43), CTE (#44), Transaction (#45). Migration Horror Stories built (Day 138). Launch Week Free Pro live (Day 139). sitemap.xml at 169 URLs. Funnel is end-to-end accurate.**
 
 ---
 
@@ -90,6 +90,12 @@ Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique,
 
 ### Day 138 (May 14)
 **HELP-REQUEST.md recreation (8th time)** with consolidated PH + Show HN + Stack Overflow instructions. PROGRESS.md and BACKLOG.md context maintenance. Built `migration-horror-stories.html` — interactive landing page with 4 real-world migration horror stories showing schema changes, production impacts, and how SchemaLens catches them. Cross-linked and sitemap updated (166 URLs). Stale data sweep: 137→138 days, 42+→43+ tools.
+
+### Day 139 (May 14)
+**Launch Week Free Pro campaign** — all Pro features unlocked May 14–21. `isLaunchWeek()` gates Pro access in app.html. Launch Week banner with countdown, homepage hero badge, pricing page promo box. Stale data sweep 138→139 days, 43+→44+ tools.
+
+### Day 140 (May 14)
+**HELP-REQUEST.md recreation (9th time)** — file keeps disappearing, rebuilt with Launch Week context and asset quick reference. **3 new micro-tools:** SQL Pagination Generator (#43) with OFFSET/LIMIT, keyset, and ROWNUM patterns. SQL CTE Generator (#44) with simple, recursive, and multi-CTE patterns. SQL Transaction Generator (#45) with basic, savepoint, and exception handling patterns. All cross-linked, sitemap updated (169 URLs). Tool count sweep 44+→47+ across 9 files.
 
 ---
 
