@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SQL GROUP BY Generator — SchemaLens</title>
+<meta name="description" content="Generate SQL GROUP BY and aggregate queries automatically from CREATE TABLE schemas. COUNT, SUM, AVG, MIN, MAX, HAVING, ROLLUP, CUBE, and GROUPING SETS. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+<meta property="og:title" content="Free SQL GROUP BY Generator — SchemaLens">
+<meta property="og:description" content="Paste CREATE TABLE statements and get ready-to-run GROUP BY queries with aggregates, HAVING, ROLLUP, and CUBE. Supports 5 SQL dialects. No signup required.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-group-by-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL GROUP BY Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates SQL GROUP BY and aggregate queries from CREATE TABLE schemas. COUNT, SUM, AVG, MIN, MAX, HAVING, ROLLUP, CUBE, and GROUPING SETS. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+  "url": "https://schemalens.tech/tools/sql-group-by-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .generator-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .generator-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .query-list { display: flex; flex-direction: column; gap: 12px; }
+  .query-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
+  }
+  .query-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+  .query-item pre {
+    margin: 0; font-family: var(--mono); font-size: 0.8rem; line-height: 1.5;
+    color: var(--code-text); white-space: pre-wrap; word-break: break-word;
+  }
+  .query-item .actions { margin-top: 8px; display: flex; gap: 8px; }
+  .query-item .actions button {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  }
+  .query-item .actions button:hover { background: var(--surface-hover); }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+  .dialect-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL GROUP BY Generator</h1>
+    <p>Paste your CREATE TABLE statements and get ready-to-run GROUP BY queries — aggregates, HAVING, ROLLUP, CUBE, and GROUPING SETS. Supports 5 SQL dialects.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="generator-grid">
+    <div class="generator-card">
+      <h2>Input SQL</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">⚡ Generate GROUP BYs</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <p class="notice">Column types are analyzed to suggest the most useful aggregate patterns.</p>
+    </div>
+
+    <div class="generator-card">
+      <h2>Generated Queries</h2>
+      <div id="statsRow" class="stats-row" style="display:none;">
+        <div class="stat"><div class="stat-value" id="statTables">0</div><div class="stat-label">Tables</div></div>
+        <div class="stat"><div class="stat-value" id="statColumns">0</div><div class="stat-label">Columns</div></div>
+        <div class="stat"><div class="stat-value" id="statPatterns">0</div><div class="stat-label">Patterns</div></div>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Paste SQL and click Generate to see GROUP BY queries.</div>
+      </div>
+      <div class="toolbar" style="margin-top:12px; display:none;" id="outputActions">
+        <button class="secondary" onclick="copyAll()">📋 Copy All</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to diff two schemas and generate migrations?</h3>
+    <p>SchemaLens compares SQL schemas, detects breaking changes, and generates safe forward + rollback migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-select-generator.html">SELECT Generator</a>
+        <a href="sql-insert-generator.html">INSERT Generator</a>
+        <a href="sql-update-generator.html">UPDATE Generator</a>
+        <a href="sql-delete-generator.html">DELETE Generator</a>
+        <a href="sql-upsert-generator.html">UPSERT Generator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// =====================
+// SQL Parser
+// =====================
+function stripComments(sql) {
+  sql = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+  sql = sql.replace(/--[^\n]*/g, '');
+  return sql;
+}
+
+function splitStatements(sql) {
+  const stmts = [];
+  let current = '';
+  let inString = false;
+  let stringChar = '';
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+    const prev = sql[i - 1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      inString = true; stringChar = ch;
+    } else if (inString && ch === stringChar && prev !== '\\') {
+      inString = false;
+    }
+    if (!inString && ch === ';') {
+      stmts.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) stmts.push(current.trim());
+  return stmts;
+}
+
+function parseCreateTable(sql) {
+  sql = stripComments(sql);
+  const match = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\(([\s\S]*)\)\s*;?\s*$/i);
+  if (!match) return null;
+  const tableName = match[1];
+  const body = match[2];
+  const columns = [];
+
+  const parts = [];
+  let depth = 0;
+  let buf = '';
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (ch === '(') { depth++; buf += ch; }
+    else if (ch === ')') { depth--; buf += ch; }
+    else if (ch === ',' && depth === 0) { parts.push(buf.trim()); buf = ''; }
+    else { buf += ch; }
+  }
+  if (buf.trim()) parts.push(buf.trim());
+
+  for (const part of parts) {
+    const upper = part.toUpperCase();
+    if (upper.startsWith('PRIMARY') || upper.startsWith('UNIQUE') || upper.startsWith('CONSTRAINT') || upper.startsWith('FOREIGN') || upper.startsWith('CHECK') || upper.startsWith('INDEX')) {
+      continue;
+    }
+    const colMatch = part.match(/^(\w+)\s+([\w()]+(?:\s*\([^)]*\))?)(.*)$/);
+    if (colMatch) {
+      columns.push({
+        name: colMatch[1],
+        type: colMatch[2].trim().toUpperCase(),
+        rest: colMatch[3].trim()
+      });
+    }
+  }
+
+  return { tableName, columns };
+}
+
+function parseSchema(sql) {
+  const tables = [];
+  const stmts = splitStatements(sql);
+  for (const stmt of stmts) {
+    if (/CREATE\s+TABLE/i.test(stmt)) {
+      const t = parseCreateTable(stmt);
+      if (t) tables.push(t);
+    }
+  }
+  return tables;
+}
+
+// =====================
+// Utils
+// =====================
+function escapeIdentifier(name, dialect) {
+  if (dialect === 'postgres') return '"' + name + '"';
+  if (dialect === 'mysql') return '`' + name + '`';
+  if (dialect === 'mssql') return '[' + name + ']';
+  return name;
+}
+
+function isNumericType(type) {
+  return /^(INT|BIGINT|SMALLINT|TINYINT|DECIMAL|NUMERIC|FLOAT|DOUBLE|REAL|MONEY|SERIAL|BIGSERIAL|NUMBER|INTEGER)/i.test(type);
+}
+
+function isDateType(type) {
+  return /^(DATE|TIME|TIMESTAMP|DATETIME)/i.test(type);
+}
+
+function isStringType(type) {
+  return /^(VARCHAR|CHAR|TEXT|NVARCHAR|NCHAR|STRING|CLOB)/i.test(type);
+}
+
+function pickGroupCol(table) {
+  const candidates = table.columns.filter(c => {
+    const ln = c.name.toLowerCase();
+    return ln.includes('category') || ln.includes('region') || ln.includes('department') || ln.includes('status') || ln.includes('type') || ln.includes('tier') || ln.includes('group') || ln.includes('country') || ln.includes('city') || ln.includes('month') || ln.includes('year') || ln.includes('quarter');
+  });
+  if (candidates.length) return candidates[0];
+  const strs = table.columns.filter(c => isStringType(c.type) && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  if (strs.length) return strs[0];
+  const nonId = table.columns.filter(c => c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  return nonId[0] || table.columns[0];
+}
+
+function pickNumericCol(table) {
+  const nums = table.columns.filter(c => isNumericType(c.type) && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  if (nums.length) return nums[0];
+  return null;
+}
+
+function pickDateCol(table) {
+  const dates = table.columns.filter(c => isDateType(c.type));
+  if (dates.length) return dates[0];
+  return null;
+}
+
+// =====================
+// GROUP BY Generators
+// =====================
+function generateBasicGroupBy(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : '1';
+  const date = pickDateCol(table);
+  const dateCol = date ? escapeIdentifier(date.name, dialect) : null;
+
+  let sql = `SELECT\n  ${g},\n  COUNT(*) AS count`;
+  if (num) {
+    sql += `,\n  SUM(${numCol}) AS total,\n  AVG(${numCol}) AS average,\n  MIN(${numCol}) AS minimum,\n  MAX(${numCol}) AS maximum`;
+  }
+  if (dateCol) {
+    sql += `,\n  MIN(${dateCol}) AS earliest,\n  MAX(${dateCol}) AS latest`;
+  }
+  sql += `\nFROM ${t}\nGROUP BY ${g}\nORDER BY count DESC;`;
+  return sql;
+}
+
+function generateHaving(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : null;
+
+  let sql = `SELECT\n  ${g},\n  COUNT(*) AS count`;
+  if (num) {
+    sql += `,\n  SUM(${numCol}) AS total`;
+  }
+  sql += `\nFROM ${t}\nGROUP BY ${g}`;
+  if (num) {
+    sql += `\nHAVING SUM(${numCol}) > 1000`;
+  } else {
+    sql += `\nHAVING COUNT(*) > 5`;
+  }
+  sql += `\nORDER BY count DESC;`;
+  return sql;
+}
+
+function generateRollup(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g1 = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const g2Col = table.columns.find(c => c.name.toLowerCase() !== pickGroupCol(table).name.toLowerCase() && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  const g2 = g2Col ? escapeIdentifier(g2Col.name, dialect) : g1;
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : '1';
+
+  if (dialect === 'sqlite') {
+    return `-- SQLite does not support ROLLUP natively.\n-- Use a UNION ALL workaround or upgrade to PostgreSQL/MySQL/SQL Server/Oracle.\n\nSELECT ${g1}, NULL AS ${g2.replace(/["\`\[\]]/g,'')}, SUM(${numCol}) AS total\nFROM ${t}\nGROUP BY ${g1}\nUNION ALL\nSELECT NULL, ${g2}, SUM(${numCol})\nFROM ${t}\nGROUP BY ${g2}\nUNION ALL\nSELECT NULL, NULL, SUM(${numCol})\nFROM ${t};`;
+  }
+
+  let sql = `SELECT\n  ${g1},\n  ${g2},\n  SUM(${numCol}) AS total,\n  COUNT(*) AS count`;
+  if (dialect === 'postgres' || dialect === 'mysql' || dialect === 'mssql' || dialect === 'oracle') {
+    sql += `,\n  GROUPING(${g1}) AS ${g1.replace(/["\`\[\]]/g,'')}_grouping`;
+  }
+  sql += `\nFROM ${t}\nGROUP BY ROLLUP(${g1}, ${g2})\nORDER BY ${g1}, ${g2};`;
+  return sql;
+}
+
+function generateCube(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g1 = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const g2Col = table.columns.find(c => c.name.toLowerCase() !== pickGroupCol(table).name.toLowerCase() && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  const g2 = g2Col ? escapeIdentifier(g2Col.name, dialect) : g1;
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : '1';
+
+  if (dialect === 'sqlite' || dialect === 'mysql') {
+    return `-- ${dialect === 'sqlite' ? 'SQLite' : 'MySQL'} does not support CUBE natively.\n-- Use a UNION ALL workaround or switch to PostgreSQL/SQL Server/Oracle.\n\nSELECT ${g1}, ${g2}, SUM(${numCol}) AS total\nFROM ${t}\nGROUP BY ${g1}, ${g2}\nUNION ALL\nSELECT ${g1}, NULL, SUM(${numCol})\nFROM ${t}\nGROUP BY ${g1}\nUNION ALL\nSELECT NULL, ${g2}, SUM(${numCol})\nFROM ${t}\nGROUP BY ${g2}\nUNION ALL\nSELECT NULL, NULL, SUM(${numCol})\nFROM ${t};`;
+  }
+
+  return `SELECT\n  ${g1},\n  ${g2},\n  SUM(${numCol}) AS total,\n  COUNT(*) AS count\nFROM ${t}\nGROUP BY CUBE(${g1}, ${g2})\nORDER BY ${g1}, ${g2};`;
+}
+
+function generateGroupingSets(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g1 = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const g2Col = table.columns.find(c => c.name.toLowerCase() !== pickGroupCol(table).name.toLowerCase() && c.name.toLowerCase() !== 'id' && !c.name.toLowerCase().endsWith('_id'));
+  const g2 = g2Col ? escapeIdentifier(g2Col.name, dialect) : g1;
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : '1';
+
+  if (dialect === 'sqlite' || dialect === 'mysql' || dialect === 'oracle') {
+    return `-- ${dialect === 'sqlite' ? 'SQLite' : dialect === 'mysql' ? 'MySQL' : 'Oracle'} has limited or no native GROUPING SETS support.\n-- Use UNION ALL workarounds or switch to PostgreSQL/SQL Server.\n\nSELECT ${g1}, ${g2}, SUM(${numCol}) AS total\nFROM ${t}\nGROUP BY ${g1}, ${g2}\nUNION ALL\nSELECT ${g1}, NULL, SUM(${numCol})\nFROM ${t}\nGROUP BY ${g1}\nUNION ALL\nSELECT NULL, ${g2}, SUM(${numCol})\nFROM ${t}\nGROUP BY ${g2}\nUNION ALL\nSELECT NULL, NULL, SUM(${numCol})\nFROM ${t};`;
+  }
+
+  return `SELECT\n  ${g1},\n  ${g2},\n  SUM(${numCol}) AS total,\n  COUNT(*) AS count\nFROM ${t}\nGROUP BY GROUPING SETS (\n  (${g1}, ${g2}),\n  (${g1}),\n  (${g2}),\n  ()\n)\nORDER BY ${g1}, ${g2};`;
+}
+
+function generateDistinctCounts(table, dialect) {
+  const t = escapeIdentifier(table.tableName, dialect);
+  const g = escapeIdentifier(pickGroupCol(table).name, dialect);
+  const num = pickNumericCol(table);
+  const numCol = num ? escapeIdentifier(num.name, dialect) : '1';
+
+  return `SELECT\n  ${g},\n  COUNT(*) AS total_rows,\n  COUNT(DISTINCT ${numCol}) AS unique_values\nFROM ${t}\nGROUP BY ${g}\nORDER BY total_rows DESC;`;
+}
+
+// =====================
+// Main Generate
+// =====================
+const PATTERNS = [
+  { fn: generateBasicGroupBy, label: 'Basic GROUP BY with Aggregates' },
+  { fn: generateHaving, label: 'GROUP BY with HAVING' },
+  { fn: generateRollup, label: 'GROUP BY ROLLUP' },
+  { fn: generateCube, label: 'GROUP BY CUBE' },
+  { fn: generateGroupingSets, label: 'GROUPING SETS' },
+  { fn: generateDistinctCounts, label: 'DISTINCT Counts per Group' }
+];
+
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const tables = parseSchema(sql);
+
+  if (tables.length === 0) {
+    document.getElementById('outputPanel').innerHTML = '<div class="empty-state">No CREATE TABLE statements found. Paste valid SQL and try again.</div>';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('outputActions').style.display = 'none';
+    return;
+  }
+
+  let totalCols = 0;
+  let totalPatterns = 0;
+  const queries = [];
+
+  for (const table of tables) {
+    totalCols += table.columns.length;
+    for (const pat of PATTERNS) {
+      queries.push({ title: `${table.tableName} — ${pat.label}`, sql: pat.fn(table, dialect) });
+      totalPatterns++;
+    }
+  }
+
+  document.getElementById('statTables').textContent = tables.length;
+  document.getElementById('statColumns').textContent = totalCols;
+  document.getElementById('statPatterns').textContent = totalPatterns;
+  document.getElementById('statsRow').style.display = 'grid';
+
+  let html = '<div class="query-list">';
+  for (let i = 0; i < queries.length; i++) {
+    html += `<div class="query-item">
+      <h4>${escapeHtml(queries[i].title)}</h4>
+      <pre>${escapeHtml(queries[i].sql)}</pre>
+      <div class="actions">
+        <button onclick="copyQuery(${i})">Copy</button>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('outputPanel').innerHTML = html;
+  document.getElementById('outputActions').style.display = 'flex';
+
+  window._queries = queries;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function copyQuery(index) {
+  if (!window._queries || !window._queries[index]) return;
+  navigator.clipboard.writeText(window._queries[index].sql).then(() => {
+    const btns = document.querySelectorAll('.query-item .actions button');
+    if (btns[index]) {
+      const old = btns[index].textContent;
+      btns[index].textContent = 'Copied!';
+      setTimeout(() => btns[index].textContent = old, 1200);
+    }
+  });
+}
+
+function copyAll() {
+  if (!window._queries) return;
+  const all = window._queries.map(q => `-- ${q.title}\n${q.sql}`).join('\n\n');
+  navigator.clipboard.writeText(all).then(() => {
+    const btn = document.querySelector('#outputActions button');
+    if (btn) {
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 1200);
+    }
+  });
+}
+
+function loadSample() {
+  document.getElementById('sqlInput').value = `CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  region VARCHAR(50) NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE employees (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  department VARCHAR(50) NOT NULL,
+  salary DECIMAL(10,2) NOT NULL,
+  hire_date DATE NOT NULL
+);`;
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste SQL and click Generate to see GROUP BY queries.</div>';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('outputActions').style.display = 'none';
+}
+</script>
+</body>
+</html>
