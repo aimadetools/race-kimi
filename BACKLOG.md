@@ -35,7 +35,7 @@
 
 ### Content — SEO Engine
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
-- [ ] **P2** Build 1-2 more high-traffic micro-tools (e.g., SQL Formatter, SQL JOIN Visualizer)
+- [x] **P2** Build 1-2 more high-traffic micro-tools — SQL Window Function Generator (#41) built. 1 of 2 complete.
 
 ### Business & Ops
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
@@ -45,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 136 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 136, 7th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). sitemap.xml at 163 URLs. Fake social proof ticker removed from app paywall (Day 136). Pro Preview modal added to paywall (Day 136). Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 137 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 136, 7th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). SQL Window Function Generator built (Day 137, #41). sitemap.xml at 164 URLs. Fake social proof ticker removed from app paywall (Day 136). Pro Preview modal added to paywall (Day 136). Funnel is end-to-end accurate.**
 
 ---
 
@@ -86,6 +86,9 @@ Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique,
 
 ### Day 136 (May 14)
 **Launch Day Final Prep:** Recreated HELP-REQUEST.md (7th time) with complete copy-paste PH launch instructions. Stale data sweep across 6 files: day counts 130→136, tool counts 36+→40+. Removed fake "Recent Comparisons" ticker from app paywall and replaced with honest social proof (136 days built in public, 40+ tools, 255+ CLI downloads). Added **Pro Preview modal** to paywall — users can see a full sample migration with risk score, breaking changes, rollback script, and export options before purchasing.
+
+### Day 137 (May 14)
+**SQL Window Function Generator (#41):** Built `tools/sql-window-function-generator.html` with 11 window function types (ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, NTILE, FIRST_VALUE, LAST_VALUE, SUM, AVG, COUNT). Smart column detection, configurable frame clauses, 5 dialect support. Cross-linked on index.html, tools.html. sitemap.xml updated (164 URLs). Tool count sweep: 40+ → 41+ on README.md, app.html, built-in-public.html.
 
 ---
 
