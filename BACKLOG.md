@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 138, 8th time). sitemap.xml at 165 URLs, 42+ tools. TODAY IS MAY 14 — LAUNCH DAY.
+- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md submitted as GitHub issue (Day 138). sitemap.xml at 166 URLs, 43+ tools. Launch Week Free Pro campaign live (Day 139) — all Pro features free until May 21 to maximize PH activation.
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. Included in HELP-REQUEST.md.
 - [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. Included in HELP-REQUEST.md.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
