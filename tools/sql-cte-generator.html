@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free SQL CTE Generator — SchemaLens</title>
+<meta name="description" content="Generate SQL Common Table Expressions (CTEs) for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Simple, recursive, and multi-CTE queries with copy-ready output. No signup required.">
+<meta property="og:title" content="Free SQL CTE Generator — SchemaLens">
+<meta property="og:description" content="Generate SQL CTEs for all 5 dialects. Simple WITH clauses, recursive hierarchies, and multi-CTE queries with copy-ready output.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-cte-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL CTE Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates SQL Common Table Expressions for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Supports simple CTEs, recursive hierarchies, and multi-CTE queries.",
+  "url": "https://schemalens.tech/tools/sql-cte-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .generator-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .generator-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select, .toolbar button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .query-list { display: flex; flex-direction: column; gap: 12px; }
+  .query-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
+  }
+  .query-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+  .query-item pre {
+    margin: 0; font-family: var(--mono); font-size: 0.8rem; line-height: 1.5;
+    color: var(--code-text); white-space: pre-wrap; word-break: break-word;
+  }
+  .query-item .actions { margin-top: 8px; display: flex; gap: 8px; }
+  .query-item .actions button {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  }
+  .query-item .actions button:hover { background: var(--surface-hover); }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+  .badge { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); margin-left: 6px; }
+  .badge.recommended { background: rgba(34,197,94,0.12); color: #22c55e; border-color: rgba(34,197,94,0.3); }
+
+  .preset-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .preset-list button {
+    font-size: 0.8rem; padding: 4px 10px; border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--text); border: 1px solid var(--border); cursor: pointer;
+  }
+  .preset-list button:hover { background: var(--surface-hover); }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL CTE Generator</h1>
+    <p>Generate Common Table Expressions (CTEs) for all 5 SQL dialects. Simple WITH clauses, recursive hierarchies, running totals, and multi-CTE queries — copy-ready output.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="generator-grid">
+    <div class="generator-card">
+      <h2>CTE Settings</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Presets</label>
+        <div class="preset-list">
+          <button onclick="loadPreset('hierarchy')">👥 Employee Hierarchy</button>
+          <button onclick="loadPreset('running')">📈 Running Total</button>
+          <button onclick="loadPreset('multi')">🔗 Multi-CTE</button>
+          <button onclick="loadPreset('path')">🗺️ Path Enumeration</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cteName">CTE Name</label>
+        <input type="text" id="cteName" value="employee_hierarchy" placeholder="cte_name">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pattern">Pattern</label>
+          <select id="pattern" onchange="toggleRecursiveFields()">
+            <option value="simple">Simple CTE</option>
+            <option value="recursive">Recursive CTE</option>
+            <option value="multi">Multiple CTEs</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tableName">Source Table</label>
+          <input type="text" id="tableName" value="employees" placeholder="table_name">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="columns">CTE Columns</label>
+          <input type="text" id="columns" value="id, name, manager_id, level" placeholder="col1, col2, col3">
+        </div>
+        <div class="form-group">
+          <label for="rootCondition">Root Condition</label>
+          <input type="text" id="rootCondition" value="manager_id IS NULL" placeholder="parent_id IS NULL">
+        </div>
+      </div>
+
+      <div class="form-group" id="recursiveJoinGroup" style="display:none;">
+        <label for="recursiveJoin">Recursive Join</label>
+        <input type="text" id="recursiveJoin" value="e.manager_id = cte.id" placeholder="child.parent_id = cte.id">
+      </div>
+
+      <div class="form-group" id="unionColumnsGroup" style="display:none;">
+        <label for="unionColumns">Union Columns</label>
+        <input type="text" id="unionColumns" value="id, name, manager_id, 1" placeholder="id, name, parent_id, 1">
+      </div>
+
+      <div class="form-group">
+        <label for="finalSelect">Final SELECT</label>
+        <input type="text" id="finalSelect" value="*" placeholder="* or specific columns">
+      </div>
+
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">⚡ Generate CTE</button>
+        <button class="secondary" onclick="clearAll()">Clear</button>
+      </div>
+      <p class="notice">Recursive CTEs are ideal for hierarchical data like org charts, file systems, and bill-of-materials.</p>
+    </div>
+
+    <div class="generator-card">
+      <h2>Generated Query</h2>
+      <div id="outputPanel">
+        <div class="empty-state">Configure settings and click Generate to see the CTE query.</div>
+      </div>
+      <div class="toolbar" style="margin-top:12px; display:none;" id="outputActions">
+        <button class="secondary" onclick="copyAll()">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to diff two schemas and generate migrations?</h3>
+    <p>SchemaLens compares SQL schemas, detects breaking changes, and generates safe forward + rollback migrations — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff Tool</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../api.html">API</a>
+        <a href="../changelog.html">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="sql-select-generator.html">SELECT Generator</a>
+        <a href="sql-insert-generator.html">INSERT Generator</a>
+        <a href="sql-update-generator.html">UPDATE Generator</a>
+        <a href="sql-delete-generator.html">DELETE Generator</a>
+        <a href="sql-upsert-generator.html">UPSERT Generator</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../affiliate.html">Affiliate Program</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 SchemaLens. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const dialectNames = {
+  postgres: 'PostgreSQL',
+  mysql: 'MySQL',
+  sqlite: 'SQLite',
+  mssql: 'SQL Server',
+  oracle: 'Oracle'
+};
+
+function quoteId(name, dialect) {
+  if (dialect === 'postgres') return `"${name}"`;
+  if (dialect === 'mssql') return `[${name}]`;
+  if (dialect === 'mysql') return `\`${name}\``;
+  return name;
+}
+
+function toggleRecursiveFields() {
+  const pattern = document.getElementById('pattern').value;
+  const show = pattern === 'recursive';
+  document.getElementById('recursiveJoinGroup').style.display = show ? 'block' : 'none';
+  document.getElementById('unionColumnsGroup').style.display = show ? 'block' : 'none';
+}
+
+function loadPreset(name) {
+  if (name === 'hierarchy') {
+    document.getElementById('cteName').value = 'employee_hierarchy';
+    document.getElementById('pattern').value = 'recursive';
+    document.getElementById('tableName').value = 'employees';
+    document.getElementById('columns').value = 'id, name, manager_id, level';
+    document.getElementById('rootCondition').value = 'manager_id IS NULL';
+    document.getElementById('recursiveJoin').value = 'e.manager_id = cte.id';
+    document.getElementById('unionColumns').value = 'id, name, manager_id, 1';
+    document.getElementById('finalSelect').value = '*';
+  } else if (name === 'running') {
+    document.getElementById('cteName').value = 'running_totals';
+    document.getElementById('pattern').value = 'simple';
+    document.getElementById('tableName').value = 'orders';
+    document.getElementById('columns').value = 'order_id, customer_id, order_date, amount, running_total';
+    document.getElementById('rootCondition').value = '';
+    document.getElementById('recursiveJoin').value = '';
+    document.getElementById('unionColumns').value = '';
+    document.getElementById('finalSelect').value = '*';
+  } else if (name === 'multi') {
+    document.getElementById('cteName').value = 'department_stats';
+    document.getElementById('pattern').value = 'multi';
+    document.getElementById('tableName').value = 'employees';
+    document.getElementById('columns').value = 'dept_id, total_salary, employee_count';
+    document.getElementById('rootCondition').value = '';
+    document.getElementById('recursiveJoin').value = '';
+    document.getElementById('unionColumns').value = '';
+    document.getElementById('finalSelect').value = '*';
+  } else if (name === 'path') {
+    document.getElementById('cteName').value = 'category_path';
+    document.getElementById('pattern').value = 'recursive';
+    document.getElementById('tableName').value = 'categories';
+    document.getElementById('columns').value = 'id, name, path';
+    document.getElementById('rootCondition').value = 'parent_id IS NULL';
+    document.getElementById('recursiveJoin').value = 'c.parent_id = cte.id';
+    document.getElementById('unionColumns').value = "id, name, name::text";
+    document.getElementById('finalSelect').value = '*';
+  }
+  toggleRecursiveFields();
+  generate();
+}
+
+function generate() {
+  const dialect = document.getElementById('dialect').value;
+  const cteName = document.getElementById('cteName').value.trim() || 'cte';
+  const pattern = document.getElementById('pattern').value;
+  const table = document.getElementById('tableName').value.trim() || 'table_name';
+  const columns = document.getElementById('columns').value.trim() || '*';
+  const rootCondition = document.getElementById('rootCondition').value.trim();
+  const recursiveJoin = document.getElementById('recursiveJoin').value.trim();
+  const unionColumns = document.getElementById('unionColumns').value.trim();
+  const finalSelect = document.getElementById('finalSelect').value.trim() || '*';
+
+  const qTable = quoteId(table, dialect);
+  const qCte = quoteId(cteName, dialect);
+
+  let sql = '';
+
+  if (pattern === 'simple') {
+    if (dialect === 'mssql') {
+      sql = `WITH ${qCte} AS (\n  SELECT ${columns}\n  FROM ${qTable}\n)\nSELECT ${finalSelect}\nFROM ${qCte};`;
+    } else {
+      sql = `WITH ${qCte} AS (\n  SELECT ${columns}\n  FROM ${qTable}\n)\nSELECT ${finalSelect}\nFROM ${qCte};`;
+    }
+  } else if (pattern === 'recursive') {
+    const qTableAlias = table.charAt(0);
+    if (dialect === 'oracle') {
+      sql = `WITH ${qCte} (id, name, manager_id, level) AS (\n  SELECT ${unionColumns || columns}\n  FROM ${qTable}\n  WHERE ${rootCondition || '1=1'}\n  UNION ALL\n  SELECT ${columns}\n  FROM ${qTable} ${qTableAlias}\n  INNER JOIN ${qCte} ON ${recursiveJoin || '1=1'}\n)\nSELECT ${finalSelect}\nFROM ${qCte};`;
+    } else {
+      sql = `WITH RECURSIVE ${qCte} AS (\n  SELECT ${unionColumns || columns}\n  FROM ${qTable}\n  WHERE ${rootCondition || '1=1'}\n\n  UNION ALL\n\n  SELECT ${columns}\n  FROM ${qTable} ${qTableAlias}\n  INNER JOIN ${qCte} ON ${recursiveJoin || '1=1'}\n)\nSELECT ${finalSelect}\nFROM ${qCte};`;
+    }
+  } else if (pattern === 'multi') {
+    sql = `WITH\n  ${qCte}_a AS (\n    SELECT dept_id, COUNT(*) AS cnt\n    FROM ${qTable}\n    GROUP BY dept_id\n  ),\n  ${qCte}_b AS (\n    SELECT dept_id, SUM(salary) AS total\n    FROM ${qTable}\n    GROUP BY dept_id\n  )\nSELECT a.dept_id, a.cnt, b.total\nFROM ${qCte}_a a\nJOIN ${qCte}_b b ON a.dept_id = b.dept_id;`;
+  }
+
+  let note = '';
+  if (pattern === 'simple') note = 'A simple CTE creates a temporary named result set for cleaner queries.';
+  else if (pattern === 'recursive') note = 'Recursive CTEs traverse hierarchical data. Add a MAXRECURSION hint in SQL Server if depth exceeds 100.';
+  else if (pattern === 'multi') note = 'Multiple CTEs let you chain temporary result sets for complex analytical queries.';
+
+  renderQuery(cteName, sql, note);
+}
+
+function renderQuery(title, sql, note) {
+  const panel = document.getElementById('outputPanel');
+  const actions = document.getElementById('outputActions');
+  panel.innerHTML = `<div class="query-list">
+    <div class="query-item">
+      <h4>${escapeHtml(title)} CTE</h4>
+      <pre>${escapeHtml(sql)}</pre>
+      <div class="actions">
+        <button onclick="copyText(this, \`${escapeJs(sql)}\`)">📋 Copy</button>
+      </div>
+      <p class="notice">${escapeHtml(note)}</p>
+    </div>
+  </div>`;
+  actions.style.display = 'flex';
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function escapeJs(str) {
+  return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+}
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function copyAll() {
+  const pre = document.querySelector('.query-item pre');
+  if (pre) {
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+      const btn = document.querySelector('#outputActions button');
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copied';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+}
+
+function clearAll() {
+  document.getElementById('cteName').value = '';
+  document.getElementById('pattern').value = 'simple';
+  document.getElementById('tableName').value = '';
+  document.getElementById('columns').value = '';
+  document.getElementById('rootCondition').value = '';
+  document.getElementById('recursiveJoin').value = '';
+  document.getElementById('unionColumns').value = '';
+  document.getElementById('finalSelect').value = '*';
+  toggleRecursiveFields();
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Configure settings and click Generate to see the CTE query.</div>';
+  document.getElementById('outputActions').style.display = 'none';
+}
+
+// Auto-generate on Enter key in inputs
+document.querySelectorAll('.form-group input, .form-group select').forEach(el => {
+  el.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+});
+</script>
+</body>
+</html>
