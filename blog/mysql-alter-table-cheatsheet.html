@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>MySQL ALTER TABLE Cheatsheet for Developers — SchemaLens</title>
+  <meta name="description" content="The complete MySQL ALTER TABLE reference for developers. Syntax, lock behavior, online DDL, and safe migration patterns for InnoDB tables in production.">
+  <meta property="og:title" content="MySQL ALTER TABLE Cheatsheet for Developers">
+  <meta property="og:description" content="The complete MySQL ALTER TABLE reference for developers. Syntax, lock behavior, online DDL, and safe migration patterns for InnoDB tables in production.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/mysql-alter-table-cheatsheet.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "MySQL ALTER TABLE Cheatsheet for Developers",
+  "description": "The complete MySQL ALTER TABLE reference for developers. Syntax, lock behavior, online DDL, and safe migration patterns for InnoDB tables in production.",
+  "url": "https://schemalens.tech/blog/mysql-alter-table-cheatsheet.html",
+  "datePublished": "2026-05-14",
+  "dateModified": "2026-05-14",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/mysql-alter-table-cheatsheet.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .cheatsheet-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .cheatsheet-table th, .cheatsheet-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .cheatsheet-table th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+    .cheatsheet-table tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+    .lock-none { color: #22c55e; font-weight: 600; }
+    .lock-shared { color: #f59e0b; font-weight: 600; }
+    .lock-exclusive { color: #ef4444; font-weight: 600; }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>MySQL ALTER TABLE Cheatsheet for Developers</h1>
+    <div class="meta">May 14, 2026 · 8 min read · SchemaLens Team</div>
+
+    <p>MySQL <code>ALTER TABLE</code> is deceptively simple. The syntax looks like any other SQL dialect — until you run it on a table with ten million rows and production locks up for thirty minutes.</p>
+
+    <p>This cheatsheet covers the MySQL-specific behaviors every developer should know: which operations lock the table, which ones are instant in MySQL 8.0, and how to run migrations safely in production without waking the on-call engineer.</p>
+
+    <h2>Lock Behavior at a Glance</h2>
+
+    <p>Not all <code>ALTER TABLE</code> statements are equal. Some lock nothing. Some allow reads but block writes. Some lock everything until the operation completes. Here is the lock behavior for common operations on <strong>InnoDB</strong> tables in MySQL 8.0:</p>
+
+    <table class="cheatsheet-table">
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>MySQL 8.0 Behavior</th>
+          <th>Lock Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ALTER TABLE ... ADD COLUMN</code></td>
+          <td>Instant (metadata-only) if added last and no DEFAULT</td>
+          <td class="lock-none">None (metadata)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... ADD COLUMN ... DEFAULT ...</code></td>
+          <td>Instant in 8.0.12+ (default values stored in metadata)</td>
+          <td class="lock-none">None (metadata)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... DROP COLUMN</code></td>
+          <td>Rebuilds table (copies rows minus column)</td>
+          <td class="lock-exclusive">Exclusive</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... MODIFY COLUMN</code></td>
+          <td>Rebuilds table if type/length changes</td>
+          <td class="lock-exclusive">Exclusive</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... CHANGE COLUMN</code></td>
+          <td>Rebuilds table if type/length changes</td>
+          <td class="lock-exclusive">Exclusive</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... ADD INDEX</code></td>
+          <td>In-place (online) if algorithm allows</td>
+          <td class="lock-shared">Shared (reads OK)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... DROP INDEX</code></td>
+          <td>Instant (metadata-only)</td>
+          <td class="lock-none">None (metadata)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... ADD PRIMARY KEY</code></td>
+          <td>In-place if no duplicate values</td>
+          <td class="lock-shared">Shared (reads OK)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... ADD FOREIGN KEY</code></td>
+          <td>Rebuilds table; checks all rows</td>
+          <td class="lock-exclusive">Exclusive</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... RENAME</code></td>
+          <td>Instant (metadata-only)</td>
+          <td class="lock-none">None (metadata)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... AUTO_INCREMENT = ...</code></td>
+          <td>Instant (metadata-only)</td>
+          <td class="lock-none">None (metadata)</td>
+        </tr>
+        <tr>
+          <td><code>ALTER TABLE ... CONVERT TO CHARACTER SET</code></td>
+          <td>Rebuilds entire table with new encoding</td>
+          <td class="lock-exclusive">Exclusive</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The key insight: <strong>MySQL 8.0 made many operations instant</strong> that required full table rebuilds in 5.7. If you are still on 5.7, upgrade before your next major schema change. The difference between "zero downtime" and "hours of locking" is often just the version number.</p>
+
+    <h2>Online DDL: The Algorithm and Lock Options</h2>
+
+    <p>MySQL supports explicit control over how <code>ALTER TABLE</code> executes via the <code>ALGORITHM</code> and <code>LOCK</code> clauses:</p>
+
+    <pre><code>ALTER TABLE orders
+  ADD COLUMN status VARCHAR(20),
+  ALGORITHM = INPLACE,
+  LOCK = NONE;</code></pre>
+
+    <h3>ALGORITHM Options</h3>
+
+    <ul>
+      <li><code>INSTANT</code> — Metadata-only change. No row copies. No locks. Available in 8.0.12+ for specific operations.</li>
+      <li><code>INPLACE</code> — Rebuilds the table in the background without creating a full copy. Allows concurrent DML.</li>
+      <li><code>COPY</code> — Creates a new table, copies all rows, then swaps. Locks the table for the duration. Fallback for unsupported operations.</li>
+    </ul>
+
+    <h3>LOCK Options</h3>
+
+    <ul>
+      <li><code>NONE</code> — Allows concurrent reads and writes. Fails if the operation cannot run without locking.</li>
+      <li><code>SHARED</code> — Allows reads, blocks writes. Safer than exclusive but still impacts production.</li>
+      <li><code>EXCLUSIVE</code> — Blocks reads and writes. Default for operations that require it.</li>
+    </ul>
+
+    <p>Best practice: always specify <code>ALGORITHM = INPLACE, LOCK = NONE</code>. If MySQL cannot satisfy the request, it will error immediately rather than silently locking your table for an hour.</p>
+
+    <h2>Safe Patterns for Common Operations</h2>
+
+    <h3>Adding a Column</h3>
+
+    <pre><code>-- Safe: instant in MySQL 8.0 if added at the end
+ALTER TABLE users
+  ADD COLUMN preferences JSON
+  ALGORITHM = INSTANT, LOCK = NONE;
+
+-- Safer: add as nullable first, backfill, then add constraints
+ALTER TABLE users
+  ADD COLUMN preferences JSON NULL
+  ALGORITHM = INSTANT, LOCK = NONE;
+
+-- Backfill in application code or with a batched UPDATE
+-- Then add NOT NULL if required in a later deploy</code></pre>
+
+    <h3>Adding an Index</h3>
+
+    <pre><code>-- Safe: online index creation
+ALTER TABLE orders
+  ADD INDEX idx_created_at (created_at)
+  ALGORITHM = INPLACE, LOCK = NONE;
+
+-- Even safer: use pt-online-schema-change for very large tables
+pt-online-schema-change \
+  --alter "ADD INDEX idx_created_at (created_at)" \
+  --execute \
+  D=production,t=orders</code></pre>
+
+    <h3>Changing a Column Type</h3>
+
+    <pre><code>-- Dangerous: full table rebuild, exclusive lock
+ALTER TABLE events
+  MODIFY COLUMN payload LONGTEXT;
+
+-- Safer alternative for large tables: pt-online-schema-change
+pt-online-schema-change \
+  --alter "MODIFY COLUMN payload LONGTEXT" \
+  --execute \
+  D=production,t=events</code></pre>
+
+    <h3>Dropping a Column</h3>
+
+    <pre><code>-- Warning: rebuilds table even though the data is being removed
+ALTER TABLE logs
+  DROP COLUMN debug_info,
+  ALGORITHM = INPLACE, LOCK = NONE;
+
+-- For huge tables, pt-online-schema-change is often faster
+-- and causes less replication lag</code></pre>
+
+    <h3>Adding a Foreign Key</h3>
+
+    <pre><code>-- Dangerous: checks every row for referential integrity
+-- On a large table, this can take hours
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- Safer: add without validation first, then validate
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  NOT VALID;
+
+-- MySQL 8.0.16+ supports NOT VALID for foreign keys
+-- Then validate in a separate statement:
+ALTER TABLE orders
+  ALTER CONSTRAINT fk_orders_user VALIDATE;</code></pre>
+
+    <h2>Tools for Safe MySQL Migrations</h2>
+
+    <h3>pt-online-schema-change (Percona Toolkit)</h3>
+
+    <p>The industry standard for large-table migrations in MySQL. It creates a shadow table, applies the ALTER, sets up triggers to sync changes, copies rows in chunks, then swaps the tables:</p>
+
+    <pre><code>pt-online-schema-change \
+  --alter "ADD COLUMN region VARCHAR(10)" \
+  --chunk-size 1000 \
+  --max-load Threads_running=25 \
+  --execute \
+  D=production,t=customers</code></pre>
+
+    <p>It is not perfect — it adds load to the primary, can cause replication lag, and requires careful monitoring — but it is far safer than a raw <code>ALTER TABLE</code> on a 500GB table.</p>
+
+    <h3>gh-ost (GitHub Online Schema Transformer)</h3>
+
+    <p>GitHub's alternative to pt-osc. It uses the binary log instead of triggers, which reduces load on the primary and avoids trigger-related bugs:</p>
+
+    <pre><code>gh-ost \
+  --database=production \
+  --table=customers \
+  --alter="ADD COLUMN region VARCHAR(10)" \
+  --execute</code></pre>
+
+    <p>Both tools are essential if you run MySQL at scale. If your table is under 1GB, a direct <code>ALTER TABLE</code> with <code>ALGORITHM = INPLACE</code> is usually fine. Above 10GB, use a migration tool.</p>
+
+    <h2>Common MySQL ALTER TABLE Mistakes</h2>
+
+    <div class="checklist">
+      <ul>
+        <li><strong>Adding <code>NOT NULL</code> without a default.</strong> On large tables, this rewrites every row. Add as <code>NULL</code> first, backfill, then alter to <code>NOT NULL</code> in a second deploy. <span class="risk-tag risk-high">High</span></li>
+        <li><strong>Running <code>ALTER</code> on the primary without checking replicas.</strong> Replicas apply DDL serially. A slow <code>ALTER</code> on the primary can create massive replication lag.</li>
+        <li><strong>Modifying <code>VARCHAR</code> length.</strong> Increasing <code>VARCHAR(100)</code> to <code>VARCHAR(200)</code> is instant. Decreasing it requires a full rebuild and can truncate data.</li>
+        <li><strong>Using <code>CHANGE COLUMN</code> when <code>RENAME COLUMN</code> works.</strong> MySQL 8.0 supports <code>RENAME COLUMN</code>, which is metadata-only. <code>CHANGE COLUMN</code> always rebuilds the table if the type is restated.</li>
+        <li><strong>Forgetting <code>ALGORITHM</code> and <code>LOCK</code> clauses.</strong> Without them, MySQL silently chooses the most conservative option. Explicit is always safer.</li>
+      </ul>
+    </div>
+
+    <h2>MySQL 5.7 vs 8.0: What Changed</h2>
+
+    <p>If you are still on MySQL 5.7, here is what you are missing:</p>
+
+    <table class="cheatsheet-table">
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>MySQL 5.7</th>
+          <th>MySQL 8.0</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Add column (no default, last position)</td>
+          <td>Table rebuild</td>
+          <td>Instant (metadata-only)</td>
+        </tr>
+        <tr>
+          <td>Add column with default</td>
+          <td>Table rebuild</td>
+          <td>Instant (default in metadata)</td>
+        </tr>
+        <tr>
+          <td>Rename column</td>
+          <td>Table rebuild</td>
+          <td>Instant (<code>RENAME COLUMN</code>)</td>
+        </tr>
+        <tr>
+          <td>Drop column</td>
+          <td>Table rebuild</td>
+          <td>Table rebuild</td>
+        </tr>
+        <tr>
+          <td>Add index</td>
+          <td>In-place (limited)</td>
+          <td>In-place (more types supported)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The message is clear: if schema changes are part of your regular deploy flow, upgrade to MySQL 8.0. The time savings and safety improvements are substantial.</p>
+
+    <h2>Quick Reference: Safe Migration Checklist</h2>
+
+    <ol>
+      <li>Check your MySQL version. 8.0+ unlocks instant DDL for many operations.</li>
+      <li>Always specify <code>ALGORITHM = INPLACE, LOCK = NONE</code> and let it fail safely if unsupported.</li>
+      <li>For tables over 10GB, use <code>pt-online-schema-change</code> or <code>gh-ost</code>.</li>
+      <li>Test the migration on a replica first and measure execution time.</li>
+      <li>Monitor replication lag during and after the migration.</li>
+      <li>Never add <code>NOT NULL</code> without a default on a large table. Use the expand/contract pattern.</li>
+    </ol>
+
+    <div class="cta-box">
+      <h3>Generate MySQL Migrations Automatically</h3>
+      <p>SchemaLens compares two MySQL schemas and generates the exact ALTER TABLE statements you need — with breaking change warnings and rollback scripts included.</p>
+      <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      <p style="font-size:0.8rem;margin-top:12px;margin-bottom:0;">🚀 Launch Week: All Pro features free until May 21, 2026</p>
+    </div>
+
+    <h3>Related Reading</h3>
+    <ul>
+      <li><a href="how-to-generate-alter-table-scripts-automatically.html">How to Generate ALTER TABLE Scripts Automatically</a></li>
+      <li><a href="sql-migration-checklist-production.html">The Complete SQL Migration Checklist for Production</a></li>
+      <li><a href="10-database-schema-changes-that-break-production.html">10 Database Schema Changes That Break Production</a></li>
+      <li><a href="../zero-downtime-migration-guide.html">Zero-Downtime Migration Guide</a></li>
+    </ul>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="logo" style="font-size:1.1rem;"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:8px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff Tool</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../vscode-extension.html">VS Code Extension</a></p>
+        <p><a href="../cli">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+        <p><a href="../schema-examples.html">Schema Examples</a></p>
+        <p><a href="../migration-recipes.html">Migration Recipes</a></p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <p><a href="../about.html">About</a></p>
+        <p><a href="../open-source.html">Open Source</a></p>
+        <p><a href="../affiliate.html">Affiliate Program</a></p>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:24px;border-top:1px solid var(--border);margin-top:24px;color:var(--text-muted);font-size:0.85rem;">
+      © 2026 SchemaLens. Built in public during the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>
