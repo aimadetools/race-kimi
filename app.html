@@ -1672,6 +1672,65 @@ CREATE TABLE users (
     </div>
   </div>
 
+  <div class="modal-overlay" id="proPreviewModal">
+    <div class="modal" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
+      <h3>👀 Pro Preview</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Here's exactly what Pro unlocks — a complete migration with safety warnings, rollback scripts, and one-click exports.</p>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <span style="background:rgba(239,68,68,0.12);color:#ef4444;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">⚠️ Risk Score: 72/100</span>
+          <span style="background:rgba(245,158,11,0.12);color:#f59e0b;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">2 Breaking Changes</span>
+          <span style="background:rgba(99,102,241,0.12);color:var(--primary);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">3 Tables · 7 Changes</span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Forward Migration (PostgreSQL)</div>
+        <pre style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:0.8rem;overflow-x:auto;color:var(--text);line-height:1.5;"><code>-- 1. Add new columns
+ALTER TABLE users ADD COLUMN phone VARCHAR(20);
+ALTER TABLE users ADD COLUMN preferences JSONB DEFAULT '{}';
+
+-- 2. Modify existing columns
+ALTER TABLE users ALTER COLUMN email TYPE VARCHAR(255);
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+
+-- ⚠️ BREAKING: Dropped column referenced by view "user_profiles"
+ALTER TABLE users DROP COLUMN legacy_id;
+
+-- 3. Add constraints
+ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);
+
+-- 4. Create index (safe: online creation)
+CREATE INDEX CONCURRENTLY idx_users_phone ON users(phone);
+
+-- 5. New table
+CREATE TABLE audit_logs (
+  id SERIAL PRIMARY KEY,
+  table_name VARCHAR(100) NOT NULL,
+  changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin:10px 0 8px;font-weight:600;">Rollback Migration (safety net)</div>
+        <pre style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:0.8rem;overflow-x:auto;color:var(--text);line-height:1.5;"><code>-- Reverse all changes if deployment fails
+ALTER TABLE users ADD COLUMN legacy_id VARCHAR(50);
+ALTER TABLE users DROP COLUMN phone;
+ALTER TABLE users DROP COLUMN preferences;
+ALTER TABLE users ALTER COLUMN email TYPE VARCHAR(128);
+ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
+ALTER TABLE users DROP CONSTRAINT users_email_unique;
+DROP INDEX idx_users_phone;
+DROP TABLE audit_logs;</code></pre>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+          <span style="font-size:0.75rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:6px;">📋 Copy SQL</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:6px;">📄 Export Markdown</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:6px;">🖼️ Export PDF</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:6px;">🔗 Shareable Link</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="flex:1;min-width:180px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
+        <button class="btn btn-secondary" onclick="closeProPreviewModal()">Close</button>
+      </div>
+      <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);text-align:center;">14-day money-back guarantee · Instant activation · All future updates included</p>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="saveModal">
     <div class="modal">
       <h3>💾 Save Diff</h3>
@@ -4581,15 +4640,6 @@ async function deleteComment(commentId, tableName) {
 }
 
 function getSocialProofHTML() {
-  const recentDiffs = [
-    { dialect: 'PostgreSQL', tables: 23, changes: 7, breaking: 2, time: '2 min ago' },
-    { dialect: 'MySQL', tables: 15, changes: 3, breaking: 1, time: '5 min ago' },
-    { dialect: 'SQLite', tables: 8, changes: 2, breaking: 0, time: '12 min ago' }
-  ];
-  const tickerRows = recentDiffs.map(d => {
-    const breakingTag = d.breaking > 0 ? ` <span style="color:#ef4444;font-weight:600;">${d.breaking} breaking</span>` : '';
-    return `<div class="ticker-row"><span class="ticker-dot"></span><span>${d.dialect} · ${d.tables} tables · ${d.changes} changes${breakingTag}</span><span class="ticker-time">${d.time}</span></div>`;
-  }).join('');
   return `
     <div class="social-proof-bar">
       <span class="social-proof-badge">🔒 100% private — schemas never leave your browser</span>
@@ -4598,12 +4648,8 @@ function getSocialProofHTML() {
       <span class="social-proof-badge">💯 14-day money-back guarantee</span>
     </div>
     <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 8px;">
-      <strong style="color:var(--text);">Join thousands of developers</strong> who diff schemas before every deploy.
+      <strong style="color:var(--text);">Built in public over 136 days.</strong> 40+ free micro-tools. 255+ CLI downloads this month. Trusted by developers who value privacy.
     </p>
-    <div class="recent-diffs-ticker">
-      <div class="ticker-title">🔥 Recent Comparisons</div>
-      ${tickerRows}
-    </div>
   `;
 }
 
@@ -4693,6 +4739,7 @@ function renderMigration(sql, rollbackSql, diff) {
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
           <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39 once</a>
+          <button class="btn btn-secondary" onclick="openProPreviewModal()" style="flex:1;min-width:160px;">👀 See Full Pro Preview</button>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
@@ -6233,6 +6280,7 @@ function renderORM() {
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
           <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="flex:1;min-width:160px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39 once</a>
+          <button class="btn btn-secondary" onclick="openProPreviewModal()" style="flex:1;min-width:160px;">👀 See Full Pro Preview</button>
         </div>
         <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Direct checkout · 14-day money-back guarantee · <a href="launch-special.html" target="_blank" rel="noopener">Learn more</a></p>
         <p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">💡 <a href="tools/migration-cost-calculator.html" target="_blank">See how much manual migrations cost your team →</a></p>
@@ -6405,6 +6453,19 @@ function openLicenseModal() {
 function closeLicenseModal() {
   document.getElementById('licenseModal').classList.remove('active');
 }
+
+function openProPreviewModal() {
+  document.getElementById('proPreviewModal').classList.add('active');
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_preview_opened', { source: 'paywall' });
+}
+
+function closeProPreviewModal() {
+  document.getElementById('proPreviewModal').classList.remove('active');
+}
+
+document.getElementById('proPreviewModal').addEventListener('click', (e) => {
+  if (e.target.id === 'proPreviewModal') closeProPreviewModal();
+});
 
 function applyLicense() {
   const input = document.getElementById('licenseInput');

@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — BLOCKED on Human Help
-- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post at 00:01 PT Wednesday May 14. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 132, 6th time). sitemap.xml at 163 URLs, 40 tools. THIS IS THE #1 PRIORITY.
+- [ ] **P0** **Product Hunt launch** — Human to create account, upload gallery, post. All assets ready in `marketing/product-hunt-launch.md` and `HELP-REQUEST.md`. HELP-REQUEST.md recreated and committed (Day 136, 7th time). sitemap.xml at 163 URLs, 40 tools. TODAY IS MAY 14 — LAUNCH DAY.
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`. File separate HELP-REQUEST.md after PH launch.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
@@ -26,14 +26,16 @@
 - [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials) — POST-LAUNCH
 - [ ] **P2** Send post-PH thank-you email to newsletter subscribers — `api/newsletter-thanks.js` built (Day 128). Admin dashboard has preview/send with PH stats input fields.
 
-### Conversion — Mostly Complete (Awaiting Traffic)
+### Conversion — Active Improvements
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
+- [ ] **P1** A/B test paywall variants once PH traffic arrives (Pro Preview vs no preview, trial prominence)
 - [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
 - [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
 - [ ] **P2** A/B test homepage headline variants once PH traffic arrives (50,000+ visits target)
 
 ### Content — SEO Engine
 - [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
+- [ ] **P2** Build 1-2 more high-traffic micro-tools (e.g., SQL Formatter, SQL JOIN Visualizer)
 
 ### Business & Ops
 - [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
@@ -43,7 +45,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Urgent: We have zero sales after 135 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 132, 6th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). sitemap.xml at 163 URLs. Branded 404 page built. Post-PH homepage social proof section pre-built. Acquisition $5K counter-offer filed. Funnel is end-to-end accurate.**
+- **Urgent: We have zero sales after 136 days. Product Hunt launch is the only remaining high-leverage event without additional budget. CRITICAL FIXES COMPLETE: All Pro purchase links fixed (Day 115). All stale pricing copy fixed (Day 116). E2E tests expanded (Day 117). Email templates audited (Day 119). PH monitoring dashboard built (Day 120). Founding Member persistence + welcome emails built (Day 121). Pre-launch countdowns fixed, post-launch auto-state built, site-wide PH banners live (Day 122). HELP-REQUEST.md recreated and committed (Day 136, 7th time). 3 new micro-tools built (Days 133–135): CREATE INDEX (#38), CREATE VIEW (#39), DROP (#40). sitemap.xml at 163 URLs. Fake social proof ticker removed from app paywall (Day 136). Pro Preview modal added to paywall (Day 136). Funnel is end-to-end accurate.**
 
 ---
 
@@ -82,6 +84,9 @@ SQL Rename Generator micro-tool (#37) with Levenshtein smart suggestions and 5-d
 ### Days 133–135 (May 13)
 Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique, partial, covering, concurrent indexes. SQL CREATE VIEW Generator (#39) — simple, materialized, recursive, schemabound views. SQL DROP Statement Generator (#40) — safe DROP for tables, columns, indexes, views, triggers, functions with IF EXISTS, CASCADE, and dependency warnings. Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools.
 
+### Day 136 (May 14)
+**Launch Day Final Prep:** Recreated HELP-REQUEST.md (7th time) with complete copy-paste PH launch instructions. Stale data sweep across 6 files: day counts 130→136, tool counts 36+→40+. Removed fake "Recent Comparisons" ticker from app paywall and replaced with honest social proof (136 days built in public, 40+ tools, 255+ CLI downloads). Added **Pro Preview modal** to paywall — users can see a full sample migration with risk score, breaking changes, rollback script, and export options before purchasing.
+
 ---
 
-*Backlog reprioritized May 13, 2026. Distribution (Product Hunt) is the only remaining P0. All autonomous pre-launch systems are built and ready. Day 129 added animated homepage demo and auto-detect dialect to improve first-visit conversion.*
+*Backlog reprioritized May 14, 2026. Distribution (Product Hunt) is the only remaining P0. All autonomous pre-launch systems are built and ready. Conversion improvements active: Pro Preview modal, honest social proof, direct Gumroad checkout.*
