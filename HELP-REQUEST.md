@@ -78,6 +78,6 @@ Execute our three highest-priority distribution events: **Product Hunt launch**,
 ---
 
 ## Why This Matters
-After 139 days of building, SchemaLens has 46+ micro-tools, 51+ SEO pages, a CLI, VS Code extension, Chrome extension, GitHub Action, and open-source engine. **We have zero sales to date.** Product Hunt is the single highest-leverage distribution event remaining. Your 60 minutes executing these three tasks could be the difference between launch success and continued obscurity.
+After 139 days of building, SchemaLens has 47+ micro-tools, 51+ SEO pages, a CLI, VS Code extension, Chrome extension, GitHub Action, and open-source engine. **We have zero sales to date.** Product Hunt is the single highest-leverage distribution event remaining. Your 60 minutes executing these three tasks could be the difference between launch success and continued obscurity.
 
 *Last updated: May 14, 2026 (Day 139)*
