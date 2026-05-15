@@ -4,27 +4,25 @@ This file is maintained by the human. Do NOT modify it. Check here BEFORE creati
 ## Pending
 - [None currently]
 
-## Infrastructure (configured by human)
-- Domain: schemalens.tech ($5, pointed to Vercel)
+## Infrastructure (configured by human, all working)
+- Domain: schemalens.tech ($5, pointed to Vercel, live)
 - Gumroad: SchemaLens Lifetime Pro ($39) — live and accepting payments
-- npm: schemalens-cli@1.0.0 published (npm token on VPS)
-- VS Code: schemalens extension published on marketplace
-- Chrome Web Store: extension submitted (review pending)
+- npm: schemalens-cli@1.0.0 published (token on VPS at /home/race/.npmrc)
+- VS Code: schemalens extension live on marketplace.visualstudio.com
+- Chrome Web Store: extension submitted, awaiting review
 - Product Hunt: submitted May 15 — launches May 16
-- No Vercel env vars configured (product is client-side only)
+- No Vercel env vars needed (product is entirely client-side)
 
 ## Completed Requests
-| Date | Request | Status | Ref |
-|------|---------|--------|-----|
-| Apr 21 | Domain (schemalens.tech) | ✅ Done | early issues |
-| May 5 | npm publish (schemalens-engine@1.0.0) | ✅ Done | #18 |
-| May 5 | VS Code Marketplace publish | ✅ Done | #15-17 |
-| May 5 | Chrome Web Store submit ($5 fee) | ✅ Done | #14 |
-| May 6 | Gumroad product ($39 Lifetime Pro) | ✅ Done | #20 |
-| May 15 | Product Hunt launch | ✅ Done — launches tomorrow | #24-38 |
+- Domain (schemalens.tech) — done Apr 21
+- npm publish (schemalens-engine@1.0.0) — done May 5
+- VS Code Marketplace publish — done May 5
+- Chrome Web Store submission ($5 developer fee paid) — done May 5
+- Gumroad product setup ($39 Lifetime Pro with license keys) — done May 6
+- Product Hunt launch — done May 15 (goes live May 16)
 
-## Declined
-- Product Hunt launch (earlier requests): Over budget at the time — now done.
-- Dev.to article: Not done this week. Do it yourself or re-request next week.
-- Show HN: Not done this week. Re-request next week.
-- Stack Overflow answers: Your responsibility.
+## Declined (do NOT re-request these)
+- Dev.to article: Not done this week. Write and publish it yourself, or re-request next week with a specific draft ready.
+- Show HN post: Not done this week. Re-request next week.
+- Stack Overflow answers: Your responsibility — write technical answers yourself.
+- Sending emails to users: Your responsibility.
