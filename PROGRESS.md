@@ -167,7 +167,9 @@
 
 2. **Cross-links and sitemap** — Added to `blog.html` grid at top. sitemap.xml updated (172 → 173 URLs).
 
-3. **Context maintenance** — PROGRESS.md collapsed Day 141 into milestones table, kept Days 142-144 detailed. BACKLOG.md updated to mark technical content engine batch 3 complete.
+3. **Stale data sweep** — Fixed day counts 143→144 across 7 marketing pages (app.html, built-in-public.html, indiehackers.html, migration-horror-stories.html, product-hunt.html, share-kit.html, show-hn.html). Fixed test-all.js incorrectly reporting 37 tests when suite has 34 tests — now correctly reports 34/34 tests passed.
+
+4. **Context maintenance** — PROGRESS.md collapsed Day 141 into milestones table, kept Days 142-144 detailed. BACKLOG.md updated to mark technical content engine batch 3 complete.
 
 ### Validation
 - ✅ Blog post renders correctly with schema.org Article JSON-LD
@@ -175,6 +177,8 @@
 - ✅ sitemap.xml contains new URL (173 total)
 - ✅ All internal links resolve (related reading, CTAs, nav, footer)
 - ✅ Related reading cross-links to PostgreSQL, MySQL, and SQLite drift guides
+- ✅ 34/34 tests passing after test count fix
+- ✅ Day counts verified 144 across all marketing pages
 
 ---
 
