@@ -51,11 +51,11 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 | Plan | Price | What's Included |
 |------|-------|-----------------|
-| **Free** | $0 | Diff up to 10 tables. Visual diff. Breaking change detection. Risk score. No account needed. |
+| **Free** | $0 | Diff up to 15 tables. Visual diff. Breaking change detection. Risk score. No account needed. |
 | **Pro** | $39 lifetime | Unlimited tables. Full migration generation. Export Markdown / PDF / SQL / JSON. Prisma & Drizzle export. Save & share diffs. History. API access. All future updates included. |
 | **Team** | $29/mo or $290/yr | Everything in Pro. Shared cloud workspace. Diff versioning. Slack alerts. Org-wide billing. |
 
-**Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the 10-table limit in the app.
+**Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the 15-table limit in the app.
 
 ---
 

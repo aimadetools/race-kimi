@@ -386,7 +386,7 @@
         Core engine is <a href="open-source.html" style="color:var(--success);text-decoration:underline;">open source (MIT)</a>
       </div>
       <h1>Compare SQL schemas.<br><span>Generate migrations.</span><br>Zero setup.</h1>
-      <p>Paste two <code>CREATE TABLE</code> dumps. Spot every difference instantly. Get ready-to-run <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — all in your browser.</p>
+      <p>Paste two <code>CREATE TABLE</code> dumps. Spot every difference instantly. Get ready-to-run <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — in your browser, CLI, or VS Code.</p>
       <div style="margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
         <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:0.8rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> PostgreSQL</span>
         <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:0.8rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> MySQL / MariaDB</span>
@@ -400,16 +400,30 @@
       </div>
       <p class="hero-note">No account required. No data leaves your device.</p>
       <p class="hero-note" style="margin-top:8px;font-size:0.85rem;">🛡️ Reviewing a migration? Use our <a href="migration-checklist.html">Database Migration Safety Checklist</a></p>
-      <div id="hero-cli-badge" style="margin-top:20px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
-        <span style="font-size:0.85rem;color:var(--text-muted);">⚡ Also on CLI:</span>
-        <code style="background:var(--code-bg);padding:4px 10px;border-radius:6px;font-size:0.85rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
-        <a href="cli/" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Docs →</a>
+      <div style="margin-top:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+        <div id="hero-cli-badge" style="display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+          <span style="font-size:0.85rem;color:var(--text-muted);">⚡ CLI:</span>
+          <code id="heroCliCode" style="background:var(--code-bg);padding:4px 10px;border-radius:6px;font-size:0.85rem;color:#a5d6ff;">npx schemalens-cli diff old.sql new.sql</code>
+          <button onclick="copyHeroCli()" style="background:transparent;border:none;color:var(--primary);cursor:pointer;font-size:0.8rem;padding:2px 6px;border-radius:4px;" title="Copy command">📋</button>
+          <a href="cli/" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Docs →</a>
+        </div>
+        <div id="hero-vscode-badge" style="display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
+          <span style="font-size:0.85rem;color:var(--text-muted);">🖥️ VS Code:</span>
+          <span style="font-size:0.85rem;color:var(--text);">Diff SQL files directly from your editor</span>
+          <a href="vscode-extension.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Learn more →</a>
+        </div>
       </div>
-      <div id="hero-vscode-badge" style="margin-top:12px;display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;">
-        <span style="font-size:0.85rem;color:var(--text-muted);">🖥️ VS Code:</span>
-        <span style="font-size:0.85rem;color:var(--text);">Diff SQL files directly from your editor</span>
-        <a href="vscode-extension.html" style="font-size:0.8rem;color:var(--primary);text-decoration:none;">Learn more →</a>
-      </div>
+      <script>
+        function copyHeroCli() {
+          const cmd = document.getElementById('heroCliCode').textContent;
+          navigator.clipboard.writeText(cmd).then(() => {
+            const btn = document.querySelector('#hero-cli-badge button');
+            const original = btn.textContent;
+            btn.textContent = '✓';
+            setTimeout(() => btn.textContent = original, 1500);
+          });
+        }
+      </script>
 
       <div class="demo-card" id="hero-demo">
         <div class="demo-header">
@@ -1036,7 +1050,7 @@
           <p style="color: var(--text-muted); font-size: 0.9rem;">For side projects & quick checks</p>
           <div class="price">$0<span>/mo</span></div>
           <ul>
-            <li>Diff up to 10 tables</li>
+            <li>Diff up to 15 tables</li>
             <li>Visual diff viewer</li>
             <li>PostgreSQL, MySQL, SQLite</li>
             <li>Local history (browser)</li>

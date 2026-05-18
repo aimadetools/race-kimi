@@ -1569,7 +1569,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 10 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
+      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 15 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -2148,7 +2148,7 @@ DROP TABLE audit_logs;</code></pre>
       <p class="subtitle">You just spotted schema changes. Now get the full migration script — no manual typing, no missed columns.</p>
       <div class="exit-intent-benefits">
         <ul>
-          <li><strong>Unlimited tables</strong> — diff your entire schema, not just 10 tables</li>
+          <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
           <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
           <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
           <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
@@ -4751,7 +4751,7 @@ function renderMigration(sql, rollbackSql, diff) {
   const container = document.getElementById('migrationContainer');
   const totalTables = diff.totalTablesNew;
   const unlocked = isProUnlocked();
-  const isLimited = totalTables > 10 && !unlocked;
+  const isLimited = totalTables > 15 && !unlocked;
   const dialect = document.getElementById('dialect')?.value || 'postgres';
   const warnings = generateMigrationWarnings(diff, dialect);
   const warningsHTML = renderMigrationWarningsHTML(warnings, isLimited);
@@ -6304,7 +6304,7 @@ function renderORM() {
   const schema = lastDiff.schemaB;
   const totalTables = schema.tables ? schema.tables.length : 0;
   const unlocked = isProUnlocked();
-  const isLimited = totalTables > 10 && !unlocked;
+  const isLimited = totalTables > 15 && !unlocked;
   const dialect = document.getElementById('dialect').value;
 
   if (isLimited) {
@@ -6313,7 +6313,7 @@ function renderORM() {
     container.innerHTML = `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks full ORM export</h3>
-        <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to 10 tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
+        <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to 15 tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>

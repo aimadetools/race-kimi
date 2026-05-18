@@ -32,7 +32,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 ## Exact Pricing Tiers
 
 ### Free — Forever
-- Diff up to 10 tables per comparison
+- Diff up to 15 tables per comparison
 - Visual diff (added/removed/modified highlight)
 - Basic text-only migration preview (first 3 changes)
 - Single-user, no account required
