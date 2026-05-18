@@ -137,7 +137,7 @@
 ### For General Developer Newsletters (TLDR, Bytes, Changelog)
 
 **Headline:** Generate Database Migrations Without the CLI  
-**Body:** SchemaLens diffs SQL schemas in your browser and generates ALTER TABLE scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Free for 10 tables.  
+**Body:** SchemaLens diffs SQL schemas in your browser and generates ALTER TABLE scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Free for 15 tables.  
 **CTA:** Diff your schemas → https://schemalens.tech?utm_source=tldr&utm_medium=newsletter&utm_campaign=sponsor
 
 ### For Tool-Focused Newsletters (Web Tools Weekly, Console.dev)

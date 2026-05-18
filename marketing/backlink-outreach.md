@@ -106,7 +106,7 @@ automatically. It supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle.
 
 **Key differentiators:**
 - 100% browser-based (no data upload required)
-- Free for schemas up to 10 tables
+- Free for schemas up to 15 tables
 - CI/CD integration via standalone CLI script
 - Breaking change detection with risk scoring
 - Export to Markdown, PDF, SQL, JSON, Prisma, Drizzle

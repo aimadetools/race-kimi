@@ -53,7 +53,7 @@ threshold. The Action posts a Markdown diff report as a PR comment so reviewers
 don't have to parse raw SQL to spot problems.
 
 Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle. Free for schemas up
-to 10 tables; Lifetime Pro at $39 one-time for unlimited.
+to 15 tables; Lifetime Pro at $39 one-time for unlimited.
 
 Would you consider featuring it in an upcoming issue?
 
@@ -137,7 +137,7 @@ is posted as a Markdown PR comment so database reviewers don't need to parse
 raw DDL.
 
 We built it after one too many "oops, that column was still being read"
-incidents. Free tier covers schemas up to 10 tables. Lifetime Pro is $39 one-time.
+incidents. Free tier covers schemas up to 15 tables. Lifetime Pro is $39 one-time.
 
 Would love a mention if it fits your upcoming issue.
 
@@ -172,7 +172,7 @@ Key features for GitHub users:
 • Fail-on-breaking mode — exit 1 when dangerous patterns are detected
 • Zero backend dependencies — calls the SchemaLens API via curl
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free for schemas up to 10 tables
+• Free for schemas up to 15 tables
 
 The Action is available now (composite action in the repo) and is designed
 to drop into existing CI workflows with a single step.
@@ -208,7 +208,7 @@ Why GitLab users specifically:
 • Breaking-change gate — fail the pipeline on dangerous migrations
 • Markdown report artifact — review the diff without leaving GitLab
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free for schemas up to 10 tables; Lifetime Pro at $39 one-time
+• Free for schemas up to 15 tables; Lifetime Pro at $39 one-time
 
 We also have a GitHub Action and Bitbucket Pipelines template, but the GitLab
 CI integration is the cleanest of the three because of GitLab's built-in
@@ -287,7 +287,7 @@ CircleCI integration options:
 • Markdown report output — store as an artifact for review
 • Breaking-change gate — fail the workflow on dangerous patterns
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free tier for schemas up to 10 tables
+• Free tier for schemas up to 15 tables
 
 A typical CircleCI config adds two lines:
   - run: curl -X POST https://schemalens.tech/api/diff ...
@@ -334,7 +334,7 @@ Features relevant to Jenkins users:
 • JSON or Markdown output — parse with Jenkins or publish as HTML report
 • Breaking-change detection — fail the stage on dangerous migrations
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free for schemas up to 10 tables
+• Free for schemas up to 15 tables
 
 Worth a mention in the newsletter or a blog post on modernizing database
 reviews in Jenkins?
@@ -367,7 +367,7 @@ Bitbucket-specific features:
 • Pipeline report — review the diff without leaving Bitbucket
 • Breaking-change gate — fail the pipeline on dangerous migrations
 • Supports PostgreSQL, MySQL, SQL Server, SQLite, and Oracle
-• Free for schemas up to 10 tables
+• Free for schemas up to 15 tables
 
 The template is designed to drop into an existing pull-request pipeline with
 minimal config. Would this be interesting for a blog post or community
@@ -405,7 +405,7 @@ Why it fits the cloud-native mindset:
 • Portable — works in any CI runner (GitHub, GitLab, CircleCI, Bitbucket, Jenkins)
 • No secrets needed for diffing — schemas are passed as text, not fetched from prod
 • Markdown/JSON output — publish as artifacts or PR comments
-• Free for schemas up to 10 tables; Lifetime Pro at $39 one-time
+• Free for schemas up to 15 tables; Lifetime Pro at $39 one-time
 
 We use it in our own GitOps pipeline to catch breaking schema changes before
 they merge into the branch that ArgoCD watches.

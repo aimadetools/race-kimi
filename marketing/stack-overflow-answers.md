@@ -52,7 +52,7 @@ If you just have two `mysqldump` files (or `SHOW CREATE TABLE` outputs) and want
 3. Get a semantic diff (tables added/removed, columns changed, indexes modified) + generated `ALTER TABLE` script
 
 Pros: Zero install, visual diff, generates migration SQL, privacy-first (client-side only).  
-Cons: Limited to 10 tables on the free tier.
+Cons: Limited to 15 tables on the free tier.
 
 ### Option 4: IDE Tools
 - **MySQL Workbench:** Database → Compare Schemas
@@ -103,7 +103,7 @@ ALTER TABLE `orders` ADD INDEX `idx_user_id` (`user_id`);
 ALTER TABLE `products` DROP COLUMN `legacy_sku`;
 ```
 
-Free for up to 10 tables. Supports PostgreSQL, MySQL, SQL Server, SQLite, Oracle.
+Free for up to 15 tables. Supports PostgreSQL, MySQL, SQL Server, SQLite, Oracle.
 
 ### 2. `mysqldiff` (CLI)
 ```bash
@@ -266,7 +266,7 @@ For a quick visual diff without installing anything:
 4. Export the generated `ALTER TABLE` / `CREATE` migration script
 
 Pros: Zero install, visual, handles PostgreSQL-specific objects (triggers, functions, views), privacy-first (client-side).  
-Cons: Free tier limited to 10 tables.
+Cons: Free tier limited to 15 tables.
 
 ### Option 4: IDE Tools
 - **DataGrip / IntelliJ:** Database → Compare Schemas

@@ -164,7 +164,7 @@ People will ask follow-up questions in comments. Have responses ready:
 > Yes, SchemaLens supports PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, and Oracle. Select your dialect from the dropdown before pasting your schemas.
 
 **"Is it really free?"**
-> The schema diff is free for up to 10 tables. Unlimited tables and full migration exports are part of Lifetime Pro ($39 one-time). No credit card required to try — we also offer a 24-hour free trial and a Founding Member giveaway for the first 50 developers.
+> The schema diff is free for up to 15 tables. Unlimited tables and full migration exports are part of Lifetime Pro ($39 one-time). No credit card required to try — we also offer a 24-hour free trial and a Founding Member giveaway for the first 50 developers.
 
 **"Can I use it offline?"**
 > The browser version needs an internet connection to load, but all parsing happens client-side — your schemas never leave your browser. There's also a CLI (`npx schemalens-cli`) that works fully offline.
