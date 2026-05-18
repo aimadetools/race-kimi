@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQLite Schema Migration Best Practices — SchemaLens</title>
+  <meta name="description" content="SQLite ALTER TABLE is limited. Learn the safe table-rebuild pattern, common migration mistakes, and how to diff SQLite schemas automatically with SchemaLens.">
+  <meta property="og:title" content="SQLite Schema Migration Best Practices">
+  <meta property="og:description" content="SQLite ALTER TABLE is limited. Learn the safe table-rebuild pattern, common migration mistakes, and how to diff SQLite schemas automatically with SchemaLens.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sqlite-schema-migration-best-practices.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SQLite Schema Migration Best Practices",
+  "description": "SQLite ALTER TABLE is limited. Learn the safe table-rebuild pattern, common migration mistakes, and how to diff SQLite schemas automatically with SchemaLens.",
+  "url": "https://schemalens.tech/blog/sqlite-schema-migration-best-practices.html",
+  "datePublished": "2026-05-18",
+  "dateModified": "2026-05-18",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/sqlite-schema-migration-best-practices.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>SQLite Schema Migration Best Practices</h1>
+    <div class="meta">May 18, 2026 · 8 min read · SchemaLens Team</div>
+
+    <p>SQLite powers more applications than almost any other database — iOS apps, Android apps, Chrome internals, Python prototypes, and embedded IoT devices. But SQLite's <code>ALTER TABLE</code> is famously limited. You can <strong>rename a table</strong> and <strong>add a column</strong>. That is it.</p>
+
+    <p>Want to drop a column? Change a <code>TEXT</code> to an <code>INTEGER</code>? Add a <code>UNIQUE</code> constraint? Rename a column? You must rebuild the entire table. Get this wrong and you corrupt data, break foreign keys, or lose rows silently.</p>
+
+    <p>This guide shows you the safe table-rebuild pattern, common mistakes that trip up even experienced developers, and how to automate SQLite schema diffs in your workflow.</p>
+
+    <h2>What SQLite ALTER TABLE Actually Supports</h2>
+
+    <p>SQLite's <code>ALTER TABLE</code> has exactly two operations:</p>
+
+    <pre><code>-- 1. Rename a table
+ALTER TABLE old_name RENAME TO new_name;
+
+-- 2. Add a column (with restrictions)
+ALTER TABLE users ADD COLUMN age INTEGER;</code></pre>
+
+    <p>The <code>ADD COLUMN</code> has additional limits:</p>
+    <ul>
+      <li>The column cannot have a <code>PRIMARY KEY</code> or <code>UNIQUE</code> constraint.</li>
+      <li>The column cannot have a default value of <code>CURRENT_TIME</code>, <code>CURRENT_DATE</code>, or <code>CURRENT_TIMESTAMP</code>.</li>
+      <li>If <code>NOT NULL</code> is specified, it must have a default value (otherwise the existing rows would have NULL values).</li>
+      <li>You cannot add a column to a table that has a <code>WITHOUT ROWID</code> clause unless the column is part of the primary key.</li>
+    </ul>
+
+    <p>Everything else — dropping columns, changing types, adding constraints, renaming columns — requires a <strong>table rebuild</strong>.</p>
+
+    <h2>The Safe Table-Rebuild Pattern</h2>
+
+    <p>Because SQLite is transactional even for schema changes, you can wrap the entire rebuild in a single transaction. If anything fails, the database rolls back to its original state. Here is the canonical six-step pattern:</p>
+
+    <h3>Step 1: Begin a Transaction</h3>
+
+    <pre><code>BEGIN TRANSACTION;</code></pre>
+
+    <h3>Step 2: Create the New Table</h3>
+
+    <pre><code>CREATE TABLE users_new (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+    <h3>Step 3: Copy Data From Old to New</h3>
+
+    <pre><code>INSERT INTO users_new (id, name, email, created_at)
+SELECT id, name, email, created_at
+FROM users;</code></pre>
+
+    <p>If you dropped a column, simply omit it from the <code>INSERT</code> and <code>SELECT</code> lists. If you added a column with a default, SQLite handles it automatically.</p>
+
+    <h3>Step 4: Drop the Old Table</h3>
+
+    <pre><code>DROP TABLE users;</code></pre>
+
+    <h3>Step 5: Rename the New Table</h3>
+
+    <pre><code>ALTER TABLE users_new RENAME TO users;</code></pre>
+
+    <h3>Step 6: Commit</h3>
+
+    <pre><code>COMMIT;</code></pre>
+
+    <blockquote>
+      <strong>Critical:</strong> Always verify row counts before and after. If <code>users</code> had 10,000 rows, <code>users_new</code> must also have 10,000 rows. A mismatch means data loss.
+    </blockquote>
+
+    <h3>Handling Indexes, Triggers, and Views</h3>
+
+    <p>When you drop the old table, SQLite automatically drops indexes and triggers attached to it. Views that reference the table survive but may become invalid. You must recreate indexes and triggers after the rename:</p>
+
+    <pre><code>-- Recreate indexes
+CREATE INDEX idx_users_email ON users(email);
+
+-- Recreate triggers
+CREATE TRIGGER users_updated
+AFTER UPDATE ON users
+BEGIN
+  UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;</code></pre>
+
+    <p>Use <code>sqlite3_schema</code> or <code>PRAGMA index_list(users)</code> before the migration to capture the exact index and trigger definitions you need to recreate.</p>
+
+    <h2>Common SQLite Migration Mistakes</h2>
+
+    <h3>1. Forgetting Foreign Key Constraints <span class="risk-tag risk-high">High Risk</span></h3>
+
+    <p>If the table you are rebuilding is referenced by foreign keys in other tables, dropping it breaks those relationships. You must either:</p>
+    <ul>
+      <li>Temporarily disable foreign key checks: <code>PRAGMA foreign_keys = OFF;</code></li>
+      <li>Rebuild the referencing tables in the correct dependency order.</li>
+    </ul>
+
+    <p>Disabling foreign keys is faster but dangerous — you lose referential integrity validation during the migration. Only do this if you are certain the data relationships are intact.</p>
+
+    <h3>2. Losing Auto-Increment Sequences <span class="risk-tag risk-high">High Risk</span></h3>
+
+    <p>SQLite stores <code>AUTOINCREMENT</code> sequence state in the <code>sqlite_sequence</code> table. When you drop and recreate a table with <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, the sequence resets. You must manually preserve it:</p>
+
+    <pre><code>-- Before dropping
+SELECT seq FROM sqlite_sequence WHERE name = 'users';
+
+-- After recreating and renaming
+UPDATE sqlite_sequence SET seq = 12345 WHERE name = 'users';</code></pre>
+
+    <h3>3. Changing Column Affinity Unintentionally <span class="risk-tag risk-medium">Medium Risk</span></h3>
+
+    <p>SQLite uses <a href="https://www.sqlite.org/datatype3.html#affinity">type affinity</a>, not strict types. A column declared <code>INTEGER</code> can still store text. When you rebuild a table and change the declared type, SQLite may change how it coerces values on insert. Test with real data before deploying.</p>
+
+    <h3>4. Forgetting Views <span class="risk-tag risk-medium">Medium Risk</span></h3>
+
+    <p>Views referencing the rebuilt table do not update automatically. If the column names changed, the view may return incorrect results or fail entirely. Run <code>PRAGMA integrity_check;</code> after any schema migration to catch orphaned views.</p>
+
+    <h3>5. Not Wrapping in a Transaction <span class="risk-tag risk-high">High Risk</span></h3>
+
+    <p>Without a transaction, a failed step leaves your database in an inconsistent state — the old table might be gone while the new one is half-populated. Always use <code>BEGIN...COMMIT</code> or run the migration inside a savepoint if you need partial rollback.</p>
+
+    <h2>Schema Diffing for SQLite</h2>
+
+    <p>Before running any migration, you should diff your old schema against your new schema. SQLite does not have a built-in schema diff tool, but you have two solid options:</p>
+
+    <h3>Option 1: Use <code>.schema</code> and Text Diff</h3>
+
+    <pre><code># Dump schema from both databases
+sqlite3 old.db ".schema" > old.sql
+sqlite3 new.db ".schema" > new.sql
+
+# Text diff (noisy — includes index order, whitespace)
+diff old.sql new.sql</code></pre>
+
+    <h3>Option 2: Use SchemaLens for Semantic Diff</h3>
+
+    <p>Paste both <code>.schema</code> outputs into <a href="../app.html">SchemaLens</a> and get a semantic diff that understands tables, columns, indexes, and constraints — without the noise of text diffing. SchemaLens generates the exact table-rebuild script you need, including the transaction wrapper and index recreation.</p>
+
+    <pre><code>-- SchemaLens output for a column rename in SQLite
+BEGIN TRANSACTION;
+
+CREATE TABLE users_new (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL
+);
+
+INSERT INTO users_new (id, full_name, email)
+SELECT id, name, email FROM users;
+
+DROP TABLE users;
+
+ALTER TABLE users_new RENAME TO users;
+
+CREATE INDEX idx_users_email ON users(email);
+
+COMMIT;</code></pre>
+
+    <h2>Automating SQLite Schema Checks in CI</h2>
+
+    <p>For teams using SQLite in testing or local development, add a schema diff step to your CI pipeline. This catches migration script errors before they reach production:</p>
+
+    <pre><code>name: SQLite Schema Check
+
+on:
+  pull_request:
+    paths:
+      - 'schema.sql'
+      - 'migrations/**'
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dump schema from reference database
+        run: sqlite3 test.db ".schema" > baseline.sql
+
+      - name: Diff against PR schema
+        run: |
+          npx schemalens-cli baseline.sql schema.sql --dialect sqlite \
+            --format markdown > schema_report.md
+
+      - name: Fail if schema changes are unaccounted for
+        run: |
+          if grep -q "change" schema_report.md; then
+            echo "Schema drift detected. See schema_report.md"
+            cat schema_report.md
+            exit 1
+          fi</code></pre>
+
+    <h2>When to Use SQLite vs. a Client-Server Database</h2>
+
+    <p>SQLite's schema migration limitations are a trade-off for its simplicity. If you find yourself rebuilding tables weekly, consider whether your project has outgrown SQLite:</p>
+
+    <ul>
+      <li><strong>Stay on SQLite:</strong> Mobile apps, embedded devices, single-user desktop apps, small web apps with infrequent schema changes, testing fixtures.</li>
+      <li><strong>Consider PostgreSQL/MySQL:</strong> Multi-user web apps, frequent schema evolution, complex constraint logic, need for online schema changes without table locks.</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Diff SQLite schemas in seconds</h3>
+      <p>Paste two <code>.schema</code> dumps into SchemaLens and get a visual diff plus a ready-to-run table-rebuild script — with transactions, index recreation, and foreign key handling.</p>
+      <a href="../app.html" class="btn btn-primary">Compare Schemas Free</a>
+      <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">Free for up to 15 tables. Lifetime Pro — $39 once.</p>
+    </div>
+
+    <h2>Related Reading</h2>
+    <ul>
+      <li><a href="postgres-schema-drift-detection-guide.html">PostgreSQL Schema Drift Detection: A Complete Guide</a></li>
+      <li><a href="mysql-alter-table-cheatsheet.html">MySQL ALTER TABLE Cheatsheet for Developers</a></li>
+      <li><a href="how-to-catch-schema-drift.html">How to Catch Schema Drift Before It Hits Production</a></li>
+      <li><a href="database-schema-versioning-best-practices.html">Database Schema Versioning Best Practices</a></li>
+    </ul>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;margin-top:40px;">
+    <div class="container" style="text-align:center;color:var(--text-muted);font-size:0.85rem;">
+      <p>© 2026 SchemaLens. Built in public. <a href="../index.html" style="color:var(--primary);">Home</a> · <a href="../blog.html" style="color:var(--primary);">Blog</a> · <a href="../app.html" style="color:var(--primary);">App</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
