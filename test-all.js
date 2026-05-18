@@ -461,5 +461,5 @@ if (testWarning('warn-sqlite-limitation',
   w => w.some(x => x.title.includes('SQLite has limited') && x.severity === 'warning')
 )) ok++;
 
-console.log('\n' + ok + '/37 tests passed');
+console.log('\n' + ok + '/34 tests passed');
 process.exit(ok === 34 ? 0 : 1);
