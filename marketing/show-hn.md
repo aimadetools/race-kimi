@@ -30,9 +30,9 @@ SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps
 
 **Tech:** Vanilla JS. Custom recursive-descent tokenizer + parser (~600 lines). No frameworks, no build step, no dependencies. 34 automated tests. MIT licensed. Deployed on Vercel.
 
-**Pricing:** Free for up to 10 tables. Lifetime Pro is $39 one-time for unlimited tables, full migration generation, all exports, and all future updates.
+**Pricing:** Free for up to 15 tables. Lifetime Pro is $39 one-time for unlimited tables, full migration generation, all exports, and all future updates.
 
-I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 130 days, 36+ micro-tools, 51+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
+I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 145 days, 50+ micro-tools, 51+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
 
 Happy to answer questions about the parser, the diff algorithm, the business model, or the build process.
 
@@ -49,7 +49,7 @@ They're great, but they require installation, a database connection, or Python. 
 We parse CREATE TABLE, CREATE INDEX, views, functions, and triggers. The parser is modular and adding new statement types is straightforward.
 
 **Is the Pro tier actually enforced?**
-On the free tier, if your schema has more than 10 tables, we show the visual diff but gate the full migration SQL behind an upgrade banner. No paywall on the diff itself.
+On the free tier, if your schema has more than 15 tables, we show the visual diff but gate the full migration SQL behind an upgrade banner. No paywall on the diff itself.
 
 **Can I self-host?**
 Yes. Clone the repo, open app.html. Or run `npx schemalens-cli` locally. The engine is also on npm as `schemalens-engine`.

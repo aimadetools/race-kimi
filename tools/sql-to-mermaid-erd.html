@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL to Mermaid ERD Converter — Visual Entity-Relationship Diagrams from CREATE TABLE | SchemaLens</title>
+<meta name="description" content="Convert SQL CREATE TABLE statements to Mermaid ERD diagrams instantly. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy into GitHub READMEs, Notion, or Obsidian. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL to Mermaid ERD Converter — Visual ER Diagrams from CREATE TABLE">
+<meta property="og:description" content="Paste SQL CREATE TABLE statements and get a Mermaid ERD diagram with relationships, keys, and cardinality. Supports all major dialects.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-to-mermaid-erd.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL to Mermaid ERD Converter",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Converts SQL CREATE TABLE statements to Mermaid ERD syntax with live diagram preview. Detects foreign keys, primary keys, and cardinality. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+  "url": "https://schemalens.tech/tools/sql-to-mermaid-erd.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .converter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .converter-grid { grid-template-columns: 1fr; } }
+
+  .converter-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .converter-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 320px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 320px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .diagram-wrap {
+    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; overflow: auto; min-height: 280px;
+  }
+  .diagram-wrap .mermaid {
+    display: flex; justify-content: center;
+  }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .options-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .options-row label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
+  .options-row input[type="checkbox"] { accent-color: var(--primary); cursor: pointer; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.15rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; font-size: 0.95rem; }
+
+  .tip-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;
+  }
+  .tip-box strong { color: var(--text); }
+
+  .dialect-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .dialect-tabs button {
+    background: var(--bg); color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; font-weight: 500;
+  }
+  .dialect-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .error { color: var(--danger); font-size: 0.9rem; margin-top: 8px; }
+
+  .copy-toast {
+    position: fixed; bottom: 24px; right: 24px; background: var(--success); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000;
+  }
+  .copy-toast.show { opacity: 1; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo" style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.25rem;color:var(--text);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="page-header">
+    <h1>SQL to Mermaid ERD Converter</h1>
+    <p>Paste SQL <code>CREATE TABLE</code> statements and get a <strong>Mermaid ERD diagram</strong> with relationships, keys, and cardinality. Perfect for GitHub READMEs, Notion, and Obsidian.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-value" id="statTables">0</div><div class="stat-label">Tables</div></div>
+    <div class="stat"><div class="stat-value" id="statRelations">0</div><div class="stat-label">Relations</div></div>
+    <div class="stat"><div class="stat-value" id="statColumns">0</div><div class="stat-label">Columns</div></div>
+  </div>
+
+  <div class="tip-box">
+    <strong>Tip:</strong> Include <code>FOREIGN KEY</code> constraints in your SQL to auto-detect relationships. The converter supports <code>REFERENCES</code> inline (PostgreSQL/MySQL) and explicit <code>CONSTRAINT ... FOREIGN KEY</code> syntax.
+  </div>
+
+  <div class="converter-grid">
+    <div class="converter-card">
+      <div class="toolbar">
+        <label for="dialectSelect">Dialect:</label>
+        <select id="dialectSelect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+        <button onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <div class="dialect-tabs">
+        <button class="active" onclick="setSampleDialect('postgres',this)">PostgreSQL</button>
+        <button onclick="setSampleDialect('mysql',this)">MySQL</button>
+        <button onclick="setSampleDialect('sqlite',this)">SQLite</button>
+        <button onclick="setSampleDialect('mssql',this)">SQL Server</button>
+        <button onclick="setSampleDialect('oracle',this)">Oracle</button>
+      </div>
+      <textarea id="sqlInput" placeholder="-- Paste your CREATE TABLE statements here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  title VARCHAR(500),
+  body TEXT
+);"></textarea>
+      <div class="error" id="parseError"></div>
+    </div>
+
+    <div class="converter-card">
+      <div class="toolbar">
+        <button onclick="copyOutput()">Copy Mermaid</button>
+        <button class="secondary" onclick="downloadMmd()">Download .mmd</button>
+      </div>
+      <div class="output-wrap">
+        <pre id="mermaidOutput">erDiagram
+    <!-- Your diagram will appear here --></pre>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="converter-card" style="padding: 12px;">
+          <h2 style="font-size: 1rem; margin-bottom: 8px;">Live Preview</h2>
+          <div class="diagram-wrap" id="diagramPreview">
+            <div class="empty-state">Enter SQL to see the diagram preview</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Need to compare two schemas?</h3>
+    <p>SchemaLens diffs SQL schemas in your browser and generates migration scripts. Free for up to 15 tables.</p>
+    <a href="../app.html" class="btn btn-primary">Open SchemaLens Diff →</a>
+  </div>
+
+  <section style="margin: 48px 0;">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px;">How It Works</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+      <div class="converter-card">
+        <h3 style="font-size: 1rem; margin-bottom: 8px;">1. Paste SQL</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Paste any <code>CREATE TABLE</code> dump. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle syntax.</p>
+      </div>
+      <div class="converter-card">
+        <h3 style="font-size: 1rem; margin-bottom: 8px;">2. Detect Relationships</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Foreign keys are parsed into Mermaid cardinality notation: <code>||--o{</code> for one-to-many, <code>||--||</code> for one-to-one.</p>
+      </div>
+      <div class="converter-card">
+        <h3 style="font-size: 1rem; margin-bottom: 8px;">3. Copy & Paste</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Copy the generated Mermaid code into GitHub READMEs, Notion, Obsidian, or any Markdown editor that supports Mermaid.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin: 48px 0;">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px;">Supported Mermaid ERD Features</h2>
+    <ul style="color: var(--text-muted); line-height: 1.8; font-size: 0.95rem;">
+      <li><strong>Tables & Columns:</strong> Every table becomes a Mermaid entity with typed columns.</li>
+      <li><strong>Primary Keys:</strong> Marked with <code>PK</code> badge in the diagram.</li>
+      <li><strong>Foreign Keys:</strong> Marked with <code>FK</code> and drawn as relationship lines with cardinality.</li>
+      <li><strong>Cardinality Detection:</strong> NOT NULL foreign keys become <code>||--o{</code>; nullable become <code>|o--o{</code>.</li>
+      <li><strong>Unique Constraints:</strong> Marked with <code>UK</code> badge when detected.</li>
+      <li><strong>Self-Referencing:</strong> Tables with foreign keys to themselves are supported.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer" style="margin-top: 48px;">
+  <div class="container" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;">
+    <p style="color:var(--text-muted);font-size:0.85rem;">SchemaLens — SQL to Mermaid ERD Converter. Free & privacy-first.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="../index.html" style="color:var(--text-muted);font-size:0.85rem;">Home</a>
+      <a href="../app.html" style="color:var(--text-muted);font-size:0.85rem;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);font-size:0.85rem;">All Tools</a>
+      <a href="../privacy-policy.html" style="color:var(--text-muted);font-size:0.85rem;">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<div class="copy-toast" id="copyToast">Copied to clipboard!</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: false, theme: 'default' });
+
+  const samples = {
+    postgres: `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  title VARCHAR(500) NOT NULL,
+  body TEXT,
+  published BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INT NOT NULL REFERENCES posts(id),
+  user_id INT NOT NULL REFERENCES users(id),
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+  post_id INT NOT NULL REFERENCES posts(id),
+  tag_id INT NOT NULL REFERENCES tags(id),
+  PRIMARY KEY (post_id, tag_id)
+);`,
+
+    mysql: `CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(500) NOT NULL,
+  body TEXT,
+  published TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE tags (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE post_tags (
+  post_id INT NOT NULL,
+  tag_id INT NOT NULL,
+  PRIMARY KEY (post_id, tag_id),
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (tag_id) REFERENCES tags(id)
+) ENGINE=InnoDB;`,
+
+    sqlite: `CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT,
+  published INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  post_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  body TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+  post_id INTEGER NOT NULL,
+  tag_id INTEGER NOT NULL,
+  PRIMARY KEY (post_id, tag_id),
+  FOREIGN KEY (post_id) REFERENCES posts(id),
+  FOREIGN KEY (tag_id) REFERENCES tags(id)
+);`,
+
+    mssql: `CREATE TABLE users (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name NVARCHAR(255) NOT NULL,
+  email NVARCHAR(255) UNIQUE NOT NULL,
+  created_at DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE posts (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  user_id INT NOT NULL,
+  title NVARCHAR(500) NOT NULL,
+  body NVARCHAR(MAX),
+  published BIT DEFAULT 0,
+  created_at DATETIME DEFAULT GETDATE(),
+  CONSTRAINT fk_posts_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body NVARCHAR(MAX) NOT NULL,
+  created_at DATETIME DEFAULT GETDATE(),
+  CONSTRAINT fk_comments_post FOREIGN KEY (post_id) REFERENCES posts(id),
+  CONSTRAINT fk_comments_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name NVARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+  post_id INT NOT NULL,
+  tag_id INT NOT NULL,
+  CONSTRAINT pk_post_tags PRIMARY KEY (post_id, tag_id),
+  CONSTRAINT fk_pt_post FOREIGN KEY (post_id) REFERENCES posts(id),
+  CONSTRAINT fk_pt_tag FOREIGN KEY (tag_id) REFERENCES tags(id)
+);`,
+
+    oracle: `CREATE TABLE users (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  name VARCHAR2(255) NOT NULL,
+  email VARCHAR2(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  user_id NUMBER NOT NULL,
+  title VARCHAR2(500) NOT NULL,
+  body CLOB,
+  published NUMBER(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_posts_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  post_id NUMBER NOT NULL,
+  user_id NUMBER NOT NULL,
+  body CLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_comments_post FOREIGN KEY (post_id) REFERENCES posts(id),
+  CONSTRAINT fk_comments_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  name VARCHAR2(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+  post_id NUMBER NOT NULL,
+  tag_id NUMBER NOT NULL,
+  CONSTRAINT pk_post_tags PRIMARY KEY (post_id, tag_id),
+  CONSTRAINT fk_pt_post FOREIGN KEY (post_id) REFERENCES posts(id),
+  CONSTRAINT fk_pt_tag FOREIGN KEY (tag_id) REFERENCES tags(id)
+);`
+  };
+
+  let currentDialect = 'postgres';
+
+  function setSampleDialect(dialect, btn) {
+    currentDialect = dialect;
+    document.getElementById('dialectSelect').value = dialect;
+    document.querySelectorAll('.dialect-tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadSample();
+  }
+
+  function loadSample() {
+    const dialect = document.getElementById('dialectSelect').value;
+    document.getElementById('sqlInput').value = samples[dialect] || samples.postgres;
+    convert();
+  }
+
+  function clearInput() {
+    document.getElementById('sqlInput').value = '';
+    convert();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('copyToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function copyOutput() {
+    const text = document.getElementById('mermaidOutput').textContent;
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+  }
+
+  function downloadMmd() {
+    const text = document.getElementById('mermaidOutput').textContent;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'schema-erd.mmd';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // --- Parser ---
+
+  function tokenize(sql) {
+    const tokens = [];
+    const regex = /(--[^\n]*)|(\/\*[\s\S]*?\*\/)|('(?:''|[^'])*')|("(?:""|[^"])*")|(`(?:``|[^`])*`)|(\b\w+\b)|([(),;])|([^\s\w(),;'"`])/gi;
+    let m;
+    while ((m = regex.exec(sql)) !== null) {
+      if (m[1]) tokens.push({ type: 'comment', value: m[1] });
+      else if (m[2]) tokens.push({ type: 'comment', value: m[2] });
+      else if (m[3]) tokens.push({ type: 'string', value: m[3] });
+      else if (m[4]) tokens.push({ type: 'string', value: m[4] });
+      else if (m[5]) tokens.push({ type: 'string', value: m[5] });
+      else if (m[6]) tokens.push({ type: 'word', value: m[6], up: m[6].toUpperCase() });
+      else if (m[7]) tokens.push({ type: 'punct', value: m[7] });
+      else if (m[8]) tokens.push({ type: 'sym', value: m[8] });
+    }
+    return tokens;
+  }
+
+  function parseSQL(sql) {
+    const tokens = tokenize(sql);
+    const tables = [];
+    let i = 0;
+
+    function peek() { return tokens[i]; }
+    function consume() { return tokens[i++]; }
+    function matchWord(w) { const t = peek(); return t && t.type === 'word' && t.up === w; }
+    function matchPunct(p) { const t = peek(); return t && t.type === 'punct' && t.value === p; }
+    function skipUntil(types) {
+      while (peek() && !types.includes(peek().type === 'word' ? peek().up : peek().value)) i++;
+    }
+
+    while (peek()) {
+      // Skip comments and non-CREATE tokens
+      if (peek().type === 'comment') { consume(); continue; }
+      if (!matchWord('CREATE')) { consume(); continue; }
+
+      consume(); // CREATE
+      if (matchWord('TABLE')) {
+        consume(); // TABLE
+        let ifNotExists = false;
+        if (matchWord('IF')) {
+          consume(); // IF
+          if (matchWord('NOT')) { consume(); consume(); if (matchWord('EXISTS')) consume(); }
+        }
+        // Table name: may be schema.table
+        let tableName = null;
+        let schemaName = null;
+        if (peek() && peek().type === 'word') {
+          schemaName = consume().value;
+          if (matchPunct('.')) {
+            consume(); // .
+            if (peek() && peek().type === 'word') {
+              tableName = consume().value;
+            } else {
+              tableName = schemaName; schemaName = null;
+            }
+          } else {
+            tableName = schemaName; schemaName = null;
+          }
+        }
+        if (!tableName) { skipUntil([';']); if (matchPunct(';')) consume(); continue; }
+
+        if (!matchPunct('(')) { skipUntil([';']); if (matchPunct(';')) consume(); continue; }
+        consume(); // (
+
+        const columns = [];
+        const fks = [];
+        const uniques = [];
+        const pks = [];
+
+        let depth = 1;
+        let colBuf = [];
+
+        while (peek() && depth > 0) {
+          const t = peek();
+          if (t.type === 'punct' && t.value === '(') { depth++; colBuf.push(consume()); }
+          else if (t.type === 'punct' && t.value === ')') {
+            depth--;
+            if (depth === 0) {
+              // Process buffered column/constraint
+              processColumnOrConstraint(colBuf, columns, fks, uniques, pks, tableName);
+              consume(); // )
+              break;
+            } else {
+              colBuf.push(consume());
+            }
+          }
+          else if (t.type === 'punct' && t.value === ',' && depth === 1) {
+            processColumnOrConstraint(colBuf, columns, fks, uniques, pks, tableName);
+            colBuf = [];
+            consume(); // ,
+          }
+          else {
+            colBuf.push(consume());
+          }
+        }
+
+        tables.push({ name: tableName, schema: schemaName, columns, fks, uniques, pks });
+        // Skip to semicolon
+        while (peek() && !matchPunct(';')) consume();
+        if (matchPunct(';')) consume();
+      } else {
+        consume(); // not TABLE
+      }
+    }
+
+    return { tables };
+  }
+
+  function processColumnOrConstraint(tokens, columns, fks, uniques, pks, tableName) {
+    if (tokens.length === 0) return;
+    // Check if it's a constraint
+    if (tokens[0].type === 'word' && tokens[0].up === 'CONSTRAINT') {
+      // CONSTRAINT [name] ...
+      let j = 1;
+      if (tokens[j] && tokens[j].type === 'word') j++; // constraint name
+      if (tokens[j] && tokens[j].type === 'word') {
+        const ctype = tokens[j].up;
+        if (ctype === 'PRIMARY') {
+          const cols = extractParenColumns(tokens, j);
+          pks.push(...cols);
+        } else if (ctype === 'UNIQUE') {
+          const cols = extractParenColumns(tokens, j);
+          uniques.push(...cols);
+        } else if (ctype === 'FOREIGN') {
+          const fk = extractFK(tokens, j, tableName);
+          if (fk) fks.push(fk);
+        }
+      }
+      return;
+    }
+    if (tokens[0].type === 'word' && tokens[0].up === 'PRIMARY') {
+      const cols = extractParenColumns(tokens, 0);
+      pks.push(...cols);
+      return;
+    }
+    if (tokens[0].type === 'word' && tokens[0].up === 'UNIQUE') {
+      const cols = extractParenColumns(tokens, 0);
+      uniques.push(...cols);
+      return;
+    }
+    if (tokens[0].type === 'word' && tokens[0].up === 'FOREIGN') {
+      const fk = extractFK(tokens, 0, tableName);
+      if (fk) fks.push(fk);
+      return;
+    }
+
+    // It's a column definition
+    const colName = tokens[0].value;
+    let dataType = '';
+    let isPK = false;
+    let isFK = false;
+    let isUnique = false;
+    let isNullable = true;
+    let refTable = null;
+    let refColumn = null;
+
+    let j = 1;
+    while (j < tokens.length) {
+      const t = tokens[j];
+      if (t.type === 'word') {
+        const up = t.up;
+        if (up === 'PRIMARY' && tokens[j + 1] && tokens[j + 1].up === 'KEY') {
+          isPK = true; j += 2; continue;
+        }
+        if (up === 'UNIQUE') { isUnique = true; j++; continue; }
+        if (up === 'NOT' && tokens[j + 1] && tokens[j + 1].up === 'NULL') {
+          isNullable = false; j += 2; continue;
+        }
+        if (up === 'NULL' && (!tokens[j - 1] || tokens[j - 1].up !== 'NOT')) {
+          isNullable = true; j++; continue;
+        }
+        if (up === 'REFERENCES') {
+          j++;
+          if (tokens[j] && tokens[j].type === 'word') {
+            refTable = tokens[j].value;
+            j++;
+            if (tokens[j] && tokens[j].type === 'punct' && tokens[j].value === '(') {
+              j++;
+              if (tokens[j] && tokens[j].type === 'word') {
+                refColumn = tokens[j].value;
+                j++;
+              }
+              if (tokens[j] && tokens[j].type === 'punct' && tokens[j].value === ')') j++;
+            }
+            isFK = true;
+          }
+          continue;
+        }
+        if (['INT','INTEGER','BIGINT','SMALLINT','SERIAL','BIGSERIAL','VARCHAR','NVARCHAR','CHAR','TEXT','CLOB','BOOLEAN','BIT','DATE','DATETIME','TIMESTAMP','TIME','DECIMAL','NUMERIC','FLOAT','REAL','DOUBLE','MONEY','UUID','JSON','JSONB','ARRAY','BYTEA','BLOB','NUMBER'].includes(up)) {
+          dataType = up;
+          j++;
+          // Collect type params like (255) or (10,2)
+          if (tokens[j] && tokens[j].type === 'punct' && tokens[j].value === '(') {
+            dataType += '(';
+            j++;
+            while (j < tokens.length && !(tokens[j].type === 'punct' && tokens[j].value === ')')) {
+              dataType += tokens[j].value;
+              j++;
+            }
+            if (tokens[j] && tokens[j].value === ')') { dataType += ')'; j++; }
+          }
+          continue;
+        }
+        // Generic type words
+        if (j === 1) {
+          dataType = t.value;
+          j++;
+          if (tokens[j] && tokens[j].type === 'punct' && tokens[j].value === '(') {
+            dataType += '(';
+            j++;
+            while (j < tokens.length && !(tokens[j].type === 'punct' && tokens[j].value === ')')) {
+              dataType += tokens[j].value;
+              j++;
+            }
+            if (tokens[j] && tokens[j].value === ')') { dataType += ')'; j++; }
+          }
+          continue;
+        }
+      }
+      j++;
+    }
+
+    columns.push({ name: colName, type: dataType || 'unknown', isPK, isFK, isUnique, isNullable, refTable, refColumn });
+  }
+
+  function extractParenColumns(tokens, startIdx) {
+    const cols = [];
+    let j = startIdx;
+    while (j < tokens.length && !(tokens[j].type === 'punct' && tokens[j].value === '(')) j++;
+    if (j < tokens.length) j++; // skip (
+    while (j < tokens.length && !(tokens[j].type === 'punct' && tokens[j].value === ')')) {
+      if (tokens[j].type === 'word') cols.push(tokens[j].value);
+      j++;
+    }
+    return cols;
+  }
+
+  function extractFK(tokens, startIdx, tableName) {
+    let j = startIdx;
+    // FOREIGN KEY (col) REFERENCES other(col)
+    while (j < tokens.length && tokens[j].up !== 'KEY') j++;
+    j++; // skip KEY
+    const cols = [];
+    if (tokens[j] && tokens[j].value === '(') {
+      j++;
+      while (j < tokens.length && !(tokens[j].type === 'punct' && tokens[j].value === ')')) {
+        if (tokens[j].type === 'word') cols.push(tokens[j].value);
+        j++;
+      }
+    }
+    while (j < tokens.length && tokens[j].up !== 'REFERENCES') j++;
+    j++; // skip REFERENCES
+    let refTable = null;
+    if (tokens[j] && tokens[j].type === 'word') {
+      refTable = tokens[j].value;
+      j++;
+    }
+    let refCol = null;
+    if (tokens[j] && tokens[j].value === '(') {
+      j++;
+      if (tokens[j] && tokens[j].type === 'word') refCol = tokens[j].value;
+    }
+    if (cols.length && refTable) {
+      return { table: tableName, column: cols[0], refTable, refColumn: refCol || 'id' };
+    }
+    return null;
+  }
+
+  function generateMermaid(tables) {
+    if (tables.length === 0) return 'erDiagram\n    <!-- Paste SQL CREATE TABLE statements to generate diagram -->';
+
+    const lines = ['erDiagram'];
+    const relSet = new Set();
+
+    // Build column lookup for PK/FK/unique
+    const tableMap = {};
+    tables.forEach(t => {
+      tableMap[t.name.toLowerCase()] = t;
+    });
+
+    tables.forEach(t => {
+      lines.push(`    ${sanitizeMermaidId(t.name)} {`);
+      t.columns.forEach(col => {
+        let tags = [];
+        if (col.isPK || t.pks.includes(col.name)) tags.push('PK');
+        if (col.isFK) tags.push('FK');
+        if (col.isUnique || t.uniques.includes(col.name)) tags.push('UK');
+        const tagStr = tags.length ? ' ' + tags.join(',') : '';
+        const typeStr = col.type || 'unknown';
+        lines.push(`        ${typeStr} ${sanitizeMermaidId(col.name)}${tagStr}`);
+      });
+      // Add PK columns that might not be in column list (rare)
+      t.pks.forEach(pk => {
+        if (!t.columns.find(c => c.name === pk)) {
+          lines.push(`        unknown ${sanitizeMermaidId(pk)} PK`);
+        }
+      });
+      lines.push(`    }`);
+    });
+
+    // Relationships
+    tables.forEach(t => {
+      t.columns.forEach(col => {
+        if (col.refTable) {
+          const from = sanitizeMermaidId(t.name);
+          const to = sanitizeMermaidId(col.refTable);
+          const key = from < to ? `${from}-${to}-${col.name}` : `${to}-${from}-${col.name}`;
+          if (relSet.has(key)) return;
+          relSet.add(key);
+
+          const leftCard = col.isNullable ? '|o' : '||';
+          const rightCard = 'o{';
+          lines.push(`    ${from} ${leftCard}--${rightCard} ${to} : "${sanitizeMermaidId(col.name)}"`);
+        }
+      });
+      t.fks.forEach(fk => {
+        const from = sanitizeMermaidId(fk.table);
+        const to = sanitizeMermaidId(fk.refTable);
+        const key = from < to ? `${from}-${to}-${fk.column}` : `${to}-${from}-${fk.column}`;
+        if (relSet.has(key)) return;
+        relSet.add(key);
+        const col = t.columns.find(c => c.name === fk.column);
+        const leftCard = col && col.isNullable ? '|o' : '||';
+        lines.push(`    ${from} ${leftCard}--o{ ${to} : "${sanitizeMermaidId(fk.column)}"`);
+      });
+    });
+
+    return lines.join('\n');
+  }
+
+  function sanitizeMermaidId(name) {
+    if (!name) return 'unknown';
+    // Mermaid ERD identifiers must be alphanumeric or underscores
+    // If it contains special chars, wrap in quotes
+    if (/^[a-zA-Z0-9_]+$/.test(name)) return name;
+    return `"${name.replace(/"/g, '\\"')}"`;
+  }
+
+  async function renderDiagram(mermaidCode) {
+    const container = document.getElementById('diagramPreview');
+    if (!mermaidCode || mermaidCode.includes('<!-- Paste SQL')) {
+      container.innerHTML = '<div class="empty-state">Enter SQL to see the diagram preview</div>';
+      return;
+    }
+    container.innerHTML = '<div class="mermaid">' + mermaidCode.replace(/</g, '&lt;') + '</div>';
+    try {
+      await mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
+    } catch (e) {
+      container.innerHTML = '<div class="empty-state" style="color:var(--danger);">Diagram render error. Check your SQL syntax.</div>';
+    }
+  }
+
+  function convert() {
+    const sql = document.getElementById('sqlInput').value;
+    const errorEl = document.getElementById('parseError');
+    errorEl.textContent = '';
+
+    let result;
+    try {
+      result = parseSQL(sql);
+    } catch (e) {
+      errorEl.textContent = 'Parse error: ' + e.message;
+      return;
+    }
+
+    const mermaidCode = generateMermaid(result.tables);
+    document.getElementById('mermaidOutput').textContent = mermaidCode;
+
+    // Update stats
+    let colCount = 0;
+    let relCount = 0;
+    result.tables.forEach(t => {
+      colCount += t.columns.length;
+      relCount += t.columns.filter(c => c.refTable).length + t.fks.length;
+    });
+    document.getElementById('statTables').textContent = result.tables.length;
+    document.getElementById('statRelations').textContent = relCount;
+    document.getElementById('statColumns').textContent = colCount;
+
+    renderDiagram(mermaidCode);
+  }
+
+  document.getElementById('sqlInput').addEventListener('input', () => {
+    clearTimeout(window._convertTimer);
+    window._convertTimer = setTimeout(convert, 400);
+  });
+
+  document.getElementById('dialectSelect').addEventListener('change', (e) => {
+    currentDialect = e.target.value;
+    loadSample();
+  });
+
+  // Init
+  loadSample();
+</script>
+</body>
+</html>

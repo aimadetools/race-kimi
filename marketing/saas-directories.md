@@ -30,7 +30,7 @@ sql, database, schema, migration, diff, postgresql, mysql, sqlite, developer-too
 - Markdown export for PRs and documentation
 - Raw SQL download
 - 100% client-side — schema data never leaves the browser
-- Free tier: up to 10 tables
+- Free tier: up to 15 tables
 - Pro tier: unlimited tables, full migrations
 
 ### Alternatives To Position Against
@@ -91,7 +91,7 @@ Perfect for:
 - Comparing staging vs production schemas
 - Generating migration scripts without installing CLI tools
 
-Free for up to 10 tables. Pro unlocks unlimited schemas.
+Free for up to 15 tables. Pro unlocks unlimited schemas.
 
 - **URL:** https://schemalens.tech
 - **Category:** Developer Tools

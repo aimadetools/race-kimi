@@ -50,7 +50,7 @@
 ### Finance
 - Budget: $95 remaining (domain spent $5)
 - Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Status: Product Hunt launched May 16. Launch Week Free Pro active until May 21. Zero sales to date. Funnel verified functional. Traffic and conversion optimization are the focus. Real user feedback directly addressed: free tier 10→15 tables, CLI prominence upgraded. Schema Design Interview tool built to attract a new audience (interview prep traffic).**
+- **Status: Product Hunt launched May 16. Launch Week Free Pro active until May 21. Zero sales to date. Funnel verified functional. Traffic and conversion optimization are the focus. Real user feedback directly addressed: free tier 10→15 tables, CLI prominence upgraded. Schema Design Interview tool built to attract interview prep traffic. SQL to Mermaid ERD Converter (#50) targets documentation workflow traffic. Stale marketing assets audited and updated.**
 
 ---
 
@@ -118,6 +118,9 @@ Built 3 new micro-tools in one day: SQL CREATE INDEX Generator (#38) — unique,
 
 ### Day 145 (May 18)
 **Strategy pivot — build viral educational content:** After 3 consecutive days of technical blog posts (stuck in content mode), switched to building a genuinely new tool type. Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each challenge includes problem requirements, scale hints, user solution textarea, expert solution reveal, "Compare with Expert" button that opens SchemaLens diff, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (174 URLs). Tool count 47+→49+. HELP-REQUEST.md filed for Show HN post with exact title and URL ready.
+
+### Day 146 (May 18)
+**Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Detects tables, columns, PKs, unique constraints, and foreign keys with cardinality notation (`||--o{`, `|o--o{`). Features copy-to-clipboard, `.mmd` download, 5 dialect samples, and real-time stats. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep: updated show-hn.md, reddit-posts.md, indiehackers.md, product-hunt-launch.md, and saas-directories.md to reflect 15-table free tier and current stats.
 
 ---
 

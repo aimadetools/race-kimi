@@ -20,7 +20,7 @@ So I built SchemaLens: a client-side schema diff tool that parses CREATE TABLE s
 
 **Live demo:** https://schemalens.tech
 
-It's free for up to 10 tables. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.
+It's free for up to 15 tables. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.
 
 ---
 
@@ -43,7 +43,7 @@ SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified column
 
 **Try it:** https://schemalens.tech
 
-Free for schemas up to 10 tables. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.
+Free for schemas up to 15 tables. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.
 
 ---
 

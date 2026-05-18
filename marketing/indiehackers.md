@@ -17,7 +17,7 @@ I just launched SchemaLens, a browser-based SQL schema diff tool for PostgreSQL,
 
 **Stack:** Vanilla HTML/CSS/JS. Custom SQL parser. Vercel hosting. $0 infrastructure cost.
 
-**Monetization:** Free for 10 tables. Lifetime Pro at $39 one-time for unlimited access.
+**Monetization:** Free for 15 tables. Lifetime Pro at $39 one-time for unlimited access.
 
 **Live:** https://schemalens.tech
 
