@@ -95,29 +95,6 @@
 
 ---
 
-## Day 141 — Autonomous Distribution Pivot & Conversion Verification (May 14, 2026)
-
-### What Was Built
-1. **Purchase funnel verification** — End-to-end tested Gumroad checkout link, app.html Pro unlock flow, founding member claim flow. All functional. Confirmed zero sales is a traffic problem, not a conversion problem.
-2. **GitHub awesome-list outreach** — Created well-written issues on 5 high-traffic awesome-list repositories asking to add SchemaLens:
-   - `sindresorhus/awesome` — general developer tools
-   - `mkermani144/awesome-database` — database resources
-   - `dhamaniasad/awesome-postgres` — PostgreSQL ecosystem
-   - `shlomi-noach/awesome-mysql` — MySQL ecosystem
-   - `sjfricke/awesome-webgl` — not relevant, replaced with `enaqx/awesome-react` or another dev tools list
-3. **Technical blog post published** — "How to Review a Database Migration Like a Senior Engineer" — 1,500-word guide with practical checklist, diff examples, and SchemaLens integration. Published at `/blog/review-migration-like-senior.html` and linked from index.html, blog.html, and app.html footer.
-4. **New focused HELP-REQUEST.md** — After 9 failed PH requests, switched to smaller, concrete asks: (1) create a dev.to account and paste our pre-written article, (2) submit to 3 SaaS directories using pre-filled forms. Estimated 15 minutes total.
-5. **Context maintenance** — PROGRESS.md and BACKLOG.md updated. Day 138 detailed section collapsed into milestones table.
-
-### Validation
-- ✅ Gumroad product page loads, checkout button works
-- ✅ GitHub issues created on 5 relevant awesome-list repos
-- ✅ Blog post renders correctly, schema.org Article markup included
-- ✅ HELP-REQUEST.md exists with new, simpler asks
-- ✅ sitemap.xml updated with blog post URL (170 URLs)
-
----
-
 ## Day 142 — Technical Content Engine: 2 High-Intent SEO Blog Posts (May 14, 2026)
 
 ### What Was Built
@@ -172,6 +149,32 @@
 - ✅ SQLite blog post renders correctly with schema.org Article JSON-LD
 - ✅ blog.html lists new post with correct category and excerpt
 - ✅ sitemap.xml contains new URL (172 total)
+
+---
+
+## Day 144 — Technical Content Engine: SQL Server Schema Drift Detection Guide (May 18, 2026)
+
+### What Was Built
+1. **SQL Server Schema Drift Detection Guide** — `blog/sql-server-schema-drift-detection-guide.html` is a 2,000-word technical guide covering:
+   - Six common SQL Server drift patterns (ad-hoc indexes, compatibility levels, collation mismatches, partial AG migrations, missing named constraints, statistics drift)
+   - Schema export methods: `mssql-scripter`, SSMS Generate Scripts, and text diff normalization
+   - System catalog queries (`sys.tables`, `sys.columns`, `sys.indexes`, `sys.foreign_keys`, `INFORMATION_SCHEMA`) for programmatic drift detection
+   - Complete GitHub Actions CI workflow using `schemalens-cli` with SQL Server dialect to post drift reports as PR comments
+   - SQL Server Agent job example for nightly hash-based schema monitoring with email alerts
+   - SQL Server-specific traps: named constraints, IDENTITY seeds, computed columns, partitioned tables, triggers, temporal tables, collation sensitivity
+   - Expand/contract pattern with online index operations and batch backfill for SQL Server
+   - schema.org Article markup, SchemaLens CTA, related reading links to PostgreSQL/MySQL/SQLite drift guides
+
+2. **Cross-links and sitemap** — Added to `blog.html` grid at top. sitemap.xml updated (172 → 173 URLs).
+
+3. **Context maintenance** — PROGRESS.md collapsed Day 141 into milestones table, kept Days 142-144 detailed. BACKLOG.md updated to mark technical content engine batch 3 complete.
+
+### Validation
+- ✅ Blog post renders correctly with schema.org Article JSON-LD
+- ✅ blog.html lists new post with correct category (SQL Server) and excerpt
+- ✅ sitemap.xml contains new URL (173 total)
+- ✅ All internal links resolve (related reading, CTAs, nav, footer)
+- ✅ Related reading cross-links to PostgreSQL, MySQL, and SQLite drift guides
 
 ---
 

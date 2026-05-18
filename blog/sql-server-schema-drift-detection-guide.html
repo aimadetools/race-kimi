@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQL Server Schema Drift Detection: A Complete Guide — SchemaLens</title>
+  <meta name="description" content="Learn how to detect, prevent, and fix SQL Server schema drift. Step-by-step guide with sqlcmd, system catalogs, and automated diffing for production teams.">
+  <meta property="og:title" content="SQL Server Schema Drift Detection: A Complete Guide">
+  <meta property="og:description" content="Learn how to detect, prevent, and fix SQL Server schema drift. Step-by-step guide with sqlcmd, system catalogs, and automated diffing for production teams.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sql-server-schema-drift-detection-guide.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SQL Server Schema Drift Detection: A Complete Guide",
+  "description": "Learn how to detect, prevent, and fix SQL Server schema drift. Step-by-step guide with sqlcmd, system catalogs, and automated diffing for production teams.",
+  "url": "https://schemalens.tech/blog/sql-server-schema-drift-detection-guide.html",
+  "datePublished": "2026-05-18",
+  "dateModified": "2026-05-18",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/sql-server-schema-drift-detection-guide.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>SQL Server Schema Drift Detection: A Complete Guide</h1>
+    <div class="meta">May 18, 2026 · 10 min read · SchemaLens Team</div>
+
+    <p>SQL Server is the backbone of thousands of enterprise applications, yet it is surprisingly easy for schemas to drift apart. A DBA runs a quick index creation on production to fix a slow report. A developer adds a column in staging but the migration script never makes it to source control. An Azure SQL managed instance gets patched to a newer compatibility level while on-prem stays behind.</p>
+
+    <p>This is <strong>schema drift</strong>, and in SQL Server it is especially insidious because the database engine is so accommodating. You can make most schema changes online with minimal locking, which is great for uptime — but it also means nothing stops someone from altering production directly. This guide shows you exactly how to detect, prevent, and fix schema drift in SQL Server, from one-off checks to fully automated monitoring.</p>
+
+    <h2>What SQL Server Schema Drift Looks Like</h2>
+
+    <p>SQL Server environments diverge in predictable ways. Here are the drift patterns we see most often in production SQL Server and Azure SQL databases:</p>
+
+    <ul>
+      <li><strong>Ad-hoc indexes.</strong> A DBA creates a non-clustered index directly on a production table to fix a slow query. The index works, but it is not in any migration script. Six months later, a restore to a new environment is missing the index and the application times out.</li>
+      <li><strong>Compatibility level differences.</strong> One server runs compatibility level 160 (SQL Server 2022), another runs 150 (SQL Server 2019). Query behavior, cardinality estimation, and available syntax differ silently.</li>
+      <li><strong>Collation mismatches.</strong> A database was created with <code>SQL_Latin1_General_CP1_CI_AS</code> but a restored copy uses <code>Latin1_General_100_CI_AS</code>. String comparisons, sorting, and index behavior change subtly.</li>
+      <li><strong>Partial migrations in availability groups.</strong> A schema change is applied to the primary replica but fails to replicate to secondaries due to a permission or constraint conflict. The secondaries lag behind without obvious errors.</li>
+      <li><strong>Missing named constraints.</strong> SQL Server auto-generates constraint names like <code>DF__Users__CreatedAt__3A81B327</code> if you do not name them explicitly. These names differ across environments, making diffing noisy and migrations non-deterministic.</li>
+      <li><strong>Statistics drift.</strong> While not a schema change per se, outdated statistics can cause query plans that behave differently across "identical" schemas. Automated rebuilds in one environment and not another create invisible divergence.</li>
+    </ul>
+
+    <h2>Method 1: The SQL Server Schema Export Diff (Fastest One-Off Check)</h2>
+
+    <p>The quickest way to compare two SQL Server schemas is to script both and diff them. SQL Server Management Studio (SSMS) and Azure Data Studio both support this, but for automation you want a command-line approach.</p>
+
+    <h3>Using sqlcmd and mssql-scripter</h3>
+
+    <pre><code># Install mssql-scripter (Python-based CLI for SQL Server)
+pip install mssql-scripter
+
+# Script entire database schema (no data)
+mssql-scripter -S prod-server.database.windows.net \
+  -d prod_db -U readonly_user -P $PASSWORD \
+  --schema-and-data false --display-progress false > prod.sql
+
+mssql-scripter -S staging-server.database.windows.net \
+  -d staging_db -U readonly_user -P $PASSWORD \
+  --schema-and-data false --display-progress false > staging.sql</code></pre>
+
+    <p>Now compare them. Text diff is noisy because <code>mssql-scripter</code> includes constraint names, object IDs, and creation timestamps that differ across environments:</p>
+
+    <pre><code># Basic text diff (very noisy)
+diff prod.sql staging.sql
+
+# Better: normalize by removing auto-generated names and IDs
+sed -E 's/DF__[^[:space:]]+/DF_AUTO/g' prod.sql > prod_norm.sql
+sed -E 's/DF__[^[:space:]]+/DF_AUTO/g' staging.sql > staging_norm.sql
+diff prod_norm.sql staging_norm.sql</code></pre>
+
+    <p>For a <strong>semantic diff</strong> that understands tables, columns, indexes, and constraints — rather than treating the schema as text — paste both files into <a href="../app.html">SchemaLens</a>. It filters out noise and highlights only the structural changes.</p>
+
+    <h3>Using SSMS Generate Scripts Wizard</h3>
+
+    <p>For a one-off comparison without installing tools:</p>
+    <ol>
+      <li>Right-click the database in SSMS → Tasks → Generate Scripts.</li>
+      <li>Select all database objects (tables, views, stored procedures, functions).</li>
+      <li>Set "Script statistics" and "Script extended properties" to False to reduce noise.</li>
+      <li>Save the output to a <code>.sql</code> file and repeat for the second database.</li>
+      <li>Diff the two files in SchemaLens or your favorite diff tool.</li>
+    </ol>
+
+    <h2>Method 2: Query the System Catalog (Programmatic)</h2>
+
+    <p>SQL Server exposes rich system catalog views in every database. You can query <code>sys.objects</code>, <code>sys.columns</code>, <code>sys.indexes</code>, and <code>INFORMATION_SCHEMA</code> to build a programmatic drift detector.</p>
+
+    <h3>Compare Tables</h3>
+
+    <pre><code>SELECT schema_name(schema_id) AS schema_name, name AS table_name
+FROM sys.tables
+WHERE is_ms_shipped = 0
+ORDER BY schema_name, table_name;</code></pre>
+
+    <h3>Compare Columns</h3>
+
+    <pre><code>SELECT
+  SCHEMA_NAME(t.schema_id) AS schema_name,
+  t.name AS table_name,
+  c.name AS column_name,
+  ty.name AS data_type,
+  c.max_length,
+  c.precision,
+  c.scale,
+  c.is_nullable,
+  dc.definition AS default_constraint
+FROM sys.columns c
+JOIN sys.tables t ON c.object_id = t.object_id
+JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+LEFT JOIN sys.default_constraints dc ON c.default_object_id = dc.object_id
+WHERE t.is_ms_shipped = 0
+ORDER BY schema_name, table_name, c.column_id;</code></pre>
+
+    <h3>Compare Indexes</h3>
+
+    <pre><code>SELECT
+  SCHEMA_NAME(t.schema_id) AS schema_name,
+  t.name AS table_name,
+  i.name AS index_name,
+  i.type_desc AS index_type,
+  STRING_AGG(c.name, ', ') WITHIN GROUP (ORDER BY ic.key_ordinal) AS indexed_columns
+FROM sys.indexes i
+JOIN sys.tables t ON i.object_id = t.object_id
+JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
+JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+WHERE t.is_ms_shipped = 0 AND i.type > 0
+GROUP BY t.schema_id, t.name, i.name, i.type_desc
+ORDER BY schema_name, table_name, index_name;</code></pre>
+
+    <h3>Compare Constraints</h3>
+
+    <pre><code>SELECT
+  SCHEMA_NAME(t.schema_id) AS schema_name,
+  t.name AS table_name,
+  CONSTRAINT_NAME = CASE
+    WHEN fk.name IS NOT NULL THEN fk.name
+    WHEN ck.name IS NOT NULL THEN ck.name
+    WHEN pk.name IS NOT NULL THEN pk.name
+  END,
+  CONSTRAINT_TYPE = CASE
+    WHEN fk.name IS NOT NULL THEN 'FOREIGN KEY'
+    WHEN ck.name IS NOT NULL THEN 'CHECK'
+    WHEN pk.name IS NOT NULL THEN 'PRIMARY KEY'
+  END
+FROM sys.tables t
+LEFT JOIN sys.foreign_keys fk ON t.object_id = fk.parent_object_id
+LEFT JOIN sys.check_constraints ck ON t.object_id = ck.parent_object_id
+LEFT JOIN sys.key_constraints pk ON t.object_id = pk.parent_object_id AND pk.type = 'PK'
+WHERE t.is_ms_shipped = 0
+  AND (fk.name IS NOT NULL OR ck.name IS NOT NULL OR pk.name IS NOT NULL)
+ORDER BY schema_name, table_name, CONSTRAINT_NAME;</code></pre>
+
+    <p>Export these queries from both environments and diff the results. This approach is deterministic, avoids text-diff noise, and is easy to automate in SQL Server Agent or Azure Automation.</p>
+
+    <h2>Method 3: Automated Drift Detection in CI/CD</h2>
+
+    <p>The only way to prevent drift at scale is to catch it automatically. Here is a minimal GitHub Actions workflow that diffs your production schema against the schema in your main branch on every pull request:</p>
+
+    <pre><code>name: SQL Server Schema Drift Check
+
+on:
+  pull_request:
+    paths:
+      - 'migrations/**'
+      - 'schema.sql'
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mssql-scripter
+        run: pip install mssql-scripter
+
+      - name: Dump production schema
+        run: |
+          mssql-scripter -S ${{ secrets.SQL_SERVER_HOST }} \
+            -d ${{ secrets.SQL_SERVER_DB }} \
+            -U ${{ secrets.SQL_SERVER_USER }} \
+            -P ${{ secrets.SQL_SERVER_PASSWORD }} \
+            --schema-and-data false > prod.sql
+
+      - name: Diff against branch schema
+        run: |
+          npx schemalens-cli prod.sql schema.sql --dialect tsql \
+            --format markdown > drift_report.md
+
+      - name: Comment PR if drift detected
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('drift_report.md', 'utf8');
+            if (report.includes('change')) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '## ⚠️ SQL Server Schema Drift Detected\n\n' + report
+              });
+            }</code></pre>
+
+    <p>This workflow uses the <a href="../cli">SchemaLens CLI</a> to generate a semantic diff and posts it as a PR comment. If the diff is empty, your branch schema matches production.</p>
+
+    <h2>Method 4: Continuous Monitoring with SQL Server Agent</h2>
+
+    <p>CI checks catch drift at merge time, but what about drift introduced outside version control? A scheduled SQL Server Agent job or an Azure Function can compare production against your canonical <code>schema.sql</code> file daily:</p>
+
+    <pre><code>-- SQL Server Agent Job: Nightly Schema Drift Check
+-- Step 1: Export current schema to a table or file
+-- Step 2: Compare hash against baseline
+-- Step 3: Alert if different
+
+DECLARE @currentHash BINARY(64);
+SELECT @currentHash = HASHBYTES('SHA2_256',
+  (SELECT
+    schema_name(schema_id) + '.' + name + '|' +
+    (SELECT STRING_AGG(c.name + ':' + ty.name, ',')
+     FROM sys.columns c
+     JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+     WHERE c.object_id = t.object_id)
+  FROM sys.tables t
+  WHERE is_ms_shipped = 0
+  ORDER BY schema_name(schema_id), name
+  FOR XML RAW));
+
+DECLARE @baselineHash BINARY(64) = 0x...; -- stored baseline
+
+IF @currentHash <> @baselineHash
+BEGIN
+  EXEC msdb.dbo.sp_send_dbmail
+    @profile_name = 'DBAlerts',
+    @recipients = 'dba@example.com',
+    @subject = 'ALERT: Schema drift detected on PROD',
+    @body = 'Production schema hash does not match baseline. Run SchemaLens diff immediately.';
+END</code></pre>
+
+    <p>For teams using Azure SQL, replace SQL Server Agent with an Azure Logic App or Power Automate flow that runs a similar query on a schedule and alerts via email or Teams.</p>
+
+    <h2>Common SQL Server-Specific Drift Traps</h2>
+
+    <div class="checklist">
+      <ul>
+        <li><strong>Named constraints.</strong> Always name your constraints explicitly (<code>CONSTRAINT PK_Users PRIMARY KEY</code>). Auto-generated names like <code>DF__Users__CreatedAt__3A81B327</code> differ across servers and make deterministic diffing impossible. <span class="risk-tag risk-high">High</span></li>
+        <li><strong>IDENTITY seed and increment.</strong> Two tables can both have <code>IDENTITY(1,1)</code> but different current seed values after data operations. Check <code>sys.identity_columns</code> for the last value, not just the definition.</li>
+        <li><strong>Computed columns.</strong> A computed column definition like <code>AS (Price * Quantity)</code> is schema. If the expression changes in one environment, queries break silently.</li>
+        <li><strong>Partition schemes and filegroups.</strong> Enterprise Edition features like table partitioning create schema objects (<code>partition_schemes</code>, <code>partition_functions</code>) that standard dumps often miss.</li>
+        <li><strong>Triggers and CLR integrations.</strong> DML triggers, DDL triggers, and CLR stored procedures live in <code>sys.triggers</code> and <code>sys.assemblies</code>. They are easy to overlook in a visual review.</li>
+        <li><strong>Temporal tables.</strong> SQL Server 2016+ system-versioned temporal tables have a hidden history table and period columns. Diffing must account for both the visible and hidden schema objects.</li>
+        <li><strong>Case sensitivity.</strong> Collation determines whether <code>UserName</code> and <code>username</code> are the same column. A case-sensitive collation on one server and a case-insensitive collation on another creates subtle but serious divergence.</li>
+      </ul>
+    </div>
+
+    <h2>The Expand/Contract Defense for SQL Server</h2>
+
+    <p>The best way to prevent drift is to make schema changes so safe that they cannot fail partially. SQL Server supports online index operations and minimal logging, making the expand/contract pattern especially efficient:</p>
+
+    <pre><code>-- Expand: add new column as nullable (online, minimal locking)
+ALTER TABLE orders ADD COLUMN status_v2 VARCHAR(20) NULL
+  WITH (ONLINE = ON);
+
+-- Backfill in small batches to avoid log growth
+DECLARE @batch INT = 1;
+WHILE @batch <= 100
+BEGIN
+  UPDATE TOP (10000) orders
+  SET status_v2 = status
+  WHERE status_v2 IS NULL;
+  SET @batch = @batch + 1;
+  WAITFOR DELAY '00:00:01'; -- breathe between batches
+END;
+
+-- Add a computed column that mirrors the old name for compatibility
+ALTER TABLE orders ADD COLUMN status AS (status_v2);
+
+-- Contract: drop old column in a later deploy (after all code references status_v2)
+-- ALTER TABLE orders DROP COLUMN status_deprecated;</code></pre>
+
+    <p>By breaking changes into multiple deployed steps, you ensure that every intermediate state is valid. If a deploy fails, you roll back the application code, not the schema — and the schema stays compatible with both old and new code.</p>
+
+    <h2>Start Detecting Drift Today</h2>
+
+    <p>You do not need a complex pipeline to start. Here is a 5-minute workflow:</p>
+
+    <ol>
+      <li>Use SSMS "Generate Scripts" or <code>mssql-scripter</code> to export your production schema.</li>
+      <li>Export your staging or local schema the same way.</li>
+      <li><a href="../app.html">Paste both into SchemaLens</a>, set dialect to SQL Server, and click Compare.</li>
+      <li>If anything shows up that you did not expect, investigate before your next deploy.</li>
+    </ol>
+
+    <p>One diff per week prevents the 3 AM "Invalid column name" escalation. The ROI is immediate.</p>
+
+    <div class="cta-box">
+      <h3>Automate SQL Server Schema Diffs</h3>
+      <p>SchemaLens generates semantic diffs for SQL Server schemas in seconds. No upload. No signup. Paste two schemas and see exactly what changed structurally.</p>
+      <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      <p style="font-size:0.8rem;margin-top:12px;margin-bottom:0;">🚀 Launch Week: All Pro features free until May 21, 2026</p>
+    </div>
+
+    <h3>Related Reading</h3>
+    <ul>
+      <li><a href="postgres-schema-drift-detection-guide.html">PostgreSQL Schema Drift Detection: A Complete Guide</a></li>
+      <li><a href="mysql-alter-table-cheatsheet.html">MySQL ALTER TABLE Cheatsheet for Developers</a></li>
+      <li><a href="sqlite-schema-migration-best-practices.html">SQLite Schema Migration Best Practices</a></li>
+      <li><a href="how-to-detect-schema-drift-before-production.html">How to Detect Schema Drift Before Production</a></li>
+      <li><a href="schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+    </ul>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="logo" style="font-size:1.1rem;"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:8px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff Tool</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../vscode-extension.html">VS Code Extension</a></p>
+        <p><a href="../cli">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+        <p><a href="../schema-examples.html">Schema Examples</a></p>
+        <p><a href="../migration-recipes.html">Migration Recipes</a></p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <p><a href="../about.html">About</a></p>
+        <p><a href="../open-source.html">Open Source</a></p>
+        <p><a href="../affiliate.html">Affiliate Program</a></p>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:24px;border-top:1px solid var(--border);margin-top:24px;color:var(--text-muted);font-size:0.85rem;">
+      © 2026 SchemaLens. Built in public during the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>
