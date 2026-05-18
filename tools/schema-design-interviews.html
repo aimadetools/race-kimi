@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Schema Design Interview Questions — Practice Like a Senior Engineer | SchemaLens</title>
+<meta name="description" content="Practice database schema design with real interview questions from Twitter, Uber, and URL shortener. Compare your solution with expert designs. Free, browser-based.">
+<meta property="og:title" content="SQL Schema Design Interview Questions — Practice Like a Senior Engineer">
+<meta property="og:description" content="3 classic schema design interview questions with expert solutions. Test your skills, compare with senior engineer answers, and learn best practices.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-design-interviews.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://schemalens.tech/tools/schema-design-interviews.html">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://cdn.vercel-insights.com">
+<link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "SQL Schema Design Interview Questions",
+  "description": "Practice database schema design with real interview questions from Twitter, Uber, and URL shortener. Compare your solution with expert designs.",
+  "educationalLevel": "Intermediate to Advanced",
+  "learningResourceType": "Interactive Practice",
+  "url": "https://schemalens.tech/tools/schema-design-interviews.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  }
+}
+</script>
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .challenge-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 32px 0 24px; }
+  .challenge-tab {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 20px; cursor: pointer; font-weight: 600; color: var(--text); transition: all .2s;
+  }
+  .challenge-tab:hover { border-color: var(--primary); }
+  .challenge-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .challenge-panel { display: none; animation: fadeIn .3s ease; }
+  .challenge-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .challenge-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; margin-bottom: 24px;
+  }
+  .challenge-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
+  .challenge-card .difficulty {
+    display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px;
+  }
+  .difficulty.medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .difficulty.hard { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+  .req-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
+  .req-box {
+    background: rgba(99,102,241,0.06); border: 1px solid var(--border); border-radius: 8px; padding: 14px;
+  }
+  .req-box h4 { font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .req-box ul { margin: 0; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+  .req-box li { margin-bottom: 4px; }
+
+  .solution-area { margin-top: 24px; }
+  .solution-area label { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 8px; }
+  .solution-area textarea {
+    width: 100%; min-height: 220px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.85rem;
+    color: var(--text); resize: vertical;
+  }
+  .solution-area textarea:focus { outline: none; border-color: var(--primary); }
+
+  .action-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .btn-toggle {
+    background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px 18px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all .2s;
+  }
+  .btn-toggle:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary-sm {
+    background: var(--primary); color: #fff; border: none; padding: 10px 18px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all .2s;
+  }
+  .btn-primary-sm:hover { opacity: 0.9; }
+
+  .expert-solution {
+    display: none; margin-top: 20px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .expert-solution.visible { display: block; animation: fadeIn .3s ease; }
+  .expert-solution .expert-header {
+    background: rgba(99,102,241,0.08); padding: 10px 16px; font-weight: 600; font-size: 0.9rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .expert-solution pre {
+    margin: 0; padding: 16px; overflow-x: auto; font-size: 0.82rem; line-height: 1.6;
+  }
+
+  .mistakes {
+    margin-top: 20px; padding: 16px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 8px;
+  }
+  .mistakes h4 { color: #ef4444; margin-bottom: 10px; font-size: 0.95rem; }
+  .mistakes ul { margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 0.9rem; }
+  .mistakes li { margin-bottom: 6px; }
+
+  .tips {
+    margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.15);
+    border-radius: 8px;
+  }
+  .tips h4 { color: #10b981; margin-bottom: 10px; font-size: 0.95rem; }
+  .tips ul { margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 0.9rem; }
+  .tips li { margin-bottom: 6px; }
+
+  .cta-section {
+    text-align: center; padding: 48px 20px; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(56,189,248,0.08));
+    border-radius: 12px; margin-top: 32px; border: 1px solid var(--border);
+  }
+  .cta-section h2 { font-size: 1.5rem; margin-bottom: 10px; }
+  .cta-section p { color: var(--text-muted); max-width: 520px; margin: 0 auto 20px; }
+
+  @media (max-width: 640px) {
+    .page-header h1 { font-size: 1.5rem; }
+    .challenge-card { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar" style="padding:0 20px;">
+  <div class="nav-container" style="max-width:960px;">
+    <a href="../index.html" class="logo" style="font-size:1.3rem;">SchemaLens</a>
+    <div class="nav-links">
+      <a href="../app.html">Diff Tool</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container" style="max-width:860px;">
+  <div class="page-header">
+    <h1>SQL Schema Design Interview Questions</h1>
+    <p>Practice real-world database schema design questions from top tech companies. Write your solution, reveal the expert answer, and diff them side-by-side.</p>
+  </div>
+
+  <div class="challenge-tabs">
+    <button class="challenge-tab active" onclick="showChallenge(0)">🐦 Design Twitter</button>
+    <button class="challenge-tab" onclick="showChallenge(1)">🚗 Design Uber</button>
+    <button class="challenge-tab" onclick="showChallenge(2)">🔗 URL Shortener</button>
+  </div>
+
+  <!-- Challenge 1: Twitter -->
+  <div class="challenge-panel active" id="panel-0">
+    <div class="challenge-card">
+      <h2>Design the Database Schema for Twitter</h2>
+      <span class="difficulty medium">Medium</span>
+      <p style="color:var(--text-muted);margin-bottom:16px;">You are designing the core relational schema for a simplified Twitter-like platform. Focus on the entities and relationships that power the main feed, profiles, and interactions.</p>
+
+      <div class="req-grid">
+        <div class="req-box">
+          <h4>Core Entities</h4>
+          <ul>
+            <li>Users with profiles</li>
+            <li>Tweets (text, media, timestamps)</li>
+            <li>Follow relationships</li>
+            <li>Likes and retweets</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Functional Requirements</h4>
+          <ul>
+            <li>Users can post tweets</li>
+            <li>Users can follow/unfollow others</li>
+            <li>Users can like and retweet</li>
+            <li>Fetch a user's home timeline</li>
+            <li>Fetch a user's profile + tweets</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Scale Hints</h4>
+          <ul>
+            <li>10M+ daily active users</li>
+            <li>500M+ tweets per day</li>
+            <li>Follows: average 200 per user</li>
+            <li>Reads >> Writes</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Constraints</h4>
+          <ul>
+            <li>Tweet text max 280 chars</li>
+            <li>Username unique, 15 chars max</li>
+            <li>Prevent self-follows</li>
+            <li>Handle deleted tweets gracefully</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="solution-area">
+        <label for="sol-0">Your Solution (SQL CREATE TABLE)</label>
+        <textarea id="sol-0" placeholder="-- Write your CREATE TABLE statements here
+-- Example:
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(15) NOT NULL UNIQUE,
+  ...
+);"></textarea>
+        <div class="action-row">
+          <button class="btn-toggle" onclick="toggleExpert(0)">👁️ Show Expert Solution</button>
+          <button class="btn-primary-sm" onclick="compareWithExpert(0)">🔍 Compare with Expert in SchemaLens</button>
+        </div>
+      </div>
+
+      <div class="expert-solution" id="expert-0">
+        <div class="expert-header">
+          <span>Expert Solution — Twitter Schema</span>
+          <button class="btn-toggle" style="padding:6px 12px;font-size:0.8rem;" onclick="copyExpert(0)">📋 Copy</button>
+        </div>
+        <pre><code id="code-0">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  username VARCHAR(15) NOT NULL UNIQUE,
+  display_name VARCHAR(50) NOT NULL,
+  bio TEXT,
+  avatar_url VARCHAR(500),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+  follower_count INT NOT NULL DEFAULT 0,
+  following_count INT NOT NULL DEFAULT 0,
+  tweet_count INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE tweets (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  content VARCHAR(280) NOT NULL,
+  reply_to_tweet_id BIGINT REFERENCES tweets(id) ON DELETE SET NULL,
+  retweet_of_tweet_id BIGINT REFERENCES tweets(id) ON DELETE SET NULL,
+  media_urls TEXT[],
+  like_count INT NOT NULL DEFAULT 0,
+  retweet_count INT NOT NULL DEFAULT 0,
+  reply_count INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+  deleted_at TIMESTAMPTZ
+);
+
+CREATE TABLE follows (
+  follower_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  following_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (follower_id, following_id),
+  CONSTRAINT no_self_follow CHECK (follower_id != following_id)
+);
+
+CREATE TABLE likes (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tweet_id BIGINT NOT NULL REFERENCES tweets(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, tweet_id)
+);
+
+CREATE TABLE bookmarks (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tweet_id BIGINT NOT NULL REFERENCES tweets(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, tweet_id)
+);
+
+CREATE INDEX idx_tweets_user_created ON tweets(user_id, created_at DESC) WHERE is_deleted = FALSE;
+CREATE INDEX idx_tweets_reply_to ON tweets(reply_to_tweet_id) WHERE reply_to_tweet_id IS NOT NULL;
+CREATE INDEX idx_tweets_retweet_of ON tweets(retweet_of_tweet_id) WHERE retweet_of_tweet_id IS NOT NULL;
+CREATE INDEX idx_follows_following ON follows(following_id, created_at DESC);
+CREATE INDEX idx_likes_tweet ON likes(tweet_id, created_at DESC);</code></pre>
+      </div>
+
+      <div class="mistakes">
+        <h4>⚠️ Common Mistakes</h4>
+        <ul>
+          <li>Forgetting the <code>no_self_follow</code> CHECK constraint</li>
+          <li>Storing the full tweet text for retweets instead of referencing the original</li>
+          <li>Missing partial indexes for non-deleted tweets</li>
+          <li>Using <code>ON DELETE CASCADE</code> on the reply/retweet self-references (should be SET NULL)</li>
+          <li>Not indexing <code>follows.following_id</code> which is needed for timeline queries</li>
+          <li>Storing denormalized counts without a strategy to keep them in sync</li>
+        </ul>
+      </div>
+
+      <div class="tips">
+        <h4>✅ What Interviewers Look For</h4>
+        <ul>
+          <li>Understanding of many-to-many relationships (follows, likes)</li>
+          <li>Self-referencing tables (replies, retweets)</li>
+          <li>Soft deletes vs hard deletes and their trade-offs</li>
+          <li>Index design for read-heavy workloads</li>
+          <li>Data normalization vs denormalization decisions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenge 2: Uber -->
+  <div class="challenge-panel" id="panel-1">
+    <div class="challenge-card">
+      <h2>Design the Database Schema for Uber</h2>
+      <span class="difficulty hard">Hard</span>
+      <p style="color:var(--text-muted);margin-bottom:16px;">Design the core relational schema for a ride-hailing platform. This includes users (riders & drivers), trips, payments, ratings, and location tracking.</p>
+
+      <div class="req-grid">
+        <div class="req-box">
+          <h4>Core Entities</h4>
+          <ul>
+            <li>Riders and Drivers (both users)</li>
+            <li>Trips (from request to completion)</li>
+            <li>Payments and pricing</li>
+            <li>Vehicle types and driver documents</li>
+            <li>Ratings and reviews</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Functional Requirements</h4>
+          <ul>
+            <li>Rider requests a ride, driver accepts</li>
+            <li>Real-time trip status tracking</li>
+            <li>Automatic fare calculation</li>
+            <li>Post-trip rating for both parties</li>
+            <li>Driver onboarding with document verification</li>
+            <li>Promo codes and discounts</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Scale Hints</h4>
+          <ul>
+            <li>100M+ monthly active riders</li>
+            <li>5M+ active drivers</li>
+            <li>20M+ trips per day</li>
+            <li>Payments in 70+ currencies</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Constraints</h4>
+          <ul>
+            <li>Trip fare must be immutable after completion</li>
+            <li>Driver can only have one active vehicle at a time</li>
+            <li>Ratings are 1-5 stars, optional comment</li>
+            <li>Support split fares and refunds</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="solution-area">
+        <label for="sol-1">Your Solution (SQL CREATE TABLE)</label>
+        <textarea id="sol-1" placeholder="-- Write your CREATE TABLE statements here
+-- Think about: users, drivers, vehicles, trips, payments, ratings..."></textarea>
+        <div class="action-row">
+          <button class="btn-toggle" onclick="toggleExpert(1)">👁️ Show Expert Solution</button>
+          <button class="btn-primary-sm" onclick="compareWithExpert(1)">🔍 Compare with Expert in SchemaLens</button>
+        </div>
+      </div>
+
+      <div class="expert-solution" id="expert-1">
+        <div class="expert-header">
+          <span>Expert Solution — Uber Schema</span>
+          <button class="btn-toggle" style="padding:6px 12px;font-size:0.8rem;" onclick="copyExpert(1)">📋 Copy</button>
+        </div>
+        <pre><code id="code-1">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  phone VARCHAR(20) NOT NULL UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  full_name VARCHAR(100) NOT NULL,
+  password_hash VARCHAR(255),
+  avatar_url VARCHAR(500),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  default_payment_method_id BIGINT
+);
+
+CREATE TABLE drivers (
+  user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  license_number VARCHAR(50) NOT NULL UNIQUE,
+  license_expiry DATE NOT NULL,
+  background_check_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  onboarding_status VARCHAR(20) NOT NULL DEFAULT 'started',
+  rating DECIMAL(2,1) NOT NULL DEFAULT 5.0,
+  total_trips INT NOT NULL DEFAULT 0,
+  lifetime_earnings DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  is_online BOOLEAN NOT NULL DEFAULT FALSE,
+  current_vehicle_id BIGINT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE vehicles (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  driver_id BIGINT NOT NULL REFERENCES drivers(user_id) ON DELETE CASCADE,
+  make VARCHAR(50) NOT NULL,
+  model VARCHAR(50) NOT NULL,
+  year INT NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  license_plate VARCHAR(20) NOT NULL UNIQUE,
+  vehicle_type VARCHAR(20) NOT NULL DEFAULT 'economy',
+  seat_capacity INT NOT NULL DEFAULT 4,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE vehicle_documents (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  vehicle_id BIGINT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
+  document_type VARCHAR(30) NOT NULL,
+  document_url VARCHAR(500) NOT NULL,
+  verification_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  verified_at TIMESTAMPTZ,
+  expires_at DATE
+);
+
+CREATE TABLE trips (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  rider_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  driver_id BIGINT REFERENCES drivers(user_id) ON DELETE SET NULL,
+  vehicle_id BIGINT REFERENCES vehicles(id) ON DELETE SET NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'requested',
+  pickup_lat DECIMAL(10,8) NOT NULL,
+  pickup_lng DECIMAL(11,8) NOT NULL,
+  pickup_address VARCHAR(300) NOT NULL,
+  dropoff_lat DECIMAL(10,8) NOT NULL,
+  dropoff_lng DECIMAL(11,8) NOT NULL,
+  dropoff_address VARCHAR(300) NOT NULL,
+  requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  accepted_at TIMESTAMPTZ,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  cancelled_at TIMESTAMPTZ,
+  cancelled_by VARCHAR(10),
+  cancellation_reason TEXT,
+  distance_km DECIMAL(8,2),
+  duration_minutes INT,
+  base_fare DECIMAL(8,2) NOT NULL,
+  distance_fare DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  time_fare DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  surge_multiplier DECIMAL(3,2) NOT NULL DEFAULT 1.00,
+  promo_discount DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  total_fare DECIMAL(8,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending'
+);
+
+CREATE TABLE trip_events (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  event_type VARCHAR(30) NOT NULL,
+  lat DECIMAL(10,8),
+  lng DECIMAL(11,8),
+  metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE payments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  amount DECIMAL(10,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  payment_method VARCHAR(20) NOT NULL,
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  transaction_id VARCHAR(100) UNIQUE,
+  processed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE ratings (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  from_user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  category VARCHAR(20),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(trip_id, from_user_id)
+);
+
+CREATE INDEX idx_trips_rider ON trips(rider_id, requested_at DESC);
+CREATE INDEX idx_trips_driver ON trips(driver_id, requested_at DESC);
+CREATE INDEX idx_trips_status ON trips(status, requested_at DESC) WHERE status IN ('requested','accepted','started');
+CREATE INDEX idx_trip_events_trip ON trip_events(trip_id, created_at DESC);
+CREATE INDEX idx_payments_trip ON payments(trip_id);
+CREATE INDEX idx_ratings_to_user ON ratings(to_user_id, created_at DESC);</code></pre>
+      </div>
+
+      <div class="mistakes">
+        <h4>⚠️ Common Mistakes</h4>
+        <ul>
+          <li>Not separating <code>users</code> from <code>drivers</code> — a driver is also a user who can ride</li>
+          <li>Storing mutable fare fields without an immutable audit trail</li>
+          <li>Forgetting event sourcing for trip status changes (needed for debugging/disputes)</li>
+          <li>Using <code>FLOAT</code> for money — always use <code>DECIMAL</code></li>
+          <li>Missing unique constraint on <code>ratings(trip_id, from_user_id)</code> to prevent duplicate ratings</li>
+          <li>Not handling driver document expiry and verification states</li>
+          <li>Storing location as a single string instead of separate lat/lng with spatial indexing potential</li>
+        </ul>
+      </div>
+
+      <div class="tips">
+        <h4>✅ What Interviewers Look For</h4>
+        <ul>
+          <li>Entity inheritance patterns (user → driver/rider)</li>
+          <li>Immutability for financial data (fare never changes after trip ends)</li>
+          <li>Audit trails and event logging</li>
+          <li>State machine design for trip lifecycle</li>
+          <li>Handling edge cases: cancellations, no-shows, refunds</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenge 3: URL Shortener -->
+  <div class="challenge-panel" id="panel-2">
+    <div class="challenge-card">
+      <h2>Design the Database Schema for a URL Shortener</h2>
+      <span class="difficulty medium">Medium</span>
+      <p style="color:var(--text-muted);margin-bottom:16px;">Design the database schema for a URL shortening service like bit.ly. Support custom aliases, analytics, expiration, and user accounts.</p>
+
+      <div class="req-grid">
+        <div class="req-box">
+          <h4>Core Entities</h4>
+          <ul>
+            <li>Users (optional anonymous)</li>
+            <li>Shortened URLs</li>
+            <li>Click analytics</li>
+            <li>Custom aliases and domains</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Functional Requirements</h4>
+          <ul>
+            <li>Shorten a long URL to a short code</li>
+            <li>Custom aliases (e.g., bit.ly/my-brand)</li>
+            <li>Redirect with 301/302</li>
+            <li>Track clicks (timestamp, referrer, country, device)</li>
+            <li>URL expiration (optional)</li>
+            <li>QR code generation (metadata only)</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Scale Hints</h4>
+          <ul>
+            <li>100M+ new URLs per month</li>
+            <li>10B+ redirects per month</li>
+            <li>Short code: 6-8 alphanumeric chars</li>
+            <li>Reads >> Writes by 100:1</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h4>Constraints</h4>
+          <ul>
+            <li>Short codes must be unique and unguessable</li>
+            <li>Custom aliases: 3-30 chars, alphanumeric + hyphen</li>
+            <li>Max URL length: 2048 chars</li>
+            <li>Soft-delete for analytics retention</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="solution-area">
+        <label for="sol-2">Your Solution (SQL CREATE TABLE)</label>
+        <textarea id="sol-2" placeholder="-- Write your CREATE TABLE statements here
+-- Think about: url mapping, click tracking, user accounts, custom aliases..."></textarea>
+        <div class="action-row">
+          <button class="btn-toggle" onclick="toggleExpert(2)">👁️ Show Expert Solution</button>
+          <button class="btn-primary-sm" onclick="compareWithExpert(2)">🔍 Compare with Expert in SchemaLens</button>
+        </div>
+      </div>
+
+      <div class="expert-solution" id="expert-2">
+        <div class="expert-header">
+          <span>Expert Solution — URL Shortener Schema</span>
+          <button class="btn-toggle" style="padding:6px 12px;font-size:0.8rem;" onclick="copyExpert(2)">📋 Copy</button>
+        </div>
+        <pre><code id="code-2">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  email VARCHAR(255) UNIQUE,
+  password_hash VARCHAR(255),
+  display_name VARCHAR(50),
+  api_key VARCHAR(64) UNIQUE,
+  tier VARCHAR(20) NOT NULL DEFAULT 'free',
+  monthly_link_limit INT NOT NULL DEFAULT 100,
+  custom_domain VARCHAR(255),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_login_at TIMESTAMPTZ
+);
+
+CREATE TABLE short_links (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
+  short_code VARCHAR(30) NOT NULL UNIQUE,
+  original_url TEXT NOT NULL,
+  is_custom_alias BOOLEAN NOT NULL DEFAULT FALSE,
+  title VARCHAR(200),
+  description TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  expires_at TIMESTAMPTZ,
+  password_hash VARCHAR(255),
+  total_clicks INT NOT NULL DEFAULT 0,
+  unique_clicks INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  deleted_at TIMESTAMPTZ,
+  CONSTRAINT valid_short_code CHECK (short_code ~ '^[a-zA-Z0-9_-]+$'),
+  CONSTRAINT valid_alias_length CHECK (
+    is_custom_alias = FALSE OR LENGTH(short_code) BETWEEN 3 AND 30
+  )
+);
+
+CREATE TABLE link_tags (
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  tag VARCHAR(30) NOT NULL,
+  PRIMARY KEY (link_id, tag)
+);
+
+CREATE TABLE click_events (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  clicked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ip_hash VARCHAR(64) NOT NULL,
+  user_agent TEXT,
+  referrer TEXT,
+  country_code CHAR(2),
+  city VARCHAR(50),
+  device_type VARCHAR(20),
+  browser VARCHAR(30),
+  os VARCHAR(30),
+  language VARCHAR(10)
+);
+
+CREATE TABLE click_aggregates (
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  total_clicks INT NOT NULL DEFAULT 0,
+  unique_clicks INT NOT NULL DEFAULT 0,
+  country_breakdown JSONB,
+  device_breakdown JSONB,
+  referrer_breakdown JSONB,
+  PRIMARY KEY (link_id, date)
+);
+
+CREATE TABLE link_rules (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  rule_type VARCHAR(30) NOT NULL,
+  condition_value VARCHAR(255) NOT NULL,
+  redirect_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  priority INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_short_links_code ON short_links(short_code) WHERE deleted_at IS NULL;
+CREATE INDEX idx_short_links_user ON short_links(user_id, created_at DESC);
+CREATE INDEX idx_click_events_link ON click_events(link_id, clicked_at DESC);
+CREATE INDEX idx_click_events_ip ON click_events(link_id, ip_hash, clicked_at);
+CREATE INDEX idx_click_aggregates_date ON click_aggregates(date);</code></pre>
+      </div>
+
+      <div class="mistakes">
+        <h4>⚠️ Common Mistakes</h4>
+        <ul>
+          <li>Storing the original URL as <code>VARCHAR</code> instead of <code>TEXT</code> — URLs can exceed 2048 chars</li>
+          <li>Not using a separate <code>click_events</code> table and instead incrementing a counter — you lose analytics granularity</li>
+          <li>Missing unique constraint on <code>short_code</code> — race conditions will create duplicates</li>
+          <li>Forgetting soft-delete — hard-deleting loses all click history</li>
+          <li>Not hashing IPs for privacy compliance (GDPR)</li>
+          <li>Storing raw user agents instead of parsed device/browser/os fields</li>
+          <li>No expiration or status field — inactive links should still resolve but not count</li>
+        </ul>
+      </div>
+
+      <div class="tips">
+        <h4>✅ What Interviewers Look For</h4>
+        <ul>
+          <li>Understanding of write-heavy vs read-heavy workloads</li>
+          <li>Separating event data (clicks) from aggregate data for performance</li>
+          <li>Privacy considerations (IP hashing, retention policies)</li>
+          <li>Flexible routing rules (device-based, geo-based redirects)</li>
+          <li>Handling collisions in short code generation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>Ready to Diff Real Schemas?</h2>
+    <p>SchemaLens is the fastest way to compare database schemas, spot breaking changes, and generate migration scripts — all in your browser.</p>
+    <a href="../app.html" class="btn btn-primary" style="font-size:1rem;padding:12px 28px;">Try SchemaLens Free →</a>
+    <p style="margin-top:14px;font-size:0.85rem;color:var(--text-muted);">No signup required. Your data never leaves your browser.</p>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top:48px;">
+  <div class="container" style="max-width:960px;">
+    <div class="footer-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px;">
+      <div>
+        <h4>Product</h4>
+        <a href="../app.html">Schema Diff</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../vscode-extension.html">VS Code Extension</a>
+        <a href="../cli">CLI Tool</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="../tools.html">All Tools</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../migration-recipes.html">Migration Recipes</a>
+        <a href="../api-guide.html">API Docs</a>
+      </div>
+      <div>
+        <h4>Compare</h4>
+        <a href="../schemalens-vs-redgate-vs-prisma.html">vs Redgate</a>
+        <a href="../schemalens-vs-liquibase-flyway.html">vs Liquibase</a>
+        <a href="../schemalens-vs-cli-tools.html">vs CLI Tools</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="../about.html">About</a>
+        <a href="../built-in-public.html">Built in Public</a>
+        <a href="../open-source.html">Open Source</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom" style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.85rem;">
+      © 2026 SchemaLens. Built in public over 145 days. <a href="../index.html" style="color:var(--primary);">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function showChallenge(index) {
+  document.querySelectorAll('.challenge-tab').forEach((tab, i) => {
+    tab.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.challenge-panel').forEach((panel, i) => {
+    panel.classList.toggle('active', i === index);
+  });
+}
+
+function toggleExpert(index) {
+  const el = document.getElementById('expert-' + index);
+  el.classList.toggle('visible');
+  const btn = el.previousElementSibling.querySelector('.btn-toggle');
+  if (btn) {
+    btn.textContent = el.classList.contains('visible') ? '🙈 Hide Expert Solution' : '👁️ Show Expert Solution';
+  }
+}
+
+function copyExpert(index) {
+  const code = document.getElementById('code-' + index).textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('#expert-' + index + ' .expert-header .btn-toggle');
+    const original = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
+}
+
+function compareWithExpert(index) {
+  const userSchema = document.getElementById('sol-' + index).value.trim();
+  const expertSchema = document.getElementById('code-' + index).textContent.trim();
+
+  if (!userSchema) {
+    alert('Paste your schema solution first, then click Compare.');
+    return;
+  }
+
+  const params = new URLSearchParams();
+  params.set('left', userSchema);
+  params.set('right', expertSchema);
+
+  const url = '../app.html?' + params.toString();
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
