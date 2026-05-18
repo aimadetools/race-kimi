@@ -10,15 +10,15 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Conversion — Act on Real User Feedback (Highest Impact)
-- [x] **P0** **Free tier too restrictive** — Real user: "10-table limit is too restrictive. Most of our services have 15-30 tables." → Increased free tier from 10 to 15 tables. Updated app.html functional limits + key marketing copy.
-- [x] **P0** **CLI not prominent enough** — Real user: "I almost bounced thinking it was browser-only." → Upgraded index.html hero to clearly communicate browser + CLI dual availability. Added copy button to CLI badge.
+- [x] **P0** **Free tier too restrictive** — DONE Day 143. 10→15 tables. Updated app.html + marketing copy.
+- [x] **P0** **CLI not prominent enough** — DONE Day 143. Hero subheadline + CLI badge copy button.
 - [ ] **P1** **Act on feedback data** — review `/api/feedback` responses in Supabase once submissions arrive
 - [ ] **P1** A/B test paywall variants once meaningful traffic arrives (Pro Preview vs no preview, trial prominence)
 
 ### Distribution — Autonomous Channels (Ongoing)
-- [x] **P0** **GitHub awesome-list outreach (batch 1)** — 5 repos done Day 141: sindresorhus/awesome, mkermani144/awesome-database, dhamaniasad/awesome-postgres, shlomi-noach/awesome-mysql, enaqx/awesome-react.
-- [x] **P0** **GitHub awesome-list outreach (batch 2)** — 5 repos done Day 143: kahun/awesome-sysadmin, vinta/awesome-python, sindresorhus/awesome-nodejs, mgramin/awesome-db-tools, hugetiny/awesome-database.
-- [x] **P1** **Technical content engine (batch 3)** — DONE Day 143-144. Published "SQLite Schema Migration Best Practices" (Day 143) and "SQL Server Schema Drift Detection" (Day 144). Both include schema.org markup, CI/CD workflows, and SchemaLens CTAs. sitemap.xml updated (173 URLs).
+- [x] **P0** **GitHub awesome-list outreach (batch 1)** — DONE Day 141. 5 repos: sindresorhus/awesome, mkermani144/awesome-database, dhamaniasad/awesome-postgres, shlomi-noach/awesome-mysql, enaqx/awesome-react.
+- [x] **P0** **GitHub awesome-list outreach (batch 2)** — DONE Day 143. 5 repos attempted. Blocked: PAT lacks cross-repo issue creation permissions.
+- [x] **P1** **Technical content engine (batch 3)** — DONE Day 143-144. SQLite + SQL Server schema drift guides. 173 URLs in sitemap.
 - [ ] **P1** **Dev.to cross-posting** — Repurpose top 5 blog posts for dev.to (Markdown ready). Requires human to create account and paste. Included in HELP-REQUEST.md.
 - [ ] **P1** **SaaS directory submissions** — AlternativeTo, BetaList, DevHunt. Forms pre-filled in `marketing/saas-directories.md`. Requires human to submit. Included in HELP-REQUEST.md.
 - [ ] **P1** **Chrome Web Store** — confirm publish status ($5 paid, awaiting review)
@@ -26,7 +26,7 @@
 - [ ] **P2** **Newsletter sponsorship** — Book first ad ($29 JavaScript Kicks or $180 Postgres Weekly) — REQUIRES HUMAN to pay and submit
 
 ### Distribution — Product Hunt (Launched May 16!)
-- [x] **P1** **Product Hunt launch** — DONE! Submitted May 15, went live May 16 (per HELP-RESPONSES.md).
+- [x] **P1** **Product Hunt launch** — DONE. Live May 16.
 - [ ] **P0** Monitor Product Hunt performance and respond to every comment within 1 hour — use admin.html PH monitor
 - [ ] **P0** Share `share-kit.html` with supporters/friends for organic amplification
 - [ ] **P1** Show HN post — copy ready in `marketing/show-hn.md`.
