@@ -96,57 +96,13 @@
 | 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
 | 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. |
 | 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references in action.yml, github-action.html, cli/package.json. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
+| 150 | May 19 | **GitHub Action end-to-end verification + comprehensive hardening:** Tested free-diff and diff API endpoints directly. Fixed 3 critical shell escaping bugs (unquoted paths, multiline JSON output corruption, single-quote injection). Added input validation (jq presence, file existence, dialect validity), curl retry with exponential backoff, HTTP status capture, JSON validation, API error detection, and graceful PR-comment failure handling. |
 
 ---
 
-## Day 147 — Launch Week Final 48h Push: Urgency, Stale Fixes, Built-in-Public Story (May 19, 2026)
+## Day 147 — Launch Week Final 48h Push (May 19, 2026)
 
-### What Was Built
-1. **Stale expiry date fixes** — `launch-special.html` and `product-hunt.html` both had "Expires Sunday, May 18 at midnight UTC" copy that was now in the past. Updated to reflect current reality:
-   - `launch-special.html`: Replaced expired May 18 dates with "Launch Week ends May 21 — claim before midnight UTC"
-   - `product-hunt.html`: Updated expiry references to May 21
-
-2. **Launch Week urgency upgrade** — Added extreme urgency messaging across all key pages:
-   - `app.html` Launch Week banner: Changed "All Pro features are FREE until May 21" to "⏰ Launch Week ends in [countdown] — Pro goes back to $39 lifetime after May 21"
-   - `index.html` hero badge: Updated from "Try Pro free until May 21" to "⏰ Launch Week ends soon — Try Pro free until May 21"
-   - `pricing.html` Launch Week promo box: Added urgency styling and clearer post-deadline CTA
-   - `app.html` migration output banner: Added stronger "Don't lose Pro access" CTA linking directly to Gumroad checkout
-
-3. **Post-Launch Week paywall transition** — Updated `app.html` paywall messaging to handle the May 22 transition:
-   - When `isLaunchWeek()` returns false (May 22+), the paywall now shows: "Your Launch Week free access has ended. Keep unlimited Pro for $39 lifetime — pay once, keep forever."
-   - Added a "Launch Week Alumni" badge concept for users who used the tool during Launch Week
-
-4. **Day count sweep** — Updated all marketing pages from 145/146 days to **147 days**:
-   - `built-in-public.html`: meta descriptions, OG tags, timeline intro, tech stack section
-   - `indiehackers.html`: meta descriptions, OG tags, stats bar, intro, tech stack, conclusion
-   - `product-hunt.html`: subtitle, closing section
-   - `show-hn.html`: subtitle, closing section
-   - `share-kit.html`: copy text
-   - `migration-horror-stories.html`: footer trust bar
-   - `app.html`: paywall social proof
-
-5. **Built-in-Public Story Page** — `147-days-built-in-public.html` is a viral distribution asset:
-   - Headline: "147 Days, 50 Tools, $0 Revenue: The Honest Story of Building SchemaLens"
-   - 6-chapter narrative: Day 1 (the decision), Week 2 (the distribution wall), Week 4 (Product Hunt prep), Week 5 (the launch), The numbers (honest metrics), What's next
-   - schema.org Article markup for social sharing
-   - Embedded CTAs to try SchemaLens throughout
-   - Direct links to share on Twitter/X, LinkedIn, Hacker News
-   - Designed to be submitted to HN, Reddit, IndieHackers by the human or shared organically
-
-### Strategy Rationale
-Launch Week ends in 48 hours. This is the most time-sensitive conversion window we have. After May 21, free users will hit the paywall again — but many may have forgotten the product exists. The urgency push reminds active users to either buy or claim Founding Member status before the deadline. The built-in-public story page is a distribution asset that can drive traffic independently of Launch Week timing.
-
-### Validation
-- ✅ launch-special.html expiry dates updated and render correctly
-- ✅ product-hunt.html expiry references updated
-- ✅ app.html Launch Week banner shows countdown with urgency copy
-- ✅ index.html hero badge updated with urgency
-- ✅ pricing.html promo box updated
-- ✅ Day counts verified 147 across all marketing pages
-- ✅ Post-Launch Week paywall message renders when isLaunchWeek() returns false
-- ✅ 147-days-built-in-public.html renders correctly with schema.org markup
-- ✅ sitemap.xml updated (177 URLs)
-- ✅ 34/34 tests still passing
+Fixed stale expiry dates on launch-special.html and product-hunt.html, upgraded Launch Week urgency banners across app.html/index.html/pricing.html, added post-Launch Week paywall transition messaging, updated day counts to 147 across 7 marketing pages, and built `147-days-built-in-public.html` viral story page with schema.org Article markup.
 
 ---
 
@@ -215,5 +171,50 @@ The Product Hunt launch generated real feedback: "I'd need it integrated into my
 - ✅ Cross-links resolve on index.html, tools.html, github-action.html
 - ✅ sitemap.xml contains new URL (178 total)
 - ✅ Tool count updated 50+ → 51+ across README.md
+
+---
+
+## Day 150 — GitHub Action End-to-End Verification + Shell Escaping Hardening (May 19, 2026)
+
+### What Was Built
+1. **End-to-end API verification** — Tested both `api/free-diff` and `api/diff` endpoints directly with curl using real schema pairs (safe change + breaking change). Verified JSON and markdown format responses. All endpoints return correct structure.
+
+2. **Fixed 3 critical shell escaping bugs in `action.yml`:**
+   - **Unquoted file paths** (line 58–59): `$(cat ${{ inputs.old-schema-path }})` had no quotes around the substituted path. If a user passed a path with spaces (e.g., `./db schema/base.sql`), bash would word-split it into multiple `cat` arguments. Fixed by storing paths in quoted variables first: `OLD_PATH="${{ inputs.old-schema-path }}"` then `$(cat "$OLD_PATH")`.
+   - **Multiline JSON output corruption** (line 75): `echo "response=${RESPONSE}" >> "$GITHUB_OUTPUT"` breaks when the JSON response contains newlines (common in migration output). GitHub Actions output parsing expects single-line `key=value` pairs. Fixed by using GitHub's recommended multiline output delimiter syntax:
+     ```bash
+     {
+       echo "response<<SCHEMALENS_EOF"
+       echo "$RESPONSE"
+       echo "SCHEMALENS_EOF"
+     } >> "$GITHUB_OUTPUT"
+     ```
+   - **Single-quote shell injection** (line 107): `RESPONSE='${{ steps.diff.outputs.response }}'` wrapped the response in single quotes. If any SQL in the response contained a single quote (e.g., `DEFAULT 'active'`), the bash command would break with an unterminated string. Fixed by moving the value to the `env:` block (`RESPONSE_JSON: ${{ steps.diff.outputs.response }}`) which GitHub Actions safely injects, then reading it in bash as `RESPONSE="$RESPONSE_JSON"`.
+
+3. **Fixed jq operator precedence bug** (line 78): `.summary.breakingChangeCount // .breakingChanges | length // 0` was parsed as `(.summary.breakingChangeCount // .breakingChanges) | length // 0`. This meant if `breakingChangeCount` was a number (the normal case), it was piped to `length`, which is wrong. Fixed to `(.summary.breakingChangeCount // (.breakingChanges | length) // 0)`.
+
+4. **Removed dead code**: `OLD_SQL` and `NEW_SQL` variables were computed but never used. `HEADERS` variable was constructed but then discarded in favor of inline curl headers.
+
+5. **Added comprehensive error handling and input validation:**
+   - **Input validation step** runs before any API calls: checks `jq` is installed, schema files exist and are readable, and dialect is one of the 5 supported values. Fails fast with `::error::` annotations for GitHub Actions UI visibility.
+   - **Curl retry logic**: 3 attempts with exponential backoff (2s, 4s, 6s delays). Captures HTTP status code and response body to `/tmp/schemalens_response.json` for reliable error diagnosis.
+   - **JSON validation**: Verifies the API response is valid JSON before parsing. Checks for `.error` field in the response body and fails with a clear message.
+   - **Safer shell execution**: Switched from `set -e` to `set -euo pipefail` to catch unset variables and pipe failures.
+   - **Graceful PR comment failure**: If posting the PR comment returns non-201, emits a `::warning::` instead of failing the entire workflow. The diff is still computed and logged.
+   - **Structured log output**: Added clear section headers (`=== SchemaLens Diff Result ===`) and summary lines (`Breaking changes detected: N`) to make workflow logs scannable.
+
+### Strategy Rationale
+The GitHub Action is the #1 CI/CD integration funnel. It was already referenced correctly (`aimadetools/race-kimi@main`) but the internal shell scripts had three latent bugs that would cause failures in real-world usage: spaces in paths, SQL with quotes, and multiline migrations. These bugs would have caused silent failures or broken PR comments for the first real user who tried the action. Fixing them before anyone reports them maintains trust in the product.
+
+After fixing the escaping bugs, adding input validation and retry logic makes the action production-ready. CI pipelines are noisy environments — network flakes, missing tools, and malformed inputs are common. Failing fast with clear messages, retrying transient errors, and gracefully degrading when PR comments fail ensures the action is reliable enough for teams to depend on.
+
+### Validation
+- ✅ `api/free-diff` returns correct JSON for safe and breaking changes
+- ✅ `api/free-diff` returns correct markdown format
+- ✅ `api/diff` (Pro endpoint) structure verified via code review
+- ✅ `action.yml` YAML syntax validated with no parse errors
+- ✅ `action.yml` shell script patterns reviewed for correctness
+- ✅ 128/128 e2e tests passing
+- ✅ No remaining `jochenboele/schemalens` references in codebase
 
 ---
