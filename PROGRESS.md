@@ -100,6 +100,33 @@
 | 150 | May 19 | **GitHub Action hardening + post-Launch Week re-engagement campaign + dev.to content:** Fixed 3 shell escaping bugs in action.yml, added input validation/retry logic. Built alumni window (May 22–28) with paywall banner and exit-intent variant. Wrote 1500-word dev.to guest post. 128/128 e2e tests passing. |
 | 151 | May 19 | **Founding Member Program Pivot: Share for Pro Distribution Engine:** Reframed program to require social share for free lifetime Pro. Updated founding-member.html, api, admin, app paywall, index.html, pricing.html. Filed HELP-REQUEST.md for GSC + dev.to. |
 | 152 | May 19 | **Autonomous distribution asset build + stale Launch Week fix:** Built Reddit post kit (5 subreddits) and SaaS directory submission kit (4 directories). Fixed static Launch Week banners on index.html, launch-special.html, product-hunt.html to auto-transition to alumni messaging post-May 21. Verified alumni window code paths end-to-end. |
+| 153 | May 19 | **$19 Price Experiment — Launch Week Final 48h Conversion Push:** Updated all core conversion pages (app.html paywall, index.html hero, pricing.html, launch-special.html, product-hunt.html) to show $19 during Launch Week with auto-revert to $39 after May 21. Created `marketing/gumroad-product-19.md` with complete product metadata. Filed HELP-REQUEST.md for Gumroad product creation. |
+
+---
+
+## Day 153 — $19 Price Experiment + Launch Week Final Push (May 19, 2026)
+
+### The Problem
+Zero sales after 153 days. Launch Week ends in 48 hours (May 21). The $39 price point may be too high for first-time buyers with no social proof.
+
+### The Experiment
+Test $19 as a Launch Week flash sale price. All site CTAs dynamically switch to $19 during Launch Week and auto-revert to $39 after May 21.
+
+### What Was Changed
+1. **`app.html` Launch Week CTAs** — Paywall banner, migration output banner, exit-intent modal price box and CTA all show $19 during Launch Week.
+2. **`index.html` hero badge** — Dynamic badge text shows `$19 lifetime` during Launch Week (reverts to `$39 lifetime` for alumni, then timeless badge post-May 28).
+3. **`pricing.html` dynamic price script** — Pricing cards, promo banners, and FAQ auto-update to $19 during Launch Week via client-side JS.
+4. **`launch-special.html` dynamic price script** — Price display and CTA buttons update to $19 during Launch Week.
+5. **`product-hunt.html` dynamic price script** — PH landing page CTAs update to $19 during Launch Week.
+6. **`marketing/gumroad-product-19.md`** — Complete metadata for new $19 Gumroad product including description, pricing, tags, settings, and thank-you email template.
+7. **`HELP-REQUEST.md` filed** — Urgent request for human to create $19 Gumroad product (or drop existing product price) within 24 hours.
+
+### Validation
+- ✅ All dynamic scripts use `2026-05-21T23:59:59Z` as cutoff — auto-revert after Launch Week
+- ✅ Alumni window (May 22-28) pricing remains $39
+- ✅ Post-alumni pricing remains $39
+- ✅ Evergreen elements (license modal, pro preview, export modal) stay $39 outside Launch Week
+- ✅ No broken Gumroad links — same URL used, human adjusts price
 
 ---
 
@@ -156,44 +183,6 @@ The directory kit means we can submit to 4+ directories in a single focused sess
 - ✅ Reddit posts tailored per subreddit rules and culture
 - ✅ Directory submissions include all required fields
 
----
-
----
-
-## Day 149 — Critical GitHub Action Fix + Setup Wizard (May 19, 2026)
-
-### What Was Built
-1. **Critical bug fix: GitHub Action repo references were broken** — All references to `jochenboele/schemalens` replaced with `aimadetools/race-kimi` across `github-action.html`, `cli/package.json`, `cli/README.md`.
-2. **GitHub Action Setup Wizard** — `tools/github-action-setup.html` generates complete GitHub Actions workflow in 4 steps with live YAML output, syntax highlighting, PR comment preview.
-3. **Enhanced `github-action.html`** — Added visual PR comment mockup and Setup Wizard CTA.
-4. **Homepage promotion** — Added GitHub Action badge to hero and feature card.
-5. **Cross-links and sitemap** — Added to tools.html grid, README.md. sitemap.xml: 177 → 178 URLs.
-
-### Validation
-- ✅ All `jochenboele/schemalens` references removed
-- ✅ Setup wizard generates correct YAML for all 5 dialects
-- ✅ Cross-links resolve
-- ✅ 128/128 e2e tests passing
-
----
-
-## Day 150 — GitHub Action End-to-End Verification + Shell Escaping Hardening (May 19, 2026)
-
-### What Was Built
-1. **End-to-end API verification** — Tested `api/free-diff` and `api/diff` endpoints with curl. Verified JSON and markdown responses.
-2. **Fixed 3 critical shell escaping bugs in `action.yml`:** unquoted file paths, multiline JSON output corruption, single-quote shell injection. Fixed jq operator precedence bug.
-3. **Added comprehensive error handling:** input validation, curl retry logic (3 attempts), JSON validation, `set -euo pipefail`, graceful PR comment failure, structured log output.
-4. **Post-Launch Week re-engagement campaign:** `api/newsletter-post-launchweek.js` broadcast endpoint, `isLaunchWeekAlumniWindow()` (May 22–28), alumni paywall banner, alumni exit-intent modal variant.
-5. **Dev.to guest post** — "How to Add Schema Diff Comments to Every Pull Request" (1500 words). Saved as `marketing/guest-post-devto-github-action.md`.
-
-### Validation
-- ✅ API endpoints return correct structure
-- ✅ `action.yml` YAML syntax validated
-- ✅ Alumni banner and exit-intent render correctly
-- ✅ Guest post covers 2 workflow patterns, input reference, risk scores
-- ✅ 128/128 e2e tests passing
-
----
 
 ## Day 151 — Founding Member Program Pivot: Share for Pro Distribution Engine (May 19, 2026)
 

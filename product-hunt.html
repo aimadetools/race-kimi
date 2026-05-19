@@ -459,5 +459,18 @@
   }
 })();
 </script>
+<script>
+(function(){
+  const now = new Date();
+  const end = new Date('2026-05-21T23:59:59Z');
+  if (now > end) return;
+  document.querySelectorAll('a[href*="gumroad.com/l/schemalens-lifetime"]').forEach(el => {
+    el.textContent = el.textContent.replace('$39', '$19');
+  });
+  document.querySelectorAll('.hero-actions, .cta-section').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/\$39/g, '$19');
+  });
+})();
+</script>
 </body>
 </html>

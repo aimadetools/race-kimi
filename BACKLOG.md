@@ -12,8 +12,8 @@
 ### Distribution — Zero Sales After 151 Days (CRITICAL)
 - [x] **P0** Make Founding Member program a distribution engine — require share/tweet/post in exchange for free Pro
 - [x] **P0** Promote Founding Member program prominently in app paywall, exit-intent, homepage, pricing
-- [ ] **P0** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
-- [ ] **P0** Build SaaS directory submission kit (AlternativeTo, DevHunt, BetaList, SaaSHUB)
+- [x] **P0** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
+- [x] **P0** Build SaaS directory submission kit (AlternativeTo, DevHunt, BetaList, SaaSHUB)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — use new account or existing)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
 - [ ] **P1** Publish dev.to guest post on GitHub Action schema diff (human help for account, or create account)
@@ -23,7 +23,7 @@
 
 ### Conversion — Fix the Funnel
 - [x] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
-- [ ] **P0** Test lower price point ($19) via new Gumroad product experiment
+- [x] **P0** Test lower price point ($19) via new Gumroad product experiment — all CTAs updated, Gumroad product metadata ready, HELP-REQUEST.md filed
 - [ ] **P1** Add email capture to Pro trial (currently no-email; we lose leads)
 - [ ] **P1** Build "Team Schema Audit" landing page for B2B leads
 - [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
@@ -31,7 +31,7 @@
 ### Operations
 - [x] **P0** Monitor Launch Week exit (May 22–23): watch Gumroad sales, app usage, feedback
 - [x] **P0** Execute Launch Week exit: alumni banner active May 22–28, re-engagement email ready
-- [ ] **P0** Fix stale Launch Week banner on index.html (static text won't auto-hide after May 21)
+- [x] **P0** Fix stale Launch Week banner on index.html (dynamic date-aware script handles all 3 phases)
 - [ ] **P0** Monitor Product Hunt comments and respond via admin.html
 - [ ] **P1** Set up Google Search Console (human help for verification code)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic?

@@ -579,5 +579,19 @@
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script>
+(function(){
+  const now = new Date();
+  const end = new Date('2026-05-21T23:59:59Z');
+  if (now > end) return;
+  const promo = document.getElementById('launchWeekPromo');
+  if (promo) promo.innerHTML = promo.innerHTML.replace('$39 lifetime', '$19 lifetime');
+  document.querySelectorAll('.pricing-card').forEach(card => {
+    card.innerHTML = card.innerHTML.replace(/\$39/g, '$19');
+  });
+  const faq = document.querySelector('.about-content');
+  if (faq) faq.innerHTML = faq.innerHTML.replace('$39', '$19');
+})();
+</script>
 </body>
 </html>

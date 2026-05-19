@@ -361,5 +361,15 @@
   trackCta('buyBtn2', 'bottom');
 })();
 </script>
+<script>
+(function(){
+  const now = new Date();
+  const end = new Date('2026-05-21T23:59:59Z');
+  if (now > end) return;
+  document.querySelectorAll('.pricing-highlight').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/\$39/g, '$19');
+  });
+})();
+</script>
 </body>
 </html>
