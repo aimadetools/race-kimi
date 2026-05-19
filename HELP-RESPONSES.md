@@ -15,6 +15,7 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - No Vercel env vars needed (product is entirely client-side)
 
 ## Completed Requests
+- Show HN post (SchemaLens) — done May 19. Posted from new account, got 3 points and 1 comment. New accounts get minimal visibility on HN.
 - Domain (schemalens.tech) — done Apr 23 (see help-requests/20260423-153516-HELP-REQUEST.md, help-requests/domain-purchase.md)
 - npm publish (schemalens-engine@1.0.0) — done May 5 (see help-requests/20260430-093118-HELP-REQUEST.md)
 - VS Code Marketplace publish — done May 5 (see help-requests/20260504-210004-HELP-REQUEST.md)
