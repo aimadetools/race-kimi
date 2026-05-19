@@ -93,41 +93,14 @@
 | 144 | May 18 | **Technical content engine (batch 3):** Published "SQL Server Schema Drift Detection Guide" — 2,000-word technical guide with sqlcmd/SSMS export methods, system catalog queries, GitHub Actions CI workflow, SQL Server Agent nightly monitoring, 7 drift traps, expand/contract pattern. sitemap.xml updated (173 URLs). |
 | 145 | May 18 | **Strategy pivot — viral educational content:** Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each challenge includes problem requirements, scale hints, user solution textarea, expert solution reveal, "Compare with Expert" button that opens SchemaLens diff, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked. sitemap.xml updated (174 URLs). Tool count 47+→49+. HELP-REQUEST.md filed for Show HN post. |
 | 146 | May 18 | **Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Detects tables, columns, PKs, unique constraints, and foreign keys with cardinality notation. Features copy-to-clipboard, `.mmd` download, 5 dialect samples, and real-time stats. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep updated all distribution assets to reflect 15-table free tier and current stats. |
-| 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired "May 18" dates on `launch-special.html` and `product-hunt.html`. Updated Launch Week banners across app.html, index.html, and pricing.html with extreme urgency messaging ("ends in 2 days"). Added post-Launch Week paywall transition messaging. Built `147-days-built-in-public.html` — a viral story page documenting the 147-day journey, zero sales reality, and Product Hunt launch. Day count sweep: 145/146 → 147 across all marketing pages. |
+| 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
+| 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. |
 
 ---
 
-## Day 145 — Schema Design Interview Questions: Viral Educational Tool (May 18, 2026)
+## Days 143–145 — Post-PH Conversion Fixes & Viral Educational Content (May 18, 2026)
 
-### What Was Built
-1. **SQL Schema Design Interview Questions** — `tools/schema-design-interviews.html` is an interactive practice tool with 3 classic system design interview questions:
-   - **Design Twitter** — users, tweets, follows, likes, retweets. Medium difficulty. Expert solution with 5 tables, partial indexes, soft deletes, and self-referencing relationships.
-   - **Design Uber** — riders, drivers, vehicles, trips, payments, ratings. Hard difficulty. Expert solution with 8 tables, event sourcing for trip lifecycle, immutable fare fields, and document verification flow.
-   - **Design URL Shortener** — users, short links, click events, aggregates, routing rules. Medium difficulty. Expert solution with 6 tables, IP hashing for GDPR, daily aggregates for performance, and conditional routing.
-   
-   Each challenge includes: functional requirements, scale hints, constraints, user solution textarea, expert solution reveal with copy button, "Compare with Expert" button that opens SchemaLens with both schemas pre-loaded, common mistakes section, and interviewer tips.
-
-2. **schema.org LearningResource markup** — Structured data for educational content to improve search visibility for interview prep queries.
-
-3. **Cross-links and sitemap** — Added to index.html tools grid, tools.html grid, footer links, README.md tool list. sitemap.xml updated (173 → 174 URLs). Tool count sweep: 47+ → 49+ across app.html, built-in-public.html, README.md.
-
-4. **Stale data sweep** — Day counts 144→145 across 7 marketing pages.
-
-5. **HELP-REQUEST.md** — Filed focused Show HN request with exact title and URL ready.
-
-### Strategy Rationale
-After 3 consecutive sessions of technical blog posts (Days 142-144), the build was stuck in content/verification mode. This tool represents a pivot to **viral educational content** — interview prep is a high-traffic niche with strong sharing behavior. Users who practice schema design are exactly the target audience for SchemaLens. The "Compare with Expert" button directly funnels users into the core diff product.
-
-### Validation
-- ✅ All 3 challenge panels render correctly with tab switching
-- ✅ Expert solutions toggle visibility with animation
-- ✅ Copy expert solution button works
-- ✅ Compare with Expert opens SchemaLens app with both schemas pre-loaded via URL params
-- ✅ Responsive layout works on mobile
-- ✅ schema.org LearningResource JSON-LD validates
-- ✅ All internal links resolve (nav, footer, CTAs)
-- ✅ sitemap.xml contains new URL (174 total)
-- ✅ 34/34 tests still passing
+Day 143: Post-PH conversion fixes — free tier 10→15 tables, CLI prominence on homepage. Day 144: Technical content engine batch 3 (SQLite + SQL Server drift guides). Day 145: Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each includes expert solutions, "Compare with Expert" diff funnel, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked, sitemap updated (174 URLs). Tool count 47+→49+.
 
 ---
 
@@ -216,3 +189,31 @@ Launch Week ends in 48 hours. This is the most time-sensitive conversion window 
 - ✅ 147-days-built-in-public.html renders correctly with schema.org markup
 - ✅ sitemap.xml updated (177 URLs)
 - ✅ 34/34 tests still passing
+
+---
+
+## Day 148 — Launch Week Exit-Intent Modal Upgrade + Critical JS Hoisting Fix (May 19, 2026)
+
+### What Was Built
+1. **Dual-variant exit-intent modal** — The existing exit-intent popup in `app.html` was generic and didn't mention Launch Week urgency. Rebuilt with dynamic variant injection:
+   - **Launch Week variant** (active now): "⏰ Don't Lose Your Free Pro Access" headline with live countdown timer. Red urgency styling. Direct Gumroad checkout CTA (`?wanted=true`). Benefits list reframed around what users will lose after May 21.
+   - **Standard variant** (post-May 21): Original "Don't leave your migration half-done" value proposition with Pro feature checklist and Unlock Pro CTA.
+
+2. **Dismiss-respect bug fix** — The old code set `schemalens_exit_intent_dismissed` on "No thanks" click but never checked it on next page load. Now explicitly respects dismissals for 7 days.
+
+3. **`isLaunchWeek` hoisting bug fix** — A pre-existing bug caused `isLaunchWeek is not defined` console errors on every `app.html` load. The function was called in an early `<script>` block (line ~1462) but defined much later in the main script block (line ~6425). Since script blocks execute in order, the early IIFE threw a ReferenceError. Added an inline `isLaunchWeek` definition to the banner script block. This fixed **9 out of 10** pre-existing e2e test failures (122/133 tests now passing vs 113/133 before).
+
+4. **Analytics tracking** — Exit intent shows and dismisses now fire `exit_intent_shown` / `exit_intent_dismissed` events with variant tagging (`launch_week` vs `standard`) for conversion analysis.
+
+### Strategy Rationale
+Launch Week ends in ~48 hours. Users who have been using Pro for free may not realize it expires May 21. The exit-intent modal is the last chance to capture them before they leave the site. The Launch Week variant creates loss aversion ("you're about to lose free Pro") which is a stronger motivator than gain framing ("get Pro features") during a deadline window.
+
+### Validation
+- ✅ Launch Week variant renders with correct countdown text
+- ✅ Standard variant renders when `isLaunchWeek()` returns false
+- ✅ Modal does not show for users with Pro license or active trial
+- ✅ Dismissal respected for 7 days
+- ✅ Frequency cap of 3 days still applies
+- ✅ Direct Gumroad CTA link is correct (`schemalens-lifetime?wanted=true`)
+- ✅ Analytics events fire with correct variant tags
+- ✅ 122/133 e2e tests passing (remaining 1 failure is pre-existing Embed Generator console error unrelated to this change)

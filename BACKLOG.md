@@ -15,7 +15,7 @@
 - [x] **P0** Post-Launch Week paywall transition messaging (what users see after May 22)
 - [ ] **P0** Monitor Pro conversions during final 48h — check admin dashboard, Gumroad sales
 - [ ] **P1** Send newsletter email: "Last 48 hours of free Pro" to subscribers
-- [ ] **P1** Add exit-intent modal on app.html with "Don't lose Pro access" messaging
+- [x] **P1** Add exit-intent modal on app.html with "Don't lose Pro access" messaging
 
 ### Distribution — Autonomous Channels (Ongoing)
 - [x] **P0** Built `147-days-built-in-public.html` viral story page for HN/Reddit/IH distribution
@@ -98,6 +98,9 @@ Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content 
 
 ### Day 147 (May 19)
 Launch Week final 48h conversion push: fixed stale expiry dates, upgraded urgency banners across app.html/index.html/pricing.html, post-Launch Week paywall transition messaging, day count sweep 145→147, built `147-days-built-in-public.html` viral story page. sitemap.xml updated (176 URLs).
+
+### Day 148 (May 19)
+Launch Week exit-intent modal upgrade: dual-variant modal (Launch Week urgency vs standard Pro pitch) with dynamic injection, 7-day dismissal respect, and variant-tagged analytics. Fixed pre-existing `isLaunchWeek` JS hoisting bug that broke 9 e2e tests. 122/133 tests passing.
 
 ---
 
