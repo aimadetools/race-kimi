@@ -35,11 +35,32 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Validate inputs
+      shell: bash
+      run: |
+        if ! command -v jq >/dev/null 2>&1; then
+          echo "::error::jq is required but not installed. Add a step that installs jq, e.g.:"
+          echo "  - run: sudo apt-get install -y jq"
+          exit 1
+        fi
+        if [ ! -r "${{ inputs.old-schema-path }}" ]; then
+          echo "::error::old-schema-path '${{ inputs.old-schema-path }}' does not exist or is not readable"
+          exit 1
+        fi
+        if [ ! -r "${{ inputs.new-schema-path }}" ]; then
+          echo "::error::new-schema-path '${{ inputs.new-schema-path }}' does not exist or is not readable"
+          exit 1
+        fi
+        case "${{ inputs.dialect }}" in
+          postgres|mysql|sqlite|mssql|oracle) ;;
+          *) echo "::error::Invalid dialect '${{ inputs.dialect }}'. Must be one of: postgres, mysql, sqlite, mssql, oracle"; exit 1 ;;
+        esac
+
     - name: Diff schemas with SchemaLens
       id: diff
       shell: bash
       run: |
-        set -e
+        set -euo pipefail
         DIALECT="${{ inputs.dialect }}"
         FORMAT="${{ inputs.format }}"
         LICENSE_KEY="${{ inputs.license-key }}"
@@ -49,8 +70,10 @@ runs:
         # Determine endpoint
         if [ -n "$LICENSE_KEY" ]; then
           ENDPOINT="https://schemalens.tech/api/diff"
+          echo "Using Pro endpoint (license key provided)"
         else
           ENDPOINT="https://schemalens.tech/api/free-diff"
+          echo "Using free endpoint (no license key)"
         fi
 
         # Build request
@@ -61,17 +84,46 @@ runs:
           --arg format "$FORMAT" \
           '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
 
-        if [ -n "$LICENSE_KEY" ]; then
-          RESPONSE=$(curl -s -X POST "$ENDPOINT" \
+        # Call API with retries
+        HTTP_STATUS=0
+        for attempt in 1 2 3; do
+          HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w "%{http_code}" -X POST "$ENDPOINT" \
             -H "Content-Type: application/json" \
-            -H "X-License-Key: $LICENSE_KEY" \
-            -d "$BODY")
-        else
-          RESPONSE=$(curl -s -X POST "$ENDPOINT" \
-            -H "Content-Type: application/json" \
-            -d "$BODY")
+            ${LICENSE_KEY:+-H "X-License-Key: $LICENSE_KEY"} \
+            -d "$BODY" || echo "000")
+          if [ "$HTTP_STATUS" = "200" ]; then
+            break
+          fi
+          echo "SchemaLens API attempt $attempt failed with HTTP $HTTP_STATUS. Retrying..."
+          sleep "$((attempt * 2))"
+        done
+
+        if [ "$HTTP_STATUS" != "200" ]; then
+          echo "::error::SchemaLens API failed after 3 attempts (last HTTP status: $HTTP_STATUS)"
+          if [ -r /tmp/schemalens_response.json ]; then
+            echo "Response body:"
+            cat /tmp/schemalens_response.json || true
+          fi
+          exit 1
         fi
 
+        RESPONSE=$(cat /tmp/schemalens_response.json)
+
+        # Validate JSON
+        if ! echo "$RESPONSE" | jq -e '.' >/dev/null 2>&1; then
+          echo "::error::SchemaLens API returned invalid JSON"
+          echo "$RESPONSE"
+          exit 1
+        fi
+
+        # Check for API-level errors
+        if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+          ERROR_MSG=$(echo "$RESPONSE" | jq -r '.error')
+          echo "::error::SchemaLens API error: $ERROR_MSG"
+          exit 1
+        fi
+
+        # Store output using multiline delimiter (safe for JSON with newlines)
         {
           echo "response<<SCHEMALENS_EOF"
           echo "$RESPONSE"
@@ -82,7 +134,9 @@ runs:
         BCOUNT=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)')
         echo "breaking_count=${BCOUNT}" >> "$GITHUB_OUTPUT"
 
-        # Print output to logs
+        # Print formatted output to logs
+        echo ""
+        echo "=== SchemaLens Diff Result ==="
         if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
           echo "$RESPONSE" | jq -r '.markdown'
         elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
@@ -90,14 +144,17 @@ runs:
         elif echo "$RESPONSE" | jq -e '.migrationTeaser' >/dev/null 2>&1; then
           echo "--- SchemaLens Free Diff (upgrade for full migration) ---"
           echo "$RESPONSE" | jq -r '.migrationTeaser'
-          echo "... $(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0') total lines. Get Pro at https://schemalens.tech/pricing.html"
+          TOTAL_LINES=$(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0')
+          echo "... ${TOTAL_LINES} total lines. Get Pro at https://schemalens.tech/pricing.html"
         fi
+        echo "================================"
+        echo "Breaking changes detected: ${BCOUNT}"
 
     - name: Fail on breaking changes
       if: inputs.fail-on-breaking == 'true' && steps.diff.outputs.breaking_count != '0'
       shell: bash
       run: |
-        echo "Breaking changes detected: ${{ steps.diff.outputs.breaking_count }}"
+        echo "::error::Breaking changes detected: ${{ steps.diff.outputs.breaking_count }}"
         exit 1
 
     - name: Post PR comment
@@ -108,6 +165,7 @@ runs:
         RESPONSE_JSON: ${{ steps.diff.outputs.response }}
       run: |
         RESPONSE="$RESPONSE_JSON"
+
         if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
           BODY=$(echo "$RESPONSE" | jq -r '.markdown')
         elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
@@ -139,8 +197,17 @@ ${TEASER}
         fi
 
         PAYLOAD=$(jq -n --arg body "$BODY" '{body: $body}')
-        curl -s -X POST \
+        COMMENT_STATUS=$(curl -s -o /tmp/schemalens_comment.json -w "%{http_code}" -X POST \
           -H "Authorization: token $GH_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           "${{ github.event.pull_request.comments_url }}" \
-          -d "$PAYLOAD"
+          -d "$PAYLOAD" || echo "000")
+
+        if [ "$COMMENT_STATUS" != "201" ]; then
+          echo "::warning::Failed to post PR comment (HTTP $COMMENT_STATUS). The diff was still computed and logged above."
+          if [ -r /tmp/schemalens_comment.json ]; then
+            cat /tmp/schemalens_comment.json || true
+          fi
+        else
+          echo "PR comment posted successfully."
+        fi
