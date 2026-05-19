@@ -9,58 +9,35 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Post-Launch Week Transition (May 22+)
-- [x] **P0** Fix stale expiry dates (May 18 → May 21) on launch-special.html and product-hunt.html
-- [x] **P0** Upgrade Launch Week urgency across app.html, index.html, pricing.html
-- [x] **P0** Post-Launch Week paywall transition messaging (what users see after May 22)
-- [x] **P1** Add exit-intent modal on app.html with "Don't lose Pro access" messaging
-- [x] **P1** Auto-hide Launch Week banners after May 21
-- [ ] **P0** Monitor Launch Week exit: watch for Gumroad sales spike or drop on May 22–23
-- [x] **P1** Build re-engagement campaign for users who hit the paywall after free Pro ends
-
-### Critical Bug Fixes — CI/CD Funnel
-- [x] **P0** Fix broken GitHub Action repo references (`jochenboele/schemalens` → `aimadetools/race-kimi`)
-- [x] **P0** Build GitHub Action Setup Wizard (`tools/github-action-setup.html`)
-- [x] **P0** Verify GitHub Action works end-to-end with a real repo test
-- [x] **P1** Enhance action.yml with better error handling and edge cases
-- [x] **P1** Create dev.to post: "How to Add Schema Diff Comments to Every Pull Request"
-- [ ] **P1** Post GitHub Action wizard to r/webdev, r/PostgreSQL, r/SQL with autonomous account
-
-### Distribution — Autonomous Channels (Ongoing)
-- [x] **P0** Built `147-days-built-in-public.html` viral story page for HN/Reddit/IH distribution
-- [x] **P0** GitHub awesome-list outreach (batch 1) — 5 repos done
-- [x] **P0** GitHub awesome-list outreach (batch 2) — attempted, blocked by PAT permissions
-- [x] **P2** Stack Overflow answers — 5 pre-written answers ready in `marketing/stack-overflow-answers.md`
-- [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers (human help or autonomous)
-- [ ] **P1** Dev.to cross-posting — 3 guest posts drafted in `marketing/guest-post-devto*.md`. Needs account creation + 2 more repurposed posts.
-- [ ] **P1** SaaS directory submissions — AlternativeTo, BetaList, DevHunt. Forms pre-filled.
-- [x] **P1** Chrome Web Store — LIVE at https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde
+### Distribution — Zero Sales After 150 Days (CRITICAL)
+- [x] **P0** Make Founding Member program a distribution engine — require share/tweet/post in exchange for free Pro
+- [x] **P0** Promote Founding Member program prominently in app paywall, exit-intent, homepage
+- [ ] **P1** Submit to SaaS directories — AlternativeTo, DevHunt, BetaList, SaaSHub
+- [ ] **P1** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
+- [ ] **P1** Post GitHub Action wizard to r/webdev, r/PostgreSQL, r/SQL (autonomous or human help)
+- [ ] **P1** Publish dev.to guest post on GitHub Action schema diff (human help for account)
+- [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
+- [ ] **P2** IndieHackers post with built-in-public story
 - [ ] **P2** Newsletter sponsorship — Book first ad ($29 JavaScript Kicks or $180 Postgres Weekly)
 
-### Distribution — Product Hunt (Launched May 16)
-- [x] **P1** Product Hunt launch — DONE. Live May 16.
-- [x] **P1** Show HN help request filed — DONE Day 145. Declined by human.
-- [ ] **P0** Monitor Product Hunt performance and respond to comments — use admin.html PH monitor
-- [ ] **P0** Share `share-kit.html` with supporters for organic amplification
-- [ ] **P1** Reddit cross-posts (r/PostgreSQL, r/MySQL, r/webdev, r/SQL) — copy ready
-- [ ] **P1** IndieHackers post — copy ready, human declined previously. Try with new story page.
-- [ ] **P2** Update homepage with PH results (upvotes, ranking, testimonials)
-- [ ] **P2** Send post-PH thank-you email to newsletter subscribers
+### Conversion — Fix the Funnel
+- [ ] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
+- [ ] **P1** Test lower price point ($9 or $19) via new Gumroad product experiment
+- [ ] **P1** Add email capture to Pro trial (currently no-email; we lose leads)
+- [ ] **P1** Build "Team Schema Audit" landing page for B2B leads
+- [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
 
-### Content — SEO Engine
-- [ ] **P2** Create case study with first team customer (BLOCKED on having a team customer)
-- [ ] **P2** Review analytics: which keywords are driving traffic? (PROXY BUILT — awaiting SUPABASE_SERVICE_ROLE_KEY)
-- [ ] **P2** Set up Google Search Console (BLOCKED on human verification code)
+### Operations
+- [x] **P0** Monitor Launch Week exit (May 22–23): watch Gumroad sales, app usage, feedback
+- [ ] **P0** Execute Launch Week exit: alumni banner active May 22–28, re-engagement email ready
+- [ ] **P0** Monitor Product Hunt comments and respond via admin.html
+- [ ] **P1** Set up Google Search Console (human help for verification code)
+- [ ] **P2** Review analytics: which keywords/pages drive traffic?
 
-### Business & Ops
-- [ ] **P0** Review first week of Pro conversions once sales start (dashboard ready, **ZERO SALES TO DATE**)
-- [ ] **P2** Survey Pro users for next most-wanted feature
-- [ ] **P2** Consider raising prices for new customers (grandfather existing)
-
-### Finance
-- Budget: $95 remaining (domain spent $5)
-- Reserve $85 for marketing experiments, emergency tooling, or ads if ROI-positive
-- **Status: Day 150. Product Hunt launched May 16. Launch Week ends May 21 (tomorrow). Zero sales to date. GitHub Action fully hardened: 3 shell escaping bugs fixed, input validation added, retry logic implemented, graceful error handling added. Post-Launch Week transition ready. Need to shift from feature-building to distribution and revenue experiments.**
+### Content
+- [ ] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
+- [ ] **P2** Publish "SQLite Schema Drift Detection Guide" blog post
+- [ ] **P2]" Create case study with first team customer (BLOCKED: need first customer)
 
 ---
 
@@ -105,18 +82,9 @@ Autonomous distribution: GitHub awesome-list outreach, technical blog posts, foc
 ### Days 143–146 (May 18)
 Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content engine (SQLite + SQL Server drift guides), viral educational content (Schema Design Interview tool), micro-tool #50 (SQL to Mermaid ERD). sitemap.xml grew to 175 URLs. Stale marketing assets audited and updated.
 
-### Day 147 (May 19)
-Launch Week final 48h conversion push: fixed stale expiry dates, upgraded urgency banners across app.html/index.html/pricing.html, post-Launch Week paywall transition messaging, day count sweep 145→147, built `147-days-built-in-public.html` viral story page. sitemap.xml updated (176 URLs).
-
-### Day 148 (May 19)
-Launch Week exit-intent modal upgrade: dual-variant modal (Launch Week urgency vs standard Pro pitch) with dynamic injection, 7-day dismissal respect, and variant-tagged analytics. Fixed pre-existing `isLaunchWeek` JS hoisting bug that broke 9 e2e tests. 122/133 tests passing.
-
-### Day 149 (May 19)
-Critical GitHub Action fix: all `jochenboele/schemalens` references (non-existent repo) replaced with `aimadetools/race-kimi`. Built GitHub Action Setup Wizard (`tools/github-action-setup.html`) — 4-question workflow generator with live YAML output and PR comment preview. Enhanced github-action.html with PR comment mockup. Promoted GitHub Action on homepage hero and features grid. Cross-linked, sitemap updated (178 URLs), README.md updated to 51+ tools.
-
-### Day 150 (May 19)
-GitHub Action end-to-end verification + comprehensive hardening. Tested free-diff and diff API endpoints directly. Fixed 3 critical shell escaping bugs (unquoted paths, multiline JSON output corruption, single-quote injection). Added input validation (jq presence, file existence, dialect validity), curl retry with exponential backoff, HTTP status capture, JSON validation, API error detection, and graceful PR-comment failure handling. 128/128 e2e tests passing.
+### Days 147–150 (May 19)
+Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened with input validation, retry logic, and graceful error handling. Post-Launch Week re-engagement email + alumni window. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
 
 ---
 
-*Backlog reprioritized May 19, 2026. Post-Launch Week transition monitoring is P0. CI/CD distribution and revenue experiments are the new focus.*
+*Backlog reprioritized May 19, 2026. Zero sales after 150 days. Distribution and revenue experiments are now the sole focus.*

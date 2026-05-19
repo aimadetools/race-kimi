@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Founding Member Giveaway — Free Lifetime Pro | SchemaLens</title>
-  <meta name="description" content="First 50 developers get free lifetime SchemaLens Pro. No credit card. No spam. Just feedback. Compare SQL schemas and generate migrations instantly.">
-  <meta property="og:title" content="Founding Member Giveaway — Free Lifetime Pro | SchemaLens">
-  <meta property="og:description" content="First 50 developers get free lifetime SchemaLens Pro. No credit card. No spam. Just feedback.">
+  <title>Founding Member Program — Free Lifetime Pro | SchemaLens</title>
+  <meta name="description" content="Get free lifetime SchemaLens Pro when you share SchemaLens with your network. No credit card. Just one share.">
+  <meta property="og:title" content="Founding Member Program — Free Lifetime Pro | SchemaLens">
+  <meta property="og:description" content="Get free lifetime SchemaLens Pro when you share SchemaLens with your network. No credit card. Just one share.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/founding-member.html">
@@ -78,13 +78,13 @@
   <div class="container" style="text-align: center;">
     <div class="hero-badge" style="margin-bottom: 16px; background: linear-gradient(90deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08)); color: var(--success); border: 1px solid rgba(34,197,94,0.3);">
       <span class="dot" style="background: var(--success);"></span>
-      Founding Member Giveaway
+      Founding Member Program
     </div>
-    <h1>Free Lifetime Pro for the First <strong style="color:var(--primary)">50</strong> Developers</h1>
+    <h1>Free Lifetime Pro When You <strong style="color:var(--primary)">Share</strong> SchemaLens</h1>
     <p style="max-width: 640px; margin: 0 auto 24px;">
-      SchemaLens is built in public. I need real-world feedback from developers like you.
-      In exchange for 10 minutes of your honest thoughts, you get a free lifetime Pro license.
-      No credit card. No spam. No catch.
+      SchemaLens is built in public by a solo founder. I need help getting the word out.
+      In exchange for one tweet, blog post, Reddit comment, or team share, you get a free lifetime Pro license.
+      No credit card. No spam. Just one share.
     </p>
 
     <div class="fm-counter">
@@ -116,15 +116,31 @@
           </select>
         </div>
         <div class="field">
+          <label for="fmSharePlan">How will you share SchemaLens? <span style="font-weight:400;color:var(--text-muted)">(required)</span></label>
+          <select id="fmSharePlan" name="share_plan" required style="margin-bottom:8px;">
+            <option value="">Select one…</option>
+            <option value="twitter">Tweet about it on X/Twitter</option>
+            <option value="linkedin">Post on LinkedIn</option>
+            <option value="reddit">Comment on Reddit (r/PostgreSQL, r/MySQL, r/webdev, etc.)</option>
+            <option value="hackernews">Comment on Hacker News</option>
+            <option value="blog">Write a blog post or dev.to article</option>
+            <option value="newsletter">Mention it in a newsletter</option>
+            <option value="team">Share it with my engineering team</option>
+            <option value="github">Star the repo + open an issue or PR</option>
+            <option value="other">Something else (describe below)</option>
+          </select>
+          <textarea id="fmShareDetail" name="share_detail" rows="2" placeholder="Optional: specific subreddit, blog topic, team size, or any details…" maxlength="300"></textarea>
+        </div>
+        <div class="field">
           <label for="fmUseCase">How would you use SchemaLens? <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
-          <textarea id="fmUseCase" name="use_case" rows="3" placeholder="e.g. I manage schema migrations for a SaaS product with 3 engineers…" maxlength="500"></textarea>
+          <textarea id="fmUseCase" name="use_case" rows="2" placeholder="e.g. I manage schema migrations for a SaaS product with 3 engineers…" maxlength="500"></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-lg" id="claimBtn">Claim My Free Lifetime Pro</button>
         <div class="error-msg" id="claimError" style="display:none;"></div>
         <div class="trust-row">
           <span>🔒 No credit card</span>
           <span>🚫 No spam</span>
-          <span>💬 Feedback optional</span>
+          <span>🚀 One share = lifetime Pro</span>
         </div>
       </form>
 
@@ -185,11 +201,11 @@
     </div>
     <div style="border-bottom: 1px solid var(--border); padding: 20px 0;">
       <h4 style="margin: 0 0 8px; font-size: 1rem; color: var(--text);">Why are you giving away Pro for free?</h4>
-      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">I'm a solo founder building SchemaLens in public. Real feedback from real developers is more valuable than $39 one-time at this stage. Your insights shape the roadmap.</p>
+      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">I'm a solo founder building SchemaLens in public. I need distribution more than I need $39 right now. One share from you puts SchemaLens in front of dozens of developers who might never find it otherwise.</p>
     </div>
     <div style="border-bottom: 1px solid var(--border); padding: 20px 0;">
-      <h4 style="margin: 0 0 8px; font-size: 1rem; color: var(--text);">What kind of feedback do you need?</h4>
-      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Anything honest. Did the parser handle your schema? Was the migration SQL accurate? What feature would make you reach for SchemaLens daily? A 5-minute email is enough.</p>
+      <h4 style="margin: 0 0 8px; font-size: 1rem; color: var(--text);">What counts as a "share"?</h4>
+      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">A tweet, a LinkedIn post, a Reddit comment, a Hacker News comment, a blog post, a newsletter mention, sharing with your team, or starring the repo + opening an issue. Anything that gets SchemaLens in front of more developers. The honor system applies — I trust you.</p>
     </div>
     <div style="border-bottom: 1px solid var(--border); padding: 20px 0;">
       <h4 style="margin: 0 0 8px; font-size: 1rem; color: var(--text);">Is this really lifetime?</h4>
@@ -201,7 +217,7 @@
     </div>
     <div style="padding: 20px 0;">
       <h4 style="margin: 0 0 8px; font-size: 1rem; color: var(--text);">What happens after 50 members?</h4>
-      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">The giveaway closes and regular pricing applies. Founding Members keep lifetime access forever.</p>
+      <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">The program closes and regular pricing applies. Founding Members keep lifetime access forever.</p>
     </div>
   </div>
 </section>
@@ -290,6 +306,8 @@
       name: document.getElementById('fmName').value.trim(),
       email: document.getElementById('fmEmail').value.trim(),
       dialect: document.getElementById('fmDialect').value,
+      share_plan: document.getElementById('fmSharePlan').value,
+      share_detail: document.getElementById('fmShareDetail').value.trim(),
       use_case: document.getElementById('fmUseCase').value.trim(),
     };
 
@@ -324,12 +342,12 @@
     const openAppBtn = document.getElementById('openAppBtn');
     if (openAppBtn && activationUrl) openAppBtn.href = activationUrl;
 
-    // Share links
-    const text = encodeURIComponent('Just claimed my free lifetime Pro license for SchemaLens — a privacy-first SQL schema diff tool. First 50 developers only! 🎉');
+    // Share links — encourage them to fulfill their commitment immediately
+    const text = encodeURIComponent('Just discovered SchemaLens — a privacy-first SQL schema diff tool that generates migration scripts in your browser. Get free lifetime Pro when you share it with your network: 🎉');
     const url = encodeURIComponent('https://schemalens.tech/founding-member.html');
     document.getElementById('shareX').href = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
     document.getElementById('shareLinkedIn').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
-    document.getElementById('shareEmail').href = 'mailto:?subject=' + encodeURIComponent('Free lifetime Pro for SchemaLens') + '&body=' + text + '%0A%0A' + url;
+    document.getElementById('shareEmail').href = 'mailto:?subject=' + encodeURIComponent('SchemaLens — free lifetime Pro for developers who share') + '&body=' + text + '%0A%0A' + url;
 
     // Copy button
     document.getElementById('copyKeyBtn').addEventListener('click', function() {

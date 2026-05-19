@@ -1,7 +1,7 @@
 /**
  * Founding Member Giveaway endpoint
  * POST /api/founding-member
- * Body: { name: string, email: string, dialect?: string, use_case?: string }
+ * Body: { name: string, email: string, dialect?: string, share_plan?: string, share_detail?: string, use_case?: string }
  *
  * Generates a valid Pro license key (SL-XXXX-XXXX-XXXX-XXXX) using the same
  * checksum algorithm as client-side validation. Rate limited to 5 requests
@@ -200,6 +200,8 @@ export default async function handler(req, res) {
   }
 
   const normalizedDialect = typeof dialect === "string" ? dialect.trim().slice(0, 50) : "";
+  const normalizedSharePlan = typeof req.body.share_plan === "string" ? req.body.share_plan.trim().slice(0, 50) : "";
+  const normalizedShareDetail = typeof req.body.share_detail === "string" ? req.body.share_detail.trim().slice(0, 300) : "";
   const normalizedUseCase = typeof use_case === "string" ? use_case.trim().slice(0, 500) : "";
 
   // Generate a valid key and verify it immediately
@@ -222,6 +224,8 @@ export default async function handler(req, res) {
     email: email.trim().toLowerCase(),
     license_key: key,
     dialect: normalizedDialect,
+    share_plan: normalizedSharePlan,
+    share_detail: normalizedShareDetail,
     use_case: normalizedUseCase,
     claimed_at: new Date().toISOString(),
   };
