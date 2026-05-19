@@ -90,7 +90,7 @@ schemalens diff schema-v1.sql schema-v2.sql --format json
 
 - [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with shareable links
 - [SchemaLens API](https://schemalens.tech/api.html) — REST API for programmatic diffs
-- [SchemaLens GitHub](https://github.com/jochenboele/schemalens)
+- [SchemaLens GitHub](https://github.com/aimadetools/race-kimi)
 
 ## License
 

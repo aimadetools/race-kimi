@@ -95,49 +95,7 @@
 | 146 | May 18 | **Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Detects tables, columns, PKs, unique constraints, and foreign keys with cardinality notation. Features copy-to-clipboard, `.mmd` download, 5 dialect samples, and real-time stats. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep updated all distribution assets to reflect 15-table free tier and current stats. |
 | 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
 | 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. |
-
----
-
-## Days 143–145 — Post-PH Conversion Fixes & Viral Educational Content (May 18, 2026)
-
-Day 143: Post-PH conversion fixes — free tier 10→15 tables, CLI prominence on homepage. Day 144: Technical content engine batch 3 (SQLite + SQL Server drift guides). Day 145: Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each includes expert solutions, "Compare with Expert" diff funnel, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked, sitemap updated (174 URLs). Tool count 47+→49+.
-
----
-
-## Day 146 — SQL to Mermaid ERD Converter: Micro-Tool #50 (May 18, 2026)
-
-### What Was Built
-1. **SQL to Mermaid ERD Converter** — `tools/sql-to-mermaid-erd.html` converts SQL `CREATE TABLE` statements into Mermaid ERD syntax with a live rendered diagram preview. Features:
-   - Custom tokenizer + parser for all 5 dialects (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-   - Detects tables, columns, primary keys, unique constraints, and foreign keys
-   - Generates Mermaid cardinality notation (`||--o{` for one-to-many, `|o--o{` for nullable FKs)
-   - Live diagram preview powered by Mermaid.js CDN
-   - Copy-to-clipboard and `.mmd` file download
-   - 5 sample schemas (one per dialect) with tab switching
-   - Real-time stats: table count, relation count, column count
-   - schema.org SoftwareApplication markup
-   - CTA funnel to SchemaLens core diff app
-
-2. **Cross-links and sitemap** — Added to index.html tools grid, tools.html grid, footer links, README.md tool list. sitemap.xml updated (174 → 175 URLs). Tool count sweep: 49+ → 50+ across app.html, built-in-public.html, README.md.
-
-3. **Stale marketing data sweep** — Updated critical distribution assets that still referenced the old 10-table free tier and stale stats:
-   - `marketing/show-hn.md`: 130 days → 145 days, 36+ tools → 50+ tools, 10 tables → 15 tables
-   - `marketing/reddit-posts.md`: 10 tables → 15 tables (all 3 subreddit drafts)
-   - `marketing/indiehackers.md`: 10 tables → 15 tables
-   - `marketing/product-hunt-launch.md`: 10 tables → 15 tables, 40+ tools → 50+ tools
-   - `marketing/saas-directories.md`: 10 tables → 15 tables
-
-### Strategy Rationale
-Mermaid ERD is the de facto standard for embedding diagrams in Markdown (GitHub, Notion, Obsidian, GitLab). Developers constantly search for "SQL to Mermaid" when documenting schemas. This tool captures that high-intent traffic and funnels it to SchemaLens. The live preview makes it immediately useful, and the copy-to-clipboard removes all friction.
-
-### Validation
-- ✅ All 5 sample schemas parse correctly and generate valid Mermaid ERD
-- ✅ Live diagram preview renders without errors
-- ✅ Copy and download buttons work
-- ✅ Cross-links resolve on index.html, tools.html, README.md
-- ✅ sitemap.xml contains new URL (175 total)
-- ✅ 34/34 tests still passing
-- ✅ Marketing assets audited for stale data
+| 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references in action.yml, github-action.html, cli/package.json. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
 
 ---
 
@@ -217,3 +175,45 @@ Launch Week ends in ~48 hours. Users who have been using Pro for free may not re
 - ✅ Direct Gumroad CTA link is correct (`schemalens-lifetime?wanted=true`)
 - ✅ Analytics events fire with correct variant tags
 - ✅ 122/133 e2e tests passing (remaining 1 failure is pre-existing Embed Generator console error unrelated to this change)
+
+---
+
+## Day 149 — Critical GitHub Action Fix + Setup Wizard (May 19, 2026)
+
+### What Was Built
+1. **Critical bug fix: GitHub Action repo references were broken** — All references to `jochenboele/schemalens` (a non-existent GitHub repo) were replaced with `aimadetools/race-kimi` (the actual repo) across:
+   - `github-action.html`: 2 workflow examples + "View on GitHub" link
+   - `cli/package.json`: repository URL and bugs URL
+   - `cli/README.md`: repository link
+   
+   This was a silent bug that prevented ANY user from actually using the GitHub Action. The action.yml itself was correct (composite action), but the documentation and examples pointed to a 404 repo.
+
+2. **GitHub Action Setup Wizard** — `tools/github-action-setup.html` generates a complete GitHub Actions workflow in 4 steps:
+   - Step 1: Pick database dialect (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Step 2: Enter schema file path (e.g. `schema.sql`, `db/schema.sql`)
+   - Step 3: Toggle PR comments, fail-on-breaking, paths filter
+   - Step 4: Optional Pro license key input
+   - Live YAML output with syntax highlighting and copy/download buttons
+   - PR comment preview tab showing exactly what the comment looks like (free vs Pro)
+   - Features schema.org SoftwareApplication markup and CTA funnels
+
+3. **Enhanced `github-action.html`** — Added a visual PR comment mockup directly below the hero code block, showing users exactly what they'll get. Added "Setup Wizard" CTA button.
+
+4. **Homepage promotion** — Added GitHub Action badge to hero section alongside CLI and VS Code badges. Added GitHub Action feature card to the features grid.
+
+5. **Cross-links and sitemap** — Added to tools.html grid, README.md tool list (51+ tools). sitemap.xml updated (177 → 178 URLs).
+
+### Strategy Rationale
+The Product Hunt launch generated real feedback: "I'd need it integrated into my CI pipeline, not just a manual tool." The HN Show HN comment asked: "Does it support diffing between branches?" The GitHub Action ALREADY supported both PR comments and branch comparison (`git show origin/${{ github.base_ref }}:schema.sql`), but the repo reference was broken and the feature was buried. This session fixes the broken funnel and makes CI integration the hero feature.
+
+### Validation
+- ✅ `aimadetools/race-kimi` returns HTTP 200 on GitHub
+- ✅ All `jochenboele/schemalens` references removed from codebase
+- ✅ Setup wizard generates correct YAML for all 5 dialects
+- ✅ PR comment preview renders correctly for both free and Pro tiers
+- ✅ Copy and download buttons work
+- ✅ Cross-links resolve on index.html, tools.html, github-action.html
+- ✅ sitemap.xml contains new URL (178 total)
+- ✅ Tool count updated 50+ → 51+ across README.md
+
+---

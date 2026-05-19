@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Action Setup Wizard — SchemaLens Schema Diff in CI</title>
+  <meta name="description" content="Generate a ready-to-use GitHub Actions workflow for SQL schema diff in your CI/CD pipeline. Compare schemas between branches, post diff comments on PRs, and catch breaking changes before deploy.">
+  <meta property="og:title" content="GitHub Action Setup Wizard — SchemaLens Schema Diff in CI">
+  <meta property="og:description" content="Generate a ready-to-use GitHub Actions workflow for SQL schema diff. Compare schemas between branches and catch breaking changes before they merge.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/github-action-setup.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .wizard-container { max-width: 800px; margin: 0 auto; padding: 32px 16px; }
+    .wizard-header { text-align: center; margin-bottom: 32px; }
+    .wizard-header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .wizard-header p { color: var(--text-muted); font-size: 1rem; }
+    .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .step-card h3 { font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; font-size: 0.8rem; font-weight: 700; }
+    .option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .option-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px; cursor: pointer; text-align: center; font-size: 0.9rem; transition: all 0.15s; }
+    .option-btn:hover { border-color: var(--primary); }
+    .option-btn.active { border-color: var(--primary); background: rgba(99,102,241,0.08); font-weight: 600; }
+    .input-field { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-size: 0.95rem; margin-top: 8px; }
+    .input-field:focus { outline: none; border-color: var(--primary); }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+    .toggle-label { font-size: 0.9rem; }
+    .toggle-hint { font-size: 0.8rem; color: var(--text-muted); }
+    .toggle-switch { position: relative; width: 44px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); border-radius: 24px; transition: 0.2s; }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+    .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+    .output-section { margin-top: 24px; }
+    .output-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .output-tab { padding: 8px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-size: 0.85rem; }
+    .output-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fca5a5; }
+    .pr-mockup { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; }
+    .pr-mockup-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .pr-mockup-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700; }
+    .pr-mockup-meta { font-size: 0.8rem; color: var(--text-muted); }
+    .pr-mockup-body { line-height: 1.6; }
+    .pr-mockup-body code { background: rgba(99,102,241,0.1); padding: 2px 5px; border-radius: 4px; font-size: 0.8rem; }
+    .pr-mockup-body pre { background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0; }
+    .btn-group { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .badge-recommended { display: inline-block; background: #10b981; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 999px; text-transform: uppercase; margin-left: 6px; vertical-align: middle; }
+    .wizard-footer { text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../github-action.html">GitHub Action</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="wizard-container">
+      <div class="wizard-header">
+        <h1>🚀 GitHub Action Setup Wizard</h1>
+        <p>Generate a ready-to-use workflow that compares database schemas in every pull request. No config file guessing.</p>
+      </div>
+
+      <div class="step-card">
+        <h3><span class="step-num">1</span> What database are you using?</h3>
+        <div class="option-grid" id="dialectGrid">
+          <button class="option-btn active" data-value="postgres">PostgreSQL</button>
+          <button class="option-btn" data-value="mysql">MySQL</button>
+          <button class="option-btn" data-value="sqlite">SQLite</button>
+          <button class="option-btn" data-value="mssql">SQL Server</button>
+          <button class="option-btn" data-value="oracle">Oracle</button>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <h3><span class="step-num">2</span> Where is your schema file?</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;">Path relative to repo root. The wizard will compare this file between your base branch and PR branch.</p>
+        <input type="text" class="input-field" id="schemaPath" value="schema.sql" placeholder="e.g. schema.sql, db/schema.sql, migrations/schema.sql">
+      </div>
+
+      <div class="step-card">
+        <h3><span class="step-num">3</span> Trigger options</h3>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Post diff as PR comment <span class="badge-recommended">Recommended</span></div>
+            <div class="toggle-hint">Adds a formatted schema diff comment to every pull request</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="postComment" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Fail build on breaking changes</div>
+            <div class="toggle-hint">Blocks merge if dropped columns, removed tables, or other breaking changes are detected</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="failBreaking" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Only run when schema changes</div>
+            <div class="toggle-hint">Uses <code>paths</code> filter so the workflow only triggers on schema/migration file changes</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="pathsFilter" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <h3><span class="step-num">4</span> Pro license key <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">(optional)</span></h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;">Without a Pro key, PR comments show a migration preview (first 5 lines). With Pro, the full migration script is included.</p>
+        <input type="text" class="input-field" id="licenseKey" value="" placeholder="${{ secrets.SCHEMALENS_KEY }} — leave blank for free tier">
+      </div>
+
+      <div class="output-section">
+        <h3 style="margin-bottom:12px;">Your workflow</h3>
+        <div class="output-tabs">
+          <button class="output-tab active" data-tab="yaml">workflow.yml</button>
+          <button class="output-tab" data-tab="preview">PR Comment Preview</button>
+        </div>
+
+        <div id="yamlOutput">
+          <div class="code-block" id="workflowCode"></div>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="copyWorkflow()">📋 Copy workflow.yml</button>
+            <button class="btn btn-secondary" onclick="downloadWorkflow()">⬇️ Download</button>
+          </div>
+        </div>
+
+        <div id="previewOutput" style="display:none;">
+          <div class="pr-mockup">
+            <div class="pr-mockup-header">
+              <div class="pr-mockup-avatar">SL</div>
+              <div>
+                <strong>SchemaLens Bot</strong>
+                <div class="pr-mockup-meta">commented 2 minutes ago</div>
+              </div>
+            </div>
+            <div class="pr-mockup-body" id="prMockupBody"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <p>Need help? <a href="../github-action.html">Read the full GitHub Action docs →</a></p>
+        <p style="margin-top:8px;">Want full migration scripts in PR comments? <a href="../pricing.html">Upgrade to Pro →</a></p>
+      </div>
+    </div>
+
+    <footer style="margin-top:48px; padding:32px 0; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem; text-align:center;">
+      <p>
+        <a href="../index.html">Home</a> ·
+        <a href="../app.html">App</a> ·
+        <a href="../tools.html">Tools</a> ·
+        <a href="../github-action.html">GitHub Action</a> ·
+        <a href="../pricing.html">Pricing</a>
+      </p>
+      <p>© 2026 SchemaLens. Built for engineers.</p>
+    </footer>
+  </div>
+
+  <script>
+    let state = {
+      dialect: 'postgres',
+      schemaPath: 'schema.sql',
+      postComment: true,
+      failBreaking: true,
+      pathsFilter: true,
+      licenseKey: ''
+    };
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+    }
+
+    function generateWorkflow() {
+      const paths = state.pathsFilter ? `
+    <span class="key">paths</span>:
+      - <span class="str">'${state.schemaPath}'</span>
+      - <span class="str">'migrations/**'</span>` : '';
+
+      const postCommentLines = state.postComment ? `
+          <span class="key">post-comment</span>: <span class="str">true</span>
+          <span class="key">github-token</span>: <span class="str">\${{ secrets.GITHUB_TOKEN }}</span>` : '';
+
+      const failLines = state.failBreaking ? `
+          <span class="key">fail-on-breaking</span>: <span class="str">true</span>` : '';
+
+      const licenseLines = state.licenseKey ? `
+          <span class="key">license-key</span>: <span class="str">\${{ secrets.SCHEMALENS_KEY }}</span>` : '';
+
+      return `<span class="comment"># .github/workflows/schema-diff.yml</span>
+<span class="comment"># Generated by SchemaLens Setup Wizard — https://schemalens.tech/tools/github-action-setup.html</span>
+<span class="key">name</span>: <span class="str">Schema Diff</span>
+<span class="key">on</span>:
+  <span class="key">pull_request</span>:${paths}
+<span class="key">jobs</span>:
+  <span class="key">diff</span>:
+    <span class="key">runs-on</span>: <span class="str">ubuntu-latest</span>
+    <span class="key">steps</span>:
+      - <span class="key">uses</span>: <span class="str">actions/checkout@v4</span>
+        <span class="key">with</span>:
+          <span class="key">fetch-depth</span>: <span class="num">0</span>
+      - <span class="key">name</span>: <span class="str">Get base branch schema</span>
+        <span class="key">run</span>: |
+          git show origin/\${{ github.base_ref }}:${state.schemaPath} > schema-base.sql
+      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+        <span class="key">with</span>:
+          <span class="key">old-schema-path</span>: <span class="str">schema-base.sql</span>
+          <span class="key">new-schema-path</span>: <span class="str">${state.schemaPath}</span>
+          <span class="key">dialect</span>: <span class="str">${state.dialect}</span>${postCommentLines}${failLines}${licenseLines}`;
+    }
+
+    function generatePreview() {
+      const hasLicense = state.licenseKey.trim().length > 0;
+      if (!state.postComment) {
+        return '<p><em>PR comments are disabled. The diff will only appear in the workflow logs.</em></p>';
+      }
+      if (hasLicense) {
+        return `<p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+<p><strong>Risk:</strong> Medium (42/100) | <strong>Breaking changes:</strong> 1</p>
+<h4>Migration Script</h4>
+<pre><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;
+
+ALTER TABLE posts
+  DROP COLUMN draft_content;
+
+CREATE INDEX idx_posts_user_id ON posts(user_id);</code></pre>
+<p><em>Generated by <a href="#">SchemaLens GitHub Action</a></em></p>`;
+      }
+      return `<p>🔍 <strong>SchemaLens Schema Diff (Free Tier)</strong></p>
+<p><strong>Risk:</strong> Medium (42/100) | <strong>Breaking changes:</strong> 1</p>
+<h4>Migration Preview</h4>
+<pre><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;
+
+-- ... 12 total migration lines.</code></pre>
+<p><em>12 total migration lines. <a href="https://schemalens.tech/pricing.html">Unlock full migration with SchemaLens Pro</a></em></p>
+<p><em>Generated by <a href="#">SchemaLens GitHub Action</a></em></p>`;
+    }
+
+    function render() {
+      document.getElementById('workflowCode').innerHTML = generateWorkflow();
+      document.getElementById('prMockupBody').innerHTML = generatePreview();
+    }
+
+    // Event listeners
+    document.getElementById('dialectGrid').addEventListener('click', e => {
+      if (!e.target.classList.contains('option-btn')) return;
+      document.querySelectorAll('#dialectGrid .option-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      state.dialect = e.target.dataset.value;
+      render();
+    });
+
+    document.getElementById('schemaPath').addEventListener('input', e => {
+      state.schemaPath = e.target.value || 'schema.sql';
+      render();
+    });
+
+    document.getElementById('postComment').addEventListener('change', e => {
+      state.postComment = e.target.checked;
+      render();
+    });
+
+    document.getElementById('failBreaking').addEventListener('change', e => {
+      state.failBreaking = e.target.checked;
+      render();
+    });
+
+    document.getElementById('pathsFilter').addEventListener('change', e => {
+      state.pathsFilter = e.target.checked;
+      render();
+    });
+
+    document.getElementById('licenseKey').addEventListener('input', e => {
+      state.licenseKey = e.target.value;
+      render();
+    });
+
+    document.querySelectorAll('.output-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const isYaml = tab.dataset.tab === 'yaml';
+        document.getElementById('yamlOutput').style.display = isYaml ? 'block' : 'none';
+        document.getElementById('previewOutput').style.display = isYaml ? 'none' : 'block';
+      });
+    });
+
+    function copyWorkflow() {
+      const text = document.getElementById('workflowCode').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-group .btn-primary');
+        const old = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = old, 2000);
+      });
+    }
+
+    function downloadWorkflow() {
+      const text = document.getElementById('workflowCode').innerText;
+      const blob = new Blob([text], { type: 'text/yaml' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'schema-diff.yml';
+      a.click();
+    }
+
+    render();
+  </script>
+</body>
+</html>

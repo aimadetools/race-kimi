@@ -33,10 +33,10 @@
   "homepage": "https://schemalens.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jochenboele/schemalens"
+    "url": "https://github.com/aimadetools/race-kimi"
   },
   "bugs": {
-    "url": "https://github.com/jochenboele/schemalens/issues"
+    "url": "https://github.com/aimadetools/race-kimi/issues"
   },
   "engines": {
     "node": ">=14.0.0"
