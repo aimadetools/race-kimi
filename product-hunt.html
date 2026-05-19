@@ -103,7 +103,7 @@
         <div class="countdown-unit"><span class="num" id="cdM">--</span><span class="lbl">Minutes</span></div>
         <div class="countdown-unit"><span class="num" id="cdS">--</span><span class="lbl">Seconds</span></div>
       </div>
-      <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">⏰ Launch Week ends May 21 at midnight UTC — claim free Pro before it's gone</div>
+      <div id="ph-countdown-text" style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">⏰ Launch Week ends May 21 at midnight UTC — claim free Pro before it's gone</div>
     </div>
     <div class="hero-actions" style="justify-content: center;" id="phHeroActions">
       <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
@@ -411,6 +411,13 @@
   const cdS = document.getElementById('cdS');
 
   function pad(n) { return n.toString().padStart(2, '0'); }
+  function updateText() {
+    const now = new Date();
+    const txt = document.getElementById('ph-countdown-text');
+    if (now > target && txt) {
+      txt.textContent = '🏷️ Alumni pricing ends May 28 — lock in lifetime Pro before the window closes';
+    }
+  }
   function update() {
     const now = new Date();
     const diff = Math.max(0, Math.floor((target - now) / 1000));
@@ -419,6 +426,7 @@
       cdH.textContent = '00';
       cdM.textContent = '00';
       cdS.textContent = '00';
+      updateText();
       return;
     }
     const d = Math.floor(diff / 86400);
@@ -432,6 +440,7 @@
     setTimeout(update, 1000);
   }
   update();
+  updateText();
 })();
 
 // Post-launch state: switch to live banner and upvote CTA after May 14 00:01 PT (07:01 UTC)

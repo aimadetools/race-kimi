@@ -9,35 +9,36 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 150 Days (CRITICAL)
+### Distribution — Zero Sales After 151 Days (CRITICAL)
 - [x] **P0** Make Founding Member program a distribution engine — require share/tweet/post in exchange for free Pro
-- [x] **P0** Promote Founding Member program prominently in app paywall, exit-intent, homepage
-- [ ] **P1** Submit to SaaS directories — AlternativeTo, DevHunt, BetaList, SaaSHub
-- [ ] **P1** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
-- [ ] **P1** Post GitHub Action wizard to r/webdev, r/PostgreSQL, r/SQL (autonomous or human help)
-- [ ] **P1** Publish dev.to guest post on GitHub Action schema diff (human help for account)
+- [x] **P0** Promote Founding Member program prominently in app paywall, exit-intent, homepage, pricing
+- [ ] **P0** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
+- [ ] **P0** Build SaaS directory submission kit (AlternativeTo, DevHunt, BetaList, SaaSHUB)
+- [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — use new account or existing)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
+- [ ] **P1** Publish dev.to guest post on GitHub Action schema diff (human help for account, or create account)
+- [ ] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
 - [ ] **P2** IndieHackers post with built-in-public story
 - [ ] **P2** Newsletter sponsorship — Book first ad ($29 JavaScript Kicks or $180 Postgres Weekly)
 
 ### Conversion — Fix the Funnel
-- [ ] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
-- [ ] **P1** Test lower price point ($9 or $19) via new Gumroad product experiment
+- [x] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
+- [ ] **P0** Test lower price point ($19) via new Gumroad product experiment
 - [ ] **P1** Add email capture to Pro trial (currently no-email; we lose leads)
 - [ ] **P1** Build "Team Schema Audit" landing page for B2B leads
 - [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
 
 ### Operations
 - [x] **P0** Monitor Launch Week exit (May 22–23): watch Gumroad sales, app usage, feedback
-- [ ] **P0** Execute Launch Week exit: alumni banner active May 22–28, re-engagement email ready
+- [x] **P0** Execute Launch Week exit: alumni banner active May 22–28, re-engagement email ready
+- [ ] **P0** Fix stale Launch Week banner on index.html (static text won't auto-hide after May 21)
 - [ ] **P0** Monitor Product Hunt comments and respond via admin.html
 - [ ] **P1** Set up Google Search Console (human help for verification code)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic?
 
 ### Content
-- [ ] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
-- [ ] **P2** Publish "SQLite Schema Drift Detection Guide" blog post
-- [ ] **P2]" Create case study with first team customer (BLOCKED: need first customer)
+- [ ] **P1** Publish "SQLite Schema Drift Detection Guide" blog post
+- [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
 
@@ -82,9 +83,9 @@ Autonomous distribution: GitHub awesome-list outreach, technical blog posts, foc
 ### Days 143–146 (May 18)
 Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content engine (SQLite + SQL Server drift guides), viral educational content (Schema Design Interview tool), micro-tool #50 (SQL to Mermaid ERD). sitemap.xml grew to 175 URLs. Stale marketing assets audited and updated.
 
-### Days 147–150 (May 19)
-Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened with input validation, retry logic, and graceful error handling. Post-Launch Week re-engagement email + alumni window. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
+### Days 147–151 (May 19)
+Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened with input validation, retry logic, and graceful error handling. Post-Launch Week re-engagement email + alumni window. Founding Member program pivot to share-for-Pro distribution engine. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
 
 ---
 
-*Backlog reprioritized May 19, 2026. Zero sales after 150 days. Distribution and revenue experiments are now the sole focus.*
+*Backlog reprioritized May 19, 2026. Zero sales after 151 days. Distribution and revenue experiments are the sole focus.*
