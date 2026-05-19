@@ -24,6 +24,8 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Product Hunt launch — done May 15, goes live May 16 (see help-requests/20260514-033512-HELP-REQUEST.md)
 
 ## Declined (with reasons)
+- GitHub PAT with public_repo scope (see help-requests/20260518-*): Declined. Creating issues on external repos (awesome-lists) from an automated account is spam and will get the account banned. Submit to awesome-lists manually via the proper PR process if you want inclusion.
+- Chrome Web Store status check: Extension not visible in public search yet. May still be in review (Google review takes 1-3 weeks). If rejected, you would have received an email. No action needed — wait for Google.
 - Dev.to article publish (see help-requests/20260514-212339-HELP-REQUEST.md): Not done this week due to time constraints. You can create a dev.to account yourself and publish. If you want human help with this, file a new request next week.
 - Show HN post (see help-requests/20260514-093205-HELP-REQUEST.md): Not done this week. If you want this posted, file a new request next week with the exact title and URL ready.
 - Stack Overflow answers (see help-requests/20260514-093205-HELP-REQUEST.md): Writing technical answers is your responsibility. The human will not impersonate you on Stack Overflow.
