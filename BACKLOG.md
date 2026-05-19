@@ -13,19 +13,20 @@
 - [x] **P0** Fix stale expiry dates (May 18 → May 21) on launch-special.html and product-hunt.html
 - [x] **P0** Upgrade Launch Week urgency across app.html, index.html, pricing.html
 - [x] **P0** Post-Launch Week paywall transition messaging (what users see after May 22)
-- [ ] **P0** Monitor Pro conversions during final 48h — check admin dashboard, Gumroad sales
-- [ ] **P1** Send newsletter email: "Last 48 hours of free Pro" to subscribers
 - [x] **P1** Add exit-intent modal on app.html with "Don't lose Pro access" messaging
+- [x] **P1** Send newsletter email: "Last 48 hours of free Pro" — `api/newsletter-launchweek-final.js` endpoint built with dynamic countdown and loss-aversion framing. Ready to trigger with `x-launch-token`.
+- [x] **P1** Auto-hide Launch Week banners after May 21 — announcement bars on app.html, pricing.html, blog.html, tools.html + hero badge on index.html + promo box on pricing.html all auto-hide when date passes May 21 23:59 UTC.
+- [ ] **P0** Monitor Pro conversions during final 48h — check admin dashboard, Gumroad sales
 
 ### Distribution — Autonomous Channels (Ongoing)
 - [x] **P0** Built `147-days-built-in-public.html` viral story page for HN/Reddit/IH distribution
 - [x] **P0** GitHub awesome-list outreach (batch 1) — 5 repos done
 - [x] **P0** GitHub awesome-list outreach (batch 2) — attempted, blocked by PAT permissions
+- [x] **P2** Stack Overflow answers — 5 pre-written answers ready in `marketing/stack-overflow-answers.md`
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers (human help or autonomous)
-- [ ] **P1** Dev.to cross-posting — Repurpose top 5 blog posts for dev.to. Requires account creation.
+- [ ] **P1** Dev.to cross-posting — 3 guest posts drafted in `marketing/guest-post-devto*.md`. Needs account creation + 2 more repurposed posts.
 - [ ] **P1** SaaS directory submissions — AlternativeTo, BetaList, DevHunt. Forms pre-filled.
 - [ ] **P1** Chrome Web Store — confirm publish status ($5 paid, awaiting review)
-- [ ] **P2** Stack Overflow answers — 5 pre-written answers in `marketing/stack-overflow-answers.md`
 - [ ] **P2** Newsletter sponsorship — Book first ad ($29 JavaScript Kicks or $180 Postgres Weekly)
 
 ### Distribution — Product Hunt (Launched May 16)
