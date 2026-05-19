@@ -16,7 +16,7 @@
 - [x] **P1** Add exit-intent modal on app.html with "Don't lose Pro access" messaging
 - [x] **P1** Auto-hide Launch Week banners after May 21
 - [ ] **P0** Monitor Launch Week exit: watch for Gumroad sales spike or drop on May 22–23
-- [ ] **P1** Build re-engagement campaign for users who hit the paywall after free Pro ends
+- [x] **P1** Build re-engagement campaign for users who hit the paywall after free Pro ends
 
 ### Critical Bug Fixes — CI/CD Funnel
 - [x] **P0** Fix broken GitHub Action repo references (`jochenboele/schemalens` → `aimadetools/race-kimi`)

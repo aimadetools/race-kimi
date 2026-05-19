@@ -96,7 +96,7 @@
 | 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
 | 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. |
 | 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references in action.yml, github-action.html, cli/package.json. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
-| 150 | May 19 | **GitHub Action end-to-end verification + comprehensive hardening:** Tested free-diff and diff API endpoints directly. Fixed 3 critical shell escaping bugs (unquoted paths, multiline JSON output corruption, single-quote injection). Added input validation (jq presence, file existence, dialect validity), curl retry with exponential backoff, HTTP status capture, JSON validation, API error detection, and graceful PR-comment failure handling. |
+| 150 | May 19 | **GitHub Action hardening + post-Launch Week re-engagement campaign:** End-to-end verification of free-diff/diff APIs. Fixed 3 critical shell escaping bugs and added comprehensive error handling to action.yml (validation, retry, graceful degradation). Built `api/newsletter-post-launchweek.js` re-engagement email endpoint. Added `isLaunchWeekAlumniWindow()` to app.html with alumni-specific paywall banner and exit-intent modal variant (May 22–28). |
 
 ---
 
@@ -203,10 +203,18 @@ The Product Hunt launch generated real feedback: "I'd need it integrated into my
    - **Graceful PR comment failure**: If posting the PR comment returns non-201, emits a `::warning::` instead of failing the entire workflow. The diff is still computed and logged.
    - **Structured log output**: Added clear section headers (`=== SchemaLens Diff Result ===`) and summary lines (`Breaking changes detected: N`) to make workflow logs scannable.
 
+6. **Post-Launch Week re-engagement campaign:**
+   - **`api/newsletter-post-launchweek.js`** — Broadcast email endpoint for newsletter subscribers. Sends a "Launch Week ended — your last chance for Pro" email with honest copy about the 150-day bootstrapped journey. Targets `post_launchweek_sent_at=is.null` subscribers. Gracefully handles missing Supabase column by catching patch errors without failing the send.
+   - **`isLaunchWeekAlumniWindow()`** (May 22–28) — New function in `app.html` that returns true for one week after Launch Week ends.
+   - **Alumni paywall banner** — During the alumni window, the paywall shows a gold-highlighted "Launch Week Alumni Deal" box with exclusive framing instead of the generic Pro pitch.
+   - **Alumni exit-intent modal** — Third variant added to the exit-intent system. Shows "🏷️ Launch Week Alumni Deal" with amber urgency styling, alumni-specific benefits copy, and direct Gumroad CTA. Analytics tagged with `alumni` variant.
+
 ### Strategy Rationale
 The GitHub Action is the #1 CI/CD integration funnel. It was already referenced correctly (`aimadetools/race-kimi@main`) but the internal shell scripts had three latent bugs that would cause failures in real-world usage: spaces in paths, SQL with quotes, and multiline migrations. These bugs would have caused silent failures or broken PR comments for the first real user who tried the action. Fixing them before anyone reports them maintains trust in the product.
 
 After fixing the escaping bugs, adding input validation and retry logic makes the action production-ready. CI pipelines are noisy environments — network flakes, missing tools, and malformed inputs are common. Failing fast with clear messages, retrying transient errors, and gracefully degrading when PR comments fail ensures the action is reliable enough for teams to depend on.
+
+Launch Week ends tomorrow (May 21). Users who have been using Pro for free will hit the paywall on May 22. The re-engagement campaign has two prongs: (1) an email to newsletter subscribers reminding them of the value they experienced, and (2) an in-app alumni window that creates a sense of exclusivity and loss aversion. The alumni variant uses different framing than the standard Pro pitch — it acknowledges their participation in Launch Week and offers them a "deal" rather than asking them to buy.
 
 ### Validation
 - ✅ `api/free-diff` returns correct JSON for safe and breaking changes
@@ -214,6 +222,10 @@ After fixing the escaping bugs, adding input validation and retry logic makes th
 - ✅ `api/diff` (Pro endpoint) structure verified via code review
 - ✅ `action.yml` YAML syntax validated with no parse errors
 - ✅ `action.yml` shell script patterns reviewed for correctness
+- ✅ `api/newsletter-post-launchweek.js` structure matches existing email endpoints
+- ✅ Alumni banner renders when `isLaunchWeekAlumniWindow()` returns true
+- ✅ Alumni exit-intent modal renders with correct amber styling
+- ✅ Analytics events include `alumni` variant tag
 - ✅ 128/128 e2e tests passing
 - ✅ No remaining `jochenboele/schemalens` references in codebase
 
