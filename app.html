@@ -1458,6 +1458,12 @@
     if (b) b.style.display = 'none';
     localStorage.setItem('launchWeekBannerDismissed', Date.now().toString());
   }
+  function isLaunchWeek() {
+    const now = new Date();
+    const start = new Date('2026-05-14T00:00:00Z');
+    const end = new Date('2026-05-21T23:59:59Z');
+    return now >= start && now <= end;
+  }
   (function() {
     if (!isLaunchWeek()) return;
     if (localStorage.getItem('launchWeekBannerDismissed')) {
@@ -2160,27 +2166,8 @@ DROP TABLE audit_logs;</code></pre>
 
   <!-- Exit Intent Modal -->
   <div class="modal-overlay exit-intent-modal" id="exitIntentModal">
-    <div class="modal">
-      <h3>🚀 Don't leave your migration half-done</h3>
-      <p class="subtitle">You just spotted schema changes. Now get the full migration script — no manual typing, no missed columns.</p>
-      <div class="exit-intent-benefits">
-        <ul>
-          <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
-          <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
-          <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
-          <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
-          <li><strong>Shareable diff links</strong> — send schema reviews to your team in one click</li>
-        </ul>
-      </div>
-      <div class="exit-intent-price" style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">⚡ Lifetime Pro: $39 once</div>
-        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Or $49/yr · $39 lifetime — cancel anytime · 14-day money-back guarantee</div>
-      </div>
-      <div class="modal-actions" style="justify-content:center;">
-        <button class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;" onclick="closeExitIntentModal(); openLicenseModal();">🔓 Unlock Pro Now</button>
-        <a class="btn btn-secondary" href="pricing.html" onclick="closeExitIntentModal()">View Pricing</a>
-      </div>
-      <button class="exit-intent-dismiss" onclick="dismissExitIntentModal()">No thanks, I'll keep the free version</button>
+    <div class="modal" id="exitIntentModalContent">
+      <!-- Variant injected by JS based on isLaunchWeek() -->
     </div>
   </div>
 
@@ -9003,27 +8990,94 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
 // Exit Intent Popup
 (function setupExitIntent() {
   const modal = document.getElementById('exitIntentModal');
-  if (!modal) return;
+  const content = document.getElementById('exitIntentModalContent');
+  if (!modal || !content) return;
 
-  // Don't show if user has Pro
-  if (localStorage.getItem('schemalens_license')) {
-    const key = localStorage.getItem('schemalens_license');
-    if (validateLicenseKey(key)) return;
-  }
+  // Don't show if user already has Pro (license or trial)
+  if (isProUnlocked()) return;
+
+  const now = Date.now();
+  const THREE_DAYS = 1000 * 60 * 60 * 24 * 3;
+  const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7;
+
+  // If explicitly dismissed, respect for 7 days
+  const dismissedAt = localStorage.getItem('schemalens_exit_intent_dismissed_at');
+  if (dismissedAt && (now - parseInt(dismissedAt, 10)) < SEVEN_DAYS) return;
 
   // Frequency capping: once per 3 days
   const lastShown = localStorage.getItem('schemalens_exit_intent_shown');
-  const now = Date.now();
-  const THREE_DAYS = 1000 * 60 * 60 * 24 * 3;
   if (lastShown && (now - parseInt(lastShown, 10)) < THREE_DAYS) return;
 
   let shown = false;
 
+  function getLaunchWeekCountdownText() {
+    const end = new Date('2026-05-21T23:59:59Z');
+    const diff = end - Date.now();
+    if (diff <= 0) return 'ended';
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const d = Math.floor(h / 24);
+    const remH = h % 24;
+    if (d > 0) return `${d}d ${remH}h`;
+    return `${h}h`;
+  }
+
+  function buildModalContent() {
+    const launchWeek = isLaunchWeek();
+    if (launchWeek) {
+      return `
+        <h3>⏰ Don't Lose Your Free Pro Access</h3>
+        <p class="subtitle">Launch Week ends in <strong style="color:var(--danger);">${getLaunchWeekCountdownText()}</strong>. After May 21, Pro features go back behind the paywall.</p>
+        <div class="exit-intent-benefits">
+          <ul>
+            <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
+            <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
+            <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
+            <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
+            <li><strong>Shareable diff links</strong> — send schema reviews to your team in one click</li>
+          </ul>
+        </div>
+        <div class="exit-intent-price" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
+          <div style="font-size:1.15rem;font-weight:700;color:var(--danger);">🔒 Lock in Pro forever — $39 one-time</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Pay once, keep forever. 14-day money-back guarantee.</div>
+        </div>
+        <div class="modal-actions" style="justify-content:center;">
+          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--danger);border-color:var(--danger);" href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_launchweek_cta');">⚡ Claim $39 Lifetime Pro →</a>
+          <button class="btn btn-secondary" onclick="dismissExitIntentModal()">I'll Decide Later</button>
+        </div>
+        <button class="exit-intent-dismiss" onclick="dismissExitIntentModal()">No thanks, I'll use the free version</button>
+      `;
+    }
+    return `
+      <h3>🚀 Don't leave your migration half-done</h3>
+      <p class="subtitle">You just spotted schema changes. Now get the full migration script — no manual typing, no missed columns.</p>
+      <div class="exit-intent-benefits">
+        <ul>
+          <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
+          <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
+          <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
+          <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
+          <li><strong>Shareable diff links</strong> — send schema reviews to your team in one click</li>
+        </ul>
+      </div>
+      <div class="exit-intent-price" style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--success);">⚡ Lifetime Pro: $39 once</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Or $49/yr · $39 lifetime — cancel anytime · 14-day money-back guarantee</div>
+      </div>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;" onclick="closeExitIntentModal(); openLicenseModal();">🔓 Unlock Pro Now</button>
+        <a class="btn btn-secondary" href="pricing.html" onclick="closeExitIntentModal()">View Pricing</a>
+      </div>
+      <button class="exit-intent-dismiss" onclick="dismissExitIntentModal()">No thanks, I'll keep the free version</button>
+    `;
+  }
+
   function showExitIntent() {
     if (shown) return;
     shown = true;
+    content.innerHTML = buildModalContent();
     modal.classList.add('active');
     localStorage.setItem('schemalens_exit_intent_shown', String(now));
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_shown', { variant: isLaunchWeek() ? 'launch_week' : 'standard' });
   }
 
   window.closeExitIntentModal = function() {
@@ -9032,7 +9086,8 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
 
   window.dismissExitIntentModal = function() {
     modal.classList.remove('active');
-    localStorage.setItem('schemalens_exit_intent_dismissed', 'true');
+    localStorage.setItem('schemalens_exit_intent_dismissed_at', String(Date.now()));
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_dismissed', { variant: isLaunchWeek() ? 'launch_week' : 'standard' });
   };
 
   // Desktop: mouse leaving viewport toward top
