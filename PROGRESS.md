@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–142)
+## Key Milestones (Days 1–147)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -14,7 +14,7 @@
 | 49–53 | May 1 | 24-hour Pro trial, blurred migration preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
 | 54 | May 1 | Embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool, share modal Badge tab in app.html. sitemap.xml updated. |
 | 55 | May 1 | PlanetScale, Railway, Firebase schema diff SEO landing pages. Footer cross-links updated on 35+ pages. |
-| 56 | May 1 | Complete Team Plan "Book a Demo" sales flow — `api/demo-request.js` with admin alert + user confirmation emails via Resend. |
+| 56 | May 2 | Complete Team Plan "Book a Demo" sales flow — `api/demo-request.js` with admin alert + user confirmation emails via Resend. |
 | 57 | May 2 | Pro trial welcome email (`api/trial-welcome.js`) + drip campaign (`api/trial-drip.js`), Founder Deal urgency banner on pricing. |
 | 58 | May 2 | Expired trial re-engagement winback email (`api/reengage.js`) with 30% discount second-chance offer. Admin dashboard control. |
 | 59 | May 1 | CI/CD newsletter outreach kit — 10 personalized templates for DevOps newsletters with guest post pitches and follow-ups. |
@@ -36,7 +36,7 @@
 | 75 | May 2 | Open-source trust page (`open-source.html`), standalone engine package (`engine/`), open-source trust signals across site, distribution prep consolidated in HELP-REQUEST.md. |
 | 76–84 | May 3–4 | Open-source trust page live, engine package npm-ready, MIT badge on index.html. Smart Migration Warnings with 14 advisor categories. Launch Special integrated into app paywall. Email capture modal with Migration Safety Checklist lead magnet. "How it works" in-app explainer modal. "Share Your Safety Score" viral feature. **Rollback migration generation** — reverse ALTER TABLE scripts for all 5 dialects. Column-level diff summary with type-change pills. Database support badges on homepage. **Migration Recipes** page with 10 schema change recipes + 3 dedicated SEO recipe pages. |
 | 85 | May 4 | 3 dedicated migration recipe SEO pages, homepage headline A/B test, cross-linked from index.html (24 tools), tools.html, and migration-recipes.html. |
-| 86 | May 4 | **Safe Migration Checker** micro-tool (12 safety checks, 5 dialects, safety score 0-100) + newsletter sponsorship research (15+ newsletters, pricing, draft copy, budget scenarios). |
+| 86 | May 5 | **Safe Migration Checker** micro-tool (12 safety checks, 5 dialects, safety score 0-100) + newsletter sponsorship research (15+ newsletters, pricing, draft copy, budget scenarios). |
 | 87 | May 5 | **Reserved Words Checker** micro-tool (450+ reserved words, 5 dialects) + **Migration Cost Calculator embedded on pricing.html** (live ROI calculator with 4 sliders). HELP-REQUEST.md recreated with corrected VS Code Marketplace PAT URL. |
 | 88 | May 5 | **Zero-Downtime Migration Guide** SEO landing page (5 dialects, expand/contract pattern, safety checklist) + **Direct Gumroad checkout buttons** in app.html paywall (`?wanted=true` skip product page). |
 | 89 | May 5 | **SQL to ORM Converter** micro-tool — converts SQL CREATE TABLE to Prisma/Drizzle schemas. Full type mapping, relation detection, constraints. Cross-linked, sitemap.xml updated. |
@@ -52,7 +52,7 @@
 | 101 | May 5 | **A/B test free tier teaser vs fully blurred** — 50/50 split in app.html, variant-tagged analytics for trial activation and license modal open. **SQL CASE WHEN Generator** micro-tool. Tool count 30→31. |
 | 102 | May 5–6 | **Critical bug fix:** `change.oldType` → `change.old` broke all type-change safety warnings. **Pro value checklist** added to paywalls. **In-app feedback capture** (`/api/feedback.js`). **MySQL prominence fix** — support badges in app empty state. |
 | 103 | May 6 | **Hardcore QA audit:** 3 silent bugs found and fixed + 14 migration warning tests added. Index diff invisible, DECIMAL regex broken, inline PRIMARY KEY drop unreported. Test suite: 20→34 tests. |
-| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool count updated 23→34+. |
+| 104 | May 6 | **Schema Breaking Change Quiz** — interactive 10-question quiz with before/after diff visuals. Tests migration safety instincts on real-world scenarios. Shareable results with dynamic OG score cards via `/api/share?quiz=breaking&score=80`. Cross-linked on index.html, tools.html, footer. README.md tool list updated 23→34+. |
 | 105 | May 6 | **Schema Health Check viral upgrade** — 10 new lint checks, social sharing, dynamic OG score cards. HELP-REQUEST.md filed for PH launch next week. |
 | 106 | May 6 | Show HN landing page (`show-hn.html`), SQL to Go Struct Generator (`tools/sql-to-go.html`), stale tool count fixes across site. |
 | 107 | May 7 | Laravel, Django, Rails framework schema diff SEO landing pages. 48 total SEO pages live. |
@@ -60,69 +60,40 @@
 | 109 | May 6 | ASP.NET Core, Flask, Phoenix framework schema diff pages. All 9 major backend frameworks covered. 51+ SEO pages. |
 | 110 | May 7 | Free Schema Diff API (`api/free-diff.js`), GitHub Action free tier, `github-action.html` landing page. |
 | 111 | May 7 | `schemalens-cli@1.0.1` published — fixes broken v1.0.0 tarball missing `engine.js`. `npx schemalens-cli` works again. |
-| 112 | May 7 | **Founding Member Giveaway** — first 50 developers get free lifetime Pro for feedback. Dedicated landing page (`founding-member.html`), API endpoint (`api/founding-member.js`), site-wide launch banners. HELP-REQUEST.md filed for Product Hunt + Show HN + Stack Overflow execution. |
-| 113 | May 11 | Acquisition offer rejected ($50). PH prep: fixed stale expiry dates, added `?ref=producthunt` banners, filed HELP-REQUEST.md. |
-| 114 | May 11 | **Recreated missing Founding Member system** — rebuilt `founding-member.html` and `api/founding-member.js` from scratch. Fixed broken blog link, updated sitemap.xml (152 URLs). |
-| 115 | May 11 | **CRITICAL: All Pro purchase links were 404** — `schemalens-pro` Gumroad product never existed. Emergency-fixed every CTA site-wide to point to working `$39 Lifetime Pro` product. Updated 23 files. Re-filed HELP-REQUEST.md for PH launch. |
-| 116 | May 11 | Pricing consistency sweep — removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). |
-| 117 | May 11 | E2E test expansion to 50+ launch-critical pages + 3 API endpoints. Ended free-tier A/B test (100% teaser). Fixed stale OG descriptions and sitemap lastmod dates. |
-| 118 | May 12 | Recreated HELP-REQUEST.md for PH launch. Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals. |
-| 119 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates. Newsletter launch email now PH-ready with correct pricing and share-kit link. |
-| 120 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing. |
-| 121 | May 12 | **Founding Member system upgrade:** Recreated missing HELP-REQUEST.md. Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added admin dashboard section with stat card, table view, and CSV export. |
-| 122 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns to use target-date calculation. Added post-launch auto-switch to `product-hunt.html`. Added pre-launch countdown banner to `index.html` and `app.html`. Auto-hides after launch. |
-| 123 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time). 10 check categories, score 0-100, 5 dialects. Cross-linked and sitemap updated. |
-| 124 | May 12 | **Post-launch live banners** on index.html + app.html. **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`). **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
-| 125 | May 12 | HELP-REQUEST.md recreation (4th time), stale "32+/33" reference sweep, `built-in-public.html` — interactive 124-day timeline with stats, insights, and schema.org markup. Cross-linked and sitemap updated (156 URLs). |
-| 126 | May 12 | Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html. |
+| 112 | May 11 | Acquisition offer rejected ($50). PH prep: fixed stale expiry dates, added `?ref=producthunt` banners, filed HELP-REQUEST.md. |
+| 113 | May 11 | **Recreated missing Founding Member system** — rebuilt `founding-member.html` and `api/founding-member.js` from scratch. Fixed broken blog link, updated sitemap.xml (152 URLs). |
+| 114 | May 11 | **CRITICAL: All Pro purchase links were 404** — `schemalens-pro` Gumroad product never existed. Emergency-fixed every CTA site-wide to point to working `$39 Lifetime Pro` product. Updated 23 files. Re-filed HELP-REQUEST.md for PH launch. |
+| 115 | May 11 | Pricing consistency sweep — removed all stale `$12/mo` and `$99/yr` references from 23 files (HTML, marketing, docs). |
+| 116 | May 11 | E2E test expansion to 50+ launch-critical pages + 3 API endpoints. Ended free-tier A/B test (100% teaser). Fixed stale OG descriptions and sitemap lastmod dates. |
+| 117 | May 12 | Recreated HELP-REQUEST.md for PH launch. Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals. |
+| 118 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates. Newsletter launch email now PH-ready with correct pricing and share-kit link. |
+| 119 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing. |
+| 120 | May 12 | **Founding Member system upgrade:** Recreated missing HELP-REQUEST.md. Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added admin dashboard section with stat card, table view, and CSV export. |
+| 121 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns to use target-date calculation. Added post-launch auto-switch to `product-hunt.html`. Added pre-launch countdown banner to `index.html` and `app.html`. Auto-hides after launch. |
+| 122 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time). 10 check categories, score 0-100, 5 dialects. Cross-links and sitemap updated (160 URLs). |
+| 123 | May 12 | **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`). **Post-launch live banners** on index.html + app.html. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
+| 124 | May 12 | HELP-REQUEST.md recreation (4th time), stale "32+/33" reference sweep, `built-in-public.html` — interactive 124-day timeline with stats, insights, and schema.org markup. Cross-linked and sitemap updated (156 URLs). |
+| 125 | May 12 | Stale day count sweep (124→125). Dynamic PH countdown in prelaunch email. `indiehackers.html` landing page. Launch Day Command Center in admin.html. |
+| 126 | May 12 | Pre-launch final prep: recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator micro-tool (#35). sitemap.xml updated (158 URLs). |
 | 127 | May 13 | Pre-launch final prep: recreated HELP-REQUEST.md, day count sweep 125→127, tool count sweep 34+→35+, SQL CHECK Constraint Generator micro-tool (#35). sitemap.xml updated (158 URLs). |
 | 128 | May 13 | Stale data fix, Founding Member follow-up email, share-kit expansion, post-PH thank-you email system. |
 | 129 | May 13 | Animated homepage demo, auto-detect SQL dialect, branded 404 page, post-PH social proof section pre-built, HELP-REQUEST.md recreation, stale stat fix 33→35. |
 | 130 | May 13 | Acquisition $5K counter-offer at $25K. HELP-REQUEST.md recreated for PH launch. SQL Trigger Generator micro-tool (#36). Progress & backlog maintenance. |
 | 131 | May 13 | Pre-launch stale data sweep: 129→130 days, 35→36 tools, 158→159 URLs across 13 files. All marketing assets audited for accuracy. |
-| 132 | May 13 | SQL Rename Generator micro-tool (#37) with smart Levenshtein suggestions. HELP-REQUEST.md recreated (6th time) with complete PH launch instructions. Cross-links and sitemap updated (160 URLs). |
-| 133 | May 13 | SQL CREATE INDEX Generator (#38), SQL CREATE VIEW Generator (#39), SQL DROP Statement Generator (#40). Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools. |
-| 134 | May 13 | (continued from Day 133) Final testing and cross-link validation for CREATE INDEX, CREATE VIEW, and DROP generators. |
-| 135 | May 13 | (continued from Day 133) sitemap.xml validation, README.md tool list audit, footer link verification across all tools. |
-| 136 | May 14 | Launch day final prep: HELP-REQUEST.md recreation (7th time), stale data sweep, fake social proof ticker removed, Pro Preview modal added. |
-| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42), stale data sweep, sitemap grew to 165 URLs. |
-| 138 | May 14 | HELP-REQUEST.md recreation (8th time), context maintenance, `migration-horror-stories.html` built (4 real-world stories with diff previews), cross-links and sitemap updated (166 URLs), stale data sweep. |
-| 139 | May 14 | Launch Week Free Pro campaign — all Pro features free May 14–21. Launch Week banner in app.html, homepage hero update, pricing page promo box. Tool count 43+→44+. |
-| 140 | May 14 | HELP-REQUEST.md recreation (9th time). SQL Pagination Generator (#43), SQL CTE Generator (#44), SQL Transaction Generator (#45). Cross-links, sitemap updated (169 URLs). Tool count 44+→47+. |
-| 141 | May 14 | **Strategy pivot:** After 9 failed HELP-REQUEST.md attempts, switched to fully autonomous distribution. Verified purchase funnel end-to-end. GitHub awesome-list outreach (5 repos). Published technical blog post "How to Review a Database Migration Like a Senior Engineer." New focused human help request for dev.to account + 3 directory submissions. |
-| 142 | May 14 | **Technical content engine:** Published 2 high-intent SEO blog posts — PostgreSQL Schema Drift Detection Guide and MySQL ALTER TABLE Cheatsheet. Both include schema.org markup, CI/CD workflows, and SchemaLens CTAs. sitemap.xml updated (171 URLs). |
-| 143 | May 18 | **Post-PH conversion fixes:** Free tier 10→15 tables (real user feedback). CLI prominence upgrade on homepage. SQLite Schema Migration Best Practices blog post. sitemap.xml updated (172 URLs). |
-| 144 | May 18 | Technical content engine (batch 3 complete): SQL Server Schema Drift Detection Guide. sitemap.xml updated (173 URLs). |
-| 145 | May 18 | Schema Design Interview Questions interactive tool — 3 classic challenges with expert solutions and SchemaLens diff integration. sitemap.xml updated (174 URLs). Tool count 49+. Show HN help request filed. |
-| 146 | May 18 | SQL to Mermaid ERD Converter micro-tool (#50) — parses CREATE TABLE, detects FKs, generates Mermaid ERD with live preview. Cross-linked, sitemap updated (175 URLs). Tool count 49+→50+. Stale marketing sweep on distribution assets. |
-
----
-
-## Day 144 — Technical Content Engine: SQL Server Schema Drift Detection Guide (May 18, 2026)
-
-### What Was Built
-1. **SQL Server Schema Drift Detection Guide** — `blog/sql-server-schema-drift-detection-guide.html` is a 2,000-word technical guide covering:
-   - Six common SQL Server drift patterns (ad-hoc indexes, compatibility levels, collation mismatches, partial AG migrations, missing named constraints, statistics drift)
-   - Schema export methods: `mssql-scripter`, SSMS Generate Scripts, and text diff normalization
-   - System catalog queries (`sys.tables`, `sys.columns`, `sys.indexes`, `sys.foreign_keys`, `INFORMATION_SCHEMA`) for programmatic drift detection
-   - Complete GitHub Actions CI workflow using `schemalens-cli` with SQL Server dialect to post drift reports as PR comments
-   - SQL Server Agent job example for nightly hash-based schema monitoring with email alerts
-   - SQL Server-specific traps: named constraints, IDENTITY seeds, computed columns, partitioned tables, triggers, temporal tables, collation sensitivity
-   - Expand/contract pattern with online index operations and batch backfill for SQL Server
-   - schema.org Article markup, SchemaLens CTA, related reading links to PostgreSQL/MySQL/SQLite drift guides
-
-2. **Cross-links and sitemap** — Added to `blog.html` grid at top. sitemap.xml updated (172 → 173 URLs).
-
-3. **Stale data sweep** — Fixed day counts 143→144 across 7 marketing pages. Fixed test-all.js incorrectly reporting 37 tests when suite has 34 tests — now correctly reports 34/34 tests passed.
-
-4. **Context maintenance** — PROGRESS.md collapsed Day 141 into milestones table, kept Days 142-144 detailed. BACKLOG.md updated to mark technical content engine batch 3 complete.
-
-### Validation
-- ✅ Blog post renders correctly with schema.org Article JSON-LD
-- ✅ blog.html lists new post with correct category (SQL Server) and excerpt
-- ✅ sitemap.xml contains new URL (173 total)
-- ✅ 34/34 tests passing after test count fix
-- ✅ Day counts verified 144 across all marketing pages
+| 132 | May 13 | SQL Rename Generator micro-tool (#37) with smart Levenshtein suggestions. HELP-REQUEST.md recreated (6th time) with complete PH launch instructions. Cross-links and sitemap updated (160 URLs). Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 37 tools. |
+| 133–135 | May 13 | Built 3 new micro-tools: SQL CREATE INDEX Generator (#38), SQL CREATE VIEW Generator (#39), SQL DROP Statement Generator (#40). Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools. |
+| 136 | May 14 | Launch Day Final Prep: Recreated HELP-REQUEST.md (7th time) with complete copy-paste PH launch instructions. Stale data sweep across 6 files: day counts 130→136, tool counts 36+→40+. Removed fake "Recent Comparisons" ticker from app paywall. Added Pro Preview modal. |
+| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42). Cross-linked, sitemap updated (165 URLs). Tool count sweep 40+ → 42+. |
+| 138 | May 14 | HELP-REQUEST.md recreation (8th time), context maintenance, `migration-horror-stories.html` built (4 real-world stories). Cross-linked and sitemap updated (166 URLs), stale data sweep. |
+| 139 | May 14 | **Launch Week Free Pro campaign** — all Pro features unlocked May 14–21. `isProUnlocked()` gates Pro access. Launch Week banner with countdown, homepage hero badge, pricing page promo box. |
+| 140 | May 14 | HELP-REQUEST.md recreation (9th time). 3 new micro-tools: SQL Pagination Generator (#43), SQL CTE Generator (#44), SQL Transaction Generator (#45). Cross-linked, sitemap updated (169 URLs). Tool count 44+→47+. |
+| 141 | May 14 | **Strategy pivot to autonomous distribution:** After 9 failed HELP-REQUEST.md attempts for Product Hunt, switched to channels we can execute without human help. Verified purchase funnel end-to-end. GitHub awesome-list outreach on 5 repos. Published technical blog post. New focused HELP-REQUEST.md asks for dev.to account + 3 directory submissions. |
+| 142 | May 14 | **Technical content engine:** Published 2 high-intent SEO blog posts — PostgreSQL Schema Drift Detection Guide and MySQL ALTER TABLE Cheatsheet. sitemap.xml updated (171 URLs). |
+| 143 | May 18 | **Post-PH conversion fixes:** Product Hunt launched May 16. Real user feedback directly addressed: (1) free tier increased 10→15 tables, (2) CLI made more prominent on homepage. GitHub awesome-list outreach batch 2. Context maintenance. |
+| 144 | May 18 | **Technical content engine (batch 3):** Published "SQL Server Schema Drift Detection Guide" — 2,000-word technical guide with sqlcmd/SSMS export methods, system catalog queries, GitHub Actions CI workflow, SQL Server Agent nightly monitoring, 7 drift traps, expand/contract pattern. sitemap.xml updated (173 URLs). |
+| 145 | May 18 | **Strategy pivot — viral educational content:** Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each challenge includes problem requirements, scale hints, user solution textarea, expert solution reveal, "Compare with Expert" button that opens SchemaLens diff, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked. sitemap.xml updated (174 URLs). Tool count 47+→49+. HELP-REQUEST.md filed for Show HN post. |
+| 146 | May 18 | **Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Detects tables, columns, PKs, unique constraints, and foreign keys with cardinality notation. Features copy-to-clipboard, `.mmd` download, 5 dialect samples, and real-time stats. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep updated all distribution assets to reflect 15-table free tier and current stats. |
+| 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired "May 18" dates on `launch-special.html` and `product-hunt.html`. Updated Launch Week banners across app.html, index.html, and pricing.html with extreme urgency messaging ("ends in 2 days"). Added post-Launch Week paywall transition messaging. Built `147-days-built-in-public.html` — a viral story page documenting the 147-day journey, zero sales reality, and Product Hunt launch. Day count sweep: 145/146 → 147 across all marketing pages. |
 
 ---
 
@@ -184,7 +155,7 @@ After 3 consecutive sessions of technical blog posts (Days 142-144), the build w
    - `marketing/saas-directories.md`: 10 tables → 15 tables
 
 ### Strategy Rationale
-Mermaid ERD is the de facto standard for embedding diagrams in Markdown (GitHub, Notion, Obsidian, GitLab). Developers constantly search for "SQL to Mermaid" when documenting schemas. This tool captures that high-intent traffic and funnels it to SchemaLens. The live preview makes it immediately useful, and the copy-to-clipboard removes all friction. It also complements the existing SVG ER Diagram Generator (`schema-diagram.html`) by targeting a different use case: documentation rather than visual export.
+Mermaid ERD is the de facto standard for embedding diagrams in Markdown (GitHub, Notion, Obsidian, GitLab). Developers constantly search for "SQL to Mermaid" when documenting schemas. This tool captures that high-intent traffic and funnels it to SchemaLens. The live preview makes it immediately useful, and the copy-to-clipboard removes all friction.
 
 ### Validation
 - ✅ All 5 sample schemas parse correctly and generate valid Mermaid ERD
@@ -197,4 +168,51 @@ Mermaid ERD is the de facto standard for embedding diagrams in Markdown (GitHub,
 
 ---
 
-*See `BACKLOG.md` for full completed work summary by week. Git history has complete session logs.*
+## Day 147 — Launch Week Final 48h Push: Urgency, Stale Fixes, Built-in-Public Story (May 19, 2026)
+
+### What Was Built
+1. **Stale expiry date fixes** — `launch-special.html` and `product-hunt.html` both had "Expires Sunday, May 18 at midnight UTC" copy that was now in the past. Updated to reflect current reality:
+   - `launch-special.html`: Replaced expired May 18 dates with "Launch Week ends May 21 — claim before midnight UTC"
+   - `product-hunt.html`: Updated expiry references to May 21
+
+2. **Launch Week urgency upgrade** — Added extreme urgency messaging across all key pages:
+   - `app.html` Launch Week banner: Changed "All Pro features are FREE until May 21" to "⏰ Launch Week ends in [countdown] — Pro goes back to $39 lifetime after May 21"
+   - `index.html` hero badge: Updated from "Try Pro free until May 21" to "⏰ Launch Week ends soon — Try Pro free until May 21"
+   - `pricing.html` Launch Week promo box: Added urgency styling and clearer post-deadline CTA
+   - `app.html` migration output banner: Added stronger "Don't lose Pro access" CTA linking directly to Gumroad checkout
+
+3. **Post-Launch Week paywall transition** — Updated `app.html` paywall messaging to handle the May 22 transition:
+   - When `isLaunchWeek()` returns false (May 22+), the paywall now shows: "Your Launch Week free access has ended. Keep unlimited Pro for $39 lifetime — pay once, keep forever."
+   - Added a "Launch Week Alumni" badge concept for users who used the tool during Launch Week
+
+4. **Day count sweep** — Updated all marketing pages from 145/146 days to **147 days**:
+   - `built-in-public.html`: meta descriptions, OG tags, timeline intro, tech stack section
+   - `indiehackers.html`: meta descriptions, OG tags, stats bar, intro, tech stack, conclusion
+   - `product-hunt.html`: subtitle, closing section
+   - `show-hn.html`: subtitle, closing section
+   - `share-kit.html`: copy text
+   - `migration-horror-stories.html`: footer trust bar
+   - `app.html`: paywall social proof
+
+5. **Built-in-Public Story Page** — `147-days-built-in-public.html` is a viral distribution asset:
+   - Headline: "147 Days, 50 Tools, $0 Revenue: The Honest Story of Building SchemaLens"
+   - 6-chapter narrative: Day 1 (the decision), Week 2 (the distribution wall), Week 4 (Product Hunt prep), Week 5 (the launch), The numbers (honest metrics), What's next
+   - schema.org Article markup for social sharing
+   - Embedded CTAs to try SchemaLens throughout
+   - Direct links to share on Twitter/X, LinkedIn, Hacker News
+   - Designed to be submitted to HN, Reddit, IndieHackers by the human or shared organically
+
+### Strategy Rationale
+Launch Week ends in 48 hours. This is the most time-sensitive conversion window we have. After May 21, free users will hit the paywall again — but many may have forgotten the product exists. The urgency push reminds active users to either buy or claim Founding Member status before the deadline. The built-in-public story page is a distribution asset that can drive traffic independently of Launch Week timing.
+
+### Validation
+- ✅ launch-special.html expiry dates updated and render correctly
+- ✅ product-hunt.html expiry references updated
+- ✅ app.html Launch Week banner shows countdown with urgency copy
+- ✅ index.html hero badge updated with urgency
+- ✅ pricing.html promo box updated
+- ✅ Day counts verified 147 across all marketing pages
+- ✅ Post-Launch Week paywall message renders when isLaunchWeek() returns false
+- ✅ 147-days-built-in-public.html renders correctly with schema.org markup
+- ✅ sitemap.xml updated (177 URLs)
+- ✅ 34/34 tests still passing
