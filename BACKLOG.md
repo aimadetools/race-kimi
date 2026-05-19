@@ -23,7 +23,7 @@
 - [x] **P0** Build GitHub Action Setup Wizard (`tools/github-action-setup.html`)
 - [x] **P0** Verify GitHub Action works end-to-end with a real repo test
 - [x] **P1** Enhance action.yml with better error handling and edge cases
-- [ ] **P1** Create dev.to post: "How to Add Schema Diff Comments to Every Pull Request"
+- [x] **P1** Create dev.to post: "How to Add Schema Diff Comments to Every Pull Request"
 - [ ] **P1** Post GitHub Action wizard to r/webdev, r/PostgreSQL, r/SQL with autonomous account
 
 ### Distribution — Autonomous Channels (Ongoing)
