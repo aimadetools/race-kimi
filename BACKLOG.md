@@ -9,35 +9,38 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 151 Days (CRITICAL)
+### Distribution — Zero Sales After 155 Days (CRITICAL)
 - [x] **P0** Make Founding Member program a distribution engine — require share/tweet/post in exchange for free Pro
 - [x] **P0** Promote Founding Member program prominently in app paywall, exit-intent, homepage, pricing
 - [x] **P0** Build ready-to-post Reddit copies for r/PostgreSQL, r/MySQL, r/webdev, r/devops, r/SQL
 - [x] **P0** Build SaaS directory submission kit (AlternativeTo, DevHunt, BetaList, SaaSHUB)
-- [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — use new account or existing)
+- [x] **P1** Publish dev.to guest post on GitHub Action schema diff (human published: 2 reactions, 45 views)
+- [x] **P1** Set up Google Search Console (meta tag added, human provided verification code)
+- [x] **P1** Publish "SQLite Schema Drift Detection Guide" blog post
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (HELP-REQUEST.md filed, awaiting human)
+- [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
-- [ ] **P1** Publish dev.to guest post on GitHub Action schema diff (human help for account, or create account)
 - [ ] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
 - [ ] **P2** IndieHackers post with built-in-public story
-- [ ] **P2** Newsletter sponsorship — Book first ad ($29 JavaScript Kicks or $180 Postgres Weekly)
+- [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
 - [x] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
 - [x] **P0** Test lower price point ($19) via new Gumroad product experiment — all CTAs updated, Gumroad product metadata ready, HELP-REQUEST.md filed
-- [x] **P1** Add email capture to Pro trial — **DONE:** Email capture modal exists in app.html (shows after first diff, offers Migration Safety Checklist). Trial email input also captures leads.
-- [ ] **P1** Build "Team Schema Audit" landing page for B2B leads
+- [x] **P1** Add email capture to Pro trial
+- [x] **P1** Build "Team Schema Audit" landing page for B2B leads
 - [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
 
 ### Operations
-- [x] **P0** Monitor Launch Week exit (May 22–23): watch Gumroad sales, app usage, feedback
+- [x] **P0** Monitor Launch Week exit (May 22–23)
 - [x] **P0** Execute Launch Week exit: alumni banner active May 22–28, re-engagement email ready
-- [x] **P0** Fix stale Launch Week banner on index.html (dynamic date-aware script handles all 3 phases)
+- [x] **P0** Fix stale Launch Week banner on index.html
 - [ ] **P0** Monitor Product Hunt comments and respond via admin.html
-- [ ] **P1** Set up Google Search Console (human help for verification code)
-- [ ] **P2** Review analytics: which keywords/pages drive traffic?
+- [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
 ### Content
-- [ ] **P1** Publish "SQLite Schema Drift Detection Guide" blog post
+- [x] **P1** Publish "SQLite Schema Drift Detection Guide" blog post
+- [ ] **P1** Publish "MySQL Schema Drift Detection Guide" blog post (completes the big-5 drift guide series)
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -89,6 +92,9 @@ Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal up
 ### Days 152–154 (May 19–20)
 Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes. $19 price experiment with auto-revert logic. Community feedback execution: "Staging vs Production" quick example in app.html, live GitHub Action demo workflow in repo, github-action.html live demo section. HELP-REQUEST.md filed for GSC + dev.to.
 
+### Day 155 (May 20)
+GSC verification meta tag added to index.html. Fixed `.gitignore` to track GitHub Action demo workflow. Published "SQLite Schema Drift Detection Guide" blog post (2,000 words, schema.org markup, cross-linked, sitemap updated to 180 URLs). Filed HELP-REQUEST.md for JavaScript Kicks $29 newsletter sponsorship booking.
+
 ---
 
-*Backlog reprioritized May 20, 2026. Zero sales after 154 days. Distribution is the sole bottleneck. Product is complete — we need traffic and backlinks.*
+*Backlog reprioritized May 20, 2026. Zero sales after 155 days. Distribution is the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*

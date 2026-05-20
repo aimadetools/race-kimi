@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SQLite Schema Drift Detection: A Complete Guide — SchemaLens</title>
+  <meta name="description" content="Learn how to detect, prevent, and fix SQLite schema drift. Step-by-step guide with .schema dumps, sqlite_schema queries, and CI automation for mobile, desktop, and embedded teams.">
+  <meta property="og:title" content="SQLite Schema Drift Detection: A Complete Guide">
+  <meta property="og:description" content="Learn how to detect, prevent, and fix SQLite schema drift. Step-by-step guide with .schema dumps, sqlite_schema queries, and CI automation for mobile, desktop, and embedded teams.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/sqlite-schema-drift-detection-guide.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SQLite Schema Drift Detection: A Complete Guide",
+  "description": "Learn how to detect, prevent, and fix SQLite schema drift. Step-by-step guide with .schema dumps, sqlite_schema queries, and CI automation for mobile, desktop, and embedded teams.",
+  "url": "https://schemalens.tech/blog/sqlite-schema-drift-detection-guide.html",
+  "datePublished": "2026-05-20",
+  "dateModified": "2026-05-20",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/sqlite-schema-drift-detection-guide.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .article { max-width: 760px; margin: 0 auto; padding: 48px 0 80px; }
+    .article h1 { font-size: 2.2rem; margin-bottom: 12px; }
+    .article .meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 14px; }
+    .article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; }
+    .article p { line-height: 1.75; margin-bottom: 16px; color: var(--text); }
+    .article ul, .article ol { margin-bottom: 16px; padding-left: 22px; }
+    .article li { margin-bottom: 8px; line-height: 1.65; }
+    .article code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .article pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .article pre code { background: none; padding: 0; }
+    .article blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 16px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .article .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .article .cta-box h3 { margin-bottom: 8px; margin-top: 0; }
+    .article .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+    .checklist {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .checklist li { list-style: none; position: relative; padding-left: 28px; }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    .risk-high { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .risk-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .risk-low { background: rgba(34,197,94,0.15); color: #22c55e; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container article">
+    <h1>SQLite Schema Drift Detection: A Complete Guide</h1>
+    <div class="meta">May 20, 2026 · 10 min read · SchemaLens Team</div>
+
+    <p>SQLite is everywhere. It powers mobile apps, browser extensions, desktop applications, IoT devices, and local development environments. Because it is a file-based database, schema drift in SQLite looks different from PostgreSQL or MySQL — but it is just as dangerous.</p>
+
+    <p>When your app ships with a <code>v1.db</code> and your development environment has a <code>v3.db</code>, users with old database files experience crashes. When your test suite uses an in-memory SQLite database but production uses a file, subtle differences in <code>PRAGMA</code> settings break queries. This is <strong>SQLite schema drift</strong>, and because SQLite has no central server to enforce consistency, the burden of detection falls entirely on your team.</p>
+
+    <h2>What SQLite Schema Drift Looks Like</h2>
+
+    <p>SQLite schema drift is insidious because the database engine is so forgiving. It will happily open a file with an older schema and let your application crash at runtime. Here are the most common patterns:</p>
+
+    <ul>
+      <li><strong>Migration gaps on user devices.</strong> A mobile app user skips two updates and reinstalls. The migration script from version 1 → 3 expects version 2 to exist. The app crashes on launch.</li>
+      <li><strong>Foreign key enforcement mismatch.</strong> One environment runs with <code>PRAGMA foreign_keys = ON</code> while another leaves it off. The same INSERT succeeds in testing and fails in production.</li>
+      <li><strong>Strict table differences.</strong> SQLite 3.37.0 introduced <code>STRICT</code> tables. A developer on a newer SQLite version creates a strict table, but CI or user devices run older versions that cannot parse it.</li>
+      <li><strong>Journal mode divergence.</strong> <code>WAL</code> mode behaves differently than <code>DELETE</code> mode under concurrency. If your test database uses WAL but your Electron app bundles DELETE mode, locking behavior differs silently.</li>
+      <li><strong>Missing <code>IF NOT EXISTS</code> guards.</strong> A <code>CREATE INDEX</code> statement without <code>IF NOT EXISTS</code> fails on the second app launch if the index already exists. This pattern spreads across environments unpredictably.</li>
+    </ul>
+
+    <h2>Method 1: The .schema Diff (Fastest One-Off Check)</h2>
+
+    <p>The quickest way to compare two SQLite databases is to dump their schemas and diff them. This works for any two <code>.db</code> files — a user backup vs your latest build, or your test database vs production export.</p>
+
+    <pre><code># Dump schema from both databases
+sqlite3 prod.db ".schema" > prod.sql
+sqlite3 staging.db ".schema" > staging.sql
+
+# For a more complete dump including indexes and triggers
+sqlite3 prod.db ".schema --indent" > prod.sql</code></pre>
+
+    <p>Now compare them. A text diff is a good start, but SQLite's <code>.schema</code> output order can vary between versions, creating false positives:</p>
+
+    <pre><code># Basic text diff (can be noisy)
+diff prod.sql staging.sql
+
+# Better: normalize with SchemaLens
+# Paste both files into SchemaLens for a semantic diff
+# that ignores statement ordering and whitespace</code></pre>
+
+    <p>For a <strong>semantic diff</strong> that understands tables, columns, indexes, and foreign keys — rather than treating the schema as text — paste both files into <a href="../app.html">SchemaLens</a>. It filters out noise and highlights only the structural changes.</p>
+
+    <h2>Method 2: Query sqlite_schema (Programmatic)</h2>
+
+    <p>SQLite stores all schema metadata in the <code>sqlite_schema</code> table (also accessible as <code>sqlite_master</code>). You can query this directly to build a programmatic drift detector.</p>
+
+    <h3>Compare Tables</h3>
+
+    <pre><code>SELECT name, sql
+FROM sqlite_schema
+WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
+ORDER BY name;</code></pre>
+
+    <h3>Compare Columns</h3>
+
+    <pre><code>SELECT m.name AS table_name,
+       p.name AS column_name,
+       p.type AS data_type,
+       p."notnull" AS is_not_null,
+       p.dflt_value AS default_value
+FROM sqlite_schema m
+JOIN pragma_table_info(m.name) p
+WHERE m.type = 'table' AND m.name NOT LIKE 'sqlite_%'
+ORDER BY m.name, p.cid;</code></pre>
+
+    <h3>Compare Indexes</h3>
+
+    <pre><code>SELECT m.name AS index_name,
+       m.tbl_name AS table_name,
+       m.sql AS index_definition
+FROM sqlite_schema m
+WHERE type = 'index' AND name NOT LIKE 'sqlite_autoindex_%'
+ORDER BY m.tbl_name, m.name;</code></pre>
+
+    <h3>Compare Foreign Keys</h3>
+
+    <pre><code>SELECT m.name AS table_name,
+       p."from" AS column_name,
+       p."table" AS references_table,
+       p."to" AS references_column
+FROM sqlite_schema m
+JOIN pragma_foreign_key_list(m.name) p
+WHERE m.type = 'table' AND m.name NOT LIKE 'sqlite_%'
+ORDER BY m.name, p.id, p.seq;</code></pre>
+
+    <p>Export these queries from both databases and diff the results. This approach is deterministic and easy to automate in a CI pipeline or an in-app health check.</p>
+
+    <h2>Method 3: Automated Drift Detection in CI/CD</h2>
+
+    <p>For teams shipping SQLite in desktop or mobile apps, schema drift should be caught before release. Here is a minimal GitHub Actions workflow that diffs your canonical schema against the schema generated by your migration scripts:</p>
+
+    <pre><code>name: SQLite Schema Drift Check
+
+on:
+  pull_request:
+    paths:
+      - 'migrations/**'
+      - 'schema.sql'
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SQLite
+        run: sudo apt-get update && sudo apt-get install -y sqlite3
+
+      - name: Build database from migrations
+        run: |
+          sqlite3 built.db < migrations/init.sql
+          for f in migrations/*.sql; do
+            sqlite3 built.db < "$f"
+          done
+          sqlite3 built.db ".schema --indent" > built.sql
+
+      - name: Diff against canonical schema
+        run: |
+          npx schemalens-cli built.sql schema.sql --format markdown \
+            > drift_report.md
+
+      - name: Comment PR if drift detected
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('drift_report.md', 'utf8');
+            if (report.includes('change')) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '## ⚠️ SQLite Schema Drift Detected\\n\\n' + report
+              });
+            }</code></pre>
+
+    <p>This workflow uses the <a href="../cli">SchemaLens CLI</a> to generate a semantic diff and posts it as a PR comment. If the diff is empty, your migration scripts produce the expected schema.</p>
+
+    <h2>Method 4: In-App Schema Validation</h2>
+
+    <p>For mobile and desktop apps, the most critical drift check happens at runtime. Your application should validate the user's database schema on startup and either migrate or warn.</p>
+
+    <pre><code>// Node.js / Electron example
+const fs = require('fs');
+const { execSync } = require('child_process');
+
+function validateSchema(dbPath, canonicalSchemaPath) {
+  const userSchema = execSync(`sqlite3 "${dbPath}" ".schema --indent"`).toString();
+  const canonicalSchema = fs.readFileSync(canonicalSchemaPath, 'utf8');
+
+  if (userSchema.trim() !== canonicalSchema.trim()) {
+    console.warn('Schema drift detected. Running migration...');
+    // Run your migration logic here
+    return false;
+  }
+  return true;
+}</code></pre>
+
+    <p>A more robust approach stores a schema hash rather than comparing the full SQL:</p>
+
+    <pre><code>// Generate a schema fingerprint
+const crypto = require('crypto');
+
+function schemaHash(dbPath) {
+  const schema = execSync(`sqlite3 "${dbPath}" ".schema"`).toString();
+  return crypto.createHash('sha256').update(schema).digest('hex').slice(0, 16);
+}</code></pre>
+
+    <p>Ship the expected hash with your app. On startup, compare. If they differ, run migrations or show a "database needs update" dialog.</p>
+
+    <h2>Common SQLite-Specific Drift Traps</h2>
+
+    <div class="checklist">
+      <ul>
+        <li><strong>Affinity vs strict types.</strong> SQLite uses type affinity, not rigid types. A column defined as <code>INTEGER</code> can store text. If your application relies on type enforcement, drift in data types is invisible to schema dumps. <span class="risk-tag risk-high">High</span></li>
+        <li><strong>Auto-increment behavior.</strong> <code>INTEGER PRIMARY KEY</code> and <code>INTEGER PRIMARY KEY AUTOINCREMENT</strong> behave differently under deletion and overflow. A schema dump shows both as <code>INTEGER PRIMARY KEY</code> unless you check <code>sqlite_sequence</code>.</li>
+        <li><strong>Virtual tables.</strong> FTS5, R*Tree, and other virtual tables appear in <code>sqlite_schema</code> but their underlying implementation varies by SQLite version and compile flags.</li>
+        <li><strong>Without RowID tables.</strong> <code>WITHOUT ROWID</code> changes the on-disk format. A schema dump includes the keyword, but application code that assumes <code>rowid</code> exists will break silently.</li>
+        <li><strong>Temporary triggers and views.</strong> SQLite allows temporary schema objects that do not appear in <code>sqlite_schema</code> unless you query <code>sqlite_temp_schema</code>.</li>
+      </ul>
+    </div>
+
+    <h2>The Expand/Contract Defense for SQLite</h2>
+
+    <p>SQLite's limited <code>ALTER TABLE</code> support makes the expand/contract pattern even more important. You cannot drop a column directly — you must create a new table, copy data, and swap:</p>
+
+    <pre><code>-- Expand: add new column as nullable
+ALTER TABLE orders ADD COLUMN status_v2 TEXT;
+
+-- Backfill
+UPDATE orders SET status_v2 = status;
+
+-- Contract: create new table, copy, swap, drop
+CREATE TABLE orders_new (
+  id INTEGER PRIMARY KEY,
+  status_v2 TEXT NOT NULL
+);
+
+INSERT INTO orders_new (id, status_v2)
+SELECT id, status_v2 FROM orders;
+
+DROP TABLE orders;
+ALTER TABLE orders_new RENAME TO orders;</code></pre>
+
+    <p>Because SQLite lacks native column rename and drop, every "simple" schema change is a potential migration script. Keeping these scripts version-controlled and tested is your best defense against drift.</p>
+
+    <h2>Start Detecting Drift Today</h2>
+
+    <p>You do not need a complex pipeline to start. Here is a 5-minute workflow:</p>
+
+    <ol>
+      <li>Run <code>sqlite3 your.db ".schema --indent"</code> and save it as <code>prod.sql</code>.</li>
+      <li>Run the same command on your development database and save it as <code>dev.sql</code>.</li>
+      <li><a href="../app.html">Paste both into SchemaLens</a> and click Compare.</li>
+      <li>If anything shows up that you did not expect, investigate before your next release.</li>
+    </ol>
+
+    <p>For mobile and desktop teams, one schema diff per release cycle prevents the dreaded "works on my machine" bug that only appears on user devices. The ROI is immediate.</p>
+
+    <div class="cta-box">
+      <h3>Automate SQLite Schema Diffs</h3>
+      <p>SchemaLens generates semantic diffs for SQLite schemas in seconds. No upload. No signup. Paste two schemas and see exactly what changed structurally.</p>
+      <a href="../app.html" class="btn btn-primary">Try SchemaLens Free</a>
+      <p style="font-size:0.8rem;margin-top:12px;margin-bottom:0;">Free tier: Diff up to 15 tables instantly. Pro unlocks unlimited tables and full migration generation.</p>
+    </div>
+
+    <h3>Related Reading</h3>
+    <ul>
+      <li><a href="sqlite-schema-migration-best-practices.html">SQLite Schema Migration Best Practices</a></li>
+      <li><a href="sqlite-vs-postgresql-when-to-switch.html">SQLite vs PostgreSQL: When to Switch</a></li>
+      <li><a href="how-to-detect-schema-drift-before-production.html">How to Detect Schema Drift Before Production</a></li>
+      <li><a href="schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+    </ul>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="logo" style="font-size:1.1rem;"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:8px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p><a href="../app.html">Schema Diff Tool</a></p>
+        <p><a href="../pricing.html">Pricing</a></p>
+        <p><a href="../vscode-extension.html">VS Code Extension</a></p>
+        <p><a href="../cli">CLI</a></p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <p><a href="../blog.html">Blog</a></p>
+        <p><a href="../api-guide.html">API Guide</a></p>
+        <p><a href="../schema-examples.html">Schema Examples</a></p>
+        <p><a href="../migration-recipes.html">Migration Recipes</a></p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <p><a href="../about.html">About</a></p>
+        <p><a href="../open-source.html">Open Source</a></p>
+        <p><a href="../affiliate.html">Affiliate Program</a></p>
+      </div>
+    </div>
+    <div class="container" style="text-align:center;padding-top:24px;border-top:1px solid var(--border);margin-top:24px;color:var(--text-muted);font-size:0.85rem;">
+      © 2026 SchemaLens. Built in public during the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>

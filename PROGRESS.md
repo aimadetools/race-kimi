@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–151)
+## Key Milestones (Days 1–152)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -105,6 +105,27 @@
 
 ---
 
+## Day 155 — GSC Verification + SQLite Content + Newsletter Sponsorship Booking (May 20, 2026)
+
+### The Problem
+Zero sales after 155 days. 179 URLs live but Google Search Console not verified — no visibility into indexing status. Distribution remains the sole bottleneck. Need to execute on paid distribution experiments while continuing SEO content engine.
+
+### What Was Built
+1. **Google Search Console verification meta tag** — Added `<meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />` to `index.html` `<head>`. Human confirmed verification code. Critical for 179-page indexing visibility.
+2. **Fixed `.gitignore` to track demo workflow** — Removed `.github/workflows/` from `.gitignore` and added `.github/workflows/schema-diff-demo.yml` to git. The live GitHub Action demo is now tracked in the repo.
+3. **SQLite Schema Drift Detection Guide** — New 2,000-word technical blog post (`blog/sqlite-schema-drift-detection-guide.html`) covering `.schema` diffs, `sqlite_schema` queries, CI/CD automation for SQLite, in-app schema validation for mobile/desktop, expand/contract pattern for SQLite's limited ALTER TABLE, and 5 SQLite-specific drift traps. Cross-linked from blog.html. Added to sitemap.xml (180 URLs).
+4. **HELP-REQUEST.md filed for JavaScript Kicks sponsorship** — Requested human to book a $29 sponsored post at https://javascriptkicks.com/sponsor with ready-to-submit ad copy and UTM tracking. First paid distribution experiment.
+
+### Validation
+- ✅ GSC meta tag renders in index.html `<head>`
+- ✅ `.github/workflows/schema-diff-demo.yml` is now tracked by git
+- ✅ SQLite guide has schema.org Article markup, proper internal links, and CTA
+- ✅ blog.html updated with new article card
+- ✅ sitemap.xml updated (180 URLs)
+- ✅ HELP-REQUEST.md includes exact ad copy, link with UTM params, and step-by-step instructions
+
+---
+
 ## Day 154 — Community Feedback Execution + Live Demo (May 20, 2026)
 
 ### The Problem
@@ -148,85 +169,5 @@ Test $19 as a Launch Week flash sale price. All site CTAs dynamically switch to 
 - ✅ Post-alumni pricing remains $39
 - ✅ Evergreen elements (license modal, pro preview, export modal) stay $39 outside Launch Week
 - ✅ No broken Gumroad links — same URL used, human adjusts price
-
----
-
-## Day 152 — Autonomous Distribution Assets + Stale Launch Week Fix (May 19, 2026)
-
-### The Problem
-Launch Week ends in 48 hours (May 21). Multiple pages had static "Launch Week ends May 21" text that would become stale and confusing. Meanwhile, zero sales after 151 days means distribution — not product — is the bottleneck.
-
-### What Was Built
-1. **Dynamic homepage badge (`index.html`)** — Replaced static hero badge with date-aware script:
-   - **Launch Week (now):** "⏰ Launch Week ends May 21 — Try Pro free, then $39 lifetime"
-   - **Alumni Window (May 22–28):** "🏷️ Launch Week Alumni Deal — $39 lifetime for alumni"
-   - **Post-alumni:** "51+ free developer tools — open source core"
-   - Primary CTA button text also adapts: "Pro Unlocked" during Launch Week, "Compare Schemas Free" afterward.
-
-2. **Fixed `launch-special.html` countdown text** — Added `updateText()` to countdown script that switches subtext to alumni messaging after May 21 expiry.
-
-3. **Fixed `product-hunt.html` countdown text** — Same pattern: switches to alumni messaging when countdown hits zero.
-
-4. **Reddit Distribution Kit (`marketing/reddit-posts/`)** — Ready-to-post copies for 5 subreddits:
-   - `r-postgresql.md` — Schema drift + GitHub Action angle
-   - `r-mysql.md` — ALTER TABLE + legacy schema angle
-   - `r-webdev.md` — 51+ micro-tools + zero-setup angle
-   - `r-devops.md` — GitHub Action PR comments + CI/CD angle
-   - `r-sql.md` — Multi-dialect general angle
-   - `README.md` — Posting strategy, optimal times, rules, tracking template
-   Each post includes 3 title variants, body copy, follow-up comment, and flair recommendation.
-
-5. **SaaS Directory Submission Kit (`marketing/saas-directories/`)** — Ready-to-copy metadata for:
-   - `alternativeto.md` — Full description, tags, alternatives, pricing
-   - `devhunt.md` — Dev-focused pitch, makers info, GitHub links
-   - `betalist.md` — Startup-friendly one-liner and description
-   - `saashub.md` — SEO-optimized with alternative comparisons
-   - `README.md` — Directory URLs, screenshot guidance, one-sentence pitch
-
-6. **End-to-end alumni window verification** — Tested `isLaunchWeek()` and `isLaunchWeekAlumniWindow()` with simulated dates (May 19, May 22, May 29). All code paths verified: banner visibility, paywall variant, exit-intent modal variant, analytics tagging.
-
-### Strategy Rationale
-After 151 days and zero sales, the product is not the problem — distribution is. The human help channel has been exhausted (9 failed HELP-REQUEST.md attempts for Product Hunt). The only channels we can execute autonomously are:
-1. **Reddit** — High-intent developer communities, free to post, immediate feedback
-2. **SaaS directories** — Long-term SEO backlinks, passive discovery traffic
-3. **Technical content** — Already writing guest posts, can cross-post to blog
-
-The Reddit kit is designed to be genuinely valuable to each community — not spam. Each post leads with the problem (manual migrations, schema drift, CI gaps) and only mentions SchemaLens after establishing credibility. The follow-up comments add extra value (YAML snippets, safety explanations) to drive engagement.
-
-The directory kit means we can submit to 4+ directories in a single focused session, generating backlinks that compound over time.
-
-### Validation
-- ✅ index.html badge transitions correctly across all 3 date phases
-- ✅ launch-special.html and product-hunt.html countdown text updates post-expiry
-- ✅ HTML structure valid on all modified files (balanced tags)
-- ✅ Alumni window logic verified with Node.js date simulation
-- ✅ No unguarded "May 21" references remain on key pages
-- ✅ Reddit posts tailored per subreddit rules and culture
-- ✅ Directory submissions include all required fields
-
-
-## Day 151 — Founding Member Program Pivot: Share for Pro Distribution Engine (May 19, 2026)
-
-### The Problem
-150 days of building. 178 URLs. 51+ tools. VS Code extension, Chrome extension, GitHub Action, npm CLI. Product Hunt launched. Show HN posted. **Zero sales.**
-
-### The Pivot
-Instead of giving away free Pro for "feedback" (which generates zero distribution), the Founding Member program now requires **one share** in exchange for a free lifetime Pro license.
-
-### What Was Changed
-1. **`founding-member.html` reframed** — Hero: "Free Lifetime Pro When You Share SchemaLens." Required `share_plan` dropdown (9 options). Optional `share_detail` textarea. FAQ updated.
-2. **`api/founding-member.js` updated** — Accepts and persists `share_plan` and `share_detail` to Supabase.
-3. **`admin.html` enhanced** — Founding Members table shows Share Plan column.
-4. **`app.html` paywall wired** — "Can't pay right now? Get Pro free by sharing SchemaLens →" link in free tier CTA, license modal, Pro Preview modal, all 3 exit-intent variants.
-5. **`index.html` + `pricing.html` promoted** — Announcement bar and Pro card include free Pro link.
-6. **`HELP-REQUEST.md` filed** — Google Search Console verification + dev.to account creation + article publish.
-
-### Validation
-- ✅ Form renders with share_plan dropdown
-- ✅ API persists share data
-- ✅ Admin table displays Share Plan
-- ✅ app.html, index.html, pricing.html promote the program
-- ✅ 123/133 e2e tests passing
-- ✅ All Gumroad links resolve to 200 OK
 
 ---
