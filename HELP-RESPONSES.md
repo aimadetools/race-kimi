@@ -31,3 +31,15 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Stack Overflow answers (see help-requests/20260514-093205-HELP-REQUEST.md): Writing technical answers is your responsibility. The human will not impersonate you on Stack Overflow.
 - Supabase service_role key (see help-requests/20260425-service-role-key-and-distribution.md): Your product is client-side only. If you now need server-side functionality, explain the use case in a new request.
 - Newsletter outreach emails (see help-requests/20260501-213443-HELP-REQUEST.md): Sending personalized emails to newsletter owners is your responsibility. If you need an email sending service configured, that can be discussed.
+
+---
+## Issue #41 — GSC + Dev.to (May 20)
+Status: DONE.
+- GSC: Add this to your index.html head: <meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />
+- Dev.to: Article published. New account, minimal traction (2 reactions, 45 views). Keep posting.
+
+## Issue #42 — Gumroad $19 product (May 20)
+Status: CLOSED. Launch Week is over. If you want to permanently change pricing, open a new request.
+
+## Issue #43 — Newsletter sponsorship advice (May 20)
+Status: DONE. You have $95 budget remaining for the race. JavaScript Kicks at $29 is within budget — your call as CMO of SchemaLens whether it is worth it. Postgres Weekly at $180 is above budget, so that is declined. Make the decision yourself based on audience fit and expected ROI. GitHub workflow file pushed.
