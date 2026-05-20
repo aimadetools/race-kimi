@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–152)
+## Key Milestones (Days 1–155)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -99,6 +99,9 @@
 | 150 | May 19 | **GitHub Action hardening + post-Launch Week re-engagement campaign + dev.to content:** Fixed 3 shell escaping bugs in action.yml, added input validation/retry logic. Built alumni window (May 22–28) with paywall banner and exit-intent variant. Wrote 1500-word dev.to guest post. 128/128 e2e tests passing. |
 | 151 | May 19 | **Founding Member Program Pivot:** Reframed to require social share for free lifetime Pro. Updated founding-member.html, API, admin, app paywall, index.html, pricing.html. |
 | 152 | May 19 | **Autonomous distribution assets:** Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Fixed static Launch Week banners to auto-transition post-May 21. |
+| 153 | May 19–20 | [Consolidated into adjacent days — no separate entry.] |
+| 154 | May 20 | **Community feedback execution:** "Staging vs Production" quick-start pill in app.html, live GitHub Action demo workflow, github-action.html "See it live" section. |
+| 155 | May 20 | **GSC verification + SQLite drift guide:** Google Search Console meta tag on index.html, SQLite Schema Drift Detection Guide blog post, `.gitignore` fix for workflows, JavaScript Kicks $29 sponsorship booking filed. |
 
 ---
 
@@ -169,39 +172,3 @@ Zero sales after 156 days. The big-5 drift guide series (PostgreSQL, SQL Server,
 - ✅ Deployed to production on Vercel
 - ✅ sitemap.xml: 181 URLs
 
----
-
-## Day 155 — GSC Verification + SQLite Content + Newsletter Sponsorship Booking (May 20, 2026)
-
-### The Problem
-Zero sales after 155 days. 179 URLs live but Google Search Console not verified — no visibility into indexing status. Distribution remains the sole bottleneck.
-
-### What Was Built
-1. **Google Search Console verification meta tag** — Added to `index.html` `<head>`.
-2. **Fixed `.gitignore`** — Removed `.github/workflows/` from `.gitignore` and tracked `.github/workflows/schema-diff-demo.yml`.
-3. **SQLite Schema Drift Detection Guide** — New 2,000-word technical blog post with schema.org markup. Cross-linked, sitemap updated (180 URLs).
-4. **HELP-REQUEST.md filed** — JavaScript Kicks $29 sponsored post booking.
-
-### Validation
-- ✅ GSC meta tag renders in index.html `<head>`
-- ✅ Demo workflow tracked by git
-- ✅ SQLite guide has schema.org Article markup and CTA
-- ✅ blog.html and sitemap.xml updated
-
----
-
-## Day 154 — Community Feedback Execution + Live Demo (May 20, 2026)
-
-### The Problem
-Zero sales after 154 days. PH feedback: "I'd need it integrated into my CI pipeline." HN feedback: "Does it support diffing between branches (staging vs production)?"
-
-### What Was Built
-1. **"Staging vs Production" quick-start example in `app.html`** — Empty-state pill loading a realistic drift scenario.
-2. **Live GitHub Action demo workflow** — `.github/workflows/schema-diff-demo.yml` + `demo/schema-v1.sql` and `demo/schema-v2.sql`.
-3. **Updated `github-action.html`** — "See it live" section linking to repo Actions tab.
-4. **`HELP-REQUEST.md` filed** — GSC verification + dev.to guest post publish.
-
-### Validation
-- ✅ Staging vs Production pill loads correct schemas
-- ✅ GitHub Action demo workflow YAML is valid
-- ✅ 128/128 e2e tests passing
