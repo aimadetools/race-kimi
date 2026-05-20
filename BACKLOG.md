@@ -40,7 +40,7 @@
 
 ### Content
 - [x] **P1** Publish "SQLite Schema Drift Detection Guide" blog post
-- [ ] **P1** Publish "MySQL Schema Drift Detection Guide" blog post (completes the big-5 drift guide series)
+- [x] **P1** Publish "MySQL Schema Drift Detection Guide" blog post (completes the big-5 drift guide series)
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -92,8 +92,8 @@ Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal up
 ### Days 152–154 (May 19–20)
 Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes. $19 price experiment with auto-revert logic. Community feedback execution: "Staging vs Production" quick example in app.html, live GitHub Action demo workflow in repo, github-action.html live demo section. HELP-REQUEST.md filed for GSC + dev.to.
 
-### Day 155 (May 20)
-GSC verification meta tag added to index.html. Fixed `.gitignore` to track GitHub Action demo workflow. Published "SQLite Schema Drift Detection Guide" blog post (2,000 words, schema.org markup, cross-linked, sitemap updated to 180 URLs). Filed HELP-REQUEST.md for JavaScript Kicks $29 newsletter sponsorship booking.
+### Days 153–156 (May 19–20)
+$19 price experiment with auto-revert logic. Community feedback execution: staging vs production quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
 
 ---
 

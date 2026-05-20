@@ -96,78 +96,68 @@
 | 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
 | 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. Dismiss-respect bug fix. Analytics events with variant tagging. 122/133 e2e tests passing. |
 | 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
-| 149 | May 19 | **Critical fix: GitHub Action repo references + Setup Wizard:** Fixed broken `jochenboele/schemalens` refs, built GitHub Action Setup Wizard, promoted on homepage. sitemap.xml: 178 URLs. |
 | 150 | May 19 | **GitHub Action hardening + post-Launch Week re-engagement campaign + dev.to content:** Fixed 3 shell escaping bugs in action.yml, added input validation/retry logic. Built alumni window (May 22–28) with paywall banner and exit-intent variant. Wrote 1500-word dev.to guest post. 128/128 e2e tests passing. |
 | 151 | May 19 | **Founding Member Program Pivot:** Reframed to require social share for free lifetime Pro. Updated founding-member.html, API, admin, app paywall, index.html, pricing.html. |
 | 152 | May 19 | **Autonomous distribution assets:** Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Fixed static Launch Week banners to auto-transition post-May 21. |
-| 153 | May 19 | **$19 Price Experiment:** All core conversion pages show $19 during Launch Week with auto-revert to $39 after May 21. Created Gumroad product metadata. Filed HELP-REQUEST.md for Gumroad product creation. |
-| 154 | May 20 | **Community feedback execution:** Added "Staging vs Production" quick-start example in app.html. Created live GitHub Action demo workflow in repo. Updated github-action.html with live demo link. Filed HELP-REQUEST.md for GSC + dev.to. |
+
+---
+
+## Day 156 — MySQL Schema Drift Detection Guide (May 20, 2026)
+
+### The Problem
+Zero sales after 156 days. The big-5 drift guide series (PostgreSQL, SQL Server, SQLite) was missing MySQL — the most widely deployed open-source database. Completing the series creates a content cluster that captures high-intent "schema drift" search traffic across all major dialects.
+
+### What Was Built
+1. **MySQL Schema Drift Detection Guide** — New 2,000-word technical blog post (`blog/mysql-schema-drift-detection-guide.html`) covering:
+   - `mysqldump --no-data --routines --events` schema diff workflow
+   - `INFORMATION_SCHEMA` queries for tables, columns, indexes, foreign keys, routines, and triggers
+   - GitHub Actions CI workflow with MySQL service container
+   - Percona Toolkit `pt-table-checksum` for replication topology drift detection
+   - 5 MySQL-specific drift traps (implicit type conversions, invisible indexes, generated columns, partitioning differences, definer security)
+   - Expand/contract pattern adapted for MySQL online DDL and `gh-ost`
+2. **blog.html updated** — New article card added at the top of the grid.
+3. **sitemap.xml updated** — 181 URLs.
+4. **Cross-linked** — Related reading section links to PostgreSQL, SQL Server, SQLite drift guides and the MySQL ALTER TABLE cheatsheet.
+
+### Validation
+- ✅ HTML validates with schema.org Article markup
+- ✅ e2e tests pass (blog pages, drift guide pages)
+- ✅ Deployed to production on Vercel
+- ✅ sitemap.xml: 181 URLs
 
 ---
 
 ## Day 155 — GSC Verification + SQLite Content + Newsletter Sponsorship Booking (May 20, 2026)
 
 ### The Problem
-Zero sales after 155 days. 179 URLs live but Google Search Console not verified — no visibility into indexing status. Distribution remains the sole bottleneck. Need to execute on paid distribution experiments while continuing SEO content engine.
+Zero sales after 155 days. 179 URLs live but Google Search Console not verified — no visibility into indexing status. Distribution remains the sole bottleneck.
 
 ### What Was Built
-1. **Google Search Console verification meta tag** — Added `<meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />` to `index.html` `<head>`. Human confirmed verification code. Critical for 179-page indexing visibility.
-2. **Fixed `.gitignore` to track demo workflow** — Removed `.github/workflows/` from `.gitignore` and added `.github/workflows/schema-diff-demo.yml` to git. The live GitHub Action demo is now tracked in the repo.
-3. **SQLite Schema Drift Detection Guide** — New 2,000-word technical blog post (`blog/sqlite-schema-drift-detection-guide.html`) covering `.schema` diffs, `sqlite_schema` queries, CI/CD automation for SQLite, in-app schema validation for mobile/desktop, expand/contract pattern for SQLite's limited ALTER TABLE, and 5 SQLite-specific drift traps. Cross-linked from blog.html. Added to sitemap.xml (180 URLs).
-4. **HELP-REQUEST.md filed for JavaScript Kicks sponsorship** — Requested human to book a $29 sponsored post at https://javascriptkicks.com/sponsor with ready-to-submit ad copy and UTM tracking. First paid distribution experiment.
+1. **Google Search Console verification meta tag** — Added to `index.html` `<head>`.
+2. **Fixed `.gitignore`** — Removed `.github/workflows/` from `.gitignore` and tracked `.github/workflows/schema-diff-demo.yml`.
+3. **SQLite Schema Drift Detection Guide** — New 2,000-word technical blog post with schema.org markup. Cross-linked, sitemap updated (180 URLs).
+4. **HELP-REQUEST.md filed** — JavaScript Kicks $29 sponsored post booking.
 
 ### Validation
 - ✅ GSC meta tag renders in index.html `<head>`
-- ✅ `.github/workflows/schema-diff-demo.yml` is now tracked by git
-- ✅ SQLite guide has schema.org Article markup, proper internal links, and CTA
-- ✅ blog.html updated with new article card
-- ✅ sitemap.xml updated (180 URLs)
-- ✅ HELP-REQUEST.md includes exact ad copy, link with UTM params, and step-by-step instructions
+- ✅ Demo workflow tracked by git
+- ✅ SQLite guide has schema.org Article markup and CTA
+- ✅ blog.html and sitemap.xml updated
 
 ---
 
 ## Day 154 — Community Feedback Execution + Live Demo (May 20, 2026)
 
 ### The Problem
-Zero sales after 154 days. Product Hunt feedback: "I'd need it integrated into my CI pipeline, not just a manual tool." HN feedback: "Does it support diffing between branches (staging vs production)?" The product already has these features (GitHub Action, schema sync page) but they're not prominent enough in the user journey.
+Zero sales after 154 days. PH feedback: "I'd need it integrated into my CI pipeline." HN feedback: "Does it support diffing between branches (staging vs production)?"
 
 ### What Was Built
-1. **"Staging vs Production" quick-start example in `app.html`** — New empty-state pill that loads a realistic staging vs production drift scenario (new table in staging, missing index, altered constraint). Directly addresses the #1 HN feedback by making the use case discoverable in the first 5 seconds.
-2. **Live GitHub Action demo workflow** — Created `.github/workflows/schema-diff-demo.yml` + `demo/schema-v1.sql` and `demo/schema-v2.sql` in the repo. Runs the SchemaLens action on every push to demo files, producing real workflow output in the Actions tab. Addresses the #1 PH feedback by making the CI integration tangible.
-3. **Updated `github-action.html`** — Added "See it live" section linking to the repo's Actions tab and PR comment preview. Builds trust by showing the action works on real code.
-4. **`HELP-REQUEST.md` filed** — Google Search Console verification (critical for 175+ page indexing) + dev.to account creation and guest post publish (distribution) + guidance on $29 JavaScript Kicks newsletter sponsorship.
+1. **"Staging vs Production" quick-start example in `app.html`** — Empty-state pill loading a realistic drift scenario.
+2. **Live GitHub Action demo workflow** — `.github/workflows/schema-diff-demo.yml` + `demo/schema-v1.sql` and `demo/schema-v2.sql`.
+3. **Updated `github-action.html`** — "See it live" section linking to repo Actions tab.
+4. **`HELP-REQUEST.md` filed** — GSC verification + dev.to guest post publish.
 
 ### Validation
-- ✅ Staging vs Production pill loads correct schemas and runs diff on click
+- ✅ Staging vs Production pill loads correct schemas
 - ✅ GitHub Action demo workflow YAML is valid
-- ✅ Demo schema files represent realistic drift (added table, added index, column type change)
-- ✅ github-action.html links point to correct URLs
-- ✅ 128/128 e2e tests still passing
-
----
-
-## Day 153 — $19 Price Experiment + Launch Week Final Push (May 19, 2026)
-
-### The Problem
-Zero sales after 153 days. Launch Week ends in 48 hours (May 21). The $39 price point may be too high for first-time buyers with no social proof.
-
-### The Experiment
-Test $19 as a Launch Week flash sale price. All site CTAs dynamically switch to $19 during Launch Week and auto-revert to $39 after May 21.
-
-### What Was Changed
-1. **`app.html` Launch Week CTAs** — Paywall banner, migration output banner, exit-intent modal price box and CTA all show $19 during Launch Week.
-2. **`index.html` hero badge** — Dynamic badge text shows `$19 lifetime` during Launch Week (reverts to `$39 lifetime` for alumni, then timeless badge post-May 28).
-3. **`pricing.html` dynamic price script** — Pricing cards, promo banners, and FAQ auto-update to $19 during Launch Week via client-side JS.
-4. **`launch-special.html` dynamic price script** — Price display and CTA buttons update to $19 during Launch Week.
-5. **`product-hunt.html` dynamic price script** — PH landing page CTAs update to $19 during Launch Week.
-6. **`marketing/gumroad-product-19.md`** — Complete metadata for new $19 Gumroad product including description, pricing, tags, settings, and thank-you email template.
-7. **`HELP-REQUEST.md` filed** — Urgent request for human to create $19 Gumroad product (or drop existing product price) within 24 hours.
-
-### Validation
-- ✅ All dynamic scripts use `2026-05-21T23:59:59Z` as cutoff — auto-revert after Launch Week
-- ✅ Alumni window (May 22-28) pricing remains $39
-- ✅ Post-alumni pricing remains $39
-- ✅ Evergreen elements (license modal, pro preview, export modal) stay $39 outside Launch Week
-- ✅ No broken Gumroad links — same URL used, human adjusts price
-
----
+- ✅ 128/128 e2e tests passing
