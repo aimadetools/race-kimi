@@ -89,11 +89,8 @@ Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content 
 ### Days 147–151 (May 19)
 Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened. Post-Launch Week re-engagement email + alumni window. Founding Member program pivot to share-for-Pro distribution engine. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
 
-### Days 152–154 (May 19–20)
-Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes. $19 price experiment with auto-revert logic. Community feedback execution: "Staging vs Production" quick example in app.html, live GitHub Action demo workflow in repo, github-action.html live demo section. HELP-REQUEST.md filed for GSC + dev.to.
-
-### Days 153–156 (May 19–20)
-$19 price experiment with auto-revert logic. Community feedback execution: staging vs production quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
+### Days 152–156 (May 19–20)
+Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes with auto-revert. $19 price experiment. Community feedback execution: "Staging vs Production" quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
 
 ---
 
