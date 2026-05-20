@@ -9,8 +9,8 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 158 Days (CRITICAL)
-- [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts.
+### Distribution — Zero Sales After 159 Days (CRITICAL)
+- [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR comment demo (ci-demo.html).
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (HELP-REQUEST.md filed, awaiting human)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
@@ -18,7 +18,7 @@
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test.
+- [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html).
 
 ### Operations
 - [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
@@ -26,7 +26,7 @@
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
 ### Content
-- [x] **Completed:** SQLite + MySQL Schema Drift Detection Guides published (big-5 drift series complete).
+- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 50+ micro-tools, 180+ SEO pages.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -78,9 +78,9 @@ Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal up
 ### Days 152–156 (May 19–20)
 Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes with auto-revert. $19 price experiment. Community feedback execution: "Staging vs Production" quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
 
-### Days 157–158 (May 20)
-Dev.to guest post repurposed into 3 Twitter threads + 2 Reddit posts for autonomous distribution. Homepage hero A/B test expanded to 3-way split (control / CLI-first / CI/CD-first) with headline, subheadline, and CTA variants. Analytics tracking updated to `homepage_headline_may2026_v2`.
+### Days 157–159 (May 20)
+Dev.to guest post repurposed into 3 Twitter threads + 2 Reddit posts. Homepage hero A/B test expanded to 3-way split (control / CLI-first / CI/CD-first). Interactive PR comment demo (`ci-demo.html`) built to visualize GitHub Action output. HELP-REQUEST.md filed for JavaScript Kicks $29 sponsorship. sitemap.xml: 182 URLs.
 
 ---
 
-*Backlog reprioritized May 20, 2026. Zero sales after 158 days. Distribution is the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*
+*Backlog reprioritized May 20, 2026. Zero sales after 159 days. Distribution is the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*

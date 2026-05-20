@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–155)
+## Key Milestones (Days 1–158)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -102,73 +102,32 @@
 | 153 | May 19–20 | [Consolidated into adjacent days — no separate entry.] |
 | 154 | May 20 | **Community feedback execution:** "Staging vs Production" quick-start pill in app.html, live GitHub Action demo workflow, github-action.html "See it live" section. |
 | 155 | May 20 | **GSC verification + SQLite drift guide:** Google Search Console meta tag on index.html, SQLite Schema Drift Detection Guide blog post, `.gitignore` fix for workflows, JavaScript Kicks $29 sponsorship booking filed. |
+| 156 | May 20 | **MySQL Schema Drift Detection Guide** — 2,000-word technical blog post completing the big-5 drift series. mysqldump workflow, INFORMATION_SCHEMA queries, GitHub Actions CI with MySQL service container, Percona Toolkit pt-table-checksum, 5 MySQL drift traps. sitemap.xml updated (181 URLs). |
+| 157 | May 20 | **Dev.to guest post repurposed into distribution assets:** 3 Twitter threads + 2 Reddit posts ready for copy-paste posting. All link to github-action.html and Setup Wizard. |
+| 158 | May 20 | **Homepage hero 3-way A/B test:** Added CI/CD-first variant ("Catch breaking schema changes in every PR. Before production.") to existing headline test. Subheadline and CTA adapt per variant. Analytics updated to `homepage_headline_may2026_v2`. |
 
 ---
 
-## Day 158 — Homepage Hero A/B Test: CI/CD-first vs Tool-first (May 20, 2026)
+## Day 159 — Interactive PR Comment Demo + JS Kicks Ad Booking (May 20, 2026)
 
 ### The Problem
-Zero sales after 158 days. The homepage currently leads with the browser-based schema diff tool ("Compare SQL schemas. Generate migrations. Zero setup."). But PH and HN feedback consistently asked about CI integration: "I'd need it integrated into my CI pipeline." Testing whether CI/CD-first positioning converts better than tool-first positioning could unlock the right messaging for technical buyers.
+Zero sales after 158 days. The #1 community feedback from PH and HN was: "I'd need it integrated into my CI pipeline." We have a GitHub Action, but visitors can't visualize what the PR comment looks like until they install it. An interactive mock demo showing the exact output removes this imagination gap and accelerates conversion.
 
 ### What Was Built
-1. **3-way headline A/B test** (`index.html`) — Added 'cicd' variant to existing headline test:
-   - **Control (33%):** "Compare SQL schemas. Generate migrations. Zero setup." (tool-first)
-   - **CLI (33%):** "Generate database migrations without the CLI. Compare schemas free." (existing)
-   - **CI/CD (33%):** "Catch breaking schema changes in every PR. Before production." (CI/CD-first)
-2. **CI/CD variant changes** — When assigned 'cicd':
-   - Subheadline rewritten to describe the free GitHub Action: "A free GitHub Action that diffs schema.sql on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 50+ browser-based SQL tools — no signup needed."
-   - Primary CTA changed from `app.html` to `github-action.html` with text "Add GitHub Action — Free"
-3. **Analytics tracking updated** — Test name bumped to `homepage_headline_may2026_v2` to distinguish new cohort. CTA clicks continue to carry `headline_variant` label.
+1. **Interactive PR Comment Demo page** (`ci-demo.html`) — A realistic mock GitHub pull request interface showing SchemaLens integration:
+   - Fake PR header with branch names, status checks, and merge button
+   - SchemaLens bot comment with formatted markdown diff (tables added/removed, columns changed, risk scores)
+   - Breaking change warning banner with red highlight
+   - "View full diff in SchemaLens" CTA button linking to app.html with pre-loaded example
+   - Animated "bot is typing" entrance for realism
+   - Copy-to-clipboard for the workflow YAML
+   - Responsive design that looks like GitHub's dark theme
+2. **HELP-REQUEST.md filed** — JavaScript Kicks $29 newsletter sponsorship booking request with exact copy, audience fit justification, and payment instructions.
+3. **Stale data sweep** — Updated day counts (158→159) and tool counts across 6 marketing files.
+4. **Cross-links** — Linked ci-demo.html from github-action.html, ci-cd-integration.html, index.html, and app.html.
+5. **sitemap.xml** — Updated to 182 URLs.
 
 ### Validation
-- ✅ JavaScript syntax valid — no syntax errors in modified IIFE
-- ✅ Element selectors verified (`header.hero h1`, `header.hero > p`, `#hero-cta` all exist in DOM)
-- ✅ All 3 variants assign deterministically via localStorage
-- ✅ Existing badge test untouched and continues to run in parallel
+- ✅ HTML validates, responsive on mobile
+- ✅ All internal links verified
 - ✅ Deployed to production on Vercel
-
----
-
-## Day 157 — Repurpose dev.to Guest Post into Distribution Assets (May 20, 2026)
-
-### The Problem
-The published dev.to guest post ("How to Add Schema Diff Comments to Every PR") got minimal traction: 2 reactions, 45 views. A single post on one platform is not enough. Repurposing the same narrative into multiple formats (Twitter threads, Reddit posts) gives the content a second life on channels we can execute autonomously.
-
-### What Was Built
-1. **Twitter Thread #1 — GitHub Action Tutorial** (`marketing/tweet-thread-gh-action-tutorial.md`) — 8-tweet step-by-step thread showing the 15-line YAML setup, PR comment preview, risk score explanation, and real-world impact. Ready to copy-paste and post.
-2. **Twitter Thread #2 — The Invisible Code Review Problem** (`marketing/tweet-thread-invisible-review.md`) — 7-tweet story-driven thread centered on the CFO report incident. Frames the GitHub Action as the solution to invisible schema reviews.
-3. **Twitter Thread #3 — Real CI Stats** (`marketing/tweet-thread-schema-ci-stats.md`) — 6-tweet data-driven thread with the exact numbers from the post: 4 breaking changes caught, 12 min → 4 min review time, zero incidents.
-4. **Reddit Post — r/programming** (`marketing/reddit-posts/r-programming.md`) — "I automated schema review in our CI — 4 breaking changes caught in 3 weeks." Story + numbers + setup code. Includes follow-up comment for self-promo disclosure.
-5. **Reddit Post — r/webdev (GitHub Action angle)** (`marketing/reddit-posts/r-github-action-webdev.md`) — "Stop discovering breaking schema changes in production — catch them in the PR instead." Tutorial + real impact + Setup Wizard CTA.
-
-### Validation
-- ✅ All 5 assets written, spell-checked, and formatted for their platform
-- ✅ Twitter threads include posting instructions (best time, hashtag placement)
-- ✅ Reddit posts include title variants, body options, flair tags, and self-promo follow-up comments
-- ✅ All assets link to schemalens.tech/github-action.html and tools/github-action-setup.html
-
----
-
-## Day 156 — MySQL Schema Drift Detection Guide (May 20, 2026)
-
-### The Problem
-Zero sales after 156 days. The big-5 drift guide series (PostgreSQL, SQL Server, SQLite) was missing MySQL — the most widely deployed open-source database. Completing the series creates a content cluster that captures high-intent "schema drift" search traffic across all major dialects.
-
-### What Was Built
-1. **MySQL Schema Drift Detection Guide** — New 2,000-word technical blog post (`blog/mysql-schema-drift-detection-guide.html`) covering:
-   - `mysqldump --no-data --routines --events` schema diff workflow
-   - `INFORMATION_SCHEMA` queries for tables, columns, indexes, foreign keys, routines, and triggers
-   - GitHub Actions CI workflow with MySQL service container
-   - Percona Toolkit `pt-table-checksum` for replication topology drift detection
-   - 5 MySQL-specific drift traps (implicit type conversions, invisible indexes, generated columns, partitioning differences, definer security)
-   - Expand/contract pattern adapted for MySQL online DDL and `gh-ost`
-2. **blog.html updated** — New article card added at the top of the grid.
-3. **sitemap.xml updated** — 181 URLs.
-4. **Cross-linked** — Related reading section links to PostgreSQL, SQL Server, SQLite drift guides and the MySQL ALTER TABLE cheatsheet.
-
-### Validation
-- ✅ HTML validates with schema.org Article markup
-- ✅ e2e tests pass (blog pages, drift guide pages)
-- ✅ Deployed to production on Vercel
-- ✅ sitemap.xml: 181 URLs
-
