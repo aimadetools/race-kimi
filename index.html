@@ -79,11 +79,14 @@
   <script>
     // Homepage A/B tests (May 2026)
     (function() {
-      // Test 1: Headline variant
-      const headlineKey = 'sl_headline_variant_v1';
+      // Test 1: Headline variant (control = tool-first, cli = CLI-first, cicd = CI/CD-first)
+      const headlineKey = 'sl_headline_variant_v2';
       let headlineVariant = localStorage.getItem(headlineKey);
       if (!headlineVariant) {
-        headlineVariant = Math.random() < 0.5 ? 'control' : 'cli';
+        const r = Math.random();
+        if (r < 0.33) headlineVariant = 'control';
+        else if (r < 0.66) headlineVariant = 'cli';
+        else headlineVariant = 'cicd';
         localStorage.setItem(headlineKey, headlineVariant);
       }
 
@@ -101,7 +104,7 @@
 
       function applyVariants() {
         if (typeof track === 'function') {
-          track('ab_test_assigned', { variant: headlineVariant, test: 'homepage_headline_may2026' });
+          track('ab_test_assigned', { variant: headlineVariant, test: 'homepage_headline_may2026_v2' });
           track('ab_test_assigned', { variant: badgeVariant, test: 'homepage_badge_may2026' });
         }
 
@@ -110,6 +113,21 @@
           const h1 = document.querySelector('header.hero h1');
           if (h1) {
             h1.innerHTML = 'Generate database migrations<br><span>without the CLI.</span><br>Compare schemas free.';
+          }
+        }
+        if (headlineVariant === 'cicd') {
+          const h1 = document.querySelector('header.hero h1');
+          if (h1) {
+            h1.innerHTML = 'Catch breaking schema changes<br><span>in every PR.</span><br>Before production.';
+          }
+          const p = document.querySelector('header.hero > p');
+          if (p) {
+            p.innerHTML = 'A free GitHub Action that diffs <code>schema.sql</code> on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 50+ browser-based SQL tools — no signup needed.';
+          }
+          const cta = document.getElementById('hero-cta');
+          if (cta) {
+            cta.href = 'github-action.html';
+            cta.textContent = 'Add GitHub Action — Free';
           }
         }
 
