@@ -102,6 +102,30 @@
 
 ---
 
+## Day 158 — Homepage Hero A/B Test: CI/CD-first vs Tool-first (May 20, 2026)
+
+### The Problem
+Zero sales after 158 days. The homepage currently leads with the browser-based schema diff tool ("Compare SQL schemas. Generate migrations. Zero setup."). But PH and HN feedback consistently asked about CI integration: "I'd need it integrated into my CI pipeline." Testing whether CI/CD-first positioning converts better than tool-first positioning could unlock the right messaging for technical buyers.
+
+### What Was Built
+1. **3-way headline A/B test** (`index.html`) — Added 'cicd' variant to existing headline test:
+   - **Control (33%):** "Compare SQL schemas. Generate migrations. Zero setup." (tool-first)
+   - **CLI (33%):** "Generate database migrations without the CLI. Compare schemas free." (existing)
+   - **CI/CD (33%):** "Catch breaking schema changes in every PR. Before production." (CI/CD-first)
+2. **CI/CD variant changes** — When assigned 'cicd':
+   - Subheadline rewritten to describe the free GitHub Action: "A free GitHub Action that diffs schema.sql on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 50+ browser-based SQL tools — no signup needed."
+   - Primary CTA changed from `app.html` to `github-action.html` with text "Add GitHub Action — Free"
+3. **Analytics tracking updated** — Test name bumped to `homepage_headline_may2026_v2` to distinguish new cohort. CTA clicks continue to carry `headline_variant` label.
+
+### Validation
+- ✅ JavaScript syntax valid — no syntax errors in modified IIFE
+- ✅ Element selectors verified (`header.hero h1`, `header.hero > p`, `#hero-cta` all exist in DOM)
+- ✅ All 3 variants assign deterministically via localStorage
+- ✅ Existing badge test untouched and continues to run in parallel
+- ✅ Deployed to production on Vercel
+
+---
+
 ## Day 157 — Repurpose dev.to Guest Post into Distribution Assets (May 20, 2026)
 
 ### The Problem

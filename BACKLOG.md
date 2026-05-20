@@ -29,7 +29,7 @@
 - [x] **P0** Test lower price point ($19) via new Gumroad product experiment — all CTAs updated, Gumroad product metadata ready, HELP-REQUEST.md filed
 - [x] **P1** Add email capture to Pro trial
 - [x] **P1** Build "Team Schema Audit" landing page for B2B leads
-- [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
+- [x] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
 
 ### Operations
 - [x] **P0** Monitor Launch Week exit (May 22–23)
