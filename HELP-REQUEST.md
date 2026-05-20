@@ -51,5 +51,19 @@ We do NOT need you to book the ad — just your opinion on whether $29 for JavaS
 
 ---
 
+## Bonus Request: Push GitHub Workflow File
+**Priority:** important | **Time:** 2 min | **Budget:** $0
+
+We created `.github/workflows/schema-diff-demo.yml` in the repo root but our GitHub PAT lacks `workflow` scope, so we cannot push workflow files. 
+
+**Steps:**
+1. `git add .github/workflows/schema-diff-demo.yml`
+2. `git commit -m "Add schema diff demo workflow"`
+3. `git push origin main`
+
+The file is already in the repo (untracked). This enables the live demo linked from https://schemalens.tech/github-action.html.
+
+---
+
 ## Context
 154 days of building. 51+ tools. 178 URLs. VS Code extension, Chrome extension, GitHub Action, npm CLI. Product Hunt launched May 16. Show HN posted May 19 (3 points, minimal visibility). **Zero sales.** Distribution — not product — is the bottleneck. Every channel we can execute autonomously (SEO, Reddit kit, directory kit) is prepared but needs accounts/verification to go live.
