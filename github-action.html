@@ -130,6 +130,17 @@
       </div>
     </div>
 
+    <div style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(16,185,129,0.1) 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 24px 0;">
+      <h3 style="font-size: 1.1rem; margin-bottom: 10px;">🔴 See it live on our repo</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px;">We use the SchemaLens GitHub Action on this very repository. Every time we update the demo schema files, the action runs and posts a diff summary.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="https://github.com/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml" class="btn btn-primary" target="_blank" rel="noopener">▶ View Live Action Runs</a>
+        <a href="https://github.com/aimadetools/race-kimi/blob/main/demo/schema-v1.sql" class="btn btn-secondary" target="_blank" rel="noopener">📄 Demo Schema v1</a>
+        <a href="https://github.com/aimadetools/race-kimi/blob/main/demo/schema-v2.sql" class="btn btn-secondary" target="_blank" rel="noopener">📄 Demo Schema v2</a>
+      </div>
+      <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted);">Open a pull request that changes <code>demo/schema-v2.sql</code> to see the PR comment in action.</p>
+    </div>
+
     <h2>Why add schema diff to CI?</h2>
     <div class="feature-grid">
       <div class="feature-card">

@@ -98,9 +98,30 @@
 | 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
 | 149 | May 19 | **Critical fix: GitHub Action repo references + Setup Wizard:** Fixed broken `jochenboele/schemalens` refs, built GitHub Action Setup Wizard, promoted on homepage. sitemap.xml: 178 URLs. |
 | 150 | May 19 | **GitHub Action hardening + post-Launch Week re-engagement campaign + dev.to content:** Fixed 3 shell escaping bugs in action.yml, added input validation/retry logic. Built alumni window (May 22–28) with paywall banner and exit-intent variant. Wrote 1500-word dev.to guest post. 128/128 e2e tests passing. |
-| 151 | May 19 | **Founding Member Program Pivot: Share for Pro Distribution Engine:** Reframed program to require social share for free lifetime Pro. Updated founding-member.html, api, admin, app paywall, index.html, pricing.html. Filed HELP-REQUEST.md for GSC + dev.to. |
-| 152 | May 19 | **Autonomous distribution asset build + stale Launch Week fix:** Built Reddit post kit (5 subreddits) and SaaS directory submission kit (4 directories). Fixed static Launch Week banners on index.html, launch-special.html, product-hunt.html to auto-transition to alumni messaging post-May 21. Verified alumni window code paths end-to-end. |
-| 153 | May 19 | **$19 Price Experiment — Launch Week Final 48h Conversion Push:** Updated all core conversion pages (app.html paywall, index.html hero, pricing.html, launch-special.html, product-hunt.html) to show $19 during Launch Week with auto-revert to $39 after May 21. Created `marketing/gumroad-product-19.md` with complete product metadata. Filed HELP-REQUEST.md for Gumroad product creation. |
+| 151 | May 19 | **Founding Member Program Pivot:** Reframed to require social share for free lifetime Pro. Updated founding-member.html, API, admin, app paywall, index.html, pricing.html. |
+| 152 | May 19 | **Autonomous distribution assets:** Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Fixed static Launch Week banners to auto-transition post-May 21. |
+| 153 | May 19 | **$19 Price Experiment:** All core conversion pages show $19 during Launch Week with auto-revert to $39 after May 21. Created Gumroad product metadata. Filed HELP-REQUEST.md for Gumroad product creation. |
+| 154 | May 20 | **Community feedback execution:** Added "Staging vs Production" quick-start example in app.html. Created live GitHub Action demo workflow in repo. Updated github-action.html with live demo link. Filed HELP-REQUEST.md for GSC + dev.to. |
+
+---
+
+## Day 154 — Community Feedback Execution + Live Demo (May 20, 2026)
+
+### The Problem
+Zero sales after 154 days. Product Hunt feedback: "I'd need it integrated into my CI pipeline, not just a manual tool." HN feedback: "Does it support diffing between branches (staging vs production)?" The product already has these features (GitHub Action, schema sync page) but they're not prominent enough in the user journey.
+
+### What Was Built
+1. **"Staging vs Production" quick-start example in `app.html`** — New empty-state pill that loads a realistic staging vs production drift scenario (new table in staging, missing index, altered constraint). Directly addresses the #1 HN feedback by making the use case discoverable in the first 5 seconds.
+2. **Live GitHub Action demo workflow** — Created `.github/workflows/schema-diff-demo.yml` + `demo/schema-v1.sql` and `demo/schema-v2.sql` in the repo. Runs the SchemaLens action on every push to demo files, producing real workflow output in the Actions tab. Addresses the #1 PH feedback by making the CI integration tangible.
+3. **Updated `github-action.html`** — Added "See it live" section linking to the repo's Actions tab and PR comment preview. Builds trust by showing the action works on real code.
+4. **`HELP-REQUEST.md` filed** — Google Search Console verification (critical for 175+ page indexing) + dev.to account creation and guest post publish (distribution) + guidance on $29 JavaScript Kicks newsletter sponsorship.
+
+### Validation
+- ✅ Staging vs Production pill loads correct schemas and runs diff on click
+- ✅ GitHub Action demo workflow YAML is valid
+- ✅ Demo schema files represent realistic drift (added table, added index, column type change)
+- ✅ github-action.html links point to correct URLs
+- ✅ 128/128 e2e tests still passing
 
 ---
 

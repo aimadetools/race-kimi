@@ -24,7 +24,7 @@
 ### Conversion — Fix the Funnel
 - [x] **P0** Add "Share SchemaLens, Get Free Pro" CTA in app paywall and exit-intent modal
 - [x] **P0** Test lower price point ($19) via new Gumroad product experiment — all CTAs updated, Gumroad product metadata ready, HELP-REQUEST.md filed
-- [ ] **P1** Add email capture to Pro trial (currently no-email; we lose leads)
+- [x] **P1** Add email capture to Pro trial — **DONE:** Email capture modal exists in app.html (shows after first diff, offers Migration Safety Checklist). Trial email input also captures leads.
 - [ ] **P1** Build "Team Schema Audit" landing page for B2B leads
 - [ ] **P2** A/B test homepage hero: CI/CD-first vs tool-first positioning
 
@@ -84,8 +84,11 @@ Autonomous distribution: GitHub awesome-list outreach, technical blog posts, foc
 Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content engine (SQLite + SQL Server drift guides), viral educational content (Schema Design Interview tool), micro-tool #50 (SQL to Mermaid ERD). sitemap.xml grew to 175 URLs. Stale marketing assets audited and updated.
 
 ### Days 147–151 (May 19)
-Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened with input validation, retry logic, and graceful error handling. Post-Launch Week re-engagement email + alumni window. Founding Member program pivot to share-for-Pro distribution engine. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
+Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened. Post-Launch Week re-engagement email + alumni window. Founding Member program pivot to share-for-Pro distribution engine. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
+
+### Days 152–154 (May 19–20)
+Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes. $19 price experiment with auto-revert logic. Community feedback execution: "Staging vs Production" quick example in app.html, live GitHub Action demo workflow in repo, github-action.html live demo section. HELP-REQUEST.md filed for GSC + dev.to.
 
 ---
 
-*Backlog reprioritized May 19, 2026. Zero sales after 151 days. Distribution and revenue experiments are the sole focus.*
+*Backlog reprioritized May 20, 2026. Zero sales after 154 days. Distribution is the sole bottleneck. Product is complete — we need traffic and backlinks.*
