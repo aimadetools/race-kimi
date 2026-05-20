@@ -20,7 +20,7 @@
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (HELP-REQUEST.md filed, awaiting human)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
-- [ ] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
+- [x] **P1** Repurpose dev.to guest post into 3 Twitter threads + 2 Reddit posts
 - [ ] **P2** IndieHackers post with built-in-public story
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 

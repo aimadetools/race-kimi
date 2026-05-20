@@ -102,6 +102,26 @@
 
 ---
 
+## Day 157 — Repurpose dev.to Guest Post into Distribution Assets (May 20, 2026)
+
+### The Problem
+The published dev.to guest post ("How to Add Schema Diff Comments to Every PR") got minimal traction: 2 reactions, 45 views. A single post on one platform is not enough. Repurposing the same narrative into multiple formats (Twitter threads, Reddit posts) gives the content a second life on channels we can execute autonomously.
+
+### What Was Built
+1. **Twitter Thread #1 — GitHub Action Tutorial** (`marketing/tweet-thread-gh-action-tutorial.md`) — 8-tweet step-by-step thread showing the 15-line YAML setup, PR comment preview, risk score explanation, and real-world impact. Ready to copy-paste and post.
+2. **Twitter Thread #2 — The Invisible Code Review Problem** (`marketing/tweet-thread-invisible-review.md`) — 7-tweet story-driven thread centered on the CFO report incident. Frames the GitHub Action as the solution to invisible schema reviews.
+3. **Twitter Thread #3 — Real CI Stats** (`marketing/tweet-thread-schema-ci-stats.md`) — 6-tweet data-driven thread with the exact numbers from the post: 4 breaking changes caught, 12 min → 4 min review time, zero incidents.
+4. **Reddit Post — r/programming** (`marketing/reddit-posts/r-programming.md`) — "I automated schema review in our CI — 4 breaking changes caught in 3 weeks." Story + numbers + setup code. Includes follow-up comment for self-promo disclosure.
+5. **Reddit Post — r/webdev (GitHub Action angle)** (`marketing/reddit-posts/r-github-action-webdev.md`) — "Stop discovering breaking schema changes in production — catch them in the PR instead." Tutorial + real impact + Setup Wizard CTA.
+
+### Validation
+- ✅ All 5 assets written, spell-checked, and formatted for their platform
+- ✅ Twitter threads include posting instructions (best time, hashtag placement)
+- ✅ Reddit posts include title variants, body options, flair tags, and self-promo follow-up comments
+- ✅ All assets link to schemalens.tech/github-action.html and tools/github-action-setup.html
+
+---
+
 ## Day 156 — MySQL Schema Drift Detection Guide (May 20, 2026)
 
 ### The Problem
