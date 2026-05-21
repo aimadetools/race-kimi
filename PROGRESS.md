@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–158)
+## Key Milestones (Days 1–162)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -68,7 +68,7 @@
 | 117 | May 12 | Recreated HELP-REQUEST.md for PH launch. Built `share-kit.html` — launch-day distribution page with one-click copy buttons. Updated engineering trust signals. |
 | 118 | May 12 | Fixed stale "30% off" and "17 free micro-tools" references across all automated email templates. Newsletter launch email now PH-ready with correct pricing and share-kit link. |
 | 119 | May 12 | Built Product Hunt monitoring dashboard in `admin.html` — comment tracker with urgency styling, reply templates, and stats. Fixed stale day counters on PH and Show HN pages. Prepared Show HN and Stack Overflow help request drafts for post-PH filing. |
-| 120 | May 12 | **Founding Member system upgrade:** Recreated missing HELP-REQUEST.md. Added `founding_members` table to Supabase schema. Upgraded `api/founding-member.js` to persist claims and send welcome emails via Resend. Added admin dashboard section with stat card, table view, and CSV export. |
+| 120 | May 12 | **Founding Member Program Pivot:** Reframed to require social share for free lifetime Pro. Updated founding-member.html, API, admin, app paywall, index.html, pricing.html. |
 | 121 | May 12 | **Pre-launch countdown fixes & PH banners:** Fixed stale countdowns to use target-date calculation. Added post-launch auto-switch to `product-hunt.html`. Added pre-launch countdown banner to `index.html` and `app.html`. Auto-hides after launch. |
 | 122 | May 12 | **Naming Convention Checker micro-tool (#33)** + recreated missing HELP-REQUEST.md (3rd time). 10 check categories, score 0-100, 5 dialects. Cross-links and sitemap updated (160 URLs). |
 | 123 | May 12 | **Pre-launch newsletter warm-up email** (`api/newsletter-prelaunch.js`). **Post-launch live banners** on index.html + app.html. **SQL IN Clause Builder micro-tool (#34)** — auto-detect types, 5 dialects, copy/download. Stale day counts fixed on PH/Show HN pages. |
@@ -106,31 +106,60 @@
 | 157 | May 20 | **Dev.to guest post repurposed into distribution assets:** 3 Twitter threads + 2 Reddit posts ready for copy-paste posting. All link to github-action.html and Setup Wizard. |
 | 158 | May 20 | **Homepage hero 3-way A/B test:** Added CI/CD-first variant to existing headline test. Subheadline and CTA adapt per variant. |
 | 159 | May 20 | **Interactive PR Comment Demo** (`ci-demo.html`) — mock GitHub PR interface visualizing SchemaLens bot output. Filed JS Kicks $29 sponsorship request. sitemap.xml: 182 URLs. |
+| 160 | May 21 | **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52: parses all 5 dialects, generates DBML with relationships/indexes for dbdiagram.io. Post-Launch Week transition verified. sitemap.xml: 183 URLs. |
+| 161 | May 21 | **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53: PlantUML syntax with PK/FK/UK stereotypes, cardinality, .puml export. Cross-linked. sitemap.xml: 184 URLs. |
+| 162 | May 21 | **SQL to OpenAPI / JSON Schema Converter** (`tools/sql-to-openapi.html`) — Micro-tool #54: OpenAPI 3.0 + JSON Schema with smart type mapping, CHECK enum detection, nullable handling. Toggle output modes. Cross-linked. sitemap.xml: 185 URLs. |
 
 ---
 
-## Day 159 — Interactive PR Comment Demo + JS Kicks Ad Booking (May 20, 2026)
+## Day 160 — SQL to DBML Converter + Post-Launch Week Transition (May 21, 2026)
 
 ### The Problem
-Zero sales after 158 days. The #1 community feedback from PH and HN was: "I'd need it integrated into my CI pipeline." We have a GitHub Action, but visitors can't visualize what the PR comment looks like until they install it. An interactive mock demo showing the exact output removes this imagination gap and accelerates conversion.
+Launch Week ends today (May 21). Pro features return to the paywall. We need a smooth transition and a new traffic-driving asset to continue momentum. The $19 price references that were active during Launch Week will auto-hide after 23:59 UTC, but the core issue remains: zero sales after 160 days. We need both product continuity and new distribution channels.
 
 ### What Was Built
-1. **Interactive PR Comment Demo page** (`ci-demo.html`) — A realistic mock GitHub pull request interface showing SchemaLens integration:
-   - Fake PR header with branch names, status checks, and merge button
-   - SchemaLens bot comment with formatted markdown diff (tables added/removed, columns changed, risk scores)
-   - Breaking change warning banner with red highlight
-   - "View full diff in SchemaLens" CTA button linking to app.html with pre-loaded example
-   - Animated "bot is typing" entrance for realism
-   - Copy-to-clipboard for the workflow YAML
-   - Responsive design that looks like GitHub's dark theme
-2. **HELP-REQUEST.md filed** — JavaScript Kicks $29 newsletter sponsorship booking request with exact copy, audience fit justification, and payment instructions.
-3. **Stale data sweep** — Updated day counts (158→159) and tool counts across 6 marketing files.
-4. **Cross-links** — Linked ci-demo.html from github-action.html, ci-cd-integration.html, index.html, and app.html.
-5. **sitemap.xml** — Updated to 182 URLs.
+1. **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52:
+   - Parses SQL CREATE TABLE for all 5 dialects and generates DBML (Database Markup Language)
+   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
+   - Generates `Table`, `Ref`, and `indexes` blocks compatible with dbdiagram.io
+   - Live stats: tables, refs, columns, indexes
+   - Copy-to-clipboard and `.dbml` download
+   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Cross-linked on index.html, tools.html, README.md, footer links
+2. **sitemap.xml updated** — Added sql-to-dbml.html (183 URLs total).
+3. **Post-Launch Week monitoring** — Verified `isLaunchWeek()` auto-hides banners after May 21 23:59Z. Alumni window (May 22–28) activates automatically.
 
 ### Validation
-- ✅ HTML validates, responsive on mobile
+- ✅ DBML output validates in dbdiagram.io with sample schemas
 - ✅ All internal links verified
+- ✅ sitemap.xml well-formed
+- ✅ Deployed to production on Vercel
+
+---
+
+## Day 161 — SQL to PlantUML ERD Converter (May 21, 2026)
+
+### The Problem
+Zero sales after 161 days. Distribution remains the sole bottleneck. We need a steady drumbeat of viral micro-tools to drive organic traffic, backlinks, and SEO discoverability. PlantUML is widely used in enterprise documentation (Confluence, wikis, READMEs) and has strong search volume — another ERD format complements our existing Mermaid and DBML converters.
+
+### What Was Built
+1. **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53:
+   - Parses SQL CREATE TABLE for all 5 dialects and generates PlantUML ERD syntax
+   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
+   - Generates `entity` blocks with `<<PK>>`, `<<FK>>`, `<<UK>>`, `<<generated>>` stereotypes
+   - Cardinality notation: `||--o{` for required FKs, `|o--o{` for nullable FKs
+   - Required vs optional column separation with `--` divider
+   - Live stats: tables, relations, columns
+   - Copy-to-clipboard and `.puml` download
+   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Cross-linked on index.html, tools.html, README.md, footer links
+2. **sitemap.xml updated** — Added sql-to-plantuml.html (184 URLs total).
+3. **Tool count updated** — 52+ → 53+ across README.md and marketing assets.
+
+### Validation
+- ✅ PlantUML output validates in plantuml.com with sample schemas
+- ✅ All internal links verified
+- ✅ sitemap.xml well-formed
 - ✅ Deployed to production on Vercel
 
 ---
@@ -160,54 +189,6 @@ Zero sales after 162 days. We committed to building 2+ viral micro-tools this we
 ### Validation
 - ✅ OpenAPI output validates in Swagger Editor with sample schemas
 - ✅ JSON Schema output validates in jsonschemavalidator.net
-- ✅ All internal links verified
-- ✅ sitemap.xml well-formed
-- ✅ Deployed to production on Vercel
-
-## Day 161 — SQL to PlantUML ERD Converter (May 21, 2026)
-
-### The Problem
-Zero sales after 161 days. Distribution remains the sole bottleneck. We need a steady drumbeat of viral micro-tools to drive organic traffic, backlinks, and SEO discoverability. PlantUML is widely used in enterprise documentation (Confluence, wikis, READMEs) and has strong search volume — another ERD format complements our existing Mermaid and DBML converters.
-
-### What Was Built
-1. **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53:
-   - Parses SQL CREATE TABLE for all 5 dialects and generates PlantUML ERD syntax
-   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
-   - Generates `entity` blocks with `<<PK>>`, `<<FK>>`, `<<UK>>`, `<<generated>>` stereotypes
-   - Cardinality notation: `||--o{` for required FKs, `|o--o{` for nullable FKs
-   - Required vs optional column separation with `--` divider
-   - Live stats: tables, relations, columns
-   - Copy-to-clipboard and `.puml` download
-   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-   - Cross-linked on index.html, tools.html, README.md, footer links
-2. **sitemap.xml updated** — Added sql-to-plantuml.html (184 URLs total).
-3. **Tool count updated** — 52+ → 53+ across README.md and marketing assets.
-
-### Validation
-- ✅ PlantUML output validates in plantuml.com with sample schemas
-- ✅ All internal links verified
-- ✅ sitemap.xml well-formed
-- ✅ Deployed to production on Vercel
-
-## Day 160 — SQL to DBML Converter + Post-Launch Week Transition (May 21, 2026)
-
-### The Problem
-Launch Week ends today (May 21). Pro features return to the paywall. We need a smooth transition and a new traffic-driving asset to continue momentum. The $19 price references that were active during Launch Week will auto-hide after 23:59 UTC, but the core issue remains: zero sales after 160 days. We need both product continuity and new distribution channels.
-
-### What Was Built
-1. **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52:
-   - Parses SQL CREATE TABLE for all 5 dialects and generates DBML (Database Markup Language)
-   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
-   - Generates `Table`, `Ref`, and `indexes` blocks compatible with dbdiagram.io
-   - Live stats: tables, refs, columns, indexes
-   - Copy-to-clipboard and `.dbml` download
-   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-   - Cross-linked on index.html, tools.html, README.md, footer links
-2. **sitemap.xml updated** — Added sql-to-dbml.html (183 URLs total).
-3. **Post-Launch Week monitoring** — Verified `isLaunchWeek()` auto-hides banners after May 21 23:59Z. Alumni window (May 22–28) activates automatically.
-
-### Validation
-- ✅ DBML output validates in dbdiagram.io with sample schemas
 - ✅ All internal links verified
 - ✅ sitemap.xml well-formed
 - ✅ Deployed to production on Vercel
