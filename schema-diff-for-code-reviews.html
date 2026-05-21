@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff for Code Reviews — Catch Breaking Changes Before Merge</title>
+  <meta name="description" content="Add schema diff to your code review workflow. Compare staging vs production schemas, catch breaking changes in pull requests, and generate migration scripts — all in your browser.">
+  <link rel="canonical" href="https://schemalens.tech/schema-diff-for-code-reviews.html">
+  <meta property="og:title" content="Schema Diff for Code Reviews — Catch Breaking Changes Before Merge">
+  <meta property="og:description" content="Compare staging vs production schemas during code review. Spot breaking changes, missing indexes, and risky migrations before they reach production.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-diff-for-code-reviews.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Schema Diff for Code Reviews",
+    "description": "Add schema diff to your code review workflow. Compare staging vs production schemas, catch breaking changes in pull requests, and generate migration scripts.",
+    "url": "https://schemalens.tech/schema-diff-for-code-reviews.html",
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "SchemaLens",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro",
+          "price": "39",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": "Visual schema diff, Breaking change detection, Migration script generation, PR comment generation, Staging vs production comparison"
+    }
+  }
+  </script>
+  <style>
+    .cr-hero { text-align:center; padding:80px 24px 48px; max-width:800px; margin:0 auto; }
+    .cr-hero h1 { font-size:2.4rem; line-height:1.15; margin-bottom:16px; }
+    .cr-hero p { font-size:1.15rem; color:var(--text-muted); margin-bottom:32px; }
+    .cr-section { max-width:960px; margin:0 auto; padding:48px 24px; }
+    .cr-section h2 { font-size:1.6rem; margin-bottom:24px; }
+    .cr-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; }
+    .cr-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+    .cr-card h3 { font-size:1.1rem; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+    .cr-card p { font-size:0.95rem; color:var(--text-muted); line-height:1.55; }
+    .cr-workflow { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; }
+    .cr-workflow-step { display:flex; gap:20px; margin-bottom:28px; }
+    .cr-workflow-step:last-child { margin-bottom:0; }
+    .cr-step-num { width:40px; height:40px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
+    .cr-step-content h4 { font-size:1.05rem; margin-bottom:6px; }
+    .cr-step-content p { font-size:0.9rem; color:var(--text-muted); line-height:1.5; }
+    .cr-cta-bar { max-width:800px; margin:48px auto; padding:40px 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center; }
+    .cr-cta-bar h2 { font-size:1.5rem; margin-bottom:12px; }
+    .cr-cta-bar p { color:var(--text-muted); margin-bottom:24px; }
+    .cr-quote { border-left:3px solid var(--primary); padding-left:20px; margin:24px 0; font-style:italic; color:var(--text-muted); }
+    .cr-badge { display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.75rem; color:var(--text-muted); margin-bottom:16px; }
+    @media (max-width:640px) {
+      .cr-hero h1 { font-size:1.7rem; }
+      .cr-workflow-step { flex-direction:column; gap:12px; }
+    }
+  </style>
+</head>
+<body>
+  <nav style="padding:16px 24px; display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
+    <a href="index.html" style="font-weight:700; font-size:1.1rem; color:var(--text); text-decoration:none;">SchemaLens</a>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <a href="app.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Open App</a>
+      <a href="github-action.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">GitHub Action</a>
+      <a href="pricing.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Pricing</a>
+      <a href="app.html" class="btn btn-primary" style="font-size:0.85rem; padding:8px 16px;">Try Free</a>
+    </div>
+  </nav>
+
+  <header class="cr-hero">
+    <div class="cr-badge">🛡️ For Engineering Teams</div>
+    <h1>Catch schema mistakes <br><span style="color:var(--primary);">before they reach code review.</span></h1>
+    <p>Compare staging vs production schemas in seconds. Spot breaking changes, missing indexes, and risky migrations — right in your browser. No CLI. No signup. No data leaves your machine.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg">Compare Staging vs Production</a>
+      <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action</a>
+    </div>
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--text-muted);">Free for 15 tables. Pro unlocks unlimited diffs + full migration scripts.</p>
+  </header>
+
+  <section class="cr-section">
+    <h2>Why schema diff belongs in code review</h2>
+    <div class="cr-grid">
+      <div class="cr-card">
+        <h3>💥 Breaking Changes</h3>
+        <p>Dropped columns, removed tables, and type changes that break production are highlighted in red with a risk score. Never miss a breaking change again.</p>
+      </div>
+      <div class="cr-card">
+        <h3>📊 Visual Diff</h3>
+        <p>Side-by-side comparison with color-coded additions (green), removals (red), and modifications (yellow). Easier to read than raw SQL dumps.</p>
+      </div>
+      <div class="cr-card">
+        <h3>📝 Migration Scripts</h3>
+        <p>Generate ready-to-run ALTER TABLE scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy, paste, deploy.</p>
+      </div>
+      <div class="cr-card">
+        <h3>🔗 Shareable Reports</h3>
+        <p>Generate a shareable link to any diff. Post it in Slack, paste it in a PR description, or email it to your DBA for review.</p>
+      </div>
+      <div class="cr-card">
+        <h3>⚡ Zero Setup</h3>
+        <p>No npm install. No config files. No database connection. Paste two CREATE TABLE dumps and get instant results.</p>
+      </div>
+      <div class="cr-card">
+        <h3>🔒 Privacy First</h3>
+        <p>All parsing happens in your browser. Your schemas never touch our servers. Perfect for sensitive production schemas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cr-section">
+    <h2>The 3-minute code review workflow</h2>
+    <div class="cr-workflow">
+      <div class="cr-workflow-step">
+        <div class="cr-step-num">1</div>
+        <div class="cr-step-content">
+          <h4>Dump your schemas</h4>
+          <p>Run <code>pg_dump --schema-only</code> (or <code>mysqldump --no-data</code>) on both staging and production. Paste the outputs into SchemaLens.</p>
+        </div>
+      </div>
+      <div class="cr-workflow-step">
+        <div class="cr-step-num">2</div>
+        <div class="cr-step-content">
+          <h4>Review the diff</h4>
+          <p>SchemaLens highlights every table, column, index, and constraint change. Breaking changes get a red warning banner. Safe changes are green.</p>
+        </div>
+      </div>
+      <div class="cr-workflow-step">
+        <div class="cr-step-num">3</div>
+        <div class="cr-step-content">
+          <h4>Copy the migration + share</h4>
+          <p>Generate the ALTER TABLE script, export it as Markdown for your PR description, and share the diff link with your team for sign-off.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary">Try the Staging vs Production Example →</a>
+    </div>
+  </section>
+
+  <section class="cr-section">
+    <h2>Automate it with the GitHub Action</h2>
+    <p style="color:var(--text-muted); margin-bottom:24px; max-width:700px;">For teams that want schema diff on every pull request without manual steps. The SchemaLens GitHub Action posts a risk-scored diff summary directly in your PR.</p>
+    <div class="cr-grid" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="cr-card">
+        <h3>🔌 One-Click Install</h3>
+        <p>Add the action to your workflow in 30 seconds. Works with any repository.</p>
+      </div>
+      <div class="cr-card">
+        <h3>💬 PR Comments</h3>
+        <p>Automatic risk-scored comments on every PR that touches schema files.</p>
+      </div>
+      <div class="cr-card">
+        <h3>🚫 Block Breaking Changes</h3>
+        <p>Optional: fail the build when breaking changes are detected.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <a href="github-action.html" class="btn btn-primary">Set Up GitHub Action →</a>
+      <a href="ci-demo.html" class="btn btn-secondary">See PR Comment Demo</a>
+    </div>
+  </section>
+
+  <section class="cr-section">
+    <h2>From the community</h2>
+    <div class="cr-quote">
+      <p>"Does it support diffing between branches (e.g., compare staging schema vs production)? That's the main use case I'd want — catching drift before a deploy, not after."</p>
+      <p style="font-style:normal; font-size:0.85rem; margin-top:8px;">— Hacker News comment, May 2026</p>
+    </div>
+    <div class="cr-quote">
+      <p>"I'd need it integrated into my CI pipeline, not just a manual tool. A GitHub Action that comments schema diffs on PRs would be more valuable."</p>
+      <p style="font-style:normal; font-size:0.85rem; margin-top:8px;">— Product Hunt comment, May 2026</p>
+    </div>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:16px;">We built SchemaLens for exactly these workflows. <a href="app.html?example=staging-vs-production" style="color:var(--primary);">Try the staging vs production example →</a></p>
+  </section>
+
+  <div class="cr-cta-bar">
+    <h2>Start catching schema drift in every code review</h2>
+    <p>Free for 15 tables. Pro unlocks unlimited diffs, full migration generation, and shareable reports.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="app.html" class="btn btn-primary btn-lg">Try SchemaLens Free</a>
+      <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+    </div>
+  </div>
+
+  <div class="cr-cta-bar" style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%); color:#fff; border:none;">
+    <h2 style="color:#fff;">🏢 Need team-wide schema monitoring?</h2>
+    <p style="color:rgba(255,255,255,0.9);">Shared workspaces, Slack alerts, SSO, and admin controls. Book a 15-minute demo.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="book-demo.html" class="btn btn-light" style="background:#fff; color:var(--primary);">Book a Demo</a>
+      <a href="team-schema-audit.html" class="btn btn-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff;">Free Team Audit</a>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:32px 24px; color:var(--text-muted); font-size:0.85rem; border-top:1px solid var(--border);">
+    <p>
+      <a href="index.html">Home</a> ·
+      <a href="app.html">App</a> ·
+      <a href="tools.html">Tools</a> ·
+      <a href="pricing.html">Pricing</a> ·
+      <a href="github-action.html">GitHub Action</a> ·
+      <a href="open-source.html">Open Source</a>
+    </p>
+    <p style="margin-top:8px;">© 2026 SchemaLens. Built for engineers.</p>
+  </footer>
+
+  <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
