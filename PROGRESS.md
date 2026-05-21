@@ -135,6 +135,31 @@ Zero sales after 158 days. The #1 community feedback from PH and HN was: "I'd ne
 
 ---
 
+## Day 161 — SQL to PlantUML ERD Converter (May 21, 2026)
+
+### The Problem
+Zero sales after 161 days. Distribution remains the sole bottleneck. We need a steady drumbeat of viral micro-tools to drive organic traffic, backlinks, and SEO discoverability. PlantUML is widely used in enterprise documentation (Confluence, wikis, READMEs) and has strong search volume — another ERD format complements our existing Mermaid and DBML converters.
+
+### What Was Built
+1. **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53:
+   - Parses SQL CREATE TABLE for all 5 dialects and generates PlantUML ERD syntax
+   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
+   - Generates `entity` blocks with `<<PK>>`, `<<FK>>`, `<<UK>>`, `<<generated>>` stereotypes
+   - Cardinality notation: `||--o{` for required FKs, `|o--o{` for nullable FKs
+   - Required vs optional column separation with `--` divider
+   - Live stats: tables, relations, columns
+   - Copy-to-clipboard and `.puml` download
+   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Cross-linked on index.html, tools.html, README.md, footer links
+2. **sitemap.xml updated** — Added sql-to-plantuml.html (184 URLs total).
+3. **Tool count updated** — 52+ → 53+ across README.md and marketing assets.
+
+### Validation
+- ✅ PlantUML output validates in plantuml.com with sample schemas
+- ✅ All internal links verified
+- ✅ sitemap.xml well-formed
+- ✅ Deployed to production on Vercel
+
 ## Day 160 — SQL to DBML Converter + Post-Launch Week Transition (May 21, 2026)
 
 ### The Problem

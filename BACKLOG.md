@@ -12,7 +12,7 @@
 ### Distribution — Zero Sales After 160 Days (CRITICAL)
 - [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR comment demo (ci-demo.html), SQL to DBML Converter (#52).
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (HELP-REQUEST.md filed May 20, awaiting human execution)
-- [ ] **P0** Build 2+ new viral micro-tools this week targeting high-volume keywords (DBML done, need next: SQL to PlantUML, Schema to OpenAPI, or SQL to Knex/Bookshelf)
+- [x] **P0** Build 2+ new viral micro-tools this week targeting high-volume keywords (DBML done, SQL to PlantUML done, need next: Schema to OpenAPI, or SQL to Knex/Bookshelf)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
 - [ ] **P2** IndieHackers post with built-in-public story
