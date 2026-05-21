@@ -135,6 +135,35 @@ Zero sales after 158 days. The #1 community feedback from PH and HN was: "I'd ne
 
 ---
 
+## Day 162 — SQL to OpenAPI / JSON Schema Converter (May 21, 2026)
+
+### The Problem
+Zero sales after 162 days. We committed to building 2+ viral micro-tools this week to keep distribution momentum. After PlantUML (#53), we need another high-value converter that developers search for. OpenAPI and JSON Schema are ubiquitous in API development — converting SQL tables directly to API specs saves hours of manual typing and attracts search traffic from API-first developers.
+
+### What Was Built
+1. **SQL to OpenAPI / JSON Schema Converter** (`tools/sql-to-openapi.html`) — Micro-tool #54:
+   - Parses SQL CREATE TABLE for all 5 dialects and generates OpenAPI 3.0 component schemas
+   - Toggle output between OpenAPI YAML and JSON Schema (Draft 7)
+   - Smart SQL-to-OpenAPI type mapping: INTEGER→integer, TIMESTAMP→date-time, UUID→uuid, JSON→object, VARCHAR→string
+   - Detects CHECK constraint enums (e.g., `CHECK (status IN ('active', 'inactive'))`)
+   - NOT NULL columns added to `required` array; nullable columns get `nullable: true`
+   - MySQL/PostgreSQL COMMENT strings become schema `description` fields
+   - DEFAULT values preserved as `default` in schema
+   - Primary keys marked with `x-primary-key: true` vendor extension
+   - Live stats: tables, schemas, columns, enums detected
+   - Copy-to-clipboard and download as `.yaml` or `.json`
+   - 5 dialect samples with CHECK constraints
+   - Cross-linked on index.html, tools.html, README.md, footer links
+2. **sitemap.xml updated** — Added sql-to-openapi.html (185 URLs total).
+3. **Tool count updated** — 53+ → 54+ across README.md and marketing assets.
+
+### Validation
+- ✅ OpenAPI output validates in Swagger Editor with sample schemas
+- ✅ JSON Schema output validates in jsonschemavalidator.net
+- ✅ All internal links verified
+- ✅ sitemap.xml well-formed
+- ✅ Deployed to production on Vercel
+
 ## Day 161 — SQL to PlantUML ERD Converter (May 21, 2026)
 
 ### The Problem
