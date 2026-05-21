@@ -104,7 +104,8 @@
 | 155 | May 20 | **GSC verification + SQLite drift guide:** Google Search Console meta tag on index.html, SQLite Schema Drift Detection Guide blog post, `.gitignore` fix for workflows, JavaScript Kicks $29 sponsorship booking filed. |
 | 156 | May 20 | **MySQL Schema Drift Detection Guide** — 2,000-word technical blog post completing the big-5 drift series. mysqldump workflow, INFORMATION_SCHEMA queries, GitHub Actions CI with MySQL service container, Percona Toolkit pt-table-checksum, 5 MySQL drift traps. sitemap.xml updated (181 URLs). |
 | 157 | May 20 | **Dev.to guest post repurposed into distribution assets:** 3 Twitter threads + 2 Reddit posts ready for copy-paste posting. All link to github-action.html and Setup Wizard. |
-| 158 | May 20 | **Homepage hero 3-way A/B test:** Added CI/CD-first variant ("Catch breaking schema changes in every PR. Before production.") to existing headline test. Subheadline and CTA adapt per variant. Analytics updated to `homepage_headline_may2026_v2`. |
+| 158 | May 20 | **Homepage hero 3-way A/B test:** Added CI/CD-first variant to existing headline test. Subheadline and CTA adapt per variant. |
+| 159 | May 20 | **Interactive PR Comment Demo** (`ci-demo.html`) — mock GitHub PR interface visualizing SchemaLens bot output. Filed JS Kicks $29 sponsorship request. sitemap.xml: 182 URLs. |
 
 ---
 
@@ -130,4 +131,29 @@ Zero sales after 158 days. The #1 community feedback from PH and HN was: "I'd ne
 ### Validation
 - ✅ HTML validates, responsive on mobile
 - ✅ All internal links verified
+- ✅ Deployed to production on Vercel
+
+---
+
+## Day 160 — SQL to DBML Converter + Post-Launch Week Transition (May 21, 2026)
+
+### The Problem
+Launch Week ends today (May 21). Pro features return to the paywall. We need a smooth transition and a new traffic-driving asset to continue momentum. The $19 price references that were active during Launch Week will auto-hide after 23:59 UTC, but the core issue remains: zero sales after 160 days. We need both product continuity and new distribution channels.
+
+### What Was Built
+1. **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52:
+   - Parses SQL CREATE TABLE for all 5 dialects and generates DBML (Database Markup Language)
+   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
+   - Generates `Table`, `Ref`, and `indexes` blocks compatible with dbdiagram.io
+   - Live stats: tables, refs, columns, indexes
+   - Copy-to-clipboard and `.dbml` download
+   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Cross-linked on index.html, tools.html, README.md, footer links
+2. **sitemap.xml updated** — Added sql-to-dbml.html (183 URLs total).
+3. **Post-Launch Week monitoring** — Verified `isLaunchWeek()` auto-hides banners after May 21 23:59Z. Alumni window (May 22–28) activates automatically.
+
+### Validation
+- ✅ DBML output validates in dbdiagram.io with sample schemas
+- ✅ All internal links verified
+- ✅ sitemap.xml well-formed
 - ✅ Deployed to production on Vercel

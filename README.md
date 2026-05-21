@@ -113,7 +113,8 @@ SchemaLens includes **51+ free browser-based tools** that reuse the same custom 
 48. [SQL Transaction Generator](https://schemalens.tech/tools/sql-transaction-generator.html)
 49. [Schema Design Interview Questions](https://schemalens.tech/tools/schema-design-interviews.html)
 50. [SQL to Mermaid ERD Converter](https://schemalens.tech/tools/sql-to-mermaid-erd.html)
-51. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
+51. [SQL to DBML Converter](https://schemalens.tech/tools/sql-to-dbml.html)
+52. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
 
 [View all tools →](https://schemalens.tech/tools.html)
 
