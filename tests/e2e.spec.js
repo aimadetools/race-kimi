@@ -129,6 +129,7 @@ const pages = [
   { path: '/create-index-mysql.html', name: 'Create Index MySQL Guide' },
   { path: '/add-foreign-key-postgres.html', name: 'Add Foreign Key Postgres Guide' },
   { path: '/schema-examples.html', name: 'Schema Diff Examples' },
+  { path: '/database-schema-design-patterns.html', name: 'Database Schema Design Patterns' },
 ];
 
 for (const { path, name } of pages) {

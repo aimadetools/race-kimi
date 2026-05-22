@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>10 Database Schema Design Patterns Every Engineer Should Know — SchemaLens</title>
+  <meta name="description" content="Master 10 essential database schema design patterns with real SQL examples. From soft deletes to multi-tenancy — copy-ready PostgreSQL, MySQL, and SQLite schemas.">
+  <meta property="og:title" content="10 Database Schema Design Patterns Every Engineer Should Know">
+  <meta property="og:description" content="Real SQL examples for soft deletes, audit logs, tagging, tree structures, multi-tenancy, and more. Copy-ready schemas for production.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/database-schema-design-patterns.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/database-schema-design-patterns.html">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "10 Database Schema Design Patterns Every Engineer Should Know",
+    "description": "Master 10 essential database schema design patterns with real SQL examples. From soft deletes to multi-tenancy — copy-ready PostgreSQL, MySQL, and SQLite schemas.",
+    "url": "https://schemalens.tech/database-schema-design-patterns.html",
+    "learningResourceType": "interactive",
+    "interactivityType": "mixed",
+    "educationalLevel": "intermediate",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Software Engineers"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "SchemaLens",
+      "url": "https://schemalens.tech"
+    }
+  }
+  </script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+    .patterns-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem 48px;
+    }
+
+    .pattern-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .pattern-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pattern-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pattern-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .pattern-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.1);
+      color: var(--primary);
+      border: 1px solid rgba(99,102,241,0.25);
+    }
+    .pattern-tag.advanced {
+      background: rgba(245,158,11,0.1);
+      color: #f59e0b;
+      border-color: rgba(245,158,11,0.25);
+    }
+    .pattern-tag.beginner {
+      background: rgba(16,185,129,0.1);
+      color: #10b981;
+      border-color: rgba(16,185,129,0.25);
+    }
+    .pattern-section {
+      margin-bottom: 16px;
+    }
+    .pattern-section:last-child { margin-bottom: 0; }
+    .pattern-section h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+    .pattern-section p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .pattern-section ul {
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+    .pattern-section li {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .code-block pre {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--primary); }
+
+    .diff-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+    .diff-cta:hover { background: var(--primary-light); }
+
+    .tradeoff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .tradeoff-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .tradeoff-box h5 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tradeoff-box ul {
+      padding-left: 1rem;
+      margin: 0;
+    }
+    .tradeoff-box li {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 2px;
+    }
+
+    .toc {
+      max-width: 860px;
+      margin: 0 auto 32px;
+      padding: 0 1rem;
+    }
+    .toc-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .toc h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .toc ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 6px 16px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .toc a {
+      font-size: 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc a:hover { color: var(--primary); }
+    .toc a span { color: var(--text-muted); font-size: 0.8rem; }
+
+    .cta-section {
+      text-align: center;
+      padding: 48px 1rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .cta-section h2 { font-size: 1.5rem; margin-bottom: 10px; }
+    .cta-section p { color: var(--text-muted); max-width: 520px; margin: 0 auto 20px; }
+    .cta-section .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .cta-section .btn:hover { background: var(--primary-light); }
+
+    @media (max-width: 640px) {
+      .tradeoff-grid { grid-template-columns: 1fr; }
+      .pattern-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--text);">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>
+      SchemaLens
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <h1>10 Database Schema Design Patterns</h1>
+    <p>Production-ready SQL patterns every backend engineer should have in their toolkit. Copy, adapt, and diff them with SchemaLens.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-inner">
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="#p1"><span>01</span> User / Profile Separation</a></li>
+        <li><a href="#p2"><span>02</span> Soft Delete</a></li>
+        <li><a href="#p3"><span>03</span> Audit Logging</a></li>
+        <li><a href="#p4"><span>04</span> Multi-tenancy</a></li>
+        <li><a href="#p5"><span>05</span> Tagging</a></li>
+        <li><a href="#p6"><span>06</span> Tree Structure</a></li>
+        <li><a href="#p7"><span>07</span> Polymorphic Associations</a></li>
+        <li><a href="#p8"><span>08</span> Voting / Rating</a></li>
+        <li><a href="#p9"><span>09</span> Shopping Cart</a></li>
+        <li><a href="#p10"><span>10</span> Messaging</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="patterns-grid">
+
+    <!-- Pattern 1: User / Profile Separation -->
+    <article class="pattern-card" id="p1">
+      <h2><span class="pattern-number">1</span> User / Profile Separation</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag beginner">Beginner</span>
+        <span class="pattern-tag">Authentication</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Storing all user data in one table couples authentication concerns (email, password hash, MFA) with profile concerns (bio, avatar, preferences). This bloats the users table and leaks auth fields into profile APIs.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>Split into <code>users</code> (auth) and <code>profiles</code> (public/personal data) with a 1:1 relationship.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  email_verified_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE profiles (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  display_name VARCHAR(100),
+  bio TEXT,
+  avatar_url VARCHAR(500),
+  timezone VARCHAR(50) DEFAULT 'UTC',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_profiles_user_id ON profiles(user_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++email+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++password_hash+VARCHAR%28255%29+NOT+NULL%2C%0A++display_name+VARCHAR%28100%29%2C%0A++bio+TEXT%2C%0A++avatar_url+VARCHAR%28500%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++email+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++password_hash+VARCHAR%28255%29+NOT+NULL%2C%0A++email_verified_at+TIMESTAMPTZ%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+profiles+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+UNIQUE+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++display_name+VARCHAR%28100%29%2C%0A++bio+TEXT%2C%0A++avatar_url+VARCHAR%28500%29%2C%0A++timezone+VARCHAR%2850%29+DEFAULT+%27UTC%27%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_profiles_user_id+ON+profiles%28user_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Public profiles are queried often</li>
+              <li>Auth fields should not leak to profile APIs</li>
+              <li>Different caching strategies for auth vs profile</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Extra JOIN on every profile fetch</li>
+              <li>Slightly more complex registration flow</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 2: Soft Delete -->
+    <article class="pattern-card" id="p2">
+      <h2><span class="pattern-number">2</span> Soft Delete</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag beginner">Beginner</span>
+        <span class="pattern-tag">Data Safety</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Hard-deleting rows destroys data forever. Accidental deletes are irreversible, and foreign key cascades can wipe out related records silently.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>Add a <code>deleted_at</code> timestamp. Filter it out in application queries. Optionally add a composite unique index that ignores soft-deleted rows.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  body TEXT,
+  published_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(slug, deleted_at)
+);
+
+CREATE INDEX idx_posts_deleted_at ON posts(deleted_at)
+  WHERE deleted_at IS NULL;
+CREATE INDEX idx_posts_user_id ON posts(user_id, deleted_at)
+  WHERE deleted_at IS NULL;</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++slug+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++body+TEXT%2C%0A++published_at+TIMESTAMPTZ%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++slug+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++published_at+TIMESTAMPTZ%2C%0A++deleted_at+TIMESTAMPTZ%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++UNIQUE%28slug%2C+deleted_at%29%0A%29%3B%0A%0ACREATE+INDEX+idx_posts_deleted_at+ON+posts%28deleted_at%29%0A++WHERE+deleted_at+IS+NULL%3B%0ACREATE+INDEX+idx_posts_user_id+ON+posts%28user_id%2C+deleted_at%29%0A++WHERE+deleted_at+IS+NULL%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>User-facing content that might be restored</li>
+              <li>Regulatory requirements for data retention</li>
+              <li>Any table with cascading relationships</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Every query needs <code>WHERE deleted_at IS NULL</code></li>
+              <li>Table bloats over time without periodic purge</li>
+              <li>Unique constraints need partial indexes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 3: Audit Logging -->
+    <article class="pattern-card" id="p3">
+      <h2><span class="pattern-number">3</span> Audit Logging</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag">Intermediate</span>
+        <span class="pattern-tag">Compliance</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>You need to know who changed what, when, and what the old value was. Built-in <code>updated_at</code> columns only tell you the last change, not the history.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>A generic <code>audit_logs</code> table that stores row-level changes. For stricter requirements, create table-specific audit tables.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE audit_logs (
+  id BIGSERIAL PRIMARY KEY,
+  table_name VARCHAR(100) NOT NULL,
+  record_id INT NOT NULL,
+  action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT','UPDATE','DELETE')),
+  old_values JSONB,
+  new_values JSONB,
+  changed_by INT REFERENCES users(id),
+  changed_at TIMESTAMPTZ DEFAULT NOW(),
+  ip_address INET,
+  user_agent TEXT
+);
+
+CREATE INDEX idx_audit_table_record ON audit_logs(table_name, record_id, changed_at DESC);
+CREATE INDEX idx_audit_changed_by ON audit_logs(changed_by, changed_at DESC);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+audit_logs+%28%0A++id+BIGSERIAL+PRIMARY+KEY%2C%0A++table_name+VARCHAR%28100%29+NOT+NULL%2C%0A++record_id+INT+NOT+NULL%2C%0A++action+VARCHAR%2810%29+NOT+NULL+CHECK+%28action+IN+%28%27INSERT%27%2C%27UPDATE%27%2C%27DELETE%27%29%29%2C%0A++old_values+JSONB%2C%0A++new_values+JSONB%2C%0A++changed_by+INT+REFERENCES+users%28id%29%2C%0A++changed_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++ip_address+INET%2C%0A++user_agent+TEXT%0A%29%3B%0A%0ACREATE+INDEX+idx_audit_table_record+ON+audit_logs%28table_name%2C+record_id%2C+changed_at+DESC%29%3B%0ACREATE+INDEX+idx_audit_changed_by+ON+audit_logs%28changed_by%2C+changed_at+DESC%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Financial, medical, or legal data</li>
+              <li>Multi-user editing environments</li>
+              <li>Debugging production issues</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Write amplification: every change becomes 2 writes</li>
+              <li>Audit table grows very fast</li>
+              <li>JSONB queries are slower than normalized columns</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 4: Multi-tenancy -->
+    <article class="pattern-card" id="p4">
+      <h2><span class="pattern-number">4</span> Multi-tenancy (Shared Database)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag">Intermediate</span>
+        <span class="pattern-tag">SaaS</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Your SaaS serves multiple organizations. You need to isolate their data without running a separate database per customer (too expensive).</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>Add a <code>tenant_id</code> column to every tenant-scoped table. Use row-level security (RLS) or application-level filtering. Add composite indexes on <code>(tenant_id, ...)</code>.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE tenants (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  subdomain VARCHAR(100) NOT NULL UNIQUE,
+  plan VARCHAR(20) DEFAULT 'free',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE projects (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT NOT NULL REFERENCES tenants(id),
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(tenant_id, name)
+);
+
+CREATE INDEX idx_projects_tenant ON projects(tenant_id, created_at DESC);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+projects+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++description+TEXT%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+tenants+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28255%29+NOT+NULL%2C%0A++subdomain+VARCHAR%28100%29+NOT+NULL+UNIQUE%2C%0A++plan+VARCHAR%2820%29+DEFAULT+%27free%27%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+projects+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++tenant_id+INT+NOT+NULL+REFERENCES+tenants%28id%29%2C%0A++name+VARCHAR%28255%29+NOT+NULL%2C%0A++description+TEXT%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++UNIQUE%28tenant_id%2C+name%29%0A%29%3B%0A%0ACREATE+INDEX+idx_projects_tenant+ON+projects%28tenant_id%2C+created_at+DESC%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>B2B SaaS with many small tenants</li>
+              <li>When per-DB cost is prohibitive</li>
+              <li>Shared resources for analytics/reporting</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Every query must include tenant_id filter</li>
+              <li>Harder to scale a single tenant independently</li>
+              <li>Backup/restore per tenant is complex</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 5: Tagging -->
+    <article class="pattern-card" id="p5">
+      <h2><span class="pattern-number">5</span> Tagging (Many-to-Many)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag beginner">Beginner</span>
+        <span class="pattern-tag">Relationships</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Storing tags as a CSV string in a column breaks normalization, prevents indexing, and makes tag-based queries slow and error-prone.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>A classic many-to-many with a junction table: <code>tags</code>, <code>posts</code>, and <code>post_tags</code>.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  slug VARCHAR(50) NOT NULL UNIQUE,
+  color VARCHAR(7) DEFAULT '#6366f1'
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE post_tags (
+  post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  tag_id INT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+  tagged_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (post_id, tag_id)
+);
+
+CREATE INDEX idx_post_tags_tag ON post_tags(tag_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++tags+VARCHAR%28500%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+tags+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%2850%29+NOT+NULL+UNIQUE%2C%0A++slug+VARCHAR%2850%29+NOT+NULL+UNIQUE%2C%0A++color+VARCHAR%287%29+DEFAULT+%27%236366f1%27%0A%29%3B%0A%0ACREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+post_tags+%28%0A++post_id+INT+NOT+NULL+REFERENCES+posts%28id%29+ON+DELETE+CASCADE%2C%0A++tag_id+INT+NOT+NULL+REFERENCES+tags%28id%29+ON+DELETE+CASCADE%2C%0A++tagged_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++PRIMARY+KEY+%28post_id%2C+tag_id%29%0A%29%3B%0A%0ACREATE+INDEX+idx_post_tags_tag+ON+post_tags%28tag_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Content categorization (posts, products, tickets)</li>
+              <li>When tags need metadata (color, description)</li>
+              <li>When you query by tag frequently</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Extra JOIN for every tagged item query</li>
+              <li>Junction table can become large</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 6: Tree Structure -->
+    <article class="pattern-card" id="p6">
+      <h2><span class="pattern-number">6</span> Tree Structure (Closure Table)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag advanced">Advanced</span>
+        <span class="pattern-tag">Hierarchy</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Storing hierarchical data (org charts, comment threads, categories) with a simple <code>parent_id</code> makes recursive queries slow and complex in SQL.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>A <strong>closure table</strong> stores every ancestor-descendant relationship, making tree queries O(1) joins.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE category_tree (
+  ancestor_id INT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  descendant_id INT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  depth INT NOT NULL CHECK (depth >= 0),
+  PRIMARY KEY (ancestor_id, descendant_id)
+);
+
+-- Example: Electronics (1) → Computers (2) → Laptops (3)
+-- Inserts: (1,1,0), (1,2,1), (1,3,2), (2,2,0), (2,3,1), (3,3,0)</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+categories+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29+NOT+NULL%2C%0A++slug+VARCHAR%28100%29+NOT+NULL+UNIQUE%2C%0A++parent_id+INT+REFERENCES+categories%28id%29%0A%29%3B&right=CREATE+TABLE+categories+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29+NOT+NULL%2C%0A++slug+VARCHAR%28100%29+NOT+NULL+UNIQUE%0A%29%3B%0A%0ACREATE+TABLE+category_tree+%28%0A++ancestor_id+INT+NOT+NULL+REFERENCES+categories%28id%29+ON+DELETE+CASCADE%2C%0A++descendant_id+INT+NOT+NULL+REFERENCES+categories%28id%29+ON+DELETE+CASCADE%2C%0A++depth+INT+NOT+NULL+CHECK+%28depth+%3E%3D+0%29%2C%0A++PRIMARY+KEY+%28ancestor_id%2C+descendant_id%29%0A%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Deep or frequently queried hierarchies</li>
+              <li>When you need fast subtree or ancestor queries</li>
+              <li>Org charts, nested comment threads</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>More writes on insert/move/delete</li>
+              <li>Storage grows as O(n²) in worst case</li>
+              <li>For simple 2-level trees, parent_id is enough</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 7: Polymorphic Associations -->
+    <article class="pattern-card" id="p7">
+      <h2><span class="pattern-number">7</span> Polymorphic Associations</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag">Intermediate</span>
+        <span class="pattern-tag">Flexibility</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>You want comments (or likes, attachments, notifications) to belong to multiple entity types (posts, products, videos) without a separate comments table per type.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>Store the target table name and ID as two columns. Use CHECK constraints to validate entity types. Add composite indexes for each target.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  entity_type VARCHAR(20) NOT NULL
+    CHECK (entity_type IN ('post','product','video')),
+  entity_id INT NOT NULL,
+  user_id INT NOT NULL REFERENCES users(id),
+  body TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_comments_post ON comments(entity_type, entity_id)
+  WHERE entity_type = 'post';
+CREATE INDEX idx_comments_product ON comments(entity_type, entity_id)
+  WHERE entity_type = 'product';
+CREATE INDEX idx_comments_video ON comments(entity_type, entity_id)
+  WHERE entity_type = 'video';</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+post_comments+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++post_id+INT+NOT+NULL+REFERENCES+posts%28id%29%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+product_comments+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++product_id+INT+NOT+NULL+REFERENCES+products%28id%29%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+comments+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++entity_type+VARCHAR%2820%29+NOT+NULL%0A++++CHECK+%28entity_type+IN+%28%27post%27%2C%27product%27%2C%27video%27%29%29%2C%0A++entity_id+INT+NOT+NULL%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_comments_post+ON+comments%28entity_type%2C+entity_id%29%0A++WHERE+entity_type+%3D+%27post%27%3B%0ACREATE+INDEX+idx_comments_product+ON+comments%28entity_type%2C+entity_id%29%0A++WHERE+entity_type+%3D+%27product%27%3B%0ACREATE+INDEX+idx_comments_video+ON+comments%28entity_type%2C+entity_id%29%0A++WHERE+entity_type+%3D+%27video%27%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Comments, likes, or notifications on multiple types</li>
+              <li>When separate tables would be mostly identical</li>
+              <li>Rapid prototyping with uncertain entity types</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>No foreign key constraints on entity_id</li>
+              <li>Query plans can be harder to optimize</li>
+              <li>Harder to enforce referential integrity in app code</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 8: Voting / Rating -->
+    <article class="pattern-card" id="p8">
+      <h2><span class="pattern-number">8</span> Voting / Rating</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag beginner">Beginner</span>
+        <span class="pattern-tag">Engagement</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Storing only an average rating loses per-user data and makes it impossible to change a vote. Storing every vote in a wide table is inflexible.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>A <code>votes</code> table with <code>value</code> (+1/-1 or 1-5). Cache aggregates in the parent table for fast reads.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  score INT DEFAULT 0,
+  vote_count INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE votes (
+  id SERIAL PRIMARY KEY,
+  post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  value SMALLINT NOT NULL CHECK (value BETWEEN -1 AND 1),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(post_id, user_id)
+);
+
+CREATE INDEX idx_votes_post ON votes(post_id, value);
+CREATE INDEX idx_votes_user ON votes(user_id, created_at DESC);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++rating+NUMERIC%283%2C2%29+DEFAULT+0%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++score+INT+DEFAULT+0%2C%0A++vote_count+INT+DEFAULT+0%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+votes+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++post_id+INT+NOT+NULL+REFERENCES+posts%28id%29+ON+DELETE+CASCADE%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++value+SMALLINT+NOT+NULL+CHECK+%28value+BETWEEN+-1+AND+1%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++UNIQUE%28post_id%2C+user_id%29%0A%29%3B%0A%0ACREATE+INDEX+idx_votes_post+ON+votes%28post_id%2C+value%29%3B%0ACREATE+INDEX+idx_votes_user+ON+votes%28user_id%2C+created_at+DESC%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Upvote/downvote systems</li>
+              <li>Star ratings (use value 1-5)</li>
+              <li>When vote history matters</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Cached aggregates can drift — recalc periodically</li>
+              <li>High write volume on hot content</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 9: Shopping Cart -->
+    <article class="pattern-card" id="p9">
+      <h2><span class="pattern-number">9</span> Shopping Cart</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag">Intermediate</span>
+        <span class="pattern-tag">E-commerce</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>Storing cart items as JSON in a user column loses inventory validation, price history, and makes abandoned-cart recovery impossible.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p>Separate <code>carts</code> and <code>cart_items</code> tables. Snapshot the product price at add-to-cart time to prevent price-change disputes.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE carts (
+  id SERIAL PRIMARY KEY,
+  user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  session_id VARCHAR(255) UNIQUE,
+  status VARCHAR(20) DEFAULT 'active'
+    CHECK (status IN ('active','converted','abandoned')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT carts_user_or_session CHECK (
+    (user_id IS NOT NULL) OR (session_id IS NOT NULL)
+  )
+);
+
+CREATE TABLE cart_items (
+  id SERIAL PRIMARY KEY,
+  cart_id INT NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL CHECK (quantity > 0),
+  unit_price_cents INT NOT NULL,
+  added_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(cart_id, product_id)
+);
+
+CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++cart_json+JSONB%0A%29%3B&right=CREATE+TABLE+carts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+UNIQUE+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++session_id+VARCHAR%28255%29+UNIQUE%2C%0A++status+VARCHAR%2820%29+DEFAULT+%27active%27%0A++++CHECK+%28status+IN+%28%27active%27%2C%27converted%27%2C%27abandoned%27%29%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++CONSTRAINT+carts_user_or_session+CHECK+%28%0A++++%28user_id+IS+NOT+NULL%29+OR+%28session_id+IS+NOT+NULL%29%0A++%29%0A%29%3B%0A%0ACREATE+TABLE+cart_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++cart_id+INT+NOT+NULL+REFERENCES+carts%28id%29+ON+DELETE+CASCADE%2C%0A++product_id+INT+NOT+NULL%2C%0A++quantity+INT+NOT+NULL+CHECK+%28quantity+%3E+0%29%2C%0A++unit_price_cents+INT+NOT+NULL%2C%0A++added_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++UNIQUE%28cart_id%2C+product_id%29%0A%29%3B%0A%0ACREATE+INDEX+idx_cart_items_cart+ON+cart_items%28cart_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Any e-commerce or booking flow</li>
+              <li>When price snapshots matter</li>
+              <li>Guest checkout (session-based carts)</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>Requires cleanup job for abandoned carts</li>
+              <li>Inventory reservation logic adds complexity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Pattern 10: Messaging -->
+    <article class="pattern-card" id="p10">
+      <h2><span class="pattern-number">10</span> Messaging (Conversation + Message)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag">Intermediate</span>
+        <span class="pattern-tag">Social</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Problem</h4>
+        <p>A simple <code>messages</code> table with <code>sender_id</code> and <code>receiver_id</code> breaks down for group chats, message status tracking, and participant metadata.</p>
+      </div>
+      <div class="pattern-section">
+        <h4>The Solution</h4>
+        <p><code>conversations</code> + <code>conversation_participants</code> + <code>messages</code>. Track read status per participant, not per message.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE conversations (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255),
+  type VARCHAR(20) DEFAULT 'direct'
+    CHECK (type IN ('direct','group')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE conversation_participants (
+  conversation_id INT NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  last_read_message_id INT,
+  PRIMARY KEY (conversation_id, user_id)
+);
+
+CREATE TABLE messages (
+  id SERIAL PRIMARY KEY,
+  conversation_id INT NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  sender_id INT NOT NULL REFERENCES users(id),
+  body TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_messages_conversation ON messages(conversation_id, created_at DESC);
+CREATE INDEX idx_participants_user ON conversation_participants(user_id, joined_at DESC);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+messages+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++sender_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++receiver_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++body+TEXT+NOT+NULL%2C%0A++is_read+BOOLEAN+DEFAULT+FALSE%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+conversations+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29%2C%0A++type+VARCHAR%2820%29+DEFAULT+%27direct%27%0A++++CHECK+%28type+IN+%28%27direct%27%2C%27group%27%29%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+TABLE+conversation_participants+%28%0A++conversation_id+INT+NOT+NULL+REFERENCES+conversations%28id%29+ON+DELETE+CASCADE%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++joined_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++last_read_message_id+INT%2C%0A++PRIMARY+KEY+%28conversation_id%2C+user_id%29%0A%29%3B%0A%0ACREATE+TABLE+messages+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++conversation_id+INT+NOT+NULL+REFERENCES+conversations%28id%29+ON+DELETE+CASCADE%2C%0A++sender_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_messages_conversation+ON+messages%28conversation_id%2C+created_at+DESC%29%3B%0ACREATE+INDEX+idx_participants_user+ON+conversation_participants%28user_id%2C+joined_at+DESC%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+      <div class="pattern-section">
+        <div class="tradeoff-grid">
+          <div class="tradeoff-box">
+            <h5>✅ When to use</h5>
+            <ul>
+              <li>Direct messages or group chats</li>
+              <li>When read receipts per user matter</li>
+              <li>When participants can join/leave</li>
+            </ul>
+          </div>
+          <div class="tradeoff-box">
+            <h5>⚠️ Trade-offs</h5>
+            <ul>
+              <li>More complex than sender/receiver columns</li>
+              <li>Conversation list queries need careful indexing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="cta-section">
+    <h2>Compare These Patterns in SchemaLens</h2>
+    <p>Paste your current schema and the pattern you want to adopt. See every column, index, and constraint diff instantly.</p>
+    <a href="app.html" class="btn">Open Schema Diff →</a>
+  </div>
+
+  <div class="patterns-grid" style="padding-bottom: 64px;">
+    <div class="pattern-card" style="text-align:center;">
+      <h3 style="margin-bottom:10px;">Want More?</h3>
+      <p style="color:var(--text-muted);margin-bottom:16px;">Explore real-world schemas from Twitter, Uber, Discord, and more.</p>
+      <a href="famous-database-schemas.html" style="display:inline-block;background:var(--primary);color:#fff;padding:10px 20px;border-radius:var(--radius-sm);font-weight:600;text-decoration:none;">Famous Database Schemas →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer" style="border-top:1px solid var(--border);padding:40px 0;">
+  <div class="container footer-grid">
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">SchemaLens</strong>
+      <p style="font-size:0.9rem;color:var(--text-muted);max-width:260px;">Browser-based SQL schema diff, migration generation, and 55+ free developer tools.</p>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Product</strong>
+      <a href="app.html">Schema Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Resources</strong>
+      <a href="blog.html">Blog</a>
+      <a href="schema-examples.html">Examples</a>
+      <a href="famous-database-schemas.html">Famous Schemas</a>
+      <a href="migration-recipes.html">Recipes</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Company</strong>
+      <a href="about.html">About</a>
+      <a href="open-source.html">Open Source</a>
+      <a href="affiliate.html">Affiliate</a>
+    </div>
+  </div>
+  <div class="container" style="text-align:center;margin-top:24px;font-size:0.85rem;color:var(--text-muted);">
+    © 2026 SchemaLens. Built in public.
+  </div>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copied!';
+    setTimeout(() => btn.innerText = original, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
