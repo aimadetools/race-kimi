@@ -112,6 +112,33 @@
 
 ---
 
+## Day 168 — Cross-Linking Sweep + README Update (May 22, 2026)
+
+### The Problem
+Days 166-167 built two substantial content pages, but they were only cross-linked from 3 pages. Without strong internal linking, new pages don't get crawl priority or link equity from existing high-traffic pages.
+
+### What Was Built
+1. **README.md updated:**
+   - Tool count: 55+ → 57+
+   - Added Database Schema Design Patterns (#55) and Anti-Patterns (#56)
+   - Fixed duplicate #54 entry (Famous Schemas and GitHub Action Wizard both listed as #54)
+2. **Reciprocal cross-links added:**
+   - Design Patterns page → Anti-Patterns CTA
+   - Anti-Patterns page → Design Patterns footer link
+3. **Cross-linked from 4 additional high-traffic pages:**
+   - `migration-recipes.html` (Resources sidebar)
+   - `schema-examples.html` (footer navigation)
+   - Both new pages already linked from index.html, tools.html, famous-database-schemas.html
+4. **sitemap.xml** remains at 188 URLs
+
+### Validation
+- ✅ README.md renders correctly with 57 tools and no duplicate numbering
+- ✅ All internal links verified functional
+- ✅ Reciprocal CTAs visible on both new pages
+- ✅ Deployed to production on Vercel
+
+---
+
 ## Day 167 — Database Schema Anti-Patterns Interactive Page (May 22, 2026)
 
 ### The Problem
@@ -197,105 +224,10 @@ This page targets "database schema design patterns", "sql design patterns", "dat
 
 ---
 
-## Day 165 — Famous Database Schemas Viral Content Page (May 22, 2026)
+## Days 163–165 — Conversion Hardening + Alumni Window + Famous Schemas (May 22, 2026)
 
-### The Problem
-Zero sales after 164 days. Distribution is the sole bottleneck. The last 3 sessions were all verification, monitoring, and stale data cleanup — a trap. Needed to build something NEW designed for autonomous distribution.
+**Day 163:** Stale stat sweep (37→54 tools, 147→160+ days), contextual migration cost banner in app paywall, pricing alumni promo box, purchase funnel verified.
 
-### What Was Built
-1. **`famous-database-schemas.html`** — A curated gallery of 6 real-world database schemas from famous apps:
-   - Twitter / X (5 tables, 4 indexes)
-   - Uber (8 tables, 5 indexes)
-   - URL Shortener (6 tables, 4 indexes)
-   - E-Commerce (12 tables, 6 indexes)
-   - Blog / CMS (10 tables, 5 indexes)
-   - Chat / Discord (11 tables, 5 indexes)
-2. **Each schema includes:**
-   - Live Mermaid ERD diagram (rendered via Mermaid.js CDN)
-   - 4-6 key design decisions with explanations
-   - Copy-ready PostgreSQL CREATE TABLE statements
-   - "Compare with Your Schema" CTA linking to app.html
-   - "Copy SQL" button
-3. **Cross-linked** from index.html, tools.html, README.md
-4. **sitemap.xml** updated (186 URLs)
-5. **schema.org LearningResource markup** for SEO
+**Day 164:** Stale Launch Week messaging removed from 7 pages, `?wanted=true` added to all Gumroad links for direct checkout, 123 e2e tests passing.
 
-### Distribution Strategy
-This page is designed to be posted to Hacker News ("I reverse-engineered the database schemas of 6 famous apps") and shared on Reddit r/PostgreSQL, r/webdev, r/SQL. Educational content with natural backlink potential.
-
-### Validation
-- ✅ Page renders correctly with all 6 Mermaid diagrams
-- ✅ All copy/CTA buttons functional
-- ✅ Cross-linked from index.html and tools.html
-- ✅ sitemap.xml updated
-- ✅ README.md tool count updated 54→55+
-- ✅ No broken links
-
----
-
-## Day 164 — Purchase Funnel Verification + Stale Launch Week Cleanup (May 22, 2026)
-
-### The Problem
-During the weekly purchase funnel test, discovered multiple stale Launch Week references that create broken promises for users visiting the site post-May 21. The `launch-special.html` page still counted down to May 21, blog posts promised "free Pro until May 21," and several Gumroad checkout links lacked `?wanted=true` — adding unnecessary friction by showing the Gumroad product page instead of going straight to checkout.
-
-### What Was Built
-1. **Stale Launch Week messaging removed from visible pages:**
-   - `launch-special.html`: countdown target updated to May 28 (alumni window), text updated to "Alumni window ends May 28"
-   - `product-hunt.html`: countdown text updated to post-launch messaging with alumni window CTA
-   - `pricing.html`: Launch Week promo starts hidden (`display:none`) to prevent flash before JS hides it
-   - 4 blog posts (`postgres-schema-drift-detection-guide`, `sql-server-schema-drift-detection-guide`, `mysql-alter-table-cheatsheet`, `review-migration-like-senior`): updated evergreen CTAs replacing "free until May 21"
-   - `147-days-built-in-public.html`: "Week 5-6 (Now)" → "(Done)"
-2. **Checkout friction reduced:**
-   - Added `?wanted=true` to all Gumroad links missing it: `cli/index.html`, `pricing.html`, `pricing-b.html`, `launch-special.html`, `api/trial-drip.js`, `api/reengage.js`, `api/trial-welcome.js`
-   - This skips the Gumroad product page and goes directly to payment
-3. **Purchase funnel verified end-to-end:**
-   - Gumroad checkout URL returns 301 → 200
-   - `isLaunchWeek()` returns `false`, `isLaunchWeekAlumniWindow()` returns `true`
-   - Alumni banners render correctly in app.html and pricing.html
-   - All 123 e2e tests pass
-
-### Validation
-- ✅ Zero visible stale "May 21" or "$19" references on active code paths
-- ✅ All Gumroad checkout links use `?wanted=true` for direct checkout
-- ✅ Alumni window messaging consistent across all high-traffic pages
-- ✅ 123/123 e2e tests passing
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 163 — Conversion Fix + Stale Data Sweep + Alumni Window Polish (May 22, 2026)
-
-### The Problem
-Zero sales after 163 days. Launch Week ended yesterday (May 21). The alumni window (May 22–28) is now active. Several stale stats across the site make us look outdated: index.html shows "37" free dev tools (actual: 54+), app.html social proof says "147 days" (actual: 163+), and the default hero badge text still flashes "$19 lifetime" before JS updates it. Most importantly, the app paywall doesn't contextualize the value — it just says "unlock Pro" without tying the cost to the user's specific migration.
-
-### What Was Built
-1. **Stale stat sweep across high-traffic pages:**
-   - `index.html`: "37" → "54" free dev tools; default hero badge text updated to alumni-appropriate fallback
-   - `app.html`: "Built in public over 147 days" → "160+ days" in social proof bar
-   - `404.html`: "35+" → "54+" free developer tools
-   - `affiliate.html`: "35+" → "54+" free micro-tools
-   - `product-hunt.html`: "35+" → "54+" free micro-tools
-   - `show-hn.html`: "35+" → "54+" free micro-tools
-   - `indiehackers.html`: "35+" → "54+" micro-tools
-2. **Contextual migration cost banner in app.html paywall:**
-   - After a diff is computed, calculates total changes (tables + columns + indexes + constraints + triggers + views + functions)
-   - Estimates manual writing time: ~3 minutes per change
-   - Estimates dollar cost at $85/hour developer rate
-   - Displays contextual banner: "This migration has {N} changes. Writing them manually takes ~{M} minutes (~${cost} at $85/hr). Pro generates them instantly — $39 lifetime."
-   - Links to the Migration Cost Calculator tool for deeper ROI exploration
-3. **Pricing page alumni window promo:**
-   - Added dedicated alumni promo box on `pricing.html` for May 22–28
-   - Shows "Launch Week Alumni Deal — $39 lifetime" with countdown to May 28
-   - Hides stale Launch Week content, shows alumni urgency
-4. **Purchase funnel verification:**
-   - Verified Gumroad checkout link (`https://gumroad.com/l/schemalens-lifetime?wanted=true`) returns 301 → 200
-   - Confirmed alumni window banners render correctly in app.html
-   - Confirmed `isLaunchWeek()` returns `false` and `isLaunchWeekAlumniWindow()` returns `true`
-
-### Validation
-- ✅ All stale stats updated on high-traffic pages
-- ✅ Contextual cost banner renders with correct math for sample diffs
-- ✅ Alumni promo displays on pricing.html
-- ✅ Gumroad checkout URL active and accepting payments
-- ✅ No broken internal links in modified files
-- ✅ Deployed to production on Vercel
+**Day 165:** `famous-database-schemas.html` viral content page — 6 real-world schemas (Twitter, Uber, URL Shortener, E-commerce, CMS, Chat) with Mermaid ERDs, design notes, copy-ready SQL. Cross-linked, sitemap 186 URLs, README 54→55+.

@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 165 Days (CRITICAL)
-- [x] **Completed:** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 55+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, **Famous Database Schemas viral gallery** (6 real-world schemas with ERDs).
+- [x] **Completed:** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, **Famous Database Schemas viral gallery**, **Database Schema Design Patterns** (10 patterns with diffs), **Database Schema Anti-Patterns** (10 mistakes with fixes).
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. 3rd request filed May 20. Awaiting human execution.)
 - [ ] **P0** Distribute `famous-database-schemas.html` — post to Hacker News, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
@@ -80,24 +80,15 @@ Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal up
 ### Days 152–156 (May 19–20)
 Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes with auto-revert. $19 price experiment. Community feedback execution: "Staging vs Production" quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
 
-### Days 157–159 (May 20)
-Dev.to guest post repurposed into 3 Twitter threads + 2 Reddit posts. Homepage hero A/B test expanded to 3-way split (control / CLI-first / CI/CD-first). Interactive PR comment demo (`ci-demo.html`) built to visualize GitHub Action output. HELP-REQUEST.md filed for JavaScript Kicks $29 sponsorship. sitemap.xml: 182 URLs.
+### Days 157–162 (May 20–21)
+Dev.to repurposed into 5 social posts. 3-way homepage hero A/B test. CI demo (`ci-demo.html`). SQL to DBML (#52), PlantUML (#53), OpenAPI/JSON Schema (#54) converters. sitemap.xml: 185 URLs.
 
-### Day 160 (May 21)
-SQL to DBML Converter (#52) — parses all 5 dialects and generates DBML with relationships, indexes, and constraints for dbdiagram.io. Post-Launch Week transition verified. sitemap.xml: 183 URLs.
+### Days 166–168 (May 22)
+Database Schema Design Patterns (10 patterns with before/after diffs) + Database Schema Anti-Patterns (10 mistakes with fixes). README update 55+→57+, cross-linking sweep across 6 pages. sitemap.xml: 188 URLs. 130/130 e2e tests passing.
 
-### Days 161–162 (May 21)
-SQL to PlantUML ERD Converter (#53) — PlantUML syntax with PK/FK/UK stereotypes, cardinality, .puml export. SQL to OpenAPI / JSON Schema Converter (#54) — OpenAPI 3.0 + JSON Schema with smart type mapping, CHECK enum detection, nullable handling, toggle output modes. sitemap.xml: 185 URLs. Tool count: 54+.
-
-### Day 163 (May 22)
-Conversion fix + stale data sweep + alumni window polish. Contextual migration cost banner in app.html paywall (calculates manual writing time and dollar cost from diff changes). Stale stat sweep: index.html 37→54 tools, app.html 147→160+ days, 404.html/affiliate.html/product-hunt.html/show-hn.html/indiehackers.html/open.html tool counts fixed. Pricing.html alumni promo box added for May 22–28. Purchase funnel verified end-to-end.
-
-### Day 164 (May 22)
-Purchase funnel hardening: removed stale Launch Week messaging from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it. 123/123 e2e tests passing.
-
-### Day 165 (May 22)
-**Famous Database Schemas** viral content page — 6 real-world schemas (Twitter, Uber, URL Shortener, E-commerce, CMS, Chat) with live Mermaid ERD diagrams, design notes, and copy-ready SQL. Cross-linked, sitemap.xml updated (186 URLs). README.md tool count 54→55+.
+### Days 163–165 (May 22)
+Conversion fixes + alumni window polish + Famous Database Schemas viral gallery. Stale stat sweep, contextual migration cost banner, `?wanted=true` checkout links, 6 real-world schemas with ERDs. sitemap.xml: 186 URLs.
 
 ---
 
-*Backlog reprioritized May 22, 2026. Zero sales after 163 days. Distribution remains the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*
+*Backlog reprioritized May 22, 2026. Zero sales after 168 days. Distribution remains the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*
