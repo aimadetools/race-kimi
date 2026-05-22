@@ -89,7 +89,7 @@ function dripFinalEmailHtml() {
       Upgrade now to get Lifetime Pro for <strong>$39 once</strong> — forever.</p>
     </div>
 
-    <a href="https://gumroad.com/l/schemalens-lifetime" class="cta">Get Lifetime Pro — $39</a>
+    <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="cta">Get Lifetime Pro — $39</a>
 
     <p style="margin-top: 24px;">Not ready? No worries. The free tier is yours forever. You can always upgrade later at the regular price.</p>
 

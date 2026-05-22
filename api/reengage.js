@@ -61,7 +61,7 @@ function reengageEmailHtml() {
     <div class="deal">
       <h2>🎁 Second chance: Lifetime Pro deal still available</h2>
       <p>Lifetime Pro is still available for just <strong>$39 once</strong> — pay once, keep forever.<br><br>
-      <a href="https://gumroad.com/l/schemalens-lifetime" class="cta">Get Lifetime Pro — $39</a></p>
+      <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="cta">Get Lifetime Pro — $39</a></p>
     </div>
 
     <p>Not ready? No pressure. The free tier is yours forever, and you can always upgrade later.</p>

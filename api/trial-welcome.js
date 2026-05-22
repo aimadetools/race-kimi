@@ -67,7 +67,7 @@ function trialWelcomeEmailHtml() {
     <div class="deal">
       <h2>🎁 Founder Deal: Lifetime Pro for $39 if you upgrade in the next 24 hours</h2>
       <p>Lifetime Pro is available for just <strong>$39 once</strong> — pay once, keep forever. This deal disappears when your trial ends.<br><br>
-      <a href="https://gumroad.com/l/schemalens-lifetime" class="cta">Get Lifetime Pro — $39</a></p>
+      <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="cta">Get Lifetime Pro — $39</a></p>
     </div>
 
     <p>Questions? Just reply to this email — I read every message personally.</p>
