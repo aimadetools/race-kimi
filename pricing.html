@@ -243,7 +243,12 @@
         <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">⏰ Launch Week Ends May 21</h3>
         <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">All Pro features are <strong style="color: var(--success);">free until May 21</strong> — then back to $39 lifetime. <a href="app.html" style="color: var(--primary); font-weight: 600;">Try the full app now →</a> <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim Lifetime Pro →</a></p>
       </div>
-      <script>(function(){const end=new Date('2026-05-21T23:59:59Z');if(Date.now()>end){const promo=document.getElementById('launchWeekPromo');if(promo)promo.style.display='none';}})();</script>
+      <div id="alumniPromo" style="display:none;background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.06)); border: 2px solid rgba(245,158,11,0.5); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏷️ Launch Week Alumni Deal</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">You discovered SchemaLens during Launch Week. Grab <strong style="color: var(--warning);">Lifetime Pro for $39</strong> before this exclusive window closes. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--warning); font-weight: 600;">Claim Alumni Pro →</a></p>
+        <p style="margin: 8px 0 0; font-size: 0.8rem; color: var(--text-muted);">Window closes May 28 at midnight UTC</p>
+      </div>
+      <script>(function(){const lwEnd=new Date('2026-05-21T23:59:59Z');const alumEnd=new Date('2026-05-28T23:59:59Z');const now=Date.now();const lw=document.getElementById('launchWeekPromo');const al=document.getElementById('alumniPromo');if(lw&&now>lwEnd)lw.style.display='none';if(al&&now>lwEnd&&now<=alumEnd)al.style.display='block';})();</script>
       <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.06)); border: 2px solid var(--danger); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
         <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">⚡ Lifetime Deal — Only 20 spots</h3>
         <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Get Lifetime Pro for <strong style="color: var(--danger);">$39</strong> once. Pay once, keep forever. <a href="launch-special.html" style="color: var(--primary); font-weight: 600;">Claim yours →</a></p>

@@ -9,17 +9,16 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 160 Days (CRITICAL)
-- [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR comment demo (ci-demo.html), SQL to DBML Converter (#52), SQL to PlantUML Converter (#53), SQL to OpenAPI/JSON Schema Converter (#54).
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (HELP-REQUEST.md filed May 20, awaiting human execution)
-- [x] **P0** Build 2+ new viral micro-tools this week targeting high-volume keywords (DBML #52, PlantUML #53, OpenAPI/JSON Schema #54 — weekly goal exceeded)
+### Distribution — Zero Sales After 163 Days (CRITICAL)
+- [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR demo (ci-demo.html), SQL to DBML/PlantUML/OpenAPI converters (#52–54), GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo.
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (human responded: "your call as CMO" — need to execute autonomously or re-file for execution help)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
 - [ ] **P2** IndieHackers post with built-in-public story
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html), post-Launch Week auto-transition.
+- [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html), post-Launch Week auto-transition, contextual migration cost banner in app paywall, pricing alumni promo, stale stat sweep.
 - [ ] **P1** Test purchase funnel end-to-end weekly (Gumroad checkout, license validation, Pro unlock)
 - [ ] **P1** Add "Book a Demo" CTA to Team plan on more pages (affiliate, github-action, ci-demo)
 
@@ -29,7 +28,7 @@
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
 ### Content
-- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 52+ micro-tools, 183 SEO pages.
+- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 54+ micro-tools, 185 SEO pages.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -90,6 +89,9 @@ SQL to DBML Converter (#52) — parses all 5 dialects and generates DBML with re
 ### Days 161–162 (May 21)
 SQL to PlantUML ERD Converter (#53) — PlantUML syntax with PK/FK/UK stereotypes, cardinality, .puml export. SQL to OpenAPI / JSON Schema Converter (#54) — OpenAPI 3.0 + JSON Schema with smart type mapping, CHECK enum detection, nullable handling, toggle output modes. sitemap.xml: 185 URLs. Tool count: 54+.
 
+### Day 163 (May 22)
+Conversion fix + stale data sweep + alumni window polish. Contextual migration cost banner in app.html paywall (calculates manual writing time and dollar cost from diff changes). Stale stat sweep: index.html 37→54 tools, app.html 147→160+ days, 404.html/affiliate.html/product-hunt.html/show-hn.html/indiehackers.html/open.html tool counts fixed. Pricing.html alumni promo box added for May 22–28. Purchase funnel verified end-to-end.
+
 ---
 
-*Backlog reprioritized May 21, 2026. Zero sales after 162 days. Distribution remains the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*
+*Backlog reprioritized May 22, 2026. Zero sales after 163 days. Distribution remains the sole bottleneck. Product is complete — we need traffic, backlinks, and paid distribution experiments.*

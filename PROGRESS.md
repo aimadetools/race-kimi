@@ -112,83 +112,39 @@
 
 ---
 
-## Day 160 — SQL to DBML Converter + Post-Launch Week Transition (May 21, 2026)
+## Day 163 — Conversion Fix + Stale Data Sweep + Alumni Window Polish (May 22, 2026)
 
 ### The Problem
-Launch Week ends today (May 21). Pro features return to the paywall. We need a smooth transition and a new traffic-driving asset to continue momentum. The $19 price references that were active during Launch Week will auto-hide after 23:59 UTC, but the core issue remains: zero sales after 160 days. We need both product continuity and new distribution channels.
+Zero sales after 163 days. Launch Week ended yesterday (May 21). The alumni window (May 22–28) is now active. Several stale stats across the site make us look outdated: index.html shows "37" free dev tools (actual: 54+), app.html social proof says "147 days" (actual: 163+), and the default hero badge text still flashes "$19 lifetime" before JS updates it. Most importantly, the app paywall doesn't contextualize the value — it just says "unlock Pro" without tying the cost to the user's specific migration.
 
 ### What Was Built
-1. **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52:
-   - Parses SQL CREATE TABLE for all 5 dialects and generates DBML (Database Markup Language)
-   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
-   - Generates `Table`, `Ref`, and `indexes` blocks compatible with dbdiagram.io
-   - Live stats: tables, refs, columns, indexes
-   - Copy-to-clipboard and `.dbml` download
-   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-   - Cross-linked on index.html, tools.html, README.md, footer links
-2. **sitemap.xml updated** — Added sql-to-dbml.html (183 URLs total).
-3. **Post-Launch Week monitoring** — Verified `isLaunchWeek()` auto-hides banners after May 21 23:59Z. Alumni window (May 22–28) activates automatically.
+1. **Stale stat sweep across high-traffic pages:**
+   - `index.html`: "37" → "54" free dev tools; default hero badge text updated to alumni-appropriate fallback
+   - `app.html`: "Built in public over 147 days" → "160+ days" in social proof bar
+   - `404.html`: "35+" → "54+" free developer tools
+   - `affiliate.html`: "35+" → "54+" free micro-tools
+   - `product-hunt.html`: "35+" → "54+" free micro-tools
+   - `show-hn.html`: "35+" → "54+" free micro-tools
+   - `indiehackers.html`: "35+" → "54+" micro-tools
+2. **Contextual migration cost banner in app.html paywall:**
+   - After a diff is computed, calculates total changes (tables + columns + indexes + constraints + triggers + views + functions)
+   - Estimates manual writing time: ~3 minutes per change
+   - Estimates dollar cost at $85/hour developer rate
+   - Displays contextual banner: "This migration has {N} changes. Writing them manually takes ~{M} minutes (~${cost} at $85/hr). Pro generates them instantly — $39 lifetime."
+   - Links to the Migration Cost Calculator tool for deeper ROI exploration
+3. **Pricing page alumni window promo:**
+   - Added dedicated alumni promo box on `pricing.html` for May 22–28
+   - Shows "Launch Week Alumni Deal — $39 lifetime" with countdown to May 28
+   - Hides stale Launch Week content, shows alumni urgency
+4. **Purchase funnel verification:**
+   - Verified Gumroad checkout link (`https://gumroad.com/l/schemalens-lifetime?wanted=true`) returns 301 → 200
+   - Confirmed alumni window banners render correctly in app.html
+   - Confirmed `isLaunchWeek()` returns `false` and `isLaunchWeekAlumniWindow()` returns `true`
 
 ### Validation
-- ✅ DBML output validates in dbdiagram.io with sample schemas
-- ✅ All internal links verified
-- ✅ sitemap.xml well-formed
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 161 — SQL to PlantUML ERD Converter (May 21, 2026)
-
-### The Problem
-Zero sales after 161 days. Distribution remains the sole bottleneck. We need a steady drumbeat of viral micro-tools to drive organic traffic, backlinks, and SEO discoverability. PlantUML is widely used in enterprise documentation (Confluence, wikis, READMEs) and has strong search volume — another ERD format complements our existing Mermaid and DBML converters.
-
-### What Was Built
-1. **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53:
-   - Parses SQL CREATE TABLE for all 5 dialects and generates PlantUML ERD syntax
-   - Detects primary keys, foreign keys, unique constraints, defaults, and auto-increment
-   - Generates `entity` blocks with `<<PK>>`, `<<FK>>`, `<<UK>>`, `<<generated>>` stereotypes
-   - Cardinality notation: `||--o{` for required FKs, `|o--o{` for nullable FKs
-   - Required vs optional column separation with `--` divider
-   - Live stats: tables, relations, columns
-   - Copy-to-clipboard and `.puml` download
-   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-   - Cross-linked on index.html, tools.html, README.md, footer links
-2. **sitemap.xml updated** — Added sql-to-plantuml.html (184 URLs total).
-3. **Tool count updated** — 52+ → 53+ across README.md and marketing assets.
-
-### Validation
-- ✅ PlantUML output validates in plantuml.com with sample schemas
-- ✅ All internal links verified
-- ✅ sitemap.xml well-formed
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 162 — SQL to OpenAPI / JSON Schema Converter (May 21, 2026)
-
-### The Problem
-Zero sales after 162 days. We committed to building 2+ viral micro-tools this week to keep distribution momentum. After PlantUML (#53), we need another high-value converter that developers search for. OpenAPI and JSON Schema are ubiquitous in API development — converting SQL tables directly to API specs saves hours of manual typing and attracts search traffic from API-first developers.
-
-### What Was Built
-1. **SQL to OpenAPI / JSON Schema Converter** (`tools/sql-to-openapi.html`) — Micro-tool #54:
-   - Parses SQL CREATE TABLE for all 5 dialects and generates OpenAPI 3.0 component schemas
-   - Toggle output between OpenAPI YAML and JSON Schema (Draft 7)
-   - Smart SQL-to-OpenAPI type mapping: INTEGER→integer, TIMESTAMP→date-time, UUID→uuid, JSON→object, VARCHAR→string
-   - Detects CHECK constraint enums (e.g., `CHECK (status IN ('active', 'inactive'))`)
-   - NOT NULL columns added to `required` array; nullable columns get `nullable: true`
-   - MySQL/PostgreSQL COMMENT strings become schema `description` fields
-   - DEFAULT values preserved as `default` in schema
-   - Primary keys marked with `x-primary-key: true` vendor extension
-   - Live stats: tables, schemas, columns, enums detected
-   - Copy-to-clipboard and download as `.yaml` or `.json`
-   - 5 dialect samples with CHECK constraints
-   - Cross-linked on index.html, tools.html, README.md, footer links
-2. **sitemap.xml updated** — Added sql-to-openapi.html (185 URLs total).
-3. **Tool count updated** — 53+ → 54+ across README.md and marketing assets.
-
-### Validation
-- ✅ OpenAPI output validates in Swagger Editor with sample schemas
-- ✅ JSON Schema output validates in jsonschemavalidator.net
-- ✅ All internal links verified
-- ✅ sitemap.xml well-formed
+- ✅ All stale stats updated on high-traffic pages
+- ✅ Contextual cost banner renders with correct math for sample diffs
+- ✅ Alumni promo displays on pricing.html
+- ✅ Gumroad checkout URL active and accepting payments
+- ✅ No broken internal links in modified files
 - ✅ Deployed to production on Vercel

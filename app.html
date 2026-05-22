@@ -3393,6 +3393,45 @@ function detectBreakingChanges(diff) {
   return breaking;
 }
 
+function calculateMigrationCost(diff) {
+  let changes = 0;
+  changes += (diff.tablesAdded?.length || 0);
+  changes += (diff.tablesRemoved?.length || 0);
+  changes += (diff.tablesRenamed?.length || 0);
+  changes += (diff.tablesModified?.length || 0);
+  changes += (diff.enumsAdded?.length || 0);
+  changes += (diff.enumsRemoved?.length || 0);
+  changes += (diff.triggersAdded?.length || 0);
+  changes += (diff.triggersRemoved?.length || 0);
+  changes += (diff.triggersModified?.length || 0);
+  changes += (diff.viewsAdded?.length || 0);
+  changes += (diff.viewsRemoved?.length || 0);
+  changes += (diff.viewsModified?.length || 0);
+  changes += (diff.functionsAdded?.length || 0);
+  changes += (diff.functionsRemoved?.length || 0);
+  changes += (diff.functionsModified?.length || 0);
+  changes += (diff.indexesAdded?.length || 0);
+  changes += (diff.indexesRemoved?.length || 0);
+  changes += (diff.constraintsAdded?.length || 0);
+  changes += (diff.constraintsRemoved?.length || 0);
+  for (const td of (diff.tablesModified || [])) {
+    changes += (td.columnsAdded?.length || 0);
+    changes += (td.columnsRemoved?.length || 0);
+    changes += (td.columnsRenamed?.length || 0);
+    for (const mod of (td.columnsModified || [])) {
+      changes += (mod.changes?.length || 0);
+    }
+    changes += (td.constraintsAdded?.length || 0);
+    changes += (td.constraintsRemoved?.length || 0);
+    if (td.constraintsChanged) changes += 1;
+    changes += (td.indexesAdded?.length || 0);
+    changes += (td.indexesRemoved?.length || 0);
+  }
+  const minutes = changes * 3;
+  const cost = Math.round((minutes / 60) * 85);
+  return { changes, minutes, cost };
+}
+
 function calculateRiskScore(diff) {
   const breaking = detectBreakingChanges(diff);
   let score = 0;
@@ -4694,7 +4733,7 @@ function getSocialProofHTML() {
       <span class="social-proof-badge">💯 14-day money-back guarantee</span>
     </div>
     <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 8px;">
-      <strong style="color:var(--text);">Built in public over 147 days.</strong> 50+ free micro-tools. 255+ CLI downloads this month. Trusted by developers who value privacy.
+      <strong style="color:var(--text);">Built in public over 160+ days.</strong> 54+ free micro-tools. Trusted by developers who value privacy.
     </p>
   `;
 }
@@ -4773,9 +4812,17 @@ function renderMigration(sql, rollbackSql, diff) {
     const teaserCopy = teaserVariant === 'teaser'
       ? 'Free plans show the first 5 lines of your migration.'
       : 'Free plans show a blurred preview of your migration.';
+    const mc = calculateMigrationCost(diff);
+    const costBannerHTML = mc.changes > 0
+      ? `<div style="background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(16,185,129,0.04));border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.9rem;color:var(--text);">
+          ⏱️ <strong>This migration has ${mc.changes} changes.</strong> Writing them manually takes ~${mc.minutes} minutes (~$${mc.cost} at $85/hr). Pro generates them instantly — <strong>$39 lifetime</strong>.
+          <span style="display:block;font-size:0.8rem;color:var(--text-muted);margin-top:3px;"><a href="tools/migration-cost-calculator.html" target="_blank" style="color:var(--success);text-decoration:underline;">See the full ROI breakdown →</a></span>
+        </div>`
+      : '';
     html += `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
+        ${costBannerHTML}
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         ${isLaunchWeek() ? `<div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           ⏰ <strong>Launch Week ends in <span class="launch-week-countdown-inline"></span></strong> — Pro is free now, but goes back to $39 lifetime after May 21.
