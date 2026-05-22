@@ -112,6 +112,49 @@
 
 ---
 
+## Day 167 — Database Schema Anti-Patterns Interactive Page (May 22, 2026)
+
+### The Problem
+Zero sales after 166 days. All P0 distribution tasks remain blocked. The Design Patterns page (Day 166) addressed "how to do it right." Complementary content about "what goes wrong" is highly shareable and captures a different search intent.
+
+### What Was Built
+1. **`database-schema-anti-patterns.html`** — Interactive guide to 10 common schema mistakes:
+   - Missing Foreign Keys (orphaned rows, no referential integrity)
+   - FLOAT for Money (IEEE 754 precision loss)
+   - Comma-Separated Values in a Column (breaks 1NF)
+   - EAV Tables (self-JOIN hell, no type safety)
+   - No created_at / updated_at (debugging nightmare)
+   - Unindexed Foreign Keys (sequential scans, lock contention)
+   - VARCHAR(255) for Everything (wasted storage, no validation)
+   - No CHECK Constraints on Enums (garbage data propagation)
+   - Missing Soft Deletes (permanent accidental deletion)
+   - Repeating Groups (1NF violation, hard limits)
+2. **Each anti-pattern includes:**
+   - Risk box explaining what goes wrong in production
+   - Copy-ready fix SQL with best practices
+   - "See the diff" CTA linking to app.html with before/after schemas
+   - Copy-to-clipboard buttons
+3. **Cross-linked** from index.html (feature card + footer), tools.html (tool card + footer), famous-database-schemas.html (footer)
+4. **Links to Design Patterns page** as complementary content
+5. **sitemap.xml** updated (188 URLs)
+6. **schema.org LearningResource markup**
+7. **e2e test** added — 130/130 tests passing
+
+### Distribution Strategy
+Pairs with the Design Patterns page as a "good cop / bad cop" content duo. Anti-patterns content is highly engaging on social media and forums (developers love horror stories). Targets "database schema mistakes", "sql anti-patterns", "common database mistakes" keywords.
+
+### Validation
+- ✅ Page renders correctly, all 10 anti-patterns visible
+- ✅ Risk boxes and fix boxes styled distinctly
+- ✅ All copy buttons functional
+- ✅ All "See the diff" links pre-fill app.html correctly
+- ✅ Cross-linked from 3 high-traffic pages
+- ✅ sitemap.xml updated
+- ✅ 130/130 e2e tests passing
+- ✅ Deployed to production on Vercel
+
+---
+
 ## Day 166 — Database Schema Design Patterns Interactive Page (May 22, 2026)
 
 ### The Problem
