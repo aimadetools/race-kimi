@@ -61,7 +61,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **54+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **55+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -116,6 +116,7 @@ SchemaLens includes **54+ free browser-based tools** that reuse the same custom 
 51. [SQL to DBML Converter](https://schemalens.tech/tools/sql-to-dbml.html)
 52. [SQL to PlantUML ERD Converter](https://schemalens.tech/tools/sql-to-plantuml.html)
 53. [SQL to OpenAPI / JSON Schema Converter](https://schemalens.tech/tools/sql-to-openapi.html)
+54. [Famous Database Schemas](https://schemalens.tech/famous-database-schemas.html) — Real-world SQL designs from Twitter, Uber, E-commerce, Chat, and more with ERD diagrams
 54. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
 
 [View all tools →](https://schemalens.tech/tools.html)

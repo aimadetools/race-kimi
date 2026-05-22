@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Famous Database Schemas — Real-World Designs from Twitter, Uber, Netflix & More | SchemaLens</title>
+<meta name="description" content="Explore the database schemas behind the world's most famous apps: Twitter, Uber, E-commerce, Chat, URL Shortener, and CMS. With ERD diagrams, SQL, and design notes.">
+<meta property="og:title" content="Famous Database Schemas — Real-World Designs from Twitter, Uber & More">
+<meta property="og:description" content="Explore real-world database schemas from famous apps. ERD diagrams, SQL CREATE TABLE statements, and design notes for every schema.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/famous-database-schemas.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://schemalens.tech/famous-database-schemas.html">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "Famous Database Schemas",
+  "description": "Real-world database schemas from Twitter, Uber, E-commerce, Chat, URL Shortener, and CMS with ERD diagrams and SQL.",
+  "educationalLevel": "Intermediate to Advanced",
+  "learningResourceType": "Reference",
+  "url": "https://schemalens.tech/famous-database-schemas.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  }
+}
+</script>
+<style>
+  .page-header { padding: 56px 20px 32px; text-align: center; background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, transparent 100%); }
+  .page-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+  .page-header .stat-bar { display: flex; gap: 24px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .page-header .stat-bar span { font-size: 0.85rem; color: var(--text-muted); background: var(--card-bg); border: 1px solid var(--border); padding: 6px 14px; border-radius: 999px; }
+
+  .schema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; padding: 0 20px 40px; }
+  .schema-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    padding: 24px; cursor: pointer; transition: all .2s ease; position: relative;
+  }
+  .schema-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 24px rgba(99,102,241,0.12); }
+  .schema-card .icon { font-size: 2rem; margin-bottom: 12px; }
+  .schema-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+  .schema-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 14px; }
+  .schema-card .meta { display: flex; gap: 12px; font-size: 0.8rem; color: var(--text-muted); }
+  .schema-card .meta span { background: rgba(99,102,241,0.08); padding: 3px 10px; border-radius: 6px; }
+  .schema-card .arrow { position: absolute; right: 20px; bottom: 20px; color: var(--primary); font-size: 1.2rem; opacity: 0; transition: opacity .2s; }
+  .schema-card:hover .arrow { opacity: 1; }
+
+  .schema-detail {
+    max-width: 900px; margin: 0 auto 48px; padding: 0 20px; display: none;
+    animation: fadeIn .4s ease;
+  }
+  .schema-detail.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .detail-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-header .icon { font-size: 2.2rem; }
+  .detail-header h2 { font-size: 1.6rem; font-weight: 700; margin: 0; }
+  .detail-header .back-btn {
+    margin-left: auto; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  }
+  .detail-header .back-btn:hover { border-color: var(--primary); }
+
+  .detail-section { margin-bottom: 28px; }
+  .detail-section h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 10px; }
+  .detail-section p, .detail-section li { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+  .detail-section ul { padding-left: 20px; }
+  .detail-section li { margin-bottom: 6px; }
+
+  .mermaid-container {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 24px; overflow-x: auto;
+  }
+  .mermaid { display: flex; justify-content: center; }
+  .mermaid svg { max-width: 100%; height: auto; }
+
+  .sql-block {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 24px;
+  }
+  .sql-header {
+    background: rgba(99,102,241,0.06); padding: 10px 16px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  .sql-header span { font-weight: 600; font-size: 0.9rem; }
+  .sql-header button {
+    background: var(--primary); color: #fff; border: none; padding: 6px 14px;
+    border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+  }
+  .sql-block pre {
+    margin: 0; padding: 16px; overflow-x: auto; font-size: 0.82rem; line-height: 1.55;
+    max-height: 420px; overflow-y: auto;
+  }
+
+  .cta-row {
+    display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0;
+  }
+  .btn-primary-sm {
+    background: var(--primary); color: #fff; border: none; padding: 10px 18px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-block;
+  }
+  .btn-primary-sm:hover { opacity: 0.9; }
+  .btn-outline-sm {
+    background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px 18px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-block;
+  }
+  .btn-outline-sm:hover { border-color: var(--primary); color: var(--primary); }
+
+  .bottom-cta {
+    text-align: center; padding: 56px 20px; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(56,189,248,0.08));
+    border-radius: 16px; margin: 40px auto; max-width: 900px; border: 1px solid var(--border);
+  }
+  .bottom-cta h2 { font-size: 1.6rem; margin-bottom: 10px; }
+  .bottom-cta p { color: var(--text-muted); max-width: 520px; margin: 0 auto 20px; }
+
+  @media (max-width: 640px) {
+    .page-header h1 { font-size: 1.6rem; }
+    .schema-grid { grid-template-columns: 1fr; }
+    .detail-header { flex-wrap: wrap; }
+    .detail-header .back-btn { margin-left: 0; width: 100%; margin-top: 10px; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar" style="padding:0 20px;">
+  <div class="nav-container" style="max-width:1000px;">
+    <a href="index.html" class="logo" style="font-size:1.3rem;">SchemaLens</a>
+    <div class="nav-links">
+      <a href="app.html">Diff Tool</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog.html">Blog</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Famous Database Schemas</h1>
+  <p>Real-world SQL designs from the apps you use every day. Explore ERD diagrams, study the CREATE TABLE statements, and compare them with your own schema.</p>
+  <div class="stat-bar">
+    <span>6 real-world schemas</span>
+    <span>60+ tables</span>
+    <span>Live ERD diagrams</span>
+    <span>Copy-ready SQL</span>
+  </div>
+</div>
+
+<div class="schema-grid" id="card-grid">
+  <div class="schema-card" onclick="showSchema('twitter')">
+    <div class="icon">🐦</div>
+    <h3>Twitter / X</h3>
+    <p>Users, tweets, follows, likes, retweets, and bookmarks. Designed for 500M+ tweets per day.</p>
+    <div class="meta"><span>5 tables</span><span>4 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+  <div class="schema-card" onclick="showSchema('uber')">
+    <div class="icon">🚗</div>
+    <h3>Uber</h3>
+    <p>Riders, drivers, vehicles, trips, payments, ratings, and real-time event tracking.</p>
+    <div class="meta"><span>8 tables</span><span>5 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+  <div class="schema-card" onclick="showSchema('shortener')">
+    <div class="icon">🔗</div>
+    <h3>URL Shortener</h3>
+    <p>Short links, click analytics, custom aliases, and geo/device tracking like bit.ly.</p>
+    <div class="meta"><span>6 tables</span><span>4 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+  <div class="schema-card" onclick="showSchema('ecommerce')">
+    <div class="icon">🛒</div>
+    <h3>E-Commerce</h3>
+    <p>Products, categories, carts, orders, payments, reviews, and inventory management.</p>
+    <div class="meta"><span>12 tables</span><span>6 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+  <div class="schema-card" onclick="showSchema('cms')">
+    <div class="icon">📝</div>
+    <h3>Blog / CMS</h3>
+    <p>Posts, authors, categories, tags, comments, media library, and newsletter subscriptions.</p>
+    <div class="meta"><span>10 tables</span><span>5 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+  <div class="schema-card" onclick="showSchema('chat')">
+    <div class="icon">💬</div>
+    <h3>Chat / Discord</h3>
+    <p>Workspaces, channels, messages, threads, reactions, roles, and permissions.</p>
+    <div class="meta"><span>11 tables</span><span>5 indexes</span></div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+
+<!-- ========== TWITTER ========== -->
+<div class="schema-detail" id="detail-twitter">
+  <div class="detail-header">
+    <div class="icon">🐦</div>
+    <h2>Twitter / X Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A simplified but production-grade schema for a Twitter-like microblogging platform. Handles users, tweets, follow relationships, likes, and bookmarks. Designed for read-heavy workloads with partial indexes for non-deleted content.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Soft deletes</strong> on tweets with <code>is_deleted</code> flag and partial index — preserves reply chains and analytics</li>
+      <li><strong>Self-referencing tweets</strong> for replies and retweets via <code>reply_to_tweet_id</code> and <code>retweet_of_tweet_id</code></li>
+      <li><strong>Composite primary key</strong> on <code>follows</code> table prevents duplicate relationships</li>
+      <li><strong>CHECK constraint</strong> prevents self-follows: <code>follower_id != following_id</code></li>
+      <li><strong>Denormalized counters</strong> on users table reduce query complexity for profile stats</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o{ tweets : "posts"
+    users ||--o{ follows : "follows"
+    users ||--o{ likes : "makes"
+    users ||--o{ bookmarks : "saves"
+    tweets ||--o{ likes : "receives"
+    tweets ||--o{ bookmarks : "receives"
+    tweets ||--o{ tweets : "reply_to"
+    tweets ||--o{ tweets : "retweet_of"
+    users {
+      bigint id PK
+      varchar15 username UK
+      varchar50 display_name
+      text bio
+      varchar500 avatar_url
+      varchar255 email UK
+      varchar255 password_hash
+      timestamptz created_at
+      boolean is_verified
+      int follower_count
+      int following_count
+      int tweet_count
+    }
+    tweets {
+      bigint id PK
+      bigint user_id FK
+      varchar280 content
+      bigint reply_to_tweet_id FK
+      bigint retweet_of_tweet_id FK
+      text media_urls
+      int like_count
+      int retweet_count
+      int reply_count
+      timestamptz created_at
+      boolean is_deleted
+      timestamptz deleted_at
+    }
+    follows {
+      bigint follower_id PK_FK
+      bigint following_id PK_FK
+      timestamptz created_at
+    }
+    likes {
+      bigint user_id PK_FK
+      bigint tweet_id PK_FK
+      timestamptz created_at
+    }
+    bookmarks {
+      bigint user_id PK_FK
+      bigint tweet_id PK_FK
+      timestamptz created_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('twitter')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('twitter')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>twitter-schema.sql</span><button onclick="copySQL('twitter')">Copy</button></div>
+    <pre><code id="sql-twitter">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  username VARCHAR(15) NOT NULL UNIQUE,
+  display_name VARCHAR(50) NOT NULL,
+  bio TEXT,
+  avatar_url VARCHAR(500),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+  follower_count INT NOT NULL DEFAULT 0,
+  following_count INT NOT NULL DEFAULT 0,
+  tweet_count INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE tweets (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  content VARCHAR(280) NOT NULL,
+  reply_to_tweet_id BIGINT REFERENCES tweets(id) ON DELETE SET NULL,
+  retweet_of_tweet_id BIGINT REFERENCES tweets(id) ON DELETE SET NULL,
+  media_urls TEXT[],
+  like_count INT NOT NULL DEFAULT 0,
+  retweet_count INT NOT NULL DEFAULT 0,
+  reply_count INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+  deleted_at TIMESTAMPTZ
+);
+
+CREATE TABLE follows (
+  follower_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  following_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (follower_id, following_id),
+  CONSTRAINT no_self_follow CHECK (follower_id != following_id)
+);
+
+CREATE TABLE likes (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tweet_id BIGINT NOT NULL REFERENCES tweets(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, tweet_id)
+);
+
+CREATE TABLE bookmarks (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tweet_id BIGINT NOT NULL REFERENCES tweets(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, tweet_id)
+);
+
+CREATE INDEX idx_tweets_user_created ON tweets(user_id, created_at DESC) WHERE is_deleted = FALSE;
+CREATE INDEX idx_tweets_reply_to ON tweets(reply_to_tweet_id) WHERE reply_to_tweet_id IS NOT NULL;
+CREATE INDEX idx_tweets_retweet_of ON tweets(retweet_of_tweet_id) WHERE retweet_of_tweet_id IS NOT NULL;
+CREATE INDEX idx_follows_following ON follows(following_id, created_at DESC);
+CREATE INDEX idx_likes_tweet ON likes(tweet_id, created_at DESC);</code></pre>
+  </div>
+</div>
+
+<!-- ========== UBER ========== -->
+<div class="schema-detail" id="detail-uber">
+  <div class="detail-header">
+    <div class="icon">🚗</div>
+    <h2>Uber Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A ride-hailing platform schema covering riders, drivers, vehicles, trips, payments, and ratings. Built for 20M+ trips per day with immutable financial records and event-sourced trip tracking.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Separate users and drivers</strong> — a driver is also a user who can ride. Uses reference pattern, not inheritance</li>
+      <li><strong>Immutable fare fields</strong> on trips table — once completed, the fare never changes</li>
+      <li><strong>Event sourcing</strong> via <code>trip_events</code> table captures every status change for debugging and disputes</li>
+      <li><strong>DECIMAL for all money</strong> — never use FLOAT for currency</li>
+      <li><strong>Vehicle document lifecycle</strong> with verification states and expiry tracking</li>
+      <li><strong>Unique constraint</strong> on <code>ratings(trip_id, from_user_id)</code> prevents duplicate ratings</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o| drivers : "can be"
+    users ||--o{ trips : "rides"
+    drivers ||--o{ trips : "drives"
+    drivers ||--o{ vehicles : "owns"
+    vehicles ||--o{ vehicle_documents : "has"
+    trips ||--o{ trip_events : "generates"
+    trips ||--o{ payments : "has"
+    trips ||--o{ ratings : "receives"
+    users ||--o{ ratings : "gives"
+    users {
+      bigint id PK
+      varchar20 phone UK
+      varchar255 email UK
+      varchar100 full_name
+      varchar255 password_hash
+      varchar500 avatar_url
+      timestamptz created_at
+      boolean is_active
+      bigint default_payment_method_id
+    }
+    drivers {
+      bigint user_id PK_FK
+      varchar50 license_number UK
+      date license_expiry
+      varchar20 background_check_status
+      varchar20 onboarding_status
+      decimal rating
+      int total_trips
+      decimal lifetime_earnings
+      boolean is_online
+      bigint current_vehicle_id
+      timestamptz created_at
+    }
+    vehicles {
+      bigint id PK
+      bigint driver_id FK
+      varchar50 make
+      varchar50 model
+      int year
+      varchar30 color
+      varchar20 license_plate UK
+      varchar20 vehicle_type
+      int seat_capacity
+      boolean is_active
+      timestamptz created_at
+    }
+    vehicle_documents {
+      bigint id PK
+      bigint vehicle_id FK
+      varchar30 document_type
+      varchar500 document_url
+      varchar20 verification_status
+      timestamptz uploaded_at
+      timestamptz verified_at
+      date expires_at
+    }
+    trips {
+      bigint id PK
+      bigint rider_id FK
+      bigint driver_id FK
+      bigint vehicle_id FK
+      varchar20 status
+      decimal pickup_lat
+      decimal pickup_lng
+      varchar300 pickup_address
+      decimal dropoff_lat
+      decimal dropoff_lng
+      varchar300 dropoff_address
+      timestamptz requested_at
+      timestamptz accepted_at
+      timestamptz started_at
+      timestamptz completed_at
+      timestamptz cancelled_at
+      varchar10 cancelled_by
+      text cancellation_reason
+      decimal distance_km
+      int duration_minutes
+      decimal base_fare
+      decimal distance_fare
+      decimal time_fare
+      decimal surge_multiplier
+      decimal promo_discount
+      decimal total_fare
+      varchar3 currency
+      varchar20 payment_status
+    }
+    trip_events {
+      bigint id PK
+      bigint trip_id FK
+      varchar30 event_type
+      decimal lat
+      decimal lng
+      jsonb metadata
+      timestamptz created_at
+    }
+    payments {
+      bigint id PK
+      bigint trip_id FK
+      bigint user_id FK
+      decimal amount
+      varchar3 currency
+      varchar20 payment_method
+      varchar20 payment_status
+      varchar100 transaction_id UK
+      timestamptz processed_at
+      timestamptz created_at
+    }
+    ratings {
+      bigint id PK
+      bigint trip_id FK
+      bigint from_user_id FK
+      bigint to_user_id FK
+      int rating
+      text comment
+      varchar20 category
+      timestamptz created_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('uber')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('uber')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>uber-schema.sql</span><button onclick="copySQL('uber')">Copy</button></div>
+    <pre><code id="sql-uber">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  phone VARCHAR(20) NOT NULL UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  full_name VARCHAR(100) NOT NULL,
+  password_hash VARCHAR(255),
+  avatar_url VARCHAR(500),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  default_payment_method_id BIGINT
+);
+
+CREATE TABLE drivers (
+  user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  license_number VARCHAR(50) NOT NULL UNIQUE,
+  license_expiry DATE NOT NULL,
+  background_check_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  onboarding_status VARCHAR(20) NOT NULL DEFAULT 'started',
+  rating DECIMAL(2,1) NOT NULL DEFAULT 5.0,
+  total_trips INT NOT NULL DEFAULT 0,
+  lifetime_earnings DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  is_online BOOLEAN NOT NULL DEFAULT FALSE,
+  current_vehicle_id BIGINT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE vehicles (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  driver_id BIGINT NOT NULL REFERENCES drivers(user_id) ON DELETE CASCADE,
+  make VARCHAR(50) NOT NULL,
+  model VARCHAR(50) NOT NULL,
+  year INT NOT NULL,
+  color VARCHAR(30) NOT NULL,
+  license_plate VARCHAR(20) NOT NULL UNIQUE,
+  vehicle_type VARCHAR(20) NOT NULL DEFAULT 'economy',
+  seat_capacity INT NOT NULL DEFAULT 4,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE vehicle_documents (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  vehicle_id BIGINT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
+  document_type VARCHAR(30) NOT NULL,
+  document_url VARCHAR(500) NOT NULL,
+  verification_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  verified_at TIMESTAMPTZ,
+  expires_at DATE
+);
+
+CREATE TABLE trips (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  rider_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  driver_id BIGINT REFERENCES drivers(user_id) ON DELETE SET NULL,
+  vehicle_id BIGINT REFERENCES vehicles(id) ON DELETE SET NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'requested',
+  pickup_lat DECIMAL(10,8) NOT NULL,
+  pickup_lng DECIMAL(11,8) NOT NULL,
+  pickup_address VARCHAR(300) NOT NULL,
+  dropoff_lat DECIMAL(10,8) NOT NULL,
+  dropoff_lng DECIMAL(11,8) NOT NULL,
+  dropoff_address VARCHAR(300) NOT NULL,
+  requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  accepted_at TIMESTAMPTZ,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  cancelled_at TIMESTAMPTZ,
+  cancelled_by VARCHAR(10),
+  cancellation_reason TEXT,
+  distance_km DECIMAL(8,2),
+  duration_minutes INT,
+  base_fare DECIMAL(8,2) NOT NULL,
+  distance_fare DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  time_fare DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  surge_multiplier DECIMAL(3,2) NOT NULL DEFAULT 1.00,
+  promo_discount DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+  total_fare DECIMAL(8,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending'
+);
+
+CREATE TABLE trip_events (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  event_type VARCHAR(30) NOT NULL,
+  lat DECIMAL(10,8),
+  lng DECIMAL(11,8),
+  metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE payments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  amount DECIMAL(10,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  payment_method VARCHAR(20) NOT NULL,
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  transaction_id VARCHAR(100) UNIQUE,
+  processed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE ratings (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  trip_id BIGINT NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  from_user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  category VARCHAR(20),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(trip_id, from_user_id)
+);
+
+CREATE INDEX idx_trips_rider ON trips(rider_id, requested_at DESC);
+CREATE INDEX idx_trips_driver ON trips(driver_id, requested_at DESC);
+CREATE INDEX idx_trips_status ON trips(status, requested_at DESC) WHERE status IN ('requested','accepted','started');
+CREATE INDEX idx_trip_events_trip ON trip_events(trip_id, created_at DESC);
+CREATE INDEX idx_payments_trip ON payments(trip_id);
+CREATE INDEX idx_ratings_to_user ON ratings(to_user_id, created_at DESC);</code></pre>
+  </div>
+</div>
+
+<!-- ========== URL SHORTENER ========== -->
+<div class="schema-detail" id="detail-shortener">
+  <div class="detail-header">
+    <div class="icon">🔗</div>
+    <h2>URL Shortener Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A bit.ly-style URL shortening service supporting custom aliases, click analytics, expiration, and user accounts. Optimized for 100:1 read-to-write ratio with aggregate tables for fast analytics.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Separate click_events and click_aggregates</strong> — raw events for detail, daily aggregates for dashboards</li>
+      <li><strong>IP hashing</strong> for GDPR compliance instead of storing raw IPs</li>
+      <li><strong>Partial index</strong> on short_links excludes soft-deleted rows for fast lookups</li>
+      <li><strong>Link rules</strong> enable device-based and geo-based redirects</li>
+      <li><strong>CHECK constraints</strong> validate short code format and custom alias length</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o{ short_links : "creates"
+    short_links ||--o{ click_events : "generates"
+    short_links ||--o{ click_aggregates : "summarized"
+    short_links ||--o{ link_tags : "tagged"
+    short_links ||--o{ link_rules : "has"
+    users {
+      bigint id PK
+      varchar255 email UK
+      varchar255 password_hash
+      varchar50 display_name
+      varchar64 api_key UK
+      varchar20 tier
+      int monthly_link_limit
+      varchar255 custom_domain
+      timestamptz created_at
+      timestamptz last_login_at
+    }
+    short_links {
+      bigint id PK
+      bigint user_id FK
+      varchar30 short_code UK
+      text original_url
+      boolean is_custom_alias
+      varchar200 title
+      text description
+      varchar20 status
+      timestamptz expires_at
+      varchar255 password_hash
+      int total_clicks
+      int unique_clicks
+      timestamptz created_at
+      timestamptz updated_at
+      timestamptz deleted_at
+    }
+    link_tags {
+      bigint link_id PK_FK
+      varchar30 tag PK
+    }
+    click_events {
+      bigint id PK
+      bigint link_id FK
+      timestamptz clicked_at
+      varchar64 ip_hash
+      text user_agent
+      text referrer
+      char2 country_code
+      varchar50 city
+      varchar20 device_type
+      varchar30 browser
+      varchar30 os
+      varchar10 language
+    }
+    click_aggregates {
+      bigint link_id PK_FK
+      date date PK
+      int total_clicks
+      int unique_clicks
+      jsonb country_breakdown
+      jsonb device_breakdown
+      jsonb referrer_breakdown
+    }
+    link_rules {
+      bigint id PK
+      bigint link_id FK
+      varchar30 rule_type
+      varchar255 condition_value
+      text redirect_url
+      boolean is_active
+      int priority
+      timestamptz created_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('shortener')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('shortener')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>url-shortener-schema.sql</span><button onclick="copySQL('shortener')">Copy</button></div>
+    <pre><code id="sql-shortener">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  email VARCHAR(255) UNIQUE,
+  password_hash VARCHAR(255),
+  display_name VARCHAR(50),
+  api_key VARCHAR(64) UNIQUE,
+  tier VARCHAR(20) NOT NULL DEFAULT 'free',
+  monthly_link_limit INT NOT NULL DEFAULT 100,
+  custom_domain VARCHAR(255),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_login_at TIMESTAMPTZ
+);
+
+CREATE TABLE short_links (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
+  short_code VARCHAR(30) NOT NULL UNIQUE,
+  original_url TEXT NOT NULL,
+  is_custom_alias BOOLEAN NOT NULL DEFAULT FALSE,
+  title VARCHAR(200),
+  description TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  expires_at TIMESTAMPTZ,
+  password_hash VARCHAR(255),
+  total_clicks INT NOT NULL DEFAULT 0,
+  unique_clicks INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  deleted_at TIMESTAMPTZ,
+  CONSTRAINT valid_short_code CHECK (short_code ~ '^[a-zA-Z0-9_-]+$'),
+  CONSTRAINT valid_alias_length CHECK (
+    is_custom_alias = FALSE OR LENGTH(short_code) BETWEEN 3 AND 30
+  )
+);
+
+CREATE TABLE link_tags (
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  tag VARCHAR(30) NOT NULL,
+  PRIMARY KEY (link_id, tag)
+);
+
+CREATE TABLE click_events (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  clicked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ip_hash VARCHAR(64) NOT NULL,
+  user_agent TEXT,
+  referrer TEXT,
+  country_code CHAR(2),
+  city VARCHAR(50),
+  device_type VARCHAR(20),
+  browser VARCHAR(30),
+  os VARCHAR(30),
+  language VARCHAR(10)
+);
+
+CREATE TABLE click_aggregates (
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  total_clicks INT NOT NULL DEFAULT 0,
+  unique_clicks INT NOT NULL DEFAULT 0,
+  country_breakdown JSONB,
+  device_breakdown JSONB,
+  referrer_breakdown JSONB,
+  PRIMARY KEY (link_id, date)
+);
+
+CREATE TABLE link_rules (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  link_id BIGINT NOT NULL REFERENCES short_links(id) ON DELETE CASCADE,
+  rule_type VARCHAR(30) NOT NULL,
+  condition_value VARCHAR(255) NOT NULL,
+  redirect_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  priority INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_short_links_code ON short_links(short_code) WHERE deleted_at IS NULL;
+CREATE INDEX idx_short_links_user ON short_links(user_id, created_at DESC);
+CREATE INDEX idx_click_events_link ON click_events(link_id, clicked_at DESC);
+CREATE INDEX idx_click_events_ip ON click_events(link_id, ip_hash, clicked_at);
+CREATE INDEX idx_click_aggregates_date ON click_aggregates(date);</code></pre>
+  </div>
+</div>
+
+<!-- ========== E-COMMERCE ========== -->
+<div class="schema-detail" id="detail-ecommerce">
+  <div class="detail-header">
+    <div class="icon">🛒</div>
+    <h2>E-Commerce Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A production e-commerce schema covering users, products, categories, shopping carts, orders, payments, reviews, and inventory. Supports multi-currency, coupon codes, and verified purchase reviews.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Self-referencing categories</strong> enable nested category trees via <code>parent_id</code></li>
+      <li><strong>Cart abstraction</strong> supports both logged-in users (user_id) and guest sessions (session_id)</li>
+      <li><strong>Order snapshot</strong> stores product name, SKU, and price at time of purchase — protects against future edits</li>
+      <li><strong>Immutable order totals</strong> — subtotal, tax, shipping, discount, and total are frozen after checkout</li>
+      <li><strong>Verified purchase reviews</strong> linked to orders prevent fake reviews</li>
+      <li><strong>Separate shipping and billing addresses</strong> for B2B and gift orders</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o{ addresses : "has"
+    users ||--o{ carts : "owns"
+    users ||--o{ orders : "places"
+    users ||--o{ reviews : "writes"
+    categories ||--o{ categories : "parent"
+    categories ||--o{ products : "contains"
+    products ||--o{ product_images : "has"
+    products ||--o{ reviews : "receives"
+    carts ||--o{ cart_items : "contains"
+    cart_items ||--|| products : "refers"
+    orders ||--o{ order_items : "contains"
+    orders ||--o{ payments : "has"
+    orders ||--|| addresses : "ships_to"
+    orders ||--|| addresses : "bills_to"
+    order_items ||--|| products : "refers"
+    users {
+      bigint id PK
+      varchar255 email UK
+      varchar255 password_hash
+      varchar100 full_name
+      varchar20 phone
+      boolean is_active
+      timestamptz created_at
+    }
+    addresses {
+      bigint id PK
+      bigint user_id FK
+      varchar20 type
+      varchar255 street
+      varchar100 city
+      varchar100 state
+      varchar20 postal_code
+      char2 country
+      boolean is_default
+    }
+    categories {
+      bigint id PK
+      bigint parent_id FK
+      varchar100 name
+      varchar100 slug UK
+      text description
+      varchar500 image_url
+      int sort_order
+    }
+    products {
+      bigint id PK
+      varchar50 sku UK
+      varchar255 name
+      varchar255 slug UK
+      text description
+      text short_description
+      decimal base_price
+      decimal compare_at_price
+      decimal cost_price
+      int quantity_in_stock
+      decimal weight_kg
+      varchar20 status
+      boolean is_featured
+      bigint category_id FK
+      timestamptz created_at
+      timestamptz updated_at
+    }
+    product_images {
+      bigint id PK
+      bigint product_id FK
+      varchar500 image_url
+      varchar255 alt_text
+      int sort_order
+      boolean is_primary
+    }
+    carts {
+      bigint id PK
+      bigint user_id FK
+      varchar100 session_id
+      varchar20 status
+      timestamptz created_at
+      timestamptz updated_at
+    }
+    cart_items {
+      bigint id PK
+      bigint cart_id FK
+      bigint product_id FK
+      int quantity
+      decimal unit_price
+      timestamptz added_at
+    }
+    orders {
+      bigint id PK
+      varchar50 order_number UK
+      bigint user_id FK
+      bigint shipping_address_id FK
+      bigint billing_address_id FK
+      varchar20 status
+      varchar20 payment_status
+      varchar20 fulfillment_status
+      decimal subtotal
+      decimal tax_amount
+      decimal shipping_amount
+      decimal discount_amount
+      decimal total_amount
+      char3 currency
+      text notes
+      timestamptz created_at
+      timestamptz updated_at
+    }
+    order_items {
+      bigint id PK
+      bigint order_id FK
+      bigint product_id FK
+      varchar255 product_name
+      varchar50 product_sku
+      int quantity
+      decimal unit_price
+      decimal total_price
+    }
+    payments {
+      bigint id PK
+      bigint order_id FK
+      bigint user_id FK
+      decimal amount
+      char3 currency
+      varchar30 provider
+      varchar255 provider_transaction_id
+      varchar20 status
+      text failure_reason
+      timestamptz created_at
+    }
+    reviews {
+      bigint id PK
+      bigint product_id FK
+      bigint user_id FK
+      bigint order_id FK
+      int rating
+      varchar255 title
+      text body
+      boolean is_verified_purchase
+      int helpful_count
+      varchar20 status
+      timestamptz created_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('ecommerce')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('ecommerce')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>ecommerce-schema.sql</span><button onclick="copySQL('ecommerce')">Copy</button></div>
+    <pre><code id="sql-ecommerce">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(100) NOT NULL,
+  phone VARCHAR(20),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE addresses (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL DEFAULT 'shipping',
+  street VARCHAR(255) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(100),
+  postal_code VARCHAR(20) NOT NULL,
+  country VARCHAR(2) NOT NULL DEFAULT 'US',
+  is_default BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE categories (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  parent_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  image_url VARCHAR(500),
+  sort_order INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE products (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  sku VARCHAR(50) NOT NULL UNIQUE,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  short_description TEXT,
+  base_price DECIMAL(12,2) NOT NULL,
+  compare_at_price DECIMAL(12,2),
+  cost_price DECIMAL(12,2),
+  quantity_in_stock INT NOT NULL DEFAULT 0,
+  weight_kg DECIMAL(8,3),
+  status VARCHAR(20) NOT NULL DEFAULT 'draft',
+  is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+  category_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE product_images (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  image_url VARCHAR(500) NOT NULL,
+  alt_text VARCHAR(255),
+  sort_order INT NOT NULL DEFAULT 0,
+  is_primary BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE carts (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+  session_id VARCHAR(100),
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT cart_owner CHECK (user_id IS NOT NULL OR session_id IS NOT NULL)
+);
+
+CREATE TABLE cart_items (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  cart_id BIGINT NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
+  product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
+  unit_price DECIMAL(12,2) NOT NULL,
+  added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(cart_id, product_id)
+);
+
+CREATE TABLE orders (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  order_number VARCHAR(50) NOT NULL UNIQUE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  shipping_address_id BIGINT NOT NULL REFERENCES addresses(id),
+  billing_address_id BIGINT NOT NULL REFERENCES addresses(id),
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  fulfillment_status VARCHAR(20) NOT NULL DEFAULT 'unfulfilled',
+  subtotal DECIMAL(12,2) NOT NULL,
+  tax_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  shipping_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  discount_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  total_amount DECIMAL(12,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id BIGINT NOT NULL REFERENCES products(id),
+  product_name VARCHAR(255) NOT NULL,
+  product_sku VARCHAR(50) NOT NULL,
+  quantity INT NOT NULL CHECK (quantity > 0),
+  unit_price DECIMAL(12,2) NOT NULL,
+  total_price DECIMAL(12,2) NOT NULL
+);
+
+CREATE TABLE payments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  amount DECIMAL(12,2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+  provider VARCHAR(30) NOT NULL,
+  provider_transaction_id VARCHAR(255),
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  failure_reason TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE reviews (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  order_id BIGINT REFERENCES orders(id) ON DELETE SET NULL,
+  rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  title VARCHAR(255),
+  body TEXT,
+  is_verified_purchase BOOLEAN NOT NULL DEFAULT FALSE,
+  helpful_count INT NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'approved',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(product_id, user_id, order_id)
+);
+
+CREATE INDEX idx_products_category ON products(category_id, status) WHERE status = 'active';
+CREATE INDEX idx_products_featured ON products(is_featured, created_at DESC) WHERE status = 'active';
+CREATE INDEX idx_orders_user ON orders(user_id, created_at DESC);
+CREATE INDEX idx_orders_status ON orders(status, created_at DESC);
+CREATE INDEX idx_reviews_product ON reviews(product_id, created_at DESC) WHERE status = 'approved';
+CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);
+CREATE INDEX idx_addresses_user ON addresses(user_id, type);</code></pre>
+  </div>
+</div>
+
+<!-- ========== CMS ========== -->
+<div class="schema-detail" id="detail-cms">
+  <div class="detail-header">
+    <div class="icon">📝</div>
+    <h2>Blog / CMS Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A modern content management system schema inspired by Ghost and WordPress. Handles posts, authors, categories, tags, nested comments, media library, and newsletter subscriptions.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Self-referencing comments</strong> enable threaded discussions via <code>parent_id</code></li>
+      <li><strong>Post status + visibility</strong> separate draft/published from public/members-only access</li>
+      <li><strong>Many-to-many with attributes</strong>: <code>post_categories</code> has <code>is_primary</code> flag for main category</li>
+      <li><strong>Media library</strong> is decoupled from posts via <code>post_media</code> junction table — enables media reuse</li>
+      <li><strong>SEO metadata</strong> stored per post (<code>meta_title</code>, <code>meta_description</code>) for headless CMS flexibility</li>
+      <li><strong>Newsletter subscription</strong> model supports multiple publications per email</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o{ posts : "authors"
+    posts ||--o{ post_categories : "categorized"
+    categories ||--o{ post_categories : "contains"
+    categories ||--o{ categories : "parent"
+    posts ||--o{ post_tags : "tagged"
+    tags ||--o{ post_tags : "contains"
+    posts ||--o{ comments : "receives"
+    comments ||--o{ comments : "replies"
+    posts ||--o{ post_media : "uses"
+    media ||--o{ post_media : "attached"
+    newsletters ||--o{ subscriptions : "has"
+    users {
+      bigint id PK
+      varchar255 email UK
+      varchar255 password_hash
+      varchar100 display_name
+      text bio
+      varchar500 avatar_url
+      varchar20 role
+      boolean is_active
+      timestamptz created_at
+    }
+    posts {
+      bigint id PK
+      bigint author_id FK
+      varchar255 title
+      varchar255 slug UK
+      text excerpt
+      text content
+      varchar500 featured_image_url
+      varchar20 status
+      varchar20 visibility
+      timestamptz published_at
+      timestamptz updated_at
+      varchar255 meta_title
+      text meta_description
+      int reading_time_minutes
+      int view_count
+    }
+    categories {
+      bigint id PK
+      varchar100 name
+      varchar100 slug UK
+      text description
+      bigint parent_id FK
+      int sort_order
+    }
+    post_categories {
+      bigint post_id PK_FK
+      bigint category_id PK_FK
+      boolean is_primary
+    }
+    tags {
+      bigint id PK
+      varchar50 name UK
+      varchar50 slug UK
+      text description
+    }
+    post_tags {
+      bigint post_id PK_FK
+      bigint tag_id PK_FK
+    }
+    comments {
+      bigint id PK
+      bigint post_id FK
+      bigint parent_id FK
+      varchar100 author_name
+      varchar255 author_email
+      varchar500 author_url
+      text content
+      varchar20 status
+      timestamptz created_at
+    }
+    media {
+      bigint id PK
+      varchar255 filename
+      varchar255 original_name
+      varchar100 mime_type
+      int file_size_bytes
+      varchar500 url
+      varchar255 alt_text
+      bigint uploaded_by FK
+      timestamptz created_at
+    }
+    post_media {
+      bigint post_id PK_FK
+      bigint media_id PK_FK
+      int sort_order
+    }
+    newsletters {
+      bigint id PK
+      varchar100 name
+      varchar100 slug UK
+      text description
+      varchar20 status
+    }
+    subscriptions {
+      bigint id PK
+      varchar255 email
+      bigint newsletter_id FK
+      varchar20 status
+      timestamptz subscribed_at
+      timestamptz unsubscribed_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('cms')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('cms')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>cms-schema.sql</span><button onclick="copySQL('cms')">Copy</button></div>
+    <pre><code id="sql-cms">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100) NOT NULL,
+  bio TEXT,
+  avatar_url VARCHAR(500),
+  role VARCHAR(20) NOT NULL DEFAULT 'author',
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  author_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL UNIQUE,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  featured_image_url VARCHAR(500),
+  status VARCHAR(20) NOT NULL DEFAULT 'draft',
+  visibility VARCHAR(20) NOT NULL DEFAULT 'public',
+  published_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  meta_title VARCHAR(255),
+  meta_description TEXT,
+  reading_time_minutes INT,
+  view_count INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE categories (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  parent_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+  sort_order INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE post_categories (
+  post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (post_id, category_id)
+);
+
+CREATE TABLE tags (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  slug VARCHAR(50) NOT NULL UNIQUE,
+  description TEXT
+);
+
+CREATE TABLE post_tags (
+  post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  tag_id BIGINT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (post_id, tag_id)
+);
+
+CREATE TABLE comments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  parent_id BIGINT REFERENCES comments(id) ON DELETE CASCADE,
+  author_name VARCHAR(100) NOT NULL,
+  author_email VARCHAR(255) NOT NULL,
+  author_url VARCHAR(500),
+  content TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE media (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  filename VARCHAR(255) NOT NULL,
+  original_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  file_size_bytes INT NOT NULL,
+  url VARCHAR(500) NOT NULL,
+  alt_text VARCHAR(255),
+  uploaded_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE post_media (
+  post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  media_id BIGINT NOT NULL REFERENCES media(id) ON DELETE CASCADE,
+  sort_order INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (post_id, media_id)
+);
+
+CREATE TABLE newsletters (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'active'
+);
+
+CREATE TABLE subscriptions (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  email VARCHAR(255) NOT NULL,
+  newsletter_id BIGINT NOT NULL REFERENCES newsletters(id) ON DELETE CASCADE,
+  status VARCHAR(20) NOT NULL DEFAULT 'subscribed',
+  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  unsubscribed_at TIMESTAMPTZ,
+  UNIQUE(email, newsletter_id)
+);
+
+CREATE INDEX idx_posts_author ON posts(author_id, published_at DESC) WHERE status = 'published';
+CREATE INDEX idx_posts_slug ON posts(slug) WHERE status = 'published';
+CREATE INDEX idx_comments_post ON comments(post_id, created_at DESC) WHERE status = 'approved';
+CREATE INDEX idx_post_categories_primary ON post_categories(category_id) WHERE is_primary = TRUE;
+CREATE INDEX idx_subscriptions_newsletter ON subscriptions(newsletter_id, status);</code></pre>
+  </div>
+</div>
+
+<!-- ========== CHAT ========== -->
+<div class="schema-detail" id="detail-chat">
+  <div class="detail-header">
+    <div class="icon">💬</div>
+    <h2>Chat / Discord Database Schema</h2>
+    <button class="back-btn" onclick="showGrid()">← Back to all schemas</button>
+  </div>
+  <div class="detail-section">
+    <h4>About</h4>
+    <p>A real-time chat platform schema inspired by Discord and Slack. Covers workspaces, channels, messages, threads, reactions, roles, permissions, and invite links.</p>
+  </div>
+  <div class="detail-section">
+    <h4>Key Design Decisions</h4>
+    <ul>
+      <li><strong>Workspace-centric model</strong> — everything lives inside a workspace (server), enabling multi-tenant isolation</li>
+      <li><strong>Self-referencing channels</strong> for channel categories and threads via <code>parent_id</code></li>
+      <li><strong>Self-referencing messages</strong> for threaded replies — no separate thread table needed</li>
+      <li><strong>Composite reactions</strong> — unique on (message_id, user_id, emoji) prevents duplicate reactions</li>
+      <li><strong>Role-based permissions</strong> stored as a bitwise integer for fast permission checks</li>
+      <li><strong>Channel membership</strong> is explicit via <code>channel_members</code> — supports private channels</li>
+      <li><strong>Invite links</strong> support max uses, expiration, and usage tracking</li>
+    </ul>
+  </div>
+  <div class="mermaid-container">
+    <div class="mermaid">
+erDiagram
+    users ||--o{ workspace_members : "belongs"
+    workspaces ||--o{ workspace_members : "has"
+    workspaces ||--o{ channels : "contains"
+    workspaces ||--o{ roles : "defines"
+    workspaces ||--o{ workspace_invites : "generates"
+    users ||--o{ workspaces : "owns"
+    channels ||--o{ channels : "parent"
+    channels ||--o{ channel_members : "has"
+    users ||--o{ channel_members : "joined"
+    channels ||--o{ messages : "contains"
+    users ||--o{ messages : "authors"
+    messages ||--o{ messages : "replies"
+    messages ||--o{ message_reactions : "receives"
+    users ||--o{ message_reactions : "adds"
+    messages ||--o{ attachments : "has"
+    users {
+      bigint id PK
+      varchar32 username UK
+      varchar100 display_name
+      varchar255 email UK
+      varchar255 password_hash
+      varchar500 avatar_url
+      varchar20 status
+      boolean is_active
+      timestamptz created_at
+    }
+    workspaces {
+      bigint id PK
+      varchar100 name
+      varchar100 slug UK
+      text description
+      varchar500 icon_url
+      bigint owner_id FK
+      boolean is_public
+      timestamptz created_at
+    }
+    workspace_members {
+      bigint id PK
+      bigint workspace_id FK
+      bigint user_id FK
+      varchar20 role
+      timestamptz joined_at
+    }
+    channels {
+      bigint id PK
+      bigint workspace_id FK
+      bigint parent_id FK
+      varchar100 name
+      varchar20 type
+      text topic
+      boolean is_private
+      int sort_order
+      timestamptz created_at
+    }
+    channel_members {
+      bigint channel_id PK_FK
+      bigint user_id PK_FK
+      timestamptz added_at
+      bigint added_by FK
+    }
+    messages {
+      bigint id PK
+      bigint channel_id FK
+      bigint author_id FK
+      bigint parent_id FK
+      text content
+      boolean is_edited
+      timestamptz edited_at
+      boolean is_pinned
+      timestamptz created_at
+    }
+    message_reactions {
+      bigint id PK
+      bigint message_id FK
+      bigint user_id FK
+      varchar50 emoji
+      timestamptz created_at
+    }
+    attachments {
+      bigint id PK
+      bigint message_id FK
+      varchar255 filename
+      int file_size_bytes
+      varchar100 mime_type
+      varchar500 url
+      int width
+      int height
+      timestamptz created_at
+    }
+    roles {
+      bigint id PK
+      bigint workspace_id FK
+      varchar50 name
+      varchar7 color
+      bigint permissions
+      boolean is_default
+      int sort_order
+      timestamptz created_at
+    }
+    workspace_invites {
+      bigint id PK
+      bigint workspace_id FK
+      bigint inviter_id FK
+      varchar255 email
+      varchar32 code UK
+      int max_uses
+      int uses_count
+      timestamptz expires_at
+      timestamptz created_at
+    }
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="app.html" class="btn-primary-sm" onclick="return openCompare('chat')">🔍 Compare with Your Schema</a>
+    <button class="btn-outline-sm" onclick="copySQL('chat')">📋 Copy SQL</button>
+  </div>
+  <div class="sql-block">
+    <div class="sql-header"><span>chat-schema.sql</span><button onclick="copySQL('chat')">Copy</button></div>
+    <pre><code id="sql-chat">CREATE TABLE users (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  username VARCHAR(32) NOT NULL UNIQUE,
+  display_name VARCHAR(100),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  avatar_url VARCHAR(500),
+  status VARCHAR(20) NOT NULL DEFAULT 'offline',
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE workspaces (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  icon_url VARCHAR(500),
+  owner_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  is_public BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE workspace_members (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role VARCHAR(20) NOT NULL DEFAULT 'member',
+  joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(workspace_id, user_id)
+);
+
+CREATE TABLE channels (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  parent_id BIGINT REFERENCES channels(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  type VARCHAR(20) NOT NULL DEFAULT 'text',
+  topic TEXT,
+  is_private BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(workspace_id, name)
+);
+
+CREATE TABLE channel_members (
+  channel_id BIGINT NOT NULL REFERENCES channels(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  added_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+  PRIMARY KEY (channel_id, user_id)
+);
+
+CREATE TABLE messages (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  channel_id BIGINT NOT NULL REFERENCES channels(id) ON DELETE CASCADE,
+  author_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  parent_id BIGINT REFERENCES messages(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  is_edited BOOLEAN NOT NULL DEFAULT FALSE,
+  edited_at TIMESTAMPTZ,
+  is_pinned BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE message_reactions (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  message_id BIGINT NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  emoji VARCHAR(50) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(message_id, user_id, emoji)
+);
+
+CREATE TABLE attachments (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  message_id BIGINT REFERENCES messages(id) ON DELETE CASCADE,
+  filename VARCHAR(255) NOT NULL,
+  file_size_bytes INT NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  url VARCHAR(500) NOT NULL,
+  width INT,
+  height INT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE roles (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  name VARCHAR(50) NOT NULL,
+  color VARCHAR(7) DEFAULT '#99AAB5',
+  permissions BIGINT NOT NULL DEFAULT 0,
+  is_default BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE workspace_invites (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  inviter_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  email VARCHAR(255),
+  code VARCHAR(32) NOT NULL UNIQUE,
+  max_uses INT,
+  uses_count INT NOT NULL DEFAULT 0,
+  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_messages_channel_created ON messages(channel_id, created_at DESC);
+CREATE INDEX idx_messages_parent ON messages(parent_id) WHERE parent_id IS NOT NULL;
+CREATE INDEX idx_workspace_members_user ON workspace_members(user_id);
+CREATE INDEX idx_channel_members_channel ON channel_members(channel_id);
+CREATE INDEX idx_channels_workspace ON channels(workspace_id, sort_order);</code></pre>
+  </div>
+</div>
+
+<div class="bottom-cta">
+  <h2>Compare Any Schema Instantly</h2>
+  <p>Paste two SQL schemas and get a visual diff + migration script in seconds. No signup, no install, no data leaves your browser.</p>
+  <a href="app.html" class="btn btn-primary" style="font-size:1rem;padding:12px 28px;">Try SchemaLens Free →</a>
+  <p style="margin-top:14px;font-size:0.85rem;color:var(--text-muted);">54+ free developer tools. Built in public over 165 days.</p>
+</div>
+
+<footer class="footer" style="margin-top:48px;">
+  <div class="container" style="max-width:1000px;">
+    <div class="footer-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px;">
+      <div>
+        <h4>Product</h4>
+        <a href="app.html">Schema Diff</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="vscode-extension.html">VS Code Extension</a>
+        <a href="cli">CLI Tool</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="tools.html">All Tools</a>
+        <a href="blog.html">Blog</a>
+        <a href="migration-recipes.html">Migration Recipes</a>
+        <a href="api-guide.html">API Docs</a>
+      </div>
+      <div>
+        <h4>Compare</h4>
+        <a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate</a>
+        <a href="schemalens-vs-liquibase-flyway.html">vs Liquibase</a>
+        <a href="schemalens-vs-cli-tools.html">vs CLI Tools</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="built-in-public.html">Built in Public</a>
+        <a href="open-source.html">Open Source</a>
+        <a href="mailto:hello@schemalens.tech">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom" style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.85rem;">
+      © 2026 SchemaLens. Built in public over 165 days. <a href="index.html" style="color:var(--primary);">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'dark', er: { useMaxWidth: true } });
+
+function showSchema(id) {
+  document.getElementById('card-grid').style.display = 'none';
+  document.querySelectorAll('.schema-detail').forEach(el => el.classList.remove('active'));
+  const detail = document.getElementById('detail-' + id);
+  detail.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Re-render mermaid for the newly visible diagram
+  setTimeout(() => {
+    mermaid.init(undefined, detail.querySelectorAll('.mermaid'));
+  }, 50);
+}
+
+function showGrid() {
+  document.querySelectorAll('.schema-detail').forEach(el => el.classList.remove('active'));
+  document.getElementById('card-grid').style.display = 'grid';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copySQL(id) {
+  const code = document.getElementById('sql-' + id).textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('#detail-' + id + ' .sql-header button');
+    const original = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
+}
+
+function openCompare(id) {
+  const sql = document.getElementById('sql-' + id).textContent.trim();
+  const params = new URLSearchParams();
+  params.set('right', sql);
+  params.set('left', '-- Paste your schema here to compare with the ' + id + ' schema');
+  window.location.href = 'app.html?' + params.toString();
+  return false;
+}
+</script>
+</body>
+</html>

@@ -9,12 +9,12 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 163 Days (CRITICAL)
-- [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR demo (ci-demo.html), SQL to DBML/PlantUML/OpenAPI converters (#52–54), GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo.
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. Assets prepared: ad copy drafted, landing page ready, UTM tracking configured. Need payment method or human execution help.)
+### Distribution — Zero Sales After 165 Days (CRITICAL)
+- [x] **Completed:** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 55+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, **Famous Database Schemas viral gallery** (6 real-world schemas with ERDs).
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. 3rd request filed May 20. Awaiting human execution.)
+- [ ] **P0** Distribute `famous-database-schemas.html` — post to Hacker News, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
-- [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
-- [ ] **P2** IndieHackers post with built-in-public story
+- [ ] **P1** Submit `147-days-built-in-public.html` to IndieHackers
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
@@ -93,7 +93,10 @@ SQL to PlantUML ERD Converter (#53) — PlantUML syntax with PK/FK/UK stereotype
 Conversion fix + stale data sweep + alumni window polish. Contextual migration cost banner in app.html paywall (calculates manual writing time and dollar cost from diff changes). Stale stat sweep: index.html 37→54 tools, app.html 147→160+ days, 404.html/affiliate.html/product-hunt.html/show-hn.html/indiehackers.html/open.html tool counts fixed. Pricing.html alumni promo box added for May 22–28. Purchase funnel verified end-to-end.
 
 ### Day 164 (May 22)
-Purchase funnel hardening: removed stale Launch Week messaging from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it (cli/index.html, pricing.html, pricing-b.html, launch-special.html, api/trial-drip.js, api/reengage.js, api/trial-welcome.js). 123/123 e2e tests passing.
+Purchase funnel hardening: removed stale Launch Week messaging from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it. 123/123 e2e tests passing.
+
+### Day 165 (May 22)
+**Famous Database Schemas** viral content page — 6 real-world schemas (Twitter, Uber, URL Shortener, E-commerce, CMS, Chat) with live Mermaid ERD diagrams, design notes, and copy-ready SQL. Cross-linked, sitemap.xml updated (186 URLs). README.md tool count 54→55+.
 
 ---
 
