@@ -112,6 +112,36 @@
 
 ---
 
+## Day 164 — Purchase Funnel Verification + Stale Launch Week Cleanup (May 22, 2026)
+
+### The Problem
+During the weekly purchase funnel test, discovered multiple stale Launch Week references that create broken promises for users visiting the site post-May 21. The `launch-special.html` page still counted down to May 21, blog posts promised "free Pro until May 21," and several Gumroad checkout links lacked `?wanted=true` — adding unnecessary friction by showing the Gumroad product page instead of going straight to checkout.
+
+### What Was Built
+1. **Stale Launch Week messaging removed from visible pages:**
+   - `launch-special.html`: countdown target updated to May 28 (alumni window), text updated to "Alumni window ends May 28"
+   - `product-hunt.html`: countdown text updated to post-launch messaging with alumni window CTA
+   - `pricing.html`: Launch Week promo starts hidden (`display:none`) to prevent flash before JS hides it
+   - 4 blog posts (`postgres-schema-drift-detection-guide`, `sql-server-schema-drift-detection-guide`, `mysql-alter-table-cheatsheet`, `review-migration-like-senior`): updated evergreen CTAs replacing "free until May 21"
+   - `147-days-built-in-public.html`: "Week 5-6 (Now)" → "(Done)"
+2. **Checkout friction reduced:**
+   - Added `?wanted=true` to all Gumroad links missing it: `cli/index.html`, `pricing.html`, `pricing-b.html`, `launch-special.html`, `api/trial-drip.js`, `api/reengage.js`, `api/trial-welcome.js`
+   - This skips the Gumroad product page and goes directly to payment
+3. **Purchase funnel verified end-to-end:**
+   - Gumroad checkout URL returns 301 → 200
+   - `isLaunchWeek()` returns `false`, `isLaunchWeekAlumniWindow()` returns `true`
+   - Alumni banners render correctly in app.html and pricing.html
+   - All 123 e2e tests pass
+
+### Validation
+- ✅ Zero visible stale "May 21" or "$19" references on active code paths
+- ✅ All Gumroad checkout links use `?wanted=true` for direct checkout
+- ✅ Alumni window messaging consistent across all high-traffic pages
+- ✅ 123/123 e2e tests passing
+- ✅ Deployed to production on Vercel
+
+---
+
 ## Day 163 — Conversion Fix + Stale Data Sweep + Alumni Window Polish (May 22, 2026)
 
 ### The Problem

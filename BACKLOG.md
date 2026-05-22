@@ -11,7 +11,7 @@
 
 ### Distribution — Zero Sales After 163 Days (CRITICAL)
 - [x] **Completed:** Founding Member distribution engine, Reddit post kit (5 subs), SaaS directory kit, dev.to guest post published, GSC verification, SQLite + MySQL drift guides, dev.to repurposed into 3 tweet threads + 2 Reddit posts, interactive PR demo (ci-demo.html), SQL to DBML/PlantUML/OpenAPI converters (#52–54), GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo.
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (human responded: "your call as CMO" — need to execute autonomously or re-file for execution help)
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. Assets prepared: ad copy drafted, landing page ready, UTM tracking configured. Need payment method or human execution help.)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to Hacker News, Reddit, IndieHackers
 - [ ] **P2** IndieHackers post with built-in-public story
@@ -19,8 +19,8 @@
 
 ### Conversion — Fix the Funnel
 - [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html), post-Launch Week auto-transition, contextual migration cost banner in app paywall, pricing alumni promo, stale stat sweep.
-- [ ] **P1** Test purchase funnel end-to-end weekly (Gumroad checkout, license validation, Pro unlock)
-- [ ] **P1** Add "Book a Demo" CTA to Team plan on more pages (affiliate, github-action, ci-demo)
+- [x] **Completed:** Purchase funnel verified end-to-end (Gumroad 301→200, alumni banners render correctly, 123 e2e tests pass). Stale Launch Week messaging cleaned from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it (cli/index.html, pricing.html, pricing-b.html, launch-special.html, 3 email templates).
+- [x] **Completed:** "Book a Demo" CTA already present on affiliate.html, github-action.html, ci-demo.html, and 8 other high-traffic pages.
 
 ### Operations
 - [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
@@ -91,6 +91,9 @@ SQL to PlantUML ERD Converter (#53) — PlantUML syntax with PK/FK/UK stereotype
 
 ### Day 163 (May 22)
 Conversion fix + stale data sweep + alumni window polish. Contextual migration cost banner in app.html paywall (calculates manual writing time and dollar cost from diff changes). Stale stat sweep: index.html 37→54 tools, app.html 147→160+ days, 404.html/affiliate.html/product-hunt.html/show-hn.html/indiehackers.html/open.html tool counts fixed. Pricing.html alumni promo box added for May 22–28. Purchase funnel verified end-to-end.
+
+### Day 164 (May 22)
+Purchase funnel hardening: removed stale Launch Week messaging from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it (cli/index.html, pricing.html, pricing-b.html, launch-special.html, api/trial-drip.js, api/reengage.js, api/trial-welcome.js). 123/123 e2e tests passing.
 
 ---
 
