@@ -130,6 +130,7 @@ const pages = [
   { path: '/add-foreign-key-postgres.html', name: 'Add Foreign Key Postgres Guide' },
   { path: '/schema-examples.html', name: 'Schema Diff Examples' },
   { path: '/database-schema-design-patterns.html', name: 'Database Schema Design Patterns' },
+  { path: '/database-schema-anti-patterns.html', name: 'Database Schema Anti-Patterns' },
 ];
 
 for (const { path, name } of pages) {

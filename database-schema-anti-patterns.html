@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>10 Database Schema Anti-Patterns (And How to Fix Them) — SchemaLens</title>
+  <meta name="description" content="10 common database schema mistakes that blow up in production. Real SQL examples of the wrong way and the right way. Learn to spot and fix them before they hurt.">
+  <meta property="og:title" content="10 Database Schema Anti-Patterns (And How to Fix Them)">
+  <meta property="og:description" content="Common schema mistakes that cause outages, data loss, and performance disasters. Real SQL examples with fixes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/database-schema-anti-patterns.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/database-schema-anti-patterns.html">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "10 Database Schema Anti-Patterns (And How to Fix Them)",
+    "description": "10 common database schema mistakes that blow up in production. Real SQL examples of the wrong way and the right way.",
+    "url": "https://schemalens.tech/database-schema-anti-patterns.html",
+    "learningResourceType": "interactive",
+    "interactivityType": "mixed",
+    "educationalLevel": "intermediate",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Software Engineers"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "SchemaLens",
+      "url": "https://schemalens.tech"
+    }
+  }
+  </script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+    .patterns-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem 48px;
+    }
+
+    .pattern-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .pattern-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pattern-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pattern-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .pattern-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+    .pattern-tag.performance {
+      background: rgba(245,158,11,0.1);
+      color: #f59e0b;
+      border-color: rgba(245,158,11,0.25);
+    }
+    .pattern-tag.data {
+      background: rgba(168,85,247,0.1);
+      color: #a855f7;
+      border-color: rgba(168,85,247,0.25);
+    }
+    .pattern-section {
+      margin-bottom: 16px;
+    }
+    .pattern-section:last-child { margin-bottom: 0; }
+    .pattern-section h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+    .pattern-section p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .pattern-section ul {
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+    .pattern-section li {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .code-block pre {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--primary); }
+
+    .diff-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+    .diff-cta:hover { background: var(--primary-light); }
+
+    .risk-box {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .risk-box h5 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ef4444;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .risk-box ul {
+      padding-left: 1.25rem;
+      margin: 0;
+    }
+    .risk-box li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 2px;
+    }
+
+    .fix-box {
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .fix-box h5 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #10b981;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toc {
+      max-width: 860px;
+      margin: 0 auto 32px;
+      padding: 0 1rem;
+    }
+    .toc-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .toc h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .toc ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 6px 16px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .toc a {
+      font-size: 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc a:hover { color: var(--primary); }
+    .toc a span { color: var(--text-muted); font-size: 0.8rem; }
+
+    .cta-section {
+      text-align: center;
+      padding: 48px 1rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .cta-section h2 { font-size: 1.5rem; margin-bottom: 10px; }
+    .cta-section p { color: var(--text-muted); max-width: 520px; margin: 0 auto 20px; }
+    .cta-section .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .cta-section .btn:hover { background: var(--primary-light); }
+
+    @media (max-width: 640px) {
+      .pattern-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--text);">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>
+      SchemaLens
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <h1>10 Database Schema Anti-Patterns</h1>
+    <p>Common mistakes that cause outages, data loss, and performance disasters. Real SQL examples of the wrong way — and how to fix it.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-inner">
+      <h3>Anti-Patterns</h3>
+      <ul>
+        <li><a href="#p1"><span>01</span> Missing Foreign Keys</a></li>
+        <li><a href="#p2"><span>02</span> FLOAT for Money</a></li>
+        <li><a href="#p3"><span>03</span> Comma-Separated Values</a></li>
+        <li><a href="#p4"><span>04</span> EAV Tables</a></li>
+        <li><a href="#p5"><span>05</span> No Timestamps</a></li>
+        <li><a href="#p6"><span>06</span> Unindexed Foreign Keys</a></li>
+        <li><a href="#p7"><span>07</span> VARCHAR(255) for Everything</a></li>
+        <li><a href="#p8"><span>08</span> No CHECK Constraints</a></li>
+        <li><a href="#p9"><span>09</span> Missing Soft Deletes</a></li>
+        <li><a href="#p10"><span>10</span> Repeating Groups</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="patterns-grid">
+
+    <!-- Anti-Pattern 1: Missing Foreign Keys -->
+    <article class="pattern-card" id="p1">
+      <h2><span class="pattern-number">1</span> Missing Foreign Keys</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Data Integrity</span>
+        <span class="pattern-tag">Critical</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Using integer columns to reference other tables without adding <code>FOREIGN KEY</code> constraints. The database happily accepts orphaned rows and invalid IDs.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Orphaned rows pile up over time</li>
+          <li>Application code must validate every reference</li>
+          <li>Deleting a parent leaves dangling child records</li>
+          <li>Impossible for the database to enforce referential integrity</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_comments_post ON comments(post_id);
+CREATE INDEX idx_comments_user ON comments(user_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+comments+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++post_id+INT+NOT+NULL%2C%0A++user_id+INT+NOT+NULL%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+comments+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++post_id+INT+NOT+NULL+REFERENCES+posts%28id%29+ON+DELETE+CASCADE%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++body+TEXT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_comments_post+ON+comments%28post_id%29%3B%0ACREATE+INDEX+idx_comments_user+ON+comments%28user_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 2: FLOAT for Money -->
+    <article class="pattern-card" id="p2">
+      <h2><span class="pattern-number">2</span> FLOAT for Money</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Data Integrity</span>
+        <span class="pattern-tag">Critical</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Storing monetary values in <code>FLOAT</code> or <code>DOUBLE</code> columns. IEEE 754 floating-point numbers cannot represent most decimal fractions exactly.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>$0.10 + $0.20 becomes 0.30000000000000004</li>
+          <li>Rounding errors compound across calculations</li>
+          <li>Financial audits fail</li>
+          <li>Tax calculations can be off by cents — or worse</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use <code>INTEGER</code> (cents) or <code>NUMERIC(19,4)</code> (decimal). Never FLOAT for money.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  total_cents INT NOT NULL CHECK (total_cents >= 0),
+  currency CHAR(3) DEFAULT 'USD',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Alternative with NUMERIC for sub-cent precision:
+-- total NUMERIC(19,4) NOT NULL CHECK (total >= 0)</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+orders+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++total+FLOAT+NOT+NULL%2C%0A++currency+CHAR%283%29+DEFAULT+%27USD%27%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+orders+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++total_cents+INT+NOT+NULL+CHECK+%28total_cents+%3E%3D+0%29%2C%0A++currency+CHAR%283%29+DEFAULT+%27USD%27%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 3: Comma-Separated Values -->
+    <article class="pattern-card" id="p3">
+      <h2><span class="pattern-number">3</span> Comma-Separated Values in a Column</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Normalization</span>
+        <span class="pattern-tag">Performance</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Storing multiple values in a single VARCHAR column as comma-separated strings. Breaks 1NF and makes every query a nightmare.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Cannot index individual tags/values</li>
+          <li><code>LIKE '%tag%'</code> queries are table scans</li>
+          <li>No referential integrity on individual values</li>
+          <li>Parsing logic duplicated across the codebase</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use a junction table for many-to-many relationships. Every value gets its own row.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE post_tags (
+  post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  tag_id INT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (post_id, tag_id)
+);
+
+CREATE INDEX idx_post_tags_tag ON post_tags(tag_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++tags+VARCHAR%28500%29%0A%29%3B&right=CREATE+TABLE+tags+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%2850%29+NOT+NULL+UNIQUE%0A%29%3B%0A%0ACREATE+TABLE+post_tags+%28%0A++post_id+INT+NOT+NULL+REFERENCES+posts%28id%29+ON+DELETE+CASCADE%2C%0A++tag_id+INT+NOT+NULL+REFERENCES+tags%28id%29+ON+DELETE+CASCADE%2C%0A++PRIMARY+KEY+%28post_id%2C+tag_id%29%0A%29%3B%0A%0ACREATE+INDEX+idx_post_tags_tag+ON+post_tags%28tag_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 4: EAV Tables -->
+    <article class="pattern-card" id="p4">
+      <h2><span class="pattern-number">4</span> EAV (Entity-Attribute-Value)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag performance">Performance</span>
+        <span class="pattern-tag data">Queryability</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Using a generic <code>entity_attributes</code> table with <code>entity_id</code>, <code>key</code>, <code>value</code> columns to store dynamic schema data. Looks flexible, destroys performance.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Every attribute requires a self-JOIN to query</li>
+          <li>No type safety — everything is a string</li>
+          <li>Cannot create indexes on specific attributes</li>
+          <li>Queries become unreadable nightmares</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use proper columns. If you truly need dynamic fields, use <code>JSONB</code> (PostgreSQL) or a dedicated document store. Never EAV.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price_cents INT NOT NULL,
+  weight_g INT,
+  color VARCHAR(50),
+  dimensions_cm JSONB,
+  specs JSONB
+);
+
+-- Query specs with GIN index:
+CREATE INDEX idx_products_specs ON products USING GIN(specs);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+entity_attributes+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++entity_id+INT+NOT+NULL%2C%0A++attr_key+VARCHAR%28100%29+NOT+NULL%2C%0A++attr_value+TEXT%0A%29%3B&right=CREATE+TABLE+products+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28255%29+NOT+NULL%2C%0A++price_cents+INT+NOT+NULL%2C%0A++weight_g+INT%2C%0A++color+VARCHAR%2850%29%2C%0A++dimensions_cm+JSONB%2C%0A++specs+JSONB%0A%29%3B%0A%0ACREATE+INDEX+idx_products_specs+ON+products+USING+GIN%28specs%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 5: No Timestamps -->
+    <article class="pattern-card" id="p5">
+      <h2><span class="pattern-number">5</span> No created_at / updated_at</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Debugging</span>
+        <span class="pattern-tag">Observability</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Creating tables without <code>created_at</code> and <code>updated_at</code> columns. When something breaks, you have no idea when the data changed.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Cannot debug "when did this row appear?"</li>
+          <li>No way to sort by recency for admin UIs</li>
+          <li>Cannot implement time-based data retention</li>
+          <li>Impossible to build analytics on table activity</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Add timestamps to every table. Use <code>DEFAULT NOW()</code> and update triggers for <code>updated_at</code>.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  status VARCHAR(20) DEFAULT 'todo',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Auto-update trigger for updated_at:
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tasks_updated_at
+  BEFORE UPDATE ON tasks
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+tasks+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++status+VARCHAR%2820%29+DEFAULT+%27todo%27%0A%29%3B&right=CREATE+TABLE+tasks+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++status+VARCHAR%2820%29+DEFAULT+%27todo%27%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 6: Unindexed Foreign Keys -->
+    <article class="pattern-card" id="p6">
+      <h2><span class="pattern-number">6</span> Unindexed Foreign Keys</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag performance">Performance</span>
+        <span class="pattern-tag">Scalability</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Adding <code>FOREIGN KEY</code> constraints without indexes on the referencing column. FKs ensure integrity, but without indexes, JOINs and cascades are slow.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Every JOIN becomes a sequential scan</li>
+          <li><code>ON DELETE CASCADE</code> locks the entire table</li>
+          <li>Query performance degrades linearly with table size</li>
+          <li>Foreign key checks during inserts block writes</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Index every foreign key column. Consider composite indexes if you filter by FK + another column.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id INT NOT NULL REFERENCES products(id),
+  quantity INT NOT NULL CHECK (quantity > 0),
+  price_cents INT NOT NULL
+);
+
+-- Always index FKs:
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_order_items_product ON order_items(product_id);
+
+-- Composite index for common query pattern:
+CREATE INDEX idx_order_items_order_product ON order_items(order_id, product_id);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL+REFERENCES+orders%28id%29+ON+DELETE+CASCADE%2C%0A++product_id+INT+NOT+NULL+REFERENCES+products%28id%29%2C%0A++quantity+INT+NOT+NULL+CHECK+%28quantity+%3E+0%29%2C%0A++price_cents+INT+NOT+NULL%0A%29%3B&right=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL+REFERENCES+orders%28id%29+ON+DELETE+CASCADE%2C%0A++product_id+INT+NOT+NULL+REFERENCES+products%28id%29%2C%0A++quantity+INT+NOT+NULL+CHECK+%28quantity+%3E+0%29%2C%0A++price_cents+INT+NOT+NULL%0A%29%3B%0A%0ACREATE+INDEX+idx_order_items_order+ON+order_items%28order_id%29%3B%0ACREATE+INDEX+idx_order_items_product+ON+order_items%28product_id%29%3B%0ACREATE+INDEX+idx_order_items_order_product+ON+order_items%28order_id%2C+product_id%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 7: VARCHAR(255) for Everything -->
+    <article class="pattern-card" id="p7">
+      <h2><span class="pattern-number">7</span> VARCHAR(255) for Everything</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Semantics</span>
+        <span class="pattern-tag">Validation</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Defaulting every string column to <code>VARCHAR(255)</code> regardless of what it stores. Emails, country codes, URLs, and usernames all get the same treatment.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Wasted storage on wide rows</li>
+          <li>No domain validation at the database level</li>
+          <li>Silent truncation of legitimate data</li>
+          <li>Harder to reason about data boundaries</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use domain-appropriate lengths and CHECK constraints. Be intentional about every column.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(254) NOT NULL UNIQUE,
+  username VARCHAR(30) NOT NULL UNIQUE,
+  display_name VARCHAR(100),
+  country_code CHAR(2) CHECK (country_code ~ '^[A-Z]{2}$'),
+  bio VARCHAR(500),
+  website_url VARCHAR(2048)
+);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++email+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++username+VARCHAR%28255%29+NOT+NULL+UNIQUE%2C%0A++display_name+VARCHAR%28255%29%2C%0A++country_code+VARCHAR%28255%29%2C%0A++bio+VARCHAR%28255%29%2C%0A++website_url+VARCHAR%28255%29%0A%29%3B&right=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++email+VARCHAR%28254%29+NOT+NULL+UNIQUE%2C%0A++username+VARCHAR%2830%29+NOT+NULL+UNIQUE%2C%0A++display_name+VARCHAR%28100%29%2C%0A++country_code+CHAR%282%29+CHECK+%28country_code+~+%27%5E%5BA-Z%5D%7B2%7D%24%27%29%2C%0A++bio+VARCHAR%28500%29%2C%0A++website_url+VARCHAR%282048%29%0A%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 8: No CHECK Constraints -->
+    <article class="pattern-card" id="p8">
+      <h2><span class="pattern-number">8</span> No CHECK Constraints on Enums</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Validation</span>
+        <span class="pattern-tag">Critical</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Using <code>VARCHAR</code> for status/state columns without <code>CHECK</code> constraints. Application bugs can insert garbage values that propagate silently.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Typos in status values create invisible bugs</li>
+          <li>Application code must validate everywhere</li>
+          <li>Queries break when unexpected values appear</li>
+          <li>Data migrations become risky guesswork</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use CHECK constraints or ENUM types. The database should be the last line of defense for invalid data.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  status VARCHAR(20) NOT NULL
+    CHECK (status IN ('pending','paid','shipped','delivered','cancelled')),
+  payment_method VARCHAR(20)
+    CHECK (payment_method IN ('card','bank_transfer','crypto','cash')),
+  total_cents INT NOT NULL CHECK (total_cents >= 0),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+orders+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++status+VARCHAR%2820%29+NOT+NULL%2C%0A++payment_method+VARCHAR%2820%29%2C%0A++total_cents+INT+NOT+NULL%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+orders+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++status+VARCHAR%2820%29+NOT+NULL%0A++++CHECK+%28status+IN+%28%27pending%27%2C%27paid%27%2C%27shipped%27%2C%27delivered%27%2C%27cancelled%27%29%29%2C%0A++payment_method+VARCHAR%2820%29%0A++++CHECK+%28payment_method+IN+%28%27card%27%2C%27bank_transfer%27%2C%27crypto%27%2C%27cash%27%29%29%2C%0A++total_cents+INT+NOT+NULL+CHECK+%28total_cents+%3E%3D+0%29%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 9: Missing Soft Deletes -->
+    <article class="pattern-card" id="p9">
+      <h2><span class="pattern-number">9</span> Missing Soft Deletes</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Data Safety</span>
+        <span class="pattern-tag">Recovery</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Hard-deleting user-facing content with <code>DELETE</code>. Accidental deletes are permanent, and cascading foreign keys can wipe out related data.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>User accidentally deletes content — it's gone forever</li>
+          <li>Cascading deletes remove comments, votes, history</li>
+          <li>Cannot audit "who deleted this and when?"</li>
+          <li>No way to recover from application bugs</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Add <code>deleted_at</code> and filter it in queries. Use partial indexes for active rows.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  deleted_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_posts_active ON posts(created_at DESC)
+  WHERE deleted_at IS NULL;</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B&right=CREATE+TABLE+posts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29%2C%0A++title+VARCHAR%28255%29+NOT+NULL%2C%0A++body+TEXT%2C%0A++deleted_at+TIMESTAMPTZ%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%2C%0A++updated_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_posts_active+ON+posts%28created_at+DESC%29%0A++WHERE+deleted_at+IS+NULL%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+    <!-- Anti-Pattern 10: Repeating Groups -->
+    <article class="pattern-card" id="p10">
+      <h2><span class="pattern-number">10</span> Repeating Groups (1NF Violation)</h2>
+      <div class="pattern-meta">
+        <span class="pattern-tag data">Normalization</span>
+        <span class="pattern-tag">Scalability</span>
+      </div>
+      <div class="pattern-section">
+        <h4>The Mistake</h4>
+        <p>Storing multiple related values as numbered columns: <code>phone_1</code>, <code>phone_2</code>, <code>phone_3</code>. Violates First Normal Form and limits you to N values.</p>
+      </div>
+      <div class="risk-box">
+        <h5>⚠️ What goes wrong</h5>
+        <ul>
+          <li>Hard limit on how many values you can store</li>
+          <li>Querying "find all phone numbers" requires ORing N columns</li>
+          <li>Wasted storage when most rows use only 1-2 values</li>
+          <li>Schema changes required to add more slots</li>
+        </ul>
+      </div>
+      <div class="pattern-section">
+        <h4>The Fix</h4>
+        <p>Use a separate table with one row per value. Add a <code>type</code> or <code>label</code> column if values are heterogeneous.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>CREATE TABLE contacts (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL
+    CHECK (type IN ('phone','email','address')),
+  label VARCHAR(50) DEFAULT 'primary',
+  value TEXT NOT NULL,
+  is_primary BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_contacts_user ON contacts(user_id, type);</pre>
+        </div>
+        <a class="diff-cta" href="app.html?left=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29+NOT+NULL%2C%0A++phone_1+VARCHAR%2850%29%2C%0A++phone_2+VARCHAR%2850%29%2C%0A++phone_3+VARCHAR%2850%29%2C%0A++email_1+VARCHAR%28254%29%2C%0A++email_2+VARCHAR%28254%29%0A%29%3B&right=CREATE+TABLE+contacts+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++user_id+INT+NOT+NULL+REFERENCES+users%28id%29+ON+DELETE+CASCADE%2C%0A++type+VARCHAR%2820%29+NOT+NULL%0A++++CHECK+%28type+IN+%28%27phone%27%2C%27email%27%2C%27address%27%29%29%2C%0A++label+VARCHAR%2850%29+DEFAULT+%27primary%27%2C%0A++value+TEXT+NOT+NULL%2C%0A++is_primary+BOOLEAN+DEFAULT+FALSE%2C%0A++created_at+TIMESTAMPTZ+DEFAULT+NOW%28%29%0A%29%3B%0A%0ACREATE+INDEX+idx_contacts_user+ON+contacts%28user_id%2C+type%29%3B" target="_blank" rel="noopener">See the diff →</a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="cta-section">
+    <h2>Diff Your Schema Against These Fixes</h2>
+    <p>Paste your current schema and the fixed version. See every missing index, constraint, and column in seconds.</p>
+    <a href="app.html" class="btn">Open Schema Diff →</a>
+  </div>
+
+  <div class="patterns-grid" style="padding-bottom: 64px;">
+    <div class="pattern-card" style="text-align:center;">
+      <h3 style="margin-bottom:10px;">Learn the Right Way</h3>
+      <p style="color:var(--text-muted);margin-bottom:16px;">Explore 10 production-ready schema design patterns with before/after diffs.</p>
+      <a href="database-schema-design-patterns.html" style="display:inline-block;background:var(--primary);color:#fff;padding:10px 20px;border-radius:var(--radius-sm);font-weight:600;text-decoration:none;">Design Patterns →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer" style="border-top:1px solid var(--border);padding:40px 0;">
+  <div class="container footer-grid">
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">SchemaLens</strong>
+      <p style="font-size:0.9rem;color:var(--text-muted);max-width:260px;">Browser-based SQL schema diff, migration generation, and 55+ free developer tools.</p>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Product</strong>
+      <a href="app.html">Schema Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Resources</strong>
+      <a href="blog.html">Blog</a>
+      <a href="schema-examples.html">Examples</a>
+      <a href="famous-database-schemas.html">Famous Schemas</a>
+      <a href="migration-recipes.html">Recipes</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Company</strong>
+      <a href="about.html">About</a>
+      <a href="open-source.html">Open Source</a>
+      <a href="affiliate.html">Affiliate</a>
+    </div>
+  </div>
+  <div class="container" style="text-align:center;margin-top:24px;font-size:0.85rem;color:var(--text-muted);">
+    © 2026 SchemaLens. Built in public.
+  </div>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copied!';
+    setTimeout(() => btn.innerText = original, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
