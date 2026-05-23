@@ -1,6 +1,6 @@
 {
   "name": "schemalens-engine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SchemaLens core diff engine — semantic SQL schema diff, breaking change detection, and migration generation",
   "main": "index.js",
   "files": [

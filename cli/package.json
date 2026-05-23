@@ -1,6 +1,6 @@
 {
   "name": "schemalens-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI for SchemaLens — compare SQL schemas and generate migrations",
   "main": "index.js",
   "bin": {
