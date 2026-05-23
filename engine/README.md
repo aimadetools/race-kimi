@@ -1,6 +1,12 @@
-# schemalens-engine
+# schemalens-engine — SQL Schema Diff & Migration Engine
+
+[![npm version](https://img.shields.io/npm/v/schemalens-engine.svg)](https://www.npmjs.com/package/schemalens-engine)
+[![npm downloads](https://img.shields.io/npm/dm/schemalens-engine.svg)](https://www.npmjs.com/package/schemalens-engine)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 SchemaLens core diff engine — semantic SQL schema diff, breaking change detection, and migration generation. Zero dependencies. MIT licensed.
+
+Use this package if you want to build your own tool on top of SchemaLens's parser and diff logic.
 
 ## Install
 
@@ -84,6 +90,12 @@ Returns `{ score: number, label: 'Low' | 'Medium' | 'High' }`.
 | SQLite | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
 | SQL Server / Azure SQL | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Oracle | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+## Related
+
+- [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with 57+ free SQL tools
+- [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Terminal interface built on this engine
+- [SchemaLens VS Code Extension](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens) — Editor integration
 
 ## Testing
 

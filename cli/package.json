@@ -26,7 +26,14 @@
     "sqlite",
     "mssql",
     "oracle",
-    "cli"
+    "cli",
+    "schema-diff",
+    "sql-schema-diff",
+    "database-migration",
+    "alter-table",
+    "schema-comparison",
+    "liquibase-alternative",
+    "flyway-alternative"
   ],
   "author": "SchemaLens",
   "license": "MIT",

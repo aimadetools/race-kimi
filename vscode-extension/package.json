@@ -19,7 +19,16 @@
     "database",
     "migration",
     "postgres",
-    "mysql"
+    "mysql",
+    "schema-diff",
+    "sql-diff",
+    "database-schema",
+    "compare-sql",
+    "alter-table",
+    "postgresql",
+    "sqlite",
+    "mssql",
+    "oracle"
   ],
   "activationEvents": [
     "onCommand:schemalens.openApp",

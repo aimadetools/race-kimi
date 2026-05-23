@@ -1,11 +1,17 @@
-# SchemaLens for VS Code
+# SchemaLens for VS Code — SQL Schema Diff Extension
 
-Open the [SchemaLens](https://schemalens.tech) schema diff tool directly from VS Code.
+[![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/schemalens.schemalens)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
+[![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/schemalens.schemalens)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+Open the [SchemaLens](https://schemalens.tech) **SQL schema diff tool** directly from VS Code. Compare two SQL files in seconds — no upload, no setup, no database connection required.
 
 ## Features
 
-- **Open SchemaLens** — Launch the browser-based diff tool in one keystroke.
-- **Diff Active SQL Files** — Compare the two open SQL files instantly. SchemaLens auto-detects your SQL dialect and generates a shareable diff URL.
+- **🚀 Open SchemaLens** — Launch the browser-based diff tool in one keystroke.
+- **🔍 Diff Active SQL Files** — Compare the two open `.sql` files instantly. SchemaLens auto-detects your SQL dialect and generates a shareable diff URL.
+- **🛡️ Privacy First** — Your SQL never leaves your machine. The extension generates a local URL hash; SchemaLens runs entirely client-side in your browser.
+- **⚡ Zero Config** — No database connection, no login, no setup. Works offline after the first page load.
 
 ## Usage
 
@@ -20,16 +26,7 @@ Open the [SchemaLens](https://schemalens.tech) schema diff tool directly from VS
 
 Right-click any `.sql` file in the editor tab and choose **"Diff Active SQL Files"**.
 
-## How it works
-
-The extension encodes your SQL using the same base64 format as SchemaLens's native Share button. Everything stays local — your schemas are never uploaded to a server. The generated URL is processed entirely in your browser.
-
-## Requirements
-
-- VS Code 1.74+
-- A default web browser
-
-## Dialect detection
+## Dialect Detection
 
 The extension guesses the SQL dialect from your file name:
 
@@ -43,9 +40,20 @@ The extension guesses the SQL dialect from your file name:
 
 You can always change the dialect inside SchemaLens after the page loads.
 
-## Privacy
+## How it works
 
-Your SQL never leaves VS Code or your browser. The extension generates a local URL hash — there is no network request until you open the URL in your browser, and even then SchemaLens runs entirely client-side.
+The extension encodes your SQL using the same base64 format as SchemaLens's native Share button. Everything stays local — your schemas are never uploaded to a server. The generated URL is processed entirely in your browser.
+
+## Requirements
+
+- VS Code 1.74+
+- A default web browser
+
+## Related
+
+- [SchemaLens Web App](https://schemalens.tech) — 57+ free SQL tools, schema design patterns, and migration guides
+- [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Diff schemas from your terminal
+- [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD
 
 ## License
 
