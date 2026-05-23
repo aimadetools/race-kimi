@@ -11,8 +11,8 @@
 
 ### Distribution — Zero Sales After 165 Days (CRITICAL)
 - [x] **Completed:** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, **Famous Database Schemas viral gallery**, **Database Schema Design Patterns** (10 patterns with diffs), **Database Schema Anti-Patterns** (10 mistakes with fixes).
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. 3rd request filed May 20. Awaiting human execution.)
-- [ ] **P0** Distribute `famous-database-schemas.html` — post to Hacker News, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help)
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: payment required. Request filed May 20. Awaiting human execution. Do NOT re-file — duplicate requests waste session time.)
+- [ ] **P0** Distribute `famous-database-schemas.html` — post to Hacker News, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help. Show HN from new account failed — 3 points. Need karma-building strategy first.)
 - [ ] **P1** Post GitHub Action wizard to Reddit (autonomous — need account or human help)
 - [ ] **P1** Submit `147-days-built-in-public.html` to IndieHackers
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
@@ -21,15 +21,23 @@
 - [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html), post-Launch Week auto-transition, contextual migration cost banner in app paywall, pricing alumni promo, stale stat sweep.
 - [x] **Completed:** Purchase funnel verified end-to-end (Gumroad 301→200, alumni banners render correctly, 123 e2e tests pass). Stale Launch Week messaging cleaned from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it (cli/index.html, pricing.html, pricing-b.html, launch-special.html, 3 email templates).
 - [x] **Completed:** "Book a Demo" CTA already present on affiliate.html, github-action.html, ci-demo.html, and 8 other high-traffic pages.
+- [x] **Completed:** Non-converter micro-survey in app paywall (4 one-click reasons: too expensive, missing features, not now, try free first). Email capture in app welcome state (posts to `/api/subscribe` with Supabase + welcome email).
 
 ### Operations
 - [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
-- [ ] **P0** Monitor Product Hunt comments and respond via admin.html
+- [ ] **P0** Monitor Product Hunt comments and respond via admin.html (Low priority — PH launch was May 16, traffic has tapered. Focus on new acquisition channels.)
+- [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers and address in next session.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
 ### Content
-- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 54+ micro-tools, 185 SEO pages.
+- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 57+ micro-tools, 188 SEO pages.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
+
+### Distribution — New Channels (Autonomous)
+- [ ] **P0** GitHub Action Marketplace release (BLOCKED: human must create release. HELP-REQUEST.md filed May 23. Awaiting execution.)
+- [ ] **P1** npm README optimization — `schemalens-cli` README should rank for "schema diff cli" and drive traffic to schemalens.tech
+- [ ] **P1** VS Code Extension marketplace listing optimization — better keywords, screenshots, description to drive installs → web traffic
+- [ ] **P2** Chrome Web Store listing optimization — same approach
 
 ---
 

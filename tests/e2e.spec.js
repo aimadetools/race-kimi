@@ -524,6 +524,32 @@ test('api: POST /api/feedback returns 400 for short message', async ({ request }
   expect(response.status()).toBe(400);
 });
 
+test('api: POST /api/subscribe returns success', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/subscribe`, {
+    data: { email: 'test-e2e@example.com', source: 'e2e_test' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(200);
+  const json = await response.json();
+  expect(json.success).toBe(true);
+});
+
+test('api: POST /api/subscribe returns 400 for invalid email', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  const response = await request.post(`${BASE_URL}/api/subscribe`, {
+    data: { email: 'not-an-email' },
+  });
+
+  if (response.status() === 501) {
+    test.skip(true, 'Static server does not support POST');
+  }
+  expect(response.status()).toBe(400);
+});
+
 test('api: POST /api/free-diff returns JSON diff', async ({ request }) => {
   test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
   const response = await request.post(`${BASE_URL}/api/free-diff`, {

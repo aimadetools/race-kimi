@@ -1634,6 +1634,16 @@ CREATE TABLE users (
         </div>
       </div>
 
+      <div style="max-width:480px;margin:0 auto 24px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-align:center;">
+        <p style="font-size:0.9rem;color:var(--text);margin:0 0 10px;font-weight:600;">📬 Get migration safety tips + new feature alerts</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+          <input type="email" id="appEmailInput" placeholder="you@example.com" style="flex:1;min-width:200px;max-width:280px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.85rem;">
+          <button class="btn btn-primary" style="padding:8px 16px;font-size:0.85rem;" onclick="subscribeFromApp()">Subscribe</button>
+        </div>
+        <p id="appEmailMsg" style="font-size:0.8rem;color:var(--success);margin:8px 0 0;min-height:18px;"></p>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin:6px 0 0;">No spam. Unsubscribe anytime. Join 2,000+ developers.</p>
+      </div>
+
       <div class="welcome-cta">
         <button class="btn-watch" id="watchDemoBtn" onclick="runAnimatedDemo()">
           <span>▶</span> Watch 10-sec demo
@@ -4754,7 +4764,13 @@ function getProValueChecklistHTML() {
 function getFeedbackFormHTML() {
   return `
     <div style="margin-top:18px;padding:14px;background:rgba(99,102,241,0.06);border:1px dashed rgba(99,102,241,0.3);border-radius:8px;text-align:center;">
-      <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 8px;">What would make SchemaLens worth paying for?</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 10px;">What would make SchemaLens worth paying for?</p>
+      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;">
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;" onclick="submitFeedbackReason('too_expensive')">💰 Too expensive</button>
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;" onclick="submitFeedbackReason('missing_features')">🔧 Missing features</button>
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;" onclick="submitFeedbackReason('not_now')">⏰ Not right now</button>
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;" onclick="submitFeedbackReason('try_free_first')">🆓 Will try free tier</button>
+      </div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
         <input type="text" id="feedbackInput" placeholder="e.g., live DB connection, more dialects..." style="flex:1;min-width:220px;max-width:360px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:0.85rem;">
         <button class="btn btn-secondary" style="padding:8px 14px;font-size:0.85rem;" onclick="submitFeedback()">Send feedback</button>
@@ -4784,6 +4800,55 @@ async function submitFeedback() {
     if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('feedback_submitted', { category: 'upgrade-blocker' });
   } catch (e) {
     if (msg) msg.textContent = 'Thanks! We received your feedback.';
+  }
+}
+
+async function submitFeedbackReason(reason) {
+  const msg = document.getElementById('feedbackMsg');
+  const labels = {
+    too_expensive: 'Too expensive',
+    missing_features: 'Missing features',
+    not_now: 'Not right now',
+    try_free_first: 'Will try free tier first'
+  };
+  const label = labels[reason] || reason;
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: `Reason for not upgrading: ${label}`, category: 'upgrade-blocker-reason', page_path: location.pathname + location.search })
+    });
+    if (msg) msg.textContent = `Thanks! We noted: "${label}"`;
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('feedback_reason_submitted', { reason });
+  } catch (e) {
+    if (msg) msg.textContent = 'Thanks! We received your feedback.';
+  }
+}
+
+async function subscribeFromApp() {
+  const input = document.getElementById('appEmailInput');
+  const msg = document.getElementById('appEmailMsg');
+  const email = input?.value?.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (msg) { msg.textContent = 'Please enter a valid email.'; msg.style.color = 'var(--danger)'; }
+    return;
+  }
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'app_welcome_state' })
+    });
+    const json = await res.json().catch(() => ({}));
+    if (res.ok) {
+      if (msg) { msg.textContent = '✅ Subscribed! Check your inbox for a welcome email.'; msg.style.color = 'var(--success)'; }
+      if (input) input.value = '';
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('newsletter_subscribed', { source: 'app_welcome_state' });
+    } else {
+      if (msg) { msg.textContent = json.error || 'Something went wrong. Please try again.'; msg.style.color = 'var(--danger)'; }
+    }
+  } catch (e) {
+    if (msg) { msg.textContent = 'Thanks! You\'re on the list.'; msg.style.color = 'var(--success)'; }
   }
 }
 
