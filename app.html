@@ -1240,6 +1240,42 @@
   window.SchemaLensTeaserVariant = variant;
 })();
 </script>
+<script>
+(function() {
+  const TABLE_LIMIT_KEY = 'sl_table_limit_variant_v1';
+  let limitVariant = localStorage.getItem(TABLE_LIMIT_KEY);
+  if (!limitVariant) {
+    // A/B test: 15 (control) vs 10 vs 8 tables to find optimal conversion point
+    const r = Math.random();
+    if (r < 0.34) {
+      limitVariant = '15';
+    } else if (r < 0.67) {
+      limitVariant = '10';
+    } else {
+      limitVariant = '8';
+    }
+    localStorage.setItem(TABLE_LIMIT_KEY, limitVariant);
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('table_limit_variant_assigned', { limit: parseInt(limitVariant, 10), test: 'free_tier_table_limit_may2026' });
+    }
+  }
+  window.SchemaLensTableLimit = parseInt(limitVariant, 10);
+})();
+</script>
+<script>
+function getFreeTierLimit() {
+  return window.SchemaLensTableLimit || 15;
+}
+
+(function updateFreeTierLimitText() {
+  const limit = getFreeTierLimit();
+  const hint = document.getElementById('freeTierLimitHint');
+  if (hint) hint.textContent = limit;
+  document.querySelectorAll('.free-tier-limit-text').forEach(el => {
+    el.textContent = limit;
+  });
+})();
+</script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
@@ -1594,7 +1630,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to 15 tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
+      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to <span id="freeTierLimitHint">15</span> tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -4865,7 +4901,7 @@ function renderMigration(sql, rollbackSql, diff) {
   const container = document.getElementById('migrationContainer');
   const totalTables = diff.totalTablesNew;
   const unlocked = isProUnlocked();
-  const isLimited = totalTables > 15 && !unlocked;
+  const isLimited = totalTables > getFreeTierLimit() && !unlocked;
   const dialect = document.getElementById('dialect')?.value || 'postgres';
   const warnings = generateMigrationWarnings(diff, dialect);
   const warningsHTML = renderMigrationWarningsHTML(warnings, isLimited);
@@ -6433,7 +6469,7 @@ function renderORM() {
   const schema = lastDiff.schemaB;
   const totalTables = schema.tables ? schema.tables.length : 0;
   const unlocked = isProUnlocked();
-  const isLimited = totalTables > 15 && !unlocked;
+  const isLimited = totalTables > getFreeTierLimit() && !unlocked;
   const dialect = document.getElementById('dialect').value;
 
   if (isLimited) {
@@ -6442,7 +6478,7 @@ function renderORM() {
     container.innerHTML = `
       <div class="upgrade-banner">
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks full ORM export</h3>
-        <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to 15 tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
+        <p>Export your complete schema to Prisma or Drizzle models in one click.<br>Free plans are limited to ${getFreeTierLimit()} tables. Pro handles <strong>all ${totalTables} tables</strong> with perfect type mapping.</p>
         <div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ Only a few spots left at this price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
@@ -6573,7 +6609,7 @@ function isProUnlocked() {
 function tryProTrial() {
   localStorage.setItem('schemalens_trial_claimed', '1');
   localStorage.setItem('schemalens_trial_used_at', Date.now().toString());
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated', { variant: window.SchemaLensTeaserVariant || 'teaser' });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit() });
 
   // Capture optional email for newsletter follow-up
   const emailInput = document.getElementById('trialEmail') || document.getElementById('trialEmailOrm');
@@ -6632,7 +6668,7 @@ function openLicenseModal() {
   document.getElementById('licenseModal').classList.add('active');
   document.getElementById('licenseInput').value = localStorage.getItem('schemalens_license') || '';
   document.getElementById('licenseInput').focus();
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser' });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit() });
 }
 
 function closeLicenseModal() {
@@ -6709,7 +6745,7 @@ function copyPreviewFromData(btn) {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy preview', 2000);
   });
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('teaser_preview_copied', { variant: window.SchemaLensTeaserVariant || 'teaser' });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('teaser_preview_copied', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit() });
 }
 
 // -----------------------------
@@ -7990,7 +8026,8 @@ document.getElementById('compareBtn').addEventListener('click', () => {
       tables_old: diff.totalTablesOld,
       tables_new: diff.totalTablesNew,
       changes: diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length,
-      variant: window.SchemaLensHeadlineVariant || 'A'
+      variant: window.SchemaLensHeadlineVariant || 'A',
+      tableLimit: getFreeTierLimit()
     });
   }
 
@@ -9200,7 +9237,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
         <p class="subtitle">Launch Week ends in <strong style="color:var(--danger);">${getLaunchWeekCountdownText()}</strong>. After May 21, Pro features go back behind the paywall.</p>
         <div class="exit-intent-benefits">
           <ul>
-            <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
+            <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
             <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
             <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
             <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
@@ -9224,7 +9261,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
         <p class="subtitle">You used SchemaLens during Launch Week. Here's an exclusive window to lock in Pro at the Launch Week price.</p>
         <div class="exit-intent-benefits">
           <ul>
-            <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
+            <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
             <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
             <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
             <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
@@ -9247,7 +9284,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
       <p class="subtitle">You just spotted schema changes. Now get the full migration script — no manual typing, no missed columns.</p>
       <div class="exit-intent-benefits">
         <ul>
-          <li><strong>Unlimited tables</strong> — diff your entire schema, not just 15 tables</li>
+          <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
           <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
           <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
           <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
