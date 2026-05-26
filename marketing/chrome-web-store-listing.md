@@ -1,42 +1,35 @@
-# Chrome Web Store Listing — SchemaLens Extension
-
-## Prepared for human submission
-
-### What the human needs to do
-1. Go to https://chrome.google.com/webstore/devconsole/
-2. Pay the $5 one-time developer registration fee
-3. Click **New Item** and upload `chrome-extension.zip`
-4. Fill in the details below
-5. Submit for review (1–3 business days)
-
----
+# Chrome Web Store Listing — SchemaLens Extension (Optimized)
 
 ## Store Listing Details
 
 ### Name
-SchemaLens — Diff SQL Schemas on GitHub
+SchemaLens — SQL Schema Diff for GitHub
 
 ### Short Description (max 132 chars)
-Adds an "Open in SchemaLens" button to SQL files on GitHub. Diff schemas and generate migrations in one click.
+One-click schema diff for SQL files on GitHub. Detect breaking changes & generate migrations for PostgreSQL, MySQL, SQLite, SQL Server, Oracle.
 
 ### Detailed Description
-SchemaLens is a privacy-first schema diff tool for developers. This extension adds an **"Open in SchemaLens"** button to every `.sql` file on GitHub, letting you instantly diff schemas and generate migration scripts without leaving your workflow.
+SchemaLens is a privacy-first SQL schema diff tool for developers. This extension adds an **"Open in SchemaLens"** button to every `.sql` file on GitHub, letting you instantly diff schemas, detect breaking changes, and generate migration scripts — all without leaving your workflow.
 
-**Features:**
-• One-click open any `.sql` file from GitHub into SchemaLens
+**What you can do:**
+• Open any `.sql` file from GitHub into SchemaLens with one click
 • Auto-detects SQL dialect (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-• Fetches raw file content directly from GitHub
-• Works with GitHub's SPA navigation — no page reload required
-• Zero data collection: your schemas never touch our servers
+• See exactly what changed between two schemas with color-coded visual diffs
+• Get warned about breaking changes before you deploy
+• Generate dialect-correct ALTER TABLE migration scripts
+• Copy diff summaries as Markdown for PR descriptions
+
+**Privacy-first by design:**
+This extension does not collect, store, or transmit any data to SchemaLens servers. It only reads the current GitHub page URL and fetches raw SQL content when you explicitly click the button. Your schema structure never touches our servers — it parses entirely in your browser.
 
 **How it works:**
 When you view a `.sql` file on GitHub, the extension injects an "Open in SchemaLens" button into the file toolbar. Click it, and the raw SQL is fetched and opened in schemalens.tech with the diff tool ready to go.
 
-**Privacy:**
-This extension does not collect, store, or transmit any data to SchemaLens servers. It only reads the current GitHub page URL and fetches raw SQL content when you explicitly click the button. Read our full privacy policy at https://schemalens.tech/privacy-policy.html
-
-**About SchemaLens:**
-SchemaLens compares two SQL database schemas in your browser and instantly generates migration scripts. No CLI to install, no database connection required, no data leaves your machine. Also available at https://schemalens.tech and via CLI (`npx schemalens-cli`).
+**Also available:**
+• Web app: https://schemalens.tech
+• VS Code Extension: https://schemalens.tech/vscode-extension.html
+• CLI: `npx schemalens-cli`
+• GitHub Action: https://schemalens.tech/github-action.html
 
 ### Category
 Developer Tools
@@ -61,7 +54,7 @@ Public (listed in the Chrome Web Store)
 
 ---
 
-## Screenshots Needed (human to capture)
+## Screenshots Needed (human to capture on update)
 
 1. **Screenshot 1 — Button on GitHub:**
    - Visit https://github.com/aimadetools/race-kimi/blob/main/supabase-schema.sql
@@ -75,7 +68,7 @@ Public (listed in the Chrome Web Store)
 
 3. **Screenshot 3 — Small promo tile (optional):**
    - Size: 440x280
-   - Can be a simple graphic with the SchemaLens logo and tagline
+   - Simple graphic with the SchemaLens logo and tagline
 
 ---
 
@@ -86,9 +79,9 @@ Public (listed in the Chrome Web Store)
 - [x] Icons: 16x16, 48x48, 128x128
 - [x] Privacy policy page live at https://schemalens.tech/privacy-policy.html
 - [ ] Screenshots (needs human)
-- [ ] $5 developer fee (needs human)
-- [ ] Google account with Chrome Web Store access (needs human)
+- [x] $5 developer fee (paid)
+- [x] Google account with Chrome Web Store access (configured)
 
 ---
 
-*Prepared May 2, 2026. Ready for submission.*
+*Optimized May 26, 2026. Version 1.0.1.*

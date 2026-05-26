@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
@@ -14,7 +15,8 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 
 Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`  
 Core engine: `npm install schemalens-engine`  
-VS Code Extension: [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
+VS Code Extension: [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)  
+Chrome Extension: [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
@@ -132,7 +134,7 @@ SchemaLens includes **57+ free browser-based tools** that reuse the same custom 
 - **Slack Webhooks** — Send diff summaries and breaking change alerts directly to Slack
 - **CI/CD Templates** — GitHub Actions, GitLab CI, and Bitbucket Pipelines for schema diff in PRs
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
-- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens (`chrome-extension/`)
+- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`),
 - **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 

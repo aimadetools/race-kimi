@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "SchemaLens — Open SQL Files in SchemaLens",
-  "version": "1.0.0",
-  "description": "Adds an 'Open in SchemaLens' button to SQL files on GitHub. Instantly diff schemas and generate migrations.",
+  "name": "SchemaLens — SQL Schema Diff for GitHub",
+  "version": "1.0.1",
+  "description": "One-click schema diff for SQL files on GitHub. Detects breaking changes, generates migration SQL for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Privacy-first — your schema never leaves your browser.",
   "homepage_url": "https://schemalens.tech",
   "privacy_policy_url": "https://schemalens.tech/privacy-policy.html",
   "permissions": [
@@ -33,7 +33,7 @@
       "16": "icons/icon-16.png",
       "48": "icons/icon-48.png"
     },
-    "default_title": "SchemaLens",
+    "default_title": "SchemaLens — Diff SQL Schemas on GitHub",
     "default_popup": "popup.html"
   }
 }

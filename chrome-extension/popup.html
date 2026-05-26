@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <style>
+    * { box-sizing: border-box; }
     body {
-      width: 280px;
-      padding: 16px;
+      width: 300px;
+      padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       color: #1f2937;
+      background: #fff;
     }
     .header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid #f3f4f6;
     }
     .header img {
       width: 32px;
@@ -22,14 +25,44 @@
       border-radius: 8px;
     }
     .header h1 {
-      font-size: 16px;
+      font-size: 15px;
       margin: 0;
+      font-weight: 700;
+    }
+    .header span {
+      font-size: 11px;
+      color: #6366f1;
+      font-weight: 600;
+      background: #eef2ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: auto;
+    }
+    .body {
+      padding: 12px 16px;
     }
     p {
       font-size: 13px;
-      color: #6b7280;
+      color: #4b5563;
       margin: 0 0 12px;
       line-height: 1.5;
+    }
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #374151;
+    }
+    .feature svg {
+      flex-shrink: 0;
+      color: #10b981;
     }
     .btn {
       display: block;
@@ -44,16 +77,41 @@
       cursor: pointer;
       text-align: center;
       text-decoration: none;
+      transition: background 0.15s;
     }
     .btn:hover {
       background: #4f46e5;
     }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      background: #fff;
+      color: #6366f1;
+      border: 1.5px solid #c7d2fe;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 8px;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover {
+      background: #eef2ff;
+      border-color: #6366f1;
+    }
     .tip {
       margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #e5e7eb;
-      font-size: 12px;
+      padding: 10px 16px 12px;
+      border-top: 1px solid #f3f4f6;
+      font-size: 11px;
       color: #9ca3af;
+      line-height: 1.4;
+    }
+    .tip strong {
+      color: #6b7280;
     }
   </style>
 </head>
@@ -61,9 +119,29 @@
   <div class="header">
     <img src="icons/icon-48.png" alt="SchemaLens">
     <h1>SchemaLens</h1>
+    <span>FREE</span>
   </div>
-  <p>Open any <code>.sql</code> file on GitHub and click <strong>Open in SchemaLens</strong> to diff schemas instantly.</p>
-  <a class="btn" href="https://schemalens.tech" target="_blank">Open SchemaLens</a>
-  <div class="tip">💡 Tip: Works on public repos. Private repos require a GitHub token.</div>
+  <div class="body">
+    <p>Open any <code>.sql</code> file on GitHub and click <strong>Open in SchemaLens</strong> to instantly diff schemas and generate migrations.</p>
+    <div class="features">
+      <div class="feature">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Auto-detects SQL dialect (5 databases)
+      </div>
+      <div class="feature">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Detects breaking changes &amp; risks
+      </div>
+      <div class="feature">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        100% client-side — zero data upload
+      </div>
+    </div>
+    <a class="btn" href="https://schemalens.tech" target="_blank">Open SchemaLens</a>
+    <a class="btn-secondary" href="https://schemalens.tech/vscode-extension.html" target="_blank">Get VS Code Extension →</a>
+  </div>
+  <div class="tip">
+    <strong>💡 Pro tip:</strong> Works on public repos out of the box. For private repos, make sure you're logged into GitHub in the same browser.
+  </div>
 </body>
 </html>

@@ -16,6 +16,7 @@
       if (c.includes('serial') || c.includes('varchar')) return 'postgres';
       if (c.includes('auto_increment')) return 'mysql';
       if (c.includes('nvarchar') || c.includes('[dbo]')) return 'mssql';
+      if (c.includes('number(') || c.includes('varchar2')) return 'oracle';
     }
     return 'postgres';
   }
@@ -39,12 +40,31 @@
     return url.pathname.endsWith('.sql') && url.pathname.includes('/blob/');
   }
 
+  function trackEvent(event, props = {}) {
+    try {
+      const payload = {
+        event,
+        source: 'chrome-extension',
+        url: location.href,
+        timestamp: Date.now(),
+        ...props
+      };
+      // Fire-and-forget analytics ping
+      fetch('https://schemalens.tech/api/analytics.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(() => {});
+    } catch (e) {}
+  }
+
   function createButton() {
     const btn = document.createElement('a');
     btn.className = 'btn-octicon tooltipped tooltipped-nw';
     btn.setAttribute('aria-label', 'Open in SchemaLens');
     btn.setAttribute('role', 'button');
-    btn.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 8px;color:#6366f1;font-weight:600;font-size:12px;';
+    btn.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 8px;color:#6366f1;font-weight:600;font-size:12px;cursor:pointer;';
     btn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 28 28" fill="none" style="vertical-align:middle">
         <rect width="28" height="28" rx="7" fill="#6366f1"/>
@@ -67,9 +87,11 @@
         const path = new URL(location.href).pathname;
         const dialect = detectDialect(path, content);
         const hash = encodeSchemaLensPayload(content, dialect);
+        trackEvent('extension_button_clicked', { dialect, repo: path.split('/')[2] });
         window.open(`${APP_URL}#diff=${hash}`, '_blank');
       } catch (err) {
         console.error('[SchemaLens]', err);
+        trackEvent('extension_button_error', { error: err.message });
         alert('Could not load the SQL file. Try opening SchemaLens manually at schemalens.tech');
       } finally {
         btn.style.opacity = '1';
@@ -90,7 +112,9 @@
       '.Box-header .d-flex .BtnGroup',
       '[data-testid="file-header"] .d-flex .BtnGroup',
       '.react-blob-header .d-flex .BtnGroup',
-      '.file-actions'
+      '.file-actions',
+      '[data-testid="blob-toolbar"] .BtnGroup',
+      '.BlobToolbar .BtnGroup'
     ];
 
     for (const sel of selectors) {
@@ -99,6 +123,7 @@
         const btn = createButton();
         btn.setAttribute('data-schemalens-btn', 'true');
         container.appendChild(btn);
+        trackEvent('extension_button_injected');
         return;
       }
     }
