@@ -121,6 +121,30 @@
 
 ---
 
+## Day 175 — IndieHackers Post Prep + Stale Data Sweep (May 26, 2026)
+
+### The Problem
+174 days, zero sales. The IndieHackers post task has been in the backlog for weeks but the landing pages (`indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html`) all had stale stats from Day 147 — making any distribution look neglected and inaccurate.
+
+### What Was Built
+1. **Stale data sweep across 3 key pages:**
+   - `indiehackers.html` — updated 147→174 days, 50+→57+ tools, 51+→189 SEO pages, 129→174 days stat, 54+→57+ tools stat
+   - `147-days-built-in-public.html` — updated title/OG/stats/share URLs to 174 Days / 57 Tools / 189 pages
+   - `built-in-public.html` — updated hero/title/OG/stats, extended timeline with 3 new chapters covering Days 128–174 (Post-Launch Recovery, Exit Push & Distribution Engine, Content Engine & Viral Pivot)
+2. **`marketing/indiehackers-post-day174.md`** — copy-paste ready IndieHackers post with raw honest stats, distribution attempts catalog, viral asset links (SchemaGuessr, Famous Database Schemas, Schema Design Interviews), submission checklist, and follow-up ideas.
+
+### Validation
+- ✅ All 3 HTML files verified with syntax-aware diff
+- ✅ Share URLs (Twitter, LinkedIn, HN) updated with correct 174/57 stats
+- ✅ Timeline narrative flows from Day 1 through Day 174 without gaps
+- ✅ Committed to git
+
+### Next Steps
+- Await human execution of IndieHackers post submission
+- Continue with Reddit distribution kit update (next highest-priority unblocked task)
+
+---
+
 ## Day 174 — Schema Guessr: Viral Database Schema Guessing Game (May 26, 2026)
 
 ### The Problem

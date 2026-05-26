@@ -1,15 +1,15 @@
 # r/webdev Post
 
 ## Title (choose one)
-1. `I built 51 free SQL micro-tools — schema diff, query generators, migration checkers`
+1. `I built 57 free SQL micro-tools — schema diff, query generators, migration checkers`
 2. `Schema diff in the browser: paste two CREATE TABLE dumps, get ALTER TABLE scripts instantly`
-3. `Showoff: My side project is a browser-based database migration tool with 51+ free utilities`
+3. `Showoff: My side project is a browser-based database migration tool with 57+ free utilities`
 
 ## Body (Title 1 variant)
 
 Hey r/webdev,
 
-Over the past 5 months I've been building **SchemaLens** — a collection of 51+ free SQL/developer tools that run entirely in the browser.
+Over the past 6 months I've been building **SchemaLens** — a collection of 57+ free SQL/developer tools that run entirely in the browser.
 
 The flagship tool is a **schema diff engine**: paste two `CREATE TABLE` dumps, get a visual semantic diff (not a line-by-line text diff) showing exactly what changed — tables, columns, indexes, constraints — plus ready-to-run migration scripts in PostgreSQL, MySQL, SQLite, SQL Server, or Oracle.
 
@@ -23,6 +23,8 @@ The flagship tool is a **schema diff engine**: paste two `CREATE TABLE` dumps, g
 - Reserved Words Checker (450+ words, 5 dialects)
 - Connection String Parser & Builder
 - Schema Design Interview Practice (Twitter, Uber, URL Shortener challenges)
+- Famous Database Schemas gallery (GitHub, Slack, Instagram ERDs)
+- SchemaGuessr game — guess the app from its database schema
 
 Everything is client-side. No signup. No data leaves your machine.
 
@@ -46,7 +48,7 @@ The $39 lifetime unlocks:
 - Diff history in localStorage
 - Priority email support
 
-Everything else — all 51+ micro-tools, the GitHub Action free tier, the VS Code extension — is completely free. I wanted the free tier to be genuinely useful even if you never pay.
+Everything else — all 57+ micro-tools, the GitHub Action free tier, the VS Code extension — is completely free. I wanted the free tier to be genuinely useful even if you never pay.
 
 ---
 

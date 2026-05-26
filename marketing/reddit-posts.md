@@ -54,7 +54,7 @@ Free for schemas up to 15 tables. If you hit edge cases with MySQL-specific synt
 **Body:**
 Hey r/webdev,
 
-For my side project this month I built SchemaLens—a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
+For my side project over the past 6 months I built SchemaLens—a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
 
 **Tech stack:**
 - Vanilla HTML/CSS/JS (no frameworks)
