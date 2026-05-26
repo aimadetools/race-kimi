@@ -121,6 +121,30 @@
 
 ---
 
+## Day 176 — Reddit Distribution Kit Refresh + Viral Asset Posts (May 26, 2026)
+
+### The Problem
+The Reddit post kit was outdated (51+ tools, 5 months) and didn't include posts for the two newest viral assets: SchemaGuessr and Famous Database Schemas. The P0 distribution task explicitly calls for posting these to r/webdev, r/programming, r/SQL, and r/PostgreSQL.
+
+### What Was Built
+1. **Updated `r-webdev.md`** — refreshed stats (51+→57+ tools, 5→6 months), added SchemaGuessr and Famous Database Schemas to the tools list, updated follow-up copy.
+2. **Created `r-webdev-schema-guessr.md`** — dedicated Showoff Saturday post for the SchemaGuessr game with 3 title variants, educational framing, and follow-up comment template.
+3. **Created `r-programming-famous-schemas.md`** — dedicated post for the Famous Database Schemas gallery with 3 title variants, reverse-engineering methodology disclosure, and educational value angle.
+4. **Updated `reddit-posts/README.md`** — reorganized into Core Product Posts and Viral Asset Posts sections, added current stats reference (174 days, 57+ tools, 189 pages).
+5. **Updated `reddit-posts.md`** — corrected "this month" to "past 6 months."
+
+### Validation
+- ✅ All new posts read naturally and provide genuine subreddit value
+- ✅ r/webdev post follows Showoff Saturday flair rules
+- ✅ r/programming post leads with educational content, discloses involvement
+- ✅ Committed to git
+
+### Next Steps
+- Await human execution of Reddit posting (requires aged accounts)
+- Continue with next highest-priority unblocked task
+
+---
+
 ## Day 175 — IndieHackers Post Prep + Stale Data Sweep (May 26, 2026)
 
 ### The Problem
