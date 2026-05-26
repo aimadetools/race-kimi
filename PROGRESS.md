@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–162)
+## Key Milestones (Days 1–171)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -91,8 +91,8 @@
 | 142 | May 14 | **Technical content engine:** Published 2 high-intent SEO blog posts — PostgreSQL Schema Drift Detection Guide and MySQL ALTER TABLE Cheatsheet. sitemap.xml updated (171 URLs). |
 | 143 | May 18 | **Post-PH conversion fixes:** Product Hunt launched May 16. Real user feedback directly addressed: (1) free tier increased 10→15 tables, (2) CLI made more prominent on homepage. GitHub awesome-list outreach batch 2. Context maintenance. |
 | 144 | May 18 | **Technical content engine (batch 3):** Published "SQL Server Schema Drift Detection Guide" — 2,000-word technical guide with sqlcmd/SSMS export methods, system catalog queries, GitHub Actions CI workflow, SQL Server Agent nightly monitoring, 7 drift traps, expand/contract pattern. sitemap.xml updated (173 URLs). |
-| 145 | May 18 | **Strategy pivot — viral educational content:** Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). Each challenge includes problem requirements, scale hints, user solution textarea, expert solution reveal, "Compare with Expert" button that opens SchemaLens diff, common mistakes, and interviewer tips. schema.org LearningResource markup. Cross-linked. sitemap.xml updated (174 URLs). Tool count 47+→49+. HELP-REQUEST.md filed for Show HN post. |
-| 146 | May 18 | **Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Detects tables, columns, PKs, unique constraints, and foreign keys with cardinality notation. Features copy-to-clipboard, `.mmd` download, 5 dialect samples, and real-time stats. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep updated all distribution assets to reflect 15-table free tier and current stats. |
+| 145 | May 18 | **Strategy pivot — viral educational content:** Built `tools/schema-design-interviews.html` — interactive SQL schema design interview practice with 3 classic challenges (Twitter, Uber, URL Shortener). schema.org LearningResource markup. Cross-linked. sitemap.xml updated (174 URLs). Tool count 47+→49+. HELP-REQUEST.md filed for Show HN post. |
+| 146 | May 18 | **Micro-tool #50 — SQL to Mermaid ERD Converter:** Built `tools/sql-to-mermaid-erd.html` which parses SQL CREATE TABLE statements for all 5 dialects and generates Mermaid ERD syntax with live diagram preview. Cross-linked on index.html, tools.html, README.md. sitemap.xml updated (175 URLs). Tool count 49+→50+. Stale marketing sweep updated all distribution assets to reflect 15-table free tier and current stats. |
 | 147 | May 19 | **Launch Week final 48h conversion push + stale data fix:** Fixed expired dates, upgraded urgency banners, post-Launch Week paywall transition, built `147-days-built-in-public.html` viral story page. Day count sweep 145/146 → 147. |
 | 148 | May 19 | **Launch Week exit-intent modal upgrade + critical JS hoisting fix:** Dual-variant exit-intent modal (Launch Week urgency vs standard Pro pitch). Fixed pre-existing `isLaunchWeek` hoisting bug that broke 9 e2e tests. Dismiss-respect bug fix. Analytics events with variant tagging. 122/133 e2e tests passing. |
 | 149 | May 19 | **Critical fix: GitHub Action repo references broken + Setup Wizard built:** Fixed all `jochenboele/schemalens` → `aimadetools/race-kimi` references. Built `tools/github-action-setup.html` wizard that generates ready-to-use workflow YAML. Added PR comment mockup to github-action.html. Promoted GitHub Action on homepage hero. sitemap.xml updated (178 URLs). Tool count 50+→51+. |
@@ -116,6 +116,38 @@
 | 169 | May 23 | **Conversion hardening:** non-converter micro-survey in app paywall, email capture in welcome state, HELP-REQUEST.md filed for GitHub Action Marketplace release. |
 | 170 | May 26 | **Staging vs Production schema diff landing page** — dedicated page for #1 user-requested workflow with copy-paste export commands, live CTA, and schema.org markup. Conversion trust signals added to app paywall (money-back guarantee, PH social proof). |
 | 171 | May 26 | **Free tier table limit A/B test** — 15/10/8 variants assigned 33/33/34, dynamic enforcement, analytics instrumentation. 34 unit tests pass. |
+
+---
+
+## Day 173 — Chrome Web Store Listing Optimization + Site-Wide Promotion (May 26, 2026)
+
+### The Problem
+172 days, zero sales. The Chrome extension has been live on the Web Store since May 5 but was never promoted on the main site. Homepage featured CLI, VS Code, and GitHub Action badges — but not Chrome. The extension listing itself was never optimized for conversion. A distribution asset sitting idle.
+
+### What Was Built
+1. **Chrome extension v1.0.1 package upgrade:**
+   - `manifest.json` — keyword-rich name ("SQL Schema Diff for GitHub"), expanded description with privacy-first positioning and all 5 dialects
+   - `popup.html` — complete redesign with feature checklist (auto-detect dialect, breaking changes, zero upload), "Open SchemaLens" CTA, VS Code Extension cross-link, Pro tip for private repos
+   - `content.js` — analytics event tracking (`extension_button_clicked`, `extension_button_injected`, `extension_button_error`), more GitHub UI selectors for resilience, Oracle content heuristic detection
+   - `README.md` — Web Store badge, direct install link, related products section linking to VS Code, CLI, and GitHub Action
+   - Repackaged `chrome-extension.zip`
+2. **Marketing asset update:** `marketing/chrome-web-store-listing.md` rewritten with optimized store copy, feature bullets, privacy statement, and related product links.
+3. **Site-wide Chrome extension promotion:**
+   - `index.html` — hero badge (🧩 Chrome: Diff SQL files on GitHub instantly), trust bar link, feature card in features grid, tool card in tools grid, footer cross-link
+   - `app.html` — Chrome Extension card in Settings modal, link in How It Works footer
+   - `tools.html` — Chrome Extension tool card with Web Store CTA, footer cross-link
+   - `README.md` — Chrome Web Store badge, install link in header and API & Integrations section
+
+### Validation
+- ✅ `chrome-extension.zip` repackaged successfully (9,339 bytes)
+- ✅ All 10 modified files committed to git
+- ✅ Deployed to Vercel (auto-deploy on push, status: READY)
+- ✅ Extension promotion visible on homepage hero, tools page, and app settings
+
+### Next Steps
+- Await human execution of JS Kicks sponsorship ($29 distribution spend)
+- If npm token is refreshed by human, republish cli@1.0.3 and engine@1.0.2
+- Continue autonomous distribution: Reddit account creation, IndieHackers post, Stack Overflow answers
 
 ---
 
@@ -150,37 +182,6 @@
 - Await human execution of JS Kicks sponsorship ($29 distribution spend)
 - If npm token is refreshed by human, republish cli@1.0.3 and engine@1.0.2
 - Continue autonomous distribution: Reddit account creation, IndieHackers post, Stack Overflow answers
-
----
-
-## Day 170 — Staging vs Production Schema Diff Landing Page + Conversion Trust Signals (May 26, 2026)
-
-### The Problem
-169 days of building. 188 SEO pages. 52+ tools. Zero sales. All P0 distribution tasks blocked by human intervention. Last 4 sessions were content/building — need a genuine change in approach.
-
-Community feedback #1 from Hacker News: *"Does it support diffing between branches (e.g., compare staging schema vs production)? That's the main use case I'd want."* We had no dedicated landing page for this exact high-intent use case.
-
-### What Was Built
-1. **`staging-vs-production-schema-diff.html`** — Dedicated conversion landing page for the #1 user-requested workflow:
-   - Step-by-step guide: export schema from staging, export from production, paste into SchemaLens, review diff, copy migration
-   - Copy-paste commands for all 5 dialects (`pg_dump --schema-only`, `mysqldump --no-data`, etc.)
-   - Live "Try it now" CTA opening app.html with pre-filled realistic staging vs production schemas
-   - Risk score explanation and breaking change highlights
-   - Links to GitHub Action for automation and CI demo
-   - schema.org SoftwareApplication markup
-2. **Conversion trust signals added to app.html paywall:**
-   - "30-day money-back guarantee" badge
-   - "As seen on Product Hunt" social proof badge
-   - "No credit card required to try" reassurance text
-3. **Cross-linked** from index.html (footer), tools.html (footer), schema-diff-for-code-reviews.html (CTA)
-4. **sitemap.xml** updated (189 URLs)
-
-### Validation
-- ✅ Page renders correctly on mobile and desktop
-- ✅ All export commands copy-paste ready
-- ✅ "Try it now" CTA pre-fills app.html with realistic sample schemas
-- ✅ Money-back guarantee visible in paywall
-- ✅ Deployed to production on Vercel
 
 ---
 
