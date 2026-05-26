@@ -13,7 +13,8 @@
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
 Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`  
-Core engine: `npm install schemalens-engine`
+Core engine: `npm install schemalens-engine`  
+VS Code Extension: [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
@@ -172,15 +173,15 @@ SchemaLens includes **57+ free browser-based tools** that reuse the same custom 
 | 1 | Landing page & validation | ✅ |
 | 2 | Core parser & diff engine | ✅ |
 | 3 | UI & free tier | ✅ |
-| 4 | Pro tier & Product Hunt launch | ⏳ (blocked on human distribution) |
+| 4 | Pro tier & Product Hunt launch | ✅ (launched May 16) |
 | 5 | More dialects & polish | ✅ |
 | 6 | Team workspace (MVP) | ✅ |
 | 7 | SEO & content engine | ✅ (32 blog posts, 10 tools) |
 | 8 | CI/CD integration | ✅ |
 | 9 | Advanced migrations | ✅ (risk score, rename detection) |
 | 10 | API & integrations | ✅ (REST API, Slack, VS Code) |
-| 11 | Marketing & partnerships | ⏳ |
-| 12 | Review & scale | ⏳ |
+| 11 | Marketing & partnerships | 🔄 (newsletter sponsorships, directory submissions) |
+| 12 | Review & scale | 🔄 (final optimization sprint) |
 
 ---
 
@@ -197,11 +198,11 @@ SchemaLens includes **57+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 36+ micro-tools
-- **Pro customers:** 0 (pre-launch)
-- **MRR:** $0 (pre-launch)
-- **Blog posts:** 32 published
-- **E2E tests:** 94 passing
+- **Free tool uses:** Growing via 57+ micro-tools
+- **Pro customers:** 0 (post-PH, iterating on distribution)
+- **MRR:** $0
+- **Blog posts:** 32+ published
+- **E2E tests:** 130+ passing
 
 ---
 

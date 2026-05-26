@@ -1,7 +1,7 @@
 {
   "name": "schemalens-engine",
-  "version": "1.0.1",
-  "description": "SchemaLens core diff engine — semantic SQL schema diff, breaking change detection, and migration generation",
+  "version": "1.0.2",
+  "description": "SQL Schema Diff Engine for Node.js — semantic diff, breaking change detection, risk scoring, and migration generation for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Zero dependencies. MIT licensed.",
   "main": "index.js",
   "files": [
     "index.js",
@@ -25,7 +25,15 @@
     "mssql",
     "oracle",
     "ddl",
-    "alter-table"
+    "alter-table",
+    "schema-diff",
+    "schema-compare",
+    "database-diff",
+    "breaking-change-detection",
+    "migration-generator",
+    "sql-parser",
+    "node-sql-parser",
+    "zero-dependencies"
   ],
   "author": "SchemaLens <hello@schemalens.tech>",
   "license": "MIT",

@@ -1,7 +1,7 @@
 {
   "name": "schemalens-cli",
-  "version": "1.0.2",
-  "description": "CLI for SchemaLens — compare SQL schemas and generate migrations",
+  "version": "1.0.3",
+  "description": "SQL Schema Diff CLI — compare database schemas, detect breaking changes, and generate ALTER TABLE migrations for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
   "main": "index.js",
   "bin": {
     "schemalens": "index.js"
@@ -32,8 +32,18 @@
     "database-migration",
     "alter-table",
     "schema-comparison",
+    "schema-compare",
+    "database-diff",
+    "ddl-diff",
+    "postgres-schema-diff",
+    "mysql-schema-diff",
+    "sql-migration-tool",
     "liquibase-alternative",
-    "flyway-alternative"
+    "flyway-alternative",
+    "prisma-alternative",
+    "breaking-change-detection",
+    "ci-cd",
+    "devops"
   ],
   "author": "SchemaLens",
   "license": "MIT",

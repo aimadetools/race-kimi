@@ -1,7 +1,7 @@
 {
   "name": "schemalens",
-  "displayName": "SchemaLens",
-  "description": "Open SchemaLens diff tool directly from VS Code",
+  "displayName": "SchemaLens — SQL Schema Diff & Migration Generator",
+  "description": "Compare SQL schemas and generate migrations without leaving VS Code. Diff two SQL files instantly — no upload, no database connection required.",
   "version": "0.1.0",
   "publisher": "schemalens",
   "engines": {
@@ -24,11 +24,16 @@
     "sql-diff",
     "database-schema",
     "compare-sql",
+    "schema-compare",
+    "database-diff",
     "alter-table",
+    "migration-generator",
     "postgresql",
     "sqlite",
     "mssql",
-    "oracle"
+    "oracle",
+    "ddl",
+    "breaking-changes"
   ],
   "activationEvents": [
     "onCommand:schemalens.openApp",

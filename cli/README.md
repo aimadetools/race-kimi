@@ -1,12 +1,28 @@
-# schemalens-cli — SQL Schema Diff & Migration Generator
+# SQL Schema Diff CLI — Compare Database Schemas & Generate Migrations
 
 [![npm version](https://img.shields.io/npm/v/schemalens-cli.svg)](https://www.npmjs.com/package/schemalens-cli)
 [![npm downloads](https://img.shields.io/npm/dm/schemalens-cli.svg)](https://www.npmjs.com/package/schemalens-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/aimadetools/race-kimi?style=social)](https://github.com/aimadetools/race-kimi)
 
-> Zero-install **schema diff CLI** — compare two SQL files, get a semantic diff, and generate `ALTER TABLE` migration scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
+> Zero-install **SQL schema diff CLI** — compare two SQL schema dumps, get a semantic diff, and generate `ALTER TABLE` migration scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
 
 **SchemaLens CLI** is the fastest way to diff database schemas from your terminal. No Docker, no JVM, no config files — just `npx schemalens-cli diff old.sql new.sql` and you get a colorized report, risk score, breaking-change warnings, and a ready-to-run migration script.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [Output Formats](#output-formats)
+- [CI/CD Integration](#cicd-integration)
+- [Use Cases](#use-cases)
+- [Why SchemaLens CLI?](#why-schemalens-cli)
+- [Related](#related)
+- [License](#license)
 
 ---
 
@@ -14,7 +30,7 @@
 
 - 🔍 **Semantic SQL Schema Diff** — Detects added/removed/renamed tables, columns, indexes, constraints, views, triggers, and functions.
 - ⚡ **5 Dialects** — PostgreSQL, MySQL / MariaDB, SQLite, SQL Server / Azure SQL, Oracle.
-- 🛡️ **Breaking Change Detection** — Automatic warnings for destructive changes (column drops, type narrowing, NOT NULL additions).
+- 🛡️ **Breaking Change Detection** — Automatic warnings for destructive changes (column drops, type narrowing, NOT NULL additions, index drops, FK removals).
 - 📊 **Risk Score** — Every diff gets a 0–100 risk rating so you know if a migration is safe to run.
 - 🔄 **Rollback Generation** — Generate reverse `ALTER TABLE` scripts to undo a migration.
 - 📄 **4 Output Formats** — Pretty terminal output, JSON, Markdown, and raw SQL.
@@ -26,9 +42,36 @@
 ## Install
 
 ```bash
+# npm
 npm install -g schemalens-cli
+
+# yarn
+yarn global add schemalens-cli
+
+# pnpm
+pnpm add -g schemalens-cli
+
+# bun
+bun add -g schemalens-cli
+
 # or run without installing
 npx schemalens-cli diff old.sql new.sql
+```
+
+---
+
+## Quick Start
+
+```bash
+# 1. Diff two schema files
+schemalens diff schema-v1.sql schema-v2.sql --dialect postgres
+
+# 2. Generate a migration script
+schemalens diff schema-v1.sql schema-v2.sql --format sql --output migration.sql
+
+# 3. Fail CI on breaking changes
+export SCHEMALENS_STRICT=1
+schemalens diff schema-v1.sql schema-v2.sql --format json
 ```
 
 ---
@@ -138,28 +181,40 @@ See the [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) f
 
 ---
 
+## Use Cases
+
+- **Code Reviews** — Attach a Markdown diff report to your PR so reviewers see exactly what schema changed.
+- **Staging → Production Checks** — Export schemas from both environments and diff before deploying.
+- **CI/CD Gates** — Fail the build if a PR introduces breaking schema changes.
+- **Legacy Database Audits** — Compare a current dump against a known baseline to find drift.
+- **Migration Safety** — Generate rollback scripts before running migrations in production.
+
+---
+
 ## Why SchemaLens CLI?
 
-| | SchemaLens CLI | Liquibase | Flyway |
-|---|----------------|-----------|--------|
-| **Setup** | Zero config | XML/YAML config | Java + config |
-| **Dependencies** | Node.js only | JVM | JVM |
-| **Diff two files** | Native | Via DB snapshot | Via DB snapshot |
-| **Offline** | ✅ Yes | ❌ Needs DB | ❌ Needs DB |
-| **Breaking detection** | Built-in | Manual checks | Manual checks |
-| **Risk scoring** | Built-in | ❌ | ❌ |
-| **Price** | Free | Freemium | Freemium |
+| | SchemaLens CLI | Liquibase | Flyway | Prisma Migrate |
+|---|----------------|-----------|--------|----------------|
+| **Setup** | Zero config | XML/YAML config | Java + config | Schema + client setup |
+| **Dependencies** | Node.js only | JVM | JVM | Node.js + Prisma Client |
+| **Diff two files** | Native | Via DB snapshot | Via DB snapshot | Via DB shadow |
+| **Offline** | ✅ Yes | ❌ Needs DB | ❌ Needs DB | ❌ Needs DB |
+| **Breaking detection** | Built-in | Manual checks | Manual checks | Basic |
+| **Risk scoring** | Built-in | ❌ | ❌ | ❌ |
+| **Rollback generation** | ✅ | Limited | Limited | Migration down |
+| **Price** | Free | Freemium | Freemium | Free / Pro team |
 
-SchemaLens CLI is the lightweight choice when you just want to **compare two SQL files** and know if the migration is safe.
+SchemaLens CLI is the lightweight choice when you just want to **compare two SQL files** and know if the migration is safe — without spinning up a database or writing config files.
 
 ---
 
 ## Related
 
-- [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with shareable links, 57+ micro-tools, and schema design guides
-- [SchemaLens API](https://schemalens.tech/api.html) — REST API for programmatic diffs
-- [SchemaLens VS Code Extension](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens) — Diff SQL files without leaving your editor
-- [SchemaLens GitHub](https://github.com/aimadetools/race-kimi)
+- ⭐ [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with shareable links, 57+ micro-tools, and schema design guides
+- 📦 [SchemaLens Engine](https://www.npmjs.com/package/schemalens-engine) — Use the diff engine programmatically in your own Node.js projects
+- 🖥️ [SchemaLens VS Code Extension](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens) — Diff SQL files without leaving your editor
+- ⚙️ [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD
+- 🐙 [GitHub Repository](https://github.com/aimadetools/race-kimi) — Star us, open issues, or contribute
 
 ## License
 

@@ -3,16 +3,32 @@
 [![npm version](https://img.shields.io/npm/v/schemalens-engine.svg)](https://www.npmjs.com/package/schemalens-engine)
 [![npm downloads](https://img.shields.io/npm/dm/schemalens-engine.svg)](https://www.npmjs.com/package/schemalens-engine)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/aimadetools/race-kimi?style=social)](https://github.com/aimadetools/race-kimi)
 
-SchemaLens core diff engine — semantic SQL schema diff, breaking change detection, and migration generation. Zero dependencies. MIT licensed.
+> Zero-dependency **SQL schema diff engine** for Node.js — semantic diff, breaking change detection, risk scoring, and migration generation for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.
 
-Use this package if you want to build your own tool on top of SchemaLens's parser and diff logic.
+Use `schemalens-engine` to build your own schema diff tool, CI integration, or migration safety checker on top of a battle-tested parser and diff logic.
+
+---
+
+## Table of Contents
+
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [API](#api)
+- [Use Cases](#use-cases)
+- [Related](#related)
+- [License](#license)
+
+---
 
 ## Install
 
 ```bash
 npm install schemalens-engine
 ```
+
+---
 
 ## Quick Start
 
@@ -38,6 +54,8 @@ const risk = calculateRiskScore(result);
 console.log('Risk score:', risk.score, risk.label);
 ```
 
+---
+
 ## API
 
 ### `diffSchemas(oldSQL, newSQL, options)`
@@ -58,53 +76,64 @@ Compare two SQL schema dumps and return a structured diff.
   removedIndexes: [...],
   addedViews: [...],
   removedViews: [...],
-  modifiedViews: [...],
+  addedTriggers: [...],
+  removedTriggers: [...],
   addedFunctions: [...],
   removedFunctions: [...],
-  // ...
+  addedTypes: [...],
+  removedTypes: [...]
 }
 ```
 
 ### `generateMigration(diffResult, options)`
 
-Generate a dialect-specific migration script from a diff result.
+Generate a ready-to-run migration script from a diff result.
 
 **Options:**
-- `dialect` — same as above
-- `safeMode` — if `true`, wraps dangerous changes in transactions/conditionals where supported
+- `dialect` — Same as above
+- `rollback` — Boolean. If `true`, generates reverse `ALTER TABLE` scripts.
+
+**Returns:** String containing SQL migration statements.
 
 ### `detectBreakingChanges(diffResult)`
 
-Returns an array of breaking change objects with `type`, `table`, `column`, and `message`.
+Analyze a diff result and return an array of breaking changes with severity and explanation.
+
+**Returns:**
+```js
+[
+  { type: 'column_removed', severity: 'high', message: '...' },
+  { type: 'type_narrowed', severity: 'medium', message: '...' }
+]
+```
 
 ### `calculateRiskScore(diffResult)`
 
-Returns `{ score: number, label: 'Low' | 'Medium' | 'High' }`.
+Calculate an overall risk score for the schema change.
 
-## Supported Dialects
+**Returns:**
+```js
+{ score: 42, label: 'Medium Risk', color: 'yellow' }
+```
 
-| Dialect | Tables | Columns | Indexes | Constraints | Views | Functions | Triggers |
-|---------|--------|---------|---------|-------------|-------|-----------|----------|
-| PostgreSQL | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| MySQL / MariaDB | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| SQLite | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| SQL Server / Azure SQL | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Oracle | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+---
+
+## Use Cases
+
+- **Custom DevOps Tools** — Build internal CLI tools that gate deployments based on schema risk scores.
+- **Migration Safety Dashboards** — Integrate diff results into your team's admin panel or Slack bot.
+- **ORM Plugins** — Add schema diff capabilities to your ORM's migration workflow.
+- **Database Monitoring** — Periodically diff production vs expected schema to detect drift.
+
+---
 
 ## Related
 
-- [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with 57+ free SQL tools
-- [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Terminal interface built on this engine
-- [SchemaLens VS Code Extension](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens) — Editor integration
-
-## Testing
-
-Run the full test suite:
-
-```bash
-npm test
-```
+- 🖥️ [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Ready-to-use terminal interface built on this engine
+- 🌐 [SchemaLens Web App](https://schemalens.tech) — Zero-install browser tool with 57+ micro-tools
+- ⚙️ [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD
+- 🐙 [GitHub Repository](https://github.com/aimadetools/race-kimi)
 
 ## License
 
-MIT — see [LICENSE](../LICENSE) for details.
+MIT
