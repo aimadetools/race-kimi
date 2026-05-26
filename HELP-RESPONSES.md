@@ -12,9 +12,11 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - VS Code: schemalens extension live on marketplace.visualstudio.com
 - Chrome Web Store: extension LIVE at https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde
 - Product Hunt: submitted May 15 — launches May 16
+- GitHub Marketplace: SchemaLens GitHub Action v1.0.0 published at https://github.com/aimadetools/race-kimi/releases/tag/v1.0.0
 - No Vercel env vars needed (product is entirely client-side)
 
 ## Completed Requests
+- GitHub Release v1.0.0 (Marketplace publish) — done May 26. Release created, Action published to GitHub Marketplace: https://github.com/aimadetools/race-kimi/releases/tag/v1.0.0
 - Show HN post (SchemaLens) — done May 19. Posted from new account, got 3 points and 1 comment. New accounts get minimal visibility on HN.
 - Domain (schemalens.tech) — done Apr 23 (see help-requests/20260423-153516-HELP-REQUEST.md, help-requests/domain-purchase.md)
 - npm publish (schemalens-engine@1.0.0) — done May 5 (see help-requests/20260430-093118-HELP-REQUEST.md)
@@ -24,6 +26,7 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Product Hunt launch — done May 15, goes live May 16 (see help-requests/20260514-033512-HELP-REQUEST.md)
 
 ## Declined (with reasons)
+- JavaScript Kicks sponsorship (Issues #44 and #45): CLOSED. You filed two conflicting requests — #44 asks for a "Generate Database Migrations Without the CLI" ad copy, #45 asks for a "Catch breaking database schema changes in every PR" ad copy. These are different products/angles. File ONE new help request with the final ad copy, target URL, and budget confirmation, and it will be executed.
 - GitHub PAT with public_repo scope (see help-requests/20260518-*): Declined. Creating issues on external repos (awesome-lists) from an automated account is spam and will get the account banned. Submit to awesome-lists manually via the proper PR process if you want inclusion.
 - Chrome Web Store status check: CONFIRMED LIVE. URL: https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde — published and available for install.
 - Dev.to article publish (see help-requests/20260514-212339-HELP-REQUEST.md): Not done this week due to time constraints. You can create a dev.to account yourself and publish. If you want human help with this, file a new request next week.
@@ -33,13 +36,22 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Newsletter outreach emails (see help-requests/20260501-213443-HELP-REQUEST.md): Sending personalized emails to newsletter owners is your responsibility. If you need an email sending service configured, that can be discussed.
 
 ---
-## Issue #41 — GSC + Dev.to (May 20)
-Status: DONE.
-- GSC: Add this to your index.html head: <meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />
-- Dev.to: Article published. New account, minimal traction (2 reactions, 45 views). Keep posting.
+## Issue #46 — GitHub Release for Marketplace (May 23)
+Status: DONE. Release v1.0.0 created and published to GitHub Marketplace: https://github.com/aimadetools/race-kimi/releases/tag/v1.0.0
+
+## Issue #45 — JavaScript Kicks Sponsorship (May 20)
+Status: CLOSED. Conflicting with Issue #44 (different ad copy). File ONE clear help request with final copy and it will be executed.
+
+## Issue #44 — JavaScript Kicks Sponsorship (May 20)
+Status: CLOSED. Conflicting with Issue #45 (different ad copy). File ONE clear help request with final copy and it will be executed.
+
+## Issue #43 — Newsletter sponsorship advice (May 20)
+Status: DONE. You have $95 budget remaining for the race. JavaScript Kicks at $29 is within budget — your call as CMO of SchemaLens whether it is worth it. Postgres Weekly at $180 is above budget, so that is declined. Make the decision yourself based on audience fit and expected ROI. GitHub workflow file pushed.
 
 ## Issue #42 — Gumroad $19 product (May 20)
 Status: CLOSED. Launch Week is over. If you want to permanently change pricing, open a new request.
 
-## Issue #43 — Newsletter sponsorship advice (May 20)
-Status: DONE. You have $95 budget remaining for the race. JavaScript Kicks at $29 is within budget — your call as CMO of SchemaLens whether it is worth it. Postgres Weekly at $180 is above budget, so that is declined. Make the decision yourself based on audience fit and expected ROI. GitHub workflow file pushed.
+## Issue #41 — GSC + Dev.to (May 20)
+Status: DONE.
+- GSC: Add this to your index.html head: <meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />
+- Dev.to: Article published. New account, minimal traction (2 reactions, 45 views). Keep posting.
