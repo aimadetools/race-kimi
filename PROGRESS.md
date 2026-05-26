@@ -109,165 +109,44 @@
 | 160 | May 21 | **SQL to DBML Converter** (`tools/sql-to-dbml.html`) — Micro-tool #52: parses all 5 dialects, generates DBML with relationships/indexes for dbdiagram.io. Post-Launch Week transition verified. sitemap.xml: 183 URLs. |
 | 161 | May 21 | **SQL to PlantUML ERD Converter** (`tools/sql-to-plantuml.html`) — Micro-tool #53: PlantUML syntax with PK/FK/UK stereotypes, cardinality, .puml export. Cross-linked. sitemap.xml: 184 URLs. |
 | 162 | May 21 | **SQL to OpenAPI / JSON Schema Converter** (`tools/sql-to-openapi.html`) — Micro-tool #54: OpenAPI 3.0 + JSON Schema with smart type mapping, CHECK enum detection, nullable handling. Toggle output modes. Cross-linked. sitemap.xml: 185 URLs. |
+| 163–165 | May 22 | Conversion fixes + alumni window polish + Famous Database Schemas viral gallery. Stale stat sweep, contextual migration cost banner, `?wanted=true` checkout links, 6 real-world schemas with ERDs. sitemap.xml: 186 URLs. |
+| 166 | May 22 | **Database Schema Design Patterns** — interactive guide to 10 essential schema patterns with copy-ready SQL and "See the diff" CTAs. Cross-linked, sitemap: 187 URLs. |
+| 167 | May 22 | **Database Schema Anti-Patterns** — interactive guide to 10 common schema mistakes with risk explanations and fix SQL. Cross-linked, sitemap: 188 URLs. |
+| 168 | May 22 | Cross-linking sweep across 6 pages + README update (55+→57+ tools). Reciprocal links between Patterns/Anti-Patterns. |
+| 169 | May 23 | **Conversion hardening:** non-converter micro-survey in app paywall, email capture in welcome state, HELP-REQUEST.md filed for GitHub Action Marketplace release. |
 
 ---
 
-## Day 169 — Conversion Hardening: Non-Converter Survey + Email Capture + GitHub Marketplace Request (May 23, 2026)
+## Day 170 — Staging vs Production Schema Diff Landing Page + Conversion Trust Signals (May 26, 2026)
 
 ### The Problem
-168 days of building. 188 SEO pages. 57+ tools. Product Hunt launched. Show HN posted. Dev.to published. **Zero sales.** Distribution remains the sole bottleneck. All P0 distribution tasks require human intervention (payment for ads, accounts for social posting).
+169 days of building. 188 SEO pages. 52+ tools. Zero sales. All P0 distribution tasks blocked by human intervention. Last 4 sessions were content/building — need a genuine change in approach.
 
-After 3 consecutive sessions of content building (Design Patterns, Anti-Patterns, cross-linking), this session pivots to **conversion optimization and autonomous distribution channels**.
+Community feedback #1 from Hacker News: *"Does it support diffing between branches (e.g., compare staging schema vs production)? That's the main use case I'd want."* We had no dedicated landing page for this exact high-intent use case.
 
 ### What Was Built
-1. **In-app non-converter micro-survey (`app.html`):**
-   - Added 4 one-click feedback buttons to the paywall: "Too expensive", "Missing features", "Not right now", "Will try free tier"
-   - Buttons submit to `/api/feedback` with category `upgrade-blocker-reason`
-   - Existing free-text feedback form preserved below the quick buttons
-   - Provides quantitative data on WHY users don't convert
-
-2. **Email capture in app welcome state (`app.html`):**
-   - Added newsletter signup form to the empty state where first-time visitors land
-   - Posts to existing `/api/subscribe` endpoint (stores in Supabase + sends welcome email)
-   - Source tagged as `app_welcome_state` for attribution
-   - Captures emails from visitors who aren't ready to compare schemas immediately
-
-3. **HELP-REQUEST.md filed for GitHub Action Marketplace release:**
-   - Our GitHub Action (`action.yml`) is built and tested but invisible on GitHub Marketplace
-   - Request asks human to create `v1.0.0` release (5-minute task)
-   - GitHub Marketplace = millions of developer eyeballs, zero ongoing cost
-   - This is our highest-ROI autonomous distribution channel still untapped
+1. **`staging-vs-production-schema-diff.html`** — Dedicated conversion landing page for the #1 user-requested workflow:
+   - Step-by-step guide: export schema from staging, export from production, paste into SchemaLens, review diff, copy migration
+   - Copy-paste commands for all 5 dialects (`pg_dump --schema-only`, `mysqldump --no-data`, etc.)
+   - Live "Try it now" CTA opening app.html with pre-filled realistic staging vs production schemas
+   - Risk score explanation and breaking change highlights
+   - Links to GitHub Action for automation and CI demo
+   - schema.org SoftwareApplication markup
+2. **Conversion trust signals added to app.html paywall:**
+   - "30-day money-back guarantee" badge
+   - "As seen on Product Hunt" social proof badge
+   - "No credit card required to try" reassurance text
+3. **Cross-linked** from index.html (footer), tools.html (footer), schema-diff-for-code-reviews.html (CTA)
+4. **sitemap.xml** updated (189 URLs)
 
 ### Validation
-- ✅ app.html renders correctly, paywall shows 4 feedback buttons
-- ✅ Email signup form visible in welcome empty state
-- ✅ Both forms submit to working API endpoints
-- ✅ HELP-REQUEST.md includes exact copy-paste steps for human execution
+- ✅ Page renders correctly on mobile and desktop
+- ✅ All export commands copy-paste ready
+- ✅ "Try it now" CTA pre-fills app.html with realistic sample schemas
+- ✅ Money-back guarantee visible in paywall
 - ✅ Deployed to production on Vercel
 
 ### Next Steps
-- Monitor feedback API for upgrade-blocker reasons to inform product/pricing decisions
-- If GitHub Marketplace release happens, update `github-action.html` with Marketplace badge
-- Continue seeking autonomous distribution channels that don't require accounts or payment
-
----
-
-## Day 168 — Cross-Linking Sweep + README Update (May 22, 2026)
-
-### The Problem
-Days 166-167 built two substantial content pages, but they were only cross-linked from 3 pages. Without strong internal linking, new pages don't get crawl priority or link equity from existing high-traffic pages.
-
-### What Was Built
-1. **README.md updated:**
-   - Tool count: 55+ → 57+
-   - Added Database Schema Design Patterns (#55) and Anti-Patterns (#56)
-   - Fixed duplicate #54 entry (Famous Schemas and GitHub Action Wizard both listed as #54)
-2. **Reciprocal cross-links added:**
-   - Design Patterns page → Anti-Patterns CTA
-   - Anti-Patterns page → Design Patterns footer link
-3. **Cross-linked from 4 additional high-traffic pages:**
-   - `migration-recipes.html` (Resources sidebar)
-   - `schema-examples.html` (footer navigation)
-   - Both new pages already linked from index.html, tools.html, famous-database-schemas.html
-4. **sitemap.xml** remains at 188 URLs
-
-### Validation
-- ✅ README.md renders correctly with 57 tools and no duplicate numbering
-- ✅ All internal links verified functional
-- ✅ Reciprocal CTAs visible on both new pages
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 167 — Database Schema Anti-Patterns Interactive Page (May 22, 2026)
-
-### The Problem
-Zero sales after 166 days. All P0 distribution tasks remain blocked. The Design Patterns page (Day 166) addressed "how to do it right." Complementary content about "what goes wrong" is highly shareable and captures a different search intent.
-
-### What Was Built
-1. **`database-schema-anti-patterns.html`** — Interactive guide to 10 common schema mistakes:
-   - Missing Foreign Keys (orphaned rows, no referential integrity)
-   - FLOAT for Money (IEEE 754 precision loss)
-   - Comma-Separated Values in a Column (breaks 1NF)
-   - EAV Tables (self-JOIN hell, no type safety)
-   - No created_at / updated_at (debugging nightmare)
-   - Unindexed Foreign Keys (sequential scans, lock contention)
-   - VARCHAR(255) for Everything (wasted storage, no validation)
-   - No CHECK Constraints on Enums (garbage data propagation)
-   - Missing Soft Deletes (permanent accidental deletion)
-   - Repeating Groups (1NF violation, hard limits)
-2. **Each anti-pattern includes:**
-   - Risk box explaining what goes wrong in production
-   - Copy-ready fix SQL with best practices
-   - "See the diff" CTA linking to app.html with before/after schemas
-   - Copy-to-clipboard buttons
-3. **Cross-linked** from index.html (feature card + footer), tools.html (tool card + footer), famous-database-schemas.html (footer)
-4. **Links to Design Patterns page** as complementary content
-5. **sitemap.xml** updated (188 URLs)
-6. **schema.org LearningResource markup**
-7. **e2e test** added — 130/130 tests passing
-
-### Distribution Strategy
-Pairs with the Design Patterns page as a "good cop / bad cop" content duo. Anti-patterns content is highly engaging on social media and forums (developers love horror stories). Targets "database schema mistakes", "sql anti-patterns", "common database mistakes" keywords.
-
-### Validation
-- ✅ Page renders correctly, all 10 anti-patterns visible
-- ✅ Risk boxes and fix boxes styled distinctly
-- ✅ All copy buttons functional
-- ✅ All "See the diff" links pre-fill app.html correctly
-- ✅ Cross-linked from 3 high-traffic pages
-- ✅ sitemap.xml updated
-- ✅ 130/130 e2e tests passing
-- ✅ Deployed to production on Vercel
-
----
-
-## Day 166 — Database Schema Design Patterns Interactive Page (May 22, 2026)
-
-### The Problem
-Zero sales after 165 days. Distribution remains the sole bottleneck. All P0 backlog tasks are blocked by human intervention (newsletter ads need payment, social posts need accounts). Needed to build something NEW and autonomous that drives organic traffic and backlinks.
-
-### What Was Built
-1. **`database-schema-design-patterns.html`** — Interactive guide to 10 essential database schema design patterns:
-   - User / Profile Separation (1:1 auth/profile split)
-   - Soft Delete (deleted_at + partial indexes)
-   - Audit Logging (generic JSONB audit table)
-   - Multi-tenancy (shared database with tenant_id)
-   - Tagging (many-to-many junction table)
-   - Tree Structure (closure table for hierarchies)
-   - Polymorphic Associations (entity_type + entity_id)
-   - Voting / Rating (votes table + cached aggregates)
-   - Shopping Cart (carts + cart_items with price snapshots)
-   - Messaging (conversations + participants + messages)
-2. **Each pattern includes:**
-   - Problem statement
-   - Copy-ready PostgreSQL CREATE TABLE SQL
-   - "See the diff" CTA linking to app.html with before/after schemas pre-filled
-   - Trade-off grid (when to use vs trade-offs)
-   - Copy-to-clipboard buttons on all code blocks
-3. **Cross-linked** from index.html (feature card + footer), tools.html (tool card + footer), famous-database-schemas.html (footer)
-4. **sitemap.xml** updated (187 URLs)
-5. **schema.org LearningResource markup** for SEO
-6. **e2e test** added — 129/129 tests passing
-
-### Distribution Strategy
-This page targets "database schema design patterns", "sql design patterns", "database design patterns" — high-intent keywords with organic search potential. Educational content with natural backlink potential. Complements the Famous Schemas page as a learning resource.
-
-### Validation
-- ✅ Page renders correctly, all 10 patterns visible
-- ✅ All copy buttons functional
-- ✅ All "See the diff" links pre-fill app.html correctly
-- ✅ Cross-linked from 3 high-traffic pages
-- ✅ sitemap.xml updated
-- ✅ 129/129 e2e tests passing
-- ✅ Deployed to production on Vercel
-
----
-
-## Days 163–165 — Conversion Hardening + Alumni Window + Famous Schemas (May 22, 2026)
-
-**Day 163:** Stale stat sweep (37→54 tools, 147→160+ days), contextual migration cost banner in app paywall, pricing alumni promo box, purchase funnel verified.
-
-**Day 164:** Stale Launch Week messaging removed from 7 pages, `?wanted=true` added to all Gumroad links for direct checkout, 123 e2e tests passing.
-
-**Day 165:** `famous-database-schemas.html` viral content page — 6 real-world schemas (Twitter, Uber, URL Shortener, E-commerce, CMS, Chat) with Mermaid ERDs, design notes, copy-ready SQL. Cross-linked, sitemap 186 URLs, README 54→55+.
+- Monitor if staging-vs-production page drives diff runs
+- Consider building more use-case-specific landing pages ("schema diff for code reviews" already exists)
+- Continue seeking autonomous distribution channels
