@@ -18,19 +18,16 @@
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed:** Share-for-Pro CTA, $19 price experiment, email capture on trial, Team Schema Audit page, homepage hero CI/CD-first A/B test, interactive PR comment demo (ci-demo.html), post-Launch Week auto-transition, contextual migration cost banner in app paywall, pricing alumni promo, stale stat sweep.
-- [x] **Completed:** Purchase funnel verified end-to-end (Gumroad 301→200, alumni banners render correctly, 123 e2e tests pass). Stale Launch Week messaging cleaned from launch-special.html, product-hunt.html, 4 blog posts, pricing.html. Added `?wanted=true` to all Gumroad checkout links missing it (cli/index.html, pricing.html, pricing-b.html, launch-special.html, 3 email templates).
-- [x] **Completed:** "Book a Demo" CTA already present on affiliate.html, github-action.html, ci-demo.html, and 8 other high-traffic pages.
-- [x] **Completed:** Non-converter micro-survey in app paywall (4 one-click reasons: too expensive, missing features, not now, try free first). Email capture in app welcome state (posts to `/api/subscribe` with Supabase + welcome email).
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, stale stat sweep, purchase funnel verified end-to-end, `?wanted=true` checkout links cleaned across 6 files, "Book a Demo" CTA on 11 pages, non-converter micro-survey (4 reasons), welcome-state email capture, money-back guarantee + PH social proof in paywall, **free tier table limit A/B test (15/10/8)**.
 
 ### Operations
 - [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
-- [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers and address in next session. (BLOCKED: need Supabase service_role key or admin dashboard access.)
+- [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
 ### Conversion — Post-Alumni Window (May 29+)
-- [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall.
-- [ ] **P1** A/B test free tier table limit: 15 vs 10 vs 8 tables — find optimal conversion point
+- [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall. Free tier table limit A/B test (15/10/8) live.
+- [ ] **P1** Add "Trusted by X developers" social proof to homepage/paywall once we have usage numbers
 - [ ] **P1** Add "Trusted by X developers" social proof to homepage/paywall once we have usage numbers
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
@@ -104,4 +101,4 @@ Conversion fixes + alumni window polish + Famous Database Schemas viral gallery.
 
 ---
 
-*Backlog reprioritized May 26, 2026. Zero sales after 169 days. Distribution remains the sole bottleneck. Built staging-vs-production landing page to address #1 community feedback. Need autonomous distribution wins in final 6 weeks.*
+*Backlog reprioritized May 26, 2026. Zero sales after 171 days. Distribution remains the sole bottleneck. Built staging-vs-production landing page and launched free-tier table limit A/B test. Need autonomous distribution wins in final 4 weeks.*
