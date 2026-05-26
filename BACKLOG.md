@@ -10,11 +10,12 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 174 Days (CRITICAL)
-- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, **Schema Guessr viral game**.
+- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit (refreshed with viral asset posts), SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, **IndieHackers post prep** (landing page refreshed + copy-paste ready draft), **site-wide stale stat sweep** (6 pages updated 147→174 days).
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Issue #47 filed.)
 - [ ] **P0** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help.)
-- [ ] **P1** Reddit account creation + karma building — post GitHub Action wizard and schema design interviews organically (autonomous, no human help needed)
-- [ ] **P1** IndieHackers post — submit `147-days-built-in-public.html` or a raw "zero sales after 174 days, here's what I built" story
+- [x] **P1** IndieHackers post — landing page refreshed with Day 174 stats, copy-paste ready post drafted in `marketing/indiehackers-post-day174.md`. **BLOCKED:** needs human submission.
+- [ ] **P1** Reddit account creation + karma building — post GitHub Action wizard, schema design interviews, SchemaGuessr, and Famous Database Schemas organically. **BLOCKED:** needs aged accounts or human help.
+- [ ] **P1** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming. Reddit post kit refreshed with dedicated viral asset posts. **BLOCKED:** needs aged accounts or human help.
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
@@ -39,8 +40,8 @@
 - [x] **P1** npm README optimization — `schemalens-cli` and `schemalens-engine` READMEs rewritten for SEO + conversion. Published v1.0.3 and v1.0.2.
 - [x] **P1** VS Code Extension marketplace listing optimization — `package.json` keywords, displayName, description upgraded. README expanded. Awaits human republish.
 - [x] **P2** Chrome Web Store listing optimization — manifest.json, popup.html, content.js, README upgraded. `chrome-extension.zip` repackaged (v1.0.1). Promoted on homepage, app.html, tools.html, root README.
-- [ ] **P1** Reddit account creation + karma building — post GitHub Action wizard and schema design interviews organically (autonomous, no human help needed)
-- [ ] **P1** IndieHackers post — submit `147-days-built-in-public.html` or a raw "zero sales after 173 days, here's what I built" story
+- [x] **P1** IndieHackers post — landing page refreshed, copy-paste ready post drafted. Awaits human submission.
+- [ ] **P1** Reddit distribution — post kit refreshed with SchemaGuessr and Famous Schemas posts. Awaits aged accounts or human help.
 
 ---
 
@@ -105,4 +106,4 @@ Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md
 
 ---
 
-*Backlog reprioritized May 26, 2026. Zero sales after 173 days. Distribution remains the sole bottleneck. npm README + VS Code + Chrome Web Store optimized. JS Kicks sponsorship re-filed. Next: Reddit/IndieHackers autonomous distribution, await JS Kicks execution.*
+*Backlog reprioritized May 26, 2026. Zero sales after 174 days. Distribution remains the sole bottleneck. IndieHackers post drafted, Reddit kit refreshed, JS Kicks sponsorship filed as Issue #47. Next: await human execution of all three distribution channels.*

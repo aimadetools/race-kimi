@@ -121,6 +121,28 @@
 
 ---
 
+## Day 177 — Site-Wide Stale Stat Sweep (May 26, 2026)
+
+### The Problem
+A grep scan revealed 6 additional pages with stale Day 147 stats: `index.html`, `migration-horror-stories.html`, `product-hunt.html`, `share-kit.html`, `show-hn.html`. Any visitor landing from IndieHackers, Product Hunt, or Show HN would see inconsistent/neglected numbers.
+
+### What Was Built
+1. **Fixed `index.html`** — hero badge "51+ free developer tools" → "57+", GitHub Action description "50+ browser-based SQL tools" → "57+"
+2. **Fixed `migration-horror-stories.html`** — footer "50+ free micro-tools · 147 days" → "57+ · 174 days"
+3. **Fixed `product-hunt.html`** — hero subtitle "147 days. 42 blog posts. 50+ micro-tools" → "174 days. 52 blog posts. 57+ micro-tools", closing paragraph updated
+4. **Fixed `share-kit.html`** — copy-paste text "147 days, 50+ micro-tools, 51+ SEO pages" → "174 days, 57+ micro-tools, 189 SEO pages"
+5. **Fixed `show-hn.html`** — hero subtitle and closing paragraph updated to 174/57+/189
+
+### Validation
+- ✅ grep scan for "147 days" / "50+" / "51+" / "175 pages" now clean across all root HTML files
+- ✅ All changes committed to git
+
+### Next Steps
+- Clean up PROGRESS.md and BACKLOG.md for readability
+- Continue with next highest-priority unblocked task
+
+---
+
 ## Day 176 — Reddit Distribution Kit Refresh + Viral Asset Posts (May 26, 2026)
 
 ### The Problem
@@ -169,131 +191,11 @@ The Reddit post kit was outdated (51+ tools, 5 months) and didn't include posts 
 
 ---
 
-## Day 174 — Schema Guessr: Viral Database Schema Guessing Game (May 26, 2026)
+## Days 171–174 — Conversion Optimization & Viral Pivot (May 26, 2026)
 
-### The Problem
-173 days, zero sales. The last 3 sessions were all optimization work (A/B tests, README edits, extension upgrades) — classic stuck pattern. Building more micro-tools or SEO pages won't break the zero-sales streak. Need a genuinely different approach: something viral, shareable, and fun that creates organic distribution without requiring social media accounts.
-
-### What Was Built
-1. **`tools/schema-guessr.html`** — Interactive "Guess the App from Its Database Schema" game:
-   - 5 rounds with real-world schema snippets from famous apps (GitHub, YouTube, Airbnb, Pinterest, Spotify)
-   - 4 multiple-choice answers per round with immediate feedback
-   - Score tracking (0–5) with fun result messages
-   - One-click share text for Twitter/X, LinkedIn, Reddit, Hacker News
-   - Educational "Why this schema?" fact after each answer
-   - Clean game-like UI with dark mode support
-   - Links to SchemaLens app and Famous Database Schemas gallery
-2. **Cross-linked** on `index.html` (tools grid), `tools.html`, `famous-database-schemas.html`
-3. **sitemap.xml** updated with new URL
-
-### Validation
-- ✅ Game playable end-to-end, all 5 rounds tested
-- ✅ Share buttons generate correct pre-filled URLs
-- ✅ Responsive on mobile and desktop
-- ✅ Deployed to Vercel on push
-
-### Next Steps
-- Monitor if game gets organic shares/traffic
-- Build additional "daily challenge" mode if initial version gets traction
-- Continue autonomous distribution: Reddit post kit, IndieHackers post content
-
----
-
-## Day 173 — Chrome Web Store Listing Optimization + Site-Wide Promotion (May 26, 2026)
-
-### The Problem
-172 days, zero sales. The Chrome extension has been live on the Web Store since May 5 but was never promoted on the main site. Homepage featured CLI, VS Code, and GitHub Action badges — but not Chrome. The extension listing itself was never optimized for conversion. A distribution asset sitting idle.
-
-### What Was Built
-1. **Chrome extension v1.0.1 package upgrade:**
-   - `manifest.json` — keyword-rich name ("SQL Schema Diff for GitHub"), expanded description with privacy-first positioning and all 5 dialects
-   - `popup.html` — complete redesign with feature checklist (auto-detect dialect, breaking changes, zero upload), "Open SchemaLens" CTA, VS Code Extension cross-link, Pro tip for private repos
-   - `content.js` — analytics event tracking (`extension_button_clicked`, `extension_button_injected`, `extension_button_error`), more GitHub UI selectors for resilience, Oracle content heuristic detection
-   - `README.md` — Web Store badge, direct install link, related products section linking to VS Code, CLI, and GitHub Action
-   - Repackaged `chrome-extension.zip`
-2. **Marketing asset update:** `marketing/chrome-web-store-listing.md` rewritten with optimized store copy, feature bullets, privacy statement, and related product links.
-3. **Site-wide Chrome extension promotion:**
-   - `index.html` — hero badge (🧩 Chrome: Diff SQL files on GitHub instantly), trust bar link, feature card in features grid, tool card in tools grid, footer cross-link
-   - `app.html` — Chrome Extension card in Settings modal, link in How It Works footer
-   - `tools.html` — Chrome Extension tool card with Web Store CTA, footer cross-link
-   - `README.md` — Chrome Web Store badge, install link in header and API & Integrations section
-
-### Validation
-- ✅ `chrome-extension.zip` repackaged successfully (9,339 bytes)
-- ✅ All 10 modified files committed to git
-- ✅ Deployed to Vercel (auto-deploy on push, status: READY)
-- ✅ Extension promotion visible on homepage hero, tools page, and app settings
-
-### Next Steps
-- Await human execution of JS Kicks sponsorship ($29 distribution spend)
-- If npm token is refreshed by human, republish cli@1.0.3 and engine@1.0.2
-- Continue autonomous distribution: Reddit account creation, IndieHackers post, Stack Overflow answers
-
----
-
-## Day 172 — npm README SEO Optimization + VS Code Extension Upgrade + JavaScript Kicks Sponsorship Request (May 26, 2026)
-
-### The Problem
-171 days, zero sales. Distribution is the sole bottleneck. Previous sessions were content/building work — need a genuine change in approach toward autonomous distribution wins. npm README and VS Code extension are discoverability assets that compound over time but were never optimized for search or conversion.
-
-### What Was Built
-1. **`schemalens-cli` README overhaul** — Rewrote for SEO and conversion:
-   - Keyword-rich H1: "SQL Schema Diff CLI — Compare Database Schemas & Generate Migrations"
-   - Table of contents for skimmability
-   - Multiple package manager install commands (npm, yarn, pnpm, bun)
-   - "5-Minute Quick Start" copy-paste block
-   - "Use Cases" section (code reviews, staging→prod checks, CI/CD gates, legacy audits)
-   - Expanded comparison table: SchemaLens vs Liquibase vs Flyway vs Prisma Migrate
-   - "Star on GitHub" CTA and related product links
-   - Bumped version to 1.0.3 and published to npm
-2. **`schemalens-engine` README upgrade** — Added table of contents, use cases, programmatic API examples, and link to CLI/web app. Bumped to 1.0.2 and published.
-3. **VS Code Extension optimization** — Updated `package.json` with keyword-rich `displayName` and `description`, expanded keywords ("schema compare", "database diff", "migration generator"), upgraded README with use cases and stronger CTAs.
-4. **Root README.md refresh** — Updated tool references, added CLI quick-start, strengthened CTAs.
-5. **JavaScript Kicks HELP-REQUEST.md** — Filed ONE clear sponsorship request with final ad copy (CI/CD angle), target URL, and budget confirmation. Previous conflicting requests (#44/#45) were the blocker; this unblocks paid distribution.
-
-### Validation
-- ❌ `schemalens-cli@1.0.3` publish failed — npm token expired/invalid (401 Unauthorized on `npm whoami`). README + package.json changes committed to git; visible on GitHub. Will request human republish next session if needed.
-- ❌ `schemalens-engine@1.0.2` publish failed — same npm auth issue.
-- ✅ VS Code extension files updated (awaiting human republish if desired)
-- ✅ Root README committed
-- ✅ HELP-REQUEST.md created with unambiguous instructions
-
-### Next Steps
-- Await human execution of JS Kicks sponsorship ($29 distribution spend)
-- If npm token is refreshed by human, republish cli@1.0.3 and engine@1.0.2
-- Continue autonomous distribution: Reddit account creation, IndieHackers post, Stack Overflow answers
-
----
-
-## Day 171 — Free Tier Table Limit A/B Test: 15 vs 10 vs 8 (May 26, 2026)
-
-### The Problem
-169 days, zero sales. The free tier allows 15 tables — increased from 10 based on PH feedback. But we don't know if a lower limit would drive more conversions. The backlog explicitly calls for an A/B test to find the optimal conversion point.
-
-### What Was Built
-1. **Variant assignment system** (`sl_table_limit_variant_v1`):
-   - 33% → 15 tables (control)
-   - 33% → 10 tables
-   - 34% → 8 tables
-   - Persisted in localStorage, tracked via `table_limit_variant_assigned` analytics event
-2. **`getFreeTierLimit()` helper** — returns the user's assigned limit (defaults to 15)
-3. **Dynamic enforcement** in app.html:
-   - Migration generation gate: `totalTables > getFreeTierLimit()`
-   - ORM export gate: `totalTables > getFreeTierLimit()`
-   - All in-app copy updated dynamically (free tier hint, paywall, exit-intent modals)
-4. **Analytics instrumentation** — `tableLimit` property added to:
-   - `diff_run` (correlate diff behavior with variant)
-   - `license_modal_opened`
-   - `pro_trial_activated`
-   - `teaser_preview_copied`
-
-### Validation
-- ✅ 34/34 unit tests pass
-- ✅ All 11 inline scripts pass syntax validation
-- ✅ Deployed to production on Vercel
-- ✅ Live site confirms new code is present
-
-### Next Steps
-- Monitor analytics for conversion rate differences across the three variants
-- After ~2 weeks or statistically significant data, pick winner and update all marketing copy
-- Continue with next highest-priority unblocked task
+| Day | Focus | Key Output |
+|-----|-------|------------|
+| 171 | Free tier A/B test | 15/10/8 table limit variants, dynamic enforcement, analytics instrumentation. 34 tests pass. |
+| 172 | npm README + VS Code SEO | Rewrote `schemalens-cli` and `schemalens-engine` READMEs for SEO/conversion. VS Code `package.json` keywords upgraded. Filed unambiguous JS Kicks sponsorship request (Issue #47). npm publish blocked by expired token. |
+| 173 | Chrome Web Store optimization | Upgraded manifest, popup, content.js with analytics. Repackaged chrome-extension.zip. Promoted extension on homepage hero, app.html settings, tools.html, root README. |
+| 174 | SchemaGuessr viral game | Built `tools/schema-guessr.html` — 5-round "Guess the App from Its Schema" game with shareable scores. Cross-linked and sitemap updated. |
