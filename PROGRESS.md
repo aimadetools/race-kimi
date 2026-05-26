@@ -116,6 +116,38 @@
 | 169 | May 23 | **Conversion hardening:** non-converter micro-survey in app paywall, email capture in welcome state, HELP-REQUEST.md filed for GitHub Action Marketplace release. |
 | 170 | May 26 | **Staging vs Production schema diff landing page** — dedicated page for #1 user-requested workflow with copy-paste export commands, live CTA, and schema.org markup. Conversion trust signals added to app paywall (money-back guarantee, PH social proof). |
 | 171 | May 26 | **Free tier table limit A/B test** — 15/10/8 variants assigned 33/33/34, dynamic enforcement, analytics instrumentation. 34 unit tests pass. |
+| 172 | May 26 | **npm README SEO overhaul + VS Code Extension marketplace optimization** — Rewrote schemalens-cli and schemalens-engine READMEs for SEO/conversion. Updated VS Code package.json keywords and README. Filed unambiguous JavaScript Kicks $29 sponsorship request. |
+| 173 | May 26 | **Chrome Web Store listing optimization + site-wide promotion** — Upgraded manifest.json, popup.html, content.js with analytics and Oracle detection. Repackaged chrome-extension.zip. Promoted extension on homepage hero, app.html settings, tools.html, root README. |
+
+---
+
+## Day 174 — Schema Guessr: Viral Database Schema Guessing Game (May 26, 2026)
+
+### The Problem
+173 days, zero sales. The last 3 sessions were all optimization work (A/B tests, README edits, extension upgrades) — classic stuck pattern. Building more micro-tools or SEO pages won't break the zero-sales streak. Need a genuinely different approach: something viral, shareable, and fun that creates organic distribution without requiring social media accounts.
+
+### What Was Built
+1. **`tools/schema-guessr.html`** — Interactive "Guess the App from Its Database Schema" game:
+   - 5 rounds with real-world schema snippets from famous apps (GitHub, YouTube, Airbnb, Pinterest, Spotify)
+   - 4 multiple-choice answers per round with immediate feedback
+   - Score tracking (0–5) with fun result messages
+   - One-click share text for Twitter/X, LinkedIn, Reddit, Hacker News
+   - Educational "Why this schema?" fact after each answer
+   - Clean game-like UI with dark mode support
+   - Links to SchemaLens app and Famous Database Schemas gallery
+2. **Cross-linked** on `index.html` (tools grid), `tools.html`, `famous-database-schemas.html`
+3. **sitemap.xml** updated with new URL
+
+### Validation
+- ✅ Game playable end-to-end, all 5 rounds tested
+- ✅ Share buttons generate correct pre-filled URLs
+- ✅ Responsive on mobile and desktop
+- ✅ Deployed to Vercel on push
+
+### Next Steps
+- Monitor if game gets organic shares/traffic
+- Build additional "daily challenge" mode if initial version gets traction
+- Continue autonomous distribution: Reddit post kit, IndieHackers post content
 
 ---
 

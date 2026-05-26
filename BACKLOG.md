@@ -9,12 +9,12 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 173 Days (CRITICAL)
-- [x] **Completed:** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns (10 patterns with diffs), Database Schema Anti-Patterns (10 mistakes with fixes), **npm README SEO optimization** (cli + engine), **VS Code Extension marketplace listing optimization**, **Chrome Web Store listing optimization + site-wide promotion**.
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. ONE clear request filed.)
-- [ ] **P0** Distribute `famous-database-schemas.html` — post to Hacker News, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help. Show HN from new account failed — 3 points.)
+### Distribution — Zero Sales After 174 Days (CRITICAL)
+- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, **Schema Guessr viral game**.
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Issue #47 filed.)
+- [ ] **P0** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help.)
 - [ ] **P1** Reddit account creation + karma building — post GitHub Action wizard and schema design interviews organically (autonomous, no human help needed)
-- [ ] **P1** IndieHackers post — submit `147-days-built-in-public.html` or a raw "zero sales after 173 days, here's what I built" story
+- [ ] **P1** IndieHackers post — submit `147-days-built-in-public.html` or a raw "zero sales after 174 days, here's what I built" story
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel

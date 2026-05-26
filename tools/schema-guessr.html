@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Guessr — Guess the App from Its Database Schema</title>
+<meta name="description" content="Can you guess a famous app just by looking at its database schema? Play Schema Guessr and test your schema intuition.">
+<meta property="og:title" content="Schema Guessr — Guess the App from Its Database Schema">
+<meta property="og:description" content="I scored on Schema Guessr! Can you guess famous apps just from their SQL schemas?">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-guessr.html">
+<link rel="canonical" href="https://schemalens.tech/tools/schema-guessr.html">
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --border: #334155;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --radius: 14px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    line-height: 1.6;
+  }
+  .container { width: 100%; max-width: 720px; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+  header p { color: var(--text-muted); font-size: 1.05rem; }
+  .badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.12);
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #818cf8);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .round-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .schema-block {
+    background: #0b1220;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .schema-block pre {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #e2e8f0;
+    white-space: pre;
+  }
+  .schema-block .kw { color: #c084fc; }
+  .schema-block .type { color: #38bdf8; }
+  .schema-block .str { color: #a3e635; }
+  .schema-block .num { color: #fbbf24; }
+  .schema-block .comment { color: #64748b; font-style: italic; }
+  .options { display: grid; gap: 10px; }
+  .option-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: rgba(99,102,241,0.08);
+  }
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+  }
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.1);
+  }
+  .option-btn:disabled { cursor: default; opacity: 0.9; }
+  .option-btn .icon { font-size: 1.1rem; width: 24px; text-align: center; }
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-box {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #86efac;
+  }
+  .feedback.wrong-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5;
+  }
+  .feedback .fact {
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .next-btn {
+    margin-top: 14px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+  }
+  .next-btn.show { display: inline-block; }
+  .next-btn:hover { background: var(--primary-hover); }
+  .scoreboard {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .scoreboard .big-score {
+    font-size: 4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+  }
+  .scoreboard .score-label {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .share-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .share-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .share-btn:hover { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .cta-box h3 { margin-bottom: 8px; }
+  .cta-box p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px; }
+  .cta-box a {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .cta-box a:hover { background: var(--primary-hover); }
+  footer {
+    margin-top: 32px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--primary); text-decoration: none; }
+  @media (max-width: 520px) {
+    header h1 { font-size: 1.5rem; }
+    .schema-block pre { font-size: 0.72rem; }
+    .big-score { font-size: 3rem !important; }
+    .share-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">SchemaLens Presents</div>
+    <h1>🧩 Schema Guessr</h1>
+    <p>Can you guess the famous app just by looking at its database schema?</p>
+  </header>
+
+  <div id="game">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="card" id="roundCard">
+      <div class="round-label">
+        <span id="roundTitle">Round 1 of 5</span>
+        <span id="scoreDisplay">Score: 0</span>
+      </div>
+      <div class="schema-block" id="schemaBlock">
+        <pre id="schemaPre"></pre>
+      </div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextRound()">Next Round →</button>
+    </div>
+  </div>
+
+  <div id="results" style="display:none">
+    <div class="card scoreboard">
+      <div class="badge">Game Over</div>
+      <div class="big-score" id="finalScore">0/5</div>
+      <div class="score-label" id="resultMessage">Not bad!</div>
+      <div class="share-grid" id="shareGrid"></div>
+      <div class="cta-box">
+        <h3>Compare Real Schemas with SchemaLens</h3>
+        <p>Paste two SQL dumps and get an instant visual diff, breaking-change warnings, and ready-to-run migration scripts.</p>
+        <a href="/app.html?ref=schema-guessr" target="_blank">Try SchemaLens Free →</a>
+      </div>
+      <div style="margin-top:16px">
+        <a href="/famous-database-schemas.html" style="color:var(--text-muted);font-size:0.9rem">Explore more famous database schemas →</a>
+      </div>
+      <button class="next-btn show" onclick="restartGame()" style="margin-top:20px">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Built by <a href="/">SchemaLens</a> · <a href="/tools.html">57+ free SQL tools</a>
+</footer>
+
+<script>
+const ROUNDS = [
+  {
+    schema: `<span class="kw">CREATE TABLE</span> repositories (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  owner_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  name <span class="type">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  description <span class="type">TEXT</span>,
+  is_private <span class="type">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">FALSE</span>,
+  stars_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  forks_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  language <span class="type">VARCHAR</span>(<span class="num">50</span>),
+  created_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> issues (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  repo_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  author_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  title <span class="type">VARCHAR</span>(<span class="num">500</span>) <span class="kw">NOT NULL</span>,
+  state <span class="type">VARCHAR</span>(<span class="num">20</span>) <span class="kw">DEFAULT</span> <span class="str">'open'</span>,
+  labels <span class="type">JSONB</span>,
+  created_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> pull_requests (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  repo_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  author_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  base_branch <span class="type">VARCHAR</span>(<span class="num">255</span>),
+  head_branch <span class="type">VARCHAR</span>(<span class="num">255</span>),
+  merged_at <span class="type">TIMESTAMP</span>,
+  additions <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  deletions <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>
+);`,
+    options: ['GitHub', 'GitLab', 'Bitbucket', 'SourceForge'],
+    correct: 0,
+    fact: "GitHub introduced the 'star' as a social signal for repos. Before that, platforms like SourceForge used 'watch' or download counts. The stars_count and forks_count columns are a dead giveaway."
+  },
+  {
+    schema: `<span class="kw">CREATE TABLE</span> videos (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  channel_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  title <span class="type">VARCHAR</span>(<span class="num">500</span>) <span class="kw">NOT NULL</span>,
+  description <span class="type">TEXT</span>,
+  duration_seconds <span class="type">INT</span> <span class="kw">NOT NULL</span>,
+  thumbnail_url <span class="type">VARCHAR</span>(<span class="num">500</span>),
+  view_count <span class="type">BIGINT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  like_count <span class="type">BIGINT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  category_id <span class="type">INT</span>,
+  published_at <span class="type">TIMESTAMP</span> <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">CREATE TABLE</span> channels (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  owner_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  handle <span class="type">VARCHAR</span>(<span class="num">100</span>) <span class="kw">UNIQUE NOT NULL</span>,
+  display_name <span class="type">VARCHAR</span>(<span class="num">255</span>),
+  subscriber_count <span class="type">BIGINT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  banner_url <span class="type">VARCHAR</span>(<span class="num">500</span>)
+);
+
+<span class="kw">CREATE TABLE</span> subscriptions (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  channel_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  subscribed_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>(),
+  <span class="kw">UNIQUE</span>(user_id, channel_id)
+);`,
+    options: ['YouTube', 'Vimeo', 'TikTok', 'Twitch'],
+    correct: 0,
+    fact: "YouTube's subscriptions table is one of the largest social graphs on the internet, connecting billions of users to channels. The combination of videos + channels + subscriptions is the classic YouTube triad."
+  },
+  {
+    schema: `<span class="kw">CREATE TABLE</span> listings (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  host_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  title <span class="type">VARCHAR</span>(<span class="num">500</span>) <span class="kw">NOT NULL</span>,
+  description <span class="type">TEXT</span>,
+  property_type <span class="type">VARCHAR</span>(<span class="num">50</span>) <span class="kw">NOT NULL</span>,
+  room_type <span class="type">VARCHAR</span>(<span class="num">50</span>),
+  max_guests <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">1</span>,
+  bedrooms <span class="type">INT</span>,
+  bathrooms <span class="type">DECIMAL</span>(<span class="num">3</span>,<span class="num">1</span>),
+  nightly_price <span class="type">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  latitude <span class="type">DECIMAL</span>(<span class="num">10</span>,<span class="num">8</span>),
+  longitude <span class="type">DECIMAL</span>(<span class="num">11</span>,<span class="num">8</span>),
+  instant_book <span class="type">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">FALSE</span>
+);
+
+<span class="kw">CREATE TABLE</span> bookings (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  listing_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  guest_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  check_in <span class="type">DATE</span> <span class="kw">NOT NULL</span>,
+  check_out <span class="type">DATE</span> <span class="kw">NOT NULL</span>,
+  total_price <span class="type">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>),
+  status <span class="type">VARCHAR</span>(<span class="num">20</span>) <span class="kw">DEFAULT</span> <span class="str">'pending'</span>,
+  guest_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">1</span>
+);
+
+<span class="kw">CREATE TABLE</span> amenities (
+  id <span class="type">INT</span> <span class="kw">PRIMARY KEY</span>,
+  name <span class="type">VARCHAR</span>(<span class="num">100</span>) <span class="kw">UNIQUE NOT NULL</span>,
+  category <span class="type">VARCHAR</span>(<span class="num">50</span>)
+);`,
+    options: ['Airbnb', 'Vrbo', 'Booking.com', 'Expedia'],
+    correct: 0,
+    fact: "Airbnb's listings table originally had no structured amenities — hosts wrote free-form text. The platform later standardized 100+ amenity types. The host_id + nightly_price + latitude/longitude combo is distinctly Airbnb."
+  },
+  {
+    schema: `<span class="kw">CREATE TABLE</span> boards (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  owner_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  name <span class="type">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  description <span class="type">TEXT</span>,
+  is_secret <span class="type">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">FALSE</span>,
+  cover_pin_id <span class="type">BIGINT</span>,
+  pin_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  follower_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  created_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> pins (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  author_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  image_url <span class="type">VARCHAR</span>(<span class="num">500</span>) <span class="kw">NOT NULL</span>,
+  title <span class="type">VARCHAR</span>(<span class="num">500</span>),
+  description <span class="type">TEXT</span>,
+  destination_url <span class="type">VARCHAR</span>(<span class="num">500</span>),
+  repin_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  save_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>
+);
+
+<span class="kw">CREATE TABLE</span> pin_boards (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  pin_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  board_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  saved_by_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  saved_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>(),
+  <span class="kw">UNIQUE</span>(pin_id, board_id)
+);`,
+    options: ['Pinterest', 'Instagram', 'Tumblr', 'DeviantArt'],
+    correct: 0,
+    fact: "Pinterest's boards and pins model was inspired by physical pinboards. The 'repin' action (captured in repin_count) created one of the first content curation networks. No other platform uses the board + pin + pin_boards junction pattern."
+  },
+  {
+    schema: `<span class="kw">CREATE TABLE</span> songs (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  title <span class="type">VARCHAR</span>(<span class="num">500</span>) <span class="kw">NOT NULL</span>,
+  artist_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  album_id <span class="type">BIGINT</span>,
+  duration_ms <span class="type">INT</span> <span class="kw">NOT NULL</span>,
+  explicit <span class="type">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">FALSE</span>,
+  preview_url <span class="type">VARCHAR</span>(<span class="num">500</span>),
+  popularity_score <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  track_number <span class="type">INT</span>,
+  disc_number <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">1</span>
+);
+
+<span class="kw">CREATE TABLE</span> playlists (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  owner_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  name <span class="type">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  description <span class="type">TEXT</span>,
+  is_public <span class="type">BOOLEAN</span> <span class="kw">DEFAULT</span> <span class="kw">TRUE</span>,
+  follower_count <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  total_tracks <span class="type">INT</span> <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  created_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> playlist_songs (
+  id <span class="type">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+  playlist_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  song_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  added_by_user_id <span class="type">BIGINT</span> <span class="kw">NOT NULL</span>,
+  added_at <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">NOW</span>(),
+  <span class="kw">UNIQUE</span>(playlist_id, song_id)
+);`,
+    options: ['Spotify', 'Apple Music', 'SoundCloud', 'Tidal'],
+    correct: 0,
+    fact: "Spotify's playlist_songs junction table is arguably the most influential table in music discovery — it powers Discover Weekly, Release Radar, and Blend. The added_by_user_id field enables collaborative playlists."
+  }
+];
+
+let currentRound = 0;
+let score = 0;
+let answered = false;
+
+function initGame() {
+  currentRound = 0;
+  score = 0;
+  document.getElementById('game').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  renderRound();
+}
+
+function renderRound() {
+  answered = false;
+  const round = ROUNDS[currentRound];
+  document.getElementById('roundTitle').textContent = `Round ${currentRound + 1} of ${ROUNDS.length}`;
+  document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
+  document.getElementById('schemaPre').innerHTML = round.schema;
+  document.getElementById('progressFill').style.width = `${((currentRound) / ROUNDS.length) * 100}%`;
+
+  const optsDiv = document.getElementById('options');
+  optsDiv.innerHTML = '';
+  round.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="icon">${String.fromCharCode(65 + idx)}</span> ${opt}`;
+    btn.onclick = () => selectOption(idx, btn);
+    optsDiv.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('nextBtn').classList.remove('show');
+}
+
+function selectOption(idx, btnEl) {
+  if (answered) return;
+  answered = true;
+  const round = ROUNDS[currentRound];
+  const isCorrect = idx === round.correct;
+  const allBtns = document.querySelectorAll('.option-btn');
+
+  allBtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === round.correct) {
+      b.classList.add('correct');
+      b.querySelector('.icon').textContent = '✓';
+    } else if (i === idx && !isCorrect) {
+      b.classList.add('wrong');
+      b.querySelector('.icon').textContent = '✕';
+    }
+  });
+
+  if (isCorrect) score++;
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct-box' : 'wrong-box');
+  fb.innerHTML = `<strong>${isCorrect ? 'Correct!' : 'Not quite!'}</strong> The answer was <strong>${round.options[round.correct]}</strong>.<div class="fact">💡 ${round.fact}</div>`;
+
+  document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextRound() {
+  currentRound++;
+  if (currentRound >= ROUNDS.length) {
+    showResults();
+  } else {
+    renderRound();
+  }
+}
+
+function showResults() {
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('finalScore').textContent = `${score}/${ROUNDS.length}`;
+
+  const messages = [
+    { min: 0, max: 1, text: "Time to study some schemas! 📚" },
+    { min: 2, max: 2, text: "Not bad — you're getting there! 🌱" },
+    { min: 3, max: 3, text: "Solid schema intuition! 👍" },
+    { min: 4, max: 4, text: "Impressive — you really know your schemas! 🎯" },
+    { min: 5, max: 5, text: "Perfect score! You're a schema detective! 🏆" }
+  ];
+  const msg = messages.find(m => score >= m.min && score <= m.max);
+  document.getElementById('resultMessage').textContent = msg ? msg.text : 'Good game!';
+
+  const shareText = encodeURIComponent(`I scored ${score}/5 on Schema Guessr! Can you guess famous apps just from their database schemas? 🧩`);
+  const shareUrl = encodeURIComponent('https://schemalens.tech/tools/schema-guessr.html');
+
+  const grid = document.getElementById('shareGrid');
+  grid.innerHTML = `
+    <a class="share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener">🐦 Share on X</a>
+    <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener">💼 LinkedIn</a>
+    <a class="share-btn" href="https://www.reddit.com/submit?title=${shareText}&url=${shareUrl}" target="_blank" rel="noopener">🔴 Reddit</a>
+    <a class="share-btn" href="https://news.ycombinator.com/submitlink?t=${shareText}&u=${shareUrl}" target="_blank" rel="noopener">🟠 Hacker News</a>
+  `;
+}
+
+function restartGame() {
+  initGame();
+}
+
+initGame();
+</script>
+</body>
+</html>

@@ -531,6 +531,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/tools/schema-guessr.html</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/blog/generate-sql-insert-statements-faster.html</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
