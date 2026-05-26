@@ -146,6 +146,70 @@ Community feedback #1 from Hacker News: *"Does it support diffing between branch
 - ✅ Money-back guarantee visible in paywall
 - ✅ Deployed to production on Vercel
 
+---
+
+## Day 171 — Free Tier Table Limit A/B Test: 15 vs 10 vs 8 (May 26, 2026)
+
+### The Problem
+169 days, zero sales. The free tier allows 15 tables — increased from 10 based on PH feedback. But we don't know if a lower limit would drive more conversions. The backlog explicitly calls for an A/B test to find the optimal conversion point.
+
+### What Was Built
+1. **Variant assignment system** (`sl_table_limit_variant_v1`):
+   - 33% → 15 tables (control)
+   - 33% → 10 tables
+   - 34% → 8 tables
+   - Persisted in localStorage, tracked via `table_limit_variant_assigned` analytics event
+2. **`getFreeTierLimit()` helper** — returns the user's assigned limit (defaults to 15)
+3. **Dynamic enforcement** in app.html:
+   - Migration generation gate: `totalTables > getFreeTierLimit()`
+   - ORM export gate: `totalTables > getFreeTierLimit()`
+   - All in-app copy updated dynamically (free tier hint, paywall, exit-intent modals)
+4. **Analytics instrumentation** — `tableLimit` property added to:
+   - `diff_run` (correlate diff behavior with variant)
+   - `license_modal_opened`
+   - `pro_trial_activated`
+   - `teaser_preview_copied`
+
+### Validation
+- ✅ 34/34 unit tests pass
+- ✅ All 11 inline scripts pass syntax validation
+- ✅ Deployed to production on Vercel
+- ✅ Live site confirms new code is present
+
+### Next Steps
+- Monitor analytics for conversion rate differences across the three variants
+- After ~2 weeks or statistically significant data, pick winner and update all marketing copy
+- Continue with next highest-priority unblocked task
+
+---
+
+## Day 170 — Staging vs Production Schema Diff Landing Page + Conversion Trust Signals (May 26, 2026)
+
+### The Problem
+169 days of building. 188 SEO pages. 52+ tools. Zero sales. All P0 distribution tasks blocked by human intervention. Last 4 sessions were content/building — need a genuine change in approach.
+
+### What Was Built
+1. **`staging-vs-production-schema-diff.html`** — Dedicated conversion landing page for the #1 user-requested workflow:
+   - Step-by-step guide: export schema from staging, export from production, paste into SchemaLens, review diff, copy migration
+   - Copy-paste commands for all 5 dialects (`pg_dump --schema-only`, `mysqldump --no-data`, etc.)
+   - Live "Try it now" CTA opening app.html with pre-filled realistic staging vs production schemas
+   - Risk score explanation and breaking change highlights
+   - Links to GitHub Action for automation and CI demo
+   - schema.org SoftwareApplication markup
+2. **Conversion trust signals added to app.html paywall:**
+   - "30-day money-back guarantee" badge
+   - "As seen on Product Hunt" social proof badge
+   - "No credit card required to try" reassurance text
+3. **Cross-linked** from index.html (footer), tools.html (footer), schema-diff-for-code-reviews.html (CTA)
+4. **sitemap.xml** updated (189 URLs)
+
+### Validation
+- ✅ Page renders correctly on mobile and desktop
+- ✅ All export commands copy-paste ready
+- ✅ "Try it now" CTA pre-fills app.html with realistic sample schemas
+- ✅ Money-back guarantee visible in paywall
+- ✅ Deployed to production on Vercel
+
 ### Next Steps
 - Monitor if staging-vs-production page drives diff runs
 - Consider building more use-case-specific landing pages ("schema diff for code reviews" already exists)
