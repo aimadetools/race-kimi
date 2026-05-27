@@ -125,6 +125,17 @@
 
 ---
 
+## Day 177 — Site-Wide Stale Stat Sweep (May 26, 2026)
+
+### What Was Built
+1. **Stale stat emergency fix** — 6 pages still showed Day 147 stats (from early May). Updated `index.html`, `migration-horror-stories.html`, `product-hunt.html`, `share-kit.html`, `show-hn.html`, `built-in-public.html` to reflect 174 days / 57+ tools / 189 pages.
+2. **No new features** — Pure maintenance to prevent visitor confusion from wildly outdated metrics.
+
+### Validation
+- ✅ e2e tests passing
+
+---
+
 ## Day 178 — Strategy Shift: Post-Alumni Cleanup + New Tool + Price Urgency (May 27, 2026)
 
 ### The Problem
@@ -144,7 +155,26 @@
 - ✅ e2e tests passing
 - ✅ All changes committed to git
 
+---
+
+## Day 179 — Language Converter Expansion: Java + Rust (May 27, 2026)
+
+### The Problem
+178 days, zero sales. All P0 distribution still blocked on human execution. Need to keep building high-traffic autonomous assets that drive organic SEO traffic and demonstrate product depth.
+
+### What Was Built
+1. **SQL to Java JPA Entity Generator (#59)** — `tools/sql-to-java.html` converts CREATE TABLE to Java JPA Entity classes with Hibernate annotations (@Entity, @Table, @Id, @Column, @ManyToOne, @OneToMany). Options: Lombok (@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor), Jackson annotations, Jakarta EE vs javax imports. Smart type mapping (String, Integer, Long, BigDecimal, LocalDateTime, UUID). All 5 dialects. Cross-linked on index.html, tools.html, README.md, sitemap.xml.
+2. **SQL to Rust Struct Generator (#60)** — `tools/sql-to-rust.html` converts CREATE TABLE to Rust structs with Serde (Serialize/Deserialize), sqlx (FromRow), and Diesel (Queryable, Selectable) annotations. Smart Option<T> for nullable, chrono for dates, camelCase renaming. All 5 dialects. Cross-linked on index.html, tools.html, README.md, sitemap.xml.
+3. **Missing link fix** — Added `github-action-setup.html` to index.html tool grid and footer (was only on tools.html).
+4. **Tool count sweep 58+ → 60+** — Updated across 18 HTML and markdown files including app.html, marketing assets, CLI/engine READMEs, built-in-public.html, and distribution kits.
+5. **E2E test coverage** — Added `sql-to-java.html` and `sql-to-rust.html` to e2e.spec.js page load tests.
+
+### Validation
+- ✅ 34/34 unit tests passed
+- ✅ 3/3 targeted e2e tests passed (Homepage, Tools Landing, SQL to Rust Generator)
+- ✅ All changes committed to git (2 commits)
+
 ### Next Steps
-- Await human execution of HELP-REQUEST.md items
-- Continue building high-traffic micro-tools and content
+- Await human execution of HELP-REQUEST.md items (JS Kicks, Gumroad products)
+- Continue building micro-tools and SEO content autonomously
 - Monitor free tier A/B test results when analytics available

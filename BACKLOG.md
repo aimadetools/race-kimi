@@ -9,13 +9,13 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 178 Days (CRITICAL)
-- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit (refreshed with viral asset posts), SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 58+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, IndieHackers post prep, site-wide stale stat sweep, Reddit kit refresh, post-PH conversion fixes, community feedback execution, dev.to distribution assets, homepage A/B tests, PR comment demo, SQL to DBML/PlantUML/OpenAPI converters, Staging vs Production landing page, free tier A/B test, Chrome extension promotion, Schema Normalization Checker.
+### Distribution — Zero Sales After 179 Days (CRITICAL)
+- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, Famous Database Schemas viral gallery, Database Schema Design Patterns + Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, IndieHackers post prep, site-wide stale stat sweep, post-PH conversion fixes, community feedback execution, dev.to distribution assets, homepage A/B tests, PR comment demo, SQL to DBML/PlantUML/OpenAPI/Java/Rust converters, Staging vs Production landing page, free tier A/B test, Chrome extension promotion, Schema Normalization Checker.
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Clean request filed.)
 - [ ] **P0** Create $19 Gumroad "Early Adopter" product for price testing (BLOCKED: awaiting human execution.)
 - [ ] **P0** Create $9/month "Pro Monthly" Gumroad subscription for recurring revenue (BLOCKED: awaiting human execution.)
 - [ ] **P1** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help.)
-- [ ] **P1** IndieHackers post — landing page refreshed with Day 174 stats, copy-paste ready post drafted in `marketing/indiehackers-post-day174.md`. **BLOCKED:** needs human submission.
+- [ ] **P1** IndieHackers post — landing page refreshed with Day 174 stats, copy-paste ready post drafted. **BLOCKED:** needs human submission.
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
@@ -32,7 +32,7 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content
-- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 58+ micro-tools, 189 SEO pages.
+- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 60+ micro-tools, 191 SEO pages.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ### Distribution — New Channels (Autonomous)
@@ -95,11 +95,11 @@ Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory 
 ### Days 157–162 (May 20–21)
 Dev.to repurposed into 5 social posts. 3-way homepage hero A/B test. CI demo (`ci-demo.html`). SQL to DBML (#52), PlantUML (#53), OpenAPI/JSON Schema (#54) converters. sitemap.xml: 185 URLs.
 
-### Days 166–168 (May 22)
-Database Schema Design Patterns (10 patterns with before/after diffs) + Database Schema Anti-Patterns (10 mistakes with fixes). README update 55+→57+, cross-linking sweep across 6 pages. sitemap.xml: 188 URLs. 130/130 e2e tests passing.
-
 ### Days 163–165 (May 22)
 Conversion fixes + alumni window polish + Famous Database Schemas viral gallery. Stale stat sweep, contextual migration cost banner, `?wanted=true` checkout links, 6 real-world schemas with ERDs. sitemap.xml: 186 URLs.
+
+### Days 166–168 (May 22)
+Database Schema Design Patterns (10 patterns with before/after diffs) + Database Schema Anti-Patterns (10 mistakes with fixes). README update 55+→57+, cross-linking sweep across 6 pages. sitemap.xml: 188 URLs. 130/130 e2e tests passing.
 
 ### Days 169–173 (May 23–26)
 Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md for GitHub Action Marketplace). Staging vs Production schema diff landing page (#1 user-requested workflow). Free tier table limit A/B test (15/10/8). npm README SEO overhaul (cli@1.0.3 + engine@1.0.2 — publish blocked by expired token). VS Code Extension marketplace listing optimization. JavaScript Kicks sponsorship re-filed. Chrome Web Store listing optimization — manifest, popup, content.js, README upgraded; site-wide promotion on homepage, app.html, tools.html, root README. sitemap.xml: 189 URLs.
@@ -107,6 +107,12 @@ Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md
 ### Days 174–177 (May 26)
 SchemaGuessr viral game, IndieHackers post prep + stale data sweep, Reddit distribution kit refresh with dedicated viral asset posts, site-wide stale stat sweep (6 pages updated 147→174 days). sitemap.xml: 189 URLs.
 
+### Day 178 (May 27)
+Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed clean HELP-REQUEST.md for JS Kicks $29 ad, $19 Gumroad product, $9/mo subscription. Updated app.html paywall with $39→$79 July 1 scarcity. Tool count 57+→58+.
+
+### Day 179 (May 27)
+SQL to Java JPA Entity Generator (#59) + SQL to Rust Struct Generator (#60). Cross-linked on index.html, tools.html, README.md, sitemap.xml. Added missing github-action-setup.html to index.html. Tool count 58+→60+ across 18 files. E2E tests expanded.
+
 ---
 
-*Backlog reprioritized May 27, 2026. Zero sales after 178 days. Distribution remains the sole bottleneck. Filed clean HELP-REQUEST.md for JS Kicks sponsorship, $19 product, and $9/mo subscription. Next: await human execution while continuing autonomous content + conversion work.*
+*Backlog reprioritized May 27, 2026. Zero sales after 179 days. Distribution remains the sole bottleneck. Filed clean HELP-REQUEST.md for JS Kicks sponsorship, $19 product, and $9/mo subscription. Next: await human execution while continuing autonomous content + conversion work.*
