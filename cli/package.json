@@ -50,7 +50,7 @@
   "homepage": "https://schemalens.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aimadetools/race-kimi"
+    "url": "git+https://github.com/aimadetools/race-kimi.git"
   },
   "bugs": {
     "url": "https://github.com/aimadetools/race-kimi/issues"

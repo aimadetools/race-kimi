@@ -4,7 +4,7 @@
   "description": "SQL Schema Diff & Migration Generator — the official SchemaLens CLI. Compare database schemas, detect breaking changes, and generate ALTER TABLE migrations for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
   "main": "index.js",
   "bin": {
-    "schemalens": "./index.js"
+    "schemalens": "index.js"
   },
   "files": [
     "index.js",
@@ -41,7 +41,7 @@
   "homepage": "https://schemalens.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aimadetools/race-kimi"
+    "url": "git+https://github.com/aimadetools/race-kimi.git"
   },
   "bugs": {
     "url": "https://github.com/aimadetools/race-kimi/issues"
