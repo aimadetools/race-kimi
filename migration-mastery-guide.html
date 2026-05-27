@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Migration Mastery Guide — 7-Day Database Schema Migration Course | SchemaLens</title>
+<meta name="description" content="The complete Migration Mastery guide. 7 lessons covering zero-downtime migrations, breaking change detection, rollback strategies, CI/CD integration, and team workflows.">
+<meta property="og:title" content="Migration Mastery Guide — 7-Day Database Schema Migration Course">
+<meta property="og:description" content="Complete guide to safe database schema migrations. Zero-downtime patterns, breaking changes, rollback strategies, and CI/CD integration.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/migration-mastery-guide.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  .guide-header { padding: 48px 0 24px; text-align: center; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+  .guide-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .guide-header p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+  .toc { max-width: 720px; margin: 0 auto 40px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .toc h2 { font-size: 1.1rem; margin-bottom: 14px; }
+  .toc ol { padding-left: 20px; color: var(--text-muted); }
+  .toc li { margin-bottom: 8px; }
+  .toc a { color: var(--primary); }
+  .lesson { max-width: 720px; margin: 0 auto 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .lesson h2 { font-size: 1.4rem; margin-bottom: 6px; }
+  .lesson .day-label { color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: block; }
+  .lesson p { color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+  .lesson ul, .lesson ol { color: var(--text-muted); line-height: 1.8; margin-bottom: 14px; padding-left: 22px; }
+  .lesson li { margin-bottom: 6px; }
+  .lesson code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .lesson .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 20px 0; }
+  .lesson .cta-box a { color: var(--primary); font-weight: 600; }
+  .lesson .cta-box p { margin: 0; }
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 12px 18px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .print-btn:hover { background: var(--primary-hover); }
+  @media print {
+    .print-btn, nav, footer { display: none !important; }
+    .lesson { page-break-inside: avoid; }
+    body { background: #fff; color: #000; }
+  }
+  @media (max-width: 600px) {
+    .guide-header h1 { font-size: 1.5rem; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar" style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:60px;">
+    <a href="/" style="font-weight:800;font-size:1.25rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+    <div style="display:flex;gap:18px;align-items:center;">
+      <a href="/app.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">App</a>
+      <a href="/tools.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Tools</a>
+      <a href="/blog.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Blog</a>
+      <a href="/pricing.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Pricing</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="guide-header">
+    <h1>Migration Mastery Guide</h1>
+    <p>7 lessons for backend developers who ship schema changes to production. Save this page or print it for your team wiki.</p>
+  </div>
+
+  <div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ol>
+      <li><a href="#day1">The 5-Minute Schema Review</a></li>
+      <li><a href="#day2">Zero-Downtime Migration Patterns</a></li>
+      <li><a href="#day3">The 12 Changes That Break Production</a></li>
+      <li><a href="#day4">Rollback Strategies That Work</a></li>
+      <li><a href="#day5">CI/CD Schema Diff Integration</a></li>
+      <li><a href="#day6">Team Workflows at Scale</a></li>
+      <li><a href="#day7">Your Migration Safety Checklist</a></li>
+    </ol>
+  </div>
+
+  <article class="lesson" id="day1">
+    <span class="day-label">Day 1</span>
+    <h2>The 5-Minute Schema Review</h2>
+    <p>Before every deploy, spend 5 minutes reviewing your schema diff. This simple habit prevents 90% of migration-related outages.</p>
+
+    <h3>The Checklist</h3>
+    <ol>
+      <li><strong>Destructive changes</strong> — Are any columns or tables being dropped? If so, confirm nothing depends on them (foreign keys, views, triggers, application code).</li>
+      <li><strong>Constraint additions</strong> — Are you adding <code>NOT NULL</code> or <code>UNIQUE</code> to large tables? These can lock tables for minutes or hours.</li>
+      <li><strong>Type changes</strong> — Is a column being narrowed (e.g., <code>VARCHAR(255)</code> → <code>VARCHAR(100)</code>)? This can truncate existing data.</li>
+      <li><strong>Missing indexes</strong> — Are new foreign keys created without backing indexes? Unindexed foreign keys cause full table scans on parent updates/deletes.</li>
+      <li><strong>Default values</strong> — Are new columns added without defaults? Existing rows will have NULL values, which may break application logic.</li>
+    </ol>
+
+    <div class="cta-box">
+      <p>🛠️ <a href="/app.html">Run your schema through SchemaLens</a> — it checks all of these automatically and gives you a risk score.</p>
+    </div>
+
+    <h3>Pro tip</h3>
+    <p>Don't just review the migration file. Review the <em>diff</em> between the old schema and the new schema. Migration files can be misleading — they show what the developer <em>intended</em> to change, but a semantic diff shows what <em>actually</em> changed.</p>
+  </article>
+
+  <article class="lesson" id="day2">
+    <span class="day-label">Day 2</span>
+    <h2>Zero-Downtime Migration Patterns</h2>
+    <p>Not all schema changes require downtime. Understanding which changes are safe and which need special handling is the foundation of reliable deploys.</p>
+
+    <h3>Safe changes (no special handling needed)</h3>
+    <ul>
+      <li>Adding a new table</li>
+      <li>Adding a new column with a default value (PostgreSQL 11+)</li>
+      <li>Adding an index with <code>CONCURRENTLY</code> (PostgreSQL) or <code>ALGORITHM=INPLACE, LOCK=NONE</code> (MySQL 5.6+)</li>
+      <li>Creating a new view or function</li>
+    </ul>
+
+    <h3>Unsafe changes (require caution)</h3>
+    <ul>
+      <li>Dropping a column, table, or index</li>
+      <li>Adding <code>NOT NULL</code> without a default</li>
+      <li>Renaming a column or table</li>
+      <li>Changing a column type</li>
+      <li>Adding a unique constraint on a large table</li>
+    </ul>
+
+    <h3>The expand/contract pattern</h3>
+    <p>For unsafe changes, use the expand/contract pattern:</p>
+    <ol>
+      <li><strong>Expand:</strong> Add the new structure while keeping the old one. Example: add <code>email_address</code> column, keep <code>email</code>.</li>
+      <li><strong>Migrate:</strong> Backfill data and update application code to write to both columns.</li>
+      <li><strong>Contract:</strong> After confirming everything works, drop the old column in a later deploy.</li>
+    </ol>
+
+    <div class="cta-box">
+      <p>📖 <a href="/zero-downtime-migration-guide.html">Read the complete Zero-Downtime Migration Guide</a> with copy-paste scripts for PostgreSQL, MySQL, SQL Server, and Oracle.</p>
+    </div>
+  </article>
+
+  <article class="lesson" id="day3">
+    <span class="day-label">Day 3</span>
+    <h2>The 12 Changes That Break Production</h2>
+    <p>After analyzing thousands of schema diffs, we've identified the changes that cause outages most often. Know these by heart.</p>
+
+    <ol>
+      <li><strong>Dropping a column</strong> — Breaks views, triggers, stored procedures, and application code that reference it.</li>
+      <li><strong>Dropping a table</strong> — Cascades to foreign keys, views, and sometimes ORM models.</li>
+      <li><strong>Adding <code>NOT NULL</code> without a default</code></strong> — Fails on existing rows or locks the table during validation.</li>
+      <li><strong>Narrowing a column type</strong> — <code>VARCHAR(255)</code> → <code>VARCHAR(50)</code> silently truncates data in some databases.</li>
+      <li><strong>Changing a column type</strong> — <code>INT</code> → <code>BIGINT</code> is safe; <code>TEXT</code> → <code>VARCHAR</code> may not be.</li>
+      <li><strong>Renaming a column</strong> — Breaks every query, view, and procedure that references the old name.</li>
+      <li><strong>Renaming a table</strong> — Breaks foreign keys and ORM mappings.</li>
+      <li><strong>Dropping an index</strong> — Causes query performance regressions that are hard to detect in staging.</li>
+      <li><strong>Dropping a foreign key</strong> — Removes referential integrity protection; orphaned rows accumulate.</li>
+      <li><strong>Adding a unique constraint on existing data</strong> — Fails if duplicates exist; locks the table during validation.</li>
+      <li><strong>Changing a primary key</strong> — Breaks foreign key relationships and often requires table recreation.</li>
+      <li><strong>Removing a default value</strong> — Causes INSERT failures in applications that relied on the database default.</li>
+    </ol>
+
+    <div class="cta-box">
+      <p>🎯 <a href="/tools/schema-breaking-change-quiz.html">Test your knowledge</a> — take the Schema Breaking Change Quiz and see how many you can spot.</p>
+    </div>
+  </article>
+
+  <article class="lesson" id="day4">
+    <span class="day-label">Day 4</span>
+    <h2>Rollback Strategies That Work</h2>
+    <p>Every migration should have a rollback plan. But not all migrations can be rolled back cleanly.</p>
+
+    <h3>Reversible changes</h3>
+    <ul>
+      <li>Adding a column → drop the column</li>
+      <li>Adding an index → drop the index</li>
+      <li>Adding a table → drop the table</li>
+      <li>Adding a default → remove the default</li>
+    </ul>
+
+    <h3>Irreversible changes</h3>
+    <ul>
+      <li>Dropping a column (data is gone)</li>
+      <li>Dropping a table (data is gone)</li>
+      <li>Narrowing a column type (truncated data cannot be restored)</li>
+      <li>Renaming a column or table (requires another rename to undo)</li>
+    </ul>
+
+    <h3>The rollback script rule</h3>
+    <p>Before running any migration in production, write the rollback script first. If you can't write a rollback script, reconsider the migration. For irreversible changes, take a database backup or snapshot before running the migration.</p>
+
+    <div class="cta-box">
+      <p>🔄 <a href="/app.html">SchemaLens Pro generates rollback scripts automatically</a> — reverse ALTER TABLE statements for every migration.</p>
+    </div>
+  </article>
+
+  <article class="lesson" id="day5">
+    <span class="day-label">Day 5</span>
+    <h2>CI/CD Schema Diff Integration</h2>
+    <p>The best time to catch a bad migration is before it merges. Automating schema diff in your CI pipeline ensures every change is reviewed.</p>
+
+    <h3>The GitHub Actions workflow</h3>
+    <p>Add a schema diff step to your CI workflow that compares the schema on the PR branch against the schema on main:</p>
+    <ol>
+      <li>Dump the schema from your main branch (<code>pg_dump --schema-only</code> or <code>mysqldump --no-data</code>)</li>
+      <li>Dump the schema from the PR branch</li>
+      <li>Run a diff tool to compare them</li>
+      <li>Post the diff as a PR comment so reviewers can see what changed</li>
+    </ol>
+
+    <h3>Pre-commit hooks</h3>
+    <p>For teams that want faster feedback, a pre-commit hook can run a local schema diff before the developer even commits. This catches issues in seconds, not minutes.</p>
+
+    <div class="cta-box">
+      <p>⚙️ <a href="/github-action.html">Use the SchemaLens GitHub Action</a> — auto-generates diff reports and posts them as PR comments.</p>
+    </div>
+  </article>
+
+  <article class="lesson" id="day6">
+    <span class="day-label">Day 6</span>
+    <h2>Team Workflows at Scale</h2>
+    <p>As teams grow, schema reviews become a bottleneck. The solution isn't to skip reviews — it's to make them faster and more consistent.</p>
+
+    <h3>The schema change RFC</h3>
+    <p>For large or risky changes, write a one-paragraph RFC that answers:</p>
+    <ul>
+      <li>What is changing and why?</li>
+      <li>What is the rollback plan?</li>
+      <li>Are there any breaking changes for consumers?</li>
+      <li>What is the expected impact on query performance?</li>
+    </ul>
+
+    <h3>PR templates</h3>
+    <p>Add a schema review section to your pull request template:</p>
+    <ul>
+      <li>[ ] I have reviewed the schema diff</li>
+      <li>[ ] I have confirmed no breaking changes for downstream consumers</li>
+      <li>[ ] I have tested the migration on a copy of production data</li>
+      <li>[ ] I have written a rollback script</li>
+    </ul>
+
+    <h3>Ownership and alerts</h3>
+    <p>Assign a "schema owner" for each service or domain. This person reviews all schema changes for that domain and is responsible for migration safety. When something goes wrong, they know the schema best.</p>
+
+    <div class="cta-box">
+      <p>👥 <a href="/team-schema-audit.html">Book a Team Schema Audit</a> — we'll review your team's migration workflow and recommend improvements.</p>
+    </div>
+  </article>
+
+  <article class="lesson" id="day7">
+    <span class="day-label">Day 7</span>
+    <h2>Your Migration Safety Checklist</h2>
+    <p>Print this checklist and use it before every deploy. It takes 2 minutes and prevents hours of incident response.</p>
+
+    <h3>Pre-deploy checks</h3>
+    <ul>
+      <li>[ ] Run the schema diff and review all changes</li>
+      <li>[ ] Identify any destructive changes (drops, renames, type changes)</li>
+      <li>[ ] Check for missing indexes on new foreign keys</li>
+      <li>[ ] Verify new columns have appropriate defaults</li>
+      <li>[ ] Confirm the migration will not lock large tables</li>
+      <li>[ ] Test the migration on a copy of production data</li>
+      <li>[ ] Write the rollback script</li>
+      <li>[ ] Notify the team if the migration is risky</li>
+    </ul>
+
+    <h3>Post-deploy checks</h3>
+    <ul>
+      <li>[ ] Monitor error rates for 30 minutes after deploy</li>
+      <li>[ ] Check slow query logs for new performance issues</li>
+      <li>[ ] Verify application health checks pass</li>
+      <li>[ ] Confirm rollback script is ready if needed</li>
+    </ul>
+
+    <div class="cta-box">
+      <p>✅ <a href="/migration-checklist.html">View the expanded Migration Checklist</a> — 25 points with detailed explanations for each.</p>
+    </div>
+
+    <h3>What's next?</h3>
+    <p>You now have the knowledge to ship schema changes safely. The next step is to make the process effortless. <a href="/pricing.html">SchemaLens Pro</a> automates the diff, risk scoring, and migration generation so you can focus on shipping.</p>
+  </article>
+</main>
+
+<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:40px 0;font-size:0.9rem;color:var(--text-muted);">
+  <div class="container" style="display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;">
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">SchemaLens</strong>
+      <p style="max-width:260px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Product</strong>
+      <a href="/app.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Web App</a>
+      <a href="/pricing.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Pricing</a>
+      <a href="/tools.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Developer Tools</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Resources</strong>
+      <a href="/blog.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Blog</a>
+      <a href="/migration-mastery.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Migration Mastery</a>
+      <a href="/migration-checklist.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Migration Checklist</a>
+    </div>
+  </div>
+  <div class="container" style="margin-top:24px;text-align:center;font-size:0.8rem;color:var(--text-muted);">
+    © 2026 SchemaLens. Built for the $100 AI Startup Race.
+  </div>
+</footer>
+
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+</body>
+</html>

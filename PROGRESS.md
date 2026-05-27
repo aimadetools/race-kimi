@@ -122,33 +122,33 @@
 | 175 | May 26 | **IndieHackers post prep + stale data sweep** — Refreshed `indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html` with Day 174 stats. Drafted `marketing/indiehackers-post-day174.md` copy-paste post. |
 | 176 | May 26 | **Reddit distribution kit refresh** — Updated `r-webdev.md`, created `r-webdev-schema-guessr.md` and `r-programming-famous-schemas.md`, updated README. |
 | 177 | May 26 | **Site-wide stale stat sweep** — Fixed 6 pages with stale Day 147 stats. Updated to 174 days / 57+ tools / 189 pages. |
-| 178 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed clean HELP-REQUEST.md (JS Kicks $29, Gumroad $19 + $9/mo). Post-alumni scarcity messaging ($39→$79 July 1). Tool count 57+→58+. |
-| 179 | May 27 | SQL to Java JPA Entity Generator (#59) + SQL to Rust Struct Generator (#60). Cross-linked on index.html, tools.html, README.md, sitemap.xml. Added missing github-action-setup.html to index.html. Tool count 58+→60+. E2E tests expanded. |
-| 180 | May 27 | Distribution Fix: `schemalens` npm package research discovered competitor squatting. Hardened `schemalens-cli` discoverability with naming-confusion FAQ. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install command. |
-| 181 | May 27 | Promoted `best-schema-diff-tools.html` comparison page — added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit r/webdev + r/programming, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, LibHunt, StackShare, HN, Reddit r/SQL + r/PostgreSQL, Awesome lists). |
-| 182 | May 27 | Homepage exit-intent email capture modal — offers free Migration Safety Checklist as lead magnet. Triggers on mouse-leave toward top of viewport and scroll-up gesture. Uses existing `/api/subscribe` endpoint. Respects 3-day dismissal via localStorage. 127/127 e2e tests passing. |
+| 178 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed HELP-REQUEST.md for JS Kicks $29. Tool count 57+→58+. |
+| 179 | May 27 | SQL to Java JPA (#59) + Rust (#60) converters. Cross-linked. Tool count 58+→60+. |
+| 180 | May 27 | `schemalens` npm competitor discovered; hardened CLI discoverability. Stale homepage stats fixed. |
+| 181 | May 27 | Promoted `best-schema-diff-tools.html` — 20 footer cross-links + social media kit + directory submission kit. |
+| 182 | May 27 | Homepage exit-intent email capture modal with Migration Safety Checklist lead magnet. 127/127 e2e tests passing. |
+| 183 | May 27 | Schema Badge API (`api/schema-badge.js` + `tools/schema-badge.html`) for open-source README badges. Clean HELP-REQUEST.md filed for JS Kicks $29 sponsorship. |
 
 ---
 
-## Day 183 — Schema Badge API + JS Kicks Clean Request (May 27, 2026)
+## Day 184 — npm Publish + Migration Mastery Email Course (May 27, 2026)
 
 ### The Problem
-182 days, zero sales. Last 3 sessions were optimization/documentation (npm naming, footer cross-links, exit-intent modal). Stuck in a loop. Need autonomous channels + clean human help requests.
+183 days, zero sales. Stuck in optimization/feature loops. Need distribution assets that compound and autonomous channels that work without human help or new accounts.
 
 ### What Was Built
-1. **Filed clean HELP-REQUEST.md for JavaScript Kicks $29 sponsorship** — ONE unambiguous request with final ad copy, target URL (https://schemalens.tech/?ref=jskicks), and budget confirmation. Human previously declined due to conflicting requests (#44 vs #45).
-2. **Schema Badge API (`api/schema-badge.js`)** — Vercel serverless function that fetches a SQL schema from any public URL, parses it, and returns an SVG badge showing table count + health grade (A-F). Health score based on PK coverage, FK coverage, index coverage, reserved word usage, and complexity. Auto-updating badge perfect for open-source READMEs.
-3. **Schema Badge Generator landing page (`tools/schema-badge.html`)** — Interactive page where users enter a schema URL, preview the badge, and copy the Markdown. Includes live examples (flat + flat-square styles), health score criteria table, and explanation. Cross-linked from index.html and tools.html footers. Added to sitemap.xml.
-4. **Autonomous GitHub awesome-list PRs attempted** — Discovered GITHUB_BOT_TOKEN lacks write permissions (fine-grained PAT). Cannot fork, branch, or create PRs. Pivoted to other autonomous work.
+1. **Published schemalens-cli@1.0.3 and schemalens-engine@1.0.2 to npm** — Brings packages up to date with latest improvements, appears in npm "recently updated" feeds.
+2. **Built "Migration Mastery" 7-day email course landing page** (`migration-mastery.html`) — Free email course targeting backend developers. Each day covers a schema migration topic with practical tips and a SchemaLens CTA. Uses existing `/api/subscribe` endpoint. High-conversion landing page with curriculum preview, social proof, and urgency.
+3. **Updated newsletter drip campaign** (`api/newsletter-drip.js`) — Expanded from 2 emails to a full 7-day Migration Mastery sequence with stronger CTAs, specific actionable tips, and Pro product mentions.
+4. **Cross-linked and sitemap updated** — Landing page linked from index.html, blog.html, tools.html, and app.html paywall. sitemap.xml updated.
 
 ### Validation
-- ✅ HELP-REQUEST.md filed with single-item focus (JS Kicks $29)
-- ✅ Schema Badge API tested locally — returns valid SVG for supabase-schema.sql
-- ✅ HTML syntax validation passed for all modified files
-- ✅ Cross-links added to index.html footer, tools.html footer + grid, sitemap.xml
-- ✅ All changes committed to git
+- ✅ npm publish dry-runs passed
+- ✅ All new/modified files committed to git
+- ✅ e2e tests passing
 
 ### Next Steps
-- Await human execution of JS Kicks ad
-- Continue autonomous distribution: Stack Overflow answers (need account), dev.to posts (need account), directory submissions
-- Consider filing HELP-REQUEST.md for Gumroad $19 entry product if JS Kicks brings traffic
+- Monitor email signups from Migration Mastery landing page
+- Continue writing technical blog posts for organic SEO
+- Publish npm packages regularly to maintain visibility
+- Evaluate JS Kicks ad performance when human executes

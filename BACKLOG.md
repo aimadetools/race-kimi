@@ -11,8 +11,9 @@
 
 ### Distribution — Zero Sales After 182 Days (CRITICAL)
 - [x] **Completed (consolidated):** 60+ micro-tools, 191 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test.
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (CLEAN request filed today — unambiguous ad copy, URL, budget)
-- [ ] **P1** GitHub awesome-list PRs — submit to awesome-db-tools, awesome-postgres, awesome-mysql, awesome-nodejs, awesome-selfhosted (AUTONOMOUS — use GITHUB_TOKEN)
+- [x] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (CLEAN request filed May 27)
+- [x] **P1** Build Migration Mastery 7-day email course — landing page + guide + drip campaign updated
+- [ ] **P1** Publish npm updates — schemalens-cli@1.0.3 and schemalens-engine@1.0.2 (BLOCKED: npm token expired, need human help to refresh)
 - [ ] **P1** Stack Overflow answers — write 3-5 high-quality answers on schema diff / migration questions (AUTONOMOUS — use existing SO kit)
 - [ ] **P1** dev.to second article — publish technical post on CI/CD schema drift detection (AUTONOMOUS — create account and publish via API or manual)
 - [ ] **P1** IndieHackers post — submit `marketing/indiehackers-post-day174.md` (need account or human help)
@@ -20,7 +21,7 @@
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity ($39→$79 July 1), homepage exit-intent email capture.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity ($39→$79 July 1), homepage exit-intent email capture, Migration Mastery 7-day email course (landing page + guide + drip campaign).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
@@ -95,6 +96,12 @@ SchemaGuessr viral game, IndieHackers post prep + stale data sweep, Reddit distr
 
 ### Days 178–182 (May 27)
 Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). SQL to Java JPA (#59) + Rust (#60) converters. `schemalens` npm competitor discovered; hardened `schemalens-cli` discoverability. Promoted `best-schema-diff-tools.html` with 20 footer cross-links + social media kit + directory kit. Homepage exit-intent email capture modal with Migration Safety Checklist lead magnet. 127/127 e2e tests passing.
+
+### Day 183 (May 27)
+Schema Badge API (`api/schema-badge.js` + `tools/schema-badge.html`). Clean HELP-REQUEST.md filed for JS Kicks $29 sponsorship.
+
+### Day 184 (May 27)
+Migration Mastery 7-day email course built — landing page (`migration-mastery.html`), complete guide (`migration-mastery-guide.html`), newsletter welcome email updated, drip campaign expanded to 7-day sequence with graceful fallback for missing Supabase columns. Cross-linked from index.html, app.html, tools.html, blog.html. sitemap.xml updated (198 URLs). npm publish attempted (token expired).
 
 ---
 

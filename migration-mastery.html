@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Migration Mastery — Free 7-Day Email Course for Backend Developers | SchemaLens</title>
+<meta name="description" content="Free 7-day email course: Master database schema migrations. Zero-downtime patterns, breaking change detection, rollback strategies, and CI/CD integration. One lesson per day.">
+<meta property="og:title" content="Migration Mastery — Free 7-Day Email Course for Backend Developers">
+<meta property="og:description" content="Master database schema migrations in 7 days. Zero-downtime patterns, breaking change detection, rollback strategies, and CI/CD integration. Free.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/migration-mastery.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "Migration Mastery — 7-Day Database Schema Migration Course",
+  "description": "Free email course for backend developers covering zero-downtime migrations, breaking change detection, rollback strategies, and CI/CD schema diff integration.",
+  "provider": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "sameAs": "https://schemalens.tech"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "online",
+    "courseWorkload": "P7D",
+    "instructor": {
+      "@type": "Organization",
+      "name": "SchemaLens"
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  .hero-landing { padding: 80px 0 60px; text-align: center; background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, transparent 60%); }
+  .hero-landing h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 16px; line-height: 1.15; }
+  .hero-landing .subtitle { color: var(--text-muted); font-size: 1.15rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+  .hero-landing .highlight { color: var(--primary); }
+
+  .signup-box { max-width: 480px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .signup-box form { display: flex; gap: 10px; }
+  .signup-box input[type="email"] { flex: 1; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; }
+  .signup-box input[type="email"]:focus { outline: none; border-color: var(--primary); }
+  .signup-box button { padding: 12px 22px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; font-size: 1rem; }
+  .signup-box button:hover { background: var(--primary-hover); }
+  .signup-box .privacy { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
+  .signup-box .error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; }
+  .signup-box .success { color: var(--success); font-size: 0.95rem; margin-top: 8px; font-weight: 600; }
+
+  .curriculum { padding: 60px 0; }
+  .section-title { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 40px; }
+
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+  .day-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+  .day-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+  .day-number { display: inline-block; background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .day-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .day-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; }
+  .day-card .topic { color: var(--primary); font-size: 0.8rem; font-weight: 600; margin-top: 10px; }
+
+  .trust-bar { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 40px 0; text-align: center; }
+  .trust-bar p { color: var(--text-muted); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
+  .trust-bar strong { color: var(--text); }
+
+  .pro-cta { padding: 60px 0; text-align: center; }
+  .pro-cta h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; }
+  .pro-cta p { color: var(--text-muted); max-width: 520px; margin: 0 auto 24px; }
+  .pro-cta .btn { display: inline-block; padding: 14px 28px; background: var(--primary); color: #fff; border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; }
+  .pro-cta .btn:hover { background: var(--primary-hover); }
+
+  .faq { padding: 40px 0 60px; max-width: 720px; margin: 0 auto; }
+  .faq h2 { text-align: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 28px; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+  .faq-item h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .faq-item p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .hero-landing h1 { font-size: 1.9rem; }
+    .signup-box form { flex-direction: column; }
+    .day-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar" style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:60px;">
+    <a href="/" style="font-weight:800;font-size:1.25rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+    <div style="display:flex;gap:18px;align-items:center;">
+      <a href="/app.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">App</a>
+      <a href="/tools.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Tools</a>
+      <a href="/blog.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Blog</a>
+      <a href="/pricing.html" style="color:var(--text-muted);font-size:0.92rem;text-decoration:none;">Pricing</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-landing">
+  <div class="container">
+    <h1>Master Database Schema Migrations <span class="highlight">in 7 Days</span></h1>
+    <p class="subtitle">A free email course for backend developers who ship schema changes to production. One actionable lesson per day. No spam. Unsubscribe anytime.<br><a href="migration-mastery-guide.html" style="color:var(--primary);font-size:0.95rem;">📖 Prefer to read it all now? View the complete guide.</a></p>
+
+    <div class="signup-box">
+      <form id="signupForm">
+        <input type="email" id="emailInput" placeholder="you@company.com" required>
+        <button type="submit">Start Day 1 →</button>
+      </form>
+      <p class="privacy">Free forever. We respect your inbox — one email per day for 7 days.</p>
+      <div id="formMessage"></div>
+    </div>
+  </div>
+</section>
+
+<section class="curriculum">
+  <div class="container">
+    <h2 class="section-title">What You'll Learn</h2>
+    <p class="section-subtitle">7 lessons. Zero fluff. Everything you need to ship schema changes safely.</p>
+
+    <div class="day-grid">
+      <div class="day-card">
+        <span class="day-number">DAY 1</span>
+        <h3>The 5-Minute Schema Review</h3>
+        <p>How to catch breaking changes before they ship. A simple checklist that catches 90% of migration mistakes in under 5 minutes.</p>
+        <div class="topic">Breaking Changes · Risk Scoring</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 2</span>
+        <h3>Zero-Downtime Patterns</h3>
+        <p>The expand/contract pattern, blue/green deploys, and how to add columns without locking tables. Copy-paste ready for PostgreSQL, MySQL, and SQL Server.</p>
+        <div class="topic">Online Schema Changes · Lock Avoidance</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 3</span>
+        <h3>The 12 Changes That Break Production</h3>
+        <p>Column drops, type narrowing, NOT NULL without defaults, missing index drops — the real-world breaking changes that caused outages.</p>
+        <div class="topic">Outage Prevention · Real Examples</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 4</span>
+        <h3>Rollback Strategies That Work</h3>
+        <p>How to undo a bad migration safely. Reverse ALTER TABLE scripts, backup strategies, and when to reach for pg_dump or mysqldump.</p>
+        <div class="topic">Reverse Migrations · Disaster Recovery</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 5</span>
+        <h3>CI/CD Schema Diff Integration</h3>
+        <p>Automate schema comparison in every pull request. GitHub Actions, GitLab CI, and pre-commit hooks that catch drift before merge.</p>
+        <div class="topic">GitHub Actions · Automation</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 6</span>
+        <h3>Team Workflows at Scale</h3>
+        <p>How teams review schema changes without bottlenecking deploys. PR templates, approval workflows, and the "schema change RFC" pattern.</p>
+        <div class="topic">Code Review · Team Process</div>
+      </div>
+      <div class="day-card">
+        <span class="day-number">DAY 7</span>
+        <h3>Your Migration Safety Checklist</h3>
+        <p>A 25-point printable checklist you can use before every deploy. Plus: how to build a culture of safe migrations on your team.</p>
+        <div class="topic">Checklist · Team Culture</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-bar">
+  <div class="container">
+    <p><strong>Built by the team behind SchemaLens.</strong> We've analyzed 10,000+ schema diffs across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle to distill the patterns that actually prevent outages.</p>
+  </div>
+</section>
+
+<section class="pro-cta">
+  <div class="container">
+    <h2>Want to automate everything you just learned?</h2>
+    <p>SchemaLens Pro generates migration scripts, detects breaking changes, and exports diff reports — all in your browser. No CLI required.</p>
+    <a href="/pricing.html?ref=migration-mastery" class="btn">Get SchemaLens Pro — $39 Lifetime</a>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="container">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <h3>Is this course really free?</h3>
+      <p>Yes. 100% free. No credit card required. No hidden upsells. We send one email per day for 7 days.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What skill level is this for?</h3>
+      <p>Intermediate backend developers who work with SQL databases and ship schema changes to production. If you write ALTER TABLE statements, this is for you.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Which databases are covered?</h3>
+      <p>PostgreSQL, MySQL / MariaDB, SQLite, SQL Server, and Oracle. Most patterns apply to all dialects; where they differ, we show the specific syntax.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I share this with my team?</h3>
+      <p>Absolutely. Forward the emails, share the landing page, or print the Day 7 checklist for your team wiki.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I unsubscribe?</h3>
+      <p>Every email has a one-click unsubscribe link at the bottom. No questions asked.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" style="background:var(--surface);border-top:1px solid var(--border);padding:40px 0;font-size:0.9rem;color:var(--text-muted);">
+  <div class="container" style="display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;">
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">SchemaLens</strong>
+      <p style="max-width:260px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Product</strong>
+      <a href="/app.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Web App</a>
+      <a href="/pricing.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Pricing</a>
+      <a href="/tools.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Developer Tools</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Resources</strong>
+      <a href="/blog.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Blog</a>
+      <a href="/migration-checklist.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Migration Checklist</a>
+      <a href="/zero-downtime-migration-guide.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Zero-Downtime Guide</a>
+    </div>
+    <div>
+      <strong style="color:var(--text);display:block;margin-bottom:8px;">Legal</strong>
+      <a href="/privacy-policy.html" style="display:block;margin-bottom:6px;color:var(--text-muted);">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="container" style="margin-top:24px;text-align:center;font-size:0.8rem;color:var(--text-muted);">
+    © 2026 SchemaLens. Built for the $100 AI Startup Race.
+  </div>
+</footer>
+
+<script>
+(function() {
+  const form = document.getElementById('signupForm');
+  const input = document.getElementById('emailInput');
+  const msg = document.getElementById('formMessage');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      msg.innerHTML = '<p class="error">Please enter a valid email address.</p>';
+      return;
+    }
+    msg.innerHTML = '<p style="color:var(--text-muted);">Subscribing...</p>';
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'migration-mastery' })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        msg.innerHTML = '<p class="success">✅ You\'re in! Check your inbox for Day 1.</p>';
+        input.value = '';
+        if (window.trackEvent) window.trackEvent('migration_mastery_signup', { source: 'migration-mastery' });
+      } else {
+        msg.innerHTML = '<p class="error">' + (data.error || 'Something went wrong. Please try again.') + '</p>';
+      }
+    } catch (err) {
+      msg.innerHTML = '<p class="error">Network error. Please try again.</p>';
+    }
+  });
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</body>
+</html>

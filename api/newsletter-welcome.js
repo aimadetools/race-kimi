@@ -38,15 +38,16 @@ function welcomeEmailHtml() {
 <body>
   <div class="container">
     <div class="logo">SchemaLens</div>
-    <h1>Welcome to the SchemaLens community</h1>
-    <p>Thanks for subscribing. You\'ll get new features, schema migration best practices, and tips on keeping your database changes safe.</p>
-    <p>Here are three ways to get started right now:</p>
+    <h1>Welcome to Migration Mastery</h1>
+    <p>You\'re enrolled in the free 7-day email course on database schema migrations. Over the next week, you\'ll get one actionable lesson per day covering zero-downtime patterns, breaking change detection, rollback strategies, and CI/CD integration.</p>
+    <p><strong>Can\'t wait?</strong> You can read the complete guide right now:</p>
+    <a href="https://schemalens.tech/migration-mastery-guide.html" class="cta">Read the Full Guide</a>
+    <p style="margin-top:20px;">Here are three other ways to get started:</p>
     <ul>
       <li><a href="https://schemalens.tech/app.html" style="color:#818cf8;">Compare two schemas instantly</a> — paste your CREATE TABLE statements and see the diff.</li>
-      <li><a href="https://schemalens.tech/tools/schema-diagram.html" style="color:#818cf8;">Generate an ER diagram</a> from your SQL in one click.</li>
-      <li><a href="https://schemalens.tech/blog.html" style="color:#818cf8;">Read our migration guides</a> — 33+ posts on PostgreSQL, MySQL, SQL Server, Oracle, and SQLite.</li>
+      <li><a href="https://schemalens.tech/tools/schema-health-check.html" style="color:#818cf8;">Run a schema health check</a> — find missing indexes, unindexed foreign keys, and design issues.</li>
+      <li><a href="https://schemalens.tech/migration-checklist.html" style="color:#818cf8;">Download the migration checklist</a> — 25 points to review before every deploy.</li>
     </ul>
-    <a href="https://schemalens.tech/app.html" class="cta">Open SchemaLens</a>
     <div class="footer">
       <p>You received this because you subscribed at <a href="https://schemalens.tech">schemalens.tech</a>.</p>
       <p>SchemaLens — Compare SQL schemas and generate migrations in your browser.</p>
