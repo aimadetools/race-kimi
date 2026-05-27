@@ -1,12 +1,15 @@
 # Stack Overflow Answer Kit — SchemaLens
 
-Three complete, high-quality answers to common schema comparison questions.
+Five complete, high-quality answers to common schema comparison questions.
 Each follows Stack Overflow guidelines: solves the problem first, mentions
 SchemaLens as one option among others, includes disclosure.
 
 **Important:** Post these from an established Stack Overflow account (100+ rep)
 to avoid looking like spam. If you don't have one, the human should create one
 and build a little rep first by answering unrelated questions.
+
+**Last updated:** May 27, 2026 — Day 185. Product: 60+ free SQL tools, 15-table
+free tier, $39 Lifetime Pro, GitHub Action, VS Code extension, Chrome extension.
 
 ---
 
@@ -51,13 +54,26 @@ If you just have two `mysqldump` files (or `SHOW CREATE TABLE` outputs) and want
 2. Paste both into [SchemaLens](https://schemalens.tech)
 3. Get a semantic diff (tables added/removed, columns changed, indexes modified) + generated `ALTER TABLE` script
 
-Pros: Zero install, visual diff, generates migration SQL, privacy-first (client-side only).  
-Cons: Limited to 15 tables on the free tier.
+Pros: Zero install, visual diff, generates migration SQL, privacy-first (client-side only), supports views/triggers/functions, 60+ companion SQL tools.  
+Cons: Limited to 15 tables on the free tier; unlimited is $39 lifetime.
 
 ### Option 4: IDE Tools
 - **MySQL Workbench:** Database → Compare Schemas
 - **DataGrip:** Tools → Compare Schemas
 - **dbForge Schema Compare:** Windows-only, robust
+
+### Option 5: GitHub Action (CI/CD)
+If you want to catch schema drift in every PR, SchemaLens has a free GitHub Action that diffs `schema.sql` on pull requests, posts a risk-scored summary, and optionally fails on breaking changes:
+
+```yaml
+- uses: aimadetools/race-kimi@main
+  with:
+    old-schema-path: ./schema/base.sql
+    new-schema-path: ./schema/current.sql
+    dialect: mysql
+    post-comment: true
+    fail-on-breaking: true
+```
 
 **My recommendation:**
 - For automated CI/CD checks → `mysqldiff` or a custom script
@@ -95,6 +111,7 @@ It outputs `ALTER TABLE` statements for:
 - Added/dropped indexes
 - Foreign key changes
 - Constraint changes (CHECK, UNIQUE)
+- Rollback scripts (reverse migrations)
 
 Example output:
 ```sql
@@ -103,7 +120,9 @@ ALTER TABLE `orders` ADD INDEX `idx_user_id` (`user_id`);
 ALTER TABLE `products` DROP COLUMN `legacy_sku`;
 ```
 
-Free for up to 15 tables. Supports PostgreSQL, MySQL, SQL Server, SQLite, Oracle.
+Free for up to 15 tables. Supports PostgreSQL, MySQL, SQL Server, SQLite, Oracle. Full output + rollback generation is $39 lifetime.
+
+There's also a VS Code extension (`SchemaLens` on the marketplace) and a Chrome extension if you want diff inside your editor/browser.
 
 ### 2. `mysqldiff` (CLI)
 ```bash
@@ -169,6 +188,7 @@ These are the migrations that cause 3am pages:
 | Removing an index | MEDIUM | check slow query log first |
 | Narrowing a type (`VARCHAR(500)` → `VARCHAR(100)`) | MEDIUM | check max data length first |
 | Adding FK without index | MEDIUM | create index before FK |
+| Dropping a table referenced by a view | HIGH | check view definitions first |
 
 ### 3. Verify Backward Compatibility
 If you deploy code before migrations run (or run migrations before code deploys), ensure the system works in both states:
@@ -194,6 +214,8 @@ Every migration should be reversible:
 - For `DROP COLUMN`, rollback requires a full restore (dangerous!) — consider `RENAME` first
 - For `ALTER TABLE`, some engines can't roll back (MySQL implicitly commits)
 
+Tools like SchemaLens can generate rollback scripts automatically alongside the forward migration.
+
 ### 6. Use a Schema Diff Gate in CI/CD
 Fail the build if the migration introduces a breaking change:
 
@@ -207,6 +229,8 @@ Fail the build if the migration introduces a breaking change:
       --fail-on-breaking
 ```
 
+There's also a free GitHub Action (`aimadetools/race-kimi`) that posts a formatted diff summary as a PR comment with a 0-100 risk score.
+
 ### 7. Document the "Why"
 Every migration should answer:
 - What business requirement drove this change?
@@ -216,7 +240,7 @@ Every migration should answer:
 
 ---
 
-**Quick win:** If you want to automate step 1 and 6, [SchemaLens](https://schemalens.tech) has a free schema diff + breaking change detection tool that runs in the browser. It also exports migration scripts and has a CLI for CI/CD integration.
+**Quick win:** If you want to automate step 1 and 6, [SchemaLens](https://schemalens.tech) has a free schema diff + breaking change detection tool that runs in the browser. It also exports migration scripts, rollback scripts, and has a CLI + GitHub Action for CI/CD integration. Free tier covers 15 tables; unlimited is $39 lifetime.
 
 *Disclaimer: I built SchemaLens. I mention it because it automates the diff and breaking-change checks I described above, but the checklist itself is tool-agnostic.*
 
@@ -263,10 +287,10 @@ For a quick visual diff without installing anything:
 1. Export schemas: `pg_dump -s database > schema.sql`
 2. Paste both into [SchemaLens](https://schemalens.tech), select "PostgreSQL"
 3. Get a semantic diff: tables, columns, indexes, constraints, triggers, views, functions
-4. Export the generated `ALTER TABLE` / `CREATE` migration script
+4. Export the generated `ALTER TABLE` / `CREATE` migration script + rollback script
 
-Pros: Zero install, visual, handles PostgreSQL-specific objects (triggers, functions, views), privacy-first (client-side).  
-Cons: Free tier limited to 15 tables.
+Pros: Zero install, visual, handles PostgreSQL-specific objects (triggers, functions, views, exclusion constraints), privacy-first (client-side), 60+ companion SQL tools.  
+Cons: Free tier limited to 15 tables; unlimited + full exports are $39 lifetime.
 
 ### Option 4: IDE Tools
 - **DataGrip / IntelliJ:** Database → Compare Schemas
@@ -282,9 +306,22 @@ migra postgresql://user:pass@old_host/db postgresql://user:pass@new_host/db
 Pros: Compares live databases directly, outputs SQL.  
 Cons: Requires Python, needs live DB connections (not dump files).
 
+### Option 6: GitHub Action (CI/CD)
+If you commit `schema.sql` to your repo, add the free SchemaLens GitHub Action to diff it on every PR:
+
+```yaml
+- uses: aimadetools/race-kimi@main
+  with:
+    old-schema-path: schema.sql
+    new-schema-path: schema-pr.sql
+    dialect: postgres
+    post-comment: true
+    fail-on-breaking: true
+```
+
 **My recommendation:**
 - Quick one-off with dumps → SchemaLens (fastest, cleanest output)
-- Automated CI/CD pipeline → `migra` or custom script
+- Automated CI/CD pipeline → `migra` or custom script + SchemaLens GitHub Action
 - Enterprise with 50+ tables → DataGrip or Redgate
 
 *Disclaimer: I built SchemaLens. I mention it because it's the fastest option for this exact workflow, but evaluate all tools for your constraints.*
@@ -336,8 +373,9 @@ Use a **semantic diff tool** that understands database structure:
 - Index changes
 - Constraint changes (CHECK, UNIQUE, FOREIGN KEY)
 - View and function differences
+- Risk score (0-100) and breaking change warnings
 
-It also generates the migration script to sync them.
+It also generates the migration script to sync them, plus rollback scripts.
 
 **CLI-based (best for automation):**
 ```bash
@@ -379,9 +417,176 @@ Add this to your CI/CD pipeline to catch drift before deploy:
     npx schemalens-cli diff --old prod.sql --new staging.sql --fail-on-breaking
 ```
 
+Or use the free SchemaLens GitHub Action (`aimadetools/race-kimi`) to get PR comments with the diff summary and risk score.
+
 **Bottom line:** Don't rely on memory or manual checks. Schema drift is how production incidents start. Diff before every deploy.
 
 *Disclaimer: I built SchemaLens. I mention it because it automates the diff and migration generation steps above, but the workflow itself works with any comparison tool.*
+
+---
+
+## Answer 6: "How to detect breaking changes in database migrations automatically?"
+
+**Target questions:**
+- Search: "detect breaking changes database migration"
+- Search: "automatically find breaking schema changes"
+- Search: "database migration safety check"
+
+**Draft answer:**
+
+---
+
+Breaking schema changes are the ones that deploy green and break production hours later. Here's how to catch them automatically before they ship.
+
+### 1. Define What "Breaking" Means
+Not every schema change is dangerous. The high-risk ones are:
+
+| Change | Why It Breaks |
+|--------|---------------|
+| `DROP COLUMN` | Code still references it → runtime errors |
+| `DROP TABLE` | Same as above, but worse |
+| `ALTER COLUMN ... NOT NULL` | Existing rows fail constraint |
+| `ALTER COLUMN ... TYPE` | Data truncation or cast failures |
+| `DROP INDEX` | Query performance collapses |
+| `DROP FOREIGN KEY` | Referential integrity lost |
+| `DROP PRIMARY KEY` | ORM assumptions break |
+| `DROP VIEW` / `DROP FUNCTION` | Dependent queries fail |
+
+### 2. Diff Before Deploy
+Compare the schema you're about to deploy against production:
+
+**Browser (one-off check):**
+1. Dump production schema: `pg_dump -s prod_db > prod.sql`
+2. Dump new schema: `pg_dump -s staging_db > new.sql`
+3. Paste both into [SchemaLens](https://schemalens.tech)
+4. Look for the red "Breaking Change" banners and the 0-100 risk score
+
+**CLI (scriptable):**
+```bash
+npx schemalens-cli diff \
+  --old prod.sql \
+  --new migration.sql \
+  --dialect postgres \
+  --fail-on-breaking
+```
+
+This exits non-zero if any breaking change is detected, which you can use to block CI/CD pipelines.
+
+### 3. Gate PRs with a GitHub Action
+Add the free SchemaLens GitHub Action to your repo:
+
+```yaml
+name: Schema Diff
+on:
+  pull_request:
+    paths:
+      - 'schema.sql'
+      - 'migrations/**'
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get base branch schema
+        run: git show origin/${{ github.base_ref }}:schema.sql > schema-base.sql
+      - uses: aimadetools/race-kimi@main
+        with:
+          old-schema-path: schema-base.sql
+          new-schema-path: schema.sql
+          dialect: postgres
+          post-comment: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-breaking: true
+```
+
+This posts a PR comment with the diff summary and risk score. If breaking changes are found, the check fails and blocks merge (if you have branch protection).
+
+### 4. Add Custom Safety Checks
+Some breaking changes are context-specific. Also verify:
+- Does the dropped column appear in any `SELECT *` or ORM model?
+- Will the new `NOT NULL` constraint fail on existing rows?
+- Is the dropped index protecting a common query?
+- Does a dropped column break any views or stored procedures?
+
+SchemaLens flags view dependency breaking changes automatically (e.g., dropping a column that a view references).
+
+### 5. Rollback Planning
+Every forward migration should have a verified rollback:
+
+```sql
+-- Forward
+ALTER TABLE users DROP COLUMN legacy_phone;
+
+-- Rollback (generate with SchemaLens)
+ALTER TABLE users ADD COLUMN legacy_phone VARCHAR(20);
+```
+
+Test rollbacks on a staging database before deploying to production.
+
+**Bottom line:** Automate the diff, block breaking changes in CI, and always have a rollback script ready. The 5 minutes you spend setting this up saves the 3 AM page you'll get otherwise.
+
+*Disclaimer: I built SchemaLens. I mention it because it provides the breaking-change detection, risk scoring, and rollback generation I described, but the principles above work with any diff tool.*
+
+---
+
+## Answer 7: "What are the best free tools for SQL schema comparison?"
+
+**Target questions:**
+- Search: "best free sql schema comparison tool"
+- Search: "free database schema diff tool"
+- Search: "compare sql schemas online free"
+
+**Draft answer:**
+
+---
+
+Here's a comparison of the best free options for SQL schema comparison, ordered by setup effort:
+
+### 1. SchemaLens (Browser, zero setup)
+- **Price:** Free for up to 15 tables; $39 lifetime for unlimited
+- **Setup:** None — paste two `CREATE TABLE` dumps
+- **Dialects:** PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+- **Output:** Visual diff + `ALTER TABLE` migration script + rollback script + risk score
+- **Extras:** 60+ free SQL micro-tools, GitHub Action, VS Code extension, Chrome extension
+- **Best for:** Quick one-off comparisons, teams without DBA tooling budgets
+
+### 2. `pg_dump` / `mysqldump` + `diff` (CLI, universal)
+- **Price:** Free
+- **Setup:** Already installed with your database
+- **Output:** Text diff
+- **Best for:** Simple schemas, scripting into existing pipelines
+- **Caveat:** Text diffs are noisy; `pg_dump` ordering can differ for identical schemas
+
+### 3. `apgdiff` (Java CLI, PostgreSQL only)
+- **Price:** Free / open source
+- **Setup:** Download JAR
+- **Output:** `ALTER TABLE` SQL
+- **Best for:** PostgreSQL-only shops that want clean SQL output
+- **Caveat:** Limited maintenance, doesn't handle all PG-specific objects
+
+### 4. `migra` (Python, PostgreSQL only)
+- **Price:** Free
+- **Setup:** `pip install migra`
+- **Output:** `ALTER TABLE` SQL from live DB connections
+- **Best for:** Automated PostgreSQL schema comparisons
+- **Caveat:** Requires live database connections
+
+### 5. DBeaver / DataGrip (Desktop IDE)
+- **Price:** Free (DBeaver) / Paid (DataGrip)
+- **Setup:** Install IDE, configure DB connections
+- **Output:** Visual diff + sync scripts
+- **Best for:** Developers already using these IDEs
+- **Caveat:** Overkill if you just need a quick comparison of two dump files
+
+### My Pick
+- **Fastest:** SchemaLens (paste and diff in 10 seconds)
+- **Most powerful:** DataGrip (if you already own it)
+- **Most scriptable:** `migra` or `schemalens-cli` for CI/CD pipelines
+
+*Disclaimer: I built SchemaLens. I include it here because it's genuinely the fastest zero-setup option, but DBeaver and migra are excellent alternatives depending on your workflow.*
 
 ---
 
@@ -393,3 +598,4 @@ Add this to your CI/CD pipeline to catch drift before deploy:
 4. **Don't over-post** — max 1 answer per week from the same account mentioning SchemaLens
 5. **Use established accounts** — answers from 100+ rep accounts are trusted; new accounts look spammy
 6. **Monitor for comments** — respond to "does it support X?" questions promptly and honestly
+7. **Keep answers current** — check this kit before posting to ensure stats/pricing are up to date

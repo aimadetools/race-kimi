@@ -2,11 +2,13 @@
 
 Complete playbook for getting SchemaLens in front of high-intent developers on Stack Overflow. This goes beyond the pre-written answers in `stack-overflow-answers.md` — it includes the reputation roadmap, posting schedule, and anti-spam tactics needed to execute successfully.
 
+**Last updated:** May 27, 2026 — Day 185.
+
 ---
 
 ## The Goal
 
-Post 3 high-quality answers mentioning SchemaLens on Stack Overflow questions with 15K+ views, without getting flagged as spam.
+Post 3–5 high-quality answers mentioning SchemaLens on Stack Overflow questions with 15K+ views, without getting flagged as spam.
 
 ---
 
@@ -17,7 +19,7 @@ Post 3 high-quality answers mentioning SchemaLens on Stack Overflow questions wi
 2. Use a real email (Gmail or your domain)
 3. Fill out profile:
    - **Display name:** Your real name or consistent handle
-   - **About me:** Brief developer bio. Example: "Database tooling enthusiast. Building SchemaLens, a browser-based SQL schema diff tool."
+   - **About me:** Brief developer bio. Example: "Database tooling enthusiast. Building SchemaLens, a browser-based SQL schema diff tool with 60+ free SQL utilities."
    - **Website:** https://schemalens.tech
    - **Location:** Your real location
    - **Photo:** Real photo (accounts with photos get more trust)
@@ -70,7 +72,7 @@ Continue answering genuinely helpful questions. Target 5–7 more answers over 3
 
 ---
 
-## Phase 2: The 3 Target Questions (Day 5+)
+## Phase 2: The 7 Target Questions (Day 5+)
 
 Once you have 100+ rep and a 3-day-old account, you're ready. Here are the exact questions to target, in order:
 
@@ -95,12 +97,38 @@ Once you have 100+ rep and a 3-day-old account, you're ready. Here are the exact
 **Pre-written answer:** See `stack-overflow-answers.md` → Answer 2
 **Why wait 2 days:** Space out promotional answers. Build more organic rep in between.
 
-### Answer 3: PostgreSQL Schema Comparison (Post on Day 10)
+### Answer 3: Best Practices for Reviewing Migrations (Post on Day 9)
+
+**Target:** https://stackoverflow.com/questions/154092 (20K+ views)
+**Title:** "Best practices for reviewing database migration scripts?"
+**Pre-written answer:** See `stack-overflow-answers.md` → Answer 3
+**Why this one:** High-value content that establishes expertise. SchemaLens is mentioned as one automation option among many.
+
+### Answer 4: PostgreSQL Schema Comparison (Post on Day 12)
 
 **Target:** https://stackoverflow.com/questions/219546 (40K+ views)
 **Title:** "How to compare two PostgreSQL database schemas?"
 **Pre-written answer:** See `stack-overflow-answers.md` → Answer 4
-**Why last:** By Day 10 you'll have 150+ rep and look like a legitimate contributor.
+**Why last among the first four:** By Day 12 you'll have 200+ rep and look like a legitimate contributor.
+
+### Answer 5: Production vs Staging Diff (Post on Day 14)
+
+**Target:** https://stackoverflow.com/questions/225772 (related, 50K+ views)
+**Title:** "How to find differences between production and staging database schemas?"
+**Pre-written answer:** See `stack-overflow-answers.md` → Answer 5
+**Why:** This is the #1 user-requested workflow for SchemaLens. High commercial intent.
+
+### Answer 6: Breaking Change Detection (Post on Day 17)
+
+**Search for:** "detect breaking changes database migration"
+**Pre-written answer:** See `stack-overflow-answers.md` → Answer 6
+**Why:** Positions SchemaLens as a safety tool, not just a diff tool. Attracts teams with compliance requirements.
+
+### Answer 7: Best Free Schema Comparison Tools (Post on Day 21)
+
+**Search for:** "best free sql schema comparison tool"
+**Pre-written answer:** See `stack-overflow-answers.md` → Answer 7
+**Why:** Comparison answers get high engagement. Positions SchemaLens fairly among alternatives.
 
 ---
 
@@ -116,7 +144,15 @@ Once you have 100+ rep and a 3-day-old account, you're ready. Here are the exact
 | 6–7 | Answer 2 more questions (no tools). | 150 |
 | 7 | **Post Answer 2** (ALTER TABLE scripts). | 180 |
 | 8–9 | Continue organic contributions. | 200 |
-| 10 | **Post Answer 3** (PostgreSQL schema comparison). | 230 |
+| 9 | **Post Answer 3** (Migration review best practices). | 230 |
+| 10–11 | Organic answers + edits. | 260 |
+| 12 | **Post Answer 4** (PostgreSQL schema comparison). | 290 |
+| 13–14 | Organic answers + comments. | 320 |
+| 14 | **Post Answer 5** (Prod vs staging). | 350 |
+| 15–17 | Organic answers. | 380 |
+| 17 | **Post Answer 6** (Breaking changes). | 410 |
+| 18–21 | Organic answers. | 450 |
+| 21 | **Post Answer 7** (Best free tools). | 480 |
 
 **Tracking spreadsheet:**
 
@@ -124,7 +160,11 @@ Once you have 100+ rep and a 3-day-old account, you're ready. Here are the exact
 |---|-------------|-------|-------------|---------|----------|--------|
 | 1 | https://stackoverflow.com/questions/225772 | 50K+ | | | | Ready |
 | 2 | https://stackoverflow.com/questions/249635 | 30K+ | | | | Ready |
-| 3 | https://stackoverflow.com/questions/219546 | 40K+ | | | | Ready |
+| 3 | https://stackoverflow.com/questions/154092 | 20K+ | | | | Ready |
+| 4 | https://stackoverflow.com/questions/219546 | 40K+ | | | | Ready |
+| 5 | https://stackoverflow.com/questions/225772 (related) | 50K+ | | | | Ready |
+| 6 | Search: "detect breaking changes database migration" | 10K+ | | | | Ready |
+| 7 | Search: "best free sql schema comparison tool" | 10K+ | | | | Ready |
 
 ---
 
@@ -140,6 +180,7 @@ Stack Overflow moderators and users are EXTREMELY sensitive to promotional conte
 - Respond genuinely to comments and criticism
 - Accept when someone points out a limitation
 - Upvote competing answers that are also good
+- Space promotional answers at least 2 days apart
 
 ### ❌ DON'T
 - Post the same answer to multiple questions
@@ -164,10 +205,13 @@ People will ask follow-up questions in comments. Have responses ready:
 > Yes, SchemaLens supports PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, and Oracle. Select your dialect from the dropdown before pasting your schemas.
 
 **"Is it really free?"**
-> The schema diff is free for up to 15 tables. Unlimited tables and full migration exports are part of Lifetime Pro ($39 one-time). No credit card required to try — we also offer a 24-hour free trial and a Founding Member giveaway for the first 50 developers.
+> The schema diff is free for up to 15 tables. Unlimited tables and full migration exports are part of Lifetime Pro ($39 one-time). No credit card required to try — we also offer a 24-hour free trial and a Founding Member giveaway for the first 50 developers who share SchemaLens with their network.
 
 **"Can I use it offline?"**
-> The browser version needs an internet connection to load, but all parsing happens client-side — your schemas never leave your browser. There's also a CLI (`npx schemalens-cli`) that works fully offline.
+> The browser version needs an internet connection to load, but all parsing happens client-side — your schemas never leave your browser. There's also a CLI (`npx schemalens-cli`) that works fully offline, plus a VS Code extension and Chrome extension.
+
+**"Does it work in CI/CD?"**
+> Yes — there's a free GitHub Action (`aimadetools/race-kimi`) that diffs schema files on every PR, posts a formatted diff summary as a PR comment, and optionally fails the build if breaking changes are detected.
 
 **"I tried it and it missed X"**
 > Thanks for the feedback! The parser is constantly improving. If you can share the specific statement it missed (anonymized), I can add support for it. You can also open an issue on the repo.
@@ -199,6 +243,10 @@ If the primary questions are locked or your answer gets buried, use these altern
 - https://stackoverflow.com/questions/383459 (15K+ views)
 - Search: "review database migration scripts"
 
+**Breaking changes:**
+- Search: "detect breaking changes database migration"
+- Search: "database migration safety check"
+
 ---
 
 ## Success Metrics
@@ -208,7 +256,7 @@ Track these weekly:
 | Metric | Week 1 Target | Week 4 Target |
 |--------|--------------|---------------|
 | Stack Overflow rep | 100+ | 500+ |
-| SchemaLens answers posted | 1 | 3 |
+| SchemaLens answers posted | 1 | 3–5 |
 | Total answer upvotes | 5+ | 20+ |
 | Referral traffic from SO | Check analytics | 50+ visits/mo |
 | Conversions from SO traffic | — | 1+ trial |
@@ -233,11 +281,15 @@ If your account gets suspended for promotional content, wait out the suspension,
 - [ ] Build to 100+ rep (Days 2–4)
 - [ ] Post Answer 1 on Day 5
 - [ ] Post Answer 2 on Day 7
-- [ ] Post Answer 3 on Day 10
+- [ ] Post Answer 3 on Day 9
+- [ ] Post Answer 4 on Day 12
+- [ ] Post Answer 5 on Day 14
+- [ ] Post Answer 6 on Day 17
+- [ ] Post Answer 7 on Day 21
 - [ ] Respond to all comments within 24 hours
 - [ ] Track results in the spreadsheet above
 - [ ] Continue answering 2–3 organic questions per week
 
 ---
 
-*This kit works alongside `marketing/stack-overflow-answers.md` which contains the actual answer copy. Use this kit for the strategy and roadmap; use the answers file for the content.*
+*This kit works alongside `marketing/stack-overflow-answers.md` which contains the actual answer copy. Use this kit for the strategy and roadmap; use the answers file for the content. Both files should be refreshed monthly with current product stats and pricing.*
