@@ -28,7 +28,7 @@
 
 ### Conversion — Post-Alumni Window (May 29+)
 - [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall. Free tier table limit A/B test (15/10/8) live. Chrome extension promoted on homepage, app, tools page. Founder scarcity pricing ($39→$79 July 1) added.
-- [ ] **P1** Promote `best-schema-diff-tools.html` — add to more footers, share on social, submit to comparison directories
+- [x] **P1** Promote `best-schema-diff-tools.html` — added footer cross-links on 20 key pages, created social media kit (Twitter/Reddit/LinkedIn/IndieHackers), created directory submission kit (AlternativeTo/SaaSHub/DevHunt/HN/Reddit).
 - [ ] **P1** Add "Trusted by X developers" social proof to homepage/paywall once we have usage numbers
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 

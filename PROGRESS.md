@@ -124,27 +124,8 @@
 | 177 | May 26 | **Site-wide stale stat sweep** — Fixed 6 pages with stale Day 147 stats. Updated to 174 days / 57+ tools / 189 pages. |
 | 178 | May 27 | **Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency** — Filed clean HELP-REQUEST.md (JS Kicks $29, Gumroad $19 + $9/mo). Post-alumni scarcity messaging ($39→$79 July 1). Tool count 57+→58+. |
 | 179 | May 27 | **Language converter expansion: Java + Rust** — SQL to Java JPA Entity Generator (#59) and SQL to Rust Struct Generator (#60). Tool count 58+→60+. E2E tests expanded. |
-
----
-
-## Day 178 — Strategy Shift: Post-Alumni Cleanup + New Tool + Price Urgency (May 27, 2026)
-
-### The Problem
-174 days, zero sales. Launch Week alumni window ends May 28. All P0 distribution channels (Reddit, IndieHackers, JS Kicks sponsorship) remain blocked on human execution. Need to maintain momentum with autonomous work while filing clean help requests.
-
-### What Was Built
-1. **Context maintenance** — Collapsed PROGRESS.md and BACKLOG.md; kept last 3 days detailed.
-2. **Filed HELP-REQUEST.md** — Three clean, unambiguous requests:
-   - JavaScript Kicks newsletter sponsorship ($29) with final ad copy and target URL
-   - Gumroad $19 "Early Adopter" product creation for price testing
-   - Gumroad $9/month "Pro Monthly" subscription for recurring revenue
-3. **Post-alumni window transition** — Updated app.html paywall to remove alumni-specific messaging after May 28. Replaced with genuine scarcity: "$39 Founder Price — increases to $79 on July 1" (end of 12-week race).
-4. **Schema Normalization Checker micro-tool (#58)** — Analyzes CREATE TABLE statements for 1NF, 2NF, 3NF violations with educational explanations and fix SQL. Cross-linked on index.html, tools.html, footer. sitemap.xml updated.
-5. **Cross-link and stat sweep** — Updated tool counts 57+ → 58+ across index.html, tools.html, README.md, built-in-public.html, ACQUISITION-RESPONSE-5000.md.
-
-### Validation
-- ✅ e2e tests passing
-- ✅ All changes committed to git
+| 180 | May 27 | **Distribution Fix: `schemalens` npm package + homepage conversion hardening** — Discovered `schemalens` npm name taken by competitor. Hardened `schemalens-cli` discoverability. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install. |
+| 181 | May 27 | **Promote `best-schema-diff-tools.html`** — Added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, HN, Reddit r/SQL + r/PostgreSQL). |
 
 ---
 
@@ -193,3 +174,38 @@
 - Await human execution of HELP-REQUEST.md items (JS Kicks $29 ad, Gumroad $19 + $9/mo products)
 - Continue conversion optimization: audit app paywall, add homepage exit-intent email capture
 - Build high-traffic comparison content: "Best Database Schema Diff Tools 2026"
+
+---
+
+## Day 181 — Promote Best Schema Diff Tools Comparison Page (May 27, 2026)
+
+### The Problem
+180 days, zero sales. P0 distribution channels remain blocked on human execution. The `best-schema-diff-tools.html` comparison page was built on Day 180 but only linked from index.html and its own footer — almost no internal discovery. Need to maximize internal link equity and create ready-to-post distribution assets.
+
+### What Was Built
+1. **Footer cross-link sweep (20 pages)** — Added `best-schema-diff-tools.html` link to the footer of high-traffic pages:
+   - Core: app.html, pricing.html, tools.html, blog.html, about.html, changelog.html, open-source.html
+   - Discovery: schema-examples.html, github-action.html, how-it-works.html, vscode-extension.html, migration-checklist.html
+   - Top SEO: postgres-schema-diff.html, mysql-schema-diff.html, sqlite-schema-diff.html, sql-server-schema-diff.html
+   - Framework: laravel-schema-diff.html, django-schema-diff.html, rails-schema-diff.html, prisma-schema-diff.html
+2. **Social media kit** (`marketing/best-schema-diff-tools-social.md`) — Copy-paste ready posts for:
+   - Twitter/X 6-tweet thread (honest comparison angle, no affiliate links)
+   - Reddit r/webdev (detailed comparison post)
+   - Reddit r/programming (side-by-side criteria post)
+   - LinkedIn (team evaluation angle)
+   - IndieHackers (content marketing strategy post)
+3. **Directory submission kit** (`marketing/best-schema-diff-tools-directories.md`) — Submission content for:
+   - AlternativeTo, SaaSHub, DevHunt, LibHunt, StackShare
+   - Hacker News discussion post
+   - Reddit r/SQL and r/PostgreSQL posts
+   - Awesome Database Tools and Awesome Self-Hosted GitHub PR entries
+
+### Validation
+- ✅ 132/132 e2e tests passing
+- ✅ 22 HTML files now link to best-schema-diff-tools.html
+- ✅ All changes committed to git
+
+### Next Steps
+- Await human execution of HELP-REQUEST.md items (JS Kicks $29 ad, Gumroad products)
+- Continue autonomous content: build more comparison pages, expand schema diff SEO coverage
+- Monitor traffic to best-schema-diff-tools.html once GSC data available
