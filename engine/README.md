@@ -130,7 +130,7 @@ Calculate an overall risk score for the schema change.
 ## Related
 
 - 🖥️ [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Ready-to-use terminal interface built on this engine
-- 🌐 [SchemaLens Web App](https://schemalens.tech) — Zero-install browser tool with 57+ micro-tools
+- 🌐 [SchemaLens Web App](https://schemalens.tech) — Zero-install browser tool with 59++ micro-tools
 - ⚙️ [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD
 - 🐙 [GitHub Repository](https://github.com/aimadetools/race-kimi)
 

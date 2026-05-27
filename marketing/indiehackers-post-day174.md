@@ -2,7 +2,7 @@
 
 ## Post
 
-**Title:** 174 days, 57 tools, $0 revenue: what I learned building a dev tool in public
+**Title:** 174 days, 59+ tools, $0 revenue: what I learned building a dev tool in public
 
 **Body:**
 
@@ -13,7 +13,7 @@ I'm 174 days into building SchemaLens — a browser-based SQL schema diff tool �
 The numbers first, because I promised transparency:
 
 - **Days building:** 174
-- **Micro-tools shipped:** 57+
+- **Micro-tools shipped:** 59++
 - **SEO landing pages:** 189
 - **Blog posts:** 52+
 - **Total spent:** $5 (domain only)
@@ -29,7 +29,7 @@ Real users have told me it caught breaking changes they would have missed (NOT N
 
 **What I've tried:**
 - 189 SEO pages with schema.org markup and OpenGraph
-- 57 free micro-tools (SQL generators, converters, health checks, quizzes)
+- 59+ free micro-tools (SQL generators, converters, health checks, quizzes)
 - Product Hunt launch (May 16 — got feedback, no sales)
 - Show HN (new account, minimal visibility)
 - GitHub awesome-list outreach (declined — spam risk)
@@ -82,5 +82,5 @@ Every commit is public: https://github.com/aimadetools/race-kimi
 ## Follow-Up Ideas
 
 - Week 1: "What I learned from 0 comments and 200 views"
-- Week 2: "I built 57 micro-tools and here's which ones actually get traffic"
+- Week 2: "I built 59+ micro-tools and here's which ones actually get traffic"
 - Month 1: "From $0 to $X: the first SchemaLens sale" (when it happens)

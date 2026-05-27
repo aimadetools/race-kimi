@@ -28,7 +28,7 @@ Drive qualified developer traffic to SchemaLens. Each post must provide genuine 
 ### Core Product Posts
 - `r-postgresql.md` — Schema drift detection + GitHub Action angle
 - `r-mysql.md` — ALTER TABLE generation + migration safety angle
-- `r-webdev.md` — Zero-setup developer tool + 57+ free micro-tools
+- `r-webdev.md` — Zero-setup developer tool + 59++ free micro-tools
 - `r-devops.md` — GitHub Action PR comments + breaking change prevention
 - `r-sql.md` — Multi-dialect schema diff general angle
 - `r-programming.md` — CI integration + breaking changes caught in PR
@@ -38,7 +38,7 @@ Drive qualified developer traffic to SchemaLens. Each post must provide genuine 
 - `r-webdev-schema-guessr.md` — SchemaGuessr game for Showoff Saturday
 - `r-programming-famous-schemas.md` — Famous Database Schemas ERD gallery
 
-**Current stats to use in all posts:** 174 days, 57+ micro-tools, 189 SEO pages, 5 dialects, $5 spent.
+**Current stats to use in all posts:** 174 days, 59++ micro-tools, 189 SEO pages, 5 dialects, $5 spent.
 
 ## Tracking
 
