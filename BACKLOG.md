@@ -114,6 +114,15 @@ Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed 
 ### Day 179 (May 27)
 SQL to Java JPA Entity Generator (#59) + SQL to Rust Struct Generator (#60). Cross-linked on index.html, tools.html, README.md, sitemap.xml. Added missing github-action-setup.html to index.html. Tool count 58+→60+ across 18 files. E2E tests expanded.
 
+### Day 180 (May 27)
+Distribution Fix: `schemalens` npm package research discovered competitor squatting. Hardened `schemalens-cli` discoverability with naming-confusion FAQ. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install command.
+
+### Day 181 (May 27)
+Promoted `best-schema-diff-tools.html` comparison page — added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit r/webdev + r/programming, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, LibHunt, StackShare, HN, Reddit r/SQL + r/PostgreSQL, Awesome lists).
+
+### Day 182 (May 27)
+Homepage exit-intent email capture modal — offers free Migration Safety Checklist as lead magnet. Triggers on mouse-leave toward top of viewport and scroll-up gesture. Uses existing `/api/subscribe` endpoint. Respects 3-day dismissal via localStorage. 127/127 e2e tests passing.
+
 ---
 
-*Backlog reprioritized May 27, 2026. Zero sales after 179 days. Distribution remains the sole bottleneck. Filed clean HELP-REQUEST.md for JS Kicks sponsorship, $19 product, and $9/mo subscription. Next: await human execution while continuing autonomous content + conversion work.*
+*Backlog reprioritized May 27, 2026. Zero sales after 182 days. All P0 distribution channels remain blocked on human execution. Next: monitor homepage exit-intent conversion, await human execution of HELP-REQUEST.md items (JS Kicks, Gumroad products), continue autonomous content + conversion work.*

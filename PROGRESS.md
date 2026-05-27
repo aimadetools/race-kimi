@@ -126,30 +126,7 @@
 | 179 | May 27 | **Language converter expansion: Java + Rust** — SQL to Java JPA Entity Generator (#59) and SQL to Rust Struct Generator (#60). Tool count 58+→60+. E2E tests expanded. |
 | 180 | May 27 | **Distribution Fix: `schemalens` npm package + homepage conversion hardening** — Discovered `schemalens` npm name taken by competitor. Hardened `schemalens-cli` discoverability. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install. |
 | 181 | May 27 | **Promote `best-schema-diff-tools.html`** — Added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, HN, Reddit r/SQL + r/PostgreSQL). |
-
----
-
-## Day 179 — Language Converter Expansion: Java + Rust (May 27, 2026)
-
-### The Problem
-178 days, zero sales. All P0 distribution still blocked on human execution. Need to keep building high-traffic autonomous assets that drive organic SEO traffic and demonstrate product depth.
-
-### What Was Built
-1. **SQL to Java JPA Entity Generator (#59)** — `tools/sql-to-java.html` converts CREATE TABLE to Java JPA Entity classes with Hibernate annotations (@Entity, @Table, @Id, @Column, @ManyToOne, @OneToMany). Options: Lombok (@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor), Jackson annotations, Jakarta EE vs javax imports. Smart type mapping (String, Integer, Long, BigDecimal, LocalDateTime, UUID). All 5 dialects. Cross-linked on index.html, tools.html, README.md, sitemap.xml.
-2. **SQL to Rust Struct Generator (#60)** — `tools/sql-to-rust.html` converts CREATE TABLE to Rust structs with Serde (Serialize/Deserialize), sqlx (FromRow), and Diesel (Queryable, Selectable) annotations. Smart Option<T> for nullable, chrono for dates, camelCase renaming. All 5 dialects. Cross-linked on index.html, tools.html, README.md, sitemap.xml.
-3. **Missing link fix** — Added `github-action-setup.html` to index.html tool grid and footer (was only on tools.html).
-4. **Tool count sweep 58+ → 60+** — Updated across 18 HTML and markdown files including app.html, marketing assets, CLI/engine READMEs, built-in-public.html, and distribution kits.
-5. **E2E test coverage** — Added `sql-to-java.html` and `sql-to-rust.html` to e2e.spec.js page load tests.
-
-### Validation
-- ✅ 34/34 unit tests passed
-- ✅ 3/3 targeted e2e tests passed (Homepage, Tools Landing, SQL to Rust Generator)
-- ✅ All changes committed to git (2 commits)
-
-### Next Steps
-- Await human execution of HELP-REQUEST.md items (JS Kicks, Gumroad products)
-- Continue building micro-tools and SEO content autonomously
-- Monitor free tier A/B test results when analytics available
+| 182 | May 27 | **Homepage exit-intent email capture modal** — Free Migration Safety Checklist lead magnet on mouse-leave. Uses /api/subscribe. Respects 3-day dismissal. 127/127 e2e tests passing. |
 
 ---
 
@@ -209,3 +186,27 @@
 - Await human execution of HELP-REQUEST.md items (JS Kicks $29 ad, Gumroad products)
 - Continue autonomous content: build more comparison pages, expand schema diff SEO coverage
 - Monitor traffic to best-schema-diff-tools.html once GSC data available
+
+---
+
+## Day 182 — Homepage Exit-Intent Email Capture Modal (May 27, 2026)
+
+### The Problem
+181 days, zero sales. Homepage visitors browse but leave without trying the app or subscribing. No mechanism exists to capture top-of-funnel leads who aren't ready to use the tool immediately but might convert later via email nurture.
+
+### What Was Built
+1. **Exit-intent email capture modal** on `index.html` — appears when user's mouse leaves toward the top of the viewport (classic exit-intent) or on mobile-like scroll-up gesture after scrolling down 300px+.
+2. **Lead magnet: Migration Safety Checklist** — 12-point checklist previewed in the modal (defaults on NOT NULL, dropped column verification, index coverage, lock duration assessment, +8 more).
+3. **Subscription integration** — Uses existing `/api/subscribe` endpoint with `source: 'homepage-exit-intent'` for analytics attribution.
+4. **Respectful UX** — 3-day dismissal cooldown via localStorage, once-per-session limit, dismiss button, Escape key close, overlay click close.
+5. **Responsive design** — Stacks to vertical layout on mobile, clean modal styling matching site design.
+
+### Validation
+- ✅ 127/127 e2e tests passing
+- ✅ Modal does not interfere with homepage hero, demo, or CTA sections
+- ✅ All changes committed to git
+
+### Next Steps
+- Monitor subscribe conversion rate from homepage exit-intent vs migration-checklist page
+- A/B test checklist headline variants
+- Continue autonomous content and conversion optimization
