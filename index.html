@@ -289,6 +289,128 @@
       transform: translateY(0);
     }
     .demo-pane { min-height: 180px; }
+    /* Homepage exit-intent email capture */
+    .exit-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .exit-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .exit-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 460px;
+      width: 100%;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+      transform: translateY(16px) scale(0.96);
+      transition: transform 0.3s ease;
+    }
+    .exit-modal-overlay.active .exit-modal {
+      transform: translateY(0) scale(1);
+    }
+    .exit-modal h3 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+    }
+    .exit-modal p {
+      color: var(--text-muted);
+      margin: 0 0 20px;
+      font-size: 0.95rem;
+    }
+    .exit-modal .checklist-preview {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .exit-modal .checklist-preview ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .exit-modal .checklist-preview li {
+      margin-bottom: 2px;
+    }
+    .exit-modal-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .exit-modal-form input[type="email"] {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .exit-modal-form input[type="email"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .exit-modal-form button {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .exit-modal-form button:hover {
+      opacity: 0.92;
+    }
+    .exit-modal-form button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .exit-modal-msg {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      min-height: 1.4em;
+    }
+    .exit-modal-msg.success { color: var(--success); }
+    .exit-modal-msg.error { color: var(--danger); }
+    .exit-modal-dismiss {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .exit-modal-dismiss:hover { color: var(--text); }
+    .exit-modal-privacy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+    @media (max-width: 480px) {
+      .exit-modal { padding: 24px; }
+      .exit-modal-form { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -1601,5 +1723,138 @@
   }, 3000);
 })();
 </script>
+  <!-- Homepage Exit-Intent Email Capture -->
+  <div class="exit-modal-overlay" id="exitModal">
+    <div class="exit-modal">
+      <h3>📋 Grab the free Migration Safety Checklist</h3>
+      <p>12 checks that prevent production schema disasters. Used by developers shipping migrations daily.</p>
+      <div class="checklist-preview">
+        <ul>
+          <li>Verify defaults on NOT NULL additions</li>
+          <li>Confirm dropped columns are truly unused</li>
+          <li>Check index coverage on new foreign keys</li>
+          <li>Assess lock duration on large tables</li>
+          <li>+ 8 more production-hardened checks</li>
+        </ul>
+      </div>
+      <form class="exit-modal-form" id="exitModalForm" onsubmit="return handleExitModalSubmit(event)">
+        <input type="email" id="exitModalEmail" placeholder="you@company.com" required autocomplete="email">
+        <button type="submit" id="exitModalBtn">Send Checklist →</button>
+      </form>
+      <div class="exit-modal-msg" id="exitModalMsg"></div>
+      <button class="exit-modal-dismiss" onclick="dismissExitModal()">No thanks, I'll risk it</button>
+      <div class="exit-modal-privacy">No spam. Unsubscribe anytime. We never share your email.</div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const modal = document.getElementById('exitModal');
+    const STORAGE_KEY = 'schemalens_exit_modal_dismissed';
+    const SHOWN_KEY = 'schemalens_exit_modal_shown';
+    const THREE_DAYS = 1000 * 60 * 60 * 24 * 3;
+
+    // Don't show if explicitly dismissed within 3 days
+    const dismissed = localStorage.getItem(STORAGE_KEY);
+    if (dismissed && Date.now() - parseInt(dismissed, 10) < THREE_DAYS) return;
+
+    // Don't show if already shown in this session
+    if (sessionStorage.getItem(SHOWN_KEY)) return;
+
+    let shown = false;
+
+    function showModal() {
+      if (shown) return;
+      shown = true;
+      sessionStorage.setItem(SHOWN_KEY, '1');
+      modal.style.display = 'flex';
+      // Force reflow for transition
+      void modal.offsetWidth;
+      modal.classList.add('active');
+      if (window.trackEvent) trackEvent('homepage_exit_modal_shown');
+    }
+
+    // Classic exit-intent: mouse leaves toward top of viewport
+    document.addEventListener('mouseout', function(e) {
+      if (e.clientY < 10 && !e.relatedTarget && !shown) {
+        showModal();
+      }
+    });
+
+    // Also show on scroll-up gesture near top (mobile hint)
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', function() {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY < lastScrollY && currentScrollY < 100 && !shown) {
+        // Only trigger if user has scrolled down at least 300px first
+        if (lastScrollY > 300) {
+          showModal();
+        }
+      }
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
+    // Close on overlay click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) dismissExitModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        dismissExitModal();
+      }
+    });
+
+    window.dismissExitModal = function() {
+      modal.classList.remove('active');
+      setTimeout(function() {
+        modal.style.display = 'none';
+      }, 300);
+      localStorage.setItem(STORAGE_KEY, String(Date.now()));
+      if (window.trackEvent) trackEvent('homepage_exit_modal_dismissed');
+    };
+
+    window.handleExitModalSubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('exitModalEmail').value.trim();
+      const btn = document.getElementById('exitModalBtn');
+      const msg = document.getElementById('exitModalMsg');
+      const originalText = btn.textContent;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      msg.textContent = '';
+      msg.className = 'exit-modal-msg';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source: 'homepage-exit-intent' }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          msg.textContent = '✅ Checklist sent! Check your inbox.';
+          msg.className = 'exit-modal-msg success';
+          document.getElementById('exitModalEmail').value = '';
+          if (window.trackEvent) trackEvent('homepage_exit_modal_subscribe', { source: 'homepage-exit-intent' });
+          // Auto-close after 2 seconds
+          setTimeout(dismissExitModal, 2000);
+        } else {
+          msg.textContent = data.error || 'Something went wrong. Please try again.';
+          msg.className = 'exit-modal-msg error';
+        }
+      } catch (err) {
+        msg.textContent = 'Network error. Please try again.';
+        msg.className = 'exit-modal-msg error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+      return false;
+    };
+  })();
+  </script>
 </body>
 </html>
