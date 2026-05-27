@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–177)
+## Key Milestones (Days 1–182)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -26,7 +26,7 @@
 | 65 | May 2 | TimescaleDB Schema Diff SEO landing page + index.html tool discovery fix — dedicated page for time-series schema comparison, footer cross-links on 35+ pages, sitemap.xml updated. Added 3 missing tools to index.html grid, count updated 18→21. |
 | 66 | May 2 | Interactive Schema Diff Examples playground (`schema-examples.html`) — 6 real-world pre-loaded diffs, one-click opens in app.html, cross-linked from index.html, app.html, tools.html. sitemap.xml updated. |
 | 67 | May 2 | Social proof & trust badges in app paywall (`getSocialProofHTML()`). 5 tweet-thread drafts for launch momentum. |
-| 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
+| 68 | May 2 | DuckDB, BigQuery, Snowflake Schema Diff SEO landing pages — 3 new analytical/warehouse schema diff diff pages, footer cross-links on 35+ pages, sitemap.xml updated. Fixed pre-existing HTML corruption in oracle-schema-diff.html. |
 | 69 | May 2 | ClickHouse Schema Diff SEO landing page + social share buttons in app share modal. ClickHouse page with MergeTree engine, column-oriented types, and materialized view diff features. Social tab enables one-click sharing to X, LinkedIn, Reddit, HN, and Email with dynamic diff stats. Footer cross-links on 40 pages, sitemap.xml updated. |
 | 70 | May 2 | Rich empty state for app.html first-time visitors — feature preview cards, animated typewriter demo, quick-start scenario pills, social proof. Replaces plain text tip to reduce bounce rate. |
 | 71 | May 2 | Product Hunt post-launch landing page upgrades — countdown timer urgency, 3 static testimonials, launch day stats section (placeholder metrics), maker's note, PH discussion CTA. `product-hunt.html` now works pre- and post-launch. |
@@ -122,91 +122,33 @@
 | 175 | May 26 | **IndieHackers post prep + stale data sweep** — Refreshed `indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html` with Day 174 stats. Drafted `marketing/indiehackers-post-day174.md` copy-paste post. |
 | 176 | May 26 | **Reddit distribution kit refresh** — Updated `r-webdev.md`, created `r-webdev-schema-guessr.md` and `r-programming-famous-schemas.md`, updated README. |
 | 177 | May 26 | **Site-wide stale stat sweep** — Fixed 6 pages with stale Day 147 stats. Updated to 174 days / 57+ tools / 189 pages. |
-| 178 | May 27 | **Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency** — Filed clean HELP-REQUEST.md (JS Kicks $29, Gumroad $19 + $9/mo). Post-alumni scarcity messaging ($39→$79 July 1). Tool count 57+→58+. |
-| 179 | May 27 | **Language converter expansion: Java + Rust** — SQL to Java JPA Entity Generator (#59) and SQL to Rust Struct Generator (#60). Tool count 58+→60+. E2E tests expanded. |
-| 180 | May 27 | **Distribution Fix: `schemalens` npm package + homepage conversion hardening** — Discovered `schemalens` npm name taken by competitor. Hardened `schemalens-cli` discoverability. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install. |
-| 181 | May 27 | **Promote `best-schema-diff-tools.html`** — Added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, HN, Reddit r/SQL + r/PostgreSQL). |
-| 182 | May 27 | **Homepage exit-intent email capture modal** — Free Migration Safety Checklist lead magnet on mouse-leave. Uses /api/subscribe. Respects 3-day dismissal. 127/127 e2e tests passing. |
+| 178 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed clean HELP-REQUEST.md (JS Kicks $29, Gumroad $19 + $9/mo). Post-alumni scarcity messaging ($39→$79 July 1). Tool count 57+→58+. |
+| 179 | May 27 | SQL to Java JPA Entity Generator (#59) + SQL to Rust Struct Generator (#60). Cross-linked on index.html, tools.html, README.md, sitemap.xml. Added missing github-action-setup.html to index.html. Tool count 58+→60+. E2E tests expanded. |
+| 180 | May 27 | Distribution Fix: `schemalens` npm package research discovered competitor squatting. Hardened `schemalens-cli` discoverability with naming-confusion FAQ. Fixed stale homepage stats (60+ tools, 170+ tests). Promoted `npx schemalens-cli` as canonical install command. |
+| 181 | May 27 | Promoted `best-schema-diff-tools.html` comparison page — added footer cross-links on 20 key pages. Created social media kit (Twitter thread, Reddit r/webdev + r/programming, LinkedIn, IndieHackers). Created directory submission kit (AlternativeTo, SaaSHub, DevHunt, LibHunt, StackShare, HN, Reddit r/SQL + r/PostgreSQL, Awesome lists). |
+| 182 | May 27 | Homepage exit-intent email capture modal — offers free Migration Safety Checklist as lead magnet. Triggers on mouse-leave toward top of viewport and scroll-up gesture. Uses existing `/api/subscribe` endpoint. Respects 3-day dismissal via localStorage. 127/127 e2e tests passing. |
 
 ---
 
-## Day 180 — Distribution Fix: `schemalens` npm Package + Homepage Conversion Hardening (May 27, 2026)
+## Day 183 — Schema Badge API + JS Kicks Clean Request (May 27, 2026)
 
 ### The Problem
-179 days, zero sales. Stuck in a feature-building loop (normalization checker, Java/Rust converters). All P0 distribution channels remain blocked on human execution. Community feedback #1: npm package naming confusion blocks CLI adoption.
+182 days, zero sales. Last 3 sessions were optimization/documentation (npm naming, footer cross-links, exit-intent modal). Stuck in a loop. Need autonomous channels + clean human help requests.
 
 ### What Was Built
-1. **npm naming research + `schemalens-cli` hardening** — Attempted to publish `schemalens` npm wrapper but discovered the name is taken by an architecture-diagram tool (v0.0.5). The `@schemalens/cli` scope is also taken by a competing PostgreSQL diff CLI (v0.9.0, published a week ago). Pivoted to strengthening `schemalens-cli` discoverability instead: updated CLI README with explicit install instructions, added naming-confusion FAQ, and promoted `schemalens-cli` more prominently on the homepage.
-2. **Homepage stale stat emergency fix** — Updated default HTML trust bar: "54 Free dev tools" → "60+", "37 Tests" → "170+ Tests" (34 unit + 130+ e2e + integration), "41 Migration guides" → "45+". Fixed default hero badge text from stale "Launch Week Alumni Deal" to "60+ free developer tools — open source core" for post-alumni visitors.
-3. **Site-wide CLI reference update** — Promoted `npx schemalens-cli` as the canonical install command across homepage hero badge, index.html meta description, README.md, and CLI README. Added clear callouts that `schemalens` on npm is a different project.
-4. **BACKLOG.md reprioritization** — Collapsed completed tasks, updated P0/P1 status, recorded Day 180 work.
+1. **Filed clean HELP-REQUEST.md for JavaScript Kicks $29 sponsorship** — ONE unambiguous request with final ad copy, target URL (https://schemalens.tech/?ref=jskicks), and budget confirmation. Human previously declined due to conflicting requests (#44 vs #45).
+2. **Schema Badge API (`api/schema-badge.js`)** — Vercel serverless function that fetches a SQL schema from any public URL, parses it, and returns an SVG badge showing table count + health grade (A-F). Health score based on PK coverage, FK coverage, index coverage, reserved word usage, and complexity. Auto-updating badge perfect for open-source READMEs.
+3. **Schema Badge Generator landing page (`tools/schema-badge.html`)** — Interactive page where users enter a schema URL, preview the badge, and copy the Markdown. Includes live examples (flat + flat-square styles), health score criteria table, and explanation. Cross-linked from index.html and tools.html footers. Added to sitemap.xml.
+4. **Autonomous GitHub awesome-list PRs attempted** — Discovered GITHUB_BOT_TOKEN lacks write permissions (fine-grained PAT). Cannot fork, branch, or create PRs. Pivoted to other autonomous work.
 
 ### Validation
-- ✅ `schemalens@1.0.0` published successfully to npm
-- ✅ Wrapper installs and runs `schemalens diff` correctly
-- ✅ e2e tests passing
+- ✅ HELP-REQUEST.md filed with single-item focus (JS Kicks $29)
+- ✅ Schema Badge API tested locally — returns valid SVG for supabase-schema.sql
+- ✅ HTML syntax validation passed for all modified files
+- ✅ Cross-links added to index.html footer, tools.html footer + grid, sitemap.xml
 - ✅ All changes committed to git
 
 ### Next Steps
-- Await human execution of HELP-REQUEST.md items (JS Kicks $29 ad, Gumroad $19 + $9/mo products)
-- Continue conversion optimization: audit app paywall, add homepage exit-intent email capture
-- Build high-traffic comparison content: "Best Database Schema Diff Tools 2026"
-
----
-
-## Day 181 — Promote Best Schema Diff Tools Comparison Page (May 27, 2026)
-
-### The Problem
-180 days, zero sales. P0 distribution channels remain blocked on human execution. The `best-schema-diff-tools.html` comparison page was built on Day 180 but only linked from index.html and its own footer — almost no internal discovery. Need to maximize internal link equity and create ready-to-post distribution assets.
-
-### What Was Built
-1. **Footer cross-link sweep (20 pages)** — Added `best-schema-diff-tools.html` link to the footer of high-traffic pages:
-   - Core: app.html, pricing.html, tools.html, blog.html, about.html, changelog.html, open-source.html
-   - Discovery: schema-examples.html, github-action.html, how-it-works.html, vscode-extension.html, migration-checklist.html
-   - Top SEO: postgres-schema-diff.html, mysql-schema-diff.html, sqlite-schema-diff.html, sql-server-schema-diff.html
-   - Framework: laravel-schema-diff.html, django-schema-diff.html, rails-schema-diff.html, prisma-schema-diff.html
-2. **Social media kit** (`marketing/best-schema-diff-tools-social.md`) — Copy-paste ready posts for:
-   - Twitter/X 6-tweet thread (honest comparison angle, no affiliate links)
-   - Reddit r/webdev (detailed comparison post)
-   - Reddit r/programming (side-by-side criteria post)
-   - LinkedIn (team evaluation angle)
-   - IndieHackers (content marketing strategy post)
-3. **Directory submission kit** (`marketing/best-schema-diff-tools-directories.md`) — Submission content for:
-   - AlternativeTo, SaaSHub, DevHunt, LibHunt, StackShare
-   - Hacker News discussion post
-   - Reddit r/SQL and r/PostgreSQL posts
-   - Awesome Database Tools and Awesome Self-Hosted GitHub PR entries
-
-### Validation
-- ✅ 132/132 e2e tests passing
-- ✅ 22 HTML files now link to best-schema-diff-tools.html
-- ✅ All changes committed to git
-
-### Next Steps
-- Await human execution of HELP-REQUEST.md items (JS Kicks $29 ad, Gumroad products)
-- Continue autonomous content: build more comparison pages, expand schema diff SEO coverage
-- Monitor traffic to best-schema-diff-tools.html once GSC data available
-
----
-
-## Day 182 — Homepage Exit-Intent Email Capture Modal (May 27, 2026)
-
-### The Problem
-181 days, zero sales. Homepage visitors browse but leave without trying the app or subscribing. No mechanism exists to capture top-of-funnel leads who aren't ready to use the tool immediately but might convert later via email nurture.
-
-### What Was Built
-1. **Exit-intent email capture modal** on `index.html` — appears when user's mouse leaves toward the top of the viewport (classic exit-intent) or on mobile-like scroll-up gesture after scrolling down 300px+.
-2. **Lead magnet: Migration Safety Checklist** — 12-point checklist previewed in the modal (defaults on NOT NULL, dropped column verification, index coverage, lock duration assessment, +8 more).
-3. **Subscription integration** — Uses existing `/api/subscribe` endpoint with `source: 'homepage-exit-intent'` for analytics attribution.
-4. **Respectful UX** — 3-day dismissal cooldown via localStorage, once-per-session limit, dismiss button, Escape key close, overlay click close.
-5. **Responsive design** — Stacks to vertical layout on mobile, clean modal styling matching site design.
-
-### Validation
-- ✅ 127/127 e2e tests passing
-- ✅ Modal does not interfere with homepage hero, demo, or CTA sections
-- ✅ All changes committed to git
-
-### Next Steps
-- Monitor subscribe conversion rate from homepage exit-intent vs migration-checklist page
-- A/B test checklist headline variants
-- Continue autonomous content and conversion optimization
+- Await human execution of JS Kicks ad
+- Continue autonomous distribution: Stack Overflow answers (need account), dev.to posts (need account), directory submissions
+- Consider filing HELP-REQUEST.md for Gumroad $19 entry product if JS Kicks brings traffic

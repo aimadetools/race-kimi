@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Badge Generator — Embed a live schema health badge in your README</title>
+  <meta name="description" content="Generate a dynamic SVG badge showing your database schema health, table count, and grade. Perfect for open-source project READMEs.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-badge.html">
+  <meta property="og:title" content="Schema Badge Generator — Embed a live schema health badge">
+  <meta property="og:description" content="Generate a dynamic SVG badge showing your database schema health, table count, and grade. Perfect for open-source project READMEs.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-badge.html">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .badge-demo { background: #0f172a; border-radius: 12px; padding: 2rem; text-align: center; margin: 1.5rem 0; }
+    .badge-demo img { max-width: 100%; height: auto; }
+    .badge-input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 1rem; margin-bottom: 1rem; }
+    .badge-code { background: #0f172a; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; overflow-x: auto; color: #e2e8f0; white-space: pre; }
+    .copy-btn { background: var(--primary); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    .copy-btn:hover { opacity: 0.9; }
+    .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .example-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .example-card h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .example-card code { font-size: 0.8rem; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <nav class="nav" style="padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;">
+    <a href="../index.html" style="font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none;">SchemaLens</a>
+    <div>
+      <a href="../tools.html" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Tools</a>
+      <a href="../app.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Try the App →</a>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width: 800px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Schema Badge Generator</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+      Add a live schema health badge to your GitHub README. It updates automatically when your schema changes.
+    </p>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">1. Enter your schema URL</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        Link to a raw SQL file (e.g., from GitHub raw). The file must be publicly accessible.
+      </p>
+      <input type="url" id="schemaUrl" class="badge-input" placeholder="https://raw.githubusercontent.com/user/repo/main/schema.sql" oninput="updateBadge()">
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">2. Preview</h2>
+      <div class="badge-demo" id="badgePreview">
+        <p style="color: var(--text-muted);">Enter a URL above to see your badge</p>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">3. Copy to README</h2>
+      <div style="position: relative;">
+        <pre class="badge-code" id="badgeMarkdown">[![Schema Health](https://schemalens.tech/api/schema-badge?url=YOUR_URL)](https://schemalens.tech)</pre>
+        <button class="copy-btn" onclick="copyCode()" style="position: absolute; top: 0.5rem; right: 0.5rem;">Copy</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Example Badges</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>PostgreSQL Sample Schema</h4>
+          <img src="../api/schema-badge?url=https://raw.githubusercontent.com/AIMadeTools/race-kimi/main/supabase-schema.sql" alt="Schema badge" loading="lazy" style="max-width: 100%;">
+          <code style="display: block; margin-top: 0.5rem; color: var(--text-muted);">?url=https://raw.githubusercontent.com/.../schema.sql</code>
+        </div>
+        <div class="example-card">
+          <h4>Flat-Square Style</h4>
+          <img src="../api/schema-badge?url=https://raw.githubusercontent.com/AIMadeTools/race-kimi/main/supabase-schema.sql&style=flat-square" alt="Schema badge" loading="lazy" style="max-width: 100%;">
+          <code style="display: block; margin-top: 0.5rem; color: var(--text-muted);">?url=...&style=flat-square</code>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">How It Works</h2>
+      <ul style="color: var(--text-muted); line-height: 1.8;">
+        <li>Fetches your SQL schema from the provided URL</li>
+        <li>Parses table definitions, indexes, and constraints</li>
+        <li>Calculates a health score (0-100) based on best practices</li>
+        <li>Returns an SVG badge with table count and letter grade</li>
+        <li>Updates every 5 minutes — no manual refresh needed</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Health Score Criteria</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="text-align: left; padding: 0.5rem;">Factor</th>
+            <th style="text-align: left; padding: 0.5rem;">Impact</th>
+          </tr>
+        </thead>
+        <tbody style="color: var(--text-muted);">
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem;">PRIMARY KEY coverage</td>
+            <td style="padding: 0.5rem;">Up to +10 points</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem;">FOREIGN KEY relationships</td>
+            <td style="padding: 0.5rem;">Up to +10 points</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem;">Index coverage</td>
+            <td style="padding: 0.5rem;">Up to +10 points</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.5rem;">Reserved word usage</td>
+            <td style="padding: 0.5rem;">-2 points each</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.5rem;">Schema complexity (>50 tables)</td>
+            <td style="padding: 0.5rem;">-5 points</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border);">
+    <p>Built by <a href="../index.html" style="color: var(--primary);">SchemaLens</a> — 60+ free developer tools</p>
+  </footer>
+
+  <script>
+    function updateBadge() {
+      const url = document.getElementById('schemaUrl').value.trim();
+      const preview = document.getElementById('badgePreview');
+      const code = document.getElementById('badgeMarkdown');
+
+      if (!url) {
+        preview.innerHTML = '<p style="color: var(--text-muted);">Enter a URL above to see your badge</p>';
+        code.textContent = '[![Schema Health](https://schemalens.tech/api/schema-badge?url=YOUR_URL)](https://schemalens.tech)';
+        return;
+      }
+
+      const badgeUrl = 'https://schemalens.tech/api/schema-badge?url=' + encodeURIComponent(url);
+      const htmlUrl = 'https://schemalens.tech/?ref=schema-badge';
+
+      preview.innerHTML = '<img src="' + badgeUrl + '" alt="Schema Health Badge" style="max-width:100%;">';
+      code.textContent = '[![Schema Health](' + badgeUrl + ')](' + htmlUrl + ')';
+    }
+
+    function copyCode() {
+      const code = document.getElementById('badgeMarkdown').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    }
+  </script>
+</body>
+</html>
