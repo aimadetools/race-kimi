@@ -92,6 +92,7 @@ const pages = [
   { path: '/tools/sql-case-generator.html', name: 'SQL CASE Generator' },
   { path: '/tools/sql-select-generator.html', name: 'SQL SELECT Generator' },
   { path: '/tools/sql-to-go.html', name: 'SQL to Go Generator' },
+  { path: '/tools/sql-to-java.html', name: 'SQL to Java Generator' },
   { path: '/tools/sql-create-index-generator.html', name: 'SQL CREATE INDEX Generator' },
   { path: '/tools/sql-create-view-generator.html', name: 'SQL CREATE VIEW Generator' },
   { path: '/tools/sql-drop-generator.html', name: 'SQL DROP Statement Generator' },
