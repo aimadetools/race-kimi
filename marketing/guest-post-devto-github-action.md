@@ -163,7 +163,7 @@ The score isn't just a number. It changes the color of the PR comment banner and
 
 ## Pro tier: Full migration scripts in PR comments
 
-The free tier shows the first 5 lines of the migration in the PR comment. For teams that want the complete script, SchemaLens Pro ($39 lifetime) returns the full migration with:
+The free tier shows the first 5 lines of the migration preview in the PR comment. For teams that want the complete script, SchemaLens Pro ($39 lifetime) returns the full migration with:
 - Complete ALTER TABLE statements for all changes
 - Rollback scripts (reverse migrations)
 - Breaking change warnings with severity levels
@@ -214,4 +214,4 @@ If this saves your team even one production incident, it's worth the 5 minutes i
 
 ---
 
-*SchemaLens is a browser-based SQL schema diff tool with 50+ micro-tools, a VS Code extension, and this free GitHub Action. Built in public over 150 days.*
+*SchemaLens is a browser-based SQL schema diff tool with 60+ free micro-tools, a VS Code extension, a Chrome extension, and this free GitHub Action. Built in public over 185 days.*
