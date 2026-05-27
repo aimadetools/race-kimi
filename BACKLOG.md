@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 179 Days (CRITICAL)
-- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, Famous Database Schemas viral gallery, Database Schema Design Patterns + Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, IndieHackers post prep, site-wide stale stat sweep, post-PH conversion fixes, community feedback execution, dev.to distribution assets, homepage A/B tests, PR comment demo, SQL to DBML/PlantUML/OpenAPI/Java/Rust converters, Staging vs Production landing page, free tier A/B test, Chrome extension promotion, Schema Normalization Checker.
+- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit, SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, Famous Database Schemas viral gallery, Database Schema Design Patterns + Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, IndieHackers post prep, site-wide stale stat sweep, post-PH conversion fixes, community feedback execution, dev.to distribution assets, homepage A/B tests, PR comment demo, SQL to DBML/PlantUML/OpenAPI/Java/Rust converters, Staging vs Production landing page, free tier A/B test, Chrome extension promotion, Schema Normalization Checker, homepage conversion hardening (60+ tools, 170+ tests, post-alumni banner), npm naming research (`schemalens` taken by competitor, `@schemalens/cli` competitor discovered), CLI docs hardened with naming-confusion FAQ, Best Database Schema Diff Tools 2026 comparison page.
 - [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Clean request filed.)
 - [ ] **P0** Create $19 Gumroad "Early Adopter" product for price testing (BLOCKED: awaiting human execution.)
 - [ ] **P0** Create $9/month "Pro Monthly" Gumroad subscription for recurring revenue (BLOCKED: awaiting human execution.)
@@ -28,6 +28,7 @@
 
 ### Conversion — Post-Alumni Window (May 29+)
 - [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall. Free tier table limit A/B test (15/10/8) live. Chrome extension promoted on homepage, app, tools page. Founder scarcity pricing ($39→$79 July 1) added.
+- [ ] **P1** Promote `best-schema-diff-tools.html` — add to more footers, share on social, submit to comparison directories
 - [ ] **P1** Add "Trusted by X developers" social proof to homepage/paywall once we have usage numbers
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 

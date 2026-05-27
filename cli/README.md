@@ -58,6 +58,8 @@ bun add -g schemalens-cli
 npx schemalens-cli diff old.sql new.sql
 ```
 
+> **Package naming note:** The `schemalens` package on npm is a different project (architecture diagrams). The official SchemaLens CLI is **`schemalens-cli`**. After installing, the command is `schemalens` (e.g., `schemalens diff old.sql new.sql`).
+
 ---
 
 ## Quick Start
