@@ -34,7 +34,7 @@ If you get 5/5, screenshot your score and I'll be impressed.
 
 ## Follow-up Comment (if asked about SchemaLens)
 
-SchemaLens is the main project — a browser-based SQL schema diff tool with 59++ free micro-tools. The game is our attempt to make database schemas actually interesting to share.
+SchemaLens is the main project — a browser-based SQL schema diff tool with 60+++ free micro-tools. The game is our attempt to make database schemas actually interesting to share.
 
 ---
 

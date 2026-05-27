@@ -64,7 +64,7 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ## Free Developer Tools
 
-SchemaLens includes **59+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **60+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -99,7 +99,8 @@ SchemaLens includes **59+ free browser-based tools** that reuse the same custom 
 29. [SQL to Python Generator](https://schemalens.tech/tools/sql-to-python.html)
 30. [SQL to Go Generator](https://schemalens.tech/tools/sql-to-go.html)
 31. [SQL to Java Generator](https://schemalens.tech/tools/sql-to-java.html)
-32. [SQL UPDATE Generator](https://schemalens.tech/tools/sql-update-generator.html)
+32. [SQL to Rust Generator](https://schemalens.tech/tools/sql-to-rust.html)
+33. [SQL UPDATE Generator](https://schemalens.tech/tools/sql-update-generator.html)
 32. [SQL DELETE Generator](https://schemalens.tech/tools/sql-delete-generator.html)
 33. [SQL UPSERT & MERGE Generator](https://schemalens.tech/tools/sql-upsert-generator.html)
 34. [SQL CASE WHEN Generator](https://schemalens.tech/tools/sql-case-generator.html)
@@ -203,7 +204,7 @@ SchemaLens includes **59+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 59+ micro-tools
+- **Free tool uses:** Growing via 60+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 32+ published

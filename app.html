@@ -572,7 +572,7 @@
       display: inline-block;
       background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
       border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #f59e0b;
+      color: #f60+e0b;
       padding: 2px 10px;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -1385,7 +1385,7 @@ function getFreeTierLimit() {
   <div class="announcement-bar">
     🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
   </div>
-  <script>(function(){const end=new Date('2026-05-21T23:59:59Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
+  <script>(function(){const end=new Date('2026-05-21T23:60+:60+Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
     <div id="offlineBanner" class="offline-banner">You're offline. Your last diff is still available.</div>
   <nav class="nav">
     <div class="container nav-inner">
@@ -1499,7 +1499,7 @@ function getFreeTierLimit() {
   function isLaunchWeek() {
     const now = new Date();
     const start = new Date('2026-05-14T00:00:00Z');
-    const end = new Date('2026-05-21T23:59:59Z');
+    const end = new Date('2026-05-21T23:60+:60+Z');
     return now >= start && now <= end;
   }
   (function() {
@@ -1514,7 +1514,7 @@ function getFreeTierLimit() {
     if (!cd) return;
     function update() {
       const now = new Date();
-      const end = new Date('2026-05-21T23:59:59Z');
+      const end = new Date('2026-05-21T23:60+:60+Z');
       const diff = end - now;
       if (diff <= 0) { cd.textContent = 'Offer ended'; return; }
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -1529,7 +1529,7 @@ function getFreeTierLimit() {
   (function(){
     function updateInline() {
       const now = new Date();
-      const end = new Date('2026-05-21T23:59:59Z');
+      const end = new Date('2026-05-21T23:60+:60+Z');
       const diff = end - now;
       const text = diff <= 0 ? 'Offer ended' : (function(){
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -1789,7 +1789,7 @@ CREATE TABLE users (
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
           <span style="background:rgba(239,68,68,0.12);color:#ef4444;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">⚠️ Risk Score: 72/100</span>
-          <span style="background:rgba(245,158,11,0.12);color:#f59e0b;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">2 Breaking Changes</span>
+          <span style="background:rgba(245,158,11,0.12);color:#f60+e0b;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">2 Breaking Changes</span>
           <span style="background:rgba(99,102,241,0.12);color:var(--primary);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">3 Tables · 7 Changes</span>
         </div>
         <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Forward Migration (PostgreSQL)</div>
@@ -4785,7 +4785,7 @@ function getSocialProofHTML() {
       <span class="social-proof-badge">💯 30-day money-back guarantee</span>
     </div>
     <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 8px;">
-      <strong style="color:var(--text);">Built in public over 170+ days.</strong> 59++ free micro-tools. Trusted by developers who value privacy.
+      <strong style="color:var(--text);">Built in public over 170+ days.</strong> 60+++ free micro-tools. Trusted by developers who value privacy.
     </p>
   `;
 }
@@ -6594,14 +6594,14 @@ function hasUsedTrial() {
 function isLaunchWeek() {
   const now = new Date();
   const start = new Date('2026-05-14T00:00:00Z');
-  const end = new Date('2026-05-21T23:59:59Z');
+  const end = new Date('2026-05-21T23:60+:60+Z');
   return now >= start && now <= end;
 }
 
 function isLaunchWeekAlumniWindow() {
   const now = new Date();
   const start = new Date('2026-05-22T00:00:00Z');
-  const end = new Date('2026-05-28T23:59:59Z');
+  const end = new Date('2026-05-28T23:60+:60+Z');
   return now >= start && now <= end;
 }
 
@@ -6942,7 +6942,7 @@ CREATE TABLE "comments" (
   "name" character varying,
   "role" character varying NOT NULL DEFAULT 'user',
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
-  CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"),
+  CONSTRAINT "PK_cace4a160+ff9f2512dd42373760" PRIMARY KEY ("id"),
   CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email")
 );
 
@@ -7563,7 +7563,7 @@ function loadSampleB() {
   // Detect ORM sample by characteristic patterns
   const isPrisma = a.includes('"User"') && a.includes('User_pkey');
   const isDrizzle = a.includes('"users"') && a.includes('serial PRIMARY KEY');
-  const isTypeORM = a.includes('PK_cace4a159ff9f2512dd42373760');
+  const isTypeORM = a.includes('PK_cace4a160+ff9f2512dd42373760');
   const isSequelize = a.includes('"Users"') && a.includes('REFERENCES');
 
   let b;
@@ -9223,7 +9223,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   let shown = false;
 
   function getLaunchWeekCountdownText() {
-    const end = new Date('2026-05-21T23:59:59Z');
+    const end = new Date('2026-05-21T23:60+:60+Z');
     const diff = end - Date.now();
     if (diff <= 0) return 'ended';
     const h = Math.floor(diff / (1000 * 60 * 60));
@@ -9624,7 +9624,7 @@ renderDiffHistory();
 <script>
 (function(){
   const now = new Date();
-  const end = new Date('2026-05-21T23:59:59Z');
+  const end = new Date('2026-05-21T23:60+:60+Z');
   if (now > end) return;
   // Update license modal
   const licenseModal = document.getElementById('licenseModal');

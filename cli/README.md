@@ -210,7 +210,7 @@ SchemaLens CLI is the lightweight choice when you just want to **compare two SQL
 
 ## Related
 
-- ⭐ [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with shareable links, 59++ micro-tools, and schema design guides
+- ⭐ [SchemaLens Web App](https://schemalens.tech) — Visual diff viewer with shareable links, 60+++ micro-tools, and schema design guides
 - 📦 [SchemaLens Engine](https://www.npmjs.com/package/schemalens-engine) — Use the diff engine programmatically in your own Node.js projects
 - 🖥️ [SchemaLens VS Code Extension](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens) — Diff SQL files without leaving your editor
 - ⚙️ [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD

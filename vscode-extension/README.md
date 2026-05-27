@@ -33,7 +33,7 @@ Right-click any `.sql` file in the editor tab and choose **"Diff Active SQL File
 - **Migration Reviews** — Before running a migration, diff your old and new schema files to see exactly what changes and catch breaking modifications.
 - **PR Prep** — Generate a Markdown diff report from two SQL files to attach to your pull request description.
 - **Staging vs Production** — Export schemas from both environments, save as `.sql` files, and diff them locally to spot drift.
-- **Learning SQL** — Use SchemaLens's built-in schema design patterns and 59++ micro-tools to level up your database skills.
+- **Learning SQL** — Use SchemaLens's built-in schema design patterns and 60+++ micro-tools to level up your database skills.
 
 ## Dialect Detection
 
@@ -60,7 +60,7 @@ The extension encodes your SQL using the same base64 format as SchemaLens's nati
 
 ## Related
 
-- 🌐 [SchemaLens Web App](https://schemalens.tech) — 59++ free SQL tools, schema design patterns, and migration guides
+- 🌐 [SchemaLens Web App](https://schemalens.tech) — 60+++ free SQL tools, schema design patterns, and migration guides
 - 📦 [SchemaLens CLI](https://www.npmjs.com/package/schemalens-cli) — Diff schemas from your terminal
 - ⚙️ [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) — Catch schema drift in CI/CD
 - 🐙 [GitHub Repository](https://github.com/aimadetools/race-kimi)
