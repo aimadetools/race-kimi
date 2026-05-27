@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Normalization Checker — 1NF 2NF 3NF Analyzer | SchemaLens</title>
+<meta name="description" content="Check your SQL schema for normalization violations. Detect repeating groups, partial dependencies, and transitive dependencies in CREATE TABLE statements. Free educational tool.">
+<meta property="og:title" content="Schema Normalization Checker — 1NF 2NF 3NF Analyzer">
+<meta property="og:description" content="Check your SQL schema for normalization violations. Detect repeating groups, partial dependencies, and transitive dependencies.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-normalization-checker.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Schema Normalization Checker",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Analyzes SQL CREATE TABLE statements for 1NF, 2NF, and 3NF normalization violations with educational explanations and fix suggestions",
+  "url": "https://schemalens.tech/tools/schema-normalization-checker.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<style>
+.norm-score { font-size: 3rem; font-weight: 800; text-align: center; margin: 1rem 0; }
+.norm-score.excellent { color: var(--success); }
+.norm-score.good { color: #22d3ee; }
+.norm-score.warn { color: var(--warning); }
+.norm-score.bad { color: var(--danger); }
+.score-bar { height: 12px; border-radius: 6px; background: var(--surface); overflow: hidden; margin-bottom: 1.5rem; }
+.score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+.norm-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; }
+.norm-card.nf1 { border-left: 4px solid var(--danger); }
+.norm-card.nf2 { border-left: 4px solid var(--warning); }
+.norm-card.nf3 { border-left: 4px solid #22d3ee; }
+.norm-severity { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+.norm-severity.nf1 { color: var(--danger); }
+.norm-severity.nf2 { color: var(--warning); }
+.norm-severity.nf3 { color: #22d3ee; }
+.norm-message { font-size: 0.95rem; margin-bottom: 0.25rem; }
+.norm-explanation { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.norm-fix { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.85rem; color: var(--text); }
+.norm-fix code { background: rgba(255,255,255,0.06); padding: 1px 4px; border-radius: 4px; font-size: 0.8rem; }
+.table-norm-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+.table-norm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.table-norm-name { font-weight: 700; font-size: 1.1rem; }
+.table-norm-score { font-size: 0.9rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; }
+.table-norm-score.excellent { background: rgba(34,197,94,0.15); color: var(--success); }
+.table-norm-score.good { background: rgba(34,211,238,0.15); color: #22d3ee; }
+.table-norm-score.warn { background: rgba(234,179,8,0.15); color: var(--warning); }
+.table-norm-score.bad { background: rgba(239,68,68,0.15); color: var(--danger); }
+.empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+.legend-box { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.85rem; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="navbar" style="background:var(--nav-bg);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="../index.html" style="font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;">SchemaLens</a>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../app.html">Diff</a>
+    <a href="../tools.html">Tools</a>
+    <a href="../blog.html">Blog</a>
+    <a href="../pricing.html">Pricing</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+</nav>
+
+<div style="max-width:960px;margin:0 auto;padding:2rem 1rem;">
+  <h1 style="font-size:1.8rem;margin-bottom:0.5rem;">Schema Normalization Checker</h1>
+  <p style="color:var(--text-muted);margin-bottom:1rem;">Paste your <code>CREATE TABLE</code> statements and get an instant normalization report. Detects 1NF, 2NF, and 3NF violations with educational explanations.</p>
+
+  <div class="legend-box">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div> 1NF — Atomic values</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--warning)"></div> 2NF — No partial dependencies</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22d3ee"></div> 3NF — No transitive dependencies</div>
+  </div>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;">
+    <select id="dialect" class="dialect-select" style="padding:0.5rem 0.75rem;border-radius:6px;background:var(--surface);color:var(--text);border:1px solid var(--border);">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+      <option value="oracle">Oracle</option>
+    </select>
+    <button class="btn btn-primary" id="checkBtn">Check Normalization</button>
+    <button class="btn btn-secondary" id="clearBtn">Clear</button>
+    <button class="btn btn-secondary" id="sampleBtn">Load Example</button>
+  </div>
+
+  <textarea id="sqlInput" style="width:100%;min-height:260px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:var(--mono);font-size:0.85rem;line-height:1.6;resize:vertical;" placeholder="Paste CREATE TABLE statements here..."></textarea>
+
+  <div id="results" style="display:none;margin-top:1.5rem;">
+    <div id="overallScore" class="norm-score"></div>
+    <div class="score-bar"><div id="scoreBarFill" class="score-bar-fill"></div></div>
+    <div id="overallLabel" style="text-align:center;font-weight:600;margin-bottom:1.5rem;color:var(--text-muted);"></div>
+    <div id="resultsList"></div>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <p>Built by SchemaLens — 58+ free developer tools for database work.</p>
+  <p style="margin-top:0.5rem;"><a href="../index.html" style="color:var(--primary)">Home</a> · <a href="../app.html" style="color:var(--primary)">Schema Diff</a> · <a href="../tools.html" style="color:var(--primary)">Tools</a> · <a href="../pricing.html" style="color:var(--primary)">Pricing</a></p>
+</footer>
+
+<script src="../lib/sql-parser.js"></script>
+<script>
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+}
+
+const NF1_ARRAY_NAMES = /tags|items|list|array|phones|emails|addresses|categories|skills|hobbies|permissions|roles|groups|friends|followers|comments|reviews|photos|videos|documents|attachments|ingredients|steps|ingredient|step|item|phone|email|address|category|skill|hobby|permission|role|group|friend|follower|comment|review|photo|video|document|attachment/i;
+const NF1_ARRAY_TYPES = /array|json|jsonb|text|varchar\(MAX\)|varchar\(max\)|clob|blob/i;
+
+const NF3_DERIVED_PATTERNS = [
+  { cols: ['zip', 'zipcode', 'zip_code', 'postal_code', 'postalcode'], derived: ['city', 'state', 'country', 'county'] },
+  { cols: ['zip', 'zipcode', 'zip_code', 'postal_code', 'postalcode'], derived: ['city_name', 'state_name', 'country_name'] },
+  { cols: ['city', 'state'], derived: ['timezone', 'time_zone', 'area_code', 'areacode'] },
+  { cols: ['quantity', 'qty', 'amount'], derived: ['total', 'subtotal', 'line_total', 'extended_price', 'total_price', 'price_total'] },
+  { cols: ['unit_price', 'unitprice', 'price_per_unit'], derived: ['total', 'subtotal', 'line_total', 'extended_price', 'total_price'] },
+  { cols: ['birthdate', 'birth_date', 'date_of_birth', 'dob'], derived: ['age'] },
+  { cols: ['manager_id', 'supervisor_id', 'lead_id', 'boss_id'], derived: ['manager_name', 'supervisor_name', 'lead_name', 'boss_name', 'manager_email'] },
+  { cols: ['department_id', 'dept_id'], derived: ['department_name', 'dept_name', 'department_code'] },
+  { cols: ['user_id', 'customer_id', 'employee_id'], derived: ['user_name', 'username', 'customer_name', 'employee_name', 'full_name', 'email'] },
+  { cols: ['product_id', 'sku'], derived: ['product_name', 'product_title', 'product_description', 'product_price'] },
+  { cols: ['start_date', 'end_date'], derived: ['duration', 'days', 'num_days', 'length'] },
+];
+
+function parseTables(sql) {
+  const tables = [];
+  const tableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"\[]?([\w.]+)[`"\[]?\s*\{?\s*\(([^;]*?)\)\s*(?:ENGINE|CHARSET|COMMENT|PARTITION|WITHOUT|TABLESPACE|STORAGE|\{|;|$)/gis;
+  let m;
+  while ((m = tableRegex.exec(sql)) !== null) {
+    const name = m[1].trim();
+    const body = m[2];
+    const columns = [];
+    const pkCols = [];
+    const fks = [];
+    const uniques = [];
+
+    const lines = body.split(',');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line) continue;
+      const pkMatch = line.match(/PRIMARY\s+KEY\s*\(([^)]+)\)/i);
+      if (pkMatch) {
+        pkCols.push(...pkMatch[1].split(',').map(c => c.trim().replace(/[`"\[\]]/g, '')));
+        continue;
+      }
+      const inlinePk = line.match(/^[`"\[]?(\w+)[`"\[]?\s+\w+[^,]*PRIMARY\s+KEY/i);
+      if (inlinePk) {
+        pkCols.push(inlinePk[1]);
+      }
+      const fkMatch = line.match(/FOREIGN\s+KEY\s*\(([^)]+)\)\s*REFERENCES\s+[`"\[]?(\w+)[`"\[]?/i);
+      if (fkMatch) {
+        fks.push({ cols: fkMatch[1].split(',').map(c => c.trim().replace(/[`"\[\]]/g, '')), refTable: fkMatch[2] });
+        continue;
+      }
+      const uniqueMatch = line.match(/UNIQUE\s*(?:KEY|INDEX)?\s*\(([^)]+)\)/i);
+      if (uniqueMatch) {
+        uniques.push(uniqueMatch[1].split(',').map(c => c.trim().replace(/[`"\[\]]/g, '')));
+        continue;
+      }
+      const colMatch = line.match(/^[`"\[]?(\w+)[`"\[]?\s+(\w+(?:\([^)]*\))?)/i);
+      if (colMatch) {
+        const colName = colMatch[1];
+        const colType = colMatch[2].toUpperCase();
+        const nullable = !/NOT\s+NULL/i.test(line);
+        const hasDefault = /DEFAULT/i.test(line);
+        columns.push({ name: colName, type: colType, nullable, hasDefault, line });
+      }
+    }
+    tables.push({ name, columns, pkCols, fks, uniques });
+  }
+  return tables;
+}
+
+function check1NF(table) {
+  const issues = [];
+  for (const col of table.columns) {
+    const nameLower = col.name.toLowerCase();
+    const typeUpper = col.type.toUpperCase();
+    if (NF1_ARRAY_NAMES.test(col.name) && (NF1_ARRAY_TYPES.test(typeUpper) || typeUpper.includes('VARCHAR'))) {
+      issues.push({
+        severity: 'nf1',
+        message: `Column "${col.name}" may store multiple values (non-atomic).`,
+        explanation: `First Normal Form (1NF) requires that each column contains only atomic (indivisible) values. Storing lists or arrays in a single column makes querying, indexing, and updating difficult.`,
+        fix: `Create a separate table (e.g., <code>${table.name}_${col.name}</code>) with a foreign key to <code>${table.name}</code> and one row per value.`
+      });
+    }
+    if (/^\w+_1$/.test(col.name) || /^\w+_2$/.test(col.name) || /^\w+_3$/.test(col.name)) {
+      issues.push({
+        severity: 'nf1',
+        message: `Column "${col.name}" suggests a repeating group pattern.`,
+        explanation: `Numbered columns (phone_1, phone_2, email_1, email_2) are a classic 1NF violation. They waste space, require schema changes to add more values, and make queries unnecessarily complex.`,
+        fix: `Replace numbered columns with a separate table: <code>CREATE TABLE ${table.name}_contacts (${table.name}_id INT, type VARCHAR(20), value VARCHAR(255));</code>`
+      });
+    }
+  }
+  return issues;
+}
+
+function check2NF(table) {
+  const issues = [];
+  if (table.pkCols.length <= 1) return issues;
+
+  const pkSet = new Set(table.pkCols.map(c => c.toLowerCase()));
+  const nonPkCols = table.columns.filter(c => !pkSet.has(c.name.toLowerCase()));
+
+  // Heuristic: if table name is a junction table (contains both parent table names)
+  // and has extra columns beyond the two FKs, flag potential 2NF violation
+  const isJunction = table.fks.length >= 2 && table.name.includes('_');
+  if (isJunction && nonPkCols.length > 0) {
+    const extra = nonPkCols.map(c => c.name).join(', ');
+    issues.push({
+      severity: 'nf2',
+      message: `Junction table "${table.name}" has extra attributes beyond foreign keys.`,
+      explanation: `Second Normal Form (2NF) requires that non-key attributes depend on the ENTIRE primary key, not just part of it. Junction tables should typically only contain the foreign keys. Extra attributes may belong on one of the parent tables or require a separate associative entity.`,
+      fix: `Move "${extra}" to the appropriate parent table, or create a separate table if the attribute depends on the relationship itself.`
+    });
+  }
+
+  // Heuristic: common partial dependency patterns
+  for (const col of nonPkCols) {
+    const cl = col.name.toLowerCase();
+    for (const pk of table.pkCols) {
+      const pkl = pk.toLowerCase();
+      if (pkl.includes('product') && (cl.includes('product_name') || cl.includes('product_title') || cl.includes('product_desc'))) {
+        issues.push({
+          severity: 'nf2',
+          message: `Column "${col.name}" depends only on "${pk}" (part of the composite key).`,
+          explanation: `2NF violation: A non-key attribute should depend on the entire primary key, not just one column of it. "${col.name}" describes the product, not the composite entity.`,
+          fix: `Move "${col.name}" to the Products table. Only keep the foreign key "${pk}" in "${table.name}".`
+        });
+      }
+      if (pkl.includes('category') && (cl.includes('category_name') || cl.includes('category_desc'))) {
+        issues.push({
+          severity: 'nf2',
+          message: `Column "${col.name}" depends only on "${pk}" (part of the composite key).`,
+          explanation: `2NF violation: "${col.name}" describes the category, not the composite entity keyed by both columns.`,
+          fix: `Move "${col.name}" to the Categories table. Only keep the foreign key "${pk}" in "${table.name}".`
+        });
+      }
+      if (pkl.includes('department') && (cl.includes('dept_name') || cl.includes('department_name'))) {
+        issues.push({
+          severity: 'nf2',
+          message: `Column "${col.name}" depends only on "${pk}" (part of the composite key).`,
+          explanation: `2NF violation: "${col.name}" describes the department, not the composite entity.`,
+          fix: `Move "${col.name}" to the Departments table. Only keep the foreign key "${pk}" in "${table.name}".`
+        });
+      }
+    }
+  }
+
+  return issues;
+}
+
+function check3NF(table) {
+  const issues = [];
+  const colNames = table.columns.map(c => c.name.toLowerCase());
+  const colSet = new Set(colNames);
+
+  for (const pattern of NF3_DERIVED_PATTERNS) {
+    const hasBase = pattern.cols.some(c => colSet.has(c));
+    if (!hasBase) continue;
+    for (const derived of pattern.derived) {
+      if (colSet.has(derived)) {
+        const baseCol = pattern.cols.find(c => colSet.has(c));
+        issues.push({
+          severity: 'nf3',
+          message: `Column "${derived}" may be derivable from "${baseCol}".`,
+          explanation: `Third Normal Form (3NF) requires that non-key attributes depend ONLY on the primary key, not on other non-key attributes. "${derived}" can be looked up from "${baseCol}", creating a transitive dependency.`,
+          fix: `Remove "${derived}" and look it up via "${baseCol}" when needed, or create a separate lookup table mapping "${baseCol}" → "${derived}".`
+        });
+      }
+    }
+  }
+
+  // Heuristic: total = quantity * price patterns
+  const hasQty = colNames.some(c => ['quantity', 'qty', 'count', 'amount'].includes(c));
+  const hasPrice = colNames.some(c => ['unit_price', 'unitprice', 'price', 'cost', 'rate'].includes(c));
+  const hasTotal = colNames.some(c => ['total', 'total_price', 'price_total', 'line_total', 'extended_price', 'subtotal'].includes(c));
+  if (hasQty && hasPrice && hasTotal) {
+    const totalCol = table.columns.find(c => ['total', 'total_price', 'price_total', 'line_total', 'extended_price', 'subtotal'].includes(c.name.toLowerCase()));
+    issues.push({
+      severity: 'nf3',
+      message: `Column "${totalCol?.name || 'total'}" is calculated from quantity and price.`,
+      explanation: `3NF violation: A computed column creates a transitive dependency and risks data inconsistency if the base values change but the total is not updated.`,
+      fix: `Remove the computed column and calculate the total in your application or use a generated/virtual column (if your dialect supports it).`
+    });
+  }
+
+  // Heuristic: manager_name when manager_id exists
+  const hasManagerId = colSet.has('manager_id') || colSet.has('supervisor_id');
+  const hasManagerName = colSet.has('manager_name') || colSet.has('supervisor_name');
+  if (hasManagerId && hasManagerName) {
+    issues.push({
+      severity: 'nf3',
+      message: `Column "manager_name" is derivable from "manager_id".`,
+      explanation: `3NF violation: The manager's name depends on manager_id, not on the table's primary key. If the manager changes their name, you must update it in every row.`,
+      fix: `Keep only "manager_id" as a foreign key. Join to the Employees table to get the manager's name when querying.`
+    });
+  }
+
+  // Heuristic: user_name when user_id exists
+  const hasUserId = colSet.has('user_id') || colSet.has('customer_id') || colSet.has('employee_id');
+  const hasUserName = colSet.has('user_name') || colSet.has('username') || colSet.has('customer_name') || colSet.has('employee_name');
+  if (hasUserId && hasUserName) {
+    issues.push({
+      severity: 'nf3',
+      message: `Name column is derivable from the ID column via a join.`,
+      explanation: `3NF violation: Storing names alongside IDs creates redundant data. The name depends on the ID, not on this table's primary key.`,
+      fix: `Remove the name column and join to the parent table (Users/Customers/Employees) when you need the name.`
+    });
+  }
+
+  return issues;
+}
+
+function analyzeSchema(sql) {
+  const tables = parseTables(sql);
+  const results = [];
+  let totalIssues = 0;
+  let totalMax = 0;
+
+  for (const table of tables) {
+    const issues = [
+      ...check1NF(table),
+      ...check2NF(table),
+      ...check3NF(table)
+    ];
+    totalIssues += issues.length;
+    totalMax += Math.max(table.columns.length, 3);
+    results.push({ table, issues });
+  }
+
+  const score = totalMax === 0 ? 100 : Math.max(0, Math.round(100 - (totalIssues / totalMax) * 100));
+  return { tables: results, score, totalIssues };
+}
+
+function renderResults(data) {
+  const resultsEl = document.getElementById('results');
+  const scoreEl = document.getElementById('overallScore');
+  const barFill = document.getElementById('scoreBarFill');
+  const labelEl = document.getElementById('overallLabel');
+  const listEl = document.getElementById('resultsList');
+
+  resultsEl.style.display = 'block';
+  scoreEl.textContent = data.score;
+  scoreEl.className = 'norm-score ' + (data.score >= 90 ? 'excellent' : data.score >= 70 ? 'good' : data.score >= 50 ? 'warn' : 'bad');
+  barFill.style.width = data.score + '%';
+  barFill.style.background = data.score >= 90 ? 'var(--success)' : data.score >= 70 ? '#22d3ee' : data.score >= 50 ? 'var(--warning)' : 'var(--danger)';
+
+  if (data.score >= 90) labelEl.textContent = 'Excellent — Your schema is well normalized!';
+  else if (data.score >= 70) labelEl.textContent = 'Good — Minor issues found.';
+  else if (data.score >= 50) labelEl.textContent = 'Fair — Several normalization issues detected.';
+  else labelEl.textContent = 'Needs Work — Significant normalization issues found.';
+
+  if (data.tables.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">No CREATE TABLE statements found. Paste valid SQL and try again.</div>';
+    return;
+  }
+
+  let html = '';
+  for (const { table, issues } of data.tables) {
+    const tScore = issues.length === 0 ? 100 : Math.max(0, 100 - issues.length * 15);
+    const tClass = tScore >= 90 ? 'excellent' : tScore >= 70 ? 'good' : tScore >= 50 ? 'warn' : 'bad';
+    html += `<div class="table-norm-card">
+      <div class="table-norm-header">
+        <span class="table-norm-name">${table.name}</span>
+        <span class="table-norm-score ${tClass}">${tScore}/100</span>
+      </div>
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">${table.columns.length} columns · PK: ${table.pkCols.join(', ') || 'None'}</div>`;
+
+    if (issues.length === 0) {
+      html += `<div style="color:var(--success);font-size:0.9rem;">✓ No normalization issues detected.</div>`;
+    } else {
+      for (const issue of issues) {
+        const nfLabel = issue.severity === 'nf1' ? '1NF Violation' : issue.severity === 'nf2' ? '2NF Violation' : '3NF Violation';
+        html += `<div class="norm-card ${issue.severity}">
+          <div class="norm-severity ${issue.severity}">${nfLabel}</div>
+          <div class="norm-message">${issue.message}</div>
+          <div class="norm-explanation">${issue.explanation}</div>
+          <div class="norm-fix">💡 <strong>Fix:</strong> ${issue.fix}</div>
+        </div>`;
+      }
+    }
+    html += `</div>`;
+  }
+
+  listEl.innerHTML = html;
+}
+
+document.getElementById('checkBtn').addEventListener('click', () => {
+  const sql = document.getElementById('sqlInput').value;
+  const result = analyzeSchema(sql);
+  renderResults(result);
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('results').style.display = 'none';
+});
+
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  document.getElementById('sqlInput').value = `CREATE TABLE orders (
+  order_id INT PRIMARY KEY,
+  product_id INT,
+  product_name VARCHAR(255),
+  category_name VARCHAR(255),
+  quantity INT,
+  unit_price DECIMAL(10,2),
+  total_price DECIMAL(10,2),
+  customer_id INT,
+  customer_name VARCHAR(255),
+  manager_id INT,
+  manager_name VARCHAR(255),
+  zip_code VARCHAR(10),
+  city VARCHAR(100),
+  state VARCHAR(50),
+  tags TEXT,
+  phone_1 VARCHAR(20),
+  phone_2 VARCHAR(20)
+);
+
+CREATE TABLE order_items (
+  order_id INT,
+  product_id INT,
+  quantity INT,
+  unit_price DECIMAL(10,2),
+  PRIMARY KEY (order_id, product_id)
+);`;
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–171)
+## Key Milestones (Days 1–177)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -116,86 +116,35 @@
 | 169 | May 23 | **Conversion hardening:** non-converter micro-survey in app paywall, email capture in welcome state, HELP-REQUEST.md filed for GitHub Action Marketplace release. |
 | 170 | May 26 | **Staging vs Production schema diff landing page** — dedicated page for #1 user-requested workflow with copy-paste export commands, live CTA, and schema.org markup. Conversion trust signals added to app paywall (money-back guarantee, PH social proof). |
 | 171 | May 26 | **Free tier table limit A/B test** — 15/10/8 variants assigned 33/33/34, dynamic enforcement, analytics instrumentation. 34 unit tests pass. |
-| 172 | May 26 | **npm README SEO overhaul + VS Code Extension marketplace optimization** — Rewrote schemalens-cli and schemalens-engine READMEs for SEO/conversion. Updated VS Code package.json keywords and README. Filed unambiguous JavaScript Kicks $29 sponsorship request. |
+| 172 | May 26 | **npm README SEO overhaul + VS Code Extension marketplace optimization** — Rewrote `schemalens-cli` and `schemalens-engine` READMEs for SEO/conversion. VS Code `package.json` keywords upgraded. Filed unambiguous JavaScript Kicks $29 sponsorship request. |
 | 173 | May 26 | **Chrome Web Store listing optimization + site-wide promotion** — Upgraded manifest.json, popup.html, content.js with analytics and Oracle detection. Repackaged chrome-extension.zip. Promoted extension on homepage hero, app.html settings, tools.html, root README. |
+| 174 | May 26 | **SchemaGuessr viral game** (`tools/schema-guessr.html`) — 5-round "Guess the App from Its Schema" game with shareable scores. Cross-linked and sitemap updated. |
+| 175 | May 26 | **IndieHackers post prep + stale data sweep** — Refreshed `indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html` with Day 174 stats. Drafted `marketing/indiehackers-post-day174.md` copy-paste post. |
+| 176 | May 26 | **Reddit distribution kit refresh** — Updated `r-webdev.md`, created `r-webdev-schema-guessr.md` and `r-programming-famous-schemas.md`, updated README. |
+| 177 | May 26 | **Site-wide stale stat sweep** — Fixed 6 pages with stale Day 147 stats (`index.html`, `migration-horror-stories.html`, `product-hunt.html`, `share-kit.html`, `show-hn.html`). Updated to 174 days / 57+ tools / 189 pages. |
 
 ---
 
-## Day 177 — Site-Wide Stale Stat Sweep (May 26, 2026)
+## Day 178 — Strategy Shift: Post-Alumni Cleanup + New Tool + Price Urgency (May 27, 2026)
 
 ### The Problem
-A grep scan revealed 6 additional pages with stale Day 147 stats: `index.html`, `migration-horror-stories.html`, `product-hunt.html`, `share-kit.html`, `show-hn.html`. Any visitor landing from IndieHackers, Product Hunt, or Show HN would see inconsistent/neglected numbers.
+174 days, zero sales. Launch Week alumni window ends May 28. All P0 distribution channels (Reddit, IndieHackers, JS Kicks sponsorship) remain blocked on human execution. Need to maintain momentum with autonomous work while filing clean help requests.
 
 ### What Was Built
-1. **Fixed `index.html`** — hero badge "51+ free developer tools" → "57+", GitHub Action description "50+ browser-based SQL tools" → "57+"
-2. **Fixed `migration-horror-stories.html`** — footer "50+ free micro-tools · 147 days" → "57+ · 174 days"
-3. **Fixed `product-hunt.html`** — hero subtitle "147 days. 42 blog posts. 50+ micro-tools" → "174 days. 52 blog posts. 57+ micro-tools", closing paragraph updated
-4. **Fixed `share-kit.html`** — copy-paste text "147 days, 50+ micro-tools, 51+ SEO pages" → "174 days, 57+ micro-tools, 189 SEO pages"
-5. **Fixed `show-hn.html`** — hero subtitle and closing paragraph updated to 174/57+/189
+1. **Context maintenance** — Collapsed PROGRESS.md and BACKLOG.md; kept last 3 days detailed.
+2. **Filed HELP-REQUEST.md** — Three clean, unambiguous requests:
+   - JavaScript Kicks newsletter sponsorship ($29) with final ad copy and target URL
+   - Gumroad $19 "Early Adopter" product creation for price testing
+   - Gumroad $9/month "Pro Monthly" subscription for recurring revenue
+3. **Post-alumni window transition** — Updated app.html paywall to remove alumni-specific messaging after May 28. Replaced with genuine scarcity: "$39 Founder Price — increases to $79 on July 1" (end of 12-week race).
+4. **Schema Normalization Checker micro-tool (#58)** — Analyzes CREATE TABLE statements for 1NF, 2NF, 3NF violations with educational explanations and fix SQL. Cross-linked on index.html, tools.html, footer. sitemap.xml updated.
+5. **Cross-link and stat sweep** — Updated tool counts 57+ → 58+ across index.html, tools.html, README.md, built-in-public.html, ACQUISITION-RESPONSE-5000.md.
 
 ### Validation
-- ✅ grep scan for "147 days" / "50+" / "51+" / "175 pages" now clean across all root HTML files
+- ✅ e2e tests passing
 - ✅ All changes committed to git
 
 ### Next Steps
-- Clean up PROGRESS.md and BACKLOG.md for readability
-- Continue with next highest-priority unblocked task
-
----
-
-## Day 176 — Reddit Distribution Kit Refresh + Viral Asset Posts (May 26, 2026)
-
-### The Problem
-The Reddit post kit was outdated (51+ tools, 5 months) and didn't include posts for the two newest viral assets: SchemaGuessr and Famous Database Schemas. The P0 distribution task explicitly calls for posting these to r/webdev, r/programming, r/SQL, and r/PostgreSQL.
-
-### What Was Built
-1. **Updated `r-webdev.md`** — refreshed stats (51+→57+ tools, 5→6 months), added SchemaGuessr and Famous Database Schemas to the tools list, updated follow-up copy.
-2. **Created `r-webdev-schema-guessr.md`** — dedicated Showoff Saturday post for the SchemaGuessr game with 3 title variants, educational framing, and follow-up comment template.
-3. **Created `r-programming-famous-schemas.md`** — dedicated post for the Famous Database Schemas gallery with 3 title variants, reverse-engineering methodology disclosure, and educational value angle.
-4. **Updated `reddit-posts/README.md`** — reorganized into Core Product Posts and Viral Asset Posts sections, added current stats reference (174 days, 57+ tools, 189 pages).
-5. **Updated `reddit-posts.md`** — corrected "this month" to "past 6 months."
-
-### Validation
-- ✅ All new posts read naturally and provide genuine subreddit value
-- ✅ r/webdev post follows Showoff Saturday flair rules
-- ✅ r/programming post leads with educational content, discloses involvement
-- ✅ Committed to git
-
-### Next Steps
-- Await human execution of Reddit posting (requires aged accounts)
-- Continue with next highest-priority unblocked task
-
----
-
-## Day 175 — IndieHackers Post Prep + Stale Data Sweep (May 26, 2026)
-
-### The Problem
-174 days, zero sales. The IndieHackers post task has been in the backlog for weeks but the landing pages (`indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html`) all had stale stats from Day 147 — making any distribution look neglected and inaccurate.
-
-### What Was Built
-1. **Stale data sweep across 3 key pages:**
-   - `indiehackers.html` — updated 147→174 days, 50+→57+ tools, 51+→189 SEO pages, 129→174 days stat, 54+→57+ tools stat
-   - `147-days-built-in-public.html` — updated title/OG/stats/share URLs to 174 Days / 57 Tools / 189 pages
-   - `built-in-public.html` — updated hero/title/OG/stats, extended timeline with 3 new chapters covering Days 128–174 (Post-Launch Recovery, Exit Push & Distribution Engine, Content Engine & Viral Pivot)
-2. **`marketing/indiehackers-post-day174.md`** — copy-paste ready IndieHackers post with raw honest stats, distribution attempts catalog, viral asset links (SchemaGuessr, Famous Database Schemas, Schema Design Interviews), submission checklist, and follow-up ideas.
-
-### Validation
-- ✅ All 3 HTML files verified with syntax-aware diff
-- ✅ Share URLs (Twitter, LinkedIn, HN) updated with correct 174/57 stats
-- ✅ Timeline narrative flows from Day 1 through Day 174 without gaps
-- ✅ Committed to git
-
-### Next Steps
-- Await human execution of IndieHackers post submission
-- Continue with Reddit distribution kit update (next highest-priority unblocked task)
-
----
-
-## Days 171–174 — Conversion Optimization & Viral Pivot (May 26, 2026)
-
-| Day | Focus | Key Output |
-|-----|-------|------------|
-| 171 | Free tier A/B test | 15/10/8 table limit variants, dynamic enforcement, analytics instrumentation. 34 tests pass. |
-| 172 | npm README + VS Code SEO | Rewrote `schemalens-cli` and `schemalens-engine` READMEs for SEO/conversion. VS Code `package.json` keywords upgraded. Filed unambiguous JS Kicks sponsorship request (Issue #47). npm publish blocked by expired token. |
-| 173 | Chrome Web Store optimization | Upgraded manifest, popup, content.js with analytics. Repackaged chrome-extension.zip. Promoted extension on homepage hero, app.html settings, tools.html, root README. |
-| 174 | SchemaGuessr viral game | Built `tools/schema-guessr.html` — 5-round "Guess the App from Its Schema" game with shareable scores. Cross-linked and sitemap updated. |
+- Await human execution of HELP-REQUEST.md items
+- Continue building high-traffic micro-tools and content
+- Monitor free tier A/B test results when analytics available

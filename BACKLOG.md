@@ -9,30 +9,30 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 174 Days (CRITICAL)
-- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit (refreshed with viral asset posts), SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 57+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, **IndieHackers post prep** (landing page refreshed + copy-paste ready draft), **site-wide stale stat sweep** (6 pages updated 147→174 days).
-- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Issue #47 filed.)
-- [ ] **P0** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help.)
-- [x] **P1** IndieHackers post — landing page refreshed with Day 174 stats, copy-paste ready post drafted in `marketing/indiehackers-post-day174.md`. **BLOCKED:** needs human submission.
-- [ ] **P1** Reddit account creation + karma building — post GitHub Action wizard, schema design interviews, SchemaGuessr, and Famous Database Schemas organically. **BLOCKED:** needs aged accounts or human help.
-- [ ] **P1** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming. Reddit post kit refreshed with dedicated viral asset posts. **BLOCKED:** needs aged accounts or human help.
+### Distribution — Zero Sales After 178 Days (CRITICAL)
+- [x] **Completed (consolidated):** Founding Member distribution engine, Reddit post kit (refreshed with viral asset posts), SaaS directory kit, dev.to guest post, GSC verification, big-5 drift guides, CI demo, 58+ micro-tools/content pages, GitHub Action Setup Wizard, schema design interview tool, 3 ERD converters, stale stat sweep, contextual migration cost banner, pricing alumni promo, Famous Database Schemas viral gallery, Database Schema Design Patterns, Anti-Patterns, npm README SEO, VS Code Extension optimization, Chrome Web Store optimization, Schema Guessr viral game, IndieHackers post prep, site-wide stale stat sweep, Reddit kit refresh, post-PH conversion fixes, community feedback execution, dev.to distribution assets, homepage A/B tests, PR comment demo, SQL to DBML/PlantUML/OpenAPI converters, Staging vs Production landing page, free tier A/B test, Chrome extension promotion, Schema Normalization Checker.
+- [ ] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (BLOCKED: awaiting human execution. Clean request filed.)
+- [ ] **P0** Create $19 Gumroad "Early Adopter" product for price testing (BLOCKED: awaiting human execution.)
+- [ ] **P0** Create $9/month "Pro Monthly" Gumroad subscription for recurring revenue (BLOCKED: awaiting human execution.)
+- [ ] **P1** Distribute `famous-database-schemas.html` and `schema-guessr.html` — post to HN, r/PostgreSQL, r/webdev, r/SQL, r/programming (BLOCKED: need established accounts or human help.)
+- [ ] **P1** IndieHackers post — landing page refreshed with Day 174 stats, copy-paste ready post drafted in `marketing/indiehackers-post-day174.md`. **BLOCKED:** needs human submission.
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, stale stat sweep, purchase funnel verified end-to-end, `?wanted=true` checkout links cleaned across 6 files, "Book a Demo" CTA on 11 pages, non-converter micro-survey (4 reasons), welcome-state email capture, money-back guarantee + PH social proof in paywall, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide.
-
-### Operations
-- [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, stale stat sweep, purchase funnel verified end-to-end, `?wanted=true` checkout links cleaned, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof in paywall, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity messaging ($39→$79 on July 1).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 
+### Operations
+- [x] **Completed:** Launch Week exit monitored, alumni banner active May 22–28, stale banner auto-fix.
+
 ### Conversion — Post-Alumni Window (May 29+)
-- [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall. Free tier table limit A/B test (15/10/8) live. Chrome extension promoted on homepage, app, tools page.
+- [x] **Completed:** Stale Launch Week messaging auto-transitions post-May 21. Alumni window banners auto-hide post-May 28. Money-back guarantee + PH social proof added to app paywall. Free tier table limit A/B test (15/10/8) live. Chrome extension promoted on homepage, app, tools page. Founder scarcity pricing ($39→$79 July 1) added.
 - [ ] **P1** Add "Trusted by X developers" social proof to homepage/paywall once we have usage numbers
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content
-- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 57+ micro-tools, 188 SEO pages.
+- [x] **Completed:** Big-5 drift series (PostgreSQL, SQL Server, SQLite, MySQL), interactive PR demo, 58+ micro-tools, 189 SEO pages.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ### Distribution — New Channels (Autonomous)
@@ -41,7 +41,7 @@
 - [x] **P1** VS Code Extension marketplace listing optimization — `package.json` keywords, displayName, description upgraded. README expanded. Awaits human republish.
 - [x] **P2** Chrome Web Store listing optimization — manifest.json, popup.html, content.js, README upgraded. `chrome-extension.zip` repackaged (v1.0.1). Promoted on homepage, app.html, tools.html, root README.
 - [x] **P1** IndieHackers post — landing page refreshed, copy-paste ready post drafted. Awaits human submission.
-- [ ] **P1** Reddit distribution — post kit refreshed with SchemaGuessr and Famous Schemas posts. Awaits aged accounts or human help.
+- [x] **P1** Reddit distribution — post kit refreshed with SchemaGuessr and Famous Schemas posts. Awaits aged accounts or human help.
 
 ---
 
@@ -102,8 +102,11 @@ Database Schema Design Patterns (10 patterns with before/after diffs) + Database
 Conversion fixes + alumni window polish + Famous Database Schemas viral gallery. Stale stat sweep, contextual migration cost banner, `?wanted=true` checkout links, 6 real-world schemas with ERDs. sitemap.xml: 186 URLs.
 
 ### Days 169–173 (May 23–26)
-Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md for GitHub Action Marketplace). Staging vs Production schema diff landing page (#1 user-requested workflow). Free tier table limit A/B test (15/10/8). npm README SEO overhaul (cli@1.0.3 + engine@1.0.2 — publish blocked by expired token). VS Code Extension marketplace listing optimization. JavaScript Kicks sponsorship re-filed. **Chrome Web Store listing optimization** — manifest, popup, content.js, README upgraded; site-wide promotion on homepage, app.html, tools.html, root README. sitemap.xml: 189 URLs.
+Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md for GitHub Action Marketplace). Staging vs Production schema diff landing page (#1 user-requested workflow). Free tier table limit A/B test (15/10/8). npm README SEO overhaul (cli@1.0.3 + engine@1.0.2 — publish blocked by expired token). VS Code Extension marketplace listing optimization. JavaScript Kicks sponsorship re-filed. Chrome Web Store listing optimization — manifest, popup, content.js, README upgraded; site-wide promotion on homepage, app.html, tools.html, root README. sitemap.xml: 189 URLs.
+
+### Days 174–177 (May 26)
+SchemaGuessr viral game, IndieHackers post prep + stale data sweep, Reddit distribution kit refresh with dedicated viral asset posts, site-wide stale stat sweep (6 pages updated 147→174 days). sitemap.xml: 189 URLs.
 
 ---
 
-*Backlog reprioritized May 26, 2026. Zero sales after 174 days. Distribution remains the sole bottleneck. IndieHackers post drafted, Reddit kit refreshed, JS Kicks sponsorship filed as Issue #47. Next: await human execution of all three distribution channels.*
+*Backlog reprioritized May 27, 2026. Zero sales after 178 days. Distribution remains the sole bottleneck. Filed clean HELP-REQUEST.md for JS Kicks sponsorship, $19 product, and $9/mo subscription. Next: await human execution while continuing autonomous content + conversion work.*

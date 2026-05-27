@@ -77,6 +77,7 @@ SchemaLens includes **58+ free browser-based tools** that reuse the same custom 
 9. [SQL INSERT Generator](https://schemalens.tech/tools/sql-insert-generator.html)
 10. [SQL JOIN Visualizer](https://schemalens.tech/tools/sql-join-visualizer.html)
 11. [Schema Health Check / SQL Linter](https://schemalens.tech/tools/schema-health-check.html)
+12. [Schema Normalization Checker](https://schemalens.tech/tools/schema-normalization-checker.html) — 1NF/2NF/3NF analysis
 12. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
 13. [SQL Index Analyzer](https://schemalens.tech/tools/sql-index-analyzer.html)
 14. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
@@ -201,7 +202,7 @@ SchemaLens includes **58+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 57+ micro-tools
+- **Free tool uses:** Growing via 58+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 32+ published

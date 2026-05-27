@@ -122,7 +122,7 @@
           }
           const p = document.querySelector('header.hero > p');
           if (p) {
-            p.innerHTML = 'A free GitHub Action that diffs <code>schema.sql</code> on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 57+ browser-based SQL tools — no signup needed.';
+            p.innerHTML = 'A free GitHub Action that diffs <code>schema.sql</code> on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 58+ browser-based SQL tools — no signup needed.';
           }
           const cta = document.getElementById('hero-cta');
           if (cta) {
@@ -518,7 +518,7 @@
       if (cta) cta.textContent = 'Compare Schemas Free';
     } else {
       // Post-alumni: timeless badge
-      if (badgeText) badgeText.textContent = '57+ free developer tools — open source core';
+      if (badgeText) badgeText.textContent = '58+ free developer tools — open source core';
       if (cta) cta.textContent = 'Compare Schemas Free';
     }
   })();
@@ -846,6 +846,12 @@
           <h3>Schema Health Check</h3>
           <p>Lint your schema for missing primary keys, unindexed foreign keys, and other design issues.</p>
           <a href="tools/schema-health-check.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Check Health</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📐</div>
+          <h3>Schema Normalization Checker</h3>
+          <p>Check your CREATE TABLE statements for 1NF, 2NF, and 3NF violations. Learn normalization with real fix suggestions.</p>
+          <a href="tools/schema-normalization-checker.html" class="btn btn-secondary" style="margin-top:12px;width:100%">Check Normalization</a>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🛡️</div>
@@ -1391,6 +1397,7 @@
           <a href="tools/csv-to-sql.html">CSV to SQL</a>
           <a href="tools/json-to-sql.html">JSON to SQL</a>
       <a href="tools/schema-health-check.html">Health Check</a>
+      <a href="tools/schema-normalization-checker.html">Normalization</a>
       <a href="tools/safe-migration-checker.html">Safe Migration</a>
       <a href="tools/sql-reserved-words-checker.html">Reserved Words</a>
       <a href="tools/naming-convention-checker.html">Naming Conventions</a>
