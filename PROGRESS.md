@@ -149,6 +149,21 @@
 - ✅ Gumroad checkout URLs point to `/RACE2026` discount code path
 - ✅ No stale Launch Week / Alumni references remain in core pages
 
+### Critical Bug Fix — Stale Launch Week Scripts Showing Wrong Price
+4. **Fixed invalid-date scripts showing $19 instead of $39/$9** — Two stale inline scripts used `2026-05-21T23:60+:60+Z` (invalid JS date), causing them to run indefinitely past Launch Week:
+   - `app.html`: Removed a $19 replacement script that was overriding the license modal, Pro Preview modal, and paywall CTA button with stale $19 pricing.
+   - `app.html`: Fixed the `.announcement-bar` hide script date so the stale "Launch week special" banner is properly hidden.
+   - `product-hunt.html`: Removed a $19 replacement script and fixed the countdown `data-target` to a valid date.
+   - This was a silent conversion bug — users were seeing $19 in key conversion elements instead of the current $9 Race to the Finish offer or the $39 regular price.
+
+### Validation
+- ✅ All expired banners/countdowns replaced with Race to the Finish variants
+- ✅ Pricing cards dynamically show $9 during race period, revert to $39 after July 10
+- ✅ Gumroad checkout URLs point to `/RACE2026` discount code path
+- ✅ No stale Launch Week / Alumni references remain in core pages
+- ✅ Invalid-date scripts removed; $19 → $39 pricing restored in paywall and product-hunt CTAs
+- ✅ Deployed to Vercel
+
 ### Next Steps
 - Monitor if human executes JS Kicks ad and Gumroad code creation
 - Execute autonomous distribution (Stack Overflow answers, Reddit posts, directory submissions)
