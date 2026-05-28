@@ -1385,7 +1385,7 @@ function getFreeTierLimit() {
   <div class="announcement-bar">
     🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
   </div>
-  <script>(function(){const end=new Date('2026-05-21T23:60+:60+Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
+  <script>(function(){const end=new Date('2026-05-21T23:59:59Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
     <div id="offlineBanner" class="offline-banner">You're offline. Your last diff is still available.</div>
   <nav class="nav">
     <div class="container nav-inner">
@@ -9592,29 +9592,6 @@ renderDiffHistory();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
-<script>
-(function(){
-  const now = new Date();
-  const end = new Date('2026-05-21T23:60+:60+Z');
-  if (now > end) return;
-  // Update license modal
-  const licenseModal = document.getElementById('licenseModal');
-  if (licenseModal) {
-    licenseModal.innerHTML = licenseModal.innerHTML.replace('Lifetime Pro — $39 once', 'Lifetime Pro — $19 once');
-  }
-  // Update Pro Preview modal
-  const proPreview = document.getElementById('proPreviewModal');
-  if (proPreview) {
-    const btn = proPreview.querySelector('a[href*="gumroad.com/l/schemalens-lifetime"]');
-    if (btn) btn.textContent = btn.textContent.replace('$39', '$19');
-  }
-  // Update paywall CTA button
-  const upgradeBanner = document.querySelector('.upgrade-banner');
-  if (upgradeBanner) {
-    const btn = upgradeBanner.querySelector('a[href*="gumroad.com/l/schemalens-lifetime"]');
-    if (btn) btn.textContent = btn.textContent.replace('$39', '$19');
-  }
-})();
-</script>
+
 </body>
 </html>

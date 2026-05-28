@@ -97,7 +97,7 @@
       <div style="color: var(--text-muted); font-size: 0.95rem;">Pay once, keep forever. Just for Product Hunt visitors.</div>
       <div style="margin-top: 12px; font-size: 0.85rem; color: var(--comment);"><strong style="color: var(--success); font-size: 1.2rem;">$39</strong> one-time</div>
       <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">🔒 14-day money-back guarantee</div>
-      <div class="countdown" id="phCountdown" data-target="2026-05-21T23:60+:60+Z">
+      <div class="countdown" id="phCountdown" data-target="2026-05-21T23:59:59Z">
         <div class="countdown-unit"><span class="num" id="cdD">--</span><span class="lbl">Days</span></div>
         <div class="countdown-unit"><span class="num" id="cdH">--</span><span class="lbl">Hours</span></div>
         <div class="countdown-unit"><span class="num" id="cdM">--</span><span class="lbl">Minutes</span></div>
@@ -459,18 +459,6 @@
   }
 })();
 </script>
-<script>
-(function(){
-  const now = new Date();
-  const end = new Date('2026-05-21T23:60+:60+Z');
-  if (now > end) return;
-  document.querySelectorAll('a[href*="gumroad.com/l/schemalens-lifetime"]').forEach(el => {
-    el.textContent = el.textContent.replace('$39', '$19');
-  });
-  document.querySelectorAll('.hero-actions, .cta-section').forEach(el => {
-    el.innerHTML = el.innerHTML.replace(/\$39/g, '$19');
-  });
-})();
-</script>
+
 </body>
 </html>
