@@ -1439,13 +1439,13 @@ function getFreeTierLimit() {
       <button onclick="dismissPhLiveBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
   </div>
-  <div id="launchWeekBanner" style="display:none;background:linear-gradient(90deg,rgba(16,185,129,0.12),rgba(99,102,241,0.08));border-bottom:1px solid rgba(16,185,129,0.3);padding:12px 0;">
+  <div id="raceToFinishBanner" style="display:none;background:linear-gradient(90deg,rgba(16,185,129,0.12),rgba(99,102,241,0.08));border-bottom:1px solid rgba(16,185,129,0.3);padding:12px 0;">
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
-        <span style="font-size:1.2rem;">🎉</span>
-        <span style="font-size:0.9rem;color:var(--text);"><strong>⏰ Launch Week ends in <span id="launchWeekCountdown" style="color:var(--danger);font-weight:600;"></span></strong> — Pro goes back to paid after May 21. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $19 Lifetime Pro →</a></span>
+        <span style="font-size:1.2rem;">🏁</span>
+        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Race to the Finish — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — Help SchemaLens win the $100 AI Startup Race. <strong>Lifetime Pro for $9</strong> (code RACE2026). <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $9 Pro →</a></span>
       </div>
-      <button onclick="dismissLaunchWeekBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
+      <button onclick="dismissRaceToFinishBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
   </div>
   <script>
@@ -1491,30 +1491,30 @@ function getFreeTierLimit() {
     if (b) b.style.display = 'none';
     localStorage.setItem('phLiveBannerDismissed', Date.now().toString());
   }
-  function dismissLaunchWeekBanner() {
-    const b = document.getElementById('launchWeekBanner');
+  function dismissRaceToFinishBanner() {
+    const b = document.getElementById('raceToFinishBanner');
     if (b) b.style.display = 'none';
-    localStorage.setItem('launchWeekBannerDismissed', Date.now().toString());
+    localStorage.setItem('raceToFinishBannerDismissed', Date.now().toString());
   }
-  function isLaunchWeek() {
+  function isRaceToFinish() {
     const now = new Date();
-    const start = new Date('2026-05-14T00:00:00Z');
-    const end = new Date('2026-05-21T23:60+:60+Z');
+    const start = new Date('2026-05-28T00:00:00Z');
+    const end = new Date('2026-07-10T23:59:59Z');
     return now >= start && now <= end;
   }
   (function() {
-    if (!isLaunchWeek()) return;
-    if (localStorage.getItem('launchWeekBannerDismissed')) {
-      const d = parseInt(localStorage.getItem('launchWeekBannerDismissed'), 10);
+    if (!isRaceToFinish()) return;
+    if (localStorage.getItem('raceToFinishBannerDismissed')) {
+      const d = parseInt(localStorage.getItem('raceToFinishBannerDismissed'), 10);
       if (Date.now() - d < 1 * 24 * 60 * 60 * 1000) return;
     }
-    const b = document.getElementById('launchWeekBanner');
+    const b = document.getElementById('raceToFinishBanner');
     if (b) b.style.display = 'block';
-    const cd = document.getElementById('launchWeekCountdown');
+    const cd = document.getElementById('raceToFinishCountdown');
     if (!cd) return;
     function update() {
       const now = new Date();
-      const end = new Date('2026-05-21T23:60+:60+Z');
+      const end = new Date('2026-07-10T23:59:59Z');
       const diff = end - now;
       if (diff <= 0) { cd.textContent = 'Offer ended'; return; }
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -1529,7 +1529,7 @@ function getFreeTierLimit() {
   (function(){
     function updateInline() {
       const now = new Date();
-      const end = new Date('2026-05-21T23:60+:60+Z');
+      const end = new Date('2026-07-10T23:59:59Z');
       const diff = end - now;
       const text = diff <= 0 ? 'Offer ended' : (function(){
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -1537,7 +1537,7 @@ function getFreeTierLimit() {
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         return days + 'd ' + hours + 'h ' + mins + 'm';
       })();
-      document.querySelectorAll('.launch-week-countdown-inline').forEach(el => el.textContent = text);
+      document.querySelectorAll('.race-to-finish-countdown-inline').forEach(el => el.textContent = text);
     }
     updateInline();
     setInterval(updateInline, 60000);
@@ -2223,7 +2223,7 @@ DROP TABLE audit_logs;</code></pre>
   <!-- Exit Intent Modal -->
   <div class="modal-overlay exit-intent-modal" id="exitIntentModal">
     <div class="modal" id="exitIntentModalContent">
-      <!-- Variant injected by JS based on isLaunchWeek() -->
+      <!-- Variant injected by JS based on isRaceToFinish() -->
     </div>
   </div>
 
@@ -4933,15 +4933,12 @@ function renderMigration(sql, rollbackSql, diff) {
         <h3>📈 Your schema has ${totalTables} tables — Pro unlocks the full migration</h3>
         ${costBannerHTML}
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
-        ${isLaunchWeek() ? `<div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          ⏰ <strong>Launch Week ends in <span class="launch-week-countdown-inline"></span></strong> — Pro is free now, but goes back to $39 lifetime after May 21.
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Don't miss the free access window. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Claim Lifetime Pro →</a></span>
-        </div>` : isLaunchWeekAlumniWindow() ? `<div style="background:linear-gradient(90deg,rgba(245,158,11,0.12),rgba(245,158,11,0.06));border:1px solid rgba(245,158,11,0.4);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          🏷️ <strong>Launch Week Alumni Deal</strong> — You used SchemaLens during Launch Week. Grab Pro for <strong>$39 lifetime</strong> before this window closes.
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Exclusive alumni pricing ends May 28. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--warning);text-decoration:underline;">Claim your spot →</a></span>
+        ${isRaceToFinish() ? `<div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
+          🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — SchemaLens is competing in the $100 AI Startup Race. Help us win: <strong>Lifetime Pro for $9</strong> with code RACE2026.
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Offer ends July 10. <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Claim $9 Pro →</a></span>
         </div>` : `<div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">⏰ 5 weeks left at Founder Price. <a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;"><a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
         </div>`}
         ${getSocialProofHTML()}
         <button class="btn btn-primary" onclick="openLicenseModal()">🔓 Unlock Pro Now</button>
@@ -5025,9 +5022,9 @@ function renderMigration(sql, rollbackSql, diff) {
     html += `</div></div></div>`;
   } else {
     if (warningsHTML) html += warningsHTML;
-    if (isLaunchWeek() && !localStorage.getItem('schemalens_license')) {
+    if (isRaceToFinish() && !localStorage.getItem('schemalens_license')) {
       html += `<div style="margin-bottom:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(16,185,129,0.1),rgba(99,102,241,0.08));border:1px solid rgba(16,185,129,0.25);border-radius:8px;font-size:0.85rem;color:var(--text);">
-        🎉 <strong>Launch Week ends in <span class="launch-week-countdown-inline"></span></strong> — Don't lose Pro access. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $19 Lifetime Pro →</a>
+        🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — Help us win the AI Startup Race. <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $9 Lifetime Pro →</a>
       </div>`;
     }
     // Tabs
@@ -6593,24 +6590,21 @@ function hasUsedTrial() {
   return elapsed < 24 * 60 * 60 * 1000; // 24 hours
 }
 
-function isLaunchWeek() {
+function isRaceToFinish() {
   const now = new Date();
-  const start = new Date('2026-05-14T00:00:00Z');
-  const end = new Date('2026-05-21T23:60+:60+Z');
+  const start = new Date('2026-05-28T00:00:00Z');
+  const end = new Date('2026-07-10T23:59:59Z');
   return now >= start && now <= end;
 }
 
 function isLaunchWeekAlumniWindow() {
-  const now = new Date();
-  const start = new Date('2026-05-22T00:00:00Z');
-  const end = new Date('2026-05-28T23:60+:60+Z');
-  return now >= start && now <= end;
+  return false;
 }
 
 function isProUnlocked() {
   const key = localStorage.getItem('schemalens_license');
   const hasLicense = !!(key && validateLicenseKey(key));
-  return hasLicense || hasUsedTrial() || isLaunchWeek();
+  return hasLicense || hasUsedTrial();
 }
 
 function tryProTrial() {
@@ -9224,8 +9218,8 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
 
   let shown = false;
 
-  function getLaunchWeekCountdownText() {
-    const end = new Date('2026-05-21T23:60+:60+Z');
+  function getRaceToFinishCountdownText() {
+    const end = new Date('2026-07-10T23:59:59Z');
     const diff = end - Date.now();
     if (diff <= 0) return 'ended';
     const h = Math.floor(diff / (1000 * 60 * 60));
@@ -9236,12 +9230,11 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   }
 
   function buildModalContent() {
-    const launchWeek = isLaunchWeek();
-    const alumniWindow = isLaunchWeekAlumniWindow();
-    if (launchWeek) {
+    const raceToFinish = isRaceToFinish();
+    if (raceToFinish) {
       return `
-        <h3>⏰ Don't Lose Your Free Pro Access</h3>
-        <p class="subtitle">Launch Week ends in <strong style="color:var(--danger);">${getLaunchWeekCountdownText()}</strong>. After May 21, Pro features go back behind the paywall.</p>
+        <h3>🏁 Help SchemaLens Win the AI Startup Race</h3>
+        <p class="subtitle">The $100 AI Startup Race ends in <strong style="color:var(--danger);">${getRaceToFinishCountdownText()}</strong>. Get Lifetime Pro for <strong>$9</strong> (code RACE2026) and support an indie developer tool.</p>
         <div class="exit-intent-benefits">
           <ul>
             <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
@@ -9252,36 +9245,12 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
           </ul>
         </div>
         <div class="exit-intent-price" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-          <div style="font-size:1.15rem;font-weight:700;color:var(--danger);">🔒 Lock in Pro forever — $19 one-time</div>
-          <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Pay once, keep forever. 14-day money-back guarantee.</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--danger);">🔒 Lifetime Pro — $9 with code RACE2026</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Regular price $39. Offer ends July 10. 30-day money-back guarantee.</div>
         </div>
         <div class="modal-actions" style="justify-content:center;">
-          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--danger);border-color:var(--danger);" href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_launchweek_cta');">⚡ Claim $19 Lifetime Pro →</a>
-          <a class="btn btn-secondary" href="founding-member.html" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_launchweek_free_cta');">🚀 Get Pro Free</a>
-        </div>
-        <button class="exit-intent-dismiss" onclick="dismissExitIntentModal()">No thanks, I'll use the free version</button>
-      `;
-    }
-    if (alumniWindow) {
-      return `
-        <h3>🏷️ Launch Week Alumni Deal</h3>
-        <p class="subtitle">You used SchemaLens during Launch Week. Here's an exclusive window to lock in Pro at the Launch Week price.</p>
-        <div class="exit-intent-benefits">
-          <ul>
-            <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
-            <li><strong>Full migration SQL</strong> — copy-paste ready ALTER TABLE scripts</li>
-            <li><strong>Export to Markdown, PDF, JSON, and SQL</strong> — perfect for PR reviews</li>
-            <li><strong>Breaking change detection</strong> — catch production killers before deploy</li>
-            <li><strong>Shareable diff links</strong> — send schema reviews to your team in one click</li>
-          </ul>
-        </div>
-        <div class="exit-intent-price" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.4);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-          <div style="font-size:1.15rem;font-weight:700;color:var(--warning);">🔒 Alumni Price: $39 lifetime — ends May 28</div>
-          <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Pay once, keep forever. 14-day money-back guarantee.</div>
-        </div>
-        <div class="modal-actions" style="justify-content:center;">
-          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--warning);border-color:var(--warning);" href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_alumni_cta');">⚡ Claim Alumni Pro →</a>
-          <a class="btn btn-secondary" href="founding-member.html" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_alumni_free_cta');">🚀 Get Pro Free</a>
+          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--danger);border-color:var(--danger);" href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_race_cta');">⚡ Claim $9 Pro →</a>
+          <a class="btn btn-secondary" href="founding-member.html" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_race_free_cta');">🚀 Get Pro Free</a>
         </div>
         <button class="exit-intent-dismiss" onclick="dismissExitIntentModal()">No thanks, I'll use the free version</button>
       `;
@@ -9300,7 +9269,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
       </div>
       <div class="exit-intent-price" style="background:rgba(16,185,129,0.1);border:1px solid var(--success);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
         <div style="font-size:1.1rem;font-weight:700;color:var(--success);">⚡ Lifetime Pro: $39 once</div>
-        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Price increases to $79 on July 1 · 30-day money-back guarantee</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">30-day money-back guarantee</div>
       </div>
       <div class="modal-actions" style="justify-content:center;">
         <button class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;" onclick="closeExitIntentModal(); openLicenseModal();">🔓 Unlock Pro Now</button>
@@ -9316,7 +9285,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
     content.innerHTML = buildModalContent();
     modal.classList.add('active');
     localStorage.setItem('schemalens_exit_intent_shown', String(now));
-    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_shown', { variant: isLaunchWeek() ? 'launch_week' : isLaunchWeekAlumniWindow() ? 'alumni' : 'standard' });
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_shown', { variant: isRaceToFinish() ? 'race_to_finish' : 'standard' });
   }
 
   window.closeExitIntentModal = function() {
@@ -9326,7 +9295,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   window.dismissExitIntentModal = function() {
     modal.classList.remove('active');
     localStorage.setItem('schemalens_exit_intent_dismissed_at', String(Date.now()));
-    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_dismissed', { variant: isLaunchWeek() ? 'launch_week' : isLaunchWeekAlumniWindow() ? 'alumni' : 'standard' });
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_dismissed', { variant: isRaceToFinish() ? 'race_to_finish' : 'standard' });
   };
 
   // Desktop: mouse leaving viewport toward top

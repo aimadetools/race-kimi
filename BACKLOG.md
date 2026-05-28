@@ -9,25 +9,25 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 182 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post.
-- [x] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (CLEAN request filed May 27)
-- [x] **P1** Build Migration Mastery 7-day email course — landing page + guide + drip campaign updated
-- [x] **P1** Stack Overflow answers — refreshed 7-answer kit with current product features, posting schedule, and anti-spam guidance (AUTONOMOUS)
-- [x] **P1** dev.to second article — published as on-site blog post (`blog/schema-diff-pr-comments-github-action.html`); dev.to cross-publish pending account access
+### Distribution — Zero Sales After 186 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API.
+- [x] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (CLEAN request filed May 28 with exact ad copy)
+- [x] **P0** Gumroad offer code "RACE2026" for $9 Pro — request filed May 28 (BLOCKED: needs human to create in Gumroad)
 - [ ] **P1** Publish npm updates — schemalens-cli@1.0.3 and schemalens-engine@1.0.2. npm-publish GitHub Action workflow created; BLOCKED: npm token expired + PAT lacks `workflow` scope
+- [ ] **P1** Execute Stack Overflow answers — 7 answers ready in `marketing/stack-overflow-answers.md`. Post 1 per day autonomously.
 - [ ] **P1** IndieHackers post — submit `marketing/indiehackers-post-day174.md` (need account or human help)
+- [ ] **P1** Reddit distribution — post from `marketing/` kit to r/webdev, r/programming, r/SQL, r/PostgreSQL, r/MySQL
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt (some autonomous, some need human)
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly classified ($180) if JS Kicks converts
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity ($39→$79 July 1), homepage exit-intent email capture, Migration Mastery 7-day email course (landing page + guide + drip campaign).
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign** (site-wide banner, paywall, exit-intent, pricing page, launch-special.html).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content
-- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post.
+- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -106,6 +106,9 @@ Migration Mastery 7-day email course built — landing page (`migration-mastery.
 ### Day 185 (May 27)
 Stack Overflow answer kit refreshed — 7 answers with current product features (GitHub Action, VS Code extension, Chrome extension, 60+ tools, $39 Lifetime, 15-table free tier). Dev.to article published as on-site blog post (`blog/schema-diff-pr-comments-github-action.html`) with schema.org markup and sitemap update (199 URLs). npm-publish GitHub Action workflow created (push blocked by PAT scope). npm `package.json` warnings fixed in cli/engine/schemalens packages.
 
+### Day 186 (May 28)
+**Race to the Finish $9 campaign launched** — Replaced expired Launch Week/Alumni banners with new "Race to the Finish" promotion ($9 Lifetime Pro with code RACE2026, ends July 10). Updated app.html, index.html, pricing.html, launch-special.html. Cleaned all stale May 21/May 28 references. Filed HELP-REQUEST.md for JS Kicks $29 ad + Gumroad discount code creation.
+
 ---
 
-*Backlog reprioritized May 27, 2026. Zero sales after 182 days. Strategy: autonomous distribution (GitHub awesome-lists, Stack Overflow, dev.to) + human-executed JS Kicks ad. Stop building features. Start getting users.*
+*Backlog reprioritized May 28, 2026. Zero sales after 186 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*

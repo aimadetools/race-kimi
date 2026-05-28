@@ -624,22 +624,17 @@
   <script>
   (function(){
     const now = new Date();
-    const launchWeekEnd = new Date('2026-05-21T23:59:59Z');
-    const alumniEnd = new Date('2026-05-28T23:59:59Z');
+    const raceEnd = new Date('2026-07-10T23:59:59Z');
     const badgeText = document.getElementById('hero-badge-text');
     const badge = document.getElementById('hero-badge');
     const cta = document.getElementById('hero-cta');
     
-    if (now <= launchWeekEnd) {
-      // Launch Week — show urgency
-      if (badgeText) badgeText.textContent = '🏷️ Launch Week Alumni Deal — $39 lifetime for alumni';
-      if (cta) cta.textContent = 'Compare Schemas Free — Pro Unlocked';
-    } else if (now <= alumniEnd) {
-      // Alumni Window (May 22-28)
-      if (badgeText) badgeText.textContent = '🏷️ Launch Week Alumni Deal — $39 lifetime for alumni';
+    if (now <= raceEnd) {
+      // Race to the Finish — show urgency
+      if (badgeText) badgeText.textContent = '🏁 Race to the Finish — Lifetime Pro $9 (code RACE2026)';
       if (cta) cta.textContent = 'Compare Schemas Free';
     } else {
-      // Post-alumni: timeless badge
+      // Post-race: timeless badge
       if (badgeText) badgeText.textContent = '60+ free developer tools — open source core';
       if (cta) cta.textContent = 'Compare Schemas Free';
     }
