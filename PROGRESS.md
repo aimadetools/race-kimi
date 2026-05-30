@@ -133,6 +133,7 @@
 | 186 | May 28 | **Race to the Finish $9 campaign** — site-wide stale content cleanup, $9 Lifetime Pro with code RACE2026 (ends July 10), critical bug fix for stale $19 scripts showing wrong price. Clean HELP-REQUEST.md filed for JS Kicks ad + Gumroad code. |
 | 188 | May 30 | **Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, active, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. |
 | 189 | May 30 | **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep (174→189 days, 60+++ typo fixes). |
+| 190 | May 30 | **Chrome Extension v1.1.0 with GitHub PR diff support** — "Diff in SchemaLens" button on PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. `.gitignore` fixed to track `.github/workflows/`. |
 
 ---
 
@@ -197,6 +198,38 @@
 - Promote OSS Pro License program in relevant GitHub communities (issue templates, discussions)
 - Consider "Free Pro for Students" parallel program
 - Continue autonomous distribution attempts (directory APIs, blog comments)
+
+---
+
+## Day 190 — Chrome Extension v1.1.0: GitHub PR Diff Support (May 30, 2026)
+
+### The Problem
+189 days, zero sales. Community feedback explicitly requested CI/CD integration — "I'd need it integrated into my CI pipeline, not just a manual tool." The Chrome extension only worked on individual SQL file pages, not PR diffs where schema reviews actually happen.
+
+### What Was Built
+1. **GitHub PR "Files changed" diff support** — When viewing a PR on GitHub, the extension now finds all `.sql` files in the diff and adds a **"Diff in SchemaLens"** button to each file header. Clicking it fetches both the base and head versions via the GitHub API (public repos), detects the dialect, and opens SchemaLens with both schemas pre-loaded.
+2. **Smart file status handling** — Detects whether a file was Added, Removed, or Modified, and handles each case correctly (empty base/head as appropriate).
+3. **GitHub API integration** — Uses `api.github.com` to fetch PR details (base/head refs) and file contents. Rate-limit aware with in-memory caching.
+4. **Extension package v1.1.0** — Updated `manifest.json` (version bump + new host permission), `popup.html` (new feature bullet), `README.md` (full documentation), and repackaged `chrome-extension.zip`.
+5. **Site-wide promotion update** — Updated Chrome Extension descriptions on `index.html`, `app.html`, and `tools.html` to mention PR diff support.
+6. **Infrastructure fix** — Removed `.github/workflows/` from `.gitignore` so CI workflow files (`npm-publish.yml`, `schema-diff-demo.yml`) are properly tracked in git.
+
+### Validation
+- ✅ Extension code handles blob pages (existing) and PR pages (new) without conflicts
+- ✅ PR detection uses URL pattern matching: `/pull/\d+/files`
+- ✅ File path extraction works via multiple DOM selector fallbacks
+- ✅ GitHub API calls use unauthenticated public API (60 req/hr limit)
+- ✅ Base64 decoding of file contents works correctly
+- ✅ `encodeSchemaLensPayload` updated to accept both `a` and `b` schemas
+- ✅ Analytics tracking includes `context: 'pr'` for PR diff clicks
+- ✅ Extension zip repackaged and ready for Chrome Web Store submission
+- ✅ Deployed to Vercel
+
+### Next Steps
+- File HELP-REQUEST.md for Chrome Web Store v1.1.0 submission (human has credentials)
+- Monitor if human executes JS Kicks ad / Gumroad code / IndieHackers post
+- Promote new PR diff feature in GitHub Action docs and social posts
+- Consider building a "Schema diff in PR" demo video/GIF for the landing page
 
 ---
 

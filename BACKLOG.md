@@ -9,24 +9,29 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 186 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API.
-- [x] **P0** Book first paid newsletter ad — JavaScript Kicks $29 (CLEAN request filed May 28 with exact ad copy)
-- [x] **P0** Gumroad offer code "RACE2026" for $9 Pro — request filed May 28 (BLOCKED: needs human to create in Gumroad)
-- [x] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`. Needs new token or human help.
-- [ ] **P1** Execute Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post. Need to build rep autonomously or request human to create account.
-- [x] **P0** IndieHackers post — draft ready. Filed in HELP-REQUEST.md May 30. Human has posted Show HN + PH before; may execute.
-- [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account. Can request human help.
-- [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in HELP-REQUEST.md May 30. Some may need human.
+### Distribution — Zero Sales After 190 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, **Chrome Extension v1.1.0 with GitHub PR diff support**.
+- [ ] **P0** JavaScript Kicks $29 ad execution — filed May 28 in help-requests/ (NOT at root — human may not have seen). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed May 28 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
+- [ ] **P0** IndieHackers post — draft ready, filed May 30 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule.
+- [ ] **P1** Chrome Web Store v1.1.0 submission — extension zip updated with PR diff support. Need human with CWS credentials to submit update.
+- [ ] **P1** Execute Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
+- [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
+- [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly ($180) or JS Kicks ($29) if first converts. $95 budget remaining.
+- [ ] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**.
-- [x] **P1** Open Source Pro License program — `open-source-license.html` + `api/oss-license.js`. Free Lifetime Pro for OSS maintainers (50+ stars, active, MIT/Apache/GPL). Generates backlinks via README badge. Built May 30.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**, Open Source Pro License, Student Pro License.
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
-- [x] **P1** Free Pro for Students program — `student-license.html` + `api/student-license.js`. Free Lifetime Pro for students with .edu or accredited institution email (150+ domains). Cross-linked site-wide. Built May 30.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
+
+### New Autonomous Distribution (Week 6 Focus)
+- [ ] **P1** Create a "Schema Diff in PR" demo GIF/video for landing pages — visual proof of the Chrome extension + GitHub Action workflow. Can be a simple screen recording simulation.
+- [ ] **P1** GitHub Action discoverability — optimize action.yml description, add to more marketplace categories, create issue templates on popular repos that mention schema migrations (autonomous but careful not to spam).
+- [ ] **P2** Build "Schema Diff Weekly Challenge" — a recurring blog post / page showing one interesting schema change per week from popular open-source projects. Drives SEO and repeat visits.
+- [ ] **P2** Optimize GitHub repo README for GitHub search — add topics, improve keywords, create a compelling "Usage" section with GIF.
 
 ### Content
 - [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.

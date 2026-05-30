@@ -3,11 +3,12 @@
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jbigkphlkggibnnbfdlkhcjpedjchgde?label=Chrome%20Web%20Store)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
 [![SchemaLens](https://img.shields.io/badge/Website-schemalens.tech-6366f1)](https://schemalens.tech)
 
-Add an **"Open in SchemaLens"** button to every `.sql` file on GitHub. Click it to instantly diff schemas, detect breaking changes, and generate migration SQL — without leaving your workflow.
+Add an **"Open in SchemaLens"** button to every `.sql` file on GitHub, plus a **"Diff in SchemaLens"** button on PR "Files changed" pages. Click it to instantly diff schemas, detect breaking changes, and generate migration SQL — without leaving your workflow.
 
 ## 🚀 Features
 
 - **One-click schema diff** — Open any `.sql` file from GitHub directly in [SchemaLens](https://schemalens.tech)
+- **PR diff support** — On any PR's "Files changed" tab, diff modified `.sql` files against their base version in one click
 - **Auto-detects SQL dialect** — PostgreSQL, MySQL, SQLite, SQL Server, and Oracle
 - **Breaking change detection** — See exactly what changed and whether it's safe to deploy
 - **Zero backend** — Your schema never touches a server. Everything parses client-side.
@@ -27,22 +28,24 @@ This extension does not collect, store, or transmit any data to SchemaLens serve
 2. Enable **Developer mode** (toggle in top-right)
 3. Click **Load unpacked**
 4. Select this `chrome-extension` folder
-5. Visit any `.sql` file on GitHub (e.g., `https://github.com/owner/repo/blob/main/schema.sql`)
-6. Look for the **Open in SchemaLens** button in the file header toolbar
+5. Visit any `.sql` file on GitHub (e.g., `https://github.com/owner/repo/blob/main/schema.sql`) or open a PR's "Files changed" tab
+6. Look for the **Open in SchemaLens** or **Diff in SchemaLens** button in the file header toolbar
 
 ## 🛠 How It Works
 
-1. The content script monitors GitHub pages for `.sql` blob URLs
-2. When detected, it injects an "Open in SchemaLens" button into the file header
-3. On click, it fetches the raw SQL from `raw.githubusercontent.com`
-4. The content is base64-encoded into a SchemaLens share URL with auto-detected dialect
-5. A new tab opens at `schemalens.tech/app.html#diff=<payload>` with the file pre-loaded
+1. The content script monitors GitHub pages for `.sql` blob URLs and PR "Files changed" pages
+2. When detected, it injects an "Open in SchemaLens" or "Diff in SchemaLens" button into the file header
+3. On blob pages, it fetches the raw SQL from `raw.githubusercontent.com`
+4. On PR pages, it uses the GitHub API to fetch both the base and head versions of the SQL file
+5. The content is base64-encoded into a SchemaLens share URL with auto-detected dialect
+6. A new tab opens at `schemalens.tech/app.html#diff=<payload>` with the file(s) pre-loaded
 
 ## 🌐 Permissions
 
 - `activeTab` — to read the current GitHub page URL
 - `https://github.com/*` — to inject the button on GitHub pages
 - `https://raw.githubusercontent.com/*` — to fetch raw SQL file content
+- `https://api.github.com/*` — to fetch base/head file versions in PR diffs
 
 ## 📝 Notes
 
