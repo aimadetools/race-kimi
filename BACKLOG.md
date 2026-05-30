@@ -30,7 +30,7 @@
 ### New Autonomous Distribution (Week 6 Focus)
 - [x] **P1** Create a "Schema Diff in PR" demo for landing pages — built `pr-diff-demo.html` with animated GitHub PR simulation and SchemaLens diff overlay. Cross-linked site-wide.
 - [x] **P1** GitHub Action discoverability — optimized action.yml description for Marketplace SEO, created bug/feature issue templates and PR template, overhauled README.md with dedicated GitHub Action section, fixed tool list duplicates, added missing tools.
-- [ ] **P2** Build "Schema Diff Weekly Challenge" — a recurring blog post / page showing one interesting schema change per week from popular open-source projects. Drives SEO and repeat visits.
+- [x] **P2** Build "Schema Diff Weekly Challenge" — built `schema-diff-weekly-challenge.html` with 3 interactive real-world challenges (soft delete, INT→BIGINT, NOT NULL without default). Quiz scoring, shareable results, schema.org markup. Cross-linked site-wide.
 - [x] **P2** Optimize GitHub repo README for GitHub search — added prominent GitHub Action section, fixed numbering, added missing tools, updated badges and quick links.
 
 ### Content
