@@ -6,10 +6,11 @@
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Marketplace-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/aimadetools/race-kimi)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
-**[🌐 Web App](https://schemalens.tech)** · **[📦 CLI](https://schemalens.tech/cli/)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Pricing](https://schemalens.tech/pricing.html)**
+**[🌐 Web App](https://schemalens.tech)** · **[📦 CLI](https://schemalens.tech/cli/)** · **[⚡ GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Pricing](https://schemalens.tech/pricing.html)**
 
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
@@ -35,6 +36,28 @@ Paste two `CREATE TABLE` dumps. SchemaLens shows you:
 - ORM exports: **Prisma schema** and **Drizzle TypeScript**
 
 All parsing happens **entirely in your browser** — your schema data never touches a server.
+
+---
+
+## GitHub Action
+
+Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) compares SQL schemas on every pull request and posts a diff summary as a PR comment.
+
+```yaml
+- uses: aimadetools/race-kimi@main
+  with:
+    old-schema-path: ./schema/base.sql
+    new-schema-path: ./schema/current.sql
+    dialect: postgres
+    post-comment: true
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    fail-on-breaking: true
+```
+
+- **Free tier** — no license key required
+- **Breaking change detection** — fail the build before bad migrations reach production
+- **PR comments** — formatted diff summary posted automatically
+- **5 dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
 
 ---
 
@@ -78,67 +101,70 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 10. [SQL JOIN Visualizer](https://schemalens.tech/tools/sql-join-visualizer.html)
 11. [Schema Health Check / SQL Linter](https://schemalens.tech/tools/schema-health-check.html)
 12. [Schema Normalization Checker](https://schemalens.tech/tools/schema-normalization-checker.html) — 1NF/2NF/3NF analysis
-12. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
-13. [SQL Index Analyzer](https://schemalens.tech/tools/sql-index-analyzer.html)
-14. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
-15. [Migration Cost Calculator](https://schemalens.tech/tools/migration-cost-calculator.html)
-16. [Video Tips](https://schemalens.tech/video-tips.html)
-17. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html)
-18. [Schema Mistake Quiz](https://schemalens.tech/tools/schema-mistake-quiz.html)
-19. [Schema Guessr](https://schemalens.tech/tools/schema-guessr.html) — guess the app from its database schema
-20. [Badge Generator](https://schemalens.tech/tools/badge-generator.html)
-20. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
-21. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
-22. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
-23. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
-24. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
-25. [SQL SELECT Generator](https://schemalens.tech/tools/sql-select-generator.html)
-26. [SQL to TypeScript Generator](https://schemalens.tech/tools/sql-to-typescript.html)
-27. [SQL Query Explainer](https://schemalens.tech/tools/sql-query-explainer.html)
-28. [Connection String Parser](https://schemalens.tech/tools/connection-string-parser.html)
-29. [SQL to Python Generator](https://schemalens.tech/tools/sql-to-python.html)
-30. [SQL to Go Generator](https://schemalens.tech/tools/sql-to-go.html)
-31. [SQL to Java Generator](https://schemalens.tech/tools/sql-to-java.html)
-32. [SQL to Rust Generator](https://schemalens.tech/tools/sql-to-rust.html)
-33. [SQL UPDATE Generator](https://schemalens.tech/tools/sql-update-generator.html)
-32. [SQL DELETE Generator](https://schemalens.tech/tools/sql-delete-generator.html)
-33. [SQL UPSERT & MERGE Generator](https://schemalens.tech/tools/sql-upsert-generator.html)
-34. [SQL CASE WHEN Generator](https://schemalens.tech/tools/sql-case-generator.html)
-35. [Schema Breaking Change Quiz](https://schemalens.tech/tools/schema-breaking-change-quiz.html)
-36. [Database Naming Convention Checker](https://schemalens.tech/tools/naming-convention-checker.html)
-37. [SQL IN Clause Builder](https://schemalens.tech/tools/sql-in-list-builder.html)
-38. [SQL CREATE INDEX Generator](https://schemalens.tech/tools/sql-create-index-generator.html)
-39. [SQL CREATE VIEW Generator](https://schemalens.tech/tools/sql-create-view-generator.html)
-40. [SQL DROP Statement Generator](https://schemalens.tech/tools/sql-drop-generator.html)
-41. [SQL CHECK Constraint Generator](https://schemalens.tech/tools/sql-check-constraint-generator.html)
-42. [SQL Trigger Generator](https://schemalens.tech/tools/sql-trigger-generator.html)
-43. [SQL Rename Generator](https://schemalens.tech/tools/sql-rename-generator.html)
-44. [SQL Window Function Generator](https://schemalens.tech/tools/sql-window-function-generator.html)
-45. [SQL GROUP BY Generator](https://schemalens.tech/tools/sql-group-by-generator.html)
-46. [SQL Pagination Generator](https://schemalens.tech/tools/sql-pagination-generator.html)
-47. [SQL CTE Generator](https://schemalens.tech/tools/sql-cte-generator.html)
-48. [SQL Transaction Generator](https://schemalens.tech/tools/sql-transaction-generator.html)
-49. [Schema Design Interview Questions](https://schemalens.tech/tools/schema-design-interviews.html)
-50. [SQL to Mermaid ERD Converter](https://schemalens.tech/tools/sql-to-mermaid-erd.html)
-51. [SQL to DBML Converter](https://schemalens.tech/tools/sql-to-dbml.html)
-52. [SQL to PlantUML ERD Converter](https://schemalens.tech/tools/sql-to-plantuml.html)
-53. [SQL to OpenAPI / JSON Schema Converter](https://schemalens.tech/tools/sql-to-openapi.html)
-54. [Famous Database Schemas](https://schemalens.tech/famous-database-schemas.html) — Real-world SQL designs from Twitter, Uber, E-commerce, Chat, and more with ERD diagrams
-55. [Database Schema Design Patterns](https://schemalens.tech/database-schema-design-patterns.html) — 10 production-ready SQL patterns with before/after diffs
-56. [Database Schema Anti-Patterns](https://schemalens.tech/database-schema-anti-patterns.html) — 10 common schema mistakes and how to fix them
-57. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
+13. [SQL Data Types Reference](https://schemalens.tech/tools/sql-data-types.html)
+14. [SQL Index Analyzer](https://schemalens.tech/tools/sql-index-analyzer.html)
+15. [ER Diagram Generator](https://schemalens.tech/tools/schema-diagram.html)
+16. [Migration Cost Calculator](https://schemalens.tech/tools/migration-cost-calculator.html)
+17. [Video Tips](https://schemalens.tech/video-tips.html)
+18. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html)
+19. [Schema Mistake Quiz](https://schemalens.tech/tools/schema-mistake-quiz.html)
+20. [Schema Guessr](https://schemalens.tech/tools/schema-guessr.html) — guess the app from its database schema
+21. [Badge Generator](https://schemalens.tech/tools/badge-generator.html)
+22. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
+23. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
+24. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
+25. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
+26. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
+27. [SQL SELECT Generator](https://schemalens.tech/tools/sql-select-generator.html)
+28. [SQL to TypeScript Generator](https://schemalens.tech/tools/sql-to-typescript.html)
+29. [SQL Query Explainer](https://schemalens.tech/tools/sql-query-explainer.html)
+30. [Connection String Parser](https://schemalens.tech/tools/connection-string-parser.html)
+31. [SQL to Python Generator](https://schemalens.tech/tools/sql-to-python.html)
+32. [SQL to Go Generator](https://schemalens.tech/tools/sql-to-go.html)
+33. [SQL to Java Generator](https://schemalens.tech/tools/sql-to-java.html)
+34. [SQL to Rust Generator](https://schemalens.tech/tools/sql-to-rust.html)
+35. [SQL UPDATE Generator](https://schemalens.tech/tools/sql-update-generator.html)
+36. [SQL DELETE Generator](https://schemalens.tech/tools/sql-delete-generator.html)
+37. [SQL UPSERT & MERGE Generator](https://schemalens.tech/tools/sql-upsert-generator.html)
+38. [SQL CASE WHEN Generator](https://schemalens.tech/tools/sql-case-generator.html)
+39. [Schema Breaking Change Quiz](https://schemalens.tech/tools/schema-breaking-change-quiz.html)
+40. [Database Naming Convention Checker](https://schemalens.tech/tools/naming-convention-checker.html)
+41. [SQL IN Clause Builder](https://schemalens.tech/tools/sql-in-list-builder.html)
+42. [SQL CREATE INDEX Generator](https://schemalens.tech/tools/sql-create-index-generator.html)
+43. [SQL CREATE VIEW Generator](https://schemalens.tech/tools/sql-create-view-generator.html)
+44. [SQL DROP Statement Generator](https://schemalens.tech/tools/sql-drop-generator.html)
+45. [SQL CHECK Constraint Generator](https://schemalens.tech/tools/sql-check-constraint-generator.html)
+46. [SQL Trigger Generator](https://schemalens.tech/tools/sql-trigger-generator.html)
+47. [SQL Rename Generator](https://schemalens.tech/tools/sql-rename-generator.html)
+48. [SQL Window Function Generator](https://schemalens.tech/tools/sql-window-function-generator.html)
+49. [SQL GROUP BY Generator](https://schemalens.tech/tools/sql-group-by-generator.html)
+50. [SQL Pagination Generator](https://schemalens.tech/tools/sql-pagination-generator.html)
+51. [SQL CTE Generator](https://schemalens.tech/tools/sql-cte-generator.html)
+52. [SQL Transaction Generator](https://schemalens.tech/tools/sql-transaction-generator.html)
+53. [Schema Design Interview Questions](https://schemalens.tech/tools/schema-design-interviews.html)
+54. [SQL to Mermaid ERD Converter](https://schemalens.tech/tools/sql-to-mermaid-erd.html)
+55. [SQL to DBML Converter](https://schemalens.tech/tools/sql-to-dbml.html)
+56. [SQL to PlantUML ERD Converter](https://schemalens.tech/tools/sql-to-plantuml.html)
+57. [SQL to OpenAPI / JSON Schema Converter](https://schemalens.tech/tools/sql-to-openapi.html)
+58. [Famous Database Schemas](https://schemalens.tech/famous-database-schemas.html) — Real-world SQL designs from Twitter, Uber, E-commerce, Chat, and more with ERD diagrams
+59. [Database Schema Design Patterns](https://schemalens.tech/database-schema-design-patterns.html) — 10 production-ready SQL patterns with before/after diffs
+60. [Database Schema Anti-Patterns](https://schemalens.tech/database-schema-anti-patterns.html) — 10 common schema mistakes and how to fix them
+61. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
+62. [SQL to C# Generator](https://schemalens.tech/tools/sql-to-csharp.html)
+63. [Schema Badge API](https://schemalens.tech/tools/schema-badge.html)
 
-[View all tools →](https://schemalens.tech/tools.html)
+[View all 60+ tools →](https://schemalens.tech/tools.html)
 
 ---
 
 ## API & Integrations
 
+- **GitHub Action** — Free schema diff in CI/CD with automatic PR comments. [Setup Guide](https://schemalens.tech/github-action.html) · [Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
 - **REST API** — `POST /api/diff` with JSON or Markdown output. [API Docs](https://schemalens.tech/api.html) · [Quick Start Guide](https://schemalens.tech/api-guide.html)
 - **Slack Webhooks** — Send diff summaries and breaking change alerts directly to Slack
-- **CI/CD Templates** — GitHub Actions, GitLab CI, and Bitbucket Pipelines for schema diff in PRs
+- **CI/CD Templates** — GitLab CI and Bitbucket Pipelines for schema diff in PRs
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
-- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens, or diff SQL files in PR "Files changed" pages ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`),
+- **Chrome Extension** — Diff SQL files on GitHub blob pages and PR "Files changed" pages with one click ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`)
 - **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 
@@ -208,7 +234,7 @@ We track everything publicly. Follow our journey on the [Open Startup page](http
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 32+ published
-- **E2E tests:** 130+ passing
+- **E2E tests:** 127 passing
 
 ---
 
