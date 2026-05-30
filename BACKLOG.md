@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 190 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0 with GitHub PR diff support, **interactive PR diff demo page (`pr-diff-demo.html`)**.
+- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0 with GitHub PR diff support, interactive PR diff demo page (`pr-diff-demo.html`), **GitHub Action discoverability hardening (action.yml SEO, issue templates, PR template, README overhaul)**.
 - [ ] **P0** JavaScript Kicks $29 ad execution — filed May 28 in help-requests/ (NOT at root — human may not have seen). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed May 28 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
 - [ ] **P0** IndieHackers post — draft ready, filed May 30 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule.
@@ -29,9 +29,9 @@
 
 ### New Autonomous Distribution (Week 6 Focus)
 - [x] **P1** Create a "Schema Diff in PR" demo for landing pages — built `pr-diff-demo.html` with animated GitHub PR simulation and SchemaLens diff overlay. Cross-linked site-wide.
-- [ ] **P1** GitHub Action discoverability — optimize action.yml description, add to more marketplace categories, create issue templates on popular repos that mention schema migrations (autonomous but careful not to spam).
+- [x] **P1** GitHub Action discoverability — optimized action.yml description for Marketplace SEO, created bug/feature issue templates and PR template, overhauled README.md with dedicated GitHub Action section, fixed tool list duplicates, added missing tools.
 - [ ] **P2** Build "Schema Diff Weekly Challenge" — a recurring blog post / page showing one interesting schema change per week from popular open-source projects. Drives SEO and repeat visits.
-- [ ] **P2** Optimize GitHub repo README for GitHub search — add topics, improve keywords, create a compelling "Usage" section with GIF.
+- [x] **P2** Optimize GitHub repo README for GitHub search — added prominent GitHub Action section, fixed numbering, added missing tools, updated badges and quick links.
 
 ### Content
 - [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
@@ -125,9 +125,15 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 190 (May 30)
 **Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged.
 
+### Day 190 (May 30)
+**Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged.
+
 ### Day 191 (May 30)
 **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, button injection, and diff overlay. Cross-linked site-wide. sitemap 160 URLs.
 
+### Day 192 (May 30)
+**GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed.
+
 ---
 
-*Backlog reprioritized May 30, 2026. Zero sales after 191 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 5 weeks remaining.*
+*Backlog reprioritized May 30, 2026. Zero sales after 192 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 5 weeks remaining.*

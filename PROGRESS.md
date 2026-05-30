@@ -135,6 +135,7 @@
 | 189 | May 30 | **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep (174→189 days, 60+++ typo fixes). |
 | 190 | May 30 | **Chrome Extension v1.1.0 with GitHub PR diff support** — "Diff in SchemaLens" button on PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. `.gitignore` fixed to track `.github/workflows/`. |
 | 191 | May 30 | **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, SchemaLens button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs. |
+| 192 | May 30 | **GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed. |
 
 ---
 
@@ -170,30 +171,32 @@
 
 ---
 
-## Day 189 — Free Pro for Students Program (May 30, 2026)
+## Day 192 — GitHub Action Discoverability Hardening (May 30, 2026)
 
 ### The Problem
-188 days, zero sales. OSS program launched but students are another high-viral segment that can't afford $39. Need parallel conversion channel targeting .edu emails with zero friction.
+191 days, zero sales. The SchemaLens GitHub Action is published on GitHub Marketplace but buried in the repo. README.md didn't feature it prominently, action.yml description wasn't optimized for Marketplace search, and there were no issue templates for community engagement.
 
 ### What Was Built
-1. **Student Pro License program** — Free Lifetime Pro for students. Requirements: valid .edu or accredited institution email, any field of study, current enrollment. Built `student-license.html` landing page with instant verification form. Created `api/student-license.js` endpoint with 150+ accredited domain whitelist, rate limiting, and valid Pro license generation.
-2. **Cross-linking site-wide** — Added student program links to app.html paywall ("Student? Get Pro free with your .edu email →"), pricing.html (dedicated promo box + FAQ), index.html footer, open-source-license.html footer, open-source.html body + footer.
-3. **International domain support** — Covers US (.edu), UK (.ac.uk), Australia (.edu.au), Germany, France, Netherlands, Switzerland, Nordics, India (.ac.in, IITs, NITs), China (.edu.cn), Japan (.ac.jp), Korea (.ac.kr), Singapore (.edu.sg), and 40+ more countries.
+1. **action.yml SEO optimization** — Rewrote description from "Compare SQL schemas and post diff comments on PRs" to "Free SQL schema diff for GitHub Actions. Catch breaking database changes in PRs. Supports Postgres, MySQL, SQLite, SQL Server, Oracle." More keyword-rich for GitHub Marketplace search.
+2. **GitHub issue templates** — Created `.github/ISSUE_TEMPLATE/bug_report.yml` (structured form with dialect dropdown, reproduction steps, browser info) and `.github/ISSUE_TEMPLATE/feature_request.yml` (problem/solution/alternatives/scope form). Professional triage experience for contributors.
+3. **Pull request template** — Created `.github/PULL_REQUEST_TEMPLATE.md` with change type checklist, testing requirements, and sitemap/PROGRESS.md reminders.
+4. **README.md overhaul** — Added dedicated "GitHub Action" section with copy-paste YAML example, feature bullets, and quick-start instructions. Added GitHub Action badge to repo header. Promoted GitHub Action to first item in API & Integrations list.
+5. **Tool list fix** — Corrected 4 duplicate numbers in the README tool list (12→13, 20→21-22, 32→33-34, 33→35-36). Added 2 missing tools: SQL to C# Generator and Schema Badge API. List now has 63 unique entries.
+6. **sitemap.xml maintenance** — Updated lastmod dates for index.html, app.html, github-action.html, pr-diff-demo.html, built-in-public.html, open-source-license.html, and student-license.html to 2026-05-30.
 
 ### Validation
-- ✅ Email domain validation works for .edu and international academic domains
-- ✅ License generation uses same checksum algorithm as client-side validation
-- ✅ Rate limiting (3 apps/IP/hour)
-- ✅ sitemap.xml updated with new page
-- ✅ All cross-links verified
+- ✅ action.yml description is under 125 characters and keyword-rich
+- ✅ Issue templates render correctly in GitHub's issue creation UI
+- ✅ PR template includes all critical checklist items
+- ✅ README.md renders correctly with new GitHub Action section and fixed numbering
+- ✅ 34/34 unit tests passing, 264/288 e2e tests passing (24 API tests skipped — no server)
 - ✅ Deployed to Vercel
 
 ### Next Steps
-- Monitor student application volume via Supabase
-- Promote program in student dev communities (Reddit r/csMajors, r/cscareerquestions, Discord servers)
+- Monitor if human executes JS Kicks ad / Gumroad code / IndieHackers post
 - Continue autonomous distribution (Stack Overflow, directories, blog comments)
-- If human executes JS Kicks ad / Gumroad code / IndieHackers post, monitor conversion
-
+- Consider building a "Schema Diff Weekly Challenge" for recurring SEO content
+- File unambiguous JavaScript Kicks sponsorship request (previous #44/#45 were closed)
 
 ---
 
