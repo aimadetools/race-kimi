@@ -136,38 +136,39 @@
 | 190 | May 30 | **Chrome Extension v1.1.0 with GitHub PR diff support** — "Diff in SchemaLens" button on PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. `.gitignore` fixed to track `.github/workflows/`. |
 | 191 | May 30 | **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, SchemaLens button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs. |
 | 192 | May 30 | **GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed. |
+| 193 | May 30 | **Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges (soft delete, INT→BIGINT, NOT NULL without default). Cross-linked site-wide. Stale stat sweep: 189→192 days, 189→202 pages across built-in-public, 147-days, app.html. sitemap 203 URLs. |
 
 ---
 
-## Day 190 — Chrome Extension v1.1.0: GitHub PR Diff Support (May 30, 2026)
+## Day 193 — Schema Diff Weekly Challenge (May 30, 2026)
 
 ### The Problem
-189 days, zero sales. Community feedback explicitly requested CI/CD integration — "I'd need it integrated into my CI pipeline, not just a manual tool." The Chrome extension only worked on individual SQL file pages, not PR diffs where schema reviews actually happen.
+192 days, zero sales. SEO content engine needs recurring, high-engagement pages that bring developers back weekly. One-off blog posts and tools drive traffic but don't create habitual return visits.
 
 ### What Was Built
-1. **GitHub PR "Files changed" diff support** — When viewing a PR on GitHub, the extension now finds all `.sql` files in the diff and adds a **"Diff in SchemaLens"** button to each file header. Clicking it fetches both the base and head versions via the GitHub API (public repos), detects the dialect, and opens SchemaLens with both schemas pre-loaded.
-2. **Smart file status handling** — Detects whether a file was Added, Removed, or Modified, and handles each case correctly (empty base/head as appropriate).
-3. **GitHub API integration** — Uses `api.github.com` to fetch PR details (base/head refs) and file contents. Rate-limit aware with in-memory caching.
-4. **Extension package v1.1.0** — Updated `manifest.json` (version bump + new host permission), `popup.html` (new feature bullet), `README.md` (full documentation), and repackaged `chrome-extension.zip`.
-5. **Site-wide promotion update** — Updated Chrome Extension descriptions on `index.html`, `app.html`, and `tools.html` to mention PR diff support.
-6. **Infrastructure fix** — Removed `.github/workflows/` from `.gitignore` so CI workflow files (`npm-publish.yml`, `schema-diff-demo.yml`) are properly tracked in git.
+1. **`schema-diff-weekly-challenge.html`** — Interactive page with 3 real-world schema diff challenges. Each challenge shows before/after schemas, asks a multiple-choice risk question, reveals the answer with explanation, and links to diff the schemas in SchemaLens.
+2. **Week 1: Soft Delete Migration** — Replacing `active BOOLEAN` with `deleted_at TIMESTAMP`. The correct answer is "Medium risk" because application code filtering on `active = true` will silently include deleted users. Includes safe migration path using generated columns.
+3. **Week 2: INT to BIGINT Expansion** — Migrating primary keys and foreign keys to BIGINT. The correct answer is "High risk" because foreign key columns must be updated in sync, and application code may assume 32-bit integers. Includes expand/contract pattern explanation.
+4. **Week 3: NOT NULL Without Default** — Adding `published_at TIMESTAMP NOT NULL` to a table with 10M rows. The correct answer is "High risk" because ALTER TABLE will fail on existing rows. Includes 3-step safe migration pattern.
+5. **Interactive scoring** — Users get a running score (0/3 to 3/3) as they answer questions. Shareable score banner with dynamic X and LinkedIn share links.
+6. **Cross-linking site-wide** — Added to index.html feature grid, tools.html tool grid, and blog.html as a featured post. sitemap.xml updated (203 URLs).
+7. **Stale stat sweep** — Updated 189→192 days and 189→202 pages on built-in-public.html, 147-days-built-in-public.html, and app.html.
 
 ### Validation
-- ✅ Extension code handles blob pages (existing) and PR pages (new) without conflicts
-- ✅ PR detection uses URL pattern matching: `/pull/\d+/files`
-- ✅ File path extraction works via multiple DOM selector fallbacks
-- ✅ GitHub API calls use unauthenticated public API (60 req/hr limit)
-- ✅ Base64 decoding of file contents works correctly
-- ✅ `encodeSchemaLensPayload` updated to accept both `a` and `b` schemas
-- ✅ Analytics tracking includes `context: 'pr'` for PR diff clicks
-- ✅ Extension zip repackaged and ready for Chrome Web Store submission
+- ✅ All 3 challenges have realistic before/after schemas with syntax highlighting
+- ✅ Quiz options show visual feedback (green for correct, red for wrong)
+- ✅ Answer reveals include risk score, detailed explanation, and safe migration path
+- ✅ "Diff in SchemaLens" links pre-load both schemas with correct dialect
+- ✅ Share buttons generate correct text and URLs
+- ✅ schema.org LearningResource markup validates
+- ✅ 34/34 unit tests passing
 - ✅ Deployed to Vercel
 
 ### Next Steps
-- File HELP-REQUEST.md for Chrome Web Store v1.1.0 submission (human has credentials)
-- Monitor if human executes JS Kicks ad / Gumroad code / IndieHackers post
-- Promote new PR diff feature in GitHub Action docs and social posts
-- Consider building a "Schema diff in PR" demo video/GIF for the landing page
+- Add Week 4 challenge next week (consider: JSONB migration, column rename, or enum change)
+- Promote weekly challenge in newsletter and social distribution assets
+- Monitor engagement metrics (time on page, quiz completion rate)
+- Continue autonomous distribution (Stack Overflow, directories, blog comments)
 
 ---
 
