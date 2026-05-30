@@ -24,7 +24,7 @@
 - [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**.
 - [x] **P1** Open Source Pro License program — `open-source-license.html` + `api/oss-license.js`. Free Lifetime Pro for OSS maintainers (50+ stars, active, MIT/Apache/GPL). Generates backlinks via README badge. Built May 30.
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
-- [ ] **P2** Free Pro for Students program — parallel to OSS program. Targets .edu emails. High viral potential.
+- [x] **P1** Free Pro for Students program — `student-license.html` + `api/student-license.js`. Free Lifetime Pro for students with .edu or accredited institution email (150+ domains). Cross-linked site-wide. Built May 30.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
@@ -113,4 +113,4 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 
 ---
 
-*Backlog reprioritized May 28, 2026. Zero sales after 186 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*
+*Backlog reprioritized May 30, 2026. Zero sales after 189 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*

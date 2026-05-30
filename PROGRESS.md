@@ -131,6 +131,8 @@
 | 184 | May 27 | Published schemalens-cli@1.0.3 and schemalens-engine@1.0.2 to npm. Built Migration Mastery 7-day email course landing page + drip campaign. sitemap.xml updated. |
 | 185 | May 27 | Refreshed Stack Overflow answer kit (7 answers). Published dev.to article as on-site blog post. Created npm-publish GitHub Action workflow. Fixed npm package.json warnings. |
 | 186 | May 28 | **Race to the Finish $9 campaign** — site-wide stale content cleanup, $9 Lifetime Pro with code RACE2026 (ends July 10), critical bug fix for stale $19 scripts showing wrong price. Clean HELP-REQUEST.md filed for JS Kicks ad + Gumroad code. |
+| 188 | May 30 | **Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, active, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. |
+| 189 | May 30 | **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep (174→189 days, 60+++ typo fixes). |
 
 ---
 
