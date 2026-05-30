@@ -1,0 +1,72 @@
+name: Bug Report
+description: Report a bug in SchemaLens
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the details below.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected to happen.
+      placeholder: "When I paste my schema, the diff shows..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Provide the exact SQL schema(s) that trigger the issue.
+      placeholder: |
+        Schema A:
+        ```sql
+        CREATE TABLE users (id INT PRIMARY KEY);
+        ```
+
+        Schema B:
+        ```sql
+        CREATE TABLE users (id INT PRIMARY KEY, email VARCHAR(255));
+        ```
+    validations:
+      required: true
+  - type: dropdown
+    id: dialect
+    attributes:
+      label: SQL Dialect
+      options:
+        - PostgreSQL
+        - MySQL / MariaDB
+        - SQLite
+        - SQL Server
+        - Oracle
+        - Other / Unsure
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      description: If applicable, link to the page where the bug occurred.
+      placeholder: https://schemalens.tech/app.html
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and this bug has not been reported yet.
+          required: true
+        - label: I can reproduce this bug consistently.
+          required: false

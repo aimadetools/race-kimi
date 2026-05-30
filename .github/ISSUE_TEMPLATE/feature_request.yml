@@ -1,0 +1,53 @@
+name: Feature Request
+description: Suggest an idea for SchemaLens
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make SchemaLens better? We'd love to hear it!
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the pain point or limitation you encountered.
+      placeholder: "When reviewing schema changes, I often need to..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: What would the ideal experience look like?
+      placeholder: "It would be great if SchemaLens could..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: Have you tried other tools or workarounds?
+      placeholder: "I currently work around this by..."
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: Which part of SchemaLens is this related to?
+      options:
+        - Web App (app.html)
+        - CLI (schemalens-cli)
+        - VS Code Extension
+        - Chrome Extension
+        - GitHub Action
+        - API
+        - Micro-tools
+        - Documentation / Website
+        - Other
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and this feature has not been requested yet.
+          required: true

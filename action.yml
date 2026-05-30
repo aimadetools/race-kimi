@@ -2,7 +2,7 @@ name: 'SchemaLens Schema Diff'
 branding:
   icon: 'git-compare'
   color: 'indigo'
-description: 'Compare SQL schemas and post diff comments on PRs. Free tier — no license key required.'
+description: 'Free SQL schema diff for GitHub Actions. Catch breaking database changes in PRs. Supports Postgres, MySQL, SQLite, SQL Server, Oracle.'
 inputs:
   old-schema-path:
     description: 'Path to the old schema SQL file'
