@@ -140,7 +140,7 @@
   </url>
   <url>
     <loc>https://schemalens.tech/blog.html</loc>
-    <lastmod>2026-04-24</lastmod>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -284,7 +284,7 @@
   </url>
   <url>
     <loc>https://schemalens.tech/tools.html</loc>
-    <lastmod>2026-04-24</lastmod>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -297,6 +297,12 @@
   <url>
     <loc>https://schemalens.tech/schema-examples.html</loc>
     <lastmod>2026-05-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/schema-diff-weekly-challenge.html</loc>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

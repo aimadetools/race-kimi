@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff Weekly Challenge — Test Your Migration Safety Skills</title>
+  <meta name="description" content="Weekly schema diff challenges from real open-source projects. Spot breaking changes, estimate risk scores, and learn safe migration patterns. New challenge every week.">
+  <meta property="og:title" content="Schema Diff Weekly Challenge — Test Your Migration Safety Skills">
+  <meta property="og:description" content="Can you spot the breaking change? Weekly schema diff challenges from real open-source projects.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-diff-weekly-challenge.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Schema Diff Weekly Challenge",
+    "description": "Weekly interactive schema diff challenges from real open-source projects. Learn to spot breaking changes and safe migration patterns.",
+    "educationalLevel": "Intermediate",
+    "learningResourceType": "challenge",
+    "url": "https://schemalens.tech/schema-diff-weekly-challenge.html",
+    "provider": {
+      "@type": "Organization",
+      "name": "SchemaLens"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .challenge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin: 24px 0; }
+    .challenge-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .week-badge { background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; }
+    .project-tag { background: var(--bg); border: 1px solid var(--border); font-size: 0.8rem; padding: 3px 10px; border-radius: var(--radius-sm); color: var(--text-muted); }
+    .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    @media (max-width: 768px) { .diff-grid { grid-template-columns: 1fr; } }
+    .diff-panel { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 16px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; }
+    .diff-panel .comment { color: #64748b; }
+    .diff-panel .added { color: #86efac; }
+    .diff-panel .removed { color: #fca5a5; }
+    .quiz-box { background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.08) 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; }
+    .quiz-box h3 { font-size: 1.05rem; margin-bottom: 10px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+    .quiz-option { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; cursor: pointer; font-size: 0.92rem; transition: all 0.15s; }
+    .quiz-option:hover { border-color: var(--primary); }
+    .quiz-option.correct { border-color: #10b981; background: rgba(16,185,129,0.08); }
+    .quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+    .answer-reveal { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .answer-reveal.visible { display: block; }
+    .risk-pill { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-left: 8px; }
+    .risk-low { background: #10b981; color: #fff; }
+    .risk-medium { background: #f59e0b; color: #fff; }
+    .risk-high { background: #ef4444; color: #fff; }
+    .share-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .share-bar a { font-size: 0.85rem; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); text-decoration: none; }
+    .share-bar a:hover { border-color: var(--primary); }
+    .cta-box { background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%); color: #fff; border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0; }
+    .cta-box h2 { color: #fff; margin-bottom: 8px; }
+    .cta-box p { color: rgba(255,255,255,0.9); margin-bottom: 16px; }
+    .score-banner { display: none; background: var(--surface); border: 2px solid var(--primary); border-radius: var(--radius); padding: 20px; text-align: center; margin: 24px 0; }
+    .score-banner.visible { display: block; }
+    .score-number { font-size: 3rem; font-weight: 800; color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>🔥 Schema Diff Weekly Challenge</h1>
+      <p>Real schema changes from open-source projects. Can you spot the breaking change, estimate the risk, and choose the safe migration path? New challenge drops every week.</p>
+    </div>
+
+    <div class="score-banner" id="scoreBanner">
+      <div class="score-number" id="scoreNumber">0/3</div>
+      <p style="margin-top:8px;">Your score this week</p>
+      <div class="share-bar" style="justify-content:center;">
+        <a href="#" id="shareX">Share on X</a>
+        <a href="#" id="shareLinkedIn">Share on LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- Week 1 -->
+    <div class="challenge-card" data-week="1">
+      <div class="challenge-header">
+        <span class="week-badge">Week 1</span>
+        <span class="project-tag">Pattern: Soft Delete Migration</span>
+        <span class="project-tag">PostgreSQL</span>
+      </div>
+      <h2 style="font-size:1.2rem;margin-bottom:8px;">Adding soft deletes to a users table</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px;">A growing SaaS needs to support user account recovery. The team decides to replace the hard-delete pattern with a <code>deleted_at</code> timestamp. Here's the schema change:</p>
+
+      <div class="diff-grid">
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">Before</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v1</span>
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  username VARCHAR(50) NOT NULL,
+  active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_active ON users(active);
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">After</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v2</span>
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  username VARCHAR(50) NOT NULL,
+<span class="removed">  active BOOLEAN DEFAULT true,</span>
+<span class="added">  deleted_at TIMESTAMP,</span>
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+<span class="removed">CREATE INDEX idx_users_active ON users(active);</span>
+<span class="added">CREATE INDEX idx_users_deleted_at ON users(deleted_at)</span>
+<span class="added">  WHERE deleted_at IS NULL;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-box">
+        <h3>🧠 What's the highest risk?</h3>
+        <div class="quiz-options">
+          <button class="quiz-option" data-correct="false">A) The <code>deleted_at</code> column has no default, so inserts will fail.</button>
+          <button class="quiz-option" data-correct="false">B) Dropping the <code>active</code> index will cause full table scans on every query.</button>
+          <button class="quiz-option" data-correct="true">C) Application code filtering on <code>active = true</code> will silently include "deleted" users.</button>
+          <button class="quiz-option" data-correct="false">D) Adding a partial index requires a table lock and will block writes for minutes.</button>
+        </div>
+        <div class="answer-reveal" id="answer1">
+          <p><strong>Correct answer: C</strong> <span class="risk-pill risk-medium">Medium Risk</span></p>
+          <p style="margin-top:8px;color:var(--text-muted);font-size:0.92rem;">This is a classic semantic breaking change. The schema migration itself is safe (nullable column addition, index creation), but existing application queries like <code>SELECT * FROM users WHERE active = true</code> will return "deleted" users because the <code>active</code> column is gone and nothing enforces the old logic. <strong>Safe migration:</strong> Keep <code>active</code> as a generated column based on <code>deleted_at</code>, or update all queries before deploying the schema change.</p>
+          <a href="app.html?a=CREATE+TABLE+users+(id+SERIAL+PRIMARY+KEY,+email+VARCHAR(255)+NOT+NULL+UNIQUE,+username+VARCHAR(50)+NOT+NULL,+active+BOOLEAN+DEFAULT+true,+created_at+TIMESTAMP+DEFAULT+NOW());%0A%0ACREATE+INDEX+idx_users_active+ON+users(active);&b=CREATE+TABLE+users+(id+SERIAL+PRIMARY+KEY,+email+VARCHAR(255)+NOT+NULL+UNIQUE,+username+VARCHAR(50)+NOT+NULL,+deleted_at+TIMESTAMP,+created_at+TIMESTAMP+DEFAULT+NOW());%0A%0ACREATE+INDEX+idx_users_deleted_at+ON+users(deleted_at)+WHERE+deleted_at+IS+NULL;&d=postgres" class="btn btn-primary" style="margin-top:12px;">🔍 Diff this in SchemaLens</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="challenge-card" data-week="2">
+      <div class="challenge-header">
+        <span class="week-badge">Week 2</span>
+        <span class="project-tag">Pattern: ID Type Expansion</span>
+        <span class="project-tag">PostgreSQL</span>
+      </div>
+      <h2 style="font-size:1.2rem;margin-bottom:8px;">Migrating primary keys from INT to BIGINT</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px;">A social platform is approaching 2.1 billion rows and hitting the INT limit. The team migrates all primary keys and foreign keys to BIGINT:</p>
+
+      <div class="diff-grid">
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">Before</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v1</span>
+CREATE TABLE posts (
+  id INT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE comments (
+  id INT PRIMARY KEY,
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">After</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v2</span>
+CREATE TABLE posts (
+<span class="added">  id BIGINT PRIMARY KEY,</span>
+<span class="added">  user_id BIGINT NOT NULL,</span>
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE comments (
+<span class="added">  id BIGINT PRIMARY KEY,</span>
+<span class="added">  post_id BIGINT NOT NULL,</span>
+<span class="added">  user_id BIGINT NOT NULL,</span>
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-box">
+        <h3>🧠 Is this safe to deploy in a single migration?</h3>
+        <div class="quiz-options">
+          <button class="quiz-option" data-correct="false">A) Yes — PostgreSQL supports online ALTER TYPE with zero downtime.</button>
+          <button class="quiz-option" data-correct="true">B) No — Foreign key columns must also be updated, and application code may assume 32-bit integers.</button>
+          <button class="quiz-option" data-correct="false">C) Only if you drop and recreate the tables, because INT→BIGINT requires a table rewrite anyway.</button>
+          <button class="quiz-option" data-correct="false">D) Yes, but only during a maintenance window because the index rebuild locks the table.</button>
+        </div>
+        <div class="answer-reveal" id="answer2">
+          <p><strong>Correct answer: B</strong> <span class="risk-pill risk-high">High Risk</span></p>
+          <p style="margin-top:8px;color:var(--text-muted);font-size:0.92rem;">In PostgreSQL, <code>ALTER COLUMN ... TYPE BIGINT</code> on a primary key requires a table rewrite and reindexes. But the bigger risk is referential integrity: if <code>posts.id</code> becomes BIGINT but <code>comments.post_id</code> stays INT, the foreign key constraint will fail. Additionally, application code (especially in languages like Java or C#) may use <code>int</code> types that overflow. <strong>Safe migration:</strong> Use the expand/contract pattern — add new BIGINT columns → dual-write → backfill → switch reads → drop old columns.</p>
+          <a href="app.html?a=CREATE+TABLE+posts+(id+INT+PRIMARY+KEY,+user_id+INT+NOT+NULL,+title+VARCHAR(255)+NOT+NULL,+body+TEXT,+created_at+TIMESTAMP+DEFAULT+NOW());%0A%0ACREATE+TABLE+comments+(id+INT+PRIMARY+KEY,+post_id+INT+NOT+NULL,+user_id+INT+NOT+NULL,+body+TEXT+NOT+NULL,+created_at+TIMESTAMP+DEFAULT+NOW());&b=CREATE+TABLE+posts+(id+BIGINT+PRIMARY+KEY,+user_id+BIGINT+NOT+NULL,+title+VARCHAR(255)+NOT+NULL,+body+TEXT,+created_at+TIMESTAMP+DEFAULT+NOW());%0A%0ACREATE+TABLE+comments+(id+BIGINT+PRIMARY+KEY,+post_id+BIGINT+NOT+NULL,+user_id+BIGINT+NOT+NULL,+body+TEXT+NOT+NULL,+created_at+TIMESTAMP+DEFAULT+NOW());&d=postgres" class="btn btn-primary" style="margin-top:12px;">🔍 Diff this in SchemaLens</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="challenge-card" data-week="3">
+      <div class="challenge-header">
+        <span class="week-badge">Week 3</span>
+        <span class="project-tag">Pattern: NOT NULL on Existing Data</span>
+        <span class="project-tag">MySQL</span>
+      </div>
+      <h2 style="font-size:1.2rem;margin-bottom:8px;">Adding a required column without a default</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px;">A content platform wants to track when posts are published. They add a <code>published_at</code> column and make it <code>NOT NULL</code> in the same migration:</p>
+
+      <div class="diff-grid">
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">Before</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v1</span>
+CREATE TABLE posts (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  author_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  status VARCHAR(20) DEFAULT 'draft',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">After</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v2</span>
+CREATE TABLE posts (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  author_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  status VARCHAR(20) DEFAULT 'draft',
+<span class="added">  published_at TIMESTAMP NOT NULL,</span>
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-box">
+        <h3>🧠 What happens when you run this migration on a table with 10M rows?</h3>
+        <div class="quiz-options">
+          <button class="quiz-option" data-correct="false">A) It completes instantly because MySQL 8.0 supports instant ADD COLUMN for NOT NULL columns.</button>
+          <button class="quiz-option" data-correct="false">B) It populates all existing rows with <code>CURRENT_TIMESTAMP</code> automatically.</button>
+          <button class="quiz-option" data-correct="true">C) The ALTER TABLE fails because existing rows have no value for the new NOT NULL column.</button>
+          <button class="quiz-option" data-correct="false">D) It works but takes hours because MySQL rewrites the entire table to fill in <code>1970-01-01 00:00:00</code>.</button>
+        </div>
+        <div class="answer-reveal" id="answer3">
+          <p><strong>Correct answer: C</strong> <span class="risk-pill risk-high">High Risk</span></p>
+          <p style="margin-top:8px;color:var(--text-muted);font-size:0.92rem;">MySQL (and most databases) will reject <code>ALTER TABLE ... ADD COLUMN ... NOT NULL</code> on a non-empty table unless you also provide a <code>DEFAULT</code> value. Even if you add a default, MySQL 8.0 may rewrite the table to populate it. <strong>Safe migration:</strong> (1) Add <code>published_at TIMESTAMP NULL</code> — instant in MySQL 8.0. (2) Backfill existing rows in batches. (3) Change to <code>NOT NULL</code> in a follow-up migration after verifying no NULLs remain.</p>
+          <a href="app.html?a=CREATE+TABLE+posts+(id+INT+PRIMARY+KEY+AUTO_INCREMENT,+author_id+INT+NOT+NULL,+title+VARCHAR(255)+NOT+NULL,+body+TEXT,+status+VARCHAR(20)+DEFAULT+'draft',+created_at+TIMESTAMP+DEFAULT+CURRENT_TIMESTAMP);&b=CREATE+TABLE+posts+(id+INT+PRIMARY+KEY+AUTO_INCREMENT,+author_id+INT+NOT+NULL,+title+VARCHAR(255)+NOT+NULL,+body+TEXT,+status+VARCHAR(20)+DEFAULT+'draft',+published_at+TIMESTAMP+NOT+NULL,+created_at+TIMESTAMP+DEFAULT+CURRENT_TIMESTAMP);&d=mysql" class="btn btn-primary" style="margin-top:12px;">🔍 Diff this in SchemaLens</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h2>Want more challenges?</h2>
+      <p>New schema diff challenges drop every week. Follow along to sharpen your migration safety instincts.</p>
+      <a href="app.html" class="btn btn-light" style="background:#fff; color:var(--primary);">Try SchemaLens Free</a>
+      <a href="tools.html" class="btn btn-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff;">Explore 60+ Tools</a>
+    </div>
+
+    <footer style="margin-top:64px; padding:32px 0; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem; text-align:center;">
+      <p>
+        <a href="index.html">Home</a> ·
+        <a href="app.html">App</a> ·
+        <a href="tools.html">Tools</a> ·
+        <a href="blog.html">Blog</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="vscode-extension.html">VS Code</a>
+      </p>
+      <p>© 2026 SchemaLens. Built for engineers.</p>
+    </footer>
+  </div>
+
+  <script>
+    let score = 0;
+    const total = 3;
+
+    document.querySelectorAll('.challenge-card').forEach(card => {
+      const options = card.querySelectorAll('.quiz-option');
+      const reveal = card.querySelector('.answer-reveal');
+      let answered = false;
+
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (answered) return;
+          answered = true;
+
+          const isCorrect = opt.dataset.correct === 'true';
+          if (isCorrect) {
+            opt.classList.add('correct');
+            score++;
+          } else {
+            opt.classList.add('wrong');
+            // Highlight correct answer
+            options.forEach(o => {
+              if (o.dataset.correct === 'true') o.classList.add('correct');
+            });
+          }
+
+          reveal.classList.add('visible');
+          updateScore();
+        });
+      });
+    });
+
+    function updateScore() {
+      const banner = document.getElementById('scoreBanner');
+      const number = document.getElementById('scoreNumber');
+      banner.classList.add('visible');
+      number.textContent = score + '/' + total;
+
+      const text = `I scored ${score}/${total} on the Schema Diff Weekly Challenge! Can you spot the breaking changes? 🔥`;
+      const url = 'https://schemalens.tech/schema-diff-weekly-challenge.html';
+      document.getElementById('shareX').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+      document.getElementById('shareLinkedIn').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
+    }
+  </script>
+</body>
+</html>
