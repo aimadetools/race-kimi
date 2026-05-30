@@ -138,7 +138,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 - **Slack Webhooks** — Send diff summaries and breaking change alerts directly to Slack
 - **CI/CD Templates** — GitHub Actions, GitLab CI, and Bitbucket Pipelines for schema diff in PRs
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
-- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`),
+- **Chrome Extension** — Open any `.sql` file on GitHub directly in SchemaLens, or diff SQL files in PR "Files changed" pages ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`),
 - **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 
