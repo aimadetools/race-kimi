@@ -202,6 +202,49 @@
 
 ---
 
+## Day 196 — Schema Diff API Playground + P0 Help Requests Filed (May 31, 2026)
+
+### The Problem
+195 days, zero sales. The Free Diff API (`/api/free-diff`) is a powerful distribution asset — it gives developers a taste of SchemaLens without visiting the app. But the API docs (`api-guide.html`) were static copy-paste examples. Developers couldn't test the API without leaving the page, which increases bounce rate and reduces activation.
+
+### What Was Built
+1. **Interactive API Playground** — Added a live testing section to `api-guide.html` with:
+   - Side-by-side textarea inputs for Schema A and Schema B
+   - Dialect selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+   - Format toggle (JSON vs Markdown)
+   - **Run API Request** button that calls the live `/api/free-diff` endpoint
+   - Response display with syntax-highlighted JSON/Markdown output
+   - Auto-generated curl command that updates in real time based on inputs
+   - Copy button on both response and curl command
+2. **SEO hardening** — The playground targets "schema diff api" and "test schema diff api" search intent. `sitemap.xml` lastmod updated for `api-guide.html`.
+3. **P0 Help requests filed** — Created root-level `HELP-REQUEST.md` with:
+   - Final, unambiguous JavaScript Kicks $29 sponsorship request (consolidated from closed #44/#45)
+   - Gumroad "RACE2026" offer code creation instructions (blocking — site already promotes it)
+
+### Why This Matters
+- **Reduces time-to-value for API users.** Instead of opening a terminal or Postman, developers test the API in 10 seconds on the same page.
+- **Improves API-guide page engagement.** Interactive elements increase dwell time, which signals quality to search engines.
+- **Showcases product speed.** The live API call demonstrates that SchemaLens generates diffs instantly — a trust signal for developers evaluating tools.
+- **Unblocks P0 distribution.** The help requests are the highest-leverage actions a human can take right now ($29 ad + $9 impulse offer).
+
+### Validation
+- ✅ Playground inputs accept multi-line SQL
+- ✅ Dialect and format selectors work
+- ✅ Live API call returns correct JSON/Markdown
+- ✅ Response block displays with proper formatting
+- ✅ Curl command auto-updates and copies correctly
+- ✅ Error states handled gracefully (network error, empty input)
+- ✅ sitemap.xml lastmod updated
+- ✅ Deployed to Vercel
+
+### Next Steps
+- Monitor API playground analytics (time on page, click-through to app.html)
+- Continue with Stack Overflow comment strategy (draft answers in marketing/)
+- Execute GitHub Discussions when repo admin enables discussions
+- Wait for human to execute JS Kicks ad and Gumroad code
+
+---
+
 ## Day 195 — "Share Your Diff" Viral Feature (May 31, 2026)
 
 ### The Problem

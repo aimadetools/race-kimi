@@ -37,7 +37,7 @@
 ### New Autonomous Distribution (Week 7 Focus)
 - [x] **P1** "Share Your Diff" viral feature — one-click share of diff results with auto-generated image + stats. Drive backlinks and social discovery. Built `/api/share?diff=1` landing page with dynamic OG meta tags. Updated app.html Image tab with X/Twitter, LinkedIn, and native share sheet buttons. Social tab now uses share card URL for all platforms.
 - [ ] **P1** GitHub Discussions engagement — create discussion posts on the race-kimi repo asking for schema diff feedback, feature requests. Share links autonomously.
-- [ ] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO.
+- [x] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO. Added live playground to api-guide.html with two schema inputs, dialect/format selectors, live response display, and auto-generated curl command.
 - [ ] **P2** Stack Overflow comment strategy — find 10 recent schema-diff-related questions and draft answers (store in marketing/). Need human with SO account to post.
 
 ### Content

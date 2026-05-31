@@ -445,6 +445,54 @@ func main() {
       </p>
     </div>
 
+    <div class="guide-section" id="playground">
+      <h2>🎮 Interactive Playground — Try the Free Diff API</h2>
+      <p>Paste two schemas below and hit <strong>Run API Request</strong> to see the live response. No signup required.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;">
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Schema A (old)</label>
+          <textarea id="playgroundSchemaA" rows="6" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-family:ui-monospace,monospace;font-size:0.8rem;resize:vertical;">CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(255)
+);</textarea>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Schema B (new)</label>
+          <textarea id="playgroundSchemaB" rows="6" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-family:ui-monospace,monospace;font-size:0.8rem;resize:vertical;">CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255) NOT NULL
+);</textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Dialect</label>
+          <select id="playgroundDialect" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:inherit;">
+            <option value="postgres">PostgreSQL</option>
+            <option value="mysql">MySQL</option>
+            <option value="sqlite">SQLite</option>
+            <option value="mssql">SQL Server</option>
+            <option value="oracle">Oracle</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Format</label>
+          <select id="playgroundFormat" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:inherit;">
+            <option value="json">JSON</option>
+            <option value="markdown">Markdown</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="runPlayground()" id="playgroundBtn" style="margin-top:18px;">▶ Run API Request</button>
+      </div>
+      <div id="playgroundStatus" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;display:none;"></div>
+      <pre class="code-block" id="playgroundResponse" style="display:none;"><code id="playgroundResponseCode">// Response will appear here</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      <div style="margin-top:12px;">
+        <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Equivalent curl command</label>
+        <pre class="code-block" id="playgroundCurl"><code id="playgroundCurlCode">curl -X POST https://schemalens.tech/api/free-diff -H "Content-Type: application/json" -d '{...}'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+    </div>
+
     <div class="guide-section">
       <h2>📤 Step 3 — Understand the Response</h2>
       <pre class="code-block"><code>{
@@ -727,6 +775,54 @@ function copyCode(btn) {
     btn.innerText = 'Ready';
     setTimeout(() => btn.innerText = old, 1500);
   });
+}
+
+async function runPlayground() {
+  const btn = document.getElementById('playgroundBtn');
+  const status = document.getElementById('playgroundStatus');
+  const responseBlock = document.getElementById('playgroundResponse');
+  const responseCode = document.getElementById('playgroundResponseCode');
+  const curlCode = document.getElementById('playgroundCurlCode');
+
+  const schemaA = document.getElementById('playgroundSchemaA').value;
+  const schemaB = document.getElementById('playgroundSchemaB').value;
+  const dialect = document.getElementById('playgroundDialect').value;
+  const format = document.getElementById('playgroundFormat').value;
+
+  if (!schemaA.trim() || !schemaB.trim()) {
+    status.textContent = 'Please paste both schemas.';
+    status.style.display = 'block';
+    return;
+  }
+
+  const body = JSON.stringify({ schemaA, schemaB, dialect, format });
+  curlCode.textContent = `curl -X POST https://schemalens.tech/api/free-diff \\\n  -H "Content-Type: application/json" \\\n  -d '${body.replace(/'/g, "'\\''")}'`;
+
+  btn.textContent = '⏳ Loading…';
+  btn.disabled = true;
+  status.textContent = 'Sending request to SchemaLens Free Diff API…';
+  status.style.display = 'block';
+  responseBlock.style.display = 'none';
+
+  try {
+    const res = await fetch('https://schemalens.tech/api/free-diff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body
+    });
+    const data = await res.json();
+    const output = format === 'markdown' ? (data.markdown || data.error || JSON.stringify(data, null, 2)) : JSON.stringify(data, null, 2);
+    responseCode.textContent = output;
+    responseBlock.style.display = 'block';
+    status.textContent = res.ok ? `✅ ${res.status} OK — ${(output.split('\n').length)} lines` : `⚠️ ${res.status} — ${data.error || 'Error'}`;
+    status.style.color = res.ok ? 'var(--success)' : 'var(--danger)';
+  } catch (err) {
+    status.textContent = '❌ Network error. Please check your connection and try again.';
+    status.style.color = 'var(--danger)';
+  } finally {
+    btn.textContent = '▶ Run API Request';
+    btn.disabled = false;
+  }
 }
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
