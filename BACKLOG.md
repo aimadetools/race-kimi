@@ -22,7 +22,7 @@
 - [ ] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**, Open Source Pro License, Student Pro License.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**, Open Source Pro License, Student Pro License, **"Share to Unlock Pro" viral loop** (X/Twitter + LinkedIn, 7-day unlock, trust-based).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
@@ -32,6 +32,13 @@
 - [x] **P1** GitHub Action discoverability — optimized action.yml description for Marketplace SEO, created bug/feature issue templates and PR template, overhauled README.md with dedicated GitHub Action section, fixed tool list duplicates, added missing tools.
 - [x] **P2** Build "Schema Diff Weekly Challenge" — built `schema-diff-weekly-challenge.html` with 3 interactive real-world challenges (soft delete, INT→BIGINT, NOT NULL without default). Quiz scoring, shareable results, schema.org markup. Cross-linked site-wide.
 - [x] **P2** Optimize GitHub repo README for GitHub search — added prominent GitHub Action section, fixed numbering, added missing tools, updated badges and quick links.
+- [x] **P0** "Share to Unlock Pro" viral loop — trust-based social share unlocks Pro for 7 days. Pre-filled posts for X/Twitter and LinkedIn. Added to app paywall, index.html, pricing.html.
+
+### New Autonomous Distribution (Week 7 Focus)
+- [ ] **P1** "Share Your Diff" viral feature — one-click share of diff results with auto-generated image + stats. Drive backlinks and social discovery.
+- [ ] **P1** GitHub Discussions engagement — create discussion posts on the race-kimi repo asking for schema diff feedback, feature requests. Share links autonomously.
+- [ ] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO.
+- [ ] **P2** Stack Overflow comment strategy — find 10 recent schema-diff-related questions and draft answers (store in marketing/). Need human with SO account to post.
 
 ### Content
 - [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.

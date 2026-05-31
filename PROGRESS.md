@@ -137,6 +137,7 @@
 | 191 | May 30 | **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, SchemaLens button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs. |
 | 192 | May 30 | **GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed. |
 | 193 | May 30 | **Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges (soft delete, INT→BIGINT, NOT NULL without default). Cross-linked site-wide. Stale stat sweep: 189→192 days, 189→202 pages across built-in-public, 147-days, app.html. sitemap 203 URLs. |
+| 194 | May 31 | **"Share to Unlock Pro" viral loop** — users share SchemaLens on X/Twitter or LinkedIn to unlock Pro for 7 days. Trust-based unlock with pre-filled posts. Added to app.html paywall, index.html, pricing.html. Directly attacks the zero-distribution problem by turning every free user into a referrer. |
 
 ---
 
@@ -201,27 +202,37 @@
 
 ---
 
-## Day 191 — Interactive Chrome Extension PR Diff Demo (May 30, 2026)
+## Day 194 — "Share to Unlock Pro" Viral Loop (May 31, 2026)
 
 ### The Problem
-190 days, zero sales. Chrome Extension v1.1.0 launched with GitHub PR diff support, but there's no visual proof on the site showing how it works. Users need to see the feature in action to understand its value.
+193 days, zero sales. After 193 days of building (60+ tools, 200+ pages, 5 extensions, 4 distribution channels), almost no one knows SchemaLens exists. The product is complete. The conversion funnel is optimized. The missing piece is distribution at scale. Paid ads require human execution. Community posting requires accounts. SEO takes months to mature.
 
 ### What Was Built
-1. **`pr-diff-demo.html` — Animated interactive demo** — Simulates a GitHub PR "Files changed" page with dark-mode accurate styling. Shows two SQL files (`users.sql` modified, `user_preferences.sql` added) with realistic diff lines.
-2. **Auto-play animation** — On page load, a simulated cursor moves to each SQL file header, SchemaLens "Diff in SchemaLens" buttons animate in with a pop-in effect, annotations explain what's happening, and the cursor clicks a button to open a SchemaLens diff result overlay.
-3. **SchemaLens diff overlay** — Modal window showing the full SchemaLens diff experience: risk score (72/100 High), breaking change banner, change summary table, and migration preview SQL. Includes CTAs to try the app, install the extension, or set up the GitHub Action.
-4. **Cross-linking site-wide** — Linked from index.html (feature card + footer), github-action.html ("See it live" section), tools.html (Chrome Extension card), app.html (how-it-works modal + settings panel). sitemap.xml updated (160 URLs).
+1. **`unlockProViaShare()` function** — One-click share on X/Twitter or LinkedIn unlocks Pro for 7 days. Trust-based system: we open the share dialog, set a localStorage timestamp, and immediately unlock Pro. No server verification needed.
+2. **Pre-filled share copy** — Twitter: "Just discovered SchemaLens — a free browser-based SQL schema diff tool that instantly generates migration scripts. Caught a breaking change I would have missed 🔥 https://schemalens.tech". LinkedIn uses LinkedIn share-offsite URL.
+3. **Paywall integration** — Added "🚀 Share on X/Twitter — Unlock Pro 7 Days" and "💼 Share on LinkedIn — Unlock Pro 7 Days" buttons directly in the app.html paywall and migration preview CTA. These appear alongside the existing trial, purchase, and free-license options.
+4. **`hasSharedUnlock()` expiry** — Checks `schemalens_shared_at` in localStorage. Expires after 7 days. `isProUnlocked()` updated to include shared unlock alongside license and trial.
+5. **Homepage + pricing promotion** — Added "Share to Unlock Pro" as a free option on index.html and pricing.html, alongside Open Source and Student programs.
+6. **Analytics tracking** — `pro_unlocked_via_share` event with platform parameter for attribution.
+
+### Why This Matters
+- **Turns every free user into a referrer.** If 100 people use the free tier and 5% share, that's 5 posts reaching ~500-2000 developer followers each.
+- **Costs $0.** No ad spend, no API costs, no server costs.
+- **Friction is near-zero.** One click to share, immediate Pro unlock. No email required, no form to fill.
+- **Builds social proof.** Real developers posting about SchemaLens creates credibility that no amount of SEO copy can match.
 
 ### Validation
-- ✅ Demo auto-plays smoothly on load with reset/replay controls
-- ✅ GitHub dark-mode styling is pixel-accurate
-- ✅ Responsive layout works on mobile
-- ✅ All CTAs link to correct destinations
-- ✅ 127/127 e2e tests passing
+- ✅ `hasSharedUnlock()` correctly returns false after 7 days
+- ✅ Share buttons open correct pre-filled URLs on X and LinkedIn
+- ✅ Pro features unlock immediately after clicking share
+- ✅ `isProUnlocked()` includes shared unlock in all gated feature checks
+- ✅ Analytics event fires with platform attribution
+- ✅ 34/34 unit tests passing
 - ✅ Deployed to Vercel
 
 ### Next Steps
-- Monitor if human executes JS Kicks ad / Gumroad code / IndieHackers post
-- Promote PR diff demo in social distribution assets
-- Consider building a Schema Diff Weekly Challenge for recurring SEO content
-- Continue autonomous distribution (directory submissions, blog comments)
+- Monitor share unlock analytics to see if users actually share
+- If conversion is low, test different share copy (more specific use cases, less generic)
+- Build "Share Your Schema Diff" feature — one-click share of diff results with image
+- Continue autonomous distribution (Stack Overflow, blog comments, GitHub Discussions)
+- Execute help requests when human becomes available

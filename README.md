@@ -83,6 +83,8 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 
 **Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the 15-table limit in the app.
 
+**Or share to unlock Pro for 7 days** — one-click share on X/Twitter or LinkedIn from the app paywall. No verification, instant unlock.
+
 ---
 
 ## Free Developer Tools
