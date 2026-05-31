@@ -8,7 +8,7 @@
   <title>Pricing — SchemaLens</title>
   <meta name="description" content="Start free. Upgrade when you need unlimited schema diffs and migration generation.">
   <meta property="og:title" content="Pricing — SchemaLens">
-  <meta property="og:description" content="Free for up to 15 tables. Lifetime Pro for $9 during the Race to the Finish (code RACE2026).">
+  <meta property="og:description" content="Free for up to 15 tables. Lifetime Pro for $39 one-time.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/pricing.html">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
@@ -241,19 +241,19 @@
   <section class="section reveal" style="padding-top: 20px;">
     <div class="container">
       <div id="raceToFinishPromo" style="display:none;background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(99,102,241,0.08)); border: 2px solid rgba(16,185,129,0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — $9 Lifetime Pro</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">SchemaLens is competing in the <strong style="color: var(--success);">$100 AI Startup Race</strong>. Help us win: get <strong>Lifetime Pro for $9</strong> with code <strong>RACE2026</strong> (regular price $39). <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim $9 Pro →</a></p>
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — Lifetime Pro $39</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">SchemaLens is competing in the <strong style="color: var(--success);">$100 AI Startup Race</strong>. Help us win: get <strong>Lifetime Pro for $39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim Pro →</a></p>
         <p style="margin: 8px 0 0; font-size: 0.8rem; color: var(--text-muted);">Offer ends July 10, 2026</p>
       </div>
       <script>(function(){const raceEnd=new Date('2026-07-10T23:59:59Z');const now=Date.now();const promo=document.getElementById('raceToFinishPromo');if(promo&&now<=raceEnd)promo.style.display='block';})();</script>
       <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.06)); border: 2px solid var(--danger); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — $9 Lifetime Pro</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Help SchemaLens win the $100 AI Startup Race. Get Lifetime Pro for <strong style="color: var(--danger);">$9</strong> with code <strong>RACE2026</strong> (regular $39). <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim $9 Pro →</a></p>
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — Lifetime Pro $39</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Help SchemaLens win the $100 AI Startup Race. Get Lifetime Pro for <strong style="color: var(--danger);">$39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim Pro →</a></p>
       </div>
 
       <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08)); border: 1px solid var(--primary); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
         <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🎁 Founder Deal — First 20 customers only</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lifetime Pro for <strong style="color: var(--primary);">$9 once</strong> with code <strong>RACE2026</strong> during the Race to the Finish. <strong id="founderDealRemaining" style="color: var(--success);">20 spots left.</strong></p>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lifetime Pro for <strong style="color: var(--primary);">$39 once</strong> during the Race to the Finish. <strong id="founderDealRemaining" style="color: var(--success);">20 spots left.</strong></p>
       </div>
 
       <!-- Migration Cost Calculator Embed -->
@@ -618,16 +618,16 @@
   document.querySelectorAll('.pricing-card').forEach(card => {
     const priceEl = card.querySelector('.price');
     if (priceEl && priceEl.textContent.includes('$39')) {
-      priceEl.innerHTML = '<span style="text-decoration:line-through;color:var(--text-muted);font-size:1.2rem;vertical-align:middle;margin-right:6px;">$39</span>$9<span> once</span>';
+      priceEl.innerHTML = '<span style="text-decoration:line-through;color:var(--text-muted);font-size:1.2rem;vertical-align:middle;margin-right:6px;">$99</span>$39<span> once</span>';
     }
     const btn = card.querySelector('a[href*="gumroad.com/l/schemalens-lifetime"]');
-    if (btn) btn.href = 'https://gumroad.com/l/schemalens-lifetime/RACE2026';
+    if (btn) btn.href = 'https://gumroad.com/l/schemalens-lifetime?wanted=true';
   });
   const faq = document.querySelector('.about-content');
   if (faq) {
     faq.innerHTML = faq.innerHTML.replace(
       'Lifetime Pro is a one-time payment of $39.',
-      'Lifetime Pro is a one-time payment of <strong style="color:var(--success);">$9</strong> during the Race to the Finish (code RACE2026, ends July 10). Regular price $39.'
+      'Lifetime Pro is a one-time payment of <strong style="color:var(--success);">$39</strong> during the Race to the Finish (ends July 10). No subscription.'
     );
   }
 })();

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started with SchemaLens — Find Your Perfect Setup</title>
+  <meta name="description" content="Answer 3 questions and get a personalized SchemaLens setup guide for your database, workflow, and team size.">
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:title" content="Get Started with SchemaLens">
+  <meta property="og:description" content="Find your perfect schema diff setup in 30 seconds.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:url" content="https://schemalens.tech/get-started.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    .wizard-container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .step-indicator {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: var(--primary); }
+    .step-dot.done { background: var(--success); }
+    .wizard-step {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .wizard-step.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .wizard-step h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .wizard-step > p {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .option-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .option-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .option-card.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06));
+    }
+    .option-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .option-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+    .option-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .wizard-nav.center { justify-content: center; }
+    .result-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .result-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .result-panel h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+    .result-panel p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .setup-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+    }
+    .setup-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .setup-steps li:last-child { border-bottom: none; }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .code-snippet {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--code-text);
+      overflow-x: auto;
+      margin: 8px 0;
+      position: relative;
+    }
+    .copy-btn-inline {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-btn-inline:hover { color: var(--text); }
+    .result-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .alt-results {
+      margin-top: 32px;
+    }
+    .alt-results h4 {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .alt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .alt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .alt-card h5 {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    .alt-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">🔍</span>
+      SchemaLens
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="get-started.html" class="nav-cta">Get Started</a>
+    </div>
+    <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<header class="hero" style="padding: 60px 0 20px;">
+  <div class="container">
+    <h1>Find your SchemaLens setup</h1>
+    <p class="subtitle">Answer 3 quick questions. Get a personalized guide for your database, workflow, and team.</p>
+  </div>
+</header>
+
+<main class="wizard-container">
+
+  <div class="step-indicator" id="stepIndicator">
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <!-- Step 1: Database -->
+  <div class="wizard-step active" id="step1">
+    <h2>What database do you use?</h2>
+    <p>SchemaLens supports all major SQL dialects.</p>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption('db','postgres')">
+        <div class="option-icon">🐘</div>
+        <h4>PostgreSQL</h4>
+        <p>Including Supabase, Neon, TimescaleDB</p>
+      </div>
+      <div class="option-card" onclick="selectOption('db','mysql')">
+        <div class="option-icon">🐬</div>
+        <h4>MySQL</h4>
+        <p>Including MariaDB, PlanetScale</p>
+      </div>
+      <div class="option-card" onclick="selectOption('db','sqlite')">
+        <div class="option-icon">🪶</div>
+        <h4>SQLite</h4>
+        <p>Local, embedded, or mobile apps</p>
+      </div>
+      <div class="option-card" onclick="selectOption('db','mssql')">
+        <div class="option-icon">🪟</div>
+        <h4>SQL Server</h4>
+        <p>Azure SQL, on-premise</p>
+      </div>
+      <div class="option-card" onclick="selectOption('db','oracle')">
+        <div class="option-icon">☀️</div>
+        <h4>Oracle</h4>
+        <p>Enterprise Oracle DB</p>
+      </div>
+      <div class="option-card" onclick="selectOption('db','other')">
+        <div class="option-icon">🗄️</div>
+        <h4>Other / Multiple</h4>
+        <p>More than one, or not sure</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Workflow -->
+  <div class="wizard-step" id="step2">
+    <h2>How do you handle schema changes today?</h2>
+    <p>We'll recommend the best SchemaLens workflow for you.</p>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption('workflow','manual')">
+        <div class="option-icon">📝</div>
+        <h4>Manual diffs</h4>
+        <p>I compare schemas by eye or with diff tools</p>
+      </div>
+      <div class="option-card" onclick="selectOption('workflow','cli')">
+        <div class="option-icon">⌨️</div>
+        <h4>CLI / scripts</h4>
+        <p>I use command-line tools or custom scripts</p>
+      </div>
+      <div class="option-card" onclick="selectOption('workflow','orm')">
+        <div class="option-icon">🧩</div>
+        <h4>ORM migrations</h4>
+        <p>Prisma, Drizzle, TypeORM, Sequelize, etc.</p>
+      </div>
+      <div class="option-card" onclick="selectOption('workflow','review')">
+        <div class="option-icon">👀</div>
+        <h4>PR / code review</h4>
+        <p>I review schema changes in pull requests</p>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Team -->
+  <div class="wizard-step" id="step3">
+    <h2>How big is your team?</h2>
+    <p>This helps us suggest the right plan.</p>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption('team','solo')">
+        <div class="option-icon">🧑‍💻</div>
+        <h4>Just me</h4>
+        <p>Solo developer or side project</p>
+      </div>
+      <div class="option-card" onclick="selectOption('team','small')">
+        <div class="option-icon">👥</div>
+        <h4>Small team</h4>
+        <p>2–10 engineers</p>
+      </div>
+      <div class="option-card" onclick="selectOption('team','large')">
+        <div class="option-icon">🏢</div>
+        <h4>Large team</h4>
+        <p>10+ engineers or multiple teams</p>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Results -->
+  <div class="wizard-step" id="step4">
+    <div class="result-panel" id="resultPanel">
+      <!-- injected by JS -->
+    </div>
+
+    <div class="alt-results reveal">
+      <h4>Also check out</h4>
+      <div class="alt-grid" id="altGrid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <div class="wizard-nav center" style="margin-top: 32px;">
+      <button class="btn btn-secondary" onclick="resetWizard()">↺ Start Over</button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <a href="index.html" class="logo" style="margin-bottom: 12px;">
+        <span class="logo-mark">🔍</span>
+        SchemaLens
+      </a>
+      <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 320px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="app.html">Web App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="tools.html">Tools</a>
+      <a href="api-guide.html">API</a>
+    </div>
+    <div class="footer-col">
+      <h4>Integrations</h4>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="vscode-extension.html">VS Code</a>
+      <a href="chrome-extension/">Chrome</a>
+      <a href="cli/">CLI</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="community.html">Community</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+const state = { db: null, workflow: null, team: null };
+
+function selectOption(key, value) {
+  state[key] = value;
+  // visual selection
+  const stepEl = document.getElementById('step' + (key === 'db' ? 1 : key === 'workflow' ? 2 : 3));
+  stepEl.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  setTimeout(() => {
+    const next = key === 'db' ? 2 : key === 'workflow' ? 3 : 4;
+    goToStep(next);
+  }, 250);
+}
+
+function goToStep(n) {
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i + 1 === n) d.classList.add('active');
+    else if (i + 1 < n) d.classList.add('done');
+  });
+  if (n === 4) renderResult();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetWizard() {
+  state.db = null; state.workflow = null; state.team = null;
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  goToStep(1);
+}
+
+function renderResult() {
+  const { db, workflow, team } = state;
+  const dbNames = { postgres: 'PostgreSQL', mysql: 'MySQL', sqlite: 'SQLite', mssql: 'SQL Server', oracle: 'Oracle', other: 'your database' };
+  const dbName = dbNames[db] || 'your database';
+
+  let title = '';
+  let desc = '';
+  let steps = [];
+  let ctas = [];
+  let badge = 'Recommended Setup';
+
+  // Primary recommendation logic
+  if (workflow === 'manual') {
+    title = 'Start with the Web App';
+    desc = `The fastest way to diff ${dbName} schemas. Paste two CREATE TABLE dumps, get a visual diff and migration script in seconds.`;
+    steps = [
+      `Open the <strong>SchemaLens Web App</strong>`,
+      `Paste your old and new ${dbName} schema dumps`,
+      `Select "${dbName}" as the dialect`,
+      `Review the visual diff and migration warnings`,
+      `Upgrade to Pro to copy the full migration script`
+    ];
+    ctas = [
+      { text: '🚀 Open Web App', href: 'app.html', primary: true },
+      { text: 'See Pricing', href: 'pricing.html', primary: false }
+    ];
+  } else if (workflow === 'cli') {
+    title = 'Use the SchemaLens CLI';
+    desc = `Diff ${dbName} schemas from your terminal. Perfect for CI pipelines and automation.`;
+    steps = [
+      `Install the CLI: <code>npx schemalens-cli --help</code>`,
+      `Export your ${dbName} schemas to SQL files`,
+      `Run: <code>schemalens old.sql new.sql --dialect ${db}</code>`,
+      `Review the diff output in your terminal`,
+      `Add a Pro license key for full migration generation`
+    ];
+    ctas = [
+      { text: 'CLI Setup Guide', href: 'cli/', primary: true },
+      { text: 'GitHub Action', href: 'github-action.html', primary: false }
+    ];
+  } else if (workflow === 'orm') {
+    title = 'VS Code Extension + Web App';
+    desc = `Diff schemas generated by your ORM without leaving your editor. Supports Prisma, Drizzle, TypeORM, and more.`;
+    steps = [
+      `Install the <strong>SchemaLens VS Code Extension</strong>`,
+      `Generate your schema SQL from your ORM (e.g. <code>prisma migrate dev --create-only</code>)`,
+      `Right-click any two .sql files → "Compare with SchemaLens"`,
+      `Review changes inline in VS Code`,
+      `Open the web app for detailed migration analysis`
+    ];
+    ctas = [
+      { text: 'Install VS Code Ext', href: 'vscode-extension.html', primary: true },
+      { text: 'Open Web App', href: 'app.html', primary: false }
+    ];
+  } else if (workflow === 'review') {
+    title = 'GitHub Action for PR Reviews';
+    desc = `Automatically diff schema files in every pull request. Catch breaking changes before merge.`;
+    steps = [
+      `Add the <strong>SchemaLens GitHub Action</strong> to your repo`,
+      `Configure it to watch your schema migration files`,
+      `Every PR gets an automatic schema diff comment`,
+      `Breaking changes are flagged with risk scores`,
+      `Team reviews schema changes without manual diffing`
+    ];
+    ctas = [
+      { text: 'Action Setup Guide', href: 'github-action.html', primary: true },
+      { text: 'See Live Demo', href: 'ci-demo.html', primary: false }
+    ];
+  }
+
+  // Team-size upsell
+  if (team === 'small' || team === 'large') {
+    badge = 'Team Setup Recommended';
+    desc += ` With ${team === 'small' ? '2–10' : '10+'} engineers, consider the <strong>Team plan</strong> for shared workspaces and Slack alerts.`;
+    ctas.push({ text: 'Book a Team Demo', href: 'book-demo.html', primary: false });
+  }
+
+  // Build steps HTML
+  const stepsHTML = steps.map((s, i) => {
+    const content = s.replace(/<code>(.*?)<\/code>/g, '<div class="code-snippet">$1<button class="copy-btn-inline" onclick="copyText(this)">Copy</button></div>');
+    return `<li><span class="step-num">${i+1}</span><div>${content}</div></li>`;
+  }).join('');
+
+  // Build CTAs
+  const ctasHTML = ctas.map(c => {
+    const cls = c.primary ? 'btn btn-primary' : 'btn btn-secondary';
+    return `<a href="${c.href}" class="${cls}">${c.text}</a>`;
+  }).join('');
+
+  document.getElementById('resultPanel').innerHTML = `
+    <div class="result-badge">${badge}</div>
+    <h3>${title}</h3>
+    <p>${desc}</p>
+    <ol class="setup-steps">${stepsHTML}</ol>
+    <div class="result-ctas">${ctasHTML}</div>
+  `;
+
+  // Alternative recommendations
+  const alts = [];
+  if (workflow !== 'manual') alts.push({ title: 'Web App', desc: 'Quick browser-based diffs for any schema.', href: 'app.html' });
+  if (workflow !== 'cli') alts.push({ title: 'CLI', desc: 'Terminal diffs and CI integration.', href: 'cli/' });
+  if (workflow !== 'orm') alts.push({ title: 'VS Code Extension', desc: 'Diff schemas inside your editor.', href: 'vscode-extension.html' });
+  if (workflow !== 'review') alts.push({ title: 'GitHub Action', desc: 'Auto-diff on every pull request.', href: 'github-action.html' });
+  alts.push({ title: 'Chrome Extension', desc: 'Diff SQL you find on any webpage.', href: 'tools/bookmarklet.html' });
+
+  document.getElementById('altGrid').innerHTML = alts.map(a => `
+    <div class="alt-card">
+      <h5>${a.title}</h5>
+      <p>${a.desc}</p>
+      <a href="${a.href}" style="font-size:0.85rem;font-weight:600;">Learn more →</a>
+    </div>
+  `).join('');
+
+  // track
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('wizard_completed', { db, workflow, team });
+}
+
+function copyText(btn) {
+  const code = btn.parentElement.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+// Reveal animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

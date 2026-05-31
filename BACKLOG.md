@@ -9,34 +9,35 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 196 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 205 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide.
-- [ ] **P0** JavaScript Kicks $29 ad execution — consolidated request now at root HELP-REQUEST.md (May 31). Previous filings in help-requests/ were not at root.
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — consolidated request now at root HELP-REQUEST.md (May 31).
-- [ ] **P0** npm token refresh — token at `/home/race/.npmrc` expired (401). `schemalens` wrapper package ready to publish in `packages/schemalens/`.
-- [ ] **P1** GitHub Discussions engagement — create discussion posts on race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope available.
+### Distribution — Zero Sales After 202 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 208 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard.
+- [ ] **P0** JavaScript Kicks $29 ad execution — clean unambiguous request at root HELP-REQUEST.md (May 31). Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — clean request at root HELP-REQUEST.md (May 31). Steps: create code for $30 off, expires July 10.
+- [ ] **P0** npm token refresh — clean request at root HELP-REQUEST.md (May 31). Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — extension zip updated with PR diff support. Need human with CWS credentials to submit update.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
-- [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly ($180) or JS Kicks ($29) if first converts. $95 budget remaining.
-- [ ] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`.
+- [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
+- [ ] **P1** Publish npm updates — BLOCKED by expired token. `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign (FIXED: removed bait-and-switch), Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide, Quick-Start Wizard (`get-started.html`).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### New Autonomous Distribution (Week 6–7 Focus)
-- [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page.
+- [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard.
 - [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope.
 
-### Week 8 Focus — New Ideas
-- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion (app.html/schema-examples.html/github-action.html), Schema Diff in 1 Command curl demo page. sitemap 207 URLs.
+### Week 8+ Focus — Break Out of Feature Loop
+- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard. sitemap 208 URLs.
+- [ ] **P1** Build 1 genuinely new conversion asset per session (not another micro-tool or SEO page). Ideas: interactive ROI calculator, "first customer" exclusivity page, partnership pitch pages, live demo video script.
+- [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
-- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 203 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
+- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 208 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---

@@ -1444,7 +1444,7 @@ function getFreeTierLimit() {
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
         <span style="font-size:1.2rem;">🏁</span>
-        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Race to the Finish — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — Help SchemaLens win the $100 AI Startup Race. <strong>Lifetime Pro for $9</strong> (code RACE2026). <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $9 Pro →</a></span>
+        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Race to the Finish — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — Help SchemaLens win the $100 AI Startup Race. <strong>Lifetime Pro for $39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim Pro →</a></span>
       </div>
       <button onclick="dismissRaceToFinishBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
@@ -1698,7 +1698,7 @@ CREATE TABLE users (
       </div>
 
       <p class="welcome-social">Join <strong>thousands of developers</strong> who diff schemas before every deploy.</p>
-      <p class="welcome-links"><a href="schema-examples.html">Browse 6 real-world examples →</a> · <a href="how-it-works.html">How it works →</a> · <a href="tools/db-schema-export-guide.html">Export from your GUI tool →</a> · <a href="tools/bookmarklet.html">Bookmarklet for instant diffs →</a></p>
+      <p class="welcome-links"><a href="schema-examples.html">Browse 6 real-world examples →</a> · <a href="how-it-works.html">How it works →</a> · <a href="tools/db-schema-export-guide.html">Export from your GUI tool →</a> · <a href="tools/bookmarklet.html">Bookmarklet for instant diffs →</a> · <a href="get-started.html">Not sure where to start? →</a></p>
     </div>
 
     <div class="results" id="results">
@@ -4952,8 +4952,8 @@ function renderMigration(sql, rollbackSql, diff) {
         ${costBannerHTML}
         <p>You've spotted every difference. Now get the complete <code>ALTER TABLE</code> script in one click.<br>${teaserCopy} Pro generates <strong>all ${totalTables} tables</strong> — no copy-paste, no missed columns.</p>
         ${isRaceToFinish() ? `<div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
-          🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — SchemaLens is competing in the $100 AI Startup Race. Help us win: <strong>Lifetime Pro for $9</strong> with code RACE2026.
-          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Offer ends July 10. <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Claim $9 Pro →</a></span>
+          🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — SchemaLens is competing in the $100 AI Startup Race. Help us win: <strong>Lifetime Pro for $39</strong>.
+          <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;">Offer ends July 10. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);text-decoration:underline;">Claim Pro →</a></span>
         </div>` : `<div style="background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.35);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:0.9rem;color:var(--text);font-weight:600;">
           🎉 Lifetime Pro: <strong>$39 once</strong> — pay once, keep forever
           <span style="display:block;font-size:0.8rem;font-weight:400;color:var(--text-muted);margin-top:4px;"><a href="launch-special.html" target="_blank" style="color:var(--primary);text-decoration:underline;">See the offer →</a></span>
@@ -5057,7 +5057,7 @@ function renderMigration(sql, rollbackSql, diff) {
     if (warningsHTML) html += warningsHTML;
     if (isRaceToFinish() && !localStorage.getItem('schemalens_license')) {
       html += `<div style="margin-bottom:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(16,185,129,0.1),rgba(99,102,241,0.08));border:1px solid rgba(16,185,129,0.25);border-radius:8px;font-size:0.85rem;color:var(--text);">
-        🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — Help us win the AI Startup Race. <a href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim $9 Lifetime Pro →</a>
+        🏁 <strong>Race to the Finish — <span class="race-to-finish-countdown-inline"></span> left</strong> — Help us win the AI Startup Race. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim Lifetime Pro →</a>
       </div>`;
     }
     // Tabs
@@ -9362,7 +9362,7 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
     if (raceToFinish) {
       return `
         <h3>🏁 Help SchemaLens Win the AI Startup Race</h3>
-        <p class="subtitle">The $100 AI Startup Race ends in <strong style="color:var(--danger);">${getRaceToFinishCountdownText()}</strong>. Get Lifetime Pro for <strong>$9</strong> (code RACE2026) and support an indie developer tool.</p>
+        <p class="subtitle">The $100 AI Startup Race ends in <strong style="color:var(--danger);">${getRaceToFinishCountdownText()}</strong>. Get Lifetime Pro for <strong>$39</strong> and support an indie developer tool.</p>
         <div class="exit-intent-benefits">
           <ul>
             <li><strong>Unlimited tables</strong> — diff your entire schema, not just ${getFreeTierLimit()} tables</li>
@@ -9373,11 +9373,11 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
           </ul>
         </div>
         <div class="exit-intent-price" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:12px 16px;margin:16px 0;text-align:center;">
-          <div style="font-size:1.15rem;font-weight:700;color:var(--danger);">🔒 Lifetime Pro — $9 with code RACE2026</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--danger);">🔒 Lifetime Pro — $39 one-time</div>
           <div style="font-size:0.9rem;color:var(--text-muted);margin-top:4px;">Regular price $39. Offer ends July 10. 30-day money-back guarantee.</div>
         </div>
         <div class="modal-actions" style="justify-content:center;flex-wrap:wrap;gap:10px;">
-          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--danger);border-color:var(--danger);" href="https://gumroad.com/l/schemalens-lifetime/RACE2026" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_race_cta');">⚡ Claim $9 Pro →</a>
+          <a class="btn btn-primary" style="font-size:1.05rem;padding:14px 28px;background:var(--danger);border-color:var(--danger);" href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_race_cta');">⚡ Claim Pro →</a>
           <a class="btn btn-secondary" href="founding-member.html" target="_blank" rel="noopener" onclick="closeExitIntentModal(); if(window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('exit_intent_race_free_cta');">🚀 Get Pro Free</a>
         </div>
         <div style="text-align:center;margin-top:12px;">

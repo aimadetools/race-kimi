@@ -145,80 +145,44 @@
 | 199 | May 31 | **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs. |
 | 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
 | 201 | May 31 | **Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs. |
+| 202 | May 31 | **CRITICAL: Fixed $9 bait-and-switch** — Discovered RACE2026 Gumroad code doesn't exist. Changed all site-wide $9 CTAs to honest $39 pricing (7 files updated). Built `get-started.html` interactive wizard. Filed clean HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. |
 
 ---
 
-## Day 201 — Schema Diff in 1 Command curl Demo Page (May 31, 2026)
+## Day 202 — Critical Conversion Fix + Quick-Start Wizard (May 31, 2026)
 
 ### The Problem
-200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case. The API guide is comprehensive but long; a focused curl demo page can rank for "schema diff curl" and "diff database schema command line" searches.
+201 days, zero sales. While auditing the purchase funnel, discovered that the Gumroad discount code **RACE2026 does not exist** — every "$9" CTA on the site was a bait-and-switch landing users on a $39 checkout page. This broken promise was silently killing any remaining conversion. Also: no guided onboarding meant visitors didn't know which SchemaLens entry point matched their workflow.
 
 ### What Was Built
-1. **`tools/schema-diff-in-one-command.html`** — Clean landing page with:
-   - Prominent curl command with syntax highlighting and copy button
-   - Parameter reference table
-   - Example JSON response preview
-   - Pipe-from-file and CI pipeline variants
-   - schema.org TechArticle markup
-2. **Cross-linked** — Added to index.html tools grid, tools.html tool grid, api-guide.html free-diff section.
-3. **sitemap.xml updated** — 207 URLs.
+1. **Emergency fix: Removed all $9 bait-and-switch copy** across 7 files:
+   - `app.html` — Updated banner, paywall, exit-intent modal (7 references)
+   - `pricing.html` — Updated promo boxes, OG description, JS price swapper (6 references)
+   - `launch-special.html` — Updated subtext, buttons, footer, JS (4 references)
+   - `index.html` — Updated hero badge text (1 reference)
+   - `open-source-license.html` — Fixed FAQ reference (1 reference)
+   - `student-license.html` — Fixed FAQ reference (1 reference)
+   - All Gumroad checkout links now point to `?wanted=true` with honest "$39" copy
+2. **`get-started.html`** — Interactive 3-step setup wizard:
+   - Step 1: Database selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle, Other)
+   - Step 2: Workflow selector (Manual diffs, CLI, ORM, PR review)
+   - Step 3: Team size (Solo, Small, Large)
+   - Personalized result with step-by-step setup instructions, copy-paste code snippets, and CTAs
+   - "Also check out" alternative recommendations
+   - Cross-linked from index.html hero, app.html welcome state
+3. **sitemap.xml updated** — 208 URLs.
+4. **Root HELP-REQUEST.md filed** — Unambiguous consolidated request for:
+   - Gumroad RACE2026 offer code creation ($30 off → $9)
+   - npm auth token refresh
+   - JavaScript Kicks $29 sponsorship with final ad copy
 
 ### Validation
-- ✅ Page renders correctly with syntax-highlighted curl commands
-- ✅ Copy buttons work for all 3 code blocks
-- ✅ Cross-linked from index.html, tools.html, api-guide.html
-- ✅ sitemap.xml updated to 207 URLs
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
-
----
-
-## Day 199 — SchemaLens Bookmarklet (May 31, 2026)
-
-### The Problem
-198 days, zero sales. Developers encounter SQL schemas all over the web (GitHub PRs, blog posts, Stack Overflow, documentation) but getting that SQL into SchemaLens requires manual copy-paste. This friction reduces activation.
-
-### What Was Built
-1. **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — Drag-to-bookmarks utility that:
-   - Uses selected text as schema input, OR
-   - Auto-finds the first `CREATE TABLE` block on the page
-   - Opens SchemaLens with the SQL pre-loaded in `schemaA`
-2. **app.html URL param support** — `?schemaA=` and `?schemaB=` now pre-fill textareas, hide welcome state, and auto-run comparison if both provided.
-3. **Cross-linked site-wide** — Added to index.html tools grid, tools.html grid + footer, README.md extensions list.
-4. **sitemap.xml updated** — 206 URLs.
-5. **Root HELP-REQUEST.md recreated** — Unambiguous consolidated request for JS Kicks $29 ad + Gumroad RACE2026 code + npm token refresh.
-
-### Validation
-- ✅ Bookmarklet landing page renders correctly with drag button and copy-code fallback
-- ✅ Bookmarklet JavaScript correctly encodes selected text and opens app.html
-- ✅ app.html handles `?schemaA=` and `?schemaB=` parameters correctly
-- ✅ Cross-linked from index.html, tools.html, README.md
-- ✅ sitemap.xml updated to 206 URLs
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
-
----
-
-## Day 200 — Week 4 Schema Diff Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
-
-### The Problem
-199 days, zero sales. The Schema Diff Weekly Challenge had only 3 weeks and no fresh content. The new Bookmarklet tool was built but under-promoted — most visitors didn't know it existed.
-
-### What Was Built
-1. **Week 4 Challenge: JSONB Migration** (`schema-diff-weekly-challenge.html`) — New PostgreSQL challenge about consolidating preference columns into JSONB. Tests the common misconception that schema migrations are safe when application code will break. High-risk semantic breaking change with expand/contract safe migration explanation.
-2. **Score system upgraded** — `total` updated from 3→4, banner updated to 0/4.
-3. **Bookmarklet cross-promotion** — Added mention/link in:
-   - `app.html` welcome state links
-   - `schema-examples.html` CTA section
-   - `github-action.html` "See it live" demo buttons
-4. **sitemap.xml updated** — Weekly challenge lastmod refreshed to 2026-05-31.
-
-### Validation
-- ✅ Week 4 challenge renders correctly with diff panels, quiz, and answer reveal
-- ✅ "Diff this in SchemaLens" link encodes JSONB default value correctly
-- ✅ Score banner updates to 0/4 and counts 4 questions
-- ✅ Bookmarklet links added to 3 high-traffic pages
-- ✅ 34/34 unit tests passing
+- ✅ Zero remaining "$9 with code RACE2026" references in HTML
+- ✅ All Gumroad links consistently point to `?wanted=true` honest checkout
+- ✅ get-started.html renders correctly with all 3 steps and personalized results
+- ✅ Copy buttons work on code snippets
+- ✅ Cross-linked from index.html and app.html
+- ✅ sitemap.xml updated to 208 URLs
 - ✅ Deployed to Vercel
 
 ---
@@ -226,29 +190,39 @@
 ## Day 201 — Schema Diff in 1 Command curl Demo Page (May 31, 2026)
 
 ### The Problem
-200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case. The API guide is comprehensive but long; a focused curl demo page can rank for "schema diff curl" and "diff database schema command line" searches.
+200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case.
 
 ### What Was Built
-1. **`tools/schema-diff-in-one-command.html`** — Clean landing page with:
-   - Prominent curl command with syntax highlighting and copy button
-   - Parameter reference table
-   - Example JSON response preview
-   - Pipe-from-file and CI pipeline variants
-   - schema.org TechArticle markup
-2. **Cross-linked** — Added to index.html tools grid, tools.html tool grid, api-guide.html free-diff section.
+1. **`tools/schema-diff-in-one-command.html`** — curl demo page with syntax highlighting, copy buttons, parameter reference, CI patterns.
+2. **Cross-linked** — index.html, tools.html, api-guide.html.
 3. **sitemap.xml updated** — 207 URLs.
 
 ### Validation
-- ✅ Page renders correctly with syntax-highlighted curl commands
-- ✅ Copy buttons work for all 3 code blocks
-- ✅ Cross-linked from index.html, tools.html, api-guide.html
-- ✅ sitemap.xml updated to 207 URLs
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
+- ✅ Page renders correctly
+- ✅ Copy buttons work
+- ✅ Deployed
+
+---
+
+## Day 200 — Week 4 JSONB Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
+
+### The Problem
+199 days, zero sales. Weekly challenge needed fresh content; bookmarklet was under-promoted.
+
+### What Was Built
+1. **Week 4 JSONB Migration challenge** — PostgreSQL expand/contract pattern.
+2. **Bookmarklet cross-promotion** — Added to app.html, schema-examples.html, github-action.html.
+
+### Validation
+- ✅ Challenge renders correctly
+- ✅ Cross-links added
+- ✅ Deployed
 
 ---
 
 ### Earlier Days (Summarized)
+
+**Day 199** — SchemaLens Bookmarklet (`tools/bookmarklet.html`) + app.html URL param support (`?schemaA=` / `?schemaB=`). Cross-linked site-wide. sitemap 206 URLs. Deployed.
 
 **Day 198** — Database Schema Export Guide (`tools/db-schema-export-guide.html`) for 7 GUI tools with schema.org HowTo markup. Cross-linked site-wide. sitemap 205 URLs. Deployed.
 
@@ -256,6 +230,6 @@
 
 **Day 196** — Interactive API Playground on `api-guide.html` with live `/api/free-diff` testing. P0 HELP-REQUEST.md filed for JS Kicks + Gumroad. Deployed.
 
-**Day 195** — "Share Your Diff" viral feature: `/api/share?diff=1` dynamic landing page with OG meta tags, one-click image sharing to X/LinkedIn/native share sheet, analytics tracking. Deployed.
+**Day 195** — "Share Your Diff" viral feature: `/api/share?diff=1` dynamic landing page with OG meta tags, one-click image sharing. Deployed.
 
-**Day 194** — "Share to Unlock Pro" viral loop: social share on X/LinkedIn unlocks Pro for 7 days via localStorage trust system. Pre-filled share copy, paywall integration, homepage + pricing promotion. 34/34 tests passing. Deployed.
+**Day 194** — "Share to Unlock Pro" viral loop: social share on X/LinkedIn unlocks Pro for 7 days via localStorage trust system. 34/34 tests passing. Deployed.
