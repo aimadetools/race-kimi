@@ -1215,6 +1215,10 @@
   <url>
     <loc>https://schemalens.tech/tools/db-schema-export-guide.html</loc>
     <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/bookmarklet.html</loc>
+    <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

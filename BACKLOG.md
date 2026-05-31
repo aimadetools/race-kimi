@@ -13,7 +13,8 @@
 - [x] **Completed (consolidated):** 60+ micro-tools, 205 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide.
 - [ ] **P0** JavaScript Kicks $29 ad execution — consolidated request now at root HELP-REQUEST.md (May 31). Previous filings in help-requests/ were not at root.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — consolidated request now at root HELP-REQUEST.md (May 31).
-- [ ] **P1** GitHub Discussions engagement — create discussion posts on race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
+- [ ] **P0** npm token refresh — token at `/home/race/.npmrc` expired (401). `schemalens` wrapper package ready to publish in `packages/schemalens/`.
+- [ ] **P1** GitHub Discussions engagement — create discussion posts on race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope available.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — extension zip updated with PR diff support. Need human with CWS credentials to submit update.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
@@ -42,7 +43,9 @@
 - [x] **P1** Site-wide stale data sweep — fixed day counts (192→197), tool counts (60+), page counts (202→203) across 15 marketing pages.
 - [x] **P2** Build "SchemaLens Community Hub" page — central landing page linking to all engagement channels, programs, and extensions. Cross-linked site-wide. sitemap 204 URLs.
 - [x] **P2** Create a "Database Schema Export Guide" for popular GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser) — step-by-step export instructions with schema.org HowTo markup. sitemap 205 URLs.
-- [ ] **P2** Add Week 4 to Schema Diff Weekly Challenge (consider: JSONB migration, column rename, or enum change).
+- [ ] **P1** Add Week 4 to Schema Diff Weekly Challenge (consider: JSONB migration, column rename, or enum change).
+- [ ] **P1** SchemaLens Bookmarklet cross-promotion — add mention to app.html welcome state, schema-examples.html, and GitHub Action landing page.
+- [ ] **P2** Build a "Schema Diff in 1 Command" curl demo page — `curl https://schemalens.tech/api/free-diff` with ready-to-copy examples.
 
 ### Content
 - [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 203 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.

@@ -17,7 +17,8 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`  
 Core engine: `npm install schemalens-engine`  
 VS Code Extension: [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)  
-Chrome Extension: [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
+Chrome Extension: [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)  
+Bookmarklet: [Get Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL you see on the web
 
 Built for the [$100 AI Startup Race](https://100aistartup.com) — a 12-week challenge to build a revenue-generating startup on a $90 budget.
 
@@ -152,6 +153,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 59. [Database Schema Design Patterns](https://schemalens.tech/database-schema-design-patterns.html) — 10 production-ready SQL patterns with before/after diffs
 60. [Database Schema Anti-Patterns](https://schemalens.tech/database-schema-anti-patterns.html) — 10 common schema mistakes and how to fix them
 61. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
+62. [SchemaLens Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL on the web in one click
 62. [SQL to C# Generator](https://schemalens.tech/tools/sql-to-csharp.html)
 63. [Schema Badge API](https://schemalens.tech/tools/schema-badge.html)
 64. [Database Schema Export Guide](https://schemalens.tech/tools/db-schema-export-guide.html) — Step-by-step export instructions for DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, and SQLite Browser
@@ -168,6 +170,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 - **CI/CD Templates** — GitLab CI and Bitbucket Pipelines for schema diff in PRs
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
 - **Chrome Extension** — Diff SQL files on GitHub blob pages and PR "Files changed" pages with one click ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`)
+- **Bookmarklet** — Drag to your bookmarks bar. Click on any page with SQL to instantly open it in SchemaLens. No install required. ([Get it](https://schemalens.tech/tools/bookmarklet.html))
 - **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 

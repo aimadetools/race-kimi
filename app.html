@@ -9498,6 +9498,40 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   }
 })();
 
+// Bookmarklet / share link parameter support (?schemaA=...&schemaB=...)
+(function() {
+  const params = new URLSearchParams(location.search);
+  const schemaA = params.get('schemaA');
+  const schemaB = params.get('schemaB');
+  const dialect = params.get('dialect');
+
+  if (schemaA) {
+    try { document.getElementById('schemaA').value = decodeURIComponent(schemaA); } catch(e) {}
+  }
+  if (schemaB) {
+    try { document.getElementById('schemaB').value = decodeURIComponent(schemaB); } catch(e) {}
+  }
+  if (dialect) {
+    const dialectSelect = document.getElementById('dialect');
+    if (dialectSelect) dialectSelect.value = dialect;
+  }
+
+  // Hide welcome state when schema is pre-loaded
+  if (schemaA || schemaB) {
+    const welcomeState = document.querySelector('.welcome-state');
+    if (welcomeState) welcomeState.classList.add('hidden');
+    const welcomeHint = document.querySelector('.welcome-hint');
+    if (welcomeHint) welcomeHint.classList.add('hidden');
+    // Auto-run if both schemas provided
+    if (schemaA && schemaB) {
+      setTimeout(() => {
+        const btn = document.getElementById('compareBtn');
+        if (btn) btn.click();
+      }, 400);
+    }
+  }
+})();
+
 // Init Supabase when DOM is ready
 initSupabase();
 </script>

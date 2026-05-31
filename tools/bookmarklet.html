@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Bookmarklet — Diff Any SQL You See on the Web</title>
+  <meta name="description" content="Drag this bookmarklet to your bookmarks bar. Click it on any page with SQL to instantly open the schema in SchemaLens.">
+  <link rel="canonical" href="https://schemalens.tech/tools/bookmarklet.html">
+  <meta property="og:title" content="SchemaLens Bookmarklet — Diff Any SQL You See on the Web">
+  <meta property="og:description" content="Drag this bookmarklet to your bookmarks bar. Click it on any page with SQL to instantly open the schema in SchemaLens.">
+  <meta property="og:url" content="https://schemalens.tech/tools/bookmarklet.html">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .bookmarklet-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: move;
+      font-size: 0.95rem;
+      border: 2px dashed rgba(255,255,255,0.4);
+      box-shadow: 0 4px 12px rgba(14,165,233,0.25);
+      user-select: none;
+    }
+    .bookmarklet-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+    .demo-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .code-block {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: var(--primary);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .use-case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .use-case-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+    .use-case-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .copy-raw-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .copy-raw-btn:hover {
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" style="padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;">
+    <a href="../index.html" style="font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none;">SchemaLens</a>
+    <div>
+      <a href="../tools.html" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Tools</a>
+      <a href="../app.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Try the App →</a>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width: 800px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">SchemaLens Bookmarklet</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+      Diff any SQL schema you see on the web — GitHub PRs, blog posts, docs, Stack Overflow — in one click.
+    </p>
+
+    <section class="demo-box" style="text-align: center;">
+      <p style="margin-bottom: 1rem; font-weight: 600;">👇 Drag this button to your bookmarks bar</p>
+      <a id="bookmarklet" class="bookmarklet-btn"
+         href="javascript:(function(){var t=window.getSelection?window.getSelection().toString():'';if(!t){var p=document.querySelectorAll('pre,code,.highlight,.blob-code-inner');for(var i=0;i<p.length;i++){if(/CREATE\s+TABLE/i.test(p[i].innerText)){t=p[i].innerText;break;}}}if(!t){alert('Select some SQL on the page first, or navigate to a page with CREATE TABLE statements.');return;}var u='https://schemalens.tech/app.html?schemaA='+encodeURIComponent(t)+'&ref=bookmarklet';window.open(u,'_blank');})();"
+         onclick="alert('Drag this button to your bookmarks bar instead of clicking it.');return false;">
+        🔍 Diff in SchemaLens
+      </a>
+      <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+        Can't drag? <button class="copy-raw-btn" onclick="copyRaw()">Copy bookmarklet code</button>
+      </p>
+      <textarea id="rawCode" style="position:absolute;left:-9999px;" readonly>javascript:(function(){var t=window.getSelection?window.getSelection().toString():'';if(!t){var p=document.querySelectorAll('pre,code,.highlight,.blob-code-inner');for(var i=0;i&lt;p.length;i++){if(/CREATE\s+TABLE/i.test(p[i].innerText)){t=p[i].innerText;break;}}}if(!t){alert('Select some SQL on the page first, or navigate to a page with CREATE TABLE statements.');return;}var u='https://schemalens.tech/app.html?schemaA='+encodeURIComponent(t)+'&amp;ref=bookmarklet';window.open(u,'_blank');})();</textarea>
+    </section>
+
+    <section style="margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">How to Use</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <strong>Drag the button above to your bookmarks bar.</strong>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">On mobile, use the "Copy bookmarklet code" button and save it as a bookmark manually.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <strong>Go to any page with SQL.</strong>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">GitHub PRs, migration blogs, documentation, Stack Overflow answers, etc.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <strong>Click the bookmarklet.</strong>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">If you selected SQL text, it uses that. Otherwise it auto-finds the first <code>CREATE TABLE</code> block on the page.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <strong>SchemaLens opens with the SQL pre-loaded.</strong>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Paste your second schema and hit Compare. No copy-paste hunting required.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Perfect For</h2>
+      <div class="use-case-grid">
+        <div class="use-case-card">
+          <h4>🐙 GitHub PR Reviews</h4>
+          <p>Reviewing a migration PR? Click the bookmarklet on the "Files changed" tab to instantly diff the schema changes.</p>
+        </div>
+        <div class="use-case-card">
+          <h4>📚 Documentation & Blogs</h4>
+          <p>Reading a tutorial with example schemas? Diff it against your own database in seconds.</p>
+        </div>
+        <div class="use-case-card">
+          <h4>💬 Stack Overflow</h4>
+          <p>Someone posted a schema in their question? Open it in SchemaLens to understand the structure visually.</p>
+        </div>
+        <div class="use-case-card">
+          <h4>🔧 Migration Guides</h4>
+          <p>Comparing before/after schemas in a migration guide? The bookmarklet grabs the first schema; you paste the second.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Demo</h2>
+      <div class="demo-box">
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Imagine you're reading a GitHub PR with this schema change:</p>
+        <div class="code-block">
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+        </div>
+        <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+          Click the bookmarklet → SchemaLens opens with this SQL already loaded → You paste your current schema → Instant diff + migration script.
+        </p>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Privacy</h2>
+      <p style="color: var(--text-muted); line-height: 1.7;">
+        The bookmarklet runs entirely in your browser. It never sends data to any server — it simply opens SchemaLens with the SQL encoded in the URL. The schema data is processed client-side, just like the main app.
+      </p>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Chrome Extension</h2>
+      <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem;">
+        Want even more power? The <a href="../chrome-extension" style="color: var(--primary);">SchemaLens Chrome Extension</a> adds a "Diff in SchemaLens" button directly to GitHub PR pages — no bookmarklet needed.
+      </p>
+      <a href="https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde" target="_blank" rel="noopener" class="btn btn-primary" style="text-decoration: none;">Install Chrome Extension →</a>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border);">
+    <p>Built by <a href="../index.html" style="color: var(--primary);">SchemaLens</a> — 60+ free developer tools</p>
+  </footer>
+
+  <script>
+    function copyRaw() {
+      const ta = document.getElementById('rawCode');
+      ta.select();
+      document.execCommand('copy');
+      const btn = document.querySelector('.copy-raw-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy bookmarklet code', 1500);
+    }
+  </script>
+</body>
+</html>
