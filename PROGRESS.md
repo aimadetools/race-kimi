@@ -144,6 +144,32 @@
 | 198 | May 31 | **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing. |
 | 199 | May 31 | **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs. |
 | 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
+| 201 | May 31 | **Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs. |
+
+---
+
+## Day 201 — Schema Diff in 1 Command curl Demo Page (May 31, 2026)
+
+### The Problem
+200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case. The API guide is comprehensive but long; a focused curl demo page can rank for "schema diff curl" and "diff database schema command line" searches.
+
+### What Was Built
+1. **`tools/schema-diff-in-one-command.html`** — Clean landing page with:
+   - Prominent curl command with syntax highlighting and copy button
+   - Parameter reference table
+   - Example JSON response preview
+   - Pipe-from-file and CI pipeline variants
+   - schema.org TechArticle markup
+2. **Cross-linked** — Added to index.html tools grid, tools.html tool grid, api-guide.html free-diff section.
+3. **sitemap.xml updated** — 207 URLs.
+
+### Validation
+- ✅ Page renders correctly with syntax-highlighted curl commands
+- ✅ Copy buttons work for all 3 code blocks
+- ✅ Cross-linked from index.html, tools.html, api-guide.html
+- ✅ sitemap.xml updated to 207 URLs
+- ✅ 34/34 unit tests passing
+- ✅ Deployed to Vercel
 
 ---
 
