@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 196 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 203 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground.
+- [x] **Completed (consolidated):** 60+ micro-tools, 205 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide.
 - [ ] **P0** JavaScript Kicks $29 ad execution — consolidated request now at root HELP-REQUEST.md (May 31). Previous filings in help-requests/ were not at root.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — consolidated request now at root HELP-REQUEST.md (May 31).
 - [ ] **P1** GitHub Discussions engagement — create discussion posts on race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
@@ -22,7 +22,7 @@
 - [ ] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground.
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide.
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
@@ -39,9 +39,9 @@
 - [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
 
 ### Week 8 Focus — New Ideas
-- [ ] **P1** Site-wide stale data sweep — fix day counts (196→197), tool counts (57), page counts (203) across all marketing pages, app.html, index.html, built-in-public.html, 147-days-built-in-public.html.
-- [ ] **P2** Build "SchemaLens Community Hub" page — central landing page linking to GitHub Discussions, newsletter, social channels, and community programs (OSS license, student license, founding member).
-- [ ] **P2** Create a "Database Schema Export Guide" for popular GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin) — targets users searching for schema diff within their existing workflow.
+- [x] **P1** Site-wide stale data sweep — fixed day counts (192→197), tool counts (60+), page counts (202→203) across 15 marketing pages.
+- [x] **P2** Build "SchemaLens Community Hub" page — central landing page linking to all engagement channels, programs, and extensions. Cross-linked site-wide. sitemap 204 URLs.
+- [x] **P2** Create a "Database Schema Export Guide" for popular GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser) — step-by-step export instructions with schema.org HowTo markup. sitemap 205 URLs.
 - [ ] **P2** Add Week 4 to Schema Diff Weekly Challenge (consider: JSONB migration, column rename, or enum change).
 
 ### Content
@@ -148,6 +148,12 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Days 194–196 (May 31)
 **Viral conversion triple punch:** (1) "Share to Unlock Pro" — social share unlocks Pro for 7 days. (2) "Share Your Diff" — one-click image sharing with dynamic OG landing page. (3) Interactive API Playground — live testing on api-guide.html. Root HELP-REQUEST.md consolidated for JS Kicks + Gumroad code.
 
+### Day 197 (May 31)
+**Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, and extensions. Day/page counts fixed across 15 files. Root HELP-REQUEST.md restored. sitemap 204 URLs.
+
+### Day 198 (May 31)
+**Database Schema Export Guide** — `tools/db-schema-export-guide.html` with step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing.
+
 ---
 
-*Backlog reprioritized May 31, 2026. Zero sales after 196 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (GitHub Discussions, Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*
+*Backlog reprioritized May 31, 2026. Zero sales after 198 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (GitHub Discussions, Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*

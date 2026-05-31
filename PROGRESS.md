@@ -137,7 +137,49 @@
 | 191 | May 30 | **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, SchemaLens button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs. |
 | 192 | May 30 | **GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed. |
 | 193 | May 30 | **Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges (soft delete, INT→BIGINT, NOT NULL without default). Cross-linked site-wide. Stale stat sweep: 189→192 days, 189→202 pages across built-in-public, 147-days, app.html. sitemap 203 URLs. |
-| 194–197 | May 31 | **Viral conversion triple punch** (Days 194–196): Share to Unlock Pro, Share Your Diff with dynamic OG cards, interactive API Playground. **Day 197**: Community Hub page launched, site-wide stale data sweep (192→197 days, 202→203 pages), root HELP-REQUEST.md restored for JS Kicks + Gumroad code execution.
+| 194–197 | May 31 | **Viral conversion triple punch** (Days 194–196): Share to Unlock Pro, Share Your Diff with dynamic OG cards, interactive API Playground. **Day 197**: Community Hub page launched, site-wide stale data sweep (192→197 days, 202→203 pages), root HELP-REQUEST.md restored for JS Kicks + Gumroad code execution. |
+| 198 | May 31 | **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — step-by-step instructions for exporting CREATE TABLE from DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, and DB Browser for SQLite. schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs.
+
+---
+
+## Day 198 — Database Schema Export Guide (May 31, 2026)
+
+### The Problem
+197 days, zero sales. SchemaLens requires users to paste CREATE TABLE statements, but many developers work inside GUI tools (DataGrip, DBeaver, TablePlus, etc.) and don't know the fastest way to export schema DDL. This is a friction point that causes bounce — users open the app, see empty inputs, and leave because they don't know how to get their schema out of their existing tool.
+
+### What Was Built
+1. **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — Comprehensive guide covering 7 popular database GUI tools:
+   - **DataGrip** — Copy DDL, full schema export, keyboard shortcuts (Ctrl+Shift+C, Ctrl+Alt+G)
+   - **DBeaver** — Generate SQL → DDL, full database export, Ctrl+Shift+E
+   - **TablePlus** — File → Export → SQL, copy table as CREATE, Cmd+Shift+E
+   - **pgAdmin** — Backup with schema-only, single table CREATE script, psql `pg_dump -s`
+   - **MySQL Workbench** — Server → Data Export → Dump Structure Only, `mysqldump --no-data`
+   - **SSMS** — Tasks → Generate Scripts → Schema only, Script Table as → CREATE To
+   - **DB Browser for SQLite** — Export → Database to SQL, `.schema` command
+2. **Command-Line Quick Reference** — One-liners for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle
+3. **schema.org HowTo markup** — Rich snippets for "how to export database schema" search queries
+4. **Interactive tool tabs** — Click any tool name to reveal step-by-step instructions with animated transitions
+5. **Cross-linked site-wide** — Added to index.html tools grid, tools.html grid + footer, app.html welcome state, README.md
+6. **sitemap.xml updated** — 205 URLs
+
+### Why This Matters
+- **Removes a critical friction point.** Users who discover SchemaLens but don't know how to export their schema now have a direct path from their existing tool to our app.
+- **Captures high-intent search traffic.** Queries like "how to export schema from datagrip" and "dbeaver export ddl" are common and underserved.
+- **Targets users in existing workflows.** Instead of trying to change behavior, we meet users where they already are.
+- **Zero cost, perpetual asset.** Like all micro-tools, this page compounds SEO value over time.
+
+### Validation
+- ✅ Guide renders correctly with all 7 tool tabs and responsive layout
+- ✅ schema.org HowTo JSON-LD validates
+- ✅ Cross-linked from index.html, tools.html, app.html, README.md
+- ✅ sitemap.xml updated to 205 URLs
+- ✅ 34/34 unit tests passing
+- ✅ Deployed to Vercel
+
+### Next Steps
+- Monitor search impressions for "export schema from [tool]" queries
+- Add Week 4 to Schema Diff Weekly Challenge
+- Continue autonomous distribution (Stack Overflow, blog comments, GitHub Discussions)
 
 ---
 
@@ -231,75 +273,6 @@
 
 ---
 
-## Day 195 — "Share Your Diff" Viral Feature (May 31, 2026)
+**Day 195** — "Share Your Diff" viral feature: `/api/share?diff=1` dynamic landing page with OG meta tags, one-click image sharing to X/LinkedIn/native share sheet, analytics tracking. Deployed.
 
-### The Problem
-194 days, zero sales. SchemaLens already generates beautiful diff summary images and shareable URLs, but the social sharing flow is fragmented. Users have to download an image, copy text, and manually compose a post. There's no streamlined "one-click share with image" flow, and shared links don't have a dedicated landing page with rich social previews.
-
-### What Was Built
-1. **`/api/share?diff=1` dynamic landing page** — New server-rendered share card that accepts diff stats via query params (`added`, `removed`, `modified`, `renamed`, `breaking`, `risk`, `score`, `dialect`, `back`). Returns a beautiful HTML page with dynamic OpenGraph title/description, styled stat cards, risk badge, dialect tag, and auto-redirect to the full diff. No Supabase lookup required — works for any diff instantly.
-2. **Enhanced social share links** — The "Social" tab in app.html now uses `/api/share?diff=1...` as the share URL instead of raw `app.html#diff=...`. This means every social post links to a branded landing page with stats, improving CTR and driving backlinks.
-3. **One-click image sharing in Image tab** — Added three new buttons to the Image tab:
-   - "Share on X / Twitter (copies image)" — copies the diff PNG to clipboard and opens Twitter compose with pre-filled text + share card URL
-   - "Share on LinkedIn (copies image)" — same flow for LinkedIn
-   - "Quick Share — native share sheet" — uses `navigator.share({ files: [image] })` on supported browsers (mobile Chrome, Safari) for true one-click sharing with image attachment
-4. **Analytics tracking** — `share_diff_with_image` event with platform attribution (`twitter`, `linkedin`, `native`).
-
-### Why This Matters
-- **Frictionless viral loop.** Users can share a diff image + stats + backlink in 2 clicks. The clipboard copy means the image is ready to paste into any social platform.
-- **Every share drives a backlink.** The share card URL (`/api/share?diff=1...`) links back to SchemaLens and auto-redirects to the actual diff. This creates inbound links from social media profiles.
-- **Works without login.** Unlike saved/public diffs that require Supabase, the share card is generated purely from URL parameters. Any free-tier user can share.
-- **Native share on mobile.** Mobile browsers that support `navigator.share()` with files can send the diff image directly to any app (WhatsApp, Telegram, Slack, etc.).
-
-### Validation
-- ✅ `/api/share?diff=1` renders correct HTML with dynamic OG meta tags
-- ✅ Share card displays colored stat cards, risk banner, and dialect badge
-- ✅ Auto-redirect to `back` URL works after 5 seconds
-- ✅ app.html social tab buttons use share card URL
-- ✅ Image tab buttons copy canvas image and open correct platform URLs
-- ✅ Native share button only appears on supported browsers
-- ✅ All scripts parse without syntax errors
-- ✅ Deployed to Vercel
-
-### Next Steps
-- Monitor `share_diff_with_image` analytics to see which platform users prefer
-- If adoption is low, add a post-share "Thanks" modal with Pro unlock incentive
-- Continue with GitHub Discussions engagement (next P1 task)
-- File unambiguous JavaScript Kicks sponsorship help request
-
----
-
-## Day 194 — "Share to Unlock Pro" Viral Loop (May 31, 2026)
-
-### The Problem
-193 days, zero sales. After 193 days of building (60+ tools, 200+ pages, 5 extensions, 4 distribution channels), almost no one knows SchemaLens exists. The product is complete. The conversion funnel is optimized. The missing piece is distribution at scale. Paid ads require human execution. Community posting requires accounts. SEO takes months to mature.
-
-### What Was Built
-1. **`unlockProViaShare()` function** — One-click share on X/Twitter or LinkedIn unlocks Pro for 7 days. Trust-based system: we open the share dialog, set a localStorage timestamp, and immediately unlock Pro. No server verification needed.
-2. **Pre-filled share copy** — Twitter: "Just discovered SchemaLens — a free browser-based SQL schema diff tool that instantly generates migration scripts. Caught a breaking change I would have missed 🔥 https://schemalens.tech". LinkedIn uses LinkedIn share-offsite URL.
-3. **Paywall integration** — Added "🚀 Share on X/Twitter — Unlock Pro 7 Days" and "💼 Share on LinkedIn — Unlock Pro 7 Days" buttons directly in the app.html paywall and migration preview CTA. These appear alongside the existing trial, purchase, and free-license options.
-4. **`hasSharedUnlock()` expiry** — Checks `schemalens_shared_at` in localStorage. Expires after 7 days. `isProUnlocked()` updated to include shared unlock alongside license and trial.
-5. **Homepage + pricing promotion** — Added "Share to Unlock Pro" as a free option on index.html and pricing.html, alongside Open Source and Student programs.
-6. **Analytics tracking** — `pro_unlocked_via_share` event with platform parameter for attribution.
-
-### Why This Matters
-- **Turns every free user into a referrer.** If 100 people use the free tier and 5% share, that's 5 posts reaching ~500-2000 developer followers each.
-- **Costs $0.** No ad spend, no API costs, no server costs.
-- **Friction is near-zero.** One click to share, immediate Pro unlock. No email required, no form to fill.
-- **Builds social proof.** Real developers posting about SchemaLens creates credibility that no amount of SEO copy can match.
-
-### Validation
-- ✅ `hasSharedUnlock()` correctly returns false after 7 days
-- ✅ Share buttons open correct pre-filled URLs on X and LinkedIn
-- ✅ Pro features unlock immediately after clicking share
-- ✅ `isProUnlocked()` includes shared unlock in all gated feature checks
-- ✅ Analytics event fires with platform attribution
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
-
-### Next Steps
-- Monitor share unlock analytics to see if users actually share
-- If conversion is low, test different share copy (more specific use cases, less generic)
-- Build "Share Your Schema Diff" feature — one-click share of diff results with image
-- Continue autonomous distribution (Stack Overflow, blog comments, GitHub Discussions)
-- Execute help requests when human becomes available
+**Day 194** — "Share to Unlock Pro" viral loop: social share on X/LinkedIn unlocks Pro for 7 days via localStorage trust system. Pre-filled share copy, paywall integration, homepage + pricing promotion. 34/34 tests passing. Deployed.
