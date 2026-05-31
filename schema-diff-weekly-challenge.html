@@ -82,7 +82,7 @@
     </div>
 
     <div class="score-banner" id="scoreBanner">
-      <div class="score-number" id="scoreNumber">0/3</div>
+      <div class="score-number" id="scoreNumber">0/4</div>
       <p style="margin-top:8px;">Your score this week</p>
       <div class="share-bar" style="justify-content:center;">
         <a href="#" id="shareX">Share on X</a>
@@ -281,6 +281,62 @@ CREATE TABLE posts (
       </div>
     </div>
 
+    <!-- Week 4 -->
+    <div class="challenge-card" data-week="4">
+      <div class="challenge-header">
+        <span class="week-badge">Week 4</span>
+        <span class="project-tag">Pattern: JSONB Migration</span>
+        <span class="project-tag">PostgreSQL</span>
+      </div>
+      <h2 style="font-size:1.2rem;margin-bottom:8px;">Consolidating preference columns into JSONB</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:16px;">A SaaS product wants to let users store arbitrary preferences. The team replaces three discrete columns with a single <code>preferences JSONB</code> column for flexibility:</p>
+
+      <div class="diff-grid">
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">Before</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v1</span>
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+<span class="removed">  notification_email BOOLEAN DEFAULT true,</span>
+<span class="removed">  theme VARCHAR(20) DEFAULT 'light',</span>
+<span class="removed">  timezone VARCHAR(50) DEFAULT 'UTC',</span>
+  created_at TIMESTAMP DEFAULT NOW()
+);
+          </div>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;">After</h4>
+          <div class="diff-panel">
+<span class="comment">-- Schema v2</span>
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+<span class="added">  preferences JSONB DEFAULT</span>
+<span class="added">    '{"email":true,"theme":"light","tz":"UTC"}'::jsonb,</span>
+  created_at TIMESTAMP DEFAULT NOW()
+);
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-box">
+        <h3>🧠 What's the highest risk?</h3>
+        <div class="quiz-options">
+          <button class="quiz-option" data-correct="true">A) Application queries referencing <code>notification_email</code>, <code>theme</code>, or <code>timezone</code> will break.</button>
+          <button class="quiz-option" data-correct="false">B) JSONB columns can't have GIN indexes, so filtering on nested keys will be slow.</button>
+          <button class="quiz-option" data-correct="false">C) The DEFAULT value won't backfill existing rows, leaving them with NULL preferences.</button>
+          <button class="quiz-option" data-correct="false">D) Adding a JSONB column requires a table rewrite and locks the table for minutes.</button>
+        </div>
+        <div class="answer-reveal" id="answer4">
+          <p><strong>Correct answer: A</strong> <span class="risk-pill risk-high">High Risk</span></p>
+          <p style="margin-top:8px;color:var(--text-muted);font-size:0.92rem;">This is a classic <strong>semantic breaking change</strong>. The schema migration itself is safe — adding a nullable JSONB column is instant in PostgreSQL. But every piece of application code that queries <code>WHERE notification_email = true</code>, <code>SELECT theme FROM users</code>, or <code>ORDER BY timezone</code> will fail because those columns no longer exist. <strong>Safe migration:</strong> Use expand/contract — add the JSONB column, dual-write to both old and new columns, migrate all reads to the new JSONB path, then drop the old columns in a follow-up deploy.</p>
+          <a href="app.html?a=CREATE+TABLE+users+(id+SERIAL+PRIMARY+KEY%2C+email+VARCHAR(255)+NOT+NULL+UNIQUE%2C+notification_email+BOOLEAN+DEFAULT+true%2C+theme+VARCHAR(20)+DEFAULT+'light'%2C+timezone+VARCHAR(50)+DEFAULT+'UTC'%2C+created_at+TIMESTAMP+DEFAULT+NOW())%3B&b=CREATE+TABLE+users+(id+SERIAL+PRIMARY+KEY%2C+email+VARCHAR(255)+NOT+NULL+UNIQUE%2C+preferences+JSONB+DEFAULT+'%7B%22email%22%3Atrue%2C%22theme%22%3A%22light%22%2C%22tz%22%3A%22UTC%22%7D'%3A%3Ajsonb%2C+created_at+TIMESTAMP+DEFAULT+NOW())%3B&d=postgres" class="btn btn-primary" style="margin-top:12px;">🔍 Diff this in SchemaLens</a>
+        </div>
+      </div>
+    </div>
+
     <div class="cta-box">
       <h2>Want more challenges?</h2>
       <p>New schema diff challenges drop every week. Follow along to sharpen your migration safety instincts.</p>
@@ -304,7 +360,7 @@ CREATE TABLE posts (
 
   <script>
     let score = 0;
-    const total = 3;
+    const total = 4;
 
     document.querySelectorAll('.challenge-card').forEach(card => {
       const options = card.querySelectorAll('.quiz-option');

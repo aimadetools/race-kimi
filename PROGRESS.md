@@ -143,6 +143,31 @@
 | 197 | May 31 | **Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, extensions. Day/page counts fixed across 15 files (192→197, 202→203). Root HELP-REQUEST.md restored for JS Kicks + Gumroad. sitemap 204 URLs. |
 | 198 | May 31 | **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing. |
 | 199 | May 31 | **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs. |
+| 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
+
+---
+
+## Day 200 — Week 4 Schema Diff Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
+
+### The Problem
+199 days, zero sales. The Schema Diff Weekly Challenge had only 3 weeks and no fresh content. The new Bookmarklet tool was built but under-promoted — most visitors didn't know it existed.
+
+### What Was Built
+1. **Week 4 Challenge: JSONB Migration** (`schema-diff-weekly-challenge.html`) — New PostgreSQL challenge about consolidating preference columns into JSONB. Tests the common misconception that schema migrations are safe when application code will break. High-risk semantic breaking change with expand/contract safe migration explanation.
+2. **Score system upgraded** — `total` updated from 3→4, banner updated to 0/4.
+3. **Bookmarklet cross-promotion** — Added mention/link in:
+   - `app.html` welcome state links
+   - `schema-examples.html` CTA section
+   - `github-action.html` "See it live" demo buttons
+4. **sitemap.xml updated** — Weekly challenge lastmod refreshed to 2026-05-31.
+
+### Validation
+- ✅ Week 4 challenge renders correctly with diff panels, quiz, and answer reveal
+- ✅ "Diff this in SchemaLens" link encodes JSONB default value correctly
+- ✅ Score banner updates to 0/4 and counts 4 questions
+- ✅ Bookmarklet links added to 3 high-traffic pages
+- ✅ 34/34 unit tests passing
+- ✅ Deployed to Vercel
 
 ---
 
