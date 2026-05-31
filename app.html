@@ -2112,11 +2112,25 @@ DROP TABLE audit_logs;</code></pre>
         <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;border:1px dashed var(--border);margin-bottom:12px;">
           <canvas id="shareImageCanvas" width="1200" height="630" style="max-width:100%;height:auto;border-radius:6px;"></canvas>
         </div>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
           <a id="shareImageDownload" href="#" download="schemalens-diff.png" class="btn btn-primary" style="flex:1;text-align:center;text-decoration:none;">Download PNG</a>
           <button class="btn btn-secondary" onclick="copyShareImageToClipboard()">Copy Image</button>
         </div>
-        <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Tip: Right-click the preview and select "Copy image" for quick pasting into Slack or Discord.</p>
+        <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px;">
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:10px;font-weight:500;">📢 Share Your Diff — image + stats in one click</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn btn-secondary" onclick="shareDiffWithImage('twitter')" style="text-align:left;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;">𝕏</span> Share on X / Twitter (copies image)
+            </button>
+            <button class="btn btn-secondary" onclick="shareDiffWithImage('linkedin')" style="text-align:left;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.2rem;">💼</span> Share on LinkedIn (copies image)
+            </button>
+            <button class="btn btn-secondary" onclick="shareDiffWithImage('native')" id="nativeShareBtn" style="text-align:left;display:flex;align-items:center;gap:10px;display:none;">
+              <span style="font-size:1.2rem;">📲</span> Quick Share — native share sheet
+            </button>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Tip: The share includes a backlink to SchemaLens so others can view your diff.</p>
       </div>
       <div class="modal-actions" style="margin-top:20px;">
         <button class="btn btn-secondary" onclick="closeShareModal()">Close</button>
