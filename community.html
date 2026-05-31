@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Community — Join 197 Days of Public Building</title>
+  <meta name="description" content="Join the SchemaLens community. Free Pro licenses for open-source maintainers and students. Weekly schema diff challenges. Newsletter. Built in public.">
+  <meta property="og:title" content="SchemaLens Community — Join 197 Days of Public Building">
+  <meta property="og:description" content="Free Pro licenses, weekly challenges, and a growing community of developers who care about database migrations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/community.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Community",
+    "description": "Join the SchemaLens community. Free Pro licenses for open-source maintainers and students. Weekly schema diff challenges. Newsletter. Built in public.",
+    "url": "https://schemalens.tech/community.html",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "SchemaLens",
+      "url": "https://schemalens.tech",
+      "sameAs": [
+        "https://github.com/aimadetools/race-kimi",
+        "https://twitter.com/schemalens",
+        "https://www.linkedin.com/company/schemalens"
+      ]
+    }
+  }
+  </script>
+  <style>
+    .community-section { padding: 80px 0; }
+    .community-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .community-section .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .community-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .community-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--hover-border);
+    }
+    .community-card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+    }
+    .community-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .community-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .community-card a {
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .community-card a::after {
+      content: '→';
+      transition: transform 0.2s;
+    }
+    .community-card a:hover::after {
+      transform: translateX(4px);
+    }
+    .stat-bar {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin: 48px 0;
+    }
+    .stat-bar .stat {
+      text-align: center;
+    }
+    .stat-bar .stat-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-bar .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .newsletter-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .newsletter-box h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .newsletter-box p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .newsletter-form input {
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      min-width: 280px;
+    }
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .newsletter-form button {
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .newsletter-form button:hover {
+      transform: translateY(-2px);
+    }
+    .program-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .tag-oss { background: rgba(52, 211, 153, 0.12); color: var(--success); }
+    .tag-student { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
+    .tag-viral { background: rgba(251, 191, 36, 0.12); color: var(--warning); }
+    .tag-challenge { background: rgba(34, 211, 238, 0.12); color: var(--secondary); }
+    .footer-community {
+      text-align: center;
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .footer-community a { color: var(--text-muted); margin: 0 12px; }
+    .footer-community a:hover { color: var(--text); }
+    @media (max-width: 640px) {
+      .newsletter-form input { min-width: 100%; }
+      .stat-bar { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">⚡</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+      <div class="nav-links">
+        <a href="app.html">App</a>
+        <a href="tools.html">Tools</a>
+        <a href="blog.html">Blog</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="community.html" style="color:var(--text);">Community</a>
+        <a href="app.html" class="nav-cta">Try Free</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" style="padding: 80px 0 60px;">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Built in public — Day 197</div>
+      <h1>Join the <span>SchemaLens</span> Community</h1>
+      <p>Free Pro licenses for students and open-source maintainers. Weekly schema challenges. A growing network of developers who ship safe migrations.</p>
+      <div class="hero-actions">
+        <a href="#programs" class="btn btn-primary">Get Free Pro</a>
+        <a href="#newsletter" class="btn btn-secondary">Join Newsletter</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="community-section" style="padding-top: 0;">
+    <div class="container">
+      <div class="stat-bar">
+        <div class="stat">
+          <div class="stat-value">57+</div>
+          <div class="stat-label">Free Micro-Tools</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">203</div>
+          <div class="stat-label">SEO Pages Live</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">5</div>
+          <div class="stat-label">SQL Dialects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Client-Side</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="community-section" id="programs">
+    <div class="container">
+      <h2>Free Pro Programs</h2>
+      <p class="section-subtitle">We believe great tools should be accessible to everyone building something meaningful. Pick the program that fits you.</p>
+      <div class="grid-3">
+        <div class="community-card">
+          <span class="program-tag tag-oss">Open Source</span>
+          <h3>🛡️ OSS Maintainer License</h3>
+          <p>Free Lifetime Pro for maintainers of open-source projects with 50+ stars. Add a SchemaLens badge to your README and get instant access.</p>
+          <a href="open-source-license.html">Claim your license</a>
+        </div>
+        <div class="community-card">
+          <span class="program-tag tag-student">Education</span>
+          <h3>🎓 Student License</h3>
+          <p>Free Lifetime Pro for students with a .edu email or from an accredited institution. 150+ supported domains worldwide.</p>
+          <a href="student-license.html">Verify your student status</a>
+        </div>
+        <div class="community-card">
+          <span class="program-tag tag-viral">Viral</span>
+          <h3>🚀 Share to Unlock Pro</h3>
+          <p>Share SchemaLens on X/Twitter or LinkedIn and unlock Pro features for 7 days instantly. No forms, no waiting.</p>
+          <a href="app.html">Unlock in the app</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="community-section" style="background: var(--surface);">
+    <div class="container">
+      <h2>Learn &amp; Challenge Yourself</h2>
+      <p class="section-subtitle">Level up your schema migration skills with interactive content designed by developers, for developers.</p>
+      <div class="grid-2">
+        <div class="community-card">
+          <span class="program-tag tag-challenge">Weekly</span>
+          <h3>🧩 Schema Diff Weekly Challenge</h3>
+          <p>Test your migration safety instincts on real-world schema changes. New challenge every week with shareable score cards. Week 1: Soft Delete Migration. Week 2: INT to BIGINT. Week 3: NOT NULL Without Default.</p>
+          <a href="schema-diff-weekly-challenge.html">Take the challenge</a>
+        </div>
+        <div class="community-card">
+          <div class="icon">📚</div>
+          <h3>Migration Mastery Email Course</h3>
+          <p>A free 7-day email course on safe database migrations. Covers expand/contract patterns, zero-downtime deploys, rollback strategies, and CI/CD integration. One actionable lesson per day.</p>
+          <a href="migration-mastery.html">Start the course</a>
+        </div>
+        <div class="community-card">
+          <div class="icon">🎮</div>
+          <h3>SchemaGuessr</h3>
+          <p>Can you guess the app from its database schema? A viral 5-round game with shareable scores. Great for team bonding and learning schema design patterns.</p>
+          <a href="tools/schema-guessr.html">Play SchemaGuessr</a>
+        </div>
+        <div class="community-card">
+          <div class="icon">🏗️</div>
+          <h3>Schema Design Interviews</h3>
+          <p>Practice SQL schema design for classic system-design interview questions: Twitter, Uber, and URL Shortener. Includes grading rubrics and sample solutions.</p>
+          <a href="tools/schema-design-interviews.html">Practice now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="community-section">
+    <div class="container">
+      <h2>Connect &amp; Contribute</h2>
+      <p class="section-subtitle">SchemaLens is open source and built in public. Every commit, every decision, every pivot is documented.</p>
+      <div class="grid-3">
+        <div class="community-card">
+          <div class="icon" style="background: #18181b;">🐙</div>
+          <h3>GitHub Repository</h3>
+          <p>Browse the source code, file issues, submit PRs, or star the repo to show support. MIT-licensed engine with a growing contributor base.</p>
+          <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener">github.com/aimadetools/race-kimi</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: #1d9bf0;">🐦</div>
+          <h3>X / Twitter</h3>
+          <p>Follow for daily build updates, schema migration tips, and behind-the-scenes looks at building a dev tool in public as part of the $100 AI Startup Race.</p>
+          <a href="https://twitter.com/schemalens" target="_blank" rel="noopener">@schemalens</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: #0a66c2;">💼</div>
+          <h3>LinkedIn</h3>
+          <p>Connect for longer-form posts about database engineering, schema design patterns, and the journey from zero to launch-ready.</p>
+          <a href="https://www.linkedin.com/company/schemalens" target="_blank" rel="noopener">SchemaLens on LinkedIn</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: #5865f2;">💬</div>
+          <h3>GitHub Discussions</h3>
+          <p>Ask questions, share your schema diff stories, request features, or help others with migration best practices. The friendliest database community on GitHub.</p>
+          <a href="https://github.com/aimadetools/race-kimi/discussions" target="_blank" rel="noopener">Join the discussion</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: var(--surface-hover);">📖</div>
+          <h3>Built in Public Timeline</h3>
+          <p>Explore the full 197-day journey: every feature shipped, every bug fixed, every strategy pivot. Interactive timeline with stats and insights.</p>
+          <a href="built-in-public.html">Read the timeline</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: var(--surface-hover);">📝</div>
+          <h3>Changelog</h3>
+          <p>Stay up to date with the latest releases: new micro-tools, dialect support, UI improvements, and performance optimizations.</p>
+          <a href="changelog.html">View changelog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="community-section" style="background: var(--surface);" id="newsletter">
+    <div class="container">
+      <div class="newsletter-box">
+        <h3>📬 The SchemaLens Newsletter</h3>
+        <p>One email per week with a schema migration tip, a new micro-tool highlight, and a behind-the-scenes look at building in public. No spam. Unsubscribe anytime.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
+          <input type="email" placeholder="you@example.com" required aria-label="Email address">
+          <button type="submit">Subscribe</button>
+        </form>
+        <p id="newsletter-status" style="margin-top: 16px; font-size: 0.9rem; min-height: 1.4em;"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="community-section">
+    <div class="container">
+      <h2>Extensions &amp; Integrations</h2>
+      <p class="section-subtitle">SchemaLens fits into your existing workflow. Use it wherever you review code.</p>
+      <div class="grid-3">
+        <div class="community-card">
+          <div class="icon" style="background: #007acc;">🖥️</div>
+          <h3>VS Code Extension</h3>
+          <p>Diff schemas directly inside VS Code. Highlight two SQL files, run the command, and see the visual diff without leaving your editor.</p>
+          <a href="vscode-extension.html">Install from Marketplace</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: #ea4335;">🌐</div>
+          <h3>Chrome Extension</h3>
+          <p>Add a "Diff in SchemaLens" button to GitHub PR Files changed pages. Automatically fetches base and head schema files.</p>
+          <a href="https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde" target="_blank" rel="noopener">Install from Chrome Web Store</a>
+        </div>
+        <div class="community-card">
+          <div class="icon" style="background: #2088ff;">⚙️</div>
+          <h3>GitHub Action</h3>
+          <p>Free SQL schema diff for GitHub Actions. Catch breaking database changes in PRs with automatic diff comments. Supports all 5 dialects.</p>
+          <a href="github-action.html">Add to your workflow</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top: 1px solid var(--border); padding: 48px 0 32px;">
+    <div class="container">
+      <div class="footer-community">
+        <p>
+          <a href="index.html">Home</a>
+          <a href="app.html">App</a>
+          <a href="tools.html">Tools</a>
+          <a href="blog.html">Blog</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="community.html">Community</a>
+          <a href="built-in-public.html">Built in Public</a>
+        </p>
+        <p style="margin-top: 16px;">© 2026 SchemaLens. Built in public over 197 days. Part of the $100 AI Startup Race.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isLight = html.getAttribute('data-theme') === 'light';
+      html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      localStorage.setItem('theme', isLight ? 'dark' : 'light');
+    }
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+
+    async function subscribeNewsletter(form) {
+      const status = document.getElementById('newsletter-status');
+      const email = form.querySelector('input[type="email"]').value.trim();
+      if (!email) { status.textContent = 'Please enter an email.'; status.style.color = 'var(--danger)'; return; }
+      status.textContent = 'Subscribing...'; status.style.color = 'var(--text-muted)';
+      try {
+        const res = await fetch('/api/newsletter-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (res.ok) { status.textContent = '✅ Subscribed! Check your inbox for a welcome email.'; status.style.color = 'var(--success)'; form.reset(); }
+        else { const data = await res.json().catch(() => ({})); status.textContent = data.error || 'Something went wrong. Try again.'; status.style.color = 'var(--danger)'; }
+      } catch (e) { status.textContent = 'Network error. Please try again.'; status.style.color = 'var(--danger)'; }
+    }
+  </script>
+</body>
+</html>

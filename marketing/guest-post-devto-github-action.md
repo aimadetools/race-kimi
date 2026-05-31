@@ -214,4 +214,4 @@ If this saves your team even one production incident, it's worth the 5 minutes i
 
 ---
 
-*SchemaLens is a browser-based SQL schema diff tool with 60+ free micro-tools, a VS Code extension, a Chrome extension, and this free GitHub Action. Built in public over 185 days.*
+*SchemaLens is a browser-based SQL schema diff tool with 60+ free micro-tools, a VS Code extension, a Chrome extension, and this free GitHub Action. Built in public over 197 days.*

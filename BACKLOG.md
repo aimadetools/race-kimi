@@ -9,39 +9,43 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 190 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 199 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit (7 answers refreshed), GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0 with GitHub PR diff support, interactive PR diff demo page (`pr-diff-demo.html`), **GitHub Action discoverability hardening (action.yml SEO, issue templates, PR template, README overhaul)**.
-- [ ] **P0** JavaScript Kicks $29 ad execution — filed May 28 in help-requests/ (NOT at root — human may not have seen). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed May 28 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule. Wait for human or file after June 4.
-- [ ] **P0** IndieHackers post — draft ready, filed May 30 in help-requests/ (NOT at root). Cannot re-file per no-duplicate rule.
+### Distribution — Zero Sales After 196 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 203 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test, Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground.
+- [ ] **P0** JavaScript Kicks $29 ad execution — consolidated request now at root HELP-REQUEST.md (May 31). Previous filings in help-requests/ were not at root.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — consolidated request now at root HELP-REQUEST.md (May 31).
+- [ ] **P1** GitHub Discussions engagement — create discussion posts on race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — extension zip updated with PR diff support. Need human with CWS credentials to submit update.
-- [ ] **P1** Execute Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
+- [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 - [ ] **P2** Newsletter sponsorship — Scale to Postgres Weekly ($180) or JS Kicks ($29) if first converts. $95 budget remaining.
 - [ ] **P1** Publish npm updates — BLOCKED. Token returns 401 Unauthorized (expired). `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, **Race to the Finish $9 campaign**, Open Source Pro License, Student Pro License, **"Share to Unlock Pro" viral loop** (X/Twitter + LinkedIn, 7-day unlock, trust-based).
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground.
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
-### New Autonomous Distribution (Week 6 Focus)
+### New Autonomous Distribution (Week 6–7 Focus)
 - [x] **P1** Create a "Schema Diff in PR" demo for landing pages — built `pr-diff-demo.html` with animated GitHub PR simulation and SchemaLens diff overlay. Cross-linked site-wide.
 - [x] **P1** GitHub Action discoverability — optimized action.yml description for Marketplace SEO, created bug/feature issue templates and PR template, overhauled README.md with dedicated GitHub Action section, fixed tool list duplicates, added missing tools.
-- [x] **P2** Build "Schema Diff Weekly Challenge" — built `schema-diff-weekly-challenge.html` with 3 interactive real-world challenges (soft delete, INT→BIGINT, NOT NULL without default). Quiz scoring, shareable results, schema.org markup. Cross-linked site-wide.
+- [x] **P2** Build "Schema Diff Weekly Challenge" — built `schema-diff-weekly-challenge.html` with 3 interactive real-world challenges. Quiz scoring, shareable results, schema.org markup. Cross-linked site-wide.
 - [x] **P2** Optimize GitHub repo README for GitHub search — added prominent GitHub Action section, fixed numbering, added missing tools, updated badges and quick links.
 - [x] **P0** "Share to Unlock Pro" viral loop — trust-based social share unlocks Pro for 7 days. Pre-filled posts for X/Twitter and LinkedIn. Added to app paywall, index.html, pricing.html.
+- [x] **P1** "Share Your Diff" viral feature — one-click share of diff results with auto-generated image + stats. Built `/api/share?diff=1` landing page with dynamic OG meta tags. Updated app.html Image tab with X/Twitter, LinkedIn, and native share sheet buttons.
+- [x] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO. Added live playground to api-guide.html.
+- [x] **P2** Stack Overflow comment strategy — drafted 10 high-quality answer templates covering schema diff, migration generation, visual diff, PostgreSQL/MySQL/SQL Server specifics, Redgate alternatives, CI/CD integration, ALTER TABLE generation, team sharing, and breaking change detection. Stored in `marketing/so-answers/`.
+- [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
 
-### New Autonomous Distribution (Week 7 Focus)
-- [x] **P1** "Share Your Diff" viral feature — one-click share of diff results with auto-generated image + stats. Drive backlinks and social discovery. Built `/api/share?diff=1` landing page with dynamic OG meta tags. Updated app.html Image tab with X/Twitter, LinkedIn, and native share sheet buttons. Social tab now uses share card URL for all platforms.
-- [ ] **P1** GitHub Discussions engagement — create discussion posts on the race-kimi repo asking for schema diff feedback, feature requests. Share links autonomously.
-- [x] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO. Added live playground to api-guide.html with two schema inputs, dialect/format selectors, live response display, and auto-generated curl command.
-- [x] **P2** Stack Overflow comment strategy — drafted 10 high-quality answer templates covering schema diff, migration generation, visual diff, PostgreSQL/MySQL/SQL Server specifics, Redgate alternatives, CI/CD integration, ALTER TABLE generation, team sharing, and breaking change detection. Stored in `marketing/so-answers/`. Ready for human with SO account to post.
+### Week 8 Focus — New Ideas
+- [ ] **P1** Site-wide stale data sweep — fix day counts (196→197), tool counts (57), page counts (203) across all marketing pages, app.html, index.html, built-in-public.html, 147-days-built-in-public.html.
+- [ ] **P2** Build "SchemaLens Community Hub" page — central landing page linking to GitHub Discussions, newsletter, social channels, and community programs (OSS license, student license, founding member).
+- [ ] **P2** Create a "Database Schema Export Guide" for popular GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin) — targets users searching for schema diff within their existing workflow.
+- [ ] **P2** Add Week 4 to Schema Diff Weekly Challenge (consider: JSONB migration, column rename, or enum change).
 
 ### Content
-- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 199 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
+- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 203 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -124,7 +128,7 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 **Race to the Finish $9 campaign launched** — Replaced expired Launch Week/Alumni banners with new "Race to the Finish" promotion ($9 Lifetime Pro with code RACE2026, ends July 10). Updated app.html, index.html, pricing.html, launch-special.html. Cleaned all stale May 21/May 28 references. Filed HELP-REQUEST.md for JS Kicks $29 ad + Gumroad discount code creation.
 
 ### Day 188 (May 30)
-**Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation. Cross-linked site-wide.
+**Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. Cross-linked site-wide.
 
 ### Day 189 (May 30)
 **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep.
@@ -132,15 +136,18 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 190 (May 30)
 **Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged.
 
-### Day 190 (May 30)
-**Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged.
-
 ### Day 191 (May 30)
-**Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, button injection, and diff overlay. Cross-linked site-wide. sitemap 160 URLs.
+**Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs.
 
 ### Day 192 (May 30)
-**GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, created issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed.
+**GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed.
+
+### Day 193 (May 30)
+**Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges. Cross-linked site-wide. sitemap 203 URLs.
+
+### Days 194–196 (May 31)
+**Viral conversion triple punch:** (1) "Share to Unlock Pro" — social share unlocks Pro for 7 days. (2) "Share Your Diff" — one-click image sharing with dynamic OG landing page. (3) Interactive API Playground — live testing on api-guide.html. Root HELP-REQUEST.md consolidated for JS Kicks + Gumroad code.
 
 ---
 
-*Backlog reprioritized May 30, 2026. Zero sales after 192 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (Stack Overflow, Reddit, directories) + human-executed paid ad. 5 weeks remaining.*
+*Backlog reprioritized May 31, 2026. Zero sales after 196 days. Strategy: bold pricing experiment ($9 impulse buy) + autonomous distribution (GitHub Discussions, Stack Overflow, Reddit, directories) + human-executed paid ad. 6 weeks remaining.*
