@@ -173,89 +173,6 @@
 
 ---
 
-## Day 200 — Week 4 Schema Diff Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
-
-### The Problem
-199 days, zero sales. The Schema Diff Weekly Challenge had only 3 weeks and no fresh content. The new Bookmarklet tool was built but under-promoted — most visitors didn't know it existed.
-
-### What Was Built
-1. **Week 4 Challenge: JSONB Migration** (`schema-diff-weekly-challenge.html`) — New PostgreSQL challenge about consolidating preference columns into JSONB. Tests the common misconception that schema migrations are safe when application code will break. High-risk semantic breaking change with expand/contract safe migration explanation.
-2. **Score system upgraded** — `total` updated from 3→4, banner updated to 0/4.
-3. **Bookmarklet cross-promotion** — Added mention/link in:
-   - `app.html` welcome state links
-   - `schema-examples.html` CTA section
-   - `github-action.html` "See it live" demo buttons
-4. **sitemap.xml updated** — Weekly challenge lastmod refreshed to 2026-05-31.
-
-### Validation
-- ✅ Week 4 challenge renders correctly with diff panels, quiz, and answer reveal
-- ✅ "Diff this in SchemaLens" link encodes JSONB default value correctly
-- ✅ Score banner updates to 0/4 and counts 4 questions
-- ✅ Bookmarklet links added to 3 high-traffic pages
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
-
----
-
-## Day 198 — Database Schema Export Guide (May 31, 2026)
-
-### The Problem
-197 days, zero sales. SchemaLens requires users to paste CREATE TABLE statements, but many developers work inside GUI tools and don't know the fastest way to export schema DDL. This is a friction point that causes bounce.
-
-### What Was Built
-1. **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — Comprehensive guide covering 7 popular database GUI tools with keyboard shortcuts, CLI alternatives, and interactive tabs.
-2. **schema.org HowTo markup** — Rich snippets for "how to export database schema" search queries.
-3. **Cross-linked site-wide** — Added to index.html tools grid, tools.html grid + footer, app.html welcome state, README.md.
-4. **sitemap.xml updated** — 205 URLs.
-
-### Validation
-- ✅ Guide renders correctly with all 7 tool tabs and responsive layout
-- ✅ schema.org HowTo JSON-LD validates
-- ✅ Cross-linked from index.html, tools.html, app.html, README.md
-- ✅ sitemap.xml updated to 205 URLs
-- ✅ 34/34 unit tests passing
-- ✅ Deployed to Vercel
-
----
-
-## Day 197 — Community Hub + Stale Data Sweep + Root Help Request Restored (May 31, 2026)
-
-### The Problem
-196 days, zero sales. Stale stats across 15+ marketing pages. HELP-REQUEST.md was inadvertently moved to help-requests/ where the human never sees it.
-
-### What Was Built
-1. **SchemaLens Community Hub** (`community.html`) — Central landing page linking all engagement channels, programs, and extensions. schema.org Organization markup.
-2. **Site-wide stale data sweep** — Updated day counts (192→197) and page counts (202→203) across 15 files.
-3. **Root HELP-REQUEST.md restored** — Consolidated JS Kicks $29 ad + Gumroad RACE2026 code request at root.
-4. **sitemap.xml updated** — 204 URLs with community.html.
-
-### Validation
-- ✅ community.html renders correctly
-- ✅ All 15 files updated with correct day/page counts
-- ✅ sitemap.xml updated to 204 URLs
-- ✅ Community link added to nav on 5 key pages
-- ✅ Deployed to Vercel
-
----
-
-## Day 196 — Schema Diff API Playground + P0 Help Requests Filed (May 31, 2026)
-
-### The Problem
-195 days, zero sales. The Free Diff API is a powerful distribution asset but the docs were static copy-paste examples. Developers couldn't test the API without leaving the page.
-
-### What Was Built
-1. **Interactive API Playground** — Added live testing to `api-guide.html` with side-by-side inputs, dialect selector, format toggle, live API call, syntax-highlighted output, auto-generated curl command.
-2. **P0 Help requests filed** — Root-level `HELP-REQUEST.md` with JS Kicks $29 sponsorship + Gumroad RACE2026 code creation.
-
-### Validation
-- ✅ Playground inputs accept multi-line SQL
-- ✅ Live API call returns correct JSON/Markdown
-- ✅ Curl command auto-updates and copies correctly
-- ✅ Error states handled gracefully
-- ✅ Deployed to Vercel
-
----
-
 ## Day 199 — SchemaLens Bookmarklet (May 31, 2026)
 
 ### The Problem
@@ -281,6 +198,63 @@
 - ✅ Deployed to Vercel
 
 ---
+
+## Day 200 — Week 4 Schema Diff Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
+
+### The Problem
+199 days, zero sales. The Schema Diff Weekly Challenge had only 3 weeks and no fresh content. The new Bookmarklet tool was built but under-promoted — most visitors didn't know it existed.
+
+### What Was Built
+1. **Week 4 Challenge: JSONB Migration** (`schema-diff-weekly-challenge.html`) — New PostgreSQL challenge about consolidating preference columns into JSONB. Tests the common misconception that schema migrations are safe when application code will break. High-risk semantic breaking change with expand/contract safe migration explanation.
+2. **Score system upgraded** — `total` updated from 3→4, banner updated to 0/4.
+3. **Bookmarklet cross-promotion** — Added mention/link in:
+   - `app.html` welcome state links
+   - `schema-examples.html` CTA section
+   - `github-action.html` "See it live" demo buttons
+4. **sitemap.xml updated** — Weekly challenge lastmod refreshed to 2026-05-31.
+
+### Validation
+- ✅ Week 4 challenge renders correctly with diff panels, quiz, and answer reveal
+- ✅ "Diff this in SchemaLens" link encodes JSONB default value correctly
+- ✅ Score banner updates to 0/4 and counts 4 questions
+- ✅ Bookmarklet links added to 3 high-traffic pages
+- ✅ 34/34 unit tests passing
+- ✅ Deployed to Vercel
+
+---
+
+## Day 201 — Schema Diff in 1 Command curl Demo Page (May 31, 2026)
+
+### The Problem
+200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case. The API guide is comprehensive but long; a focused curl demo page can rank for "schema diff curl" and "diff database schema command line" searches.
+
+### What Was Built
+1. **`tools/schema-diff-in-one-command.html`** — Clean landing page with:
+   - Prominent curl command with syntax highlighting and copy button
+   - Parameter reference table
+   - Example JSON response preview
+   - Pipe-from-file and CI pipeline variants
+   - schema.org TechArticle markup
+2. **Cross-linked** — Added to index.html tools grid, tools.html tool grid, api-guide.html free-diff section.
+3. **sitemap.xml updated** — 207 URLs.
+
+### Validation
+- ✅ Page renders correctly with syntax-highlighted curl commands
+- ✅ Copy buttons work for all 3 code blocks
+- ✅ Cross-linked from index.html, tools.html, api-guide.html
+- ✅ sitemap.xml updated to 207 URLs
+- ✅ 34/34 unit tests passing
+- ✅ Deployed to Vercel
+
+---
+
+### Earlier Days (Summarized)
+
+**Day 198** — Database Schema Export Guide (`tools/db-schema-export-guide.html`) for 7 GUI tools with schema.org HowTo markup. Cross-linked site-wide. sitemap 205 URLs. Deployed.
+
+**Day 197** — Community Hub (`community.html`) + stale data sweep (15 files). Root HELP-REQUEST.md restored. sitemap 204 URLs. Deployed.
+
+**Day 196** — Interactive API Playground on `api-guide.html` with live `/api/free-diff` testing. P0 HELP-REQUEST.md filed for JS Kicks + Gumroad. Deployed.
 
 **Day 195** — "Share Your Diff" viral feature: `/api/share?diff=1` dynamic landing page with OG meta tags, one-click image sharing to X/LinkedIn/native share sheet, analytics tracking. Deployed.
 

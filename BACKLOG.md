@@ -29,23 +29,11 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### New Autonomous Distribution (Week 6–7 Focus)
-- [x] **P1** Create a "Schema Diff in PR" demo for landing pages — built `pr-diff-demo.html` with animated GitHub PR simulation and SchemaLens diff overlay. Cross-linked site-wide.
-- [x] **P1** GitHub Action discoverability — optimized action.yml description for Marketplace SEO, created bug/feature issue templates and PR template, overhauled README.md with dedicated GitHub Action section, fixed tool list duplicates, added missing tools.
-- [x] **P2** Build "Schema Diff Weekly Challenge" — built `schema-diff-weekly-challenge.html` with 3 interactive real-world challenges. Quiz scoring, shareable results, schema.org markup. Cross-linked site-wide.
-- [x] **P2** Optimize GitHub repo README for GitHub search — added prominent GitHub Action section, fixed numbering, added missing tools, updated badges and quick links.
-- [x] **P0** "Share to Unlock Pro" viral loop — trust-based social share unlocks Pro for 7 days. Pre-filled posts for X/Twitter and LinkedIn. Added to app paywall, index.html, pricing.html.
-- [x] **P1** "Share Your Diff" viral feature — one-click share of diff results with auto-generated image + stats. Built `/api/share?diff=1` landing page with dynamic OG meta tags. Updated app.html Image tab with X/Twitter, LinkedIn, and native share sheet buttons.
-- [x] **P2** Schema Diff API playground — interactive docs where developers test the free diff API in-browser. Targets "schema diff api" SEO. Added live playground to api-guide.html.
-- [x] **P2** Stack Overflow comment strategy — drafted 10 high-quality answer templates covering schema diff, migration generation, visual diff, PostgreSQL/MySQL/SQL Server specifics, Redgate alternatives, CI/CD integration, ALTER TABLE generation, team sharing, and breaking change detection. Stored in `marketing/so-answers/`.
-- [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. IN PROGRESS.
+- [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page.
+- [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope.
 
 ### Week 8 Focus — New Ideas
-- [x] **P1** Site-wide stale data sweep — fixed day counts (192→197), tool counts (60+), page counts (202→203) across 15 marketing pages.
-- [x] **P2** Build "SchemaLens Community Hub" page — central landing page linking to all engagement channels, programs, and extensions. Cross-linked site-wide. sitemap 204 URLs.
-- [x] **P2** Create a "Database Schema Export Guide" for popular GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser) — step-by-step export instructions with schema.org HowTo markup. sitemap 205 URLs.
-- [ ] **P1** Add Week 4 to Schema Diff Weekly Challenge (consider: JSONB migration, column rename, or enum change).
-- [ ] **P1** SchemaLens Bookmarklet cross-promotion — add mention to app.html welcome state, schema-examples.html, and GitHub Action landing page.
-- [ ] **P2** Build a "Schema Diff in 1 Command" curl demo page — `curl https://schemalens.tech/api/free-diff` with ready-to-copy examples.
+- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion (app.html/schema-examples.html/github-action.html), Schema Diff in 1 Command curl demo page. sitemap 207 URLs.
 
 ### Content
 - [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 203 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course.
