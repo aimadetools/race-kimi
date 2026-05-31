@@ -154,6 +154,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 61. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
 62. [SQL to C# Generator](https://schemalens.tech/tools/sql-to-csharp.html)
 63. [Schema Badge API](https://schemalens.tech/tools/schema-badge.html)
+64. [Database Schema Export Guide](https://schemalens.tech/tools/db-schema-export-guide.html) — Step-by-step export instructions for DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, and SQLite Browser
 
 [View all 60+ tools →](https://schemalens.tech/tools.html)
 
