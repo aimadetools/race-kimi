@@ -146,6 +146,41 @@
 | 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
 | 201 | May 31 | **Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs. |
 | 202 | May 31 | **CRITICAL: Fixed $9 bait-and-switch** — Discovered RACE2026 Gumroad code doesn't exist. Changed all site-wide $9 CTAs to honest $39 pricing (7 files updated). Built `get-started.html` interactive wizard. Filed clean HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. |
+| 203 | May 31 | **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs. |
+
+---
+
+## Day 203 — Founding Customer Program (May 31, 2026)
+
+### The Problem
+202 days, zero sales. Every conversion tactic so far has been generic (pricing pages, feature lists, discounts). There is no offer that creates genuine scarcity for PAYING customers — only free-tier upgrades and social-share giveaways. Potential buyers have no reason to buy *now* rather than later.
+
+### What Was Built
+1. **`founding-customer.html`** — Dedicated Founding Customer landing page:
+   - Scarcity: Only 10 spots, live counter with urgency colors
+   - Value stack: $39 vs $500+ total value (license + schema review + checklist)
+   - Personal bonuses: 30-min 1-on-1 schema review call, priority support, direct founder access
+   - Recognition: Name on public Founding Customers wall
+   - Beta access: Early access to all new features
+   - Founder note: Personal message explaining the 202-day journey
+   - Risk reversal: 30-day money-back guarantee (better than standard 14-day)
+   - FAQ: 6 questions covering common objections
+   - schema.org Product markup for SEO
+   - Sold-out state: Auto-transforms CTA to waitlist when counter hits 0
+2. **Cross-linked** from:
+   - `index.html` — Hero banner now mentions Founding Customer bonuses
+   - `pricing.html` — Pricing card links to Founding Customer program
+   - `app.html` — License modal now shows Founding Customer offer above free-share option
+3. **sitemap.xml updated** — 209 URLs.
+
+### Validation
+- ✅ Page renders correctly on mobile and desktop
+- ✅ Counter logic works (10 → 0 with urgency colors)
+- ✅ Sold-out state transforms CTA to waitlist
+- ✅ All Gumroad links point to honest `?wanted=true` checkout
+- ✅ schema.org Product markup validates
+- ✅ Cross-linked from 3 high-traffic pages
+- ✅ Deployed to Vercel
 
 ---
 
@@ -204,23 +239,9 @@
 
 ---
 
-## Day 200 — Week 4 JSONB Challenge + Bookmarklet Cross-Promotion (May 31, 2026)
-
-### The Problem
-199 days, zero sales. Weekly challenge needed fresh content; bookmarklet was under-promoted.
-
-### What Was Built
-1. **Week 4 JSONB Migration challenge** — PostgreSQL expand/contract pattern.
-2. **Bookmarklet cross-promotion** — Added to app.html, schema-examples.html, github-action.html.
-
-### Validation
-- ✅ Challenge renders correctly
-- ✅ Cross-links added
-- ✅ Deployed
-
----
-
 ### Earlier Days (Summarized)
+
+**Day 200** — Week 4 JSONB Challenge + Bookmarklet cross-promotion. PostgreSQL expand/contract pattern added to weekly challenge. Bookmarklet promoted in app.html, schema-examples.html, github-action.html. Deployed.
 
 **Day 199** — SchemaLens Bookmarklet (`tools/bookmarklet.html`) + app.html URL param support (`?schemaA=` / `?schemaB=`). Cross-linked site-wide. sitemap 206 URLs. Deployed.
 

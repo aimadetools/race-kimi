@@ -22,7 +22,7 @@
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. `schemalens` wrapper package ready in `packages/schemalens/`.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign (FIXED: removed bait-and-switch), Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide, Quick-Start Wizard (`get-started.html`).
+- [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign (FIXED: removed bait-and-switch), Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide, Quick-Start Wizard (`get-started.html`), Founding Customer Program (`founding-customer.html`).
 - [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
@@ -32,8 +32,8 @@
 - [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope.
 
 ### Week 8+ Focus — Break Out of Feature Loop
-- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard. sitemap 208 URLs.
-- [ ] **P1** Build 1 genuinely new conversion asset per session (not another micro-tool or SEO page). Ideas: interactive ROI calculator, "first customer" exclusivity page, partnership pitch pages, live demo video script.
+- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, **Founding Customer Program** (`founding-customer.html`) — scarcity-based conversion asset with personal schema review call, priority support, and founder access. sitemap 209 URLs.
+- [ ] **P1** Build next genuinely new conversion asset per session (not another micro-tool or SEO page). Ideas: partnership pitch pages, live demo video script, interactive "compare your current workflow" wizard.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
