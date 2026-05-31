@@ -7128,17 +7128,10 @@ function openShareModal() {
   document.getElementById('shareBadgeMd').textContent = `[![SchemaLens](${badgeUrl})](${linkUrl})`;
   document.getElementById('shareBadgeHtml').textContent = `<a href="${linkUrl}"><img src="${badgeUrl}" alt="SchemaLens"></a>`;
 
-  // Populate social share links
+  // Populate social share links (text-only tab)
   const shareText = totalChanges > 0
     ? `I just compared two database schemas and spotted ${totalChanges} change${totalChanges > 1 ? 's' : ''} (${added} added, ${removed} removed, ${modified} modified) with SchemaLens.`
     : 'I just compared two database schemas side by side with SchemaLens.';
-  const encodedText = encodeURIComponent(shareText);
-  const encodedUrl = encodeURIComponent(url);
-  document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
-  document.getElementById('shareLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
-  document.getElementById('shareReddit').href = `https://www.reddit.com/submit?title=${encodedText}&url=${encodedUrl}`;
-  document.getElementById('shareHN').href = `https://news.ycombinator.com/submitlink?t=${encodedText}&u=${encodedUrl}`;
-  document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('Schema comparison result')}&body=${encodedText}%0A%0A${encodedUrl}`;
 
   // Generate share image preview
   let imageSummary = { added: 0, removed: 0, modified: 0, renamed: 0, breaking: 0, riskScore: 0, riskLabel: 'Low' };
@@ -7159,6 +7152,26 @@ function openShareModal() {
     }
   } catch (e) {}
   generateShareImage(imageSummary);
+
+  // Build share card URL for viral social sharing (uses computed imageSummary)
+  const shareCardUrl = `https://schemalens.tech/api/share?diff=1&name=${encodeURIComponent(totalChanges > 0 ? 'Schema Diff Result' : 'Schema Comparison')}&added=${imageSummary.added}&removed=${imageSummary.removed}&modified=${imageSummary.modified}&renamed=${imageSummary.renamed}&breaking=${imageSummary.breaking}&risk=${encodeURIComponent(imageSummary.riskLabel)}&score=${imageSummary.riskScore}&dialect=${encodeURIComponent(dialect)}&back=${encodeURIComponent(url)}`;
+  window._schemalensShareCardUrl = shareCardUrl;
+  window._schemalensShareText = shareText;
+
+  // Update social share links to use share card landing page
+  const encodedText = encodeURIComponent(shareText);
+  const encodedCardUrl = encodeURIComponent(shareCardUrl);
+  document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedCardUrl}`;
+  document.getElementById('shareLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedCardUrl}`;
+  document.getElementById('shareReddit').href = `https://www.reddit.com/submit?title=${encodedText}&url=${encodedCardUrl}`;
+  document.getElementById('shareHN').href = `https://news.ycombinator.com/submitlink?t=${encodedText}&u=${encodedCardUrl}`;
+  document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('Schema comparison result')}&body=${encodedText}%0A%0A${encodedCardUrl}`;
+
+  // Show native share button if supported
+  const nativeBtn = document.getElementById('nativeShareBtn');
+  if (nativeBtn) {
+    nativeBtn.style.display = (navigator.canShare && navigator.canShare({ files: [] })) ? 'flex' : 'none';
+  }
 
   // Populate Safety Score tab
   let safetyScoreData = null;
@@ -7353,6 +7366,60 @@ async function copyShareImageToClipboard() {
     });
   } catch (e) {
     alert('Could not copy image. Try downloading instead.');
+  }
+}
+
+async function shareDiffWithImage(platform) {
+  const canvas = document.getElementById('shareImageCanvas');
+  const shareCardUrl = window._schemalensShareCardUrl || 'https://schemalens.tech';
+  const shareText = window._schemalensShareText || 'Check out this schema diff I made with SchemaLens.';
+
+  // Track analytics
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_diff_with_image', { platform });
+
+  // Try native share first if platform is 'native'
+  if (platform === 'native' && navigator.canShare && navigator.canShare({ files: [] })) {
+    try {
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'schemalens-diff.png', { type: 'image/png' });
+        await navigator.share({
+          files: [file],
+          title: 'Schema Diff Result',
+          text: shareText,
+          url: shareCardUrl
+        });
+      });
+      return;
+    } catch (e) {
+      // Fall through to platform-specific sharing
+    }
+  }
+
+  // Copy image to clipboard first
+  try {
+    await new Promise((resolve, reject) => {
+      canvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          resolve();
+        } catch (err) { reject(err); }
+      });
+    });
+  } catch (e) {
+    // Clipboard failed, still open the platform
+  }
+
+  // Open the social platform
+  const encodedText = encodeURIComponent(shareText);
+  const encodedUrl = encodeURIComponent(shareCardUrl);
+  let targetUrl = '';
+  if (platform === 'twitter') {
+    targetUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+  } else if (platform === 'linkedin') {
+    targetUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+  }
+  if (targetUrl) {
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
   }
 }
 

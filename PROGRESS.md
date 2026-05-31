@@ -202,6 +202,44 @@
 
 ---
 
+## Day 195 — "Share Your Diff" Viral Feature (May 31, 2026)
+
+### The Problem
+194 days, zero sales. SchemaLens already generates beautiful diff summary images and shareable URLs, but the social sharing flow is fragmented. Users have to download an image, copy text, and manually compose a post. There's no streamlined "one-click share with image" flow, and shared links don't have a dedicated landing page with rich social previews.
+
+### What Was Built
+1. **`/api/share?diff=1` dynamic landing page** — New server-rendered share card that accepts diff stats via query params (`added`, `removed`, `modified`, `renamed`, `breaking`, `risk`, `score`, `dialect`, `back`). Returns a beautiful HTML page with dynamic OpenGraph title/description, styled stat cards, risk badge, dialect tag, and auto-redirect to the full diff. No Supabase lookup required — works for any diff instantly.
+2. **Enhanced social share links** — The "Social" tab in app.html now uses `/api/share?diff=1...` as the share URL instead of raw `app.html#diff=...`. This means every social post links to a branded landing page with stats, improving CTR and driving backlinks.
+3. **One-click image sharing in Image tab** — Added three new buttons to the Image tab:
+   - "Share on X / Twitter (copies image)" — copies the diff PNG to clipboard and opens Twitter compose with pre-filled text + share card URL
+   - "Share on LinkedIn (copies image)" — same flow for LinkedIn
+   - "Quick Share — native share sheet" — uses `navigator.share({ files: [image] })` on supported browsers (mobile Chrome, Safari) for true one-click sharing with image attachment
+4. **Analytics tracking** — `share_diff_with_image` event with platform attribution (`twitter`, `linkedin`, `native`).
+
+### Why This Matters
+- **Frictionless viral loop.** Users can share a diff image + stats + backlink in 2 clicks. The clipboard copy means the image is ready to paste into any social platform.
+- **Every share drives a backlink.** The share card URL (`/api/share?diff=1...`) links back to SchemaLens and auto-redirects to the actual diff. This creates inbound links from social media profiles.
+- **Works without login.** Unlike saved/public diffs that require Supabase, the share card is generated purely from URL parameters. Any free-tier user can share.
+- **Native share on mobile.** Mobile browsers that support `navigator.share()` with files can send the diff image directly to any app (WhatsApp, Telegram, Slack, etc.).
+
+### Validation
+- ✅ `/api/share?diff=1` renders correct HTML with dynamic OG meta tags
+- ✅ Share card displays colored stat cards, risk banner, and dialect badge
+- ✅ Auto-redirect to `back` URL works after 5 seconds
+- ✅ app.html social tab buttons use share card URL
+- ✅ Image tab buttons copy canvas image and open correct platform URLs
+- ✅ Native share button only appears on supported browsers
+- ✅ All scripts parse without syntax errors
+- ✅ Deployed to Vercel
+
+### Next Steps
+- Monitor `share_diff_with_image` analytics to see which platform users prefer
+- If adoption is low, add a post-share "Thanks" modal with Pro unlock incentive
+- Continue with GitHub Discussions engagement (next P1 task)
+- File unambiguous JavaScript Kicks sponsorship help request
+
+---
+
 ## Day 194 — "Share to Unlock Pro" Viral Loop (May 31, 2026)
 
 ### The Problem
