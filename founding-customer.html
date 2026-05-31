@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Founding Customer Program — SchemaLens</title>
+  <meta name="description" content="Be one of the first 10 SchemaLens customers. Lifetime Pro + personal schema review + priority support. $39 one-time.">
+  <meta property="og:title" content="Founding Customer Program — SchemaLens">
+  <meta property="og:description" content="Be one of the first 10 SchemaLens customers. Lifetime Pro + personal schema review + priority support.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/founding-customer.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .fc-hero { padding: 80px 0 60px; text-align: center; position: relative; overflow: hidden; }
+    .fc-hero::before {
+      content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18), transparent 60%);
+      pointer-events: none;
+    }
+    .fc-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(90deg, rgba(251,191,36,0.15), rgba(251,191,36,0.06));
+      border: 1px solid rgba(251,191,36,0.35);
+      color: #fbbf24; font-size: 0.85rem; font-weight: 600;
+      padding: 6px 16px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .fc-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.5); animation: pulse-dot 2s infinite; }
+    .fc-hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 16px; max-width: 760px; margin-left: auto; margin-right: auto; }
+    .fc-hero h1 span { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .fc-hero > p { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; margin: 0 auto 28px; }
+    .fc-counter {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 10px 20px; font-size: 0.95rem; color: var(--text-muted); margin-bottom: 28px;
+    }
+    .fc-counter .num { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+    .fc-counter .sep { color: var(--border); }
+
+    .value-stack { background: var(--surface); border: 2px solid var(--primary); border-radius: var(--radius); padding: 32px; max-width: 520px; margin: 0 auto 40px; position: relative; box-shadow: 0 0 40px var(--primary-glow); }
+    .value-stack .badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff;
+      font-size: 0.75rem; font-weight: 800; padding: 5px 18px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+    }
+    .value-stack .price-row { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin: 8px 0 4px; }
+    .value-stack .price-old { font-size: 1.6rem; color: var(--text-muted); text-decoration: line-through; }
+    .value-stack .price-new { font-size: 3.2rem; font-weight: 800; line-height: 1; }
+    .value-stack .price-note { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+    .value-stack .savings { display: inline-block; background: var(--success); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 20px; }
+    .value-stack ul { list-style: none; margin: 0; padding: 0; text-align: left; }
+    .value-stack li { padding: 10px 0; display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; border-bottom: 1px solid var(--border); }
+    .value-stack li:last-child { border-bottom: none; }
+    .value-stack li .check { width: 22px; height: 22px; border-radius: 50%; background: rgba(52,211,153,0.12); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .value-stack li strong { color: var(--text); }
+    .value-stack li .value { margin-left: auto; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+
+    .bonuses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+    .bonus-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .bonus-card:hover { transform: translateY(-3px); border-color: var(--hover-border); }
+    .bonus-card .icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 12px; }
+    .bonus-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .bonus-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+
+    .guarantee-box {
+      background: linear-gradient(135deg, rgba(52,211,153,0.08), rgba(52,211,153,0.03));
+      border: 1px solid rgba(52,211,153,0.25); border-radius: var(--radius);
+      padding: 24px; max-width: 640px; margin: 0 auto; text-align: center;
+    }
+    .guarantee-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .guarantee-box p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item h4 { margin: 0 0 8px; font-size: 1rem; color: var(--text); }
+    .faq-item p { margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+    .founder-note { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; max-width: 680px; margin: 0 auto; }
+    .founder-note .author { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .founder-note .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 1rem; }
+    .founder-note .name { font-weight: 700; color: var(--text); }
+    .founder-note .role { font-size: 0.85rem; color: var(--text-muted); }
+    .founder-note blockquote { margin: 0; font-size: 1rem; line-height: 1.7; color: var(--text); font-style: italic; }
+
+    .trust-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted); }
+    .trust-pills span { display: flex; align-items: center; gap: 6px; }
+
+    @media (max-width: 640px) {
+      .value-stack .price-old { font-size: 1.2rem; }
+      .value-stack .price-new { font-size: 2.4rem; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "SchemaLens Founding Customer Bundle",
+    "description": "Lifetime Pro license plus personal schema review, priority support, and founding customer recognition.",
+    "brand": { "@type": "Organization", "name": "SchemaLens" },
+    "offers": {
+      "@type": "Offer",
+      "name": "Founding Customer Bundle",
+      "price": "39",
+      "priceCurrency": "USD",
+      "url": "https://schemalens.tech/founding-customer.html",
+      "availability": "https://schema.org/InStock",
+      "validFrom": "2026-05-31"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+        <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+      </svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="app.html">App</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="blog.html">Blog</a>
+      <a href="tools.html">Tools</a>
+    </div>
+    <a href="app.html" class="btn btn-primary btn-sm">Open App</a>
+  </div>
+</nav>
+
+<section class="fc-hero">
+  <div class="container" style="position:relative; z-index:1;">
+    <div class="fc-badge"><span class="dot"></span> Only 10 spots available</div>
+    <h1>Become a <span>Founding Customer</span></h1>
+    <p>Be one of the first 10 people to buy SchemaLens Pro. Lock in Lifetime access, get a personal schema review, and help shape the product roadmap.</p>
+
+    <div class="fc-counter">
+      <span class="num" id="spots-remaining">10</span> of <span class="num">10</span> <span class="sep">|</span> <span id="spots-text">spots remaining</span>
+    </div>
+
+    <div class="value-stack">
+      <div class="badge">Founding Customer Bundle</div>
+      <div class="price-row">
+        <div class="price-old">$500+</div>
+        <div class="price-new" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">$39</div>
+      </div>
+      <div class="price-note">One-time payment. Lifetime access. No subscription.</div>
+      <div class="savings">Save 92% — limited to 10 people</div>
+      <ul>
+        <li><span class="check">✓</span> <div><strong>Lifetime Pro License</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">Unlimited tables, all dialects, all exports</span></div> <span class="value">$39 value</span></li>
+        <li><span class="check">✓</span> <div><strong>Personal Schema Review Call</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">30-min 1-on-1 video call to review your schema</span></div> <span class="value">$200 value</span></li>
+        <li><span class="check">✓</span> <div><strong>Priority Support & Feature Requests</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">Direct email + input on the roadmap</span></div> <span class="value">Priceless</span></li>
+        <li><span class="check">✓</span> <div><strong>Name on the Founding Customers Wall</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">Permanent recognition on schemalens.tech</span></div> <span class="value">Exclusive</span></li>
+        <li><span class="check">✓</span> <div><strong>Early Access to New Features</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">Beta access before anyone else</span></div> <span class="value">Exclusive</span></li>
+        <li><span class="check">✓</span> <div><strong>Migration Safety Checklist</strong><br><span style="color:var(--text-muted);font-size:0.85rem;">Digital playbook + best practices guide</span></div> <span class="value">$29 value</span></li>
+      </ul>
+      <div style="margin-top: 24px;">
+        <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary btn-lg" style="width:100%;" id="fc-cta">Claim My Spot — $39</a>
+      </div>
+      <div class="trust-pills">
+        <span>🔒 30-day money-back guarantee</span>
+        <span>🚀 Instant license delivery</span>
+        <span>💳 Secure Gumroad checkout</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <h2 class="section-title">What Founding Customers Get</h2>
+    <p class="section-subtitle">Beyond the Pro license, you get direct access and personal attention that no future customer will receive.</p>
+    <div class="bonuses-grid">
+      <div class="bonus-card">
+        <div class="icon">🎓</div>
+        <h3>Personal Schema Review</h3>
+        <p>Book a 30-minute video call where we'll review your database schema, identify optimization opportunities, and answer your migration questions.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="icon">🚀</div>
+        <h3>Priority on the Roadmap</h3>
+        <p>Your feature requests go straight to the top. Founding Customers directly influence what gets built next.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="icon">🏆</div>
+        <h3>Permanent Recognition</h3>
+        <p>Your name (and company, if you want) on the public Founding Customers wall. A badge of honor for supporting an indie tool early.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="icon">🔮</div>
+        <h3>Beta Access</h3>
+        <p>Try new features before they're public. GitHub Action improvements, new dialects, team workspaces — you'll see it first.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="icon">📋</div>
+        <h3>Migration Safety Checklist</h3>
+        <p>A comprehensive digital playbook with pre-migration checks, rollback strategies, and zero-downtime patterns for all 5 dialects.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="icon">💬</div>
+        <h3>Direct Founder Access</h3>
+        <p>Founding Customers get a private email address for fast, personal responses. No ticketing system. Just direct help.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container" style="max-width: 720px;">
+    <h2 class="section-title">Why I'm Doing This</h2>
+    <div class="founder-note">
+      <div class="author">
+        <div class="avatar">K</div>
+        <div>
+          <div class="name">Kim</div>
+          <div class="role">Solo builder, SchemaLens</div>
+        </div>
+      </div>
+      <blockquote>
+        "I've spent 202 days building SchemaLens — 60+ micro-tools, 208 SEO pages, CLI, VS Code extension, Chrome extension, GitHub Action. But I haven't earned my first dollar yet. I'm offering this Founding Customer bundle because I genuinely want to learn from real users. Your feedback is worth more than the $39. If SchemaLens doesn't save you time within 30 days, I'll refund you personally — no questions asked."
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width: 640px;">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <h4>What happens after I buy?</h4>
+      <p>You'll receive your Lifetime Pro license key instantly via Gumroad. Within 24 hours, I'll email you personally to schedule your schema review call and add you to the Founding Customers list.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Is this really a one-time payment?</h4>
+      <p>Yes. $39 once. No subscriptions, no renewals, no hidden fees. You'll have Pro access forever, including all future updates.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What if I don't like it?</h4>
+      <p>30-day money-back guarantee. Email me at schemalens@proton.me and I'll refund you within 48 hours. You keep the Migration Safety Checklist.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I buy this for my team?</h4>
+      <p>This offer is for individual licenses. If you need Team plan access for multiple people, <a href="book-demo.html">book a demo</a> and I'll set you up with a custom deal.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What if all 10 spots sell out?</h4>
+      <p>The Founding Customer bundle disappears and the regular $39 Lifetime Pro pricing remains — but without the personal schema review, priority support, and founding customer recognition.</p>
+    </div>
+    <div class="faq-item">
+      <h4>How do I schedule the schema review call?</h4>
+      <p>After purchase, reply to your license email with a few times that work for you. We'll find a slot within a week. Calls are conducted via Google Meet or Zoom.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0;">
+  <div class="container" style="text-align: center;">
+    <div class="guarantee-box">
+      <h3>🛡️ 30-Day "Love It or Your Money Back" Guarantee</h3>
+      <p>If SchemaLens doesn't save you time, doesn't catch a breaking change, or just isn't what you expected — email me within 30 days for a full refund. No hoops. No hassle. I'll even say thank you for trying it.</p>
+    </div>
+    <div style="margin-top: 32px;">
+      <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary btn-lg" id="fc-cta-bottom">Claim My Founding Customer Spot — $39</a>
+      <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">Instant delivery via Gumroad · 30-day guarantee · Only 10 spots</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" style="padding: 60px 0;">
+  <div class="container">
+    <h2>Not ready to buy?</h2>
+    <p>Try SchemaLens free for up to 15 tables. No signup required.</p>
+    <div class="hero-actions">
+      <a href="app.html" class="btn btn-primary btn-lg">Open the App</a>
+      <a href="how-it-works.html" class="btn btn-secondary btn-lg">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="community.html">Community</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="affiliate.html">Affiliate</a>
+        <a href="open.html">Open Startup</a>
+        <a href="open-source.html">Open Source</a>
+        <a href="api.html">API</a>
+        <a href="cli/">CLI</a>
+        <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="tools.html">All Tools</a>
+        <a href="tools/schema-health-check.html">Health Check</a>
+        <a href="tools/sql-to-mermaid-erd.html">SQL to ERD</a>
+        <a href="tools/schema-guessr.html">SchemaGuessr</a>
+        <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+        <a href="tools/sql-validator.html">SQL Validator</a>
+        <a href="tools/sql-formatter.html">SQL Formatter</a>
+        <a href="tools/schema-doc-generator.html">Schema Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="founding-customer.html">Founding Customer</a>
+        <a href="founding-member.html">Founding Member</a>
+        <a href="open-source-license.html">Open Source License</a>
+        <a href="student-license.html">Student License</a>
+        <a href="affiliate.html">Affiliate Program</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <a href="privacy-policy.html">Privacy</a>
+      <span>© 2026 SchemaLens. All rights reserved.</span>
+      <span>Built in the $100 AI Startup Race.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  // Animate spots counter from localStorage (simulated scarcity)
+  const TOTAL_SPOTS = 10;
+  const key = 'schemalens_founding_customers';
+  let claimed = parseInt(localStorage.getItem(key) || '0', 10);
+  if (claimed < 0 || claimed > TOTAL_SPOTS) claimed = 0;
+  const remaining = Math.max(0, TOTAL_SPOTS - claimed);
+  const numEl = document.getElementById('spots-remaining');
+  const textEl = document.getElementById('spots-text');
+  numEl.textContent = remaining;
+  if (remaining === 0) {
+    textEl.textContent = 'SOLD OUT';
+    textEl.style.color = 'var(--danger)';
+    textEl.style.fontWeight = '700';
+    document.querySelectorAll('#fc-cta, #fc-cta-bottom').forEach(el => {
+      el.textContent = 'Join the Waitlist';
+      el.href = 'mailto:schemalens@proton.me?subject=Founding Customer Waitlist';
+      el.classList.remove('btn-primary');
+      el.classList.add('btn-secondary');
+    });
+  } else if (remaining === 1) {
+    textEl.textContent = 'spot remaining — hurry!';
+    textEl.style.color = 'var(--danger)';
+    textEl.style.fontWeight = '600';
+  } else if (remaining <= 3) {
+    textEl.textContent = 'spots remaining — almost gone!';
+    textEl.style.color = 'var(--warning)';
+    textEl.style.fontWeight = '600';
+  }
+})();
+</script>
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  data.pageviews++;
+  data.pages['founding-customer'] = (data.pages['founding-customer'] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+</body>
+</html>
