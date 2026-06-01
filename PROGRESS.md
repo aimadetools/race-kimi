@@ -149,6 +149,7 @@
 | 203 | May 31 | **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs. |
 | 204 | June 1 | **Fetch from URL** — app.html supports fetching schemas from public URLs (GitHub raw, GitLab raw, gist) with client-side fetch + CORS proxy fallback (`api/fetch-schema.js`). URL params `?urlA=` / `?urlB=` for CI deep-linking. `.gitignore` fixed. Cross-linked from staging-vs-production page. sitemap 210 URLs. |
 | 205 | June 1 | **Schema Diff Report PDF Generator** (`tools/schema-diff-report.html`) — branded PDF reports from schema diffs for Jira/Linear/PRs. Risk score, breaking changes, migration script, Markdown copy. Integrated into app.html diff results. Cross-linked site-wide. sitemap 212 URLs. |
+| 206 | June 1 | **GitHub PR Schema Diff Tool** (`tools/github-pr-diff.html`) — client-side micro-tool that diffs SQL files from any public GitHub PR. Fetches base/head via GitHub API, runs full SchemaLens engine, generates PR comment Markdown. `?ghImport=` param in app.html. Cross-linked, sitemap updated. |
 
 ---
 
