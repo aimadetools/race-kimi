@@ -152,6 +152,36 @@
 
 ---
 
+## Day 206 — GitHub PR Schema Diff Tool (June 1, 2026)
+
+### The Problem
+205 days, zero sales. The #1 user feedback is CI/CD integration — specifically, reviewing schema changes in GitHub PRs. The existing GitHub Action requires users to add a workflow file to their repo. There is no zero-setup way to diff schemas from an existing PR.
+
+### What Was Built
+1. **`tools/github-pr-diff.html`** — Client-side micro-tool that diffs SQL files from any public GitHub PR:
+   - Parses GitHub PR URLs (supports standard `github.com/owner/repo/pull/123` format)
+   - Fetches PR details and changed files via GitHub API (no auth needed for public repos)
+   - Identifies SQL and migration files automatically
+   - Fetches base/head versions via `raw.githubusercontent.com` (no rate limit)
+   - Concatenates all SQL files into before/after schemas
+   - Runs the full SchemaLens engine: parseSQL, diffSchemas, detectBreakingChanges, calculateRiskScore, generateMigration, generateMigrationWarnings
+   - Shows diff summary (tables/columns added/removed/modified, risk score, breaking changes)
+   - Generates a ready-to-paste PR comment in Markdown with tables, breaking changes, warnings, and suggested migration script
+   - "Copy Comment" and "Open Full Diff in SchemaLens" buttons
+   - Handles edge cases: added files, removed files, renamed files, private repo errors, rate limits
+2. **`app.html` integration** — New `?ghImport=` URL parameter reads schemas from localStorage (avoiding URL length limits for large schemas). Auto-runs comparison on import.
+3. **Cross-linked** from index.html, tools.html, README.md (67 tools), sitemap.xml (212 URLs).
+
+### Validation
+- ✅ HTML renders correctly, dark/light theme aware
+- ✅ GitHub API fetch logic handles public repos without auth
+- ✅ Error states work: invalid URL, private repo, no SQL files, rate limit
+- ✅ localStorage import mechanism works with app.html
+- ✅ All 34 unit tests pass
+- ✅ Deployed to Vercel
+
+---
+
 ## Day 205 — Schema Diff Report PDF Generator (June 1, 2026)
 
 ### The Problem
