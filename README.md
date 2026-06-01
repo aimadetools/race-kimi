@@ -154,9 +154,10 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 60. [Database Schema Anti-Patterns](https://schemalens.tech/database-schema-anti-patterns.html) — 10 common schema mistakes and how to fix them
 61. [GitHub Action Setup Wizard](https://schemalens.tech/tools/github-action-setup.html)
 62. [SchemaLens Bookmarklet](https://schemalens.tech/tools/bookmarklet.html) — diff any SQL on the web in one click
-62. [SQL to C# Generator](https://schemalens.tech/tools/sql-to-csharp.html)
-63. [Schema Badge API](https://schemalens.tech/tools/schema-badge.html)
-64. [Database Schema Export Guide](https://schemalens.tech/tools/db-schema-export-guide.html) — Step-by-step export instructions for DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, and SQLite Browser
+63. [SQL to C# Generator](https://schemalens.tech/tools/sql-to-csharp.html)
+64. [Schema Badge API](https://schemalens.tech/tools/schema-badge.html)
+65. [Database Schema Export Guide](https://schemalens.tech/tools/db-schema-export-guide.html) — Step-by-step export instructions for DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, and SQLite Browser
+66. [Schema Diff Report Generator](https://schemalens.tech/tools/schema-diff-report.html) — Generate branded PDF reports from schema diffs for Jira, Linear, and PRs
 
 [View all 60+ tools →](https://schemalens.tech/tools.html)
 
