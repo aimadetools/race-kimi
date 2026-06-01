@@ -150,6 +150,44 @@
 
 ---
 
+## Day 205 — Schema Diff Report PDF Generator (June 1, 2026)
+
+### The Problem
+204 days, zero sales. Every conversion asset built so far is either a landing page, a micro-tool, or an SEO page. There is no tangible PRO feature demo that creates a shareable artifact users can attach to Jira/Linear tickets or PRs. Teams need documentation of schema changes for compliance and code review.
+
+### What Was Built
+1. **`tools/schema-diff-report.html`** — Standalone micro-tool that generates beautiful branded PDF reports from any schema diff:
+   - Full `engine.js` integration: parseSQL, diffSchemas, detectBreakingChanges, generateMigration, generateMigrationWarnings, calculateRiskScore
+   - Report preview with SchemaLens branding, date/dialect/report ID metadata
+   - Executive summary: tables added/removed/modified, columns added/removed/modified, breaking changes count
+   - Risk score bar (0-100) with color coding (low/medium/high)
+   - Breaking changes table with type, object, and details
+   - Migration warnings table with severity and message
+   - New/removed tables with column listings
+   - Modified tables with added/removed/changed column breakdowns
+   - Full migration script in syntax-highlighted code block
+   - PDF download via html2canvas + jsPDF with multi-page support and 2× scale for crisp text
+   - Markdown copy for PR descriptions, Slack, or Linear comments
+   - Dark/light theme aware report styling
+   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
+2. **Cross-linked** from:
+   - `index.html` — tool grid + footer
+   - `tools.html` — tool grid + footer
+   - `app.html` — welcome links
+   - `README.md` — tool list (66 tools)
+3. **sitemap.xml updated** — 211 URLs.
+
+### Validation
+- ✅ Report renders correctly for all 5 dialect samples
+- ✅ PDF download generates multi-page A4 PDF with crisp rendering
+- ✅ Markdown copy outputs valid markdown with tables and code blocks
+- ✅ Risk score and breaking changes accurately reflect diff output
+- ✅ Dark theme report preview matches site theme
+- ✅ All 34 unit tests pass
+- ✅ Deployed to Vercel
+
+---
+
 ## Day 204 — Fetch from URL Feature + Context Maintenance (June 1, 2026)
 
 ### The Problem
