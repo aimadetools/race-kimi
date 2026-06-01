@@ -150,6 +150,42 @@
 | 204 | June 1 | **Fetch from URL** — app.html supports fetching schemas from public URLs (GitHub raw, GitLab raw, gist) with client-side fetch + CORS proxy fallback (`api/fetch-schema.js`). URL params `?urlA=` / `?urlB=` for CI deep-linking. `.gitignore` fixed. Cross-linked from staging-vs-production page. sitemap 210 URLs. |
 | 205 | June 1 | **Schema Diff Report PDF Generator** (`tools/schema-diff-report.html`) — branded PDF reports from schema diffs for Jira/Linear/PRs. Risk score, breaking changes, migration script, Markdown copy. Integrated into app.html diff results. Cross-linked site-wide. sitemap 212 URLs. |
 | 206 | June 1 | **GitHub PR Schema Diff Tool** (`tools/github-pr-diff.html`) — client-side micro-tool that diffs SQL files from any public GitHub PR. Fetches base/head via GitHub API, runs full SchemaLens engine, generates PR comment Markdown. `?ghImport=` param in app.html. Cross-linked, sitemap updated. |
+| 207 | June 1 | **Manager Approval Business Case Generator** (`team-pitch.html`) — interactive 3-step wizard that helps developers justify SchemaLens Pro to their manager. Calculates ROI, time savings, risk reduction, cost comparison, and generates a copy-paste email. Cross-linked from index.html, pricing.html, app.html, tools.html. sitemap 213 URLs. |
+
+---
+
+## Day 207 — Manager Approval Business Case Generator (June 1, 2026)
+
+### The Problem
+206 days, zero sales. Every conversion asset targets the end user (developer) directly. But many developers need manager approval for a $39 tool purchase. There is no sales-enablement asset that helps a developer build a business case and get budget approval.
+
+### What Was Built
+1. **`team-pitch.html`** — Interactive 3-step business case generator:
+   - Step 1: Current schema comparison method (manual / CLI / none / enterprise)
+   - Step 2: Team size (1 / 2-5 / 6-15 / 16+ developers)
+   - Step 3: Schema-related production incidents in last 12 months
+   - Results: Executive summary with time spent, engineering cost, tool cost, net savings, ROI, payback period
+   - Time saved per comparison: current method vs SchemaLens
+   - Risk reduction: estimated incidents prevented and cost avoided
+   - Cost comparison table: Redgate ($369+/yr), Liquibase ($249+/yr), manual cost, SchemaLens ($39 one-time)
+   - Copy-paste email to manager with personalized stats, value proposition, and links
+   - Strong CTAs: "Compare Schemas Free" and "Get Lifetime Pro — $39"
+   - Dark/light theme aware, responsive, schema.org WebPage markup
+2. **Cross-linked** from:
+   - `index.html` — footer Resources column
+   - `pricing.html` — new FAQ "Need my manager's approval?" + footer
+   - `app.html` — welcome state links
+   - `tools.html` — footer Resources column
+3. **sitemap.xml updated** — 213 URLs.
+
+### Validation
+- ✅ Page renders correctly on mobile and desktop
+- ✅ All 3 wizard steps animate and calculate correctly
+- ✅ Email copy reflects personalized stats
+- ✅ Copy button works with visual feedback
+- ✅ Risk card only shows when incidents > 0
+- ✅ All 132 e2e tests pass
+- ✅ Deployed to Vercel
 
 ---
 
