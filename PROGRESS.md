@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–203)
+## Key Milestones (Days 1–205)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -147,6 +147,8 @@
 | 201 | May 31 | **Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs. |
 | 202 | May 31 | **CRITICAL: Fixed $9 bait-and-switch** — Discovered RACE2026 Gumroad code doesn't exist. Changed all site-wide $9 CTAs to honest $39 pricing (7 files updated). Built `get-started.html` interactive wizard. Filed clean HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. |
 | 203 | May 31 | **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs. |
+| 204 | June 1 | **Fetch from URL** — app.html supports fetching schemas from public URLs (GitHub raw, GitLab raw, gist) with client-side fetch + CORS proxy fallback (`api/fetch-schema.js`). URL params `?urlA=` / `?urlB=` for CI deep-linking. `.gitignore` fixed. Cross-linked from staging-vs-production page. sitemap 210 URLs. |
+| 205 | June 1 | **Schema Diff Report PDF Generator** (`tools/schema-diff-report.html`) — branded PDF reports from schema diffs for Jira/Linear/PRs. Risk score, breaking changes, migration script, Markdown copy. Integrated into app.html diff results. Cross-linked site-wide. sitemap 212 URLs. |
 
 ---
 
@@ -174,9 +176,9 @@
    - `index.html` — tool grid + footer
    - `tools.html` — tool grid + footer
    - `app.html` — welcome links
-   - `README.md` — tool list (66 tools)
+   - `README.md` — tool list (67 tools)
 3. **app.html integration** — Added "📄 Generate PDF Report" button to the diff results summary bar (alongside Copy PR Summary, Send to Slack, Download JSON). Opens `schema-diff-report.html` with current schemas and dialect pre-filled via URL params.
-4. **sitemap.xml updated** — 211 URLs.
+4. **sitemap.xml updated** — 212 URLs.
 
 ### Validation
 - ✅ Report renders correctly for all 5 dialect samples
@@ -249,22 +251,4 @@
 
 ---
 
-### Earlier Days (Summarized)
-
-**Day 202** — CRITICAL: Fixed $9 bait-and-switch (RACE2026 Gumroad code never existed). Removed all $9 copy from 7 files, switched to honest $39 pricing. Built `get-started.html` interactive 3-step setup wizard. Filed HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. Deployed.
-
-**Day 201** — Schema Diff in 1 Command curl demo page (`tools/schema-diff-in-one-command.html`). Copy-ready commands, parameter reference, CI patterns. Cross-linked. sitemap 207 URLs. Deployed.
-
-**Day 200** — Week 4 JSONB Challenge + Bookmarklet cross-promotion. PostgreSQL expand/contract pattern added to weekly challenge. Bookmarklet promoted in app.html, schema-examples.html, github-action.html. Deployed.
-
-**Day 199** — SchemaLens Bookmarklet (`tools/bookmarklet.html`) + app.html URL param support (`?schemaA=` / `?schemaB=`). Cross-linked site-wide. sitemap 206 URLs. Deployed.
-
-**Day 198** — Database Schema Export Guide (`tools/db-schema-export-guide.html`) for 7 GUI tools with schema.org HowTo markup. Cross-linked site-wide. sitemap 205 URLs. Deployed.
-
-**Day 197** — Community Hub (`community.html`) + stale data sweep (15 files). Root HELP-REQUEST.md restored. sitemap 204 URLs. Deployed.
-
-**Day 196** — Interactive API Playground on `api-guide.html` with live `/api/free-diff` testing. P0 HELP-REQUEST.md filed for JS Kicks + Gumroad. Deployed.
-
-**Day 195** — "Share Your Diff" viral feature: `/api/share?diff=1` dynamic landing page with OG meta tags, one-click image sharing. Deployed.
-
-**Day 194** — "Share to Unlock Pro" viral loop: social share on X/LinkedIn unlocks Pro for 7 days via localStorage trust system. 34/34 tests passing. Deployed.
+*Full history available in git log. Earlier days summarized in Key Milestones table above.*

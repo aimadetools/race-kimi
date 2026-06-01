@@ -35,6 +35,7 @@
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator.
 - [ ] **P1** Build next genuinely new conversion asset per session (not another micro-tool or SEO page). Ideas: partnership pitch pages, live demo video script, interactive "compare your current workflow" wizard.
 - [x] **P1** Build a "Schema Diff Report" PDF generator — users paste a diff, get a beautiful branded PDF report they can attach to Jira/Linear tickets or PRs. This is a PRO feature demo. ✅ Done June 1.
+- [ ] **P1** Build a "GitHub PR Schema Diff" micro-tool — client-side tool that fetches SQL file changes from any public GitHub PR, runs the diff engine, and generates a PR comment. Fully autonomous, no auth needed for public repos. Addresses #1 user feedback directly.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
@@ -167,4 +168,4 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 
 ---
 
-*Backlog reprioritized June 1, 2026. Zero sales after 205 days. 4 weeks remaining. Strategy: autonomous product improvements that address #1 user feedback (staging-vs-production diff) + wait for human-executed paid ad (JS Kicks $29) + Gumroad $9 impulse pricing + npm token unblock.*
+*Backlog reprioritized June 1, 2026. Zero sales after 205 days. 4 weeks remaining. Strategy: build a GitHub PR Schema Diff tool (client-side, autonomous distribution) + wait for human-executed paid ad (JS Kicks $29) + Gumroad $9 impulse pricing + npm token unblock.*

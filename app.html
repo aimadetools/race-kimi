@@ -9651,6 +9651,40 @@ async function fetchSchemaFromUrl(side) {
   const urlA = params.get('urlA');
   const urlB = params.get('urlB');
   const dialect = params.get('dialect');
+  const ghImport = params.get('ghImport');
+
+  // Handle GitHub PR diff import via localStorage (avoids URL length limits)
+  if (ghImport) {
+    try {
+      const importedA = localStorage.getItem(ghImport + '-a');
+      const importedB = localStorage.getItem(ghImport + '-b');
+      const importedDialect = localStorage.getItem(ghImport + '-dialect');
+      if (importedA !== null) {
+        document.getElementById('schemaA').value = importedA;
+        localStorage.removeItem(ghImport + '-a');
+      }
+      if (importedB !== null) {
+        document.getElementById('schemaB').value = importedB;
+        localStorage.removeItem(ghImport + '-b');
+      }
+      if (importedDialect) {
+        const dialectSelect = document.getElementById('dialect');
+        if (dialectSelect) dialectSelect.value = importedDialect;
+        localStorage.removeItem(ghImport + '-dialect');
+      }
+      // Hide welcome state
+      const welcomeState = document.querySelector('.welcome-state');
+      if (welcomeState) welcomeState.classList.add('hidden');
+      const welcomeHint = document.querySelector('.welcome-hint');
+      if (welcomeHint) welcomeHint.classList.add('hidden');
+      // Auto-run comparison
+      setTimeout(() => {
+        const btn = document.getElementById('compareBtn');
+        if (btn) btn.click();
+      }, 400);
+      return;
+    } catch (e) {}
+  }
 
   if (schemaA) {
     try { document.getElementById('schemaA').value = decodeURIComponent(schemaA); } catch(e) {}

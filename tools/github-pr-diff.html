@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub PR Schema Diff — Review SQL Changes in Any Pull Request | SchemaLens</title>
+<meta name="description" content="Paste a GitHub PR URL and instantly see the schema diff for all SQL files changed. Generate PR comments with breaking change warnings. Free, browser-based, no auth needed for public repos.">
+<meta property="og:title" content="GitHub PR Schema Diff — Review SQL Changes in Any Pull Request">
+<meta property="og:description" content="Paste a GitHub PR URL and instantly see the schema diff for all SQL files changed. Generate PR comments with breaking change warnings.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/github-pr-diff.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "GitHub PR Schema Diff",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Fetches SQL file changes from any public GitHub PR and generates a schema diff with breaking change detection. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Generates ready-to-paste PR comments.",
+  "url": "https://schemalens.tech/tools/github-pr-diff.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 20px;
+  }
+  .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .input-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .input-row input[type="text"] {
+    flex: 1; min-width: 260px; background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.95rem;
+  }
+  .input-row select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .input-row button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 12px 22px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .input-row button:hover { background: var(--primary-hover); }
+  .input-row button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .examples { margin-top: 12px; font-size: 0.88rem; color: var(--text-muted); }
+  .examples a { color: var(--primary); text-decoration: underline; cursor: pointer; }
+  .examples a:hover { color: var(--primary-hover); }
+
+  .loading { display: none; text-align: center; padding: 40px; color: var(--text-muted); }
+  .loading.active { display: block; }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary);
+    border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .results { display: none; }
+  .results.active { display: block; }
+
+  .pr-info {
+    display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;
+  }
+  .pr-info .avatar {
+    width: 48px; height: 48px; border-radius: 50%; background: var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+  }
+  .pr-info .meta { flex: 1; min-width: 200px; }
+  .pr-info .meta .title { font-weight: 600; font-size: 1.05rem; margin-bottom: 4px; }
+  .pr-info .meta .sub { color: var(--text-muted); font-size: 0.9rem; }
+  .pr-info .badge {
+    background: var(--primary-glow); color: var(--primary); border: 1px solid var(--primary);
+    border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600;
+  }
+
+  .file-list { margin-top: 12px; }
+  .file-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 8px;
+    border: 1px solid var(--border);
+  }
+  .file-item .status {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .file-item .status.added { background: rgba(52,211,153,0.15); color: var(--success); }
+  .file-item .status.removed { background: rgba(248,113,113,0.15); color: var(--danger); }
+  .file-item .status.modified { background: rgba(251,191,36,0.15); color: var(--warning); }
+  .file-item .status.renamed { background: rgba(34,211,238,0.15); color: var(--secondary); }
+  .file-item .fname { font-family: var(--mono); font-size: 0.88rem; flex: 1; }
+
+  .schema-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 900px) { .schema-grid { grid-template-columns: 1fr; } }
+  .schema-grid textarea {
+    width: 100%; min-height: 180px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px;
+    font-family: var(--mono); font-size: 0.85rem; resize: vertical;
+  }
+
+  .diff-summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;
+    margin: 20px 0;
+  }
+  .diff-summary .stat {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 16px; text-align: center;
+  }
+  .diff-summary .stat .num { font-size: 1.6rem; font-weight: 700; }
+  .diff-summary .stat .num.added { color: var(--success); }
+  .diff-summary .stat .num.removed { color: var(--danger); }
+  .diff-summary .stat .num.modified { color: var(--warning); }
+  .diff-summary .stat .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+  .risk-bar {
+    height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin: 8px 0 16px;
+  }
+  .risk-bar .fill {
+    height: 100%; border-radius: 5px; transition: width 0.5s ease;
+  }
+  .risk-bar .fill.low { background: var(--success); }
+  .risk-bar .fill.medium { background: var(--warning); }
+  .risk-bar .fill.high { background: var(--danger); }
+
+  .comment-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 16px; font-family: var(--mono); font-size: 0.85rem; white-space: pre-wrap;
+    max-height: 400px; overflow: auto; margin-top: 10px;
+  }
+
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .btn-group button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 18px; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-group button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-group button:hover { border-color: var(--hover-border); }
+  .btn-group button.primary:hover { background: var(--primary-hover); }
+
+  .error { background: rgba(248,113,113,0.1); border: 1px solid var(--danger); color: var(--danger);
+    border-radius: var(--radius-sm); padding: 16px; margin-top: 16px;
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../github-action.html" style="color:var(--text-muted);text-decoration:none;">GitHub Action</a>
+    </div>
+  </div>
+</nav>
+
+<main style="max-width:var(--max-width);margin:0 auto;padding:0 24px 80px;">
+
+  <div class="page-header">
+    <h1>GitHub PR Schema Diff</h1>
+    <p>Paste any public GitHub PR URL and instantly review the schema changes. Generate PR comments with breaking-change warnings in one click.</p>
+  </div>
+
+  <div class="card">
+    <div class="input-row">
+      <input type="text" id="prUrl" placeholder="https://github.com/owner/repo/pull/123" />
+      <select id="dialectSelect">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mssql">SQL Server</option>
+        <option value="oracle">Oracle</option>
+      </select>
+      <button id="loadBtn" onclick="loadPR()">Load PR</button>
+    </div>
+    <div class="examples">
+      Works with any public repo. Try PRs from projects with SQL migrations — e.g. Ghost, Discourse, Directus, Appwrite, or your own repositories.
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div id="loadingText">Fetching PR details from GitHub...</div>
+  </div>
+
+  <div class="error hidden" id="error"></div>
+
+  <div class="results" id="results">
+
+    <div class="card">
+      <div class="pr-info" id="prInfo"></div>
+    </div>
+
+    <div class="card">
+      <h2>🗂️ SQL Files Changed</h2>
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Schema Diff Summary</h2>
+      <div class="diff-summary" id="diffSummary"></div>
+      <div id="riskSection" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>Risk Score</strong>
+          <span id="riskValue" style="font-weight:700;"></span>
+        </div>
+        <div class="risk-bar"><div class="fill" id="riskBar"></div></div>
+      </div>
+      <div id="breakingSection" class="hidden" style="margin-top:16px;">
+        <h3 style="font-size:1rem;margin-bottom:10px;">⚠️ Breaking Changes</h3>
+        <div id="breakingList"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📝 Generated PR Comment</h2>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:10px;">Copy and paste this into the GitHub PR discussion.</p>
+      <div class="comment-box" id="commentBox"></div>
+      <div class="btn-group">
+        <button class="primary" onclick="copyComment()">📋 Copy Comment</button>
+        <button onclick="openInApp()">🔍 Open Full Diff in SchemaLens</button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:var(--max-width);margin:0 auto;">
+    <p>Built with SchemaLens — the zero-install schema diff tool for developers.</p>
+    <p style="margin-top:8px;">
+      <a href="../index.html" style="color:var(--text-muted);">Home</a> &middot;
+      <a href="../app.html" style="color:var(--text-muted);">App</a> &middot;
+      <a href="../tools.html" style="color:var(--text-muted);">Tools</a> &middot;
+      <a href="../github-action.html" style="color:var(--text-muted);">GitHub Action</a> &middot;
+      <a href="../api-guide.html" style="color:var(--text-muted);">API</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  window.module = { exports: {} };
+</script>
+<script src="../engine/engine.js"></script>
+<script>
+  const { parseSQL, diffSchemas, detectBreakingChanges, calculateRiskScore, generateMigration, generateMigrationWarnings } = module.exports;
+
+  let currentSchemaA = '';
+  let currentSchemaB = '';
+  let currentDialect = 'postgres';
+  let currentPR = null;
+
+  function setExample(url) {
+    document.getElementById('prUrl').value = url;
+    loadPR();
+  }
+
+  function parsePRUrl(url) {
+    const m = url.match(/github\.com\/([^\/]+)\/([^\/]+)\/pull\/(\d+)/);
+    if (!m) return null;
+    return { owner: m[1], repo: m[2], number: parseInt(m[3], 10) };
+  }
+
+  function showLoading(text) {
+    document.getElementById('loading').classList.add('active');
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('results').classList.remove('active');
+    document.getElementById('error').classList.add('hidden');
+  }
+
+  function hideLoading() {
+    document.getElementById('loading').classList.remove('active');
+  }
+
+  function showError(msg) {
+    hideLoading();
+    const el = document.getElementById('error');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+  }
+
+  async function fetchJSON(url) {
+    const res = await fetch(url, { headers: { Accept: 'application/vnd.github.v3+json' } });
+    if (!res.ok) {
+      if (res.status === 404) throw new Error('PR not found. Make sure the URL is correct and the repo is public.');
+      if (res.status === 403) throw new Error('GitHub API rate limit exceeded. Try again in a few minutes or use a different PR.');
+      throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  }
+
+  async function fetchText(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
+    return res.text();
+  }
+
+  async function loadPR() {
+    const url = document.getElementById('prUrl').value.trim();
+    if (!url) { showError('Please enter a GitHub PR URL.'); return; }
+
+    const parsed = parsePRUrl(url);
+    if (!parsed) { showError('Invalid GitHub PR URL. Expected format: https://github.com/owner/repo/pull/123'); return; }
+
+    currentDialect = document.getElementById('dialectSelect').value;
+    document.getElementById('loadBtn').disabled = true;
+    showLoading('Fetching PR details from GitHub...');
+
+    try {
+      // 1. Fetch PR details
+      const pr = await fetchJSON(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/pulls/${parsed.number}`);
+      currentPR = pr;
+
+      showLoading('Fetching changed files...');
+
+      // 2. Fetch PR files
+      const files = await fetchJSON(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/pulls/${parsed.number}/files`);
+
+      // 3. Filter SQL files
+      const sqlFiles = files.filter(f => f.filename.endsWith('.sql') || /\bmigration\b/i.test(f.filename));
+
+      if (sqlFiles.length === 0) {
+        showError('No SQL files found in this PR. Try a PR that includes .sql files or migration files.');
+        document.getElementById('loadBtn').disabled = false;
+        return;
+      }
+
+      showLoading(`Fetching ${sqlFiles.length} SQL file(s)...`);
+
+      // 4. Fetch base and head versions
+      const baseSha = pr.base.sha;
+      const headSha = pr.head.sha;
+
+      let schemaA = '';
+      let schemaB = '';
+
+      for (let i = 0; i < sqlFiles.length; i++) {
+        const f = sqlFiles[i];
+        const filename = f.filename;
+        const prevFilename = f.previous_filename || filename;
+
+        showLoading(`Fetching SQL file ${i + 1} of ${sqlFiles.length}: ${filename}`);
+
+        // Base version
+        if (f.status !== 'added') {
+          try {
+            const baseUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${baseSha}/${encodeURIComponent(prevFilename)}`;
+            const baseContent = await fetchText(baseUrl);
+            schemaA += `\n/* File: ${prevFilename} (base) */\n${baseContent}\n`;
+          } catch (e) {
+            schemaA += `\n/* File: ${prevFilename} (base) — could not fetch */\n`;
+          }
+        }
+
+        // Head version
+        if (f.status !== 'removed') {
+          try {
+            const headUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${headSha}/${encodeURIComponent(filename)}`;
+            const headContent = await fetchText(headUrl);
+            schemaB += `\n/* File: ${filename} (head) */\n${headContent}\n`;
+          } catch (e) {
+            schemaB += `\n/* File: ${filename} (head) — could not fetch */\n`;
+          }
+        }
+      }
+
+      currentSchemaA = schemaA.trim();
+      currentSchemaB = schemaB.trim();
+
+      // 5. Run diff
+      const oldSchema = parseSQL(currentSchemaA, currentDialect);
+      const newSchema = parseSQL(currentSchemaB, currentDialect);
+      const diff = diffSchemas(oldSchema, newSchema);
+      const breaking = detectBreakingChanges(diff);
+      const risk = calculateRiskScore(diff, breaking);
+      const migration = generateMigration(diff, currentDialect);
+      const warnings = generateMigrationWarnings(diff, currentDialect);
+
+      // 6. Render results
+      renderPRInfo(pr, parsed, sqlFiles.length);
+      renderFileList(sqlFiles);
+      renderDiffSummary(diff, breaking, risk);
+      renderComment(pr, diff, breaking, risk, migration, warnings, sqlFiles);
+
+      hideLoading();
+      document.getElementById('results').classList.add('active');
+      document.getElementById('loadBtn').disabled = false;
+
+    } catch (e) {
+      showError(e.message || 'Something went wrong. Please try again.');
+      document.getElementById('loadBtn').disabled = false;
+    }
+  }
+
+  function renderPRInfo(pr, parsed, sqlCount) {
+    const el = document.getElementById('prInfo');
+    el.innerHTML = `
+      <div class="avatar">🔄</div>
+      <div class="meta">
+        <div class="title">${escapeHtml(pr.title)}</div>
+        <div class="sub">
+          <a href="${pr.html_url}" target="_blank" style="color:var(--primary);text-decoration:none;">${parsed.owner}/${parsed.repo}#${parsed.number}</a>
+          &middot; by ${escapeHtml(pr.user.login)} &middot; ${sqlCount} SQL file${sqlCount !== 1 ? 's' : ''}
+        </div>
+      </div>
+      <div class="badge">${pr.state.toUpperCase()}</div>
+    `;
+  }
+
+  function renderFileList(files) {
+    const el = document.getElementById('fileList');
+    el.innerHTML = files.map(f => `
+      <div class="file-item">
+        <span class="status ${f.status}">${f.status}</span>
+        <span class="fname">${escapeHtml(f.filename)}${f.previous_filename ? ` <span style="color:var(--text-muted)">← ${escapeHtml(f.previous_filename)}</span>` : ''}</span>
+        <span style="color:var(--text-muted);font-size:0.8rem;">+${f.additions} -${f.deletions}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderDiffSummary(diff, breaking, risk) {
+    const tablesAdded = diff.addedTables.length;
+    const tablesRemoved = diff.removedTables.length;
+    const tablesModified = diff.changedTables.length;
+    let columnsAdded = 0, columnsRemoved = 0, columnsModified = 0;
+    for (const t of diff.changedTables) {
+      columnsAdded += t.addedColumns.length;
+      columnsRemoved += t.removedColumns.length;
+      columnsModified += t.changedColumns.length;
+    }
+
+    document.getElementById('diffSummary').innerHTML = `
+      <div class="stat"><div class="num added">${tablesAdded}</div><div class="label">Tables Added</div></div>
+      <div class="stat"><div class="num removed">${tablesRemoved}</div><div class="label">Tables Removed</div></div>
+      <div class="stat"><div class="num modified">${tablesModified}</div><div class="label">Tables Modified</div></div>
+      <div class="stat"><div class="num added">${columnsAdded}</div><div class="label">Columns Added</div></div>
+      <div class="stat"><div class="num removed">${columnsRemoved}</div><div class="label">Columns Removed</div></div>
+      <div class="stat"><div class="num ${breaking.length > 0 ? 'removed' : 'added'}">${breaking.length}</div><div class="label">Breaking Changes</div></div>
+    `;
+
+    const riskEl = document.getElementById('riskSection');
+    const riskBar = document.getElementById('riskBar');
+    const riskValue = document.getElementById('riskValue');
+    if (risk !== undefined) {
+      riskEl.classList.remove('hidden');
+      riskValue.textContent = `${risk}/100`;
+      riskValue.style.color = risk >= 70 ? 'var(--danger)' : risk >= 40 ? 'var(--warning)' : 'var(--success)';
+      riskBar.style.width = `${risk}%`;
+      riskBar.className = 'fill ' + (risk >= 70 ? 'high' : risk >= 40 ? 'medium' : 'low');
+    }
+
+    const breakingEl = document.getElementById('breakingSection');
+    if (breaking.length > 0) {
+      breakingEl.classList.remove('hidden');
+      document.getElementById('breakingList').innerHTML = breaking.map(b => `
+        <div style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;">
+          <strong style="color:var(--danger);">${escapeHtml(b.type)}</strong> — ${escapeHtml(b.object)}
+          <div style="color:var(--text-muted);font-size:0.85rem;margin-top:2px;">${escapeHtml(b.description)}</div>
+        </div>
+      `).join('');
+    } else {
+      breakingEl.classList.add('hidden');
+    }
+  }
+
+  function renderComment(pr, diff, breaking, risk, migration, warnings, files) {
+    const tablesAdded = diff.addedTables.length;
+    const tablesRemoved = diff.removedTables.length;
+    const tablesModified = diff.changedTables.length;
+    let columnsAdded = 0, columnsRemoved = 0, columnsModified = 0;
+    for (const t of diff.changedTables) {
+      columnsAdded += t.addedColumns.length;
+      columnsRemoved += t.removedColumns.length;
+      columnsModified += t.changedColumns.length;
+    }
+
+    let md = `## 🔄 Schema Changes Detected\n\n`;
+    md += `Analyzed **${files.length}** SQL file(s) in [${pr.base.repo.full_name}#${pr.number}](${pr.html_url}).\n\n`;
+
+    md += `| Metric | Count |\n`;
+    md += `|--------|-------|\n`;
+    md += `| Tables Added | ${tablesAdded} |\n`;
+    md += `| Tables Removed | ${tablesRemoved} |\n`;
+    md += `| Tables Modified | ${tablesModified} |\n`;
+    md += `| Columns Added | ${columnsAdded} |\n`;
+    md += `| Columns Removed | ${columnsRemoved} |\n`;
+    md += `| Columns Modified | ${columnsModified} |\n`;
+    md += `| **Breaking Changes** | **${breaking.length}** |\n`;
+    md += `| **Risk Score** | **${risk}/100** |\n\n`;
+
+    if (breaking.length > 0) {
+      md += `### ⚠️ Breaking Changes\n\n`;
+      for (const b of breaking) {
+        md += `- **${b.type}** — \`${b.object}\`: ${b.description}\n`;
+      }
+      md += `\n`;
+    }
+
+    if (warnings.length > 0) {
+      md += `### ⚡ Migration Warnings\n\n`;
+      for (const w of warnings.slice(0, 5)) {
+        md += `- **${w.severity.toUpperCase()}** — ${w.message}\n`;
+      }
+      if (warnings.length > 5) md += `- *...and ${warnings.length - 5} more warnings*\n`;
+      md += `\n`;
+    }
+
+    if (migration && migration.trim()) {
+      md += `### 🛠️ Suggested Migration Script\n\n`;
+      md += '```sql\n' + migration.trim() + '\n```\n\n';
+    }
+
+    md += `---\n`;
+    md += `*Generated by [SchemaLens](https://schemalens.tech) — free schema diff tool for developers.*`;
+
+    document.getElementById('commentBox').textContent = md;
+  }
+
+  function copyComment() {
+    const text = document.getElementById('commentBox').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-group button.primary');
+      const original = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = original, 1500);
+    });
+  }
+
+  function openInApp() {
+    if (!currentSchemaA && !currentSchemaB) return;
+    const key = 'gh-pr-diff-' + Date.now();
+    localStorage.setItem(key + '-a', currentSchemaA);
+    localStorage.setItem(key + '-b', currentSchemaB);
+    localStorage.setItem(key + '-dialect', currentDialect);
+    window.open(`../app.html?ghImport=${key}`, '_blank');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+</script>
+
+</body>
+</html>
