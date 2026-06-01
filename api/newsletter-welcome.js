@@ -45,6 +45,7 @@ function welcomeEmailHtml() {
     <p style="margin-top:20px;">Here are three other ways to get started:</p>
     <ul>
       <li><a href="https://schemalens.tech/app.html" style="color:#818cf8;">Compare two schemas instantly</a> — paste your CREATE TABLE statements and see the diff.</li>
+      <li><a href="https://schemalens.tech/tools/schema-diff-speed-challenge.html" style="color:#818cf8;">Take the Speed Challenge</a> — race the clock to spot schema changes and test your skills.</li>
       <li><a href="https://schemalens.tech/tools/schema-health-check.html" style="color:#818cf8;">Run a schema health check</a> — find missing indexes, unindexed foreign keys, and design issues.</li>
       <li><a href="https://schemalens.tech/migration-checklist.html" style="color:#818cf8;">Download the migration checklist</a> — 25 points to review before every deploy.</li>
     </ul>

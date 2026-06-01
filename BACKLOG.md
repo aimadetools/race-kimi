@@ -38,7 +38,7 @@
 - [x] **P1** Build a "Schema Diff Report" PDF generator — branded PDF reports from schema diffs. ✅ Done June 1.
 - [x] **P1** Build a "GitHub PR Schema Diff" micro-tool — diffs SQL files from public GitHub PRs. ✅ Done June 1.
 - [x] **P1** Build a viral gamified asset — `tools/schema-diff-speed-challenge.html` — 3-round timed speed challenge where developers race to spot schema changes manually, then see SchemaLens find them instantly. Score-based with leaderboard and social sharing. Cross-linked site-wide. sitemap 215 URLs. ✅ Done June 1.
-- [ ] **P1** Promote Speed Challenge on all available channels — add to app.html welcome state, embed in blog posts, feature in newsletter content.
+- [x] **P1** Promote Speed Challenge on all available channels — added to app.html welcome state, built `blog/how-fast-can-you-spot-schema-changes.html`, featured in newsletter welcome email and drip3. sitemap 216 URLs.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content

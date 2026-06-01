@@ -140,7 +140,11 @@ function drip3EmailHtml() {
 <li><strong>Adding a unique constraint on existing data</strong> — Fails if duplicates exist.</li>
 <li><strong>Changing a primary key</strong> — Requires table recreation in most databases.</li>
 <li><strong>Removing a default value</strong> — Breaks INSERTs that relied on it.</li>
-</ol>`,
+</ol>
+
+<div class="tip">
+<p><strong>Think you can spot them all?</strong> Test your skills with the <a href="https://schemalens.tech/tools/schema-diff-speed-challenge.html?ref=drip3" style="color:#818cf8;">Schema Diff Speed Challenge</a> — a 3-round game where you race the clock to find schema changes manually, then see how SchemaLens finds them instantly.</p>
+</div>`,
     ctaText: "Test Your Knowledge — Free Quiz",
     ctaUrl: "https://schemalens.tech/tools/schema-breaking-change-quiz.html?ref=drip3"
   });
