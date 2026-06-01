@@ -2554,8 +2554,26 @@ ${migration ? `## Migration Script\n\n\`\`\`sql\n${migration}\n\`\`\`\n` : ''}
     });
   }
 
-  // Initialize
-  loadSample();
+  // URL parameter support
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramSchemaA = urlParams.get('schemaA');
+  const paramSchemaB = urlParams.get('schemaB');
+  const paramDialect = urlParams.get('dialect');
+  if (paramDialect) {
+    document.getElementById('dialectSelect').value = paramDialect;
+  }
+  if (paramSchemaA) {
+    document.getElementById('schemaA').value = paramSchemaA;
+  }
+  if (paramSchemaB) {
+    document.getElementById('schemaB').value = paramSchemaB;
+  }
+  if (paramSchemaA && paramSchemaB) {
+    // Auto-generate report after a brief delay to let DOM settle
+    setTimeout(generateReport, 300);
+  } else {
+    loadSample();
+  }
 </script>
 </body>
 </html>

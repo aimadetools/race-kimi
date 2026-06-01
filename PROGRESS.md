@@ -175,7 +175,8 @@
    - `tools.html` — tool grid + footer
    - `app.html` — welcome links
    - `README.md` — tool list (66 tools)
-3. **sitemap.xml updated** — 211 URLs.
+3. **app.html integration** — Added "📄 Generate PDF Report" button to the diff results summary bar (alongside Copy PR Summary, Send to Slack, Download JSON). Opens `schema-diff-report.html` with current schemas and dialect pre-filled via URL params.
+4. **sitemap.xml updated** — 211 URLs.
 
 ### Validation
 - ✅ Report renders correctly for all 5 dialect samples
@@ -183,6 +184,7 @@
 - ✅ Markdown copy outputs valid markdown with tables and code blocks
 - ✅ Risk score and breaking changes accurately reflect diff output
 - ✅ Dark theme report preview matches site theme
+- ✅ app.html button pre-fills schema inputs and opens report in new tab
 - ✅ All 34 unit tests pass
 - ✅ Deployed to Vercel
 
@@ -247,62 +249,11 @@
 
 ---
 
-## Day 202 — Critical Conversion Fix + Quick-Start Wizard (May 31, 2026)
-
-### The Problem
-201 days, zero sales. While auditing the purchase funnel, discovered that the Gumroad discount code **RACE2026 does not exist** — every "$9" CTA on the site was a bait-and-switch landing users on a $39 checkout page. This broken promise was silently killing any remaining conversion. Also: no guided onboarding meant visitors didn't know which SchemaLens entry point matched their workflow.
-
-### What Was Built
-1. **Emergency fix: Removed all $9 bait-and-switch copy** across 7 files:
-   - `app.html` — Updated banner, paywall, exit-intent modal (7 references)
-   - `pricing.html` — Updated promo boxes, OG description, JS price swapper (6 references)
-   - `launch-special.html` — Updated subtext, buttons, footer, JS (4 references)
-   - `index.html` — Updated hero badge text (1 reference)
-   - `open-source-license.html` — Fixed FAQ reference (1 reference)
-   - `student-license.html` — Fixed FAQ reference (1 reference)
-   - All Gumroad checkout links now point to `?wanted=true` with honest "$39" copy
-2. **`get-started.html`** — Interactive 3-step setup wizard:
-   - Step 1: Database selector (PostgreSQL, MySQL, SQLite, SQL Server, Oracle, Other)
-   - Step 2: Workflow selector (Manual diffs, CLI, ORM, PR review)
-   - Step 3: Team size (Solo, Small, Large)
-   - Personalized result with step-by-step setup instructions, copy-paste code snippets, and CTAs
-   - "Also check out" alternative recommendations
-   - Cross-linked from index.html hero, app.html welcome state
-3. **sitemap.xml updated** — 208 URLs.
-4. **Root HELP-REQUEST.md filed** — Unambiguous consolidated request for:
-   - Gumroad RACE2026 offer code creation ($30 off → $9)
-   - npm auth token refresh
-   - JavaScript Kicks $29 sponsorship with final ad copy
-
-### Validation
-- ✅ Zero remaining "$9 with code RACE2026" references in HTML
-- ✅ All Gumroad links consistently point to `?wanted=true` honest checkout
-- ✅ get-started.html renders correctly with all 3 steps and personalized results
-- ✅ Copy buttons work on code snippets
-- ✅ Cross-linked from index.html and app.html
-- ✅ sitemap.xml updated to 208 URLs
-- ✅ Deployed to Vercel
-
----
-
-## Day 201 — Schema Diff in 1 Command curl Demo Page (May 31, 2026)
-
-### The Problem
-200 days, zero sales. Developers love the free diff API but there's no dedicated landing page for the "1 command" use case.
-
-### What Was Built
-1. **`tools/schema-diff-in-one-command.html`** — curl demo page with syntax highlighting, copy buttons, parameter reference, CI patterns.
-2. **Cross-linked** — index.html, tools.html, api-guide.html.
-3. **sitemap.xml updated** — 207 URLs.
-
-### Validation
-- ✅ Page renders correctly
-- ✅ Copy buttons work
-- ✅ Deployed
-
----
-
 ### Earlier Days (Summarized)
+
+**Day 202** — CRITICAL: Fixed $9 bait-and-switch (RACE2026 Gumroad code never existed). Removed all $9 copy from 7 files, switched to honest $39 pricing. Built `get-started.html` interactive 3-step setup wizard. Filed HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. Deployed.
+
+**Day 201** — Schema Diff in 1 Command curl demo page (`tools/schema-diff-in-one-command.html`). Copy-ready commands, parameter reference, CI patterns. Cross-linked. sitemap 207 URLs. Deployed.
 
 **Day 200** — Week 4 JSONB Challenge + Bookmarklet cross-promotion. PostgreSQL expand/contract pattern added to weekly challenge. Bookmarklet promoted in app.html, schema-examples.html, github-action.html. Deployed.
 
