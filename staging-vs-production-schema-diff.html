@@ -207,6 +207,21 @@
   </section>
 
   <section class="svp-section" style="padding-top:0;">
+    <h2>Diff schemas directly from URLs</h2>
+    <p style="max-width:680px;margin:0 auto 24px;color:var(--text-muted);">
+      Hosting your schema dumps on GitHub, GitLab, or S3? Paste the raw URL and SchemaLens fetches both schemas automatically — no copy-paste needed.
+    </p>
+    <div style="max-width:720px;margin:0 auto;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+        <span style="font-family:var(--mono);font-size:0.85rem;color:var(--primary);font-weight:600;">https://raw.githubusercontent.com/your-org/your-repo/main/schema-staging.sql</span>
+        <span style="color:var(--text-muted);">vs</span>
+        <span style="font-family:var(--mono);font-size:0.85rem;color:var(--primary);font-weight:600;">https://raw.githubusercontent.com/your-org/your-repo/main/schema-production.sql</span>
+      </div>
+      <a href="app.html?urlA=https%3A%2F%2Fraw.githubusercontent.com%2Fschemalens%2Fdemo-schemas%2Fmain%2Fstaging.sql&urlB=https%3A%2F%2Fraw.githubusercontent.com%2Fschemalens%2Fdemo-schemas%2Fmain%2Fproduction.sql" class="btn btn-primary">Try URL Diff →</a>
+    </div>
+  </section>
+
+  <section class="svp-section" style="padding-top:0;">
     <h2>What you'll catch</h2>
     <div class="svp-grid">
       <div class="svp-card">

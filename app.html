@@ -147,6 +147,54 @@
     .sample-links button:hover {
       text-decoration: underline;
     }
+    .url-fetch-row {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--code-bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .url-fetch-row input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      color: var(--text);
+      font-family: var(--mono);
+    }
+    .url-fetch-row input::placeholder {
+      color: var(--text-muted);
+    }
+    .url-fetch-row button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .url-fetch-row button:hover {
+      opacity: 0.9;
+    }
+    .url-fetch-row button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .url-fetch-error {
+      padding: 4px 16px;
+      font-size: 0.75rem;
+      color: var(--danger);
+      background: var(--code-bg);
+      display: none;
+    }
+    .url-fetch-error.visible {
+      display: block;
+    }
     .results {
       display: none;
     }
@@ -1601,6 +1649,11 @@ function getFreeTierLimit() {
           <span><span class="dot old"></span> Schema A (Old)</span>
           <span id="schemaAStats" style="font-weight:400;color:var(--text-muted)"></span>
         </div>
+        <div class="url-fetch-row">
+          <input type="url" id="urlA" placeholder="https://raw.githubusercontent.com/.../schema.sql" onkeydown="if(event.key==='Enter') fetchSchemaFromUrl('A')">
+          <button onclick="fetchSchemaFromUrl('A')">Fetch</button>
+        </div>
+        <div class="url-fetch-error" id="urlAError"></div>
         <textarea id="schemaA" placeholder="-- Paste your old schema here
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -1618,6 +1671,11 @@ CREATE TABLE users (
           <span><span class="dot new"></span> Schema B (New)</span>
           <span id="schemaBStats" style="font-weight:400;color:var(--text-muted)"></span>
         </div>
+        <div class="url-fetch-row">
+          <input type="url" id="urlB" placeholder="https://raw.githubusercontent.com/.../schema.sql" onkeydown="if(event.key==='Enter') fetchSchemaFromUrl('B')">
+          <button onclick="fetchSchemaFromUrl('B')">Fetch</button>
+        </div>
+        <div class="url-fetch-error" id="urlBError"></div>
         <textarea id="schemaB" placeholder="-- Paste your new schema here
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -9499,11 +9557,83 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   }
 })();
 
+// Fetch schema from public URL (client-side with CORS proxy fallback)
+async function fetchSchemaFromUrl(side) {
+  const input = document.getElementById('url' + side);
+  const errorEl = document.getElementById('url' + side + 'Error');
+  const textarea = document.getElementById('schema' + side);
+  const url = input.value.trim();
+
+  if (!url) return;
+
+  errorEl.classList.remove('visible');
+  errorEl.textContent = '';
+
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch(e) {
+    errorEl.textContent = 'Invalid URL';
+    errorEl.classList.add('visible');
+    return;
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    errorEl.textContent = 'Only HTTP/HTTPS URLs are supported';
+    errorEl.classList.add('visible');
+    return;
+  }
+
+  const btn = input.nextElementSibling;
+  const originalText = btn.textContent;
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    let fetched = false;
+    // Try client-side fetch first
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const text = await response.text();
+      textarea.value = text;
+      fetched = true;
+    } catch (clientErr) {
+      // Fallback to CORS proxy
+      const proxyUrl = '/api/fetch-schema.js?url=' + encodeURIComponent(url);
+      const proxyResponse = await fetch(proxyUrl, { signal: AbortSignal.timeout(15000) });
+      if (!proxyResponse.ok) {
+        const errData = await proxyResponse.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to fetch schema (' + proxyResponse.status + ')');
+      }
+      const data = await proxyResponse.json();
+      textarea.value = data.content || '';
+      fetched = true;
+    }
+
+    if (fetched) {
+      updateStats();
+      const welcomeState = document.querySelector('.welcome-state');
+      if (welcomeState) welcomeState.classList.add('hidden');
+      const welcomeHint = document.querySelector('.welcome-hint');
+      if (welcomeHint) welcomeHint.classList.add('hidden');
+    }
+  } catch (err) {
+    errorEl.textContent = 'Error: ' + (err.message || 'Failed to fetch');
+    errorEl.classList.add('visible');
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
 // Bookmarklet / share link parameter support (?schemaA=...&schemaB=...)
 (function() {
   const params = new URLSearchParams(location.search);
   const schemaA = params.get('schemaA');
   const schemaB = params.get('schemaB');
+  const urlA = params.get('urlA');
+  const urlB = params.get('urlB');
   const dialect = params.get('dialect');
 
   if (schemaA) {
@@ -9515,6 +9645,30 @@ document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
   if (dialect) {
     const dialectSelect = document.getElementById('dialect');
     if (dialectSelect) dialectSelect.value = dialect;
+  }
+
+  // Handle URL parameters after a short delay to ensure DOM is ready
+  if (urlA || urlB) {
+    setTimeout(async () => {
+      if (urlA) {
+        document.getElementById('urlA').value = decodeURIComponent(urlA);
+        await fetchSchemaFromUrl('A');
+      }
+      if (urlB) {
+        document.getElementById('urlB').value = decodeURIComponent(urlB);
+        await fetchSchemaFromUrl('B');
+      }
+      // Auto-run comparison if both sides are populated
+      const a = document.getElementById('schemaA').value;
+      const b = document.getElementById('schemaB').value;
+      if (a && b) {
+        setTimeout(() => {
+          const btn = document.getElementById('compareBtn');
+          if (btn) btn.click();
+        }, 400);
+      }
+    }, 600);
+    return;
   }
 
   // Hide welcome state when schema is pre-loaded

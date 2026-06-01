@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–198)
+## Key Milestones (Days 1–203)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -122,7 +122,7 @@
 | 175 | May 26 | **IndieHackers post prep + stale data sweep** — Refreshed `indiehackers.html`, `147-days-built-in-public.html`, `built-in-public.html` with Day 174 stats. Drafted `marketing/indiehackers-post-day174.md` copy-paste post. |
 | 176 | May 26 | **Reddit distribution kit refresh** — Updated `r-webdev.md`, created `r-webdev-schema-guessr.md` and `r-programming-famous-schemas.md`, updated README. |
 | 177 | May 26 | **Site-wide stale stat sweep** — Fixed 6 pages with stale Day 147 stats. Updated to 174 days / 57+ tools / 189 pages. |
-| 178 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency. Filed HELP-REQUEST.md for JS Kicks $29. Tool count 57+→58+. |
+| 178 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). Filed HELP-REQUEST.md for JS Kicks $29. Tool count 57+→58+. |
 | 179 | May 27 | SQL to Java JPA (#59) + Rust (#60) converters. Cross-linked. Tool count 58+→60+. |
 | 180 | May 27 | `schemalens` npm competitor discovered; hardened CLI discoverability. Stale homepage stats fixed. |
 | 181 | May 27 | Promoted `best-schema-diff-tools.html` — 20 footer cross-links + social media kit + directory submission kit. |
@@ -131,9 +131,9 @@
 | 184 | May 27 | Published schemalens-cli@1.0.3 and schemalens-engine@1.0.2 to npm. Built Migration Mastery 7-day email course landing page + drip campaign. sitemap.xml updated. |
 | 185 | May 27 | Stack Overflow answer kit refreshed — 7 answers with current product features (GitHub Action, VS Code extension, Chrome extension, 60+ tools, $39 Lifetime, 15-table free tier). Dev.to article published as on-site blog post (`blog/schema-diff-pr-comments-github-action.html`) with schema.org markup and sitemap update (199 URLs). npm-publish GitHub Action workflow created (push blocked by PAT scope). npm `package.json` warnings fixed in cli/engine/schemalens packages. |
 | 186 | May 28 | **Race to the Finish $9 campaign launched** — Replaced expired Launch Week/Alumni banners with new "Race to the Finish" promotion ($9 Lifetime Pro with code RACE2026, ends July 10). Updated app.html, index.html, pricing.html, launch-special.html. Cleaned all stale May 21/May 28 references. Filed HELP-REQUEST.md for JS Kicks $29 ad + Gumroad discount code creation. |
-| 188 | May 30 | **Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, active, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. |
-| 189 | May 30 | **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep (174→189 days, 60+++ typo fixes). |
-| 190 | May 30 | **Chrome Extension v1.1.0 with GitHub PR diff support** — "Diff in SchemaLens" button on PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. `.gitignore` fixed to track `.github/workflows/`. |
+| 188 | May 30 | **Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. Cross-linked site-wide. |
+| 189 | May 30 | **Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep. |
+| 190 | May 30 | **Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged. `.gitignore` fixed to track `.github/workflows/`. |
 | 191 | May 30 | **Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs. |
 | 192 | May 30 | **GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed. |
 | 193 | May 30 | **Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges. Cross-linked site-wide. sitemap 203 URLs. |
@@ -141,12 +141,37 @@
 | 195 | May 31 | **"Share Your Diff" viral feature** — one-click image sharing with dynamic OG landing page (`/api/share?diff=1`). App.html Image tab upgraded with X/Twitter, LinkedIn, native share sheet. |
 | 196 | May 31 | **Schema Diff API Playground** — interactive live testing added to `api-guide.html`. Side-by-side inputs, dialect selector, format toggle, live `/api/free-diff` call, auto-generated curl command. Error states handled gracefully. |
 | 197 | May 31 | **Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, extensions. Day/page counts fixed across 15 files (192→197, 202→203). Root HELP-REQUEST.md restored for JS Kicks + Gumroad. sitemap 204 URLs. |
-| 198 | May 31 | **Database Schema Export Guide** (`tools/db-schema-export-guide.html`) — step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing. |
+| 198 | May 31 | **Database Schema Export Guide** — `tools/db-schema-export-guide.html` with step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing. |
 | 199 | May 31 | **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs. |
 | 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
 | 201 | May 31 | **Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs. |
 | 202 | May 31 | **CRITICAL: Fixed $9 bait-and-switch** — Discovered RACE2026 Gumroad code doesn't exist. Changed all site-wide $9 CTAs to honest $39 pricing (7 files updated). Built `get-started.html` interactive wizard. Filed clean HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs. |
 | 203 | May 31 | **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs. |
+
+---
+
+## Day 204 — Fetch from URL Feature + Context Maintenance (June 1, 2026)
+
+### The Problem
+203 days, zero sales. The #1 user-requested feature (per COMMUNITY-FEEDBACK.md) is branch-based / staging-vs-production schema comparison. Users want to diff schemas from GitHub branches, CI artifacts, or hosted schema dumps — not just copy-paste. Also: `.github/workflows/` was accidentally re-ignored in `.gitignore`, blocking CI workflow tracking.
+
+### What Was Built
+1. **`.gitignore` fix** — Removed `.github/workflows/` from `.gitignore` so `npm-publish.yml` and `schema-diff-demo.yml` are tracked by git again.
+2. **"Fetch from URL" feature in `app.html`** — Users can now paste a raw URL (GitHub raw, GitLab raw, gist, or any public schema file) into new URL input fields above each schema textarea. One click fetches the content and auto-pastes it into the diff inputs. Addresses the staging-vs-production workflow directly.
+3. **URL parameter support extended** — `app.html` now supports `?urlA=` and `?urlB=` parameters in addition to `?schemaA=` and `?schemaB=`. Enables deep-linking from CI pipelines, GitHub Actions, and documentation.
+4. **`api/fetch-schema.js` CORS proxy fallback** — For URLs that block CORS (e.g., private GitLab instances, S3 buckets without CORS headers), the serverless function fetches and returns the schema content. Includes basic URL validation and a 10-second timeout.
+5. **Cross-linked from `staging-vs-production-schema-diff.html`** — Added a "Fetch from URL" section with example URLs and a direct link to app.html with pre-filled params.
+6. **sitemap.xml updated** — 210 URLs (no new page, but updated lastmod for app.html).
+
+### Validation
+- ✅ `.gitignore` updated, workflows staged in git
+- ✅ GitHub raw URL fetch works client-side (CORS-enabled)
+- ✅ GitLab raw URL fetch works client-side
+- ✅ Invalid URL error handling works (malformed URL, 404, CORS failure)
+- ✅ URL parameter `?urlA=` / `?urlB=` correctly fetches and populates inputs on load
+- ✅ CORS proxy fallback (`api/fetch-schema.js`) returns 200 with schema content
+- ✅ Cross-linked from staging-vs-production page
+- ✅ Deployed to Vercel
 
 ---
 

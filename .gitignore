@@ -16,5 +16,4 @@ marketing/screenshots/
 marketing/demo-assets/
 .vercel
 
-.github/workflows/
 cron.log.old
