@@ -5666,6 +5666,21 @@ function copyPRSummary() {
   });
 }
 
+function openReportGenerator() {
+  const schemaA = document.getElementById('schemaA').value;
+  const schemaB = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+  if (!schemaA.trim() || !schemaB.trim()) {
+    alert('Please paste both schemas before generating a report.');
+    return;
+  }
+  const params = new URLSearchParams();
+  params.set('schemaA', schemaA);
+  params.set('schemaB', schemaB);
+  params.set('dialect', dialect);
+  window.open('tools/schema-diff-report.html?' + params.toString(), '_blank');
+}
+
 function downloadFile(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
