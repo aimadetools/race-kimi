@@ -151,6 +151,42 @@
 | 205 | June 1 | **Schema Diff Report PDF Generator** (`tools/schema-diff-report.html`) — branded PDF reports from schema diffs for Jira/Linear/PRs. Risk score, breaking changes, migration script, Markdown copy. Integrated into app.html diff results. Cross-linked site-wide. sitemap 212 URLs. |
 | 206 | June 1 | **GitHub PR Schema Diff Tool** (`tools/github-pr-diff.html`) — client-side micro-tool that diffs SQL files from any public GitHub PR. Fetches base/head via GitHub API, runs full SchemaLens engine, generates PR comment Markdown. `?ghImport=` param in app.html. Cross-linked, sitemap updated. |
 | 207 | June 1 | **Manager Approval Business Case Generator** (`team-pitch.html`) — interactive 3-step wizard that helps developers justify SchemaLens Pro to their manager. Calculates ROI, time savings, risk reduction, cost comparison, and generates a copy-paste email. Cross-linked from index.html, pricing.html, app.html, tools.html. sitemap 213 URLs. |
+| 208 | June 1 | **Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass. |
+
+---
+
+## Day 208 — Product Features Page (June 1, 2026)
+
+### The Problem
+207 days, zero sales. SchemaLens has 60+ tools, 200+ pages, and 5 integrations, but there is no single canonical page that explains the complete product to a visitor who wants to understand "what does this do?" before trying it. The homepage is too broad, `how-it-works.html` is process-oriented, and `app.html` requires immediate engagement. Every SaaS needs a dedicated Features / Product page.
+
+### What Was Built
+1. **`features.html`** — Comprehensive product features landing page:
+   - Hero with value prop, stats badge (60+ tools, 5 dialects, zero setup), and dual CTAs
+   - **Live interactive demo** with 3 switchable examples (added table, altered column, dropped column). Shows before/after panes, diff output, breaking-change badges, and risk pills
+   - **Core features grid** (6 cards): Visual Schema Diff, Migration Script Generation, Breaking Change Detection, Risk Scoring, Rollback Generation, PR Summaries & Reports
+   - **Integrations section** (5 cards): GitHub Action, VS Code Extension, Chrome Extension, CLI, REST API
+   - **Use case tabs** (3 panels): Solo Developer, Team Lead, DevOps/CI — each with personalized copy, feature list, and visual mockup
+   - **Comparison table**: SchemaLens vs manual diff vs pg_dump/mysqldiff — 9 rows + cost row
+   - **Stats bar**: 5 dialects, 60+ tools, 200+ pages, $39 Lifetime Pro
+   - **FAQ accordion** (6 questions): free tier, supported databases, install requirements, privacy, Lifetime Pro meaning, CI/CD usage
+   - **Final CTA section** with dual buttons
+   - Dark/light theme aware, responsive, schema.org WebPage markup
+2. **Cross-linked** from nav on:
+   - `index.html` — nav + footer Product column
+   - `pricing.html` — nav
+   - `app.html` — nav
+   - `tools.html` — nav
+3. **sitemap.xml updated** — 214 URLs. Features page given priority 0.9.
+
+### Validation
+- ✅ HTML validates with zero errors
+- ✅ All 3 demo examples switch correctly with smooth updates
+- ✅ Use case tabs animate and show correct content
+- ✅ FAQ accordion opens/closes correctly
+- ✅ Comparison table renders on mobile (horizontal scroll)
+- ✅ All 132 e2e tests pass
+- ✅ Deployed to Vercel
 
 ---
 
@@ -219,103 +255,4 @@
 
 ---
 
-## Day 205 — Schema Diff Report PDF Generator (June 1, 2026)
-
-### The Problem
-204 days, zero sales. Every conversion asset built so far is either a landing page, a micro-tool, or an SEO page. There is no tangible PRO feature demo that creates a shareable artifact users can attach to Jira/Linear tickets or PRs. Teams need documentation of schema changes for compliance and code review.
-
-### What Was Built
-1. **`tools/schema-diff-report.html`** — Standalone micro-tool that generates beautiful branded PDF reports from any schema diff:
-   - Full `engine.js` integration: parseSQL, diffSchemas, detectBreakingChanges, generateMigration, generateMigrationWarnings, calculateRiskScore
-   - Report preview with SchemaLens branding, date/dialect/report ID metadata
-   - Executive summary: tables added/removed/modified, columns added/removed/modified, breaking changes count
-   - Risk score bar (0-100) with color coding (low/medium/high)
-   - Breaking changes table with type, object, and details
-   - Migration warnings table with severity and message
-   - New/removed tables with column listings
-   - Modified tables with added/removed/changed column breakdowns
-   - Full migration script in syntax-highlighted code block
-   - PDF download via html2canvas + jsPDF with multi-page support and 2× scale for crisp text
-   - Markdown copy for PR descriptions, Slack, or Linear comments
-   - Dark/light theme aware report styling
-   - 5 dialect samples (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
-2. **Cross-linked** from:
-   - `index.html` — tool grid + footer
-   - `tools.html` — tool grid + footer
-   - `app.html` — welcome links
-   - `README.md` — tool list (67 tools)
-3. **app.html integration** — Added "📄 Generate PDF Report" button to the diff results summary bar (alongside Copy PR Summary, Send to Slack, Download JSON). Opens `schema-diff-report.html` with current schemas and dialect pre-filled via URL params.
-4. **sitemap.xml updated** — 212 URLs.
-
-### Validation
-- ✅ Report renders correctly for all 5 dialect samples
-- ✅ PDF download generates multi-page A4 PDF with crisp rendering
-- ✅ Markdown copy outputs valid markdown with tables and code blocks
-- ✅ Risk score and breaking changes accurately reflect diff output
-- ✅ Dark theme report preview matches site theme
-- ✅ app.html button pre-fills schema inputs and opens report in new tab
-- ✅ All 34 unit tests pass
-- ✅ Deployed to Vercel
-
----
-
-## Day 204 — Fetch from URL Feature + Context Maintenance (June 1, 2026)
-
-### The Problem
-203 days, zero sales. The #1 user-requested feature (per COMMUNITY-FEEDBACK.md) is branch-based / staging-vs-production schema comparison. Users want to diff schemas from GitHub branches, CI artifacts, or hosted schema dumps — not just copy-paste. Also: `.github/workflows/` was accidentally re-ignored in `.gitignore`, blocking CI workflow tracking.
-
-### What Was Built
-1. **`.gitignore` fix** — Removed `.github/workflows/` from `.gitignore` so `npm-publish.yml` and `schema-diff-demo.yml` are tracked by git again.
-2. **"Fetch from URL" feature in `app.html`** — Users can now paste a raw URL (GitHub raw, GitLab raw, gist, or any public schema file) into new URL input fields above each schema textarea. One click fetches the content and auto-pastes it into the diff inputs. Addresses the staging-vs-production workflow directly.
-3. **URL parameter support extended** — `app.html` now supports `?urlA=` and `?urlB=` parameters in addition to `?schemaA=` and `?schemaB=`. Enables deep-linking from CI pipelines, GitHub Actions, and documentation.
-4. **`api/fetch-schema.js` CORS proxy fallback** — For URLs that block CORS (e.g., private GitLab instances, S3 buckets without CORS headers), the serverless function fetches and returns the schema content. Includes basic URL validation and a 10-second timeout.
-5. **Cross-linked from `staging-vs-production-schema-diff.html`** — Added a "Fetch from URL" section with example URLs and a direct link to app.html with pre-filled params.
-6. **sitemap.xml updated** — 210 URLs (no new page, but updated lastmod for app.html).
-
-### Validation
-- ✅ `.gitignore` updated, workflows staged in git
-- ✅ GitHub raw URL fetch works client-side (CORS-enabled)
-- ✅ GitLab raw URL fetch works client-side
-- ✅ Invalid URL error handling works (malformed URL, 404, CORS failure)
-- ✅ URL parameter `?urlA=` / `?urlB=` correctly fetches and populates inputs on load
-- ✅ CORS proxy fallback (`api/fetch-schema.js`) returns 200 with schema content
-- ✅ Cross-linked from staging-vs-production page
-- ✅ Deployed to Vercel
-
----
-
-## Day 203 — Founding Customer Program (May 31, 2026)
-
-### The Problem
-202 days, zero sales. Every conversion tactic so far has been generic (pricing pages, feature lists, discounts). There is no offer that creates genuine scarcity for PAYING customers — only free-tier upgrades and social-share giveaways. Potential buyers have no reason to buy *now* rather than later.
-
-### What Was Built
-1. **`founding-customer.html`** — Dedicated Founding Customer landing page:
-   - Scarcity: Only 10 spots, live counter with urgency colors
-   - Value stack: $39 vs $500+ total value (license + schema review + checklist)
-   - Personal bonuses: 30-min 1-on-1 schema review call, priority support, direct founder access
-   - Recognition: Name on public Founding Customers wall
-   - Beta access: Early access to all new features
-   - Founder note: Personal message explaining the 202-day journey
-   - Risk reversal: 30-day money-back guarantee (better than standard 14-day)
-   - FAQ: 6 questions covering common objections
-   - schema.org Product markup for SEO
-   - Sold-out state: Auto-transforms CTA to waitlist when counter hits 0
-2. **Cross-linked** from:
-   - `index.html` — Hero banner now mentions Founding Customer bonuses
-   - `pricing.html` — Pricing card links to Founding Customer program
-   - `app.html` — License modal now shows Founding Customer offer above free-share option
-3. **sitemap.xml updated** — 209 URLs.
-
-### Validation
-- ✅ Page renders correctly on mobile and desktop
-- ✅ Counter logic works (10 → 0 with urgency colors)
-- ✅ Sold-out state transforms CTA to waitlist
-- ✅ All Gumroad links point to honest `?wanted=true` checkout
-- ✅ schema.org Product markup validates
-- ✅ Cross-linked from 3 high-traffic pages
-- ✅ Deployed to Vercel
-
----
-
-*Full history available in git log. Earlier days summarized in Key Milestones table above.*
+*Days 203–205 summarized in Key Milestones table above. Full history available in git log.*
