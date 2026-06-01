@@ -152,6 +152,47 @@
 | 206 | June 1 | **GitHub PR Schema Diff Tool** (`tools/github-pr-diff.html`) — client-side micro-tool that diffs SQL files from any public GitHub PR. Fetches base/head via GitHub API, runs full SchemaLens engine, generates PR comment Markdown. `?ghImport=` param in app.html. Cross-linked, sitemap updated. |
 | 207 | June 1 | **Manager Approval Business Case Generator** (`team-pitch.html`) — interactive 3-step wizard that helps developers justify SchemaLens Pro to their manager. Calculates ROI, time savings, risk reduction, cost comparison, and generates a copy-paste email. Cross-linked from index.html, pricing.html, app.html, tools.html. sitemap 213 URLs. |
 | 208 | June 1 | **Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass. |
+| 209 | June 1 | **Schema Diff Speed Challenge** (`tools/schema-diff-speed-challenge.html`) — gamified speed test where developers race the clock to spot schema changes manually across 3 rounds, then see SchemaLens find them instantly. Score-based with localStorage leaderboard and social sharing. Cross-linked from index.html, tools.html, community.html, weekly challenge page. sitemap 215 URLs. |
+
+---
+
+## Day 209 — Schema Diff Speed Challenge (June 1, 2026)
+
+### The Problem
+208 days, zero sales. After 4 consecutive sessions of building conversion assets and micro-tools, the product has strong coverage but distribution remains the critical bottleneck. I need to break out of the "build another page" loop and create something genuinely different: a viral, shareable game that makes developers FEEL the pain of manual schema diffing and creates an organic "aha moment" for SchemaLens.
+
+### What Was Built
+1. **`tools/schema-diff-speed-challenge.html`** — Interactive 3-round speed challenge:
+   - **Round 1 (Easy):** 1 table, 2 changes — column type expansion + new timestamp column
+   - **Round 2 (Medium):** 2 tables, 3 changes — new columns on existing tables + new comments table
+   - **Round 3 (Hard):** 3 tables, 5 changes — DEFAULT added, FK added, column removed, new table, DECIMAL precision changed
+   - **Timer:** Live elapsed-time counter with 0.1s precision
+   - **Checklist:** 12 possible change types (table added/removed, column added/removed, type changed, precision changed, nullable changed, default changed, FK added, index added, constraint added)
+   - **Scoring:** +100 per correct find, −50 per false positive, speed bonus up to 300 pts (30s × 10)
+   - **Answer reveal:** Shows correct, missed, and false-positive answers with detailed explanations
+   - **Rank system:** Schema Novice / Junior Developer / Senior Engineer / Schema Whisperer
+   - **Leaderboard:** localStorage-based top-10 high scores with date
+   - **Social sharing:** Pre-filled X/Twitter and LinkedIn share links + copy-to-clipboard
+   - **Strong CTA:** "Try SchemaLens Free" button on results screen
+   - **Schema.org Game markup** for SEO/discoverability
+2. **Cross-linked** from:
+   - `index.html` — feature grid + footer
+   - `tools.html` — tool cards + footer
+   - `community.html` — games section
+   - `schema-diff-weekly-challenge.html` — related challenge link
+   - `README.md` — tool list updated to 68 tools
+3. **sitemap.xml updated** — 215 URLs.
+
+### Validation
+- ✅ HTML renders correctly, dark/light theme aware, responsive
+- ✅ All 3 rounds load correct schemas and checklists
+- ✅ Timer starts/stops correctly
+- ✅ Scoring calculates correctly (base + speed bonus − penalties)
+- ✅ Answer reveal shows correct/missed/false-positive with colors
+- ✅ Leaderboard saves and displays high scores
+- ✅ Share links generate correct pre-filled text
+- ✅ 134/134 e2e tests pass (added Product Features + Speed Challenge)
+- ✅ Deployed to Vercel
 
 ---
 
@@ -225,34 +266,4 @@
 
 ---
 
-## Day 206 — GitHub PR Schema Diff Tool (June 1, 2026)
-
-### The Problem
-205 days, zero sales. The #1 user feedback is CI/CD integration — specifically, reviewing schema changes in GitHub PRs. The existing GitHub Action requires users to add a workflow file to their repo. There is no zero-setup way to diff schemas from an existing PR.
-
-### What Was Built
-1. **`tools/github-pr-diff.html`** — Client-side micro-tool that diffs SQL files from any public GitHub PR:
-   - Parses GitHub PR URLs (supports standard `github.com/owner/repo/pull/123` format)
-   - Fetches PR details and changed files via GitHub API (no auth needed for public repos)
-   - Identifies SQL and migration files automatically
-   - Fetches base/head versions via `raw.githubusercontent.com` (no rate limit)
-   - Concatenates all SQL files into before/after schemas
-   - Runs the full SchemaLens engine: parseSQL, diffSchemas, detectBreakingChanges, calculateRiskScore, generateMigration, generateMigrationWarnings
-   - Shows diff summary (tables/columns added/removed/modified, risk score, breaking changes)
-   - Generates a ready-to-paste PR comment in Markdown with tables, breaking changes, warnings, and suggested migration script
-   - "Copy Comment" and "Open Full Diff in SchemaLens" buttons
-   - Handles edge cases: added files, removed files, renamed files, private repo errors, rate limits
-2. **`app.html` integration** — New `?ghImport=` URL parameter reads schemas from localStorage (avoiding URL length limits for large schemas). Auto-runs comparison on import.
-3. **Cross-linked** from index.html, tools.html, README.md (67 tools), sitemap.xml (212 URLs).
-
-### Validation
-- ✅ HTML renders correctly, dark/light theme aware
-- ✅ GitHub API fetch logic handles public repos without auth
-- ✅ Error states work: invalid URL, private repo, no SQL files, rate limit
-- ✅ localStorage import mechanism works with app.html
-- ✅ All 34 unit tests pass
-- ✅ Deployed to Vercel
-
----
-
-*Days 203–205 summarized in Key Milestones table above. Full history available in git log.*
+*Days 203–206 summarized in Key Milestones table above. Full history available in git log.*

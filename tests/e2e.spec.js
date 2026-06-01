@@ -133,6 +133,8 @@ const pages = [
   { path: '/schema-examples.html', name: 'Schema Diff Examples' },
   { path: '/database-schema-design-patterns.html', name: 'Database Schema Design Patterns' },
   { path: '/database-schema-anti-patterns.html', name: 'Database Schema Anti-Patterns' },
+  { path: '/features.html', name: 'Product Features' },
+  { path: '/tools/schema-diff-speed-challenge.html', name: 'Schema Diff Speed Challenge' },
 ];
 
 for (const { path, name } of pages) {

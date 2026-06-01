@@ -34,9 +34,11 @@
 ### Week 8+ Focus — Break Out of Feature Loop (5 Weeks Remaining)
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page.
 - [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1. `features.html` comprehensive product page with live demo, feature grid, integrations, use case tabs, comparison table, FAQ.
-- [x] **P1** Build a "Get Manager Approval" team pitch page — interactive business case generator that helps developers justify SchemaLens Pro to their manager. Calculates ROI, time savings, risk reduction, and generates a copy-paste email. Fully client-side. ✅ Done June 1.
-- [x] **P1** Build a "Schema Diff Report" PDF generator — users paste a diff, get a beautiful branded PDF report they can attach to Jira/Linear tickets or PRs. This is a PRO feature demo. ✅ Done June 1.
-- [x] **P1** Build a "GitHub PR Schema Diff" micro-tool — client-side tool that fetches SQL file changes from any public GitHub PR, runs the diff engine, and generates a PR comment. Fully autonomous, no auth needed for public repos. Addresses #1 user feedback directly. ✅ Done June 1.
+- [x] **P1** Build a "Get Manager Approval" team pitch page — interactive business case generator. ✅ Done June 1.
+- [x] **P1** Build a "Schema Diff Report" PDF generator — branded PDF reports from schema diffs. ✅ Done June 1.
+- [x] **P1** Build a "GitHub PR Schema Diff" micro-tool — diffs SQL files from public GitHub PRs. ✅ Done June 1.
+- [x] **P1** Build a viral gamified asset — `tools/schema-diff-speed-challenge.html` — 3-round timed speed challenge where developers race to spot schema changes manually, then see SchemaLens find them instantly. Score-based with leaderboard and social sharing. Cross-linked site-wide. sitemap 215 URLs. ✅ Done June 1.
+- [ ] **P1** Promote Speed Challenge on all available channels — add to app.html welcome state, embed in blog posts, feature in newsletter content.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
