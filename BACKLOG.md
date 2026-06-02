@@ -18,8 +18,8 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 212 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 216 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program + distribution kit, **pg-schema-diff comparison page**.
+### Distribution — Zero Sales After 214 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 217 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program + distribution kit, pg-schema-diff comparison page.
 - [ ] **P1** Build comparison pages for other high-traffic competitors: Bytebase, Atlas (Ariga), PostgresCompare.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. `schemalens` name is taken by competitor (scottyroges). Wrapper package in `packages/schemalens/` should be renamed to `@schemalens/cli` or `schemalens-diff-cli` before publishing.
@@ -33,7 +33,7 @@
 ### Infrastructure / Technical Debt
 - [ ] **P1** Supabase is completely down (`fmfwdwwvvcdtreduncev.supabase.co` does not resolve). Cloud saves, analytics, and feedback are all broken. Either fix the Supabase project or remove cloud-save dependencies and switch to pure localStorage.
 - [ ] **P1** npm naming crisis: `schemalens` package on npm is owned by competitor (scottyroges, published Jan 2026). All site references should use `schemalens-cli` or `schemalens-engine`. Wrapper package must be renamed before publish.
-- [ ] **P2** Add `license-keys.txt` to `.gitignore` — security fix to prevent accidental commit of license keys.
+- [x] **P2** Add `license-keys.txt` to `.gitignore` — security fix to prevent accidental commit of license keys. ✅ Done Day 213.
 
 ### New Autonomous Distribution (Week 7 Focus)
 - [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL feature, Schema Diff Report PDF Generator, pg-schema-diff comparison page.
@@ -47,7 +47,7 @@
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
-- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 216 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison page.
+- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 217 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison page.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -171,12 +171,12 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 203 (May 31)
 **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs.
 
-### Days 208–212 (June 1–2)
-**Conversion asset blitz:** Product Features page (`features.html`), Manager Approval Generator (`team-pitch.html`), Schema Diff Report PDF (`tools/schema-diff-report.html`), GitHub PR Diff (`tools/github-pr-diff.html`), Schema Diff Speed Challenge (`tools/schema-diff-speed-challenge.html`) with promotion blitz, Ambassador Program (`ambassador.html`) with complete distribution kit. sitemap 216 URLs. 134/134 e2e tests pass.
+### Days 204–209 (June 1)
+**Conversion asset blitz:** Fetch from URL (app.html + api/fetch-schema.js), Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator (team-pitch.html), Product Features page (features.html), Schema Diff Speed Challenge with promotion blitz (blog post + newsletter integration). sitemap 216 URLs.
 
-### Day 213 (June 2)
-**Context maintenance + competitor response:** Summarized days 203–209 in PROGRESS.md Key Milestones. Added `license-keys.txt` to `.gitignore`. Discovered `schemalens` npm package is owned by competitor (scottyroges, published Jan 2026). Built **SchemaLens vs pg-schema-diff** comparison page (`schemalens-vs-pg-schema-diff.html`) — targets Stripe's popular Go library, high-intent SEO traffic. Cross-linked from index.html, CLI comparison, Liquibase comparison, Redgate comparison. sitemap updated (217 URLs).
+### Days 210–213 (June 1–2)
+**Speed Challenge promotion + trust fixes + competitor response:** Speed Challenge blog post and newsletter integration. Critical trust fix: PH banner no longer shows for organic traffic. open.html fully updated to Day 213 metrics. Ambassador Program (ambassador.html + api + distribution kit). pg-schema-diff comparison page. Security fix: license-keys.txt added to .gitignore. Discovered Supabase down and `schemalens` npm competitor. sitemap 217 URLs.
 
 ---
 
-*Backlog reprioritized June 2, 2026. Zero sales after 213 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + address infrastructure debt (Supabase down, npm naming) + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*
+*Backlog reprioritized June 2, 2026. Zero sales after 214 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + address infrastructure debt (Supabase down, npm naming) + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*

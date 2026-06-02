@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link rel="preconnect" href="https://fmfwdwwvvcdtreduncev.supabase.co">
-  <link rel="dns-prefetch" href="https://fmfwdwwvvcdtreduncev.supabase.co">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
   <title>SchemaLens — Schema Diff Tool</title>
@@ -1257,7 +1255,6 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="lib/analytics-client.js"></script>
 <script>
 (function() {
@@ -8903,25 +8900,12 @@ let supabaseClient = null;
 let currentUser = null;
 
 function initSupabase() {
-  if (typeof supabase === 'undefined' || !supabase.createClient) {
-    console.warn('Supabase client not loaded');
-    return;
-  }
-  try {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true }
-    });
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      currentUser = session?.user || null;
-      updateAuthUI();
-    });
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      currentUser = session?.user || null;
-      updateAuthUI();
-    });
-  } catch (err) {
-    console.error('Supabase init error:', err);
-  }
+  // Supabase project is permanently down (DNS failure). All cloud features
+  // (auth, cloud save, team workspace) are disabled. The app gracefully
+  // falls back to localStorage for history and saved diffs.
+  supabaseClient = null;
+  currentUser = null;
+  console.log('SchemaLens: Supabase cloud features are offline. Using localStorage mode.');
 }
 
 function updateAuthUI() {
