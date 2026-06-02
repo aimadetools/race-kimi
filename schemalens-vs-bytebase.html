@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens vs Bytebase — Best Database Schema Diff Tool (2026)</title>
+  <meta name="description" content="Compare SchemaLens with Bytebase. See when a lightweight browser-based schema diff tool beats a full database DevOps platform for migration reviews and schema comparisons.">
+  <meta property="og:title" content="SchemaLens vs Bytebase — Best Database Schema Diff Tool (2026)">
+  <meta property="og:description" content="Browser-based schema diff vs database DevOps platform. Compare features, pricing, setup time, and CI/CD integration.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schemalens-vs-bytebase.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is SchemaLens better than Bytebase?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your needs. Bytebase is a full database DevOps platform with team collaboration, approval workflows, and deployment automation. SchemaLens is a focused schema diff and migration generation tool that works instantly in your browser with zero setup. Choose SchemaLens for quick diffs, PR reviews, and when you need results in seconds without infrastructure. Choose Bytebase for enterprise-grade change management across large teams."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SchemaLens and Bytebase together?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Use SchemaLens for instant visual diffs during development and code review. Use Bytebase for formal change approval workflows and multi-environment deployments. Many teams paste SchemaLens diff output into Bytebase change requests for clarity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Bytebase require a live database connection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Bytebase connects to your live databases to perform schema diffs and deployments. SchemaLens works entirely offline — paste two CREATE TABLE dumps and get instant results without any database connection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which tool is more affordable?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens is significantly more affordable for individuals and small teams. The Pro tier is $39 one-time for lifetime access. Bytebase starts free for small teams but requires a paid subscription ($15-30/user/month) for advanced features and larger teams."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which tool is faster to set up?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens requires zero setup — open the website and paste your schemas. Bytebase requires either self-hosting (Docker deployment) or signing up for their cloud service, connecting databases, and configuring projects."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Unbiased comparison — updated June 2026
+      </div>
+      <h1>SchemaLens vs Bytebase.<br><span>Instant diff or full DevOps platform?</span></h1>
+      <p>Bytebase is a powerful database DevOps platform with team workflows and deployment automation. SchemaLens is a focused, zero-setup schema diff tool that gives you answers in seconds. Here's how they compare.</p>
+      <div class="hero-actions">
+        <a href="#comparison-table" class="btn btn-primary btn-lg">Jump to Comparison</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Try SchemaLens Free</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section" id="comparison-table">
+    <div class="container">
+      <h2 class="section-title text-center">At-a-glance comparison</h2>
+      <p class="section-subtitle text-center">How SchemaLens stacks up against Bytebase.</p>
+      <div class="table-wrapper" style="overflow-x: auto; margin-top: 32px;">
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Feature</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 700; color: var(--primary);">SchemaLens</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Bytebase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Pricing</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Free tier + $39 Lifetime Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">Free (small team) → $15-30/user/mo</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Setup time</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Instant — open browser</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Docker or cloud signup + DB config</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Visual diff</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Rich HTML with color coding</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Web-based visual diff</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Runs in browser</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes — zero install</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Self-hosted or cloud service</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">PostgreSQL</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">MySQL / MariaDB</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQLite</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not supported</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQL Server</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not supported</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Oracle</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not supported</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Needs live DB connection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">❌ No — paste SQL dumps</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Yes — connects to DB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Shareable links</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ URL + public links</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Within workspace only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Export formats</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">SQL, Markdown, PDF, JSON</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL, issue tracking</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Breaking change detection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in with warnings</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ SQL review policies</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Team approval workflows</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not built-in</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Advanced approval chains</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CI/CD templates</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ GitHub + GitLab + Bitbucket</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ GitOps + API integration</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Data privacy</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Schemas stay in browser</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Connected to cloud/self-hosted</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CLI available</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ schemalens-cli (npm)</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Web/API only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">VS Code extension</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ No</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Offline capable</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes — PWA</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Requires internet + DB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Best for</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Developers, code review, quick diffs</td>
+              <td style="padding: 14px 16px; text-align: center;">DBAs, enterprise change management</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title text-center">Deep-dive: Where SchemaLens shines</h2>
+      <div class="feature-grid" style="margin-top: 40px;">
+        <div class="feature-card">
+          <h3>⚡ Zero Setup</h3>
+          <p>Bytebase requires Docker deployment or cloud signup, database connections, and project configuration. SchemaLens opens in your browser and works immediately. Paste two SQL dumps and see the diff in under 3 seconds.</p>
+        </div>
+        <div class="feature-card">
+          <h3>💰 Transparent Pricing</h3>
+          <p>Bytebase charges per user per month for teams ($15-30/user). SchemaLens Pro is $39 once — lifetime access, unlimited diffs, all export formats. No recurring bills, no user limits, no surprise charges.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔒 Air-Gapped Privacy</h3>
+          <p>Bytebase connects to your live databases, which requires network access and security review. SchemaLens parses schemas entirely in your browser. Your production schemas never touch a server — perfect for regulated industries and sensitive data.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🌐 Multi-Dialect Support</h3>
+          <p>Bytebase supports PostgreSQL and MySQL. SchemaLens handles PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle — all in one interface. Ideal for polyglot teams and migration projects.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Shareability</h3>
+          <p>Generate a shareable URL for any diff and send it via Slack, email, or paste it into a GitHub PR. Recipients don't need an account or a Bytebase workspace to view it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🛠️ Developer Toolchain</h3>
+          <p>SchemaLens integrates where developers already work: browser, VS Code extension, Chrome extension for GitHub PRs, npm CLI, and GitHub Actions. Bytebase is a separate platform developers must context-switch into.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Where Bytebase shines</h2>
+      <div class="feature-grid" style="margin-top: 40px;">
+        <div class="feature-card">
+          <h3>🏢 Enterprise Workflows</h3>
+          <p>Bytebase offers sophisticated approval chains, role-based access control, and audit trails for regulated enterprises. SchemaLens focuses on the diff itself, not the organizational process around it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🚀 Deployment Automation</h3>
+          <p>Bytebase can apply schema changes directly to databases with rollout strategies. SchemaLens generates migration scripts but does not execute them — it's a planning and review tool, not a deployment platform.</p>
+        </div>
+        <div class="feature-card">
+          <h3>👥 Team Collaboration</h3>
+          <p>Bytebase has built-in commenting, assignment, and notification systems for DBA review. SchemaLens is optimized for individual developer speed and async sharing via links.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title text-center">Which tool should you choose?</h2>
+      <div style="max-width: 720px; margin: 32px auto 0;">
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 20px;">
+          <h3 style="margin-bottom: 12px; color: var(--primary);">Choose SchemaLens if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); line-height: 1.7;">
+            <li>You need schema diffs <strong>now</strong> without installing anything</li>
+            <li>You work across multiple SQL dialects (Postgres, MySQL, SQLite, SQL Server, Oracle)</li>
+            <li>You review migrations in pull requests and need shareable diff output</li>
+            <li>You want a one-time payment, not a monthly subscription</li>
+            <li>Your schemas are sensitive and cannot leave your machine</li>
+            <li>You need a CLI, VS Code extension, or GitHub Action integration</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary" style="margin-top: 12px;">Try SchemaLens Free →</a>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px;">
+          <h3 style="margin-bottom: 12px; color: var(--text-muted);">Choose Bytebase if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); line-height: 1.7;">
+            <li>You need formal DBA approval workflows with audit trails</li>
+            <li>You want to deploy schema changes directly from the tool</li>
+            <li>You have a large team with role-based access requirements</li>
+            <li>You only use PostgreSQL or MySQL and don't need other dialects</li>
+            <li>You prefer an all-in-one database DevOps platform over focused tools</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">Start diffing in seconds</h2>
+      <p class="section-subtitle" style="max-width: 560px; margin: 0 auto 28px;">Join 10,000+ developers who use SchemaLens to catch schema mistakes before they reach production. Free for 15 tables. Pro is $39 lifetime.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens Free</a>
+      <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">No signup · No credit card · Schemas stay in your browser</p>
+    </div>
+  </section>
+
+  <footer class="footer" style="margin-top:0;">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-brand">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </div>
+        <p>Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="app.html">Open App</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="features.html">Features</a>
+        <a href="vscode-extension.html">VS Code</a>
+        <a href="chrome-extension/">Chrome</a>
+        <a href="cli/">CLI</a>
+        <a href="api.html">API</a>
+      </div>
+      <div class="footer-links">
+        <h4>Compare</h4>
+        <a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate / Prisma</a>
+        <a href="schemalens-vs-liquibase-flyway.html">vs Liquibase / Flyway</a>
+        <a href="schemalens-vs-cli-tools.html">vs CLI tools</a>
+        <a href="schemalens-vs-pg-schema-diff.html">vs pg-schema-diff</a>
+        <a href="schemalens-vs-bytebase.html">vs Bytebase</a>
+        <a href="best-schema-diff-tools.html">Best tools 2026</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="open.html">Open Startup</a>
+        <a href="blog.html">Blog</a>
+        <a href="affiliate.html">Affiliate</a>
+        <a href="ambassador.html">Ambassador</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center; margin-top:32px; padding-top:24px; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem;">
+      © 2026 SchemaLens. Built in the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>
