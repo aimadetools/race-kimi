@@ -1054,9 +1054,8 @@
       font-size: 0.9rem;
       cursor: pointer;
       font-weight: 500;
-      display: none;
+      display: inline-block;
     }
-    .save-btn.visible { display: inline-block; }
     .save-btn:hover { border-color: var(--primary); color: var(--primary); }
     .saved-diffs-panel {
       margin-top: 24px;
@@ -1651,10 +1650,10 @@ function getFreeTierLimit() {
       <button class="btn btn-primary" id="compareBtn">Compare Schemas</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-secondary" id="shareBtn" title="Copy shareable URL">Share</button>
-      <button class="save-btn" id="saveBtn" title="Save diff to cloud" onclick="openSaveModal()">💾 Save</button>
+      <button class="save-btn" id="saveBtn" title="Save diff locally" onclick="openSaveModal()">💾 Save</button>
       <button class="btn btn-secondary" id="settingsBtn" title="Settings" onclick="openSettingsModal()">⚙️</button>
       <span id="licenseStatus" class="license-status locked" style="margin-left:auto;cursor:pointer;" onclick="openLicenseModal()">🔒 Unlock Pro</span>
-      <span id="authStatus" class="auth-status" onclick="toggleAuthModal()">👤 Sign In</span>
+
     </div>
 
     <div class="editor-grid">
@@ -1930,17 +1929,11 @@ DROP TABLE audit_logs;</code></pre>
   <div class="modal-overlay" id="saveModal">
     <div class="modal">
       <h3>💾 Save Diff</h3>
-      <p>Give your diff a name so you can find it later.</p>
+      <p>Give your diff a name so you can find it later. Saved locally in this browser.</p>
       <input type="text" id="saveDiffName" placeholder="e.g. Users table migration v2">
-      <div id="saveTeamSection" style="display:none;margin-top:12px;">
-        <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;">
-          <input type="checkbox" id="saveToTeam" style="width:auto;">
-          <span>Save to team workspace (<span id="saveTeamName"></span>)</span>
-        </label>
-      </div>
       <div class="modal-actions">
         <button class="btn btn-secondary" onclick="closeSaveModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveDiffToCloud()">Save to Cloud</button>
+        <button class="btn btn-primary" onclick="saveDiffToCloud()">Save Locally</button>
       </div>
     </div>
   </div>
@@ -4770,23 +4763,7 @@ function toggleComments(tableName) {
 }
 
 async function loadComments(savedDiffId) {
-  if (!supabaseClient || !savedDiffId) {
-    diffCommentsCache = [];
-    renderAllComments();
-    return;
-  }
-  try {
-    const { data, error } = await supabaseClient
-      .from('diff_comments')
-      .select('id, saved_diff_id, user_id, table_name, message, created_at')
-      .eq('saved_diff_id', savedDiffId)
-      .order('created_at', { ascending: true });
-    if (error) throw error;
-    diffCommentsCache = data || [];
-  } catch (err) {
-    diffCommentsCache = [];
-    console.error('loadComments error:', err);
-  }
+  diffCommentsCache = [];
   renderAllComments();
 }
 
@@ -4795,88 +4772,26 @@ function renderAllComments() {
   for (const name of tableNames) {
     renderCommentsForTable(name);
   }
-  // Update counts for all tables (including zero)
   document.querySelectorAll('[id^="comment-count-"]').forEach(el => {
     const tableName = el.id.replace('comment-count-', '');
-    const count = diffCommentsCache.filter(c => c.table_name === tableName).length;
-    el.textContent = count;
-    if (count > 0) {
-      el.style.background = 'var(--primary)';
-      el.style.color = '#fff';
-    } else {
-      el.style.background = 'var(--border)';
-      el.style.color = 'var(--text-muted)';
-    }
+    el.textContent = '0';
+    el.style.background = 'var(--border)';
+    el.style.color = 'var(--text-muted)';
   });
 }
 
 function renderCommentsForTable(tableName) {
   const list = document.getElementById('comments-list-' + tableName);
   if (!list) return;
-  const comments = diffCommentsCache.filter(c => c.table_name === tableName);
-  if (!comments.length) {
-    list.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:4px 0;">No comments yet.</div>';
-    return;
-  }
-  list.innerHTML = comments.map(c => {
-    const date = new Date(c.created_at).toLocaleDateString();
-    const time = new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const isOwn = currentUser && c.user_id === currentUser.id;
-    const deleteBtn = isOwn
-      ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}', '${esc(tableName)}')" title="Delete comment">×</button>`
-      : '';
-    return `<div class="comment-item">
-      <div class="comment-meta">
-        <span>${esc((currentUser && c.user_id === currentUser.id) ? 'You' : 'Team member')}</span>
-        <span>·</span>
-        <span>${date} ${time}</span>
-        ${deleteBtn}
-      </div>
-      <div>${esc(c.message)}</div>
-    </div>`;
-  }).join('');
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:4px 0;">Comments are no longer available.</div>';
 }
 
 async function addComment(tableName) {
-  if (!supabaseClient || !currentUser) {
-    showError('Please sign in to add comments.');
-    return;
-  }
-  if (!currentSavedDiffId) {
-    showError('Save this diff to cloud first to enable comments.');
-    return;
-  }
-  const input = document.getElementById('comment-input-' + tableName);
-  if (!input) return;
-  const message = input.value.trim();
-  if (!message) return;
-  try {
-    const { error } = await supabaseClient
-      .from('diff_comments')
-      .insert([{ saved_diff_id: currentSavedDiffId, user_id: currentUser.id, table_name: tableName, message }]);
-    if (error) throw error;
-    input.value = '';
-    await loadComments(currentSavedDiffId);
-    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('comment_added', { table: tableName });
-  } catch (err) {
-    showError('Failed to add comment: ' + err.message);
-  }
+  showError('Comments are no longer available.');
 }
 
 async function deleteComment(commentId, tableName) {
-  if (!confirm('Delete this comment?')) return;
-  if (!supabaseClient) return;
-  try {
-    const { error } = await supabaseClient
-      .from('diff_comments')
-      .delete()
-      .eq('id', commentId)
-      .eq('user_id', currentUser.id);
-    if (error) throw error;
-    await loadComments(currentSavedDiffId);
-  } catch (err) {
-    showError('Failed to delete comment: ' + err.message);
-  }
+  showError('Comments are no longer available.');
 }
 
 function getSocialProofHTML() {
@@ -8801,10 +8716,6 @@ document.addEventListener('keydown', (e) => {
 let savedDiffsCache = [];
 
 function openSaveModal() {
-  if (!currentUser) {
-    toggleAuthModal();
-    return;
-  }
   const modal = document.getElementById('saveModal');
   if (!modal) return;
   document.getElementById('saveDiffName').value = '';
@@ -8841,10 +8752,6 @@ async function saveDiffToCloud() {
     showError('Please enter a name for this diff.');
     return;
   }
-  if (!supabaseClient || !currentUser) {
-    showError('You must be signed in to save diffs.');
-    return;
-  }
   const sqlA = document.getElementById('schemaA').value;
   const sqlB = document.getElementById('schemaB').value;
   const dialect = document.getElementById('dialect').value;
@@ -8858,37 +8765,16 @@ async function saveDiffToCloud() {
   btn.textContent = 'Saving…';
   btn.disabled = true;
 
-  const saveToTeam = document.getElementById('saveToTeam')?.checked && userTeamMemberships.length;
-  const teamName = saveToTeam ? userTeamMemberships[0].team_name : null;
-
   try {
-    // Versioning: find existing diff with same name
-    const matchQuery = teamName
-      ? supabaseClient.from('saved_diffs').select('id, diff_group_id, version_number').eq('name', name).eq('team_name', teamName).order('version_number', { ascending: false }).limit(1)
-      : supabaseClient.from('saved_diffs').select('id, diff_group_id, version_number').eq('name', name).eq('user_id', currentUser.id).is('team_name', null).order('version_number', { ascending: false }).limit(1);
-    const { data: existing, error: findErr } = await matchQuery;
-    if (findErr) throw findErr;
-
-    let diffGroupId = null;
-    let versionNumber = 1;
-    if (existing && existing.length > 0) {
-      diffGroupId = existing[0].diff_group_id || existing[0].id;
-      versionNumber = (existing[0].version_number || 1) + 1;
-    }
-
-    const { data: inserted, error } = await supabaseClient
-      .from('saved_diffs')
-      .insert([{ user_id: currentUser.id, name, dialect, schema_a: sqlA, schema_b: sqlB, team_name: teamName, diff_group_id: diffGroupId, version_number: versionNumber }])
-      .select('id')
-      .single();
-    if (error) throw error;
-    if (inserted && inserted.id) {
-      currentSavedDiffId = inserted.id;
-    }
+    const diffs = getLocalSavedDiffs();
+    const id = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+    diffs.unshift({ id, name, dialect, schema_a: sqlA, schema_b: sqlB, created_at: new Date().toISOString() });
+    if (diffs.length > 50) diffs.length = 50;
+    setLocalSavedDiffs(diffs);
+    currentSavedDiffId = id;
     closeSaveModal();
-    showError('✓ Diff saved to cloud!' + (teamName ? ' (Team: ' + teamName + ')' : '') + (versionNumber > 1 ? ' (v' + versionNumber + ')' : ''));
+    showError('✓ Diff saved locally!');
     loadSavedDiffs();
-    if (teamName) loadTeamDiffs();
   } catch (err) {
     showError('Failed to save diff: ' + err.message);
   } finally {
@@ -8901,29 +8787,9 @@ async function loadSavedDiffs() {
   const panel = document.getElementById('savedDiffsPanel');
   const list = document.getElementById('savedDiffsList');
   if (!panel || !list) return;
-
-  if (!currentUser) {
-    panel.style.display = 'none';
-    list.innerHTML = '<p class="saved-diffs-empty">Sign in to save and access your diffs from any device.</p>';
-    return;
-  }
-
   panel.style.display = 'block';
-  list.innerHTML = '<p class="saved-diffs-empty">Loading…</p>';
-
-  try {
-    const { data, error } = await supabaseClient
-      .from('saved_diffs')
-      .select('id, name, dialect, created_at, public_id, is_public, version_number, diff_group_id, user_id')
-      .eq('user_id', currentUser.id)
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    savedDiffsCache = data || [];
-    renderSavedDiffsList();
-  } catch (err) {
-    list.innerHTML = '<p class="saved-diffs-empty">Failed to load saved diffs. Please try again.</p>';
-    console.error('loadSavedDiffs error:', err);
-  }
+  savedDiffsCache = getLocalSavedDiffs();
+  renderSavedDiffsList();
 }
 
 function renderSavedDiffsList() {
@@ -8932,38 +8798,15 @@ function renderSavedDiffsList() {
     list.innerHTML = '<p class="saved-diffs-empty">No saved diffs yet. Click 💾 Save to store your first diff.</p>';
     return;
   }
-  // Count versions per group
-  const groupCounts = {};
-  savedDiffsCache.forEach(d => {
-    const gid = d.diff_group_id || d.id;
-    groupCounts[gid] = (groupCounts[gid] || 0) + 1;
-  });
-  // Show only latest version of each group
-  const seenGroups = new Set();
-  const latestDiffs = savedDiffsCache.filter(d => {
-    const gid = d.diff_group_id || d.id;
-    if (seenGroups.has(gid)) return false;
-    seenGroups.add(gid);
-    return true;
-  });
-  list.innerHTML = latestDiffs.map(d => {
+  list.innerHTML = savedDiffsCache.map(d => {
     const date = new Date(d.created_at).toLocaleDateString();
-    const linkBtn = d.public_id
-      ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
-      : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
-    const gid = d.diff_group_id || d.id;
-    const versionCount = groupCounts[gid] || 1;
-    const versionBadge = versionCount > 1 ? ` <span style="font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 6px;border-radius:4px;">v${d.version_number || 1}</span>` : '';
-    const versionsBtn = versionCount > 1 ? `<button onclick="openVersionsModal('${gid}', '${esc(d.name)}')">Versions</button>` : '';
     return `<div class="saved-diff-item">
       <div class="saved-diff-info">
-        <div class="saved-diff-name">${esc(d.name)}${versionBadge}</div>
-        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
+        <div class="saved-diff-name">${esc(d.name)}</div>
+        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}</div>
       </div>
       <div class="saved-diff-actions">
         <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
-        ${linkBtn}
-        ${versionsBtn}
         <button class="delete-btn" onclick="deleteSavedDiff('${d.id}')">Delete</button>
       </div>
     </div>`;
@@ -8978,23 +8821,7 @@ function generatePublicId() {
 }
 
 async function createPublicLink(id) {
-  if (!supabaseClient || !currentUser) return;
-  const publicId = generatePublicId();
-  try {
-    const { error } = await supabaseClient
-      .from('saved_diffs')
-      .update({ public_id: publicId, is_public: true })
-      .eq('id', id)
-      .eq('user_id', currentUser.id);
-    if (error) throw error;
-    copyPublicLink(publicId);
-    // Update cache
-    const item = savedDiffsCache.find(d => d.id === id);
-    if (item) { item.public_id = publicId; item.is_public = true; }
-    renderSavedDiffsList();
-  } catch (err) {
-    showError('Failed to create public link: ' + err.message);
-  }
+  showError('Public sharing is no longer available. Use the Share button to copy a URL with your diff encoded in it.');
 }
 
 function copyPublicLink(publicId) {
@@ -9005,36 +8832,7 @@ function copyPublicLink(publicId) {
 }
 
 async function loadPublicDiff(publicId) {
-  if (!supabaseClient) {
-    showError('Unable to load shared diff. Please try again later.');
-    return;
-  }
-  try {
-    const { data, error } = await supabaseClient
-      .from('saved_diffs')
-      .select('id, schema_a, schema_b, dialect, name')
-      .eq('public_id', publicId)
-      .eq('is_public', true)
-      .single();
-    if (error) throw error;
-    if (!data) {
-      showError('Shared diff not found or no longer public.');
-      return;
-    }
-    document.getElementById('schemaA').value = data.schema_a || '';
-    document.getElementById('schemaB').value = data.schema_b || '';
-    if (data.dialect && ['postgres','mysql','sqlite','mssql','oracle'].includes(data.dialect)) {
-      document.getElementById('dialect').value = data.dialect;
-    }
-    currentSavedDiffId = data.id || null;
-    updateStats();
-    // Auto-run comparison
-    setTimeout(() => document.getElementById('compareBtn').click(), 300);
-    // Show shared banner
-    showSharedBanner(data.name, 'public');
-  } catch (err) {
-    showError('Failed to load shared diff: ' + err.message);
-  }
+  showError('Public shared diffs are no longer available. Shared links now use URL-encoded diffs instead.');
 }
 
 function showSharedBanner(name, source) {
@@ -9113,14 +8911,10 @@ function trackEvent(eventType) {
 }
 
 async function loadDiffIntoEditors(id) {
-  if (!supabaseClient || !id) return;
+  if (!id) return;
   try {
-    const { data, error } = await supabaseClient
-      .from('saved_diffs')
-      .select('schema_a, schema_b, dialect')
-      .eq('id', id)
-      .single();
-    if (error) throw error;
+    const diffs = getLocalSavedDiffs();
+    const data = diffs.find(d => d.id === id);
     if (!data) return;
     document.getElementById('schemaA').value = data.schema_a || '';
     document.getElementById('schemaB').value = data.schema_b || '';
@@ -9141,203 +8935,61 @@ async function loadDiffIntoEditors(id) {
 async function deleteSavedDiff(id) {
   if (!confirm('Delete this saved diff?')) return;
   try {
-    const { error } = await supabaseClient
-      .from('saved_diffs')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', currentUser.id);
-    if (error) throw error;
-    savedDiffsCache = savedDiffsCache.filter(d => d.id !== id);
+    let diffs = getLocalSavedDiffs();
+    diffs = diffs.filter(d => d.id !== id);
+    setLocalSavedDiffs(diffs);
+    savedDiffsCache = diffs;
     renderSavedDiffsList();
   } catch (err) {
     showError('Failed to delete diff: ' + err.message);
   }
 }
 
-/* ---------- Supabase Auth ---------- */
-const SUPABASE_URL = 'https://fmfwdwwvvcdtreduncev.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtZndkd3d2dmNkdHJlZHVuY2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjIyMTAsImV4cCI6MjA5MjMzODIxMH0.tMXibqq5XPRGSdxfrNqCPgJRk3IYtvu5aCQVutZN9gw';
-let supabaseClient = null;
-let currentUser = null;
+/* ---------- Local Save & Load (Supabase removed) ---------- */
+// Supabase project is permanently down. All cloud features (auth, cloud save,
+// team workspace, public links, comments) have been removed. Diffs are saved
+// locally in localStorage only.
 
-function initSupabase() {
-  // Supabase project is permanently down (DNS failure). All cloud features
-  // (auth, cloud save, team workspace) are disabled. The app gracefully
-  // falls back to localStorage for history and saved diffs.
-  supabaseClient = null;
-  currentUser = null;
-  console.log('SchemaLens: Supabase cloud features are offline. Using localStorage mode.');
+function getLocalSavedDiffs() {
+  try { return JSON.parse(localStorage.getItem('schemalens_saved_diffs') || '[]'); }
+  catch (e) { return []; }
+}
+function setLocalSavedDiffs(diffs) {
+  localStorage.setItem('schemalens_saved_diffs', JSON.stringify(diffs));
 }
 
 function updateAuthUI() {
-  const el = document.getElementById('authStatus');
-  const saveBtn = document.getElementById('saveBtn');
-  if (el) {
-    if (currentUser) {
-      el.textContent = '👤 ' + (currentUser.email || 'Account');
-      el.classList.add('signed-in');
-    } else {
-      el.textContent = '👤 Sign In';
-      el.classList.remove('signed-in');
-    }
-  }
-  if (saveBtn) {
-    saveBtn.classList.toggle('visible', !!currentUser);
-  }
   loadSavedDiffs();
-  loadTeamMemberships().then(() => {
-    loadTeamDiffs();
-    updateSaveModalTeamUI();
-  });
 }
 
 function toggleAuthModal() {
-  const modal = document.getElementById('authModal');
-  if (!modal) return;
-  if (modal.classList.contains('active')) {
-    closeAuthModal();
-    return;
-  }
-  document.getElementById('authEmailSection').style.display = currentUser ? 'none' : 'block';
-  document.getElementById('authPendingSection').style.display = 'none';
-  document.getElementById('authSignedInSection').style.display = currentUser ? 'block' : 'none';
-  if (currentUser) {
-    document.getElementById('authUserEmail').textContent = currentUser.email || '';
-    updateTeamAuthUI();
-  }
-  modal.classList.add('active');
-  if (!currentUser) {
-    document.getElementById('authEmail').focus();
-  }
+  showError('Cloud sign-in is no longer available. Your diffs are saved locally in this browser.');
 }
-
 function closeAuthModal() {
   const modal = document.getElementById('authModal');
   if (modal) modal.classList.remove('active');
 }
-
 async function sendMagicLink() {
-  const email = document.getElementById('authEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    showError('Please enter a valid email address.');
-    return;
-  }
-  if (!supabaseClient) {
-    showError('Auth service is not available. Please try again later.');
-    return;
-  }
-  const btn = document.querySelector('#authEmailSection .btn-primary');
-  const originalText = btn.textContent;
-  btn.textContent = 'Sending…';
-  btn.disabled = true;
-  try {
-    const { error } = await supabaseClient.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.href }
-    });
-    if (error) throw error;
-    document.getElementById('authEmailSection').style.display = 'none';
-    document.getElementById('authPendingSection').style.display = 'block';
-  } catch (err) {
-    showError('Failed to send magic link: ' + err.message);
-  } finally {
-    btn.textContent = originalText;
-    btn.disabled = false;
-  }
+  showError('Cloud sign-in is no longer available. Your diffs are saved locally in this browser.');
 }
-
-async function signOut() {
-  if (!supabaseClient) return;
-  await supabaseClient.auth.signOut();
-  currentUser = null;
-  updateAuthUI();
-  closeAuthModal();
-}
+async function signOut() {}
 
 // Close auth modal on overlay click
-document.getElementById('authModal').addEventListener('click', (e) => {
+document.getElementById('authModal')?.addEventListener('click', (e) => {
   if (e.target.id === 'authModal') closeAuthModal();
 });
 
-/* ---------- Team Workspace ---------- */
+/* ---------- Team Workspace (disabled) ---------- */
 let userTeamMemberships = [];
-
-async function loadTeamMemberships() {
-  if (!supabaseClient || !currentUser) {
-    userTeamMemberships = [];
-    return;
-  }
-  try {
-    const { data, error } = await supabaseClient
-      .from('team_memberships')
-      .select('team_name, role')
-      .eq('user_id', currentUser.id);
-    if (error) throw error;
-    userTeamMemberships = data || [];
-  } catch (err) {
-    console.error('loadTeamMemberships error:', err);
-    userTeamMemberships = [];
-  }
-}
-
+async function loadTeamMemberships() { userTeamMemberships = []; }
 async function joinOrCreateTeam() {
-  const name = document.getElementById('joinTeamName')?.value.trim();
-  if (!name) {
-    showError('Please enter a team name.');
-    return;
-  }
-  if (!supabaseClient || !currentUser) {
-    showError('You must be signed in to join a team.');
-    return;
-  }
-  try {
-    const { error } = await supabaseClient
-      .from('team_memberships')
-      .insert([{ user_id: currentUser.id, team_name: name, role: 'member' }]);
-    if (error) throw error;
-    await loadTeamMemberships();
-    updateTeamAuthUI();
-    loadTeamDiffs();
-    showError('✓ You joined team: ' + esc(name));
-  } catch (err) {
-    showError('Failed to join team: ' + err.message);
-  }
+  showError('Team workspace is no longer available.');
 }
-
-async function leaveTeam() {
-  if (!supabaseClient || !currentUser || !userTeamMemberships.length) return;
-  const teamName = userTeamMemberships[0].team_name;
-  if (!confirm('Leave team "' + teamName + '"?')) return;
-  try {
-    const { error } = await supabaseClient
-      .from('team_memberships')
-      .delete()
-      .eq('user_id', currentUser.id)
-      .eq('team_name', teamName);
-    if (error) throw error;
-    userTeamMemberships = [];
-    updateTeamAuthUI();
-    const panel = document.getElementById('teamDiffsPanel');
-    if (panel) panel.style.display = 'none';
-    showError('✓ You left team: ' + esc(teamName));
-  } catch (err) {
-    showError('Failed to leave team: ' + err.message);
-  }
-}
-
-function updateTeamAuthUI() {
-  const noTeamEl = document.getElementById('teamAuthNoTeam');
-  const hasTeamEl = document.getElementById('teamAuthHasTeam');
-  const teamNameEl = document.getElementById('teamAuthName');
-  if (!noTeamEl || !hasTeamEl) return;
-  if (userTeamMemberships.length) {
-    noTeamEl.style.display = 'none';
-    hasTeamEl.style.display = 'block';
-    if (teamNameEl) teamNameEl.textContent = userTeamMemberships[0].team_name;
-  } else {
-    noTeamEl.style.display = 'block';
-    hasTeamEl.style.display = 'none';
-  }
+async function leaveTeam() {}
+function updateTeamAuthUI() {}
+function updateSaveModalTeamUI() {
+  const section = document.getElementById('saveTeamSection');
+  if (section) section.style.display = 'none';
 }
 
 // -----------------------------
@@ -9346,7 +8998,6 @@ function updateTeamAuthUI() {
 function shouldShowEmailCapture() {
   if (document.body.classList.contains('embed-mode')) return false;
   if (isProUnlocked()) return false;
-  if (currentUser) return false;
   if (localStorage.getItem('schemalens_email_captured')) return false;
   if (localStorage.getItem('schemalens_email_capture_dismissed')) return false;
   const diffCount = parseInt(localStorage.getItem('schemalens_diff_count') || '0', 10);
@@ -9447,75 +9098,13 @@ document.getElementById('howItWorksModal')?.addEventListener('click', (e) => {
 
 async function loadTeamDiffs() {
   const panel = document.getElementById('teamDiffsPanel');
-  const list = document.getElementById('teamDiffsList');
-  if (!panel || !list) return;
-
-  if (!currentUser || !userTeamMemberships.length) {
-    panel.style.display = 'none';
-    return;
-  }
-
-  panel.style.display = 'block';
-  list.innerHTML = '<p class="saved-diffs-empty">Loading…</p>';
-
-  const teamNames = userTeamMemberships.map(m => m.team_name);
-  try {
-    const { data, error } = await supabaseClient
-      .from('saved_diffs')
-      .select('id, name, dialect, created_at, user_id, public_id, is_public, version_number, diff_group_id')
-      .in('team_name', teamNames)
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    renderTeamDiffsList(data || []);
-  } catch (err) {
-    list.innerHTML = '<p class="saved-diffs-empty">Failed to load team diffs. Please try again.</p>';
-    console.error('loadTeamDiffs error:', err);
-  }
+  if (panel) panel.style.display = 'none';
 }
 
 function renderTeamDiffsList(diffs) {
   const list = document.getElementById('teamDiffsList');
   if (!list) return;
-  if (!diffs.length) {
-    list.innerHTML = '<p class="saved-diffs-empty">No team diffs yet. Save a diff to your team workspace to share it.</p>';
-    return;
-  }
-  // Count versions per group
-  const groupCounts = {};
-  diffs.forEach(d => {
-    const gid = d.diff_group_id || d.id;
-    groupCounts[gid] = (groupCounts[gid] || 0) + 1;
-  });
-  // Show only latest version of each group
-  const seenGroups = new Set();
-  const latestDiffs = diffs.filter(d => {
-    const gid = d.diff_group_id || d.id;
-    if (seenGroups.has(gid)) return false;
-    seenGroups.add(gid);
-    return true;
-  });
-  list.innerHTML = latestDiffs.map(d => {
-    const date = new Date(d.created_at).toLocaleDateString();
-    const isMine = d.user_id === currentUser?.id;
-    const linkBtn = d.public_id
-      ? `<button onclick="copyPublicLink('${d.public_id}')">Copy Link</button>`
-      : `<button onclick="createPublicLink('${d.id}')">Share</button>`;
-    const gid = d.diff_group_id || d.id;
-    const versionCount = groupCounts[gid] || 1;
-    const versionBadge = versionCount > 1 ? ` <span style="font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 6px;border-radius:4px;">v${d.version_number || 1}</span>` : '';
-    const versionsBtn = versionCount > 1 ? `<button onclick="openVersionsModal('${gid}', '${esc(d.name)}')">Versions</button>` : '';
-    return `<div class="saved-diff-item">
-      <div class="saved-diff-info">
-        <div class="saved-diff-name">${esc(d.name)}${versionBadge}${isMine ? ' · You' : ''}</div>
-        <div class="saved-diff-meta">${esc(d.dialect)} · ${date}${d.is_public ? ' · 🔗 Public' : ''}</div>
-      </div>
-      <div class="saved-diff-actions">
-        <button onclick="loadDiffIntoEditors('${d.id}')">Load</button>
-        ${linkBtn}
-        ${versionsBtn}
-      </div>
-    </div>`;
-  }).join('');
+  list.innerHTML = '<p class="saved-diffs-empty">Team workspace is no longer available.</p>';
 }
 
 // Diff Versioning
@@ -9536,43 +9125,12 @@ function closeVersionsModal() {
 
 async function loadDiffVersions(groupId) {
   const list = document.getElementById('versionsList');
-  if (!supabaseClient) {
-    list.innerHTML = '<p class="saved-diffs-empty">Supabase not available.</p>';
-    return;
-  }
-  try {
-    const { data, error } = await supabaseClient
-      .from('saved_diffs')
-      .select('id, name, dialect, created_at, user_id, version_number')
-      .or('diff_group_id.eq.' + groupId + ',id.eq.' + groupId)
-      .order('version_number', { ascending: false });
-    if (error) throw error;
-    renderDiffVersionsList(data || []);
-  } catch (err) {
-    list.innerHTML = '<p class="saved-diffs-empty">Failed to load versions.</p>';
-    console.error('loadDiffVersions error:', err);
-  }
+  list.innerHTML = '<p class="saved-diffs-empty">Version history is no longer available.</p>';
 }
 
 function renderDiffVersionsList(versions) {
   const list = document.getElementById('versionsList');
-  if (!versions.length) {
-    list.innerHTML = '<p class="saved-diffs-empty">No versions found.</p>';
-    return;
-  }
-  list.innerHTML = versions.map(v => {
-    const date = new Date(v.created_at).toLocaleString();
-    const isMine = v.user_id === currentUser?.id;
-    return `<div class="saved-diff-item" style="padding:10px 12px;">
-      <div class="saved-diff-info">
-        <div class="saved-diff-name">v${v.version_number || 1}${isMine ? ' · You' : ''}</div>
-        <div class="saved-diff-meta">${esc(v.dialect)} · ${date}</div>
-      </div>
-      <div class="saved-diff-actions">
-        <button onclick="loadDiffIntoEditors('${v.id}'); closeVersionsModal();">Load</button>
-      </div>
-    </div>`;
-  }).join('');
+  list.innerHTML = '<p class="saved-diffs-empty">Version history is no longer available.</p>';
 }
 
 // Feedback widget
@@ -9582,7 +9140,7 @@ function openFeedbackModal() {
   document.getElementById('feedbackFormSection').style.display = 'block';
   document.getElementById('feedbackSuccessSection').style.display = 'none';
   document.getElementById('feedbackMessage').value = '';
-  document.getElementById('feedbackEmail').value = currentUser?.email || '';
+  document.getElementById('feedbackEmail').value = '';
   setFeedbackCategory('other');
   modal.classList.add('active');
 }
@@ -9985,8 +9543,6 @@ async function fetchSchemaFromUrl(side) {
   }
 })();
 
-// Init Supabase when DOM is ready
-initSupabase();
 </script>
 <script>
 (function(){
