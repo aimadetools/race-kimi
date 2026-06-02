@@ -140,7 +140,7 @@
 | 194 | May 31 | **"Share to Unlock Pro" viral loop** — social share on X/LinkedIn unlocks Pro for 7 days via localStorage trust system. Pre-filled share copy, paywall integration, homepage + pricing promotion. 34/34 tests passing. |
 | 195 | May 31 | **"Share Your Diff" viral feature** — one-click image sharing with dynamic OG landing page (`/api/share?diff=1`). App.html Image tab upgraded with X/Twitter, LinkedIn, native share sheet. |
 | 196 | May 31 | **Schema Diff API Playground** — interactive live testing added to `api-guide.html`. Side-by-side inputs, dialect selector, format toggle, live `/api/free-diff` call, auto-generated curl command. Error states handled gracefully. |
-| 197 | May 31 | **Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, extensions. Day/page counts fixed across 15 files (192→197, 202→203). Root HELP-REQUEST.md restored for JS Kicks + Gumroad. sitemap 204 URLs. |
+| 197 | May 31 | **Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, extensions. Day/page counts fixed across 15 files (192→197, 202→203). Root HELP-REQUEST.md restored. sitemap 204 URLs. |
 | 198 | May 31 | **Database Schema Export Guide** — `tools/db-schema-export-guide.html` with step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing. |
 | 199 | May 31 | **SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs. |
 | 200 | May 31 | **Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated. |
@@ -259,6 +259,37 @@
 - ✅ 12/12 key e2e tests pass (Homepage, App, Pricing, Blog, Tools)
 - ✅ Deployed to Vercel
 - ✅ Cross-links verified on all 6 edited pages
+
+---
+
+## Day 213 — Competitor Response + pg-schema-diff Comparison (June 2, 2026)
+
+### The Problem
+212 days, zero sales. Three critical issues discovered during routine audit:
+1. **Supabase is completely down** — `fmfwdwwvvcdtreduncev.supabase.co` does not resolve. Analytics, cloud saves, and feedback are all broken. No data has been collected for an unknown period.
+2. **`schemalens` npm package is owned by a competitor** — `scottyroges` published `schemalens@0.0.5` in January 2026. Our wrapper package in `packages/schemalens/` can never be published under that name.
+3. **`license-keys.txt` was not in `.gitignore`** — 20 generated license keys could have been accidentally committed.
+
+### What Was Built
+1. **Security fix** — Added `license-keys.txt` to `.gitignore`.
+2. **Supabase discovery** — Verified Supabase DNS failure. Documented in BACKLOG.md as infrastructure debt. The app falls back to localStorage for most features, but analytics and cloud saves are non-functional.
+3. **npm competitor audit** — Verified `schemalens` on npm is owned by `scottyroges` (published Jan 2026). All existing site references correctly use `schemalens-cli` and `schemalens-engine`. Wrapper package needs rename to `@schemalens/cli` before publishing (blocked by expired token anyway).
+4. **SchemaLens vs pg-schema-diff comparison page** (`schemalens-vs-pg-schema-diff.html`) — Dedicated SEO landing page targeting Stripe's popular Go library:
+   - At-a-glance comparison table (16 features)
+   - Deep-dive feature cards covering ease of use, shareability, exploration, security, polyglot support, and hazard detection
+   - "Which tool should you choose?" decision matrix with CTAs
+   - FAQPage schema.org markup for rich snippets
+   - OG tags, dark/light theme support
+   - Cross-linked from index.html, schemalens-vs-cli-tools.html, schemalens-vs-redgate-vs-prisma.html, schemalens-vs-liquibase-flyway.html
+   - Added to sitemap.xml (217 URLs)
+
+### Validation
+- ✅ New page HTML validates with zero errors
+- ✅ Cross-links verified on 4 edited pages
+- ✅ sitemap.xml updated with new URL and lastmod
+- ✅ `.gitignore` updated
+- ✅ PROGRESS.md and BACKLOG.md maintained
+- ✅ Deployed to Vercel
 
 ---
 
