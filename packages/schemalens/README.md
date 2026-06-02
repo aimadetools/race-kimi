@@ -1,6 +1,6 @@
-# schemalens
+# schemalens-diff-cli
 
-[![npm version](https://img.shields.io/npm/v/schemalens.svg)](https://www.npmjs.com/package/schemalens)
+[![npm version](https://img.shields.io/npm/v/schemalens-diff-cli.svg)](https://www.npmjs.com/package/schemalens-diff-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > The official SchemaLens CLI — compare SQL schemas and generate migrations in your terminal.
@@ -9,13 +9,13 @@
 
 ```bash
 # Run without installing
-npx schemalens diff old.sql new.sql
+npx schemalens-diff-cli diff old.sql new.sql
 
 # Install globally
-npm install -g schemalens
+npm install -g schemalens-diff-cli
 
 # Or use in a project
-npm install --save-dev schemalens
+npm install --save-dev schemalens-diff-cli
 ```
 
 ## Usage

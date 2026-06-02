@@ -288,7 +288,7 @@ sqlcmd -S prod.db.internal -U dbuser -d Production -Q "EXEC sp_msforeachtable 'S
           pg_dump --schema-only $DATABASE_URL > branch.sql
       - <span class="keyword">name</span>: Compare schemas
         <span class="keyword">run</span>: |
-          npx schemalens-diff prod.sql branch.sql --dialect=postgres</code></pre>
+          npx schemalens-cli prod.sql branch.sql --dialect=postgres</code></pre>
 
       <p>Learn more in our <a href="../ci-cd-integration.html">CI/CD Integration Guide</a>.</p>
 

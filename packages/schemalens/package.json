@@ -1,5 +1,5 @@
 {
-  "name": "schemalens",
+  "name": "schemalens-diff-cli",
   "version": "1.0.0",
   "description": "SQL Schema Diff & Migration Generator — the official SchemaLens CLI. Compare database schemas, detect breaking changes, and generate ALTER TABLE migrations for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
   "main": "index.js",
