@@ -224,6 +224,26 @@
     .results-panel { display: none; }
     .results-panel.active { display: block; }
 
+    .explanation-panel { padding: 8px 0; }
+    .explanation-section { margin-bottom: 28px; }
+    .explanation-section h4 { font-size: 1.05rem; margin: 0 0 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .explanation-section h4 .icon { font-size: 1.2rem; }
+    .explanation-list { margin: 0; padding-left: 0; list-style: none; }
+    .explanation-list li { padding: 10px 14px; margin-bottom: 8px; border-radius: var(--radius); background: var(--surface); border-left: 3px solid var(--primary); font-size: 0.95rem; line-height: 1.6; }
+    .explanation-list li.added { border-left-color: var(--success); background: rgba(52,211,153,0.06); }
+    .explanation-list li.removed { border-left-color: var(--danger); background: rgba(248,113,113,0.06); }
+    .explanation-list li.modified { border-left-color: var(--warning); background: rgba(251,191,36,0.06); }
+    .explanation-list li.tip { border-left-color: var(--info); background: rgba(96,165,250,0.06); }
+    .explanation-list li .label { font-weight: 600; }
+    .explanation-list li .detail { color: var(--text-muted); font-size: 0.88rem; display: block; margin-top: 2px; }
+    .explanation-overview { background: var(--surface); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; border: 1px solid var(--border); }
+    .explanation-overview p { margin: 0; font-size: 1rem; line-height: 1.6; }
+    .explanation-breaking { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; }
+    .explanation-breaking h4 { color: var(--danger); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+    .explanation-breaking ul { margin: 0; padding-left: 18px; color: var(--danger); }
+    .explanation-breaking ul li { margin-bottom: 6px; }
+    .explanation-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+
     .summary-bar {
       display: flex;
       gap: 16px;
@@ -1765,6 +1785,7 @@ CREATE TABLE users (
         <button class="results-tab" data-tab="markdown">Export Markdown</button>
         <button class="results-tab" data-tab="pdf">Export PDF</button>
         <button class="results-tab" data-tab="orm">ORM Export</button>
+        <button class="results-tab" data-tab="explanation">Explanation</button>
       </div>
 
       <div class="results-panel active" id="panel-visual">
@@ -1792,6 +1813,10 @@ CREATE TABLE users (
 
       <div class="results-panel" id="panel-orm">
         <div id="ormContainer"></div>
+      </div>
+
+      <div class="results-panel" id="panel-explanation">
+        <div id="explanationContainer"></div>
       </div>
     </div>
 
@@ -6626,6 +6651,239 @@ function renderORM() {
   updateORMOutput(schema, dialect);
 }
 
+function renderExplanation(diff, breakingChanges) {
+  diff = diff || lastDiff || null;
+  breakingChanges = breakingChanges || window.lastBreakingChanges || [];
+  const container = document.getElementById('explanationContainer');
+  if (!diff) {
+    container.innerHTML = '<div class="explanation-empty"><h3>No diff to explain</h3><p>Run a comparison first to see a plain-English breakdown of your schema changes.</p></div>';
+    return;
+  }
+
+  const totalChanges =
+    (diff.tablesAdded?.length || 0) +
+    (diff.tablesRemoved?.length || 0) +
+    (diff.tablesRenamed?.length || 0) +
+    (diff.tablesModified?.length || 0) +
+    (diff.enumsAdded?.length || 0) +
+    (diff.enumsRemoved?.length || 0) +
+    (diff.triggersAdded?.length || 0) +
+    (diff.triggersRemoved?.length || 0) +
+    (diff.triggersModified?.length || 0) +
+    (diff.viewsAdded?.length || 0) +
+    (diff.viewsRemoved?.length || 0) +
+    (diff.viewsModified?.length || 0) +
+    (diff.functionsAdded?.length || 0) +
+    (diff.functionsRemoved?.length || 0) +
+    (diff.functionsModified?.length || 0);
+
+  if (totalChanges === 0) {
+    container.innerHTML = '<div class="explanation-empty"><h3>No differences found</h3><p>The two schemas are identical. Nothing to explain.</p></div>';
+    return;
+  }
+
+  let html = '';
+
+  // Overview
+  const parts = [];
+  const tAdd = diff.tablesAdded?.length || 0;
+  const tRem = diff.tablesRemoved?.length || 0;
+  const tRen = diff.tablesRenamed?.length || 0;
+  const tMod = diff.tablesModified?.length || 0;
+  if (tAdd) parts.push(`<strong>${tAdd}</strong> table${tAdd > 1 ? 's' : ''} added`);
+  if (tRem) parts.push(`<strong>${tRem}</strong> table${tRem > 1 ? 's' : ''} removed`);
+  if (tRen) parts.push(`<strong>${tRen}</strong> table${tRen > 1 ? 's' : ''} renamed`);
+  if (tMod) parts.push(`<strong>${tMod}</strong> table${tMod > 1 ? 's' : ''} modified`);
+
+  const otherCount =
+    (diff.enumsAdded?.length || 0) + (diff.enumsRemoved?.length || 0) +
+    (diff.triggersAdded?.length || 0) + (diff.triggersRemoved?.length || 0) + (diff.triggersModified?.length || 0) +
+    (diff.viewsAdded?.length || 0) + (diff.viewsRemoved?.length || 0) + (diff.viewsModified?.length || 0) +
+    (diff.functionsAdded?.length || 0) + (diff.functionsRemoved?.length || 0) + (diff.functionsModified?.length || 0);
+  if (otherCount) parts.push(`<strong>${otherCount}</strong> other object change${otherCount > 1 ? 's' : ''}`);
+
+  html += `<div class="explanation-overview"><p>📋 This diff contains ${parts.join(', ')}. Below is a plain-English breakdown of what changed and what to watch out for.</p></div>`;
+
+  // Breaking changes box
+  const criticalBC = breakingChanges.filter(b => b.severity === 'critical');
+  const warningBC = breakingChanges.filter(b => b.severity === 'warning');
+  if (breakingChanges.length > 0) {
+    html += `<div class="explanation-breaking">`;
+    html += `<h4>🚨 ${breakingChanges.length} Breaking Change${breakingChanges.length > 1 ? 's' : ''} Detected</h4>`;
+    html += `<ul>`;
+    for (const bc of criticalBC) {
+      html += `<li><strong>CRITICAL:</strong> ${esc(bc.details)}</li>`;
+    }
+    for (const bc of warningBC) {
+      html += `<li><strong>Warning:</strong> ${esc(bc.details)}</li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Helper to build a column description
+  function colDesc(col) {
+    let s = `<strong>${esc(col.name)}</strong> (${esc(col.type)})`;
+    if (!col.nullable) s += ' <strong>NOT NULL</strong>';
+    if (col.defaultValue) s += ` default <code>${esc(col.defaultValue)}</code>`;
+    if (col.primaryKey) s += ' <strong>PRIMARY KEY</strong>';
+    return s;
+  }
+
+  // Tables Added
+  if (diff.tablesAdded?.length) {
+    html += `<div class="explanation-section"><h4><span class="icon">➕</span> New Tables</h4><ul class="explanation-list">`;
+    for (const table of diff.tablesAdded) {
+      const colCount = table.columns?.length || 0;
+      const colNames = (table.columns || []).slice(0, 5).map(c => esc(c.name)).join(', ');
+      const more = colCount > 5 ? ` and ${colCount - 5} more` : '';
+      html += `<li class="added">A new table <strong>${esc(table.name)}</strong> was created with ${colCount} column${colCount > 1 ? 's' : ''}: ${colNames}${more}.`;
+      html += `<span class="detail">This is a safe, non-breaking change. Make sure your application code creates and queries this table correctly.</span></li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Tables Removed
+  if (diff.tablesRemoved?.length) {
+    html += `<div class="explanation-section"><h4><span class="icon">➖</span> Removed Tables</h4><ul class="explanation-list">`;
+    for (const table of diff.tablesRemoved) {
+      html += `<li class="removed">The table <strong>${esc(table.name)}</strong> was dropped.`;
+      html += `<span class="detail">🚨 BREAKING: Any code, queries, or views that reference this table will fail immediately. Verify nothing depends on it before deploying.</span></li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Tables Renamed
+  if (diff.tablesRenamed?.length) {
+    html += `<div class="explanation-section"><h4><span class="icon">🏷️</span> Renamed Tables</h4><ul class="explanation-list">`;
+    for (const ren of diff.tablesRenamed) {
+      html += `<li class="modified">The table <strong>${esc(ren.oldTable.name)}</strong> was renamed to <strong>${esc(ren.newTable.name)}</strong>.`;
+      html += `<span class="detail">Update all queries, foreign keys, and application code that reference the old name. Some ORMs handle renames automatically.</span></li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Tables Modified
+  if (diff.tablesModified?.length) {
+    html += `<div class="explanation-section"><h4><span class="icon">✏️</span> Modified Tables</h4><ul class="explanation-list">`;
+    for (const td of diff.tablesModified) {
+      html += `<li class="modified">Changes to table <strong>${esc(td.name)}</strong>:`;
+      html += `<span class="detail">`;
+      const items = [];
+      for (const col of td.columnsAdded || []) {
+        let item = `Added column ${colDesc(col)}.`;
+        if (!col.nullable && !col.defaultValue) {
+          item += ` <strong style="color:var(--danger)">⚠ This is NOT NULL with no default — migration will fail on existing rows.</strong>`;
+        }
+        items.push(item);
+      }
+      for (const col of td.columnsRemoved || []) {
+        items.push(`Dropped column <strong>${esc(col.name)}</strong>. <strong style="color:var(--danger)">⚠ Breaking:</strong> Any code using this column will fail.`);
+      }
+      for (const ren of td.columnsRenamed || []) {
+        items.push(`Renamed column <strong>${esc(ren.oldColumn.name)}</strong> to <strong>${esc(ren.newColumn.name)}</strong>. Update queries and ORM models.`);
+      }
+      for (const mod of td.columnsModified || []) {
+        for (const c of mod.changes) {
+          if (c.field === 'type') {
+            let extra = '';
+            const oldT = (c.old || '').toUpperCase();
+            const newT = (c.new || '').toUpperCase();
+            if ((oldT.includes('TEXT') || oldT.includes('CLOB')) && (newT.includes('VARCHAR') || newT.includes('CHAR'))) {
+              extra = ' <strong style="color:var(--warning)">⚠ Risk of data truncation.</strong>';
+            }
+            items.push(`Changed column <strong>${esc(mod.column.name)}</strong> from <code>${esc(c.old)}</code> to <code>${esc(c.new)}</code>.${extra}`);
+          } else if (c.field === 'nullable') {
+            if (c.new === 'NOT NULL') {
+              items.push(`Column <strong>${esc(mod.column.name)}</strong> is now <strong>NOT NULL</strong>. <strong style="color:var(--warning)">⚠ Existing rows must be backfilled before applying.</strong>`);
+            } else {
+              items.push(`Column <strong>${esc(mod.column.name)}</strong> now allows NULL values.`);
+            }
+          } else if (c.field === 'default') {
+            items.push(`Default value for <strong>${esc(mod.column.name)}</strong> changed from <code>${esc(c.old)}</code> to <code>${esc(c.new)}</code>.`);
+          } else if (c.field === 'primary key') {
+            items.push(`Primary key on <strong>${esc(mod.column.name)}</strong> was ${c.new === 'YES' ? 'added' : 'removed'}.`);
+          } else if (c.field === 'unique') {
+            items.push(`Unique constraint on <strong>${esc(mod.column.name)}</strong> was ${c.new === 'YES' ? 'added' : 'removed'}.`);
+          } else {
+            items.push(`Column <strong>${esc(mod.column.name)}</strong>: <code>${esc(c.old)}</code> → <code>${esc(c.new)}</code> (${esc(c.field)}).`);
+          }
+        }
+      }
+      for (const con of td.constraintsAdded || []) {
+        let detail = esc(con.type);
+        if (con.type === 'FOREIGN KEY') detail += ` referencing ${esc(con.refTable)}`;
+        if (con.columns) detail += ` on (${esc(con.columns.join(', '))})`;
+        items.push(`Added <strong>${detail}</strong> constraint.`);
+      }
+      for (const con of td.constraintsRemoved || []) {
+        let detail = esc(con.type);
+        if (con.columns) detail += ` on (${esc(con.columns.join(', '))})`;
+        items.push(`Removed <strong>${detail}</strong> constraint.`);
+      }
+      html += items.map(i => `• ${i}`).join('<br>');
+      html += `</span></li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Enums
+  if ((diff.enumsAdded?.length || 0) + (diff.enumsRemoved?.length || 0)) {
+    html += `<div class="explanation-section"><h4><span class="icon">🔘</span> Enums</h4><ul class="explanation-list">`;
+    for (const en of diff.enumsAdded || []) {
+      html += `<li class="added">New enum type <strong>${esc(en.name)}</strong> with values: ${(en.values || []).map(v => `<code>${esc(v)}</code>`).join(', ')}.</li>`;
+    }
+    for (const en of diff.enumsRemoved || []) {
+      html += `<li class="removed">Enum type <strong>${esc(en.name)}</strong> was removed. <strong style="color:var(--danger)">⚠ Breaking:</strong> Any columns using this type will fail.</li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  // Triggers
+  if ((diff.triggersAdded?.length || 0) + (diff.triggersRemoved?.length || 0) + (diff.triggersModified?.length || 0)) {
+    html += `<div class="explanation-section"><h4><span class="icon">⚡</span> Triggers</h4><ul class="explanation-list">`;
+    for (const t of diff.triggersAdded || []) html += `<li class="added">New trigger <strong>${esc(t.name)}</strong> on <strong>${esc(t.table)}</strong>.</li>`;
+    for (const t of diff.triggersRemoved || []) html += `<li class="removed">Trigger <strong>${esc(t.name)}</strong> on <strong>${esc(t.table)}</strong> was removed.</li>`;
+    for (const t of diff.triggersModified || []) html += `<li class="modified">Trigger <strong>${esc(t.name)}</strong> on <strong>${esc(t.table)}</strong> was modified.</li>`;
+    html += `</ul></div>`;
+  }
+
+  // Views
+  if ((diff.viewsAdded?.length || 0) + (diff.viewsRemoved?.length || 0) + (diff.viewsModified?.length || 0)) {
+    html += `<div class="explanation-section"><h4><span class="icon">👁️</span> Views</h4><ul class="explanation-list">`;
+    for (const v of diff.viewsAdded || []) html += `<li class="added">New view <strong>${esc(v.name)}</strong>.</li>`;
+    for (const v of diff.viewsRemoved || []) html += `<li class="removed">View <strong>${esc(v.name)}</strong> was removed.</li>`;
+    for (const v of diff.viewsModified || []) html += `<li class="modified">View <strong>${esc(v.name)}</strong> was modified.</li>`;
+    html += `</ul></div>`;
+  }
+
+  // Functions
+  if ((diff.functionsAdded?.length || 0) + (diff.functionsRemoved?.length || 0) + (diff.functionsModified?.length || 0)) {
+    html += `<div class="explanation-section"><h4><span class="icon">ƒ</span> Functions / Procedures</h4><ul class="explanation-list">`;
+    for (const f of diff.functionsAdded || []) html += `<li class="added">New function <strong>${esc(f.name)}</strong>.</li>`;
+    for (const f of diff.functionsRemoved || []) html += `<li class="removed">Function <strong>${esc(f.name)}</strong> was removed.</li>`;
+    for (const f of diff.functionsModified || []) html += `<li class="modified">Function <strong>${esc(f.name)}</strong> was modified.</li>`;
+    html += `</ul></div>`;
+  }
+
+  // Action items / tips
+  html += `<div class="explanation-section"><h4><span class="icon">💡</span> Recommended Next Steps</h4><ul class="explanation-list">`;
+  if (criticalBC.length) {
+    html += `<li class="tip">Review the <strong>${criticalBC.length} critical breaking change${criticalBC.length > 1 ? 's' : ''}</strong> above before deploying. These can cause immediate production failures.</li>`;
+  }
+  html += `<li class="tip">Copy the <strong>Migration SQL</strong> tab and run it in a staging environment first.</li>`;
+  html += `<li class="tip">Check the <strong>Visual Diff</strong> tab to verify every change is intentional.</li>`;
+  if (diff.tablesAdded?.length) {
+    html += `<li class="tip">Update your ORM models and API validations to match the new ${diff.tablesAdded.length} table${diff.tablesAdded.length > 1 ? 's' : ''}.</li>`;
+  }
+  if (diff.tablesRemoved?.length) {
+    html += `<li class="tip">Remove or update any code referencing the dropped table${diff.tablesRemoved.length > 1 ? 's' : ''}.</li>`;
+  }
+  html += `<li class="tip">Run your test suite against the migrated schema before production deployment.</li>`;
+  html += `</ul></div>`;
+
+  container.innerHTML = html;
+}
+
 function switchOrmFormat(fmt) {
   currentOrmFormat = fmt;
   document.getElementById('btnPrisma').classList.toggle('active', fmt === 'prisma');
@@ -6722,6 +6980,7 @@ function unlockProViaShare(platform) {
   if (typeof lastDiff !== 'undefined' && lastDiff) {
     renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff);
     if (typeof renderORM === 'function') renderORM();
+    renderExplanation();
   }
   showError('✓ Pro unlocked for 7 days! Thanks for sharing SchemaLens.');
 }
@@ -6770,6 +7029,7 @@ function tryProTrial() {
   if (lastDiff) {
     renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff);
     renderORM();
+    renderExplanation();
   }
   showError('✓ Pro trial activated! Copy, download, and export are unlocked for 24 hours.');
 }
@@ -6833,14 +7093,14 @@ function applyLicense() {
     checkLicense();
     closeLicenseModal();
     // Re-render migration if results are showing
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); }
     return;
   }
   if (validateLicenseKey(key)) {
     localStorage.setItem('schemalens_license', key);
     checkLicense();
     closeLicenseModal();
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); }
     if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_activate');
   } else {
     input.style.borderColor = 'var(--danger)';
@@ -8204,6 +8464,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderMarkdown();
   renderPDF();
   renderORM();
+  renderExplanation(diff, breakingChanges);
 
   // Show share CTA or powered-by badge based on context
   if (isViewingSharedDiff()) {

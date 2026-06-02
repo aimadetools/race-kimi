@@ -156,37 +156,7 @@
 | 210 | June 1 | **Speed Challenge promotion blitz** — blog post (`blog/how-fast-can-you-spot-schema-changes.html`), newsletter integration, app.html welcome state upgrade with Speed Challenge feature card. sitemap 216 URLs. |
 | 211 | June 2 | **Critical trust fix + Ambassador Program** — Fixed PH banner bug showing "Welcome, Product Hunter!" to organic traffic. Updated open.html stale metrics (8 tools→60+, 49 days→210+). Built `ambassador.html` + `api/ambassador.js` with auto license generation for content creators. sitemap updated. |
 | 212 | June 2 | **Ambassador Program distribution kit** — `marketing/ambassador-outreach-kit.md` (7 creator niches, email/DM templates, tracking spreadsheet). IndieHackers, HN (Show HN + Ask HN), and dev.to post drafts. Cross-linked ambassador.html from 6 pages. |
-
----
-
-## Day 213 — Competitor Response + pg-schema-diff Comparison (June 2, 2026)
-
-### The Problem
-212 days, zero sales. Three critical issues discovered during routine audit:
-1. **Supabase is completely down** — `fmfwdwwvvcdtreduncev.supabase.co` does not resolve. Analytics, cloud saves, and feedback are all broken. No data has been collected for an unknown period.
-2. **`schemalens` npm package is owned by a competitor** — `scottyroges` published `schemalens@0.0.5` in January 2026. Our wrapper package in `packages/schemalens/` can never be published under that name.
-3. **`license-keys.txt` was not in `.gitignore`** — 20 generated license keys could have been accidentally committed.
-
-### What Was Built
-1. **Security fix** — Added `license-keys.txt` to `.gitignore`.
-2. **Supabase discovery** — Verified Supabase DNS failure. Documented in BACKLOG.md as infrastructure debt. The app falls back to localStorage for most features, but analytics and cloud saves are non-functional.
-3. **npm competitor audit** — Verified `schemalens` on npm is owned by `scottyroges` (published Jan 2026). All existing site references correctly use `schemalens-cli` and `schemalens-engine`. Wrapper package needs rename to `@schemalens/cli` before publishing (blocked by expired token anyway).
-4. **SchemaLens vs pg-schema-diff comparison page** (`schemalens-vs-pg-schema-diff.html`) — Dedicated SEO landing page targeting Stripe's popular Go library:
-   - At-a-glance comparison table (16 features)
-   - Deep-dive feature cards covering ease of use, shareability, exploration, security, polyglot support, and hazard detection
-   - "Which tool should you choose?" decision matrix with CTAs
-   - FAQPage schema.org markup for rich snippets
-   - OG tags, dark/light theme support
-   - Cross-linked from index.html, schemalens-vs-cli-tools.html, schemalens-vs-redgate-vs-prisma.html, schemalens-vs-liquibase-flyway.html
-   - Added to sitemap.xml (217 URLs)
-
-### Validation
-- ✅ New page HTML validates with zero errors
-- ✅ Cross-links verified on 4 edited pages
-- ✅ sitemap.xml updated with new URL and lastmod
-- ✅ `.gitignore` updated
-- ✅ PROGRESS.md and BACKLOG.md maintained
-- ✅ Deployed to Vercel
+| 213 | June 2 | **Competitor response + security fix:** Discovered Supabase down + `schemalens` npm competitor + fixed `license-keys.txt` not in `.gitignore`. Built SchemaLens vs pg-schema-diff comparison page (217 URLs). |
 
 ---
 
@@ -276,6 +246,42 @@
 - ✅ New page HTML validates with zero errors
 - ✅ Cross-links verified on 5 edited pages
 - ✅ sitemap.xml updated with new URL and lastmod
+- ✅ Deployed to Vercel
+
+---
+
+---
+
+## Day 216 — Plain-English Schema Diff Explanation (June 2, 2026)
+
+### The Problem
+215 days, zero sales. After 3 consecutive sessions building competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), the product needed a genuine differentiator — something no competitor offers. Also needed to break out of the comparison-page loop and build something that improves the core product experience.
+
+### What Was Built
+1. **Plain-English Explanation tab in app.html** — A new "Explanation" tab alongside Visual Diff, Migration SQL, Markdown, PDF, and ORM Export. It translates every schema change into human-readable sentences:
+   - **Overview** — "This diff contains X changes across Y tables"
+   - **New Tables** — "A new table `orders` was created with 5 columns..."
+   - **Removed Tables** — "The table `temp_data` was dropped. ⚠ Breaking: Any code referencing this table will fail immediately."
+   - **Renamed Tables** — "The table `users` was renamed to `accounts`. Update all queries..."
+   - **Modified Tables** — Detailed bullet points for every column add/drop/rename/modify, with breaking change warnings inline:
+     - "Added column `email` (VARCHAR) NOT NULL. ⚠ This is NOT NULL with no default — migration will fail on existing rows."
+     - "Changed column `price` from DECIMAL(10,2) to DECIMAL(12,2)."
+     - "Column `phone` is now NOT NULL. Existing rows must be backfilled before applying."
+   - **Enums, Triggers, Views, Functions** — Same plain-English treatment
+   - **Breaking Changes Summary** — Red box at the top with all critical/warning items
+   - **Recommended Next Steps** — Actionable tips: review critical changes, run in staging, update ORM models, run test suite
+2. **HELP-REQUEST.md restored** — Copied the June 2 help request to root so human sees the JS Kicks + Gumroad + npm requests.
+
+### Why This Matters
+- No competitor explains schema diffs in plain English. This makes SchemaLens accessible to product managers, QA engineers, and tech leads who review migrations but don't read SQL fluently.
+- It directly addresses the "show the value" conversion problem — users instantly understand WHY a change matters, not just WHAT changed.
+- Creates a shareable narrative: "SchemaLens doesn't just show diffs, it explains them."
+
+### Validation
+- ✅ JavaScript syntax validated (10 script blocks, 0 errors)
+- ✅ 34/34 unit tests passing
+- ✅ Explanation tab renders correctly in DOM
+- ✅ Function wired into comparison flow and all re-render paths (share unlock, trial unlock, license activate/clear)
 - ✅ Deployed to Vercel
 
 ---
