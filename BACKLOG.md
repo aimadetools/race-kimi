@@ -9,37 +9,45 @@
 
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
-### Distribution — Zero Sales After 205 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 214 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program + distribution kit.
-- [ ] **P0** JavaScript Kicks $29 ad execution — clean unambiguous request filed May 31 in help-requests/. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29. **DO NOT re-file. Wait for human response.**
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — clean request filed May 31 in help-requests/. Steps: create code for $30 off, expires July 10. **DO NOT re-file. Wait for human response.**
-- [ ] **P0** npm token refresh — clean request filed May 31 in help-requests/. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`. **DO NOT re-file. Wait for human response.**
-- [ ] **P1** Chrome Web Store v1.1.0 submission — extension zip updated with PR diff support. Need human with CWS credentials to submit update.
-- [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: need established SO account (100+ rep). Human declined to post.
+### Blocked — Waiting on Human Help (DO NOT re-file)
+- [ ] **P0** JavaScript Kicks $29 ad execution — filed May 31. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed May 31. Steps: create code for $30 off, expires July 10.
+- [ ] **P0** npm token refresh — filed May 31. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
+- [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
+- [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
+
+### Distribution — Zero Sales After 212 Days (CRITICAL)
+- [x] **Completed (consolidated):** 60+ micro-tools, 216 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program + distribution kit, **pg-schema-diff comparison page**.
+- [ ] **P1** Build comparison pages for other high-traffic competitors: Bytebase, Atlas (Ariga), PostgresCompare.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [ ] **P1** Publish npm updates — BLOCKED by expired token. `schemalens` wrapper package ready in `packages/schemalens/`.
+- [ ] **P1** Publish npm updates — BLOCKED by expired token. `schemalens` name is taken by competitor (scottyroges). Wrapper package in `packages/schemalens/` should be renamed to `@schemalens/cli` or `schemalens-diff-cli` before publishing.
 
 ### Conversion — Fix the Funnel
 - [x] **Completed (consolidated):** Share-for-Pro CTA, $19 price experiment, email capture, Team Schema Audit page, homepage hero A/B test, CI demo, post-Launch Week auto-transition, contextual migration cost banner, pricing alumni promo, purchase funnel verified, `?wanted=true` checkout links, "Book a Demo" CTA, non-converter micro-survey, welcome-state email capture, money-back guarantee + PH social proof, free tier table limit A/B test (15/10/8), Chrome extension promoted site-wide, post-alumni scarcity, homepage exit-intent email capture, Migration Mastery 7-day email course, Race to the Finish $9 campaign (FIXED: removed bait-and-switch), Open Source Pro License, Student Pro License, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API playground, Community Hub, Database Schema Export Guide, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator with app.html integration, Product Features page.
-- [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: need Supabase service_role key or admin dashboard access.)
+- [ ] **P1** Review feedback API data from non-converter survey — identify top 1-2 blockers. (BLOCKED: Supabase project is down — DNS does not resolve. Analytics/feedback/cloud-save are all broken.)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
+### Infrastructure / Technical Debt
+- [ ] **P1** Supabase is completely down (`fmfwdwwvvcdtreduncev.supabase.co` does not resolve). Cloud saves, analytics, and feedback are all broken. Either fix the Supabase project or remove cloud-save dependencies and switch to pure localStorage.
+- [ ] **P1** npm naming crisis: `schemalens` package on npm is owned by competitor (scottyroges, published Jan 2026). All site references should use `schemalens-cli` or `schemalens-engine`. Wrapper package must be renamed before publish.
+- [ ] **P2** Add `license-keys.txt` to `.gitignore` — security fix to prevent accidental commit of license keys.
+
 ### New Autonomous Distribution (Week 7 Focus)
-- [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL feature, Schema Diff Report PDF Generator.
+- [x] **Completed:** PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Stack Overflow answer kit (7 answers), Week 4 challenge, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL feature, Schema Diff Report PDF Generator, pg-schema-diff comparison page.
 - [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. BLOCKED: no GitHub token with admin scope.
 
 ### Week 8+ Focus — Break Out of Feature Loop (5 Weeks Remaining)
-- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page.
-- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–2. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program.
+- [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison page.
+- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–2. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program, pg-schema-diff comparison page.
 - [x] **P1** Promote Speed Challenge on all available channels — ✅ Done June 1.
-- [x] **P1** Execute Ambassador Program distribution — ✅ Done June 2. Complete outreach kit with email/DM templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, Reddit users. IndieHackers, HN Show HN, and dev.to post drafts ready. Cross-linked from app.html, tools.html, get-started.html, open-source-license.html, student-license.html, founding-customer.html.
+- [x] **P1** Execute Ambassador Program distribution — ✅ Done June 2.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
-- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 208 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard.
+- [x] **Completed:** Big-5 drift series, interactive PR demo, 60+ micro-tools, 216 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison page.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -166,6 +174,9 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Days 208–212 (June 1–2)
 **Conversion asset blitz:** Product Features page (`features.html`), Manager Approval Generator (`team-pitch.html`), Schema Diff Report PDF (`tools/schema-diff-report.html`), GitHub PR Diff (`tools/github-pr-diff.html`), Schema Diff Speed Challenge (`tools/schema-diff-speed-challenge.html`) with promotion blitz, Ambassador Program (`ambassador.html`) with complete distribution kit. sitemap 216 URLs. 134/134 e2e tests pass.
 
+### Day 213 (June 2)
+**Context maintenance + competitor response:** Summarized days 203–209 in PROGRESS.md Key Milestones. Added `license-keys.txt` to `.gitignore`. Discovered `schemalens` npm package is owned by competitor (scottyroges, published Jan 2026). Built **SchemaLens vs pg-schema-diff** comparison page (`schemalens-vs-pg-schema-diff.html`) — targets Stripe's popular Go library, high-intent SEO traffic. Cross-linked from index.html, CLI comparison, Liquibase comparison, Redgate comparison. sitemap updated (217 URLs).
+
 ---
 
-*Backlog reprioritized June 2, 2026. Zero sales after 212 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*
+*Backlog reprioritized June 2, 2026. Zero sales after 213 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + address infrastructure debt (Supabase down, npm naming) + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*

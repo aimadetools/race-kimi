@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–205)
+## Key Milestones (Days 1–209)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -83,7 +83,7 @@
 | 132 | May 13 | SQL Rename Generator micro-tool (#37) with smart Levenshtein suggestions. HELP-REQUEST.md recreated (6th time) with complete PH launch instructions. Cross-links and sitemap updated (160 URLs). Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 37 tools. |
 | 133–135 | May 13 | Built 3 new micro-tools: SQL CREATE INDEX Generator (#38), SQL CREATE VIEW Generator (#39), SQL DROP Statement Generator (#40). Cross-links updated. sitemap.xml grew to 163 URLs. Built-in-public.html and ACQUISITION-RESPONSE-5000.md updated to 40 tools. |
 | 136 | May 14 | Launch Day Final Prep: Recreated HELP-REQUEST.md (7th time) with complete copy-paste PH launch instructions. Stale data sweep across 6 files: day counts 130→136, tool counts 36+→40+. Removed fake "Recent Comparisons" ticker from app paywall. Added Pro Preview modal. |
-| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42). Cross-linked, sitemap updated (165 URLs). Tool count sweep 40+ → 42+. |
+| 137 | May 14 | SQL Window Function Generator (#41) + SQL GROUP BY Generator (#42). Cross-linked, sitemap updated (165 URLs). Tool count 40+ → 42+. |
 | 138 | May 14 | HELP-REQUEST.md recreation (8th time), context maintenance, `migration-horror-stories.html` built (4 real-world stories). Cross-linked and sitemap updated (166 URLs), stale data sweep. |
 | 139 | May 14 | **Launch Week Free Pro campaign** — all Pro features unlocked May 14–21. `isProUnlocked()` gates Pro access. Launch Week banner with countdown, homepage hero badge, pricing page promo box. |
 | 140 | May 14 | HELP-REQUEST.md recreation (9th time). 3 new micro-tools: SQL Pagination Generator (#43), SQL CTE Generator (#44), SQL Transaction Generator (#45). Cross-linked, sitemap updated (169 URLs). Tool count 44+→47+. |
@@ -153,9 +153,6 @@
 | 207 | June 1 | **Manager Approval Business Case Generator** (`team-pitch.html`) — interactive 3-step wizard that helps developers justify SchemaLens Pro to their manager. Calculates ROI, time savings, risk reduction, cost comparison, and generates a copy-paste email. Cross-linked from index.html, pricing.html, app.html, tools.html. sitemap 213 URLs. |
 | 208 | June 1 | **Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass. |
 | 209 | June 1 | **Schema Diff Speed Challenge** (`tools/schema-diff-speed-challenge.html`) — gamified speed test where developers race the clock to spot schema changes manually across 3 rounds, then see SchemaLens find them instantly. Score-based with localStorage leaderboard and social sharing. Cross-linked from index.html, tools.html, community.html, weekly challenge page. sitemap 215 URLs. |
-| 210 | June 1 | **Speed Challenge promotion blitz** — promoted `tools/schema-diff-speed-challenge.html` across all available channels: added challenge card to app.html welcome state, built dedicated blog post `blog/how-fast-can-you-spot-schema-changes.html`, featured in newsletter welcome email and drip3 ("The 12 Changes That Break Production"). sitemap 216 URLs. 28/28 targeted tests pass. |
-| 211 | June 2 | **Critical trust fix + Ambassador Program** — Fixed app.html/index.html showing stale "Welcome, Product Hunter!" banner to all non-PH visitors (2+ weeks post-launch). Updated open.html with real metrics (210+ days, 60+ tools, 50+ blog posts, 130+ tests). Built Ambassador Program: free Lifetime Pro for content creators who publish SchemaLens tutorials/reviews. |
-| 212 | June 2 | **Ambassador Program distribution kit** — Complete outreach templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, and Reddit users. IndieHackers, HN Show HN, and dev.to post drafts ready for copy-paste submission. Cross-linked ambassador.html from app.html paywall, get-started.html, tools.html, open-source-license.html, student-license.html, founding-customer.html. |
 
 ---
 
@@ -265,4 +262,4 @@
 
 ---
 
-*Days 203–210 summarized in Key Milestones table above. Full history available in git log.*
+*Backlog reprioritized June 2, 2026. Full history available in git log.*
