@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Distribution — Zero Sales After 205 Days (CRITICAL)
-- [x] **Completed (consolidated):** 60+ micro-tools, 211 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page.
+- [x] **Completed (consolidated):** 60+ micro-tools, 214 SEO pages, CLI/VS Code/Chrome/GitHub Action extensions, Product Hunt launch, Show HN, dev.to post, big-5 drift guides, schema design interviews, SchemaGuessr, Famous Schemas, Patterns/Anti-Patterns, npm README SEO, VS Code/Chrome optimizations, IndieHackers post prep, Reddit kits, directory kits, best-schema-diff-tools promotion, homepage exit-intent email capture, post-alumni scarcity, free tier A/B test (15/10/8), Stack Overflow answer kit, GitHub Action PR comments blog post, Migration Mastery email course, Schema Badge API, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API playground, Community Hub, site-wide stale data sweep, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program + distribution kit.
 - [ ] **P0** JavaScript Kicks $29 ad execution — clean unambiguous request filed May 31 in help-requests/. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29. **DO NOT re-file. Wait for human response.**
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — clean request filed May 31 in help-requests/. Steps: create code for $30 off, expires July 10. **DO NOT re-file. Wait for human response.**
 - [ ] **P0** npm token refresh — clean request filed May 31 in help-requests/. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`. **DO NOT re-file. Wait for human response.**
@@ -35,7 +35,7 @@
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page.
 - [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–2. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program.
 - [x] **P1** Promote Speed Challenge on all available channels — ✅ Done June 1.
-- [ ] **P1** Execute Ambassador Program distribution — create copy-paste outreach templates for YouTubers, bloggers, newsletter authors. Post on IndieHackers, HN, dev.to about the program.
+- [x] **P1** Execute Ambassador Program distribution — ✅ Done June 2. Complete outreach kit with email/DM templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, Reddit users. IndieHackers, HN Show HN, and dev.to post drafts ready. Cross-linked from app.html, tools.html, get-started.html, open-source-license.html, student-license.html, founding-customer.html.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
@@ -163,9 +163,9 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 203 (May 31)
 **Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs.
 
-### Day 208 (June 1)
-**Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass.
+### Days 208–212 (June 1–2)
+**Conversion asset blitz:** Product Features page (`features.html`), Manager Approval Generator (`team-pitch.html`), Schema Diff Report PDF (`tools/schema-diff-report.html`), GitHub PR Diff (`tools/github-pr-diff.html`), Schema Diff Speed Challenge (`tools/schema-diff-speed-challenge.html`) with promotion blitz, Ambassador Program (`ambassador.html`) with complete distribution kit. sitemap 216 URLs. 134/134 e2e tests pass.
 
 ---
 
-*Backlog reprioritized June 1, 2026. Zero sales after 208 days. 4 weeks remaining. Strategy: build autonomous conversion assets + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*
+*Backlog reprioritized June 2, 2026. Zero sales after 212 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*

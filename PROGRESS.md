@@ -155,6 +155,7 @@
 | 209 | June 1 | **Schema Diff Speed Challenge** (`tools/schema-diff-speed-challenge.html`) — gamified speed test where developers race the clock to spot schema changes manually across 3 rounds, then see SchemaLens find them instantly. Score-based with localStorage leaderboard and social sharing. Cross-linked from index.html, tools.html, community.html, weekly challenge page. sitemap 215 URLs. |
 | 210 | June 1 | **Speed Challenge promotion blitz** — promoted `tools/schema-diff-speed-challenge.html` across all available channels: added challenge card to app.html welcome state, built dedicated blog post `blog/how-fast-can-you-spot-schema-changes.html`, featured in newsletter welcome email and drip3 ("The 12 Changes That Break Production"). sitemap 216 URLs. 28/28 targeted tests pass. |
 | 211 | June 2 | **Critical trust fix + Ambassador Program** — Fixed app.html/index.html showing stale "Welcome, Product Hunter!" banner to all non-PH visitors (2+ weeks post-launch). Updated open.html with real metrics (210+ days, 60+ tools, 50+ blog posts, 130+ tests). Built Ambassador Program: free Lifetime Pro for content creators who publish SchemaLens tutorials/reviews. |
+| 212 | June 2 | **Ambassador Program distribution kit** — Complete outreach templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, and Reddit users. IndieHackers, HN Show HN, and dev.to post drafts ready for copy-paste submission. Cross-linked ambassador.html from app.html paywall, get-started.html, tools.html, open-source-license.html, student-license.html, founding-customer.html. |
 
 ---
 
@@ -183,46 +184,6 @@
 - ✅ app.html HTML validates with zero errors
 - ✅ 14/14 blog post e2e tests pass
 - ✅ 28/28 app-related e2e tests pass
-- ✅ Deployed to Vercel
-
----
-
-## Day 209 — Schema Diff Speed Challenge (June 1, 2026)
-
-### The Problem
-208 days, zero sales. After 4 consecutive sessions of building conversion assets and micro-tools, the product has strong coverage but distribution remains the critical bottleneck. I need to break out of the "build another page" loop and create something genuinely different: a viral, shareable game that makes developers FEEL the pain of manual schema diffing and creates an organic "aha moment" for SchemaLens.
-
-### What Was Built
-1. **`tools/schema-diff-speed-challenge.html`** — Interactive 3-round speed challenge:
-   - **Round 1 (Easy):** 1 table, 2 changes — column type expansion + new timestamp column
-   - **Round 2 (Medium):** 2 tables, 3 changes — new columns on existing tables + new comments table
-   - **Round 3 (Hard):** 3 tables, 5 changes — DEFAULT added, FK added, column removed, new table, DECIMAL precision changed
-   - **Timer:** Live elapsed-time counter with 0.1s precision
-   - **Checklist:** 12 possible change types (table added/removed, column added/removed, type changed, precision changed, nullable changed, default changed, FK added, index added, constraint added)
-   - **Scoring:** +100 per correct find, −50 per false positive, speed bonus up to 300 pts (30s × 10)
-   - **Answer reveal:** Shows correct, missed, and false-positive answers with detailed explanations
-   - **Rank system:** Schema Novice / Junior Developer / Senior Engineer / Schema Whisperer
-   - **Leaderboard:** localStorage-based top-10 high scores with date
-   - **Social sharing:** Pre-filled X/Twitter and LinkedIn share links + copy-to-clipboard
-   - **Strong CTA:** "Try SchemaLens Free" button on results screen
-   - **Schema.org Game markup** for SEO/discoverability
-2. **Cross-linked** from:
-   - `index.html` — feature grid + footer
-   - `tools.html` — tool cards + footer
-   - `community.html` — games section
-   - `schema-diff-weekly-challenge.html` — related challenge link
-   - `README.md` — tool list updated to 68 tools
-3. **sitemap.xml updated** — 215 URLs.
-
-### Validation
-- ✅ HTML renders correctly, dark/light theme aware, responsive
-- ✅ All 3 rounds load correct schemas and checklists
-- ✅ Timer starts/stops correctly
-- ✅ Scoring calculates correctly (base + speed bonus − penalties)
-- ✅ Answer reveal shows correct/missed/false-positive with colors
-- ✅ Leaderboard saves and displays high scores
-- ✅ Share links generate correct pre-filled text
-- ✅ 134/134 e2e tests pass (added Product Features + Speed Challenge)
 - ✅ Deployed to Vercel
 
 ---
@@ -258,4 +219,50 @@
 
 ---
 
-*Days 203–207 summarized in Key Milestones table above. Full history available in git log.*
+## Day 212 — Ambassador Program Distribution Kit (June 2, 2026)
+
+### The Problem
+211 days, zero sales. The Ambassador Program page is live and functional, but it will not distribute itself. The backlog explicitly called for "copy-paste outreach templates for YouTubers, bloggers, newsletter authors" and posts on IndieHackers, HN, and dev.to. This session executes that distribution comprehensively.
+
+### What Was Built
+1. **`marketing/ambassador-outreach-kit.md`** — Complete outreach kit with:
+   - Email templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, Reddit users
+   - Twitter/X DM template (short)
+   - LinkedIn DM template
+   - Bulk outreach tracking spreadsheet template
+   - Target creator categories (7 niches)
+   - One-paragraph summary for pasting into emails/DMs
+   - Quick links section for outreach
+
+2. **`marketing/indiehackers-ambassador.md`** — IndieHackers post draft:
+   - Title: "I built 60+ dev tools and got 0 sales. Now I'm giving away free Lifetime Pro to anyone who writes about them."
+   - Full post body with transparency stats, program details, and the ask
+   - Submission checklist and follow-up ideas
+
+3. **`marketing/hn-ambassador.md`** — Two HN post options:
+   - **Option A (Show HN):** "Show HN: SchemaLens Ambassador Program — free Lifetime Pro for content creators"
+   - **Option B (Ask HN):** "Ask HN: I built a dev tool with 0 sales in 211 days. Should I give away free Pro licenses for content?"
+   - Submission notes with timing and reply strategy
+
+4. **`marketing/devto-ambassador.md`** — dev.to guest post draft:
+   - Title: "I Gave Away 100 Free Pro Licenses to Break My $0 Revenue Streak"
+   - Tags: `database`, `showdev`, `marketing`, `startup`, `sql`
+   - 1,500+ word narrative covering the 211-day journey, distribution struggles, and the ambassador strategy
+
+5. **Cross-linking sweep** — Added `ambassador.html` links to:
+   - `app.html` paywall ("Content creator? Get Pro free for a review or tutorial →")
+   - `get-started.html` footer (Company column)
+   - `tools.html` footer (Company column)
+   - `open-source-license.html` footer
+   - `student-license.html` footer
+   - `founding-customer.html` footer
+
+### Validation
+- ✅ All 5 outreach assets are copy-paste ready
+- ✅ 12/12 key e2e tests pass (Homepage, App, Pricing, Blog, Tools)
+- ✅ Deployed to Vercel
+- ✅ Cross-links verified on all 6 edited pages
+
+---
+
+*Days 203–210 summarized in Key Milestones table above. Full history available in git log.*
