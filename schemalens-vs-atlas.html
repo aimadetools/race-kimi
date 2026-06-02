@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens vs Atlas (Ariga) — Best Schema Diff Tool (2026)</title>
+  <meta name="description" content="Compare SchemaLens with Atlas by Ariga. See when an instant browser-based schema diff tool beats a schema-as-code CLI and cloud platform for migration reviews.">
+  <meta property="og:title" content="SchemaLens vs Atlas (Ariga) — Best Schema Diff Tool (2026)">
+  <meta property="og:description" content="Browser-based schema diff vs schema-as-code CLI. Compare features, pricing, setup time, dialect support, and CI/CD integration.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schemalens-vs-atlas.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is SchemaLens better than Atlas?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your workflow. Atlas is a powerful schema-as-code platform with a Go CLI, 50+ safety analyzers, and GitOps-native CI/CD. SchemaLens is a focused, zero-setup browser tool for instant visual diffs and migration generation. Choose SchemaLens for quick diffs, PR reviews, and when you need results in seconds without a live database. Choose Atlas for declarative schema management, drift detection, and Kubernetes-driven deployments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SchemaLens and Atlas together?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Use SchemaLens for instant visual diffs during development and code review — paste two schema dumps and share the result via URL. Use Atlas for declarative schema management, linting migrations, and applying changes through CI/CD pipelines. Many teams use SchemaLens to explore changes visually before codifying them in Atlas HCL or SQL."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Atlas require a live database connection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Atlas is designed around live database inspection and schema application. It connects to your database to inspect the current state, compute diffs, and apply migrations. SchemaLens works entirely offline — paste two CREATE TABLE dumps and get instant results without any database connection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which tool is more affordable?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens is significantly more affordable for individuals and small teams. The Pro tier is $39 one-time for lifetime access. Atlas CLI is free and open source, but Atlas Cloud — required for team features, CI/CD automation, and drift detection — starts at $9 per developer per month plus $59 per CI/CD project and $39 per monitored database."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which tool supports more SQL dialects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Atlas supports more database engines overall — PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, ClickHouse, CockroachDB, TiDB, and Redshift. SchemaLens supports the five most common dialects: PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. If you need TiDB or Redshift, Atlas is the better choice. For Oracle, SchemaLens is the better choice."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+          <a href="cli/">CLI</a>
+          <a href="team.html">Team</a>
+        <a href="testimonials.html">Wall of Love</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Unbiased comparison — updated June 2026
+      </div>
+      <h1>SchemaLens vs Atlas.<br><span>Instant browser diff or schema-as-code platform?</span></h1>
+      <p>Atlas by Ariga is a powerful schema-as-code tool with 50+ safety analyzers and Kubernetes-native CI/CD. SchemaLens is a focused, zero-setup visual diff tool that gives you answers in seconds. Here's how they compare.</p>
+      <div class="hero-actions">
+        <a href="#comparison-table" class="btn btn-primary btn-lg">Jump to Comparison</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Try SchemaLens Free</a>
+      </div>
+      <p class="hero-note">No account required. No data leaves your device.</p>
+    </div>
+  </header>
+
+  <section class="section" id="comparison-table">
+    <div class="container">
+      <h2 class="section-title text-center">At-a-glance comparison</h2>
+      <p class="section-subtitle text-center">How SchemaLens stacks up against Atlas by Ariga.</p>
+      <div class="table-wrapper" style="overflow-x: auto; margin-top: 32px;">
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th style="text-align: left; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Feature</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 700; color: var(--primary);">SchemaLens</th>
+              <th style="text-align: center; padding: 14px 16px; font-weight: 600; color: var(--text-muted);">Atlas (Ariga)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Pricing</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Free tier + $39 Lifetime Pro</td>
+              <td style="padding: 14px 16px; text-align: center;">Free CLI → Cloud $9/dev/mo + infra</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Setup time</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Instant — open browser</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Install CLI or cloud signup + DB config</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Visual diff</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Rich HTML with color coding</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ CLI text / Cloud dashboard</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Runs in browser</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes — zero install</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ CLI or cloud service</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">PostgreSQL</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">MySQL / MariaDB</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQLite</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">SQL Server</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Oracle</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Full support</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not supported</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">ClickHouse / CockroachDB / TiDB</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not supported</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Supported</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Needs live DB connection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">❌ No — paste SQL dumps</td>
+              <td style="padding: 14px 16px; text-align: center;">✅ Yes — connects to DB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Shareable links</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ URL + public links</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Within cloud project only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Export formats</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">SQL, Markdown, PDF, JSON</td>
+              <td style="padding: 14px 16px; text-align: center;">SQL, HCL</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Breaking change detection</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Built-in with warnings</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ 50+ safety analyzers</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Schema-as-code</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not built-in</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ HCL or SQL desired state</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Apply migrations to DB</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Generate only</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Plan + apply</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Drift detection</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Not built-in</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Atlas Cloud monitoring</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CI/CD templates</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ GitHub + GitLab + Bitbucket</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ GitOps + K8s operator</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Data privacy</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Schemas stay in browser</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ Connected to cloud/DB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">CLI available</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ schemalens-cli (npm)</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ atlas (Go + npm)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">VS Code extension</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes</td>
+              <td style="padding: 14px 16px; text-align: center;">⚠️ IDE support (limited)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Offline capable</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">✅ Yes — PWA</td>
+              <td style="padding: 14px 16px; text-align: center;">❌ Requires internet + DB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 14px 16px; font-weight: 500;">Best for</td>
+              <td style="padding: 14px 16px; text-align: center; color: var(--success); font-weight: 600;">Developers, code review, quick diffs</td>
+              <td style="padding: 14px 16px; text-align: center;">Platform teams, GitOps, IaC</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title text-center">Deep-dive: Where SchemaLens shines</h2>
+      <div class="feature-grid" style="margin-top: 40px;">
+        <div class="feature-card">
+          <h3>⚡ Zero Setup</h3>
+          <p>Atlas requires installing a Go binary or signing up for Atlas Cloud, configuring database URLs, and learning HCL or SQL schema definitions. SchemaLens opens in your browser and works immediately. Paste two SQL dumps and see the diff in under 3 seconds.</p>
+        </div>
+        <div class="feature-card">
+          <h3>💰 Transparent Pricing</h3>
+          <p>Atlas Cloud pricing scales with team size and infrastructure: $9/dev/mo, $59/CI project/mo, $39/monitored DB/mo. For a 5-person team with 2 databases, that's $104/month recurring. SchemaLens Pro is $39 once — lifetime access, unlimited diffs, all export formats. No recurring bills, no infrastructure costs.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔒 Air-Gapped Privacy</h3>
+          <p>Atlas connects to your live databases and optionally syncs to Atlas Cloud. SchemaLens parses schemas entirely in your browser. Your production schemas never touch a server — perfect for regulated industries, HIPAA environments, and air-gapped networks.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Shareability</h3>
+          <p>Generate a shareable URL for any diff and send it via Slack, email, or paste it into a GitHub PR. Recipients don't need an Atlas account, CLI installation, or database access to view the exact same visual output.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🛠️ Developer Toolchain</h3>
+          <p>SchemaLens integrates where developers already work: browser, VS Code extension, Chrome extension for GitHub PRs, npm CLI, and GitHub Actions. Atlas is primarily a CLI/cloud platform that developers must context-switch into.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📊 Rich Export Formats</h3>
+          <p>Export diffs as SQL migrations, Markdown for PR comments, branded PDF reports for Jira/Linear, or JSON for automation. Atlas exports SQL and HCL. When you need to communicate schema changes to stakeholders, SchemaLens gives you more options.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title text-center">Where Atlas shines</h2>
+      <div class="feature-grid" style="margin-top: 40px;">
+        <div class="feature-card">
+          <h3>🏗️ Schema-as-Code</h3>
+          <p>Atlas lets you define your desired database state in HCL or SQL and automatically computes the migration plan. This declarative approach is powerful for teams practicing Infrastructure-as-Code and GitOps workflows.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🛡️ 50+ Safety Analyzers</h3>
+          <p>Atlas has one of the most advanced migration linting engines available. It detects destructive changes, data-dependent modifications, table locks, backward-incompatible changes, and more before you apply anything.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🚀 Apply Migrations Directly</h3>
+          <p>Atlas doesn't just generate migration scripts — it can apply them directly to your database with rollout strategies. SchemaLens is a planning and review tool; Atlas is a deployment platform.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔍 Drift Detection</h3>
+          <p>Atlas Cloud continuously monitors your database schemas and alerts you when they drift from the desired state. SchemaLens has no built-in monitoring — it's designed for on-demand comparison, not ongoing surveillance.</p>
+        </div>
+        <div class="feature-card">
+          <h3>☸️ Kubernetes & GitOps Native</h3>
+          <p>Atlas offers a Kubernetes operator, Terraform provider, ArgoCD integration, and native GitHub Actions. If your team lives in K8s and Terraform, Atlas fits naturally into your existing toolchain.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🌐 Broad Database Support</h3>
+          <p>Atlas supports PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, ClickHouse, CockroachDB, TiDB, and Redshift. SchemaLens covers the five most common dialects plus Oracle. If you need TiDB or Redshift, Atlas is the clear choice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border);">
+    <div class="container">
+      <h2 class="section-title text-center">Which tool should you choose?</h2>
+      <div style="max-width: 720px; margin: 32px auto 0;">
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 20px;">
+          <h3 style="margin-bottom: 12px; color: var(--primary);">Choose SchemaLens if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); line-height: 1.7;">
+            <li>You need schema diffs <strong>now</strong> without installing anything</li>
+            <li>You review migrations in pull requests and need shareable diff output</li>
+            <li>You want a one-time payment, not a monthly infrastructure bill</li>
+            <li>Your schemas are sensitive and cannot leave your machine or connect to cloud services</li>
+            <li>You need a CLI, VS Code extension, Chrome extension, or GitHub Action integration</li>
+            <li>You work with Oracle (not supported by Atlas)</li>
+            <li>You need Markdown, PDF, or JSON export formats</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary" style="margin-top: 12px;">Try SchemaLens Free →</a>
+        </div>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px;">
+          <h3 style="margin-bottom: 12px; color: var(--text-muted);">Choose Atlas if…</h3>
+          <ul style="padding-left: 20px; color: var(--text-muted); line-height: 1.7;">
+            <li>You practice Infrastructure-as-Code and want schema-as-code in HCL</li>
+            <li>You need to apply migrations directly to databases from your tool</li>
+            <li>You want continuous drift detection and schema monitoring</li>
+            <li>Your team uses Kubernetes, Terraform, or ArgoCD for deployments</li>
+            <li>You need support for ClickHouse, CockroachDB, TiDB, or Redshift</li>
+            <li>You want 50+ automated safety analyzers linting every migration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">Start diffing in seconds</h2>
+      <p class="section-subtitle" style="max-width: 560px; margin: 0 auto 28px;">Join 10,000+ developers who use SchemaLens to catch schema mistakes before they reach production. Free for 15 tables. Pro is $39 lifetime.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens Free</a>
+      <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">No signup · No credit card · Schemas stay in your browser</p>
+    </div>
+  </section>
+
+  <footer class="footer" style="margin-top:0;">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-brand">
+          <span class="logo-mark">SL</span>
+          SchemaLens
+        </div>
+        <p>Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="app.html">Open App</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="features.html">Features</a>
+        <a href="vscode-extension.html">VS Code</a>
+        <a href="chrome-extension/">Chrome</a>
+        <a href="cli/">CLI</a>
+        <a href="api.html">API</a>
+      </div>
+      <div class="footer-links">
+        <h4>Compare</h4>
+        <a href="schemalens-vs-redgate-vs-prisma.html">vs Redgate / Prisma</a>
+        <a href="schemalens-vs-liquibase-flyway.html">vs Liquibase / Flyway</a>
+        <a href="schemalens-vs-cli-tools.html">vs CLI tools</a>
+        <a href="schemalens-vs-pg-schema-diff.html">vs pg-schema-diff</a>
+        <a href="schemalens-vs-bytebase.html">vs Bytebase</a>
+        <a href="schemalens-vs-atlas.html">vs Atlas (Ariga)</a>
+        <a href="best-schema-diff-tools.html">Best tools 2026</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="open.html">Open Startup</a>
+        <a href="blog.html">Blog</a>
+        <a href="affiliate.html">Affiliate</a>
+        <a href="ambassador.html">Ambassador</a>
+      </div>
+    </div>
+    <div class="container" style="text-align:center; margin-top:32px; padding-top:24px; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem;">
+      © 2026 SchemaLens. Built in the $100 AI Startup Race.
+    </div>
+  </footer>
+
+</body>
+</html>
