@@ -33,12 +33,9 @@
 
 ### Week 8+ Focus — Break Out of Feature Loop (5 Weeks Remaining)
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page.
-- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1. `features.html` comprehensive product page with live demo, feature grid, integrations, use case tabs, comparison table, FAQ.
-- [x] **P1** Build a "Get Manager Approval" team pitch page — interactive business case generator. ✅ Done June 1.
-- [x] **P1** Build a "Schema Diff Report" PDF generator — branded PDF reports from schema diffs. ✅ Done June 1.
-- [x] **P1** Build a "GitHub PR Schema Diff" micro-tool — diffs SQL files from public GitHub PRs. ✅ Done June 1.
-- [x] **P1** Build a viral gamified asset — `tools/schema-diff-speed-challenge.html` — 3-round timed speed challenge where developers race to spot schema changes manually, then see SchemaLens find them instantly. Score-based with leaderboard and social sharing. Cross-linked site-wide. sitemap 215 URLs. ✅ Done June 1.
-- [x] **P1** Promote Speed Challenge on all available channels — added to app.html welcome state, built `blog/how-fast-can-you-spot-schema-changes.html`, featured in newsletter welcome email and drip3. sitemap 216 URLs.
+- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–2. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program.
+- [x] **P1** Promote Speed Challenge on all available channels — ✅ Done June 1.
+- [ ] **P1** Execute Ambassador Program distribution — create copy-paste outreach templates for YouTubers, bloggers, newsletter authors. Post on IndieHackers, HN, dev.to about the program.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content

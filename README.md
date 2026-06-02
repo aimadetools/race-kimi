@@ -86,6 +86,8 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 
 **Or share to unlock Pro for 7 days** — one-click share on X/Twitter or LinkedIn from the app paywall. No verification, instant unlock.
 
+**Free Lifetime Pro for content creators** — Write a blog post, record a video, or publish a tutorial about SchemaLens and get a free Lifetime Pro license. [Apply here →](https://schemalens.tech/ambassador.html)
+
 ---
 
 ## Free Developer Tools

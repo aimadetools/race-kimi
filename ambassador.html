@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ambassador Program — Free Lifetime Pro for Content Creators</title>
+  <meta name="description" content="Create content about SchemaLens and get a free Lifetime Pro license. Blog posts, videos, tutorials, tweet threads, and newsletters all qualify.">
+  <meta property="og:title" content="SchemaLens Ambassador Program — Free Lifetime Pro">
+  <meta property="og:description" content="Create content about SchemaLens and get a free Lifetime Pro license. Open to all developers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/ambassador.html">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "SchemaLens Ambassador Program",
+  "description": "Free Lifetime Pro license for developers who create content about SchemaLens.",
+  "url": "https://schemalens.tech/ambassador.html"
+}
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="app.html">Diff</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="open.html">Open Startup</a>
+      <a href="api.html">API</a>
+      <a href="cli/">CLI</a>
+      <a href="team.html">Team</a>
+      <a href="testimonials.html">Wall of Love</a>
+      <a href="app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header class="about-hero">
+  <div class="container">
+    <div style="display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:0.35rem 0.9rem;font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">🎤 Ambassador Program</div>
+    <h1>Create content. Get free Lifetime Pro.</h1>
+    <p style="max-width: 640px;">Love SchemaLens? Write a blog post, record a video, or share a tweet thread — and get a free Lifetime Pro license worth $39. No catch. No waiting.</p>
+    <div style="margin-top:1.5rem;">
+      <a href="#apply" class="btn btn-primary" style="display:inline-block;margin-right:0.5rem;">Apply Now →</a>
+      <a href="#how-it-works" class="btn btn-secondary" style="display:inline-block;">How It Works</a>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:2rem;">What You Get</h2>
+    <div class="feature-grid">
+      <div class="feature-card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔑</div>
+        <div style="font-weight:600;">Lifetime Pro License</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem;">Unlimited tables, full migration SQL, exports, and all future updates. Yours forever.</div>
+      </div>
+      <div class="feature-card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">⭐</div>
+        <div style="font-weight:600;">Founder Recognition</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem;">Your name and content featured on our community page and social channels.</div>
+      </div>
+      <div class="feature-card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
+        <div style="font-weight:600;">Early Access</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem;">Be the first to try new features, integrations, and beta tools before anyone else.</div>
+      </div>
+      <div class="feature-card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">💬</div>
+        <div style="font-weight:600;">Direct Line to the Founder</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem;">Shape the product roadmap. Your feedback goes straight to the top.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:2rem;">What We're Looking For</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">📝 Blog Post</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">A review, tutorial, or comparison featuring SchemaLens. 500+ words. Publish on your blog, Medium, or dev.to.</div>
+      </div>
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">🎥 Video</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">A demo, walkthrough, or review on YouTube, TikTok, or Twitter/X. 2+ minutes.</div>
+      </div>
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">🧵 Tweet Thread</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">A Twitter/X thread explaining SchemaLens, its features, or how you use it. 5+ tweets.</div>
+      </div>
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">📧 Newsletter</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">Mention SchemaLens in your developer newsletter. Any subscriber count welcome.</div>
+      </div>
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">📚 Tutorial</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">A step-by-step guide on using SchemaLens for a specific workflow (CI/CD, migration review, etc.).</div>
+      </div>
+      <div class="feature-card">
+        <div style="font-weight:600;margin-bottom:0.5rem;">💬 Social Post</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);">A LinkedIn post, Reddit post, or Discord share with genuine thoughts on SchemaLens.</div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);margin-top:1.5rem;max-width:600px;margin-left:auto;margin-right:auto;">Not sure if your idea qualifies? Apply anyway. We're flexible and value creativity over polish.</p>
+  </div>
+</section>
+
+<section id="how-it-works" class="section">
+  <div class="container" style="max-width:720px;">
+    <h2 style="text-align:center;margin-bottom:2rem;">How It Works</h2>
+    <div style="display:grid;gap:1.5rem;">
+      <div style="display:flex;gap:1.25rem;align-items:flex-start;">
+        <div style="min-width:48px;height:48px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;">1</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Create Your Content</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);">Publish a blog post, video, thread, or tutorial that mentions SchemaLens. Be honest — we welcome critical feedback too.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.25rem;align-items:flex-start;">
+        <div style="min-width:48px;height:48px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;">2</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Submit the URL</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);">Fill out the form below with your name, email, and a link to your published content. One license per person.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.25rem;align-items:flex-start;">
+        <div style="min-width:48px;height:48px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;">3</div>
+        <div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Get Instant Pro</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);">We verify your content and instantly generate a Lifetime Pro license key. Paste it into SchemaLens and you're good to go.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="apply" class="section" style="background:var(--surface);">
+  <div class="container" style="max-width:560px;">
+    <h2 style="text-align:center;margin-bottom:0.5rem;">Apply Now</h2>
+    <p style="text-align:center;color:var(--text-muted);margin-bottom:2rem;">Fill out the form below. If your content is live and mentions SchemaLens, your license is generated automatically.</p>
+
+    <form id="ambassadorForm" style="display:grid;gap:1rem;">
+      <div>
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-muted);">Your Name</label>
+        <input type="text" id="ambName" required placeholder="Jane Doe" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem;">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-muted);">Email Address</label>
+        <input type="email" id="ambEmail" required placeholder="jane@example.com" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem;">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-muted);">Content URL</label>
+        <input type="url" id="ambUrl" required placeholder="https://yourblog.com/schemalens-review" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem;">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-muted);">Content Type</label>
+        <select id="ambType" required style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem;">
+          <option value="">Select one...</option>
+          <option value="blog">Blog Post</option>
+          <option value="video">Video</option>
+          <option value="tweet_thread">Tweet Thread</option>
+          <option value="newsletter">Newsletter</option>
+          <option value="tutorial">Tutorial</option>
+          <option value="social_post">Social Post</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.35rem;color:var(--text-muted);">Anything Else? (optional)</label>
+        <textarea id="ambMessage" rows="3" placeholder="Tell us about your audience, your angle, or anything we should know..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem;resize:vertical;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Submit Application</button>
+    </form>
+
+    <div id="ambassadorSuccess" style="display:none;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.4);border-radius:12px;padding:1.5rem;margin-top:1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🎉</div>
+      <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">Welcome to the Ambassador Program!</div>
+      <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem;">Your Lifetime Pro license has been generated. Copy it below and paste it into SchemaLens.</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;" id="ambassadorLicenseKey">---</div>
+      <button onclick="copyAmbassadorKey()" class="btn btn-secondary" style="display:inline-block;">Copy License Key</button>
+      <div style="margin-top:1rem;">
+        <a href="app.html" class="btn btn-primary" style="display:inline-block;">Open SchemaLens →</a>
+      </div>
+    </div>
+
+    <div id="ambassadorError" style="display:none;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:1rem;margin-top:1rem;text-align:center;color:var(--danger);font-size:0.9rem;"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:720px;">
+    <h2 style="text-align:center;margin-bottom:2rem;">Frequently Asked Questions</h2>
+    <div style="display:grid;gap:1rem;">
+      <details style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+        <summary style="font-weight:700;cursor:pointer;">Do I need a large audience?</summary>
+        <div style="margin-top:0.75rem;font-size:0.9rem;color:var(--text-muted);">No. We care about quality and authenticity, not follower counts. A well-written blog post with 10 readers is just as valuable as a viral tweet.</div>
+      </details>
+      <details style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+        <summary style="font-weight:700;cursor:pointer;">Can the content be critical?</summary>
+        <div style="margin-top:0.75rem;font-size:0.9rem;color:var(--text-muted);">Yes. Honest feedback helps us improve. As long as the content is thoughtful and mentions SchemaLens, it qualifies.</div>
+      </details>
+      <details style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+        <summary style="font-weight:700;cursor:pointer;">How long does approval take?</summary>
+        <div style="margin-top:0.75rem;font-size:0.9rem;color:var(--text-muted);">Most applications are approved instantly. If our automated check can't verify your URL, a human reviews it within 24 hours.</div>
+      </details>
+      <details style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+        <summary style="font-weight:700;cursor:pointer;">Can I submit multiple pieces of content?</summary>
+        <div style="margin-top:0.75rem;font-size:0.9rem;color:var(--text-muted);">One license per person, but you're welcome to create as much content as you like. Ambassadors who create exceptional content may receive additional perks.</div>
+      </details>
+      <details style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+        <summary style="font-weight:700;cursor:pointer;">What if my content is behind a paywall?</summary>
+        <div style="margin-top:0.75rem;font-size:0.9rem;color:var(--text-muted);">Paywalled content is fine — just make sure the URL is accessible to us for verification. If we can't verify it automatically, email us a screenshot or excerpt.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--surface);text-align:center;">
+  <div class="container">
+    <h2 style="margin-bottom:1rem;">Not a content creator?</h2>
+    <p style="color:var(--text-muted);max-width:560px;margin:0 auto 1.5rem;">We have other ways to get free Lifetime Pro.</p>
+    <div style="display:flex;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
+      <a href="open-source-license.html" class="btn btn-secondary" style="display:inline-block;">Open Source License</a>
+      <a href="student-license.html" class="btn btn-secondary" style="display:inline-block;">Student License</a>
+      <a href="founding-member.html" class="btn btn-secondary" style="display:inline-block;">Share to Unlock</a>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1rem;margin-top:3rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <a href="index.html">Home</a>
+      <a href="app.html">Schema Diff</a>
+      <a href="tools.html">All Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="open.html">Open Startup</a>
+      <a href="community.html">Community</a>
+      <a href="api.html">API</a>
+      <a href="cli/">CLI</a>
+      <a href="team.html">Team</a>
+      <a href="testimonials.html">Wall of Love</a>
+    </div>
+    <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+  </div>
+</footer>
+
+<script>
+document.getElementById('ambassadorForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type="submit"]');
+  const originalText = btn.textContent;
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  const name = document.getElementById('ambName').value.trim();
+  const email = document.getElementById('ambEmail').value.trim();
+  const url = document.getElementById('ambUrl').value.trim();
+  const type = document.getElementById('ambType').value;
+  const message = document.getElementById('ambMessage').value.trim();
+
+  try {
+    const resp = await fetch('/api/ambassador.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, url, type, message })
+    });
+    const data = await resp.json();
+
+    if (resp.ok && data.success) {
+      document.getElementById('ambassadorLicenseKey').textContent = data.license_key;
+      document.getElementById('ambassadorSuccess').style.display = 'block';
+      document.getElementById('ambassadorError').style.display = 'none';
+      this.style.display = 'none';
+      if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('ambassador_license_claimed', { type });
+    } else {
+      document.getElementById('ambassadorError').textContent = data.error || 'Something went wrong. Please try again.';
+      document.getElementById('ambassadorError').style.display = 'block';
+    }
+  } catch (err) {
+    document.getElementById('ambassadorError').textContent = 'Network error. Please try again.';
+    document.getElementById('ambassadorError').style.display = 'block';
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+});
+
+function copyAmbassadorKey() {
+  const key = document.getElementById('ambassadorLicenseKey').textContent;
+  navigator.clipboard.writeText(key).then(() => {
+    const btn = document.querySelector('#ambassadorSuccess button');
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+}
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>

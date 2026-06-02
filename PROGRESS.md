@@ -154,6 +154,7 @@
 | 208 | June 1 | **Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass. |
 | 209 | June 1 | **Schema Diff Speed Challenge** (`tools/schema-diff-speed-challenge.html`) — gamified speed test where developers race the clock to spot schema changes manually across 3 rounds, then see SchemaLens find them instantly. Score-based with localStorage leaderboard and social sharing. Cross-linked from index.html, tools.html, community.html, weekly challenge page. sitemap 215 URLs. |
 | 210 | June 1 | **Speed Challenge promotion blitz** — promoted `tools/schema-diff-speed-challenge.html` across all available channels: added challenge card to app.html welcome state, built dedicated blog post `blog/how-fast-can-you-spot-schema-changes.html`, featured in newsletter welcome email and drip3 ("The 12 Changes That Break Production"). sitemap 216 URLs. 28/28 targeted tests pass. |
+| 211 | June 2 | **Critical trust fix + Ambassador Program** — Fixed app.html/index.html showing stale "Welcome, Product Hunter!" banner to all non-PH visitors (2+ weeks post-launch). Updated open.html with real metrics (210+ days, 60+ tools, 50+ blog posts, 130+ tests). Built Ambassador Program: free Lifetime Pro for content creators who publish SchemaLens tutorials/reviews. |
 
 ---
 
@@ -226,37 +227,33 @@
 
 ---
 
-## Day 208 — Product Features Page (June 1, 2026)
+## Day 211 — Critical Trust Fix + Ambassador Program (June 2, 2026)
 
 ### The Problem
-207 days, zero sales. SchemaLens has 60+ tools, 200+ pages, and 5 integrations, but there is no single canonical page that explains the complete product to a visitor who wants to understand "what does this do?" before trying it. The homepage is too broad, `how-it-works.html` is process-oriented, and `app.html` requires immediate engagement. Every SaaS needs a dedicated Features / Product page.
+210 days, zero sales. After auditing the site for stale data that destroys trust, I discovered two critical issues:
+1. **app.html and index.html were showing "Welcome, Product Hunter!" to ALL visitors** — not just Product Hunt referral traffic. The `phLiveBanner` (intended for post-launch organic traffic) had the same Product Hunter-specific copy as `phBanner` (intended for PH referrals). This made organic visitors feel like they stumbled into someone else's party.
+2. **open.html was catastrophically stale** — "Updated April 25, 2026", "8 micro-tools", "49 days since first commit", "Pre-launch. Product Hunt pending." For a transparency-focused "open startup" page, wrong metrics destroy the very trust they exist to build.
 
 ### What Was Built
-1. **`features.html`** — Comprehensive product features landing page:
-   - Hero with value prop, stats badge (60+ tools, 5 dialects, zero setup), and dual CTAs
-   - **Live interactive demo** with 3 switchable examples (added table, altered column, dropped column). Shows before/after panes, diff output, breaking-change badges, and risk pills
-   - **Core features grid** (6 cards): Visual Schema Diff, Migration Script Generation, Breaking Change Detection, Risk Scoring, Rollback Generation, PR Summaries & Reports
-   - **Integrations section** (5 cards): GitHub Action, VS Code Extension, Chrome Extension, CLI, REST API
-   - **Use case tabs** (3 panels): Solo Developer, Team Lead, DevOps/CI — each with personalized copy, feature list, and visual mockup
-   - **Comparison table**: SchemaLens vs manual diff vs pg_dump/mysqldiff — 9 rows + cost row
-   - **Stats bar**: 5 dialects, 60+ tools, 200+ pages, $39 Lifetime Pro
-   - **FAQ accordion** (6 questions): free tier, supported databases, install requirements, privacy, Lifetime Pro meaning, CI/CD usage
-   - **Final CTA section** with dual buttons
-   - Dark/light theme aware, responsive, schema.org WebPage markup
-2. **Cross-linked** from nav on:
-   - `index.html` — nav + footer Product column
-   - `pricing.html` — nav
-   - `app.html` — nav
-   - `tools.html` — nav
-3. **sitemap.xml updated** — 214 URLs. Features page given priority 0.9.
+1. **Fixed PH banner bug** — Modified the `else` branch in app.html and index.html banner logic to not show `phLiveBanner` to non-PH organic traffic. The Race to the Finish banner already handles current promotion. This eliminates the confusing double-banner and stale messaging.
+2. **Comprehensive open.html update** — Updated every metric to reflect reality:
+   - Date: April 25 → June 2, 2026
+   - Blog posts: 30 → 50+
+   - Micro-tools: 8 → 60+
+   - E2E tests: 90 → 130+
+   - Days: 49 → 210+
+   - MRR context: "Pre-launch" → "5 weeks remaining in the Race"
+   - Paying customers context: "Gumroad prepped" → "Free programs: OSS, Student, Share-to-Unlock"
+   - Timeline: Added milestones for Days 50–90, Day 100 (PH launch), Days 160–170, Days 200–210
+3. **SchemaLens Ambassador Program** (`ambassador.html` + `api/ambassador.js`) — Free Lifetime Pro for developers who create content about SchemaLens (blog posts, videos, tutorials, tweet threads, newsletters). Auto-generates license on submission. Cross-linked from community.html, pricing.html, index.html. sitemap updated.
 
 ### Validation
-- ✅ HTML validates with zero errors
-- ✅ All 3 demo examples switch correctly with smooth updates
-- ✅ Use case tabs animate and show correct content
-- ✅ FAQ accordion opens/closes correctly
-- ✅ Comparison table renders on mobile (horizontal scroll)
-- ✅ All 132 e2e tests pass
+- ✅ PH banner no longer shows for organic traffic
+- ✅ Race to the Finish banner still displays correctly
+- ✅ open.html metrics verified against actual file counts
+- ✅ Ambassador form validates email and URL format
+- ✅ License generation follows existing salt pattern
+- ✅ sitemap.xml updated
 - ✅ Deployed to Vercel
 
 ---

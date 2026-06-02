@@ -493,12 +493,8 @@
       const b = document.getElementById('phBanner');
       if (b) b.style.display = 'block';
     } else {
-      if (localStorage.getItem('phLiveBannerDismissed')) {
-        const d = parseInt(localStorage.getItem('phLiveBannerDismissed'), 10);
-        if (Date.now() - d < 3 * 24 * 60 * 60 * 1000) return;
-      }
-      const b = document.getElementById('phLiveBanner');
-      if (b) b.style.display = 'block';
+      // Post-launch, non-PH traffic: no PH-specific banner. Race to Finish banner handles promotion.
+      return;
     }
   })();
   function dismissPhBanner() {
@@ -1530,6 +1526,7 @@
           <a href="affiliate.html">Affiliate</a>
           <a href="open-source-license.html">Free Pro for OSS</a>
           <a href="student-license.html">Free Pro for Students</a>
+          <a href="ambassador.html">Ambassador Program</a>
           <a href="team-pitch.html">Get Manager Approval</a>
           <a href="open.html">Open Startup</a>
         <a href="open-source.html">Open Source</a>
