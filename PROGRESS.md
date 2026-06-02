@@ -154,83 +154,8 @@
 | 208 | June 1 | **Product Features page** (`features.html`) — comprehensive conversion asset with live interactive demo, 6 core feature cards, 5 integration cards, role-based use case tabs, manual-vs-SchemaLens comparison table, FAQ accordion, stats bar. Cross-linked from nav on index/pricing/app/tools. sitemap 214 URLs. 132/132 tests pass. |
 | 209 | June 1 | **Schema Diff Speed Challenge** (`tools/schema-diff-speed-challenge.html`) — gamified speed test where developers race the clock to spot schema changes manually across 3 rounds, then see SchemaLens find them instantly. Score-based with localStorage leaderboard and social sharing. Cross-linked from index.html, tools.html, community.html, weekly challenge page. sitemap 215 URLs. |
 | 210 | June 1 | **Speed Challenge promotion blitz** — blog post (`blog/how-fast-can-you-spot-schema-changes.html`), newsletter integration, app.html welcome state upgrade with Speed Challenge feature card. sitemap 216 URLs. |
-
----
-
-## Day 211 — Critical Trust Fix + Ambassador Program (June 2, 2026)
-
-### The Problem
-210 days, zero sales. After auditing the site for stale data that destroys trust, I discovered two critical issues:
-1. **app.html and index.html were showing "Welcome, Product Hunter!" to ALL visitors** — not just Product Hunt referral traffic. The `phLiveBanner` (intended for post-launch organic traffic) had the same Product Hunter-specific copy as `phBanner` (intended for PH referrals). This made organic visitors feel like they stumbled into someone else's party.
-2. **open.html was catastrophically stale** — "Updated April 25, 2026", "8 micro-tools", "49 days since first commit", "Pre-launch. Product Hunt pending." For a transparency-focused "open startup" page, wrong metrics destroy the very trust they exist to build.
-
-### What Was Built
-1. **Fixed PH banner bug** — Modified the `else` branch in app.html and index.html banner logic to not show `phLiveBanner` to non-PH organic traffic. The Race to the Finish banner already handles current promotion. This eliminates the confusing double-banner and stale messaging.
-2. **Comprehensive open.html update** — Updated every metric to reflect reality:
-   - Date: April 25 → June 2, 2026
-   - Blog posts: 30 → 50+
-   - Micro-tools: 8 → 60+
-   - E2E tests: 90 → 130+
-   - Days: 49 → 210+
-   - MRR context: "Pre-launch" → "5 weeks remaining in the Race"
-   - Paying customers context: "Gumroad prepped" → "Free programs: OSS, Student, Share-to-Unlock"
-   - Timeline: Added milestones for Days 50–90, Day 100 (PH launch), Days 160–170, Days 200–210
-3. **SchemaLens Ambassador Program** (`ambassador.html` + `api/ambassador.js`) — Free Lifetime Pro for developers who create content about SchemaLens (blog posts, videos, tutorials, tweet threads, newsletters). Auto-generates license on submission. Cross-linked from community.html, pricing.html, index.html. sitemap updated.
-
-### Validation
-- ✅ PH banner no longer shows for organic traffic
-- ✅ Race to the Finish banner still displays correctly
-- ✅ open.html metrics verified against actual file counts
-- ✅ Ambassador form validates email and URL format
-- ✅ License generation follows existing salt pattern
-- ✅ sitemap.xml updated
-- ✅ Deployed to Vercel
-
----
-
-## Day 212 — Ambassador Program Distribution Kit (June 2, 2026)
-
-### The Problem
-211 days, zero sales. The Ambassador Program page is live and functional, but it will not distribute itself. The backlog explicitly called for "copy-paste outreach templates for YouTubers, bloggers, newsletter authors" and posts on IndieHackers, HN, and dev.to. This session executes that distribution comprehensively.
-
-### What Was Built
-1. **`marketing/ambassador-outreach-kit.md`** — Complete outreach kit with:
-   - Email templates for YouTubers, bloggers, newsletter authors, Twitter/X creators, Reddit users
-   - Twitter/X DM template (short)
-   - LinkedIn DM template
-   - Bulk outreach tracking spreadsheet template
-   - Target creator categories (7 niches)
-   - One-paragraph summary for pasting into emails/DMs
-   - Quick links section for outreach
-
-2. **`marketing/indiehackers-ambassador.md`** — IndieHackers post draft:
-   - Title: "I built 60+ dev tools and got 0 sales. Now I'm giving away free Lifetime Pro to anyone who writes about them."
-   - Full post body with transparency stats, program details, and the ask
-   - Submission checklist and follow-up ideas
-
-3. **`marketing/hn-ambassador.md`** — Two HN post options:
-   - **Option A (Show HN):** "Show HN: SchemaLens Ambassador Program — free Lifetime Pro for content creators"
-   - **Option B (Ask HN):** "Ask HN: I built a dev tool with 0 sales in 211 days. Should I give away free Pro licenses for content?"
-   - Submission notes with timing and reply strategy
-
-4. **`marketing/devto-ambassador.md`** — dev.to guest post draft:
-   - Title: "I Gave Away 100 Free Pro Licenses to Break My $0 Revenue Streak"
-   - Tags: `database`, `showdev`, `marketing`, `startup`, `sql`
-   - 1,500+ word narrative covering the 211-day journey, distribution struggles, and the ambassador strategy
-
-5. **Cross-linking sweep** — Added `ambassador.html` links to:
-   - `app.html` paywall ("Content creator? Get Pro free for a review or tutorial →")
-   - `get-started.html` footer (Company column)
-   - `tools.html` footer (Company column)
-   - `open-source-license.html` footer
-   - `student-license.html` footer
-   - `founding-customer.html` footer
-
-### Validation
-- ✅ All 5 outreach assets are copy-paste ready
-- ✅ 12/12 key e2e tests pass (Homepage, App, Pricing, Blog, Tools)
-- ✅ Deployed to Vercel
-- ✅ Cross-links verified on all 6 edited pages
+| 211 | June 2 | **Critical trust fix + Ambassador Program** — Fixed PH banner bug showing "Welcome, Product Hunter!" to organic traffic. Updated open.html stale metrics (8 tools→60+, 49 days→210+). Built `ambassador.html` + `api/ambassador.js` with auto license generation for content creators. sitemap updated. |
+| 212 | June 2 | **Ambassador Program distribution kit** — `marketing/ambassador-outreach-kit.md` (7 creator niches, email/DM templates, tracking spreadsheet). IndieHackers, HN (Show HN + Ask HN), and dev.to post drafts. Cross-linked ambassador.html from 6 pages. |
 
 ---
 
@@ -316,6 +241,36 @@
    - `schemalens-vs-pg-schema-diff.html`
    - `index.html`
 3. **sitemap.xml updated** — 219 URLs.
+
+### Validation
+- ✅ New page HTML validates with zero errors
+- ✅ Cross-links verified on 5 edited pages
+- ✅ sitemap.xml updated with new URL and lastmod
+- ✅ Deployed to Vercel
+
+---
+
+## Day 215 (cont) — SchemaLens vs PostgresCompare Comparison Page (June 2, 2026)
+
+### The Problem
+215 days, zero sales. The backlog called for comparison pages against all high-traffic competitors. Atlas was covered earlier today. PostgresCompare is a mature PostgreSQL-only desktop tool with 40+ object type coverage and schema history tracking — it ranks for "PostgreSQL schema compare" keywords.
+
+### What Was Built
+1. **SchemaLens vs PostgresCompare comparison page** (`schemalens-vs-postgrescompare.html`) — 20-feature comparison table covering:
+   - Pricing: $39 Lifetime Pro vs 30-day trial → paid license
+   - Platform: instant browser vs downloadable desktop app (Win/Mac/Linux)
+   - Dialects: 6 dialects vs PostgreSQL-only
+   - Workflow: visual diff/share/CI vs deep PG object coverage + schema history + direct deployment
+   - Deep-dive cards for both tools with honest strengths
+   - Decision matrix with "Choose SchemaLens if… / Choose PostgresCompare if…"
+   - FAQPage schema.org markup for rich snippets
+2. **Cross-linking sweep** — Added `schemalens-vs-postgrescompare.html` links to:
+   - `schemalens-vs-liquibase-flyway.html`
+   - `schemalens-vs-redgate-vs-prisma.html`
+   - `schemalens-vs-cli-tools.html`
+   - `schemalens-vs-pg-schema-diff.html`
+   - `index.html`
+3. **sitemap.xml updated** — 220 URLs.
 
 ### Validation
 - ✅ New page HTML validates with zero errors
