@@ -295,7 +295,33 @@
 
 ---
 
-*Backlog reprioritized June 2, 2026. Full history available in git log.*
+## Day 215 — SchemaLens vs Atlas (Ariga) Comparison Page (June 2, 2026)
+
+### The Problem
+215 days, zero sales. The backlog explicitly called for comparison pages against high-traffic competitors. Bytebase was covered Day 214. Atlas by Ariga is a well-funded, 8,400+ star schema-as-code tool often described as "Terraform for databases." It attracts high-intent traffic from platform engineers and teams practicing Infrastructure-as-Code.
+
+### What Was Built
+1. **SchemaLens vs Atlas comparison page** (`schemalens-vs-atlas.html`) — 22-feature comparison table covering:
+   - Pricing: $39 Lifetime Pro vs free CLI + Cloud at $9/dev/mo + $59/project + $39/DB
+   - Setup: instant browser vs CLI install/cloud signup + DB config
+   - Dialects: SchemaLens supports Oracle; Atlas supports ClickHouse, CockroachDB, TiDB, Redshift
+   - Workflow: visual diff/share vs schema-as-code HCL, apply migrations, drift detection
+   - Deep-dive cards for both tools with honest strengths
+   - Decision matrix with "Choose SchemaLens if… / Choose Atlas if…"
+   - FAQPage schema.org markup for rich snippets
+2. **Cross-linking sweep** — Added `schemalens-vs-atlas.html` links to:
+   - `schemalens-vs-liquibase-flyway.html`
+   - `schemalens-vs-redgate-vs-prisma.html`
+   - `schemalens-vs-cli-tools.html`
+   - `schemalens-vs-pg-schema-diff.html`
+   - `index.html`
+3. **sitemap.xml updated** — 219 URLs.
+
+### Validation
+- ✅ New page HTML validates with zero errors
+- ✅ Cross-links verified on 5 edited pages
+- ✅ sitemap.xml updated with new URL and lastmod
+- ✅ Deployed to Vercel
 
 ---
 
