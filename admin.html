@@ -410,6 +410,14 @@
           <div class="value" id="statRevenue">—</div>
           <div class="label">Revenue</div>
         </div>
+        <div class="admin-stat">
+          <div class="value" id="statLocalEmails">—</div>
+          <div class="label">Local Emails</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statLocalFeedback">—</div>
+          <div class="label">Local Feedback</div>
+        </div>
       </div>
 
       <div class="admin-section">
@@ -705,6 +713,21 @@
           <button onclick="refreshLocalEmails()">Refresh</button>
           <button class="primary" onclick="exportLocalEmails()">Export CSV</button>
           <button onclick="clearLocalEmails()">Clear All</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>💬 Local Feedback & Survey Responses (localStorage Backup)</h3>
+          <span class="admin-badge" id="badgeLocalFeedback">0</span>
+        </div>
+        <div class="admin-section-body" id="localFeedbackBody">
+          <div class="admin-empty">No local feedback captured yet.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshLocalFeedback()">Refresh</button>
+          <button class="primary" onclick="exportLocalFeedback()">Export CSV</button>
+          <button onclick="clearLocalFeedback()">Clear All</button>
         </div>
       </div>
 
@@ -1935,6 +1958,7 @@
 
     function refreshAll() {
       refreshFeedback();
+      refreshLocalFeedback();
       refreshSubscribers();
       refreshTestimonials();
       refreshComments();
@@ -1979,6 +2003,7 @@
     function refreshLocalEmails() {
       const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
       document.getElementById('badgeLocalEmails').textContent = String(list.length);
+      document.getElementById('statLocalEmails').textContent = list.length;
       const container = document.getElementById('localEmailsBody');
       if (list.length === 0) {
         container.innerHTML = '<div class="admin-empty">No local emails captured yet.</div>';
@@ -2012,6 +2037,50 @@
       if (!confirm('Delete all locally stored emails? This cannot be undone.')) return;
       localStorage.removeItem('schemalens_emails');
       refreshLocalEmails();
+    }
+
+    function refreshLocalFeedback() {
+      const list = JSON.parse(localStorage.getItem('schemalens_feedback') || '[]');
+      document.getElementById('badgeLocalFeedback').textContent = String(list.length);
+      document.getElementById('statLocalFeedback').textContent = list.length;
+      const container = document.getElementById('localFeedbackBody');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="admin-empty">No local feedback captured yet.</div>';
+        return;
+      }
+      list.sort((a, b) => new Date(b.date) - new Date(a.date));
+      let html = '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85rem;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Date</th><th style="text-align:left;padding:8px;">Category</th><th style="text-align:left;padding:8px;">Message</th><th style="text-align:left;padding:8px;">Page</th></tr></thead><tbody>';
+      for (const item of list) {
+        const date = item.date ? new Date(item.date).toLocaleString() : 'Unknown';
+        const category = item.category || 'other';
+        const message = (item.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const page = item.page_path || item.page || '—';
+        html += `<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;color:var(--text-muted);white-space:nowrap;">${date}</td><td style="padding:8px;"><span class="admin-badge">${category}</span></td><td style="padding:8px;max-width:300px;word-break:break-word;">${message}</td><td style="padding:8px;color:var(--text-muted);font-size:0.75rem;">${page}</td></tr>`;
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function exportLocalFeedback() {
+      const list = JSON.parse(localStorage.getItem('schemalens_feedback') || '[]');
+      if (list.length === 0) { alert('No feedback to export.'); return; }
+      const csv = ['date,category,message,page_path,reason,email'].concat(list.map(f => {
+        const msg = (f.message || '').replace(/"/g, '""');
+        return `"${f.date || ''}","${f.category || ''}","${msg}","${f.page_path || f.page || ''}","${f.reason || ''}","${f.email || ''}"`;
+      })).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `schemalens-feedback-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearLocalFeedback() {
+      if (!confirm('Delete all locally stored feedback? This cannot be undone.')) return;
+      localStorage.removeItem('schemalens_feedback');
+      refreshLocalFeedback();
     }
 
     function saveChecklist() {

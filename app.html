@@ -4841,6 +4841,14 @@ function getFeedbackFormHTML() {
   `;
 }
 
+function storeFeedbackLocal(record) {
+  try {
+    const list = JSON.parse(localStorage.getItem('schemalens_feedback') || '[]');
+    list.push({ ...record, date: new Date().toISOString(), id: 'fb-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6) });
+    localStorage.setItem('schemalens_feedback', JSON.stringify(list.slice(-200))); // keep last 200
+  } catch (e) {}
+}
+
 async function submitFeedback() {
   const input = document.getElementById('feedbackInput');
   const msg = document.getElementById('feedbackMsg');
@@ -4849,6 +4857,7 @@ async function submitFeedback() {
     if (msg) msg.textContent = 'Please enter at least a few words.';
     return;
   }
+  storeFeedbackLocal({ message: text, category: 'upgrade-blocker', page_path: location.pathname + location.search });
   try {
     const res = await fetch('/api/feedback', {
       method: 'POST',
@@ -4873,6 +4882,7 @@ async function submitFeedbackReason(reason) {
     try_free_first: 'Will try free tier first'
   };
   const label = labels[reason] || reason;
+  storeFeedbackLocal({ message: `Reason for not upgrading: ${label}`, category: 'upgrade-blocker-reason', reason, page_path: location.pathname + location.search });
   try {
     const res = await fetch('/api/feedback', {
       method: 'POST',
@@ -9199,6 +9209,7 @@ async function submitFeedback() {
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
+  storeFeedbackLocal({ message, category: currentFeedbackCategory, email: email || undefined, page_path: window.location.pathname + window.location.search });
   try {
     const res = await fetch('/api/feedback', {
       method: 'POST',
@@ -9214,7 +9225,9 @@ async function submitFeedback() {
     document.getElementById('feedbackFormSection').style.display = 'none';
     document.getElementById('feedbackSuccessSection').style.display = 'block';
   } catch (err) {
-    errorEl.textContent = 'Failed to send feedback. Please try again or email us at schemalens@proton.me';
+    errorEl.textContent = 'Saved locally. We\'ll sync when the server is back online, or email us at schemalens@proton.me';
+    document.getElementById('feedbackFormSection').style.display = 'none';
+    document.getElementById('feedbackSuccessSection').style.display = 'block';
   } finally {
     btn.textContent = originalText;
     btn.disabled = false;

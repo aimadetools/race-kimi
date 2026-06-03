@@ -623,6 +623,7 @@ CREATE TABLE categories (
     window.SchemaLensAnalytics = window.SchemaLensAnalytics || {
       track: function(event, props) {
         console.log('ANALYTICS:', event, props);
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
         try {
           fetch('/api/analytics', {
             method: 'POST',
