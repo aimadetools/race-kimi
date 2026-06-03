@@ -165,6 +165,9 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 69. [SQL Schema Roast](https://schemalens.tech/tools/schema-roast.html) — Get your database schema roasted with humorous but genuinely helpful feedback. Shareable roast cards
 70. [SQL Dialect Translator](https://schemalens.tech/tools/sql-dialect-translator.html) — Convert CREATE TABLE statements between PostgreSQL, MySQL, SQLite, SQL Server, and Oracle with type mapping
 
+### Migration Guides
+- [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration
+
 [View all 70+ tools →](https://schemalens.tech/tools.html)
 
 ---
