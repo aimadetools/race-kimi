@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL to PostgreSQL Migration Guide — Step-by-Step (2026)</title>
+<meta name="description" content="Complete guide to migrating from MySQL to PostgreSQL. Schema conversion, data migration, type mapping, and common pitfalls. Free tools included.">
+<meta property="og:title" content="MySQL to PostgreSQL Migration Guide — Step-by-Step (2026)">
+<meta property="og:description" content="Complete guide to migrating from MySQL to PostgreSQL. Schema conversion, data migration, type mapping, and common pitfalls.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.tech/mysql-to-postgresql-migration.html">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<link rel="canonical" href="https://schemalens.tech/mysql-to-postgresql-migration.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "MySQL to PostgreSQL Migration Guide",
+  "description": "Step-by-step guide for migrating a database from MySQL to PostgreSQL including schema conversion, data migration, and validation.",
+  "totalTime": "PT4H",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "USD", "value": "0"},
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Export MySQL Schema",
+      "text": "Use mysqldump to export your MySQL schema without data: mysqldump --no-data -u user -p database > schema.sql",
+      "url": "https://schemalens.tech/mysql-to-postgresql-migration.html#step-1"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Translate Schema to PostgreSQL",
+      "text": "Convert MySQL CREATE TABLE statements to PostgreSQL syntax using a dialect translator or SchemaLens diff tool.",
+      "url": "https://schemalens.tech/mysql-to-postgresql-migration.html#step-2"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Migrate Data",
+      "text": "Use pgloader or custom ETL scripts to move data from MySQL to PostgreSQL.",
+      "url": "https://schemalens.tech/mysql-to-postgresql-migration.html#step-3"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Validate and Test",
+      "text": "Compare row counts, run application tests, and verify constraints and indexes.",
+      "url": "https://schemalens.tech/mysql-to-postgresql-migration.html#step-4"
+    }
+  ]
+}
+</script>
+<style>
+  :root{--bg:#0f172a;--surface:#1e293b;--border:#334155;--text:#f1f5f9;--text-muted:#94a3b8;--accent:#38bdf8;--accent-2:#818cf8;--danger:#f87171;--warning:#fbbf24;--success:#34d399;--code-bg:#0b1220;--code-text:#e2e8f0;--radius:12px;--radius-sm:8px;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  .container{max-width:800px;margin:0 auto;padding:24px}
+  .page-header{text-align:center;padding:48px 0 32px}
+  .page-header h1{font-size:2.2rem;margin:0 0 12px;line-height:1.2}
+  .page-header p{color:var(--text-muted);font-size:1.1rem;max-width:640px;margin:0 auto}
+  .badge{display:inline-block;background:rgba(56,189,248,0.1);color:var(--accent);border:1px solid rgba(56,189,248,0.2);border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:600;margin-bottom:16px}
+  h2{font-size:1.5rem;margin:40px 0 16px;color:var(--text);border-bottom:1px solid var(--border);padding-bottom:8px}
+  h3{font-size:1.2rem;margin:28px 0 12px;color:var(--text-muted)}
+  p,li{color:var(--text-muted);font-size:1rem}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:var(--code-bg);color:var(--code-text);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:0.9em}
+  pre{background:var(--code-bg);color:var(--code-text);padding:16px;border-radius:var(--radius-sm);overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:0.9rem;line-height:1.5;border:1px solid var(--border)}
+  pre code{background:none;padding:0}
+  ul,ol{padding-left:20px}
+  li{margin-bottom:8px}
+  .tip{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:var(--radius-sm);padding:16px 20px;margin:20px 0;color:var(--success)}
+  .tip::before{content:"💡 ";font-weight:700}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:var(--radius-sm);padding:16px 20px;margin:20px 0;color:var(--warning)}
+  .warning-box::before{content:"⚠️ ";font-weight:700}
+  .cta-box{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.08));border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;margin:32px 0}
+  .cta-box h3{margin:0 0 10px;font-size:1.2rem;color:var(--text)}
+  .cta-box p{color:var(--text-muted);margin-bottom:16px}
+  .btn-primary{background:var(--accent);color:#0f172a;border:none;border-radius:var(--radius-sm);padding:12px 24px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn-primary:hover{opacity:.9;text-decoration:none}
+  .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 20px;font-size:0.95rem;cursor:pointer;text-decoration:none;display:inline-block;margin-left:8px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.95rem}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+  th{color:var(--text-muted);font-weight:600;background:var(--surface)}
+  td{color:var(--text-muted)}
+  tr:hover td{background:rgba(255,255,255,0.02)}
+  footer{text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:40px}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;margin:10px 0;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer}
+  .checklist-item input[type=checkbox]{margin-top:4px}
+  .checklist-item.done{opacity:0.5;text-decoration:line-through}
+  .checklist-item label{cursor:pointer;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <div class="badge">Free Guide · 2026</div>
+    <h1>MySQL to PostgreSQL Migration Guide</h1>
+    <p>A complete, step-by-step guide for migrating your database from MySQL to PostgreSQL — from schema conversion to data migration to production cutover.</p>
+  </div>
+
+  <div class="cta-box">
+    <h3>🚀 Jump straight to schema translation</h3>
+    <p>Paste your MySQL CREATE TABLE statements and get PostgreSQL-ready SQL in seconds.</p>
+    <a href="tools/sql-dialect-translator.html?from=mysql&to=postgres" class="btn-primary">Translate MySQL → PostgreSQL</a>
+    <a href="app.html" class="btn-secondary">Diff Two Schemas</a>
+  </div>
+
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#why">Why Migrate from MySQL to PostgreSQL?</a></li>
+    <li><a href="#before">Pre-Migration Checklist</a></li>
+    <li><a href="#step-1">Step 1: Export MySQL Schema</a></li>
+    <li><a href="#step-2">Step 2: Translate Schema to PostgreSQL</a></li>
+    <li><a href="#step-3">Step 3: Migrate Your Data</a></li>
+    <li><a href="#step-4">Step 4: Validate and Test</a></li>
+    <li><a href="#types">Common Type Mapping Issues</a></li>
+    <li><a href="#pitfalls">Migration Pitfalls to Avoid</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+
+  <h2 id="why">Why Migrate from MySQL to PostgreSQL?</h2>
+  <p>Teams typically migrate from MySQL to PostgreSQL for these reasons:</p>
+  <ul>
+    <li><strong>Advanced data types</strong> — PostgreSQL supports arrays, JSONB, UUID, INET, and custom types natively.</li>
+    <li><strong>Complex queries</strong> — Better CTE support, window functions, and recursive queries.</li>
+    <li><strong>Data integrity</strong> — Stricter constraint enforcement and transactional DDL.</li>
+    <li><strong>Extensions</strong> — PostGIS, pgvector, TimescaleDB, and hundreds of others.</li>
+    <li><strong>License</strong> — PostgreSQL's permissive license avoids Oracle's MySQL ownership concerns.</li>
+  </ul>
+
+  <h2 id="before">Pre-Migration Checklist</h2>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Inventory all MySQL databases, tables, views, stored procedures, and triggers</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Document current MySQL version, storage engines, and character sets</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Identify MySQL-only features (ENUM, SET, full-text indexes, spatial data)</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Estimate data size and migration window</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Set up a PostgreSQL target instance (same or higher version recommended)</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Create a rollback plan</label>
+  </div>
+
+  <h2 id="step-1">Step 1: Export MySQL Schema</h2>
+  <p>Use <code>mysqldump</code> to export just the schema (no data) so you can review and translate it:</p>
+  <pre><code>mysqldump --no-data --routines --events \
+  -u username -p database_name > mysql_schema.sql</code></pre>
+
+  <div class="tip">
+    Include <code>--routines</code> and <code>--events</code> to capture stored procedures and events. You'll need to manually translate these since automated tools typically only handle CREATE TABLE.
+  </div>
+
+  <p>Review the exported file for MySQL-specific syntax:</p>
+  <ul>
+    <li><code>ENGINE=InnoDB</code> — PostgreSQL doesn't use storage engines</li>
+    <li><code>AUTO_INCREMENT</code> — Will become <code>SERIAL</code> or <code>GENERATED ALWAYS AS IDENTITY</code></li>
+    <li><code>BACKTICK` quoting</code> — PostgreSQL uses double quotes</li>
+    <li><code>ENUM</code> and <code>SET</code> types — Need special handling</li>
+  </ul>
+
+  <h2 id="step-2">Step 2: Translate Schema to PostgreSQL</h2>
+  <p>This is where most migrations get stuck. MySQL and PostgreSQL have different:</p>
+  <ul>
+    <li>Data type names and behaviors</li>
+    <li>Auto-increment syntax</li>
+    <li>String quoting rules</li>
+    <li>Index types (e.g., FULLTEXT doesn't exist in PostgreSQL)</li>
+    <li>Constraint syntax</li>
+  </ul>
+
+  <p>You have three options:</p>
+  <h3>Option A: Automated Translation (Fastest)</h3>
+  <p>Use the <a href="tools/sql-dialect-translator.html?from=mysql&to=postgres">SQL Dialect Translator</a> to convert your <code>mysqldump</code> output to PostgreSQL syntax. It handles type mapping, auto-increment conversion, and identifier quoting.</p>
+
+  <h3>Option B: SchemaLens Diff (Recommended for Complex Schemas)</h3>
+  <p>If you're redesigning the schema as part of migration, paste your MySQL schema and your target PostgreSQL schema into <a href="app.html">SchemaLens</a>. It will show you exactly what's different and generate the migration SQL.</p>
+
+  <h3>Option C: Manual Translation</h3>
+  <p>For small schemas, you can manually rewrite the CREATE TABLE statements. Use the type mapping table below as a reference.</p>
+
+  <div class="cta-box">
+    <h3>🛠️ Save hours with automated translation</h3>
+    <p>The SQL Dialect Translator converts MySQL schemas to PostgreSQL in seconds — including type mapping, auto-increment syntax, and constraint adaptation.</p>
+    <a href="tools/sql-dialect-translator.html?from=mysql&to=postgres" class="btn-primary">Try the Translator →</a>
+  </div>
+
+  <h2 id="step-3">Step 3: Migrate Your Data</h2>
+  <p>After translating the schema, create the tables in PostgreSQL and migrate the data.</p>
+
+  <h3>Option 1: pgloader (Recommended)</h3>
+  <p><a href="https://pgloader.io/" target="_blank">pgloader</a> is the gold standard for MySQL → PostgreSQL data migration. It handles type casting, index creation, and parallel loading.</p>
+  <pre><code>pgloader mysql://user:pass@host/dbname postgresql://user:pass@host/dbname</code></pre>
+
+  <h3>Option 2: Custom ETL with Python</h3>
+  <p>For complex transformations, use Python with <code>SQLAlchemy</code> and <code>pandas</code>:</p>
+  <pre><code>import pandas as pd
+from sqlalchemy import create_engine
+
+mysql = create_engine('mysql+pymysql://user:pass@host/db')
+postgres = create_engine('postgresql://user:pass@host/db')
+
+df = pd.read_sql('SELECT * FROM users', mysql)
+df.to_sql('users', postgres, if_exists='append', index=False)</code></pre>
+
+  <h3>Option 3: CSV Export/Import</h3>
+  <p>For small datasets, export to CSV and use PostgreSQL's <code>COPY</code> command:</p>
+  <pre><code>-- MySQL
+SELECT * INTO OUTFILE '/tmp/users.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM users;
+
+-- PostgreSQL
+COPY users FROM '/tmp/users.csv' CSV HEADER;</code></pre>
+
+  <div class="warning-box">
+    <strong>Watch out for encoding issues.</strong> MySQL's <code>utf8mb4</code> maps to PostgreSQL's <code>UTF8</code>, but emoji and 4-byte characters can cause issues if not handled properly. Verify character set compatibility before migration.
+  </div>
+
+  <h2 id="step-4">Step 4: Validate and Test</h2>
+  <p>Never skip validation. Here's a systematic approach:</p>
+
+  <h3>Schema Validation</h3>
+  <ul>
+    <li>Compare table counts: <code>SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'dbname';</code></li>
+    <li>Compare column counts per table</li>
+    <li>Verify all indexes were recreated</li>
+    <li>Check foreign key constraints</li>
+  </ul>
+
+  <h3>Data Validation</h3>
+  <ul>
+    <li>Row count verification per table</li>
+    <li>Checksum sampling on critical tables</li>
+    <li>Verify NULL constraints are respected</li>
+    <li>Test application queries against PostgreSQL</li>
+  </ul>
+
+  <h3>Use SchemaLens for Diff Validation</h3>
+  <p>Export both schemas and diff them to catch anything you missed:</p>
+  <pre><code>-- MySQL
+mysqldump --no-data -u user -p mysql_db > mysql_schema.sql
+
+-- PostgreSQL
+pg_dump --schema-only -U user postgres_db > postgres_schema.sql</code></pre>
+  <p>Then paste both into <a href="app.html">SchemaLens</a> to see a visual diff of any remaining differences.</p>
+
+  <div class="cta-box">
+    <h3>🔍 Catch schema differences before go-live</h3>
+    <p>SchemaLens compares your MySQL and PostgreSQL schemas side-by-side and highlights any tables, columns, or indexes that didn't migrate correctly.</p>
+    <a href="app.html" class="btn-primary">Compare Schemas Free →</a>
+  </div>
+
+  <h2 id="types">Common Type Mapping Issues</h2>
+  <table>
+    <thead>
+      <tr><th>MySQL Type</th><th>PostgreSQL Type</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>INT AUTO_INCREMENT</code></td><td><code>SERIAL</code></td><td>Use <code>BIGSERIAL</code> for BIGINT</td></tr>
+      <tr><td><code>TINYINT(1)</code></td><td><code>BOOLEAN</code></td><td>MySQL often uses this for booleans</td></tr>
+      <tr><td><code>VARCHAR(n)</code></td><td><code>VARCHAR(n)</code></td><td>No change needed</td></tr>
+      <tr><td><code>TEXT</code></td><td><code>TEXT</code></td><td>No change needed</td></tr>
+      <tr><td><code>LONGTEXT</code></td><td><code>TEXT</code></td><td>PostgreSQL TEXT is unlimited</td></tr>
+      <tr><td><code>DATETIME</code></td><td><code>TIMESTAMP</code></td><td>Or <code>TIMESTAMPTZ</code> with timezone</td></tr>
+      <tr><td><code>JSON</code></td><td><code>JSONB</code></td><td>JSONB is faster and indexable</td></tr>
+      <tr><td><code>ENUM</code></td><td><code>VARCHAR</code> + CHECK</td><td>PostgreSQL has no native ENUM in CREATE TABLE</td></tr>
+      <tr><td><code>SET</code></td><td><code>TEXT</code> or array</td><td>No direct equivalent</td></tr>
+      <tr><td><code>BLOB</code></td><td><code>BYTEA</code></td><td>Binary data storage</td></tr>
+      <tr><td><code>FLOAT</code></td><td><code>REAL</code></td><td>Or <code>DOUBLE PRECISION</code></td></tr>
+      <tr><td><code>DOUBLE</code></td><td><code>DOUBLE PRECISION</code></td><td>No change needed</td></tr>
+      <tr><td><code>DECIMAL(p,s)</code></td><td><code>NUMERIC(p,s)</code></td><td>No change needed</td></tr>
+      <tr><td><code>BIT</code></td><td><code>BOOLEAN</code></td><td>Or <code>BIT</code> if you need bit fields</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="pitfalls">Migration Pitfalls to Avoid</h2>
+  <ul>
+    <li><strong>Assuming IDENTICAL behavior</strong> — <code>VARCHAR</code> behaves similarly but not identically. PostgreSQL is stricter about trailing spaces.</li>
+    <li><strong>Forgetting to recreate indexes</strong> — pgloader recreates some, but custom or partial indexes may need manual work.</li>
+    <li><strong>Case sensitivity</strong> — PostgreSQL folds unquoted identifiers to lowercase. <code>UserName</code> becomes <code>username</code> unless quoted.</li>
+    <li><strong>Division behavior</strong> — <code>SELECT 1/4</code> returns <code>0</code> in MySQL but <code>0.25</code> in PostgreSQL (integer vs numeric division).</li>
+    <li><strong>GROUP BY requirements</strong> — PostgreSQL requires all non-aggregated SELECT columns to be in GROUP BY. MySQL is more permissive.</li>
+    <li><strong>Full-text search</strong> — MySQL's <code>MATCH ... AGAINST</code> doesn't exist in PostgreSQL. Use <code>tsvector</code> and <code>tsquery</code> instead.</li>
+    <li><strong>String concatenation</strong> — <code>CONCAT()</code> works in both, but <code>||</code> is the standard in PostgreSQL.</li>
+  </ul>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How long does a MySQL to PostgreSQL migration take?</h3>
+  <p>For schemas under 50 tables with a few GB of data, plan for 4-8 hours of focused work. Large schemas (500+ tables) or TB-scale data can take days or weeks. The schema translation is usually the fastest part; data migration and testing take the most time.</p>
+
+  <h3>Can I migrate without downtime?</h3>
+  <p>Yes, using a <strong>dual-write pattern</strong>: write to both MySQL and PostgreSQL during a transition period, then switch reads to PostgreSQL once validated. Tools like <a href="https://debezium.io/" target="_blank">Debezium</a> can help with CDC (Change Data Capture).</p>
+
+  <h3>What about stored procedures and triggers?</h3>
+  <p>These must be manually rewritten. MySQL uses SQL/PSM syntax while PostgreSQL uses PL/pgSQL. The logic is often similar but function names and conventions differ.</p>
+
+  <h3>Is pgloader free?</h3>
+  <p>Yes, pgloader is open-source and free. It's the most popular tool for MySQL → PostgreSQL data migration and handles most edge cases automatically.</p>
+
+  <h3>Do I need to change my application code?</h3>
+  <p>Probably. Even with ORMs like Prisma or SQLAlchemy, you may need to update connection strings, query syntax, and handling of specific data types. Test thoroughly in a staging environment.</p>
+
+  <div class="cta-box">
+    <h3>Ready to migrate? Start with your schema.</h3>
+    <p>Convert your MySQL CREATE TABLE statements to PostgreSQL syntax in seconds, then diff the result to catch anything the translator missed.</p>
+    <a href="tools/sql-dialect-translator.html?from=mysql&to=postgres" class="btn-primary">Translate Schema →</a>
+    <a href="app.html" class="btn-secondary">Diff & Validate →</a>
+  </div>
+
+  <footer>
+    <p>Built by <a href="index.html">SchemaLens</a> · <a href="tools.html">70+ Free SQL Tools</a> · <a href="privacy-policy.html">Privacy</a></p>
+    <p style="margin-top:8px">Have feedback? <a href="mailto:hello@schemalens.tech">hello@schemalens.tech</a></p>
+  </footer>
+</div>
+</body>
+</html>
