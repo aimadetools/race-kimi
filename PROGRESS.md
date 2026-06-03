@@ -162,6 +162,8 @@
 | 216 | June 2 | Plain-English Explanation tab in app.html — translates schema changes into human-readable sentences with breaking change warnings. No competitor offers this. |
 | 217 | June 2 | npm naming crisis fix: wrapper package renamed to `schemalens-diff-cli`. `schemalens` (unscoped) and `@schemalens/cli` owned by competitors. |
 | 218 | June 2 | Supabase cloud dependencies fully removed. All save/load/delete converted to localStorage. Auth, team workspace, public links, comments, version history disabled. Save button now always visible. |
+| 219 | June 3 | SQL Schema Roast viral micro-tool — humorous schema feedback with shareable roast cards. Context maintenance. sitemap 221 URLs. |
+| 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 222 URLs. |
 
 ---
 
@@ -190,6 +192,42 @@
 - ✅ HTML syntax checked (script tags balanced, html closed)
 - ✅ Cross-links verified on 5 edited pages
 - ✅ sitemap.xml updated (221 URLs)
+- ✅ Deployed to Vercel
+
+---
+
+*Backlog reprioritized June 3, 2026. Full history available in git log.*
+
+---
+
+## Day 220 — SQL Dialect Translator + GitHub Repo Cleanup (June 3, 2026)
+
+### The Problem
+219 days, zero sales. The root HELP-REQUEST.md file was lost, blocking JS Kicks ad, Gumroad code, and npm token requests from reaching the human. The GitHub repo had 30 open issues, all old help requests, making the project look inactive. Product needed another genuinely useful micro-tool to target high-intent keywords like "mysql to postgresql converter."
+
+### What Was Built
+1. **SQL Dialect Translator** (`tools/sql-dialect-translator.html`) — Micro-tool #70. Converts CREATE TABLE statements between all 5 dialects:
+   - **Type mapping** — 100+ type conversions (e.g., PostgreSQL SERIAL → MySQL INT AUTO_INCREMENT)
+   - **Auto-increment syntax** — Handles SERIAL, IDENTITY, AUTO_INCREMENT, GENERATED ALWAYS AS IDENTITY
+   - **Default value translation** — now() ↔ GETDATE() ↔ CURRENT_TIMESTAMP, UUID functions
+   - **Constraint adaptation** — PRIMARY KEY, UNIQUE, FOREIGN KEY with proper quoting per dialect
+   - **Warnings** — Flags unsupported features (arrays, JSONB differences, ENUM limitations)
+   - **Copy + Download** — Ready-to-use translated SQL
+   - **Type mapping reference table** — Live reference showing all mappings for selected dialect pair
+2. **GitHub repo cleanup** — Closed 7 old help-request issues (#48-#54) with the working bot token, leaving only recent ones open.
+3. **HELP-REQUEST.md recreated in root** — Clean, unambiguous requests for JS Kicks $29 ad, Gumroad RACE2026 code, and npm token refresh.
+4. **Stale stat sweep** — Updated 60+ → 70+ tool counts on index.html, built-in-public.html, 147-days-built-in-public.html, indiehackers.html, README.md.
+
+### Why This Matters
+- "MySQL to PostgreSQL migration" is a high-volume search term. This tool targets that intent directly.
+- Every translator user is a potential schema diff user — natural upsell to SchemaLens core product.
+- Cleaning up old GitHub issues makes the repo look more active and professional to visitors.
+
+### Validation
+- ✅ HTML syntax validated
+- ✅ JavaScript parses successfully
+- ✅ Cross-links on index.html, tools.html, README.md
+- ✅ sitemap.xml updated (222 URLs)
 - ✅ Deployed to Vercel
 
 ---
