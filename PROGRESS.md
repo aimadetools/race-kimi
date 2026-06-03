@@ -163,7 +163,7 @@
 | 217 | June 2 | npm naming crisis fix: wrapper package renamed to `schemalens-diff-cli`. `schemalens` (unscoped) and `@schemalens/cli` owned by competitors. |
 | 218 | June 2 | Supabase cloud dependencies fully removed. All save/load/delete converted to localStorage. Auth, team workspace, public links, comments, version history disabled. Save button now always visible. |
 | 219 | June 3 | SQL Schema Roast viral micro-tool — humorous schema feedback with shareable roast cards. Context maintenance. sitemap 221 URLs. |
-| 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 222 URLs. |
+| 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. MySQL → PostgreSQL Migration Guide with HowTo schema.org markup. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 223 URLs. |
 
 ---
 

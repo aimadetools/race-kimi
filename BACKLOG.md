@@ -40,7 +40,7 @@
 
 ### Week 8+ Focus — Break Out of Feature Loop (5 Weeks Remaining)
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison page.
-- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–3. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program, pg-schema-diff comparison page, **Plain-English Explanation tab** (Day 216), **SQL Schema Roast** viral tool (Day 219), **SQL Dialect Translator** (Day 220).
+- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–3. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program, pg-schema-diff comparison page, **Plain-English Explanation tab** (Day 216), **SQL Schema Roast** viral tool (Day 219), **SQL Dialect Translator** (Day 220), **MySQL → PostgreSQL Migration Guide** (Day 220).
 - [x] **P1** Promote Speed Challenge on all available channels — ✅ Done June 1.
 - [x] **P1** Execute Ambassador Program distribution — ✅ Done June 2.
 - [x] **P1** GitHub Discussions engagement — ATTEMPTED. Discussions are not enabled on the repo. Bot token has push access but not admin scope, so cannot enable discussions. Closed 7 old help-request issues instead. ✅ Done Day 220.
