@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Data Masking & Anonymization Script Generator | SchemaLens</title>
+<meta name="description" content="Generate SQL data masking and anonymization scripts from your CREATE TABLE definitions. Auto-detects PII columns. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Free, browser-based.">
+<meta property="og:title" content="SQL Data Masking & Anonymization Script Generator">
+<meta property="og:description" content="Auto-generate SQL UPDATE scripts to mask PII and anonymize sensitive columns for GDPR-compliant dev/staging databases.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-data-masker.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Data Masking Script Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Auto-detects PII columns from CREATE TABLE statements. Generates dialect-specific masking SQL. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. GDPR-ready anonymization scripts.",
+  "url": "https://schemalens.tech/tools/sql-data-masker.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .converter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .converter-grid { grid-template-columns: 1fr; } }
+
+  .converter-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
+  }
+  .converter-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
+
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
+
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
+
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+
+  .risk-high { color: #ef4444; }
+  .risk-medium { color: #f59e0b; }
+  .risk-low { color: #22c55e; }
+
+  .detection-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
+  .detection-table th, .detection-table td {
+    border: 1px solid var(--border); padding: 8px 10px; text-align: left;
+  }
+  .detection-table th { background: var(--surface); font-weight: 600; }
+  .detection-table td { font-family: var(--mono); font-size: 0.8rem; }
+  .detection-table td:first-child { font-weight: 600; }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; text-transform: uppercase; }
+  .badge-pii { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .badge-safe { background: rgba(34,197,94,0.15); color: #22c55e; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>SQL Data Masking & Anonymization Script Generator</h1>
+    <p>Paste your CREATE TABLE statements and get ready-to-run SQL scripts that mask PII for GDPR-compliant dev and staging databases. Auto-detects 30+ sensitive column patterns.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="converter-grid">
+    <div class="converter-card">
+      <h2>Input Schema</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  phone VARCHAR(20),
+  ssn VARCHAR(11),
+  date_of_birth DATE,
+  address TEXT,
+  salary DECIMAL(10,2),
+  ip_address VARCHAR(45),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  credit_card_last4 VARCHAR(4),
+  shipping_address TEXT,
+  status VARCHAR(20) DEFAULT 'pending'
+);"></textarea>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">🛡️ Generate Masking Script</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
+      </div>
+      <p class="notice">Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. All processing happens in your browser.</p>
+    </div>
+
+    <div class="converter-card">
+      <h2>Generated Masking SQL</h2>
+      <div class="toolbar">
+        <button onclick="copyOutput()">📋 Copy SQL</button>
+        <button class="secondary" onclick="downloadSQL()">⬇ Download .sql</button>
+      </div>
+      <div id="outputPanel">
+        <div class="empty-state">Paste CREATE TABLE statements and click Generate to create anonymization scripts.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>🔄 Masked your dev database?</h3>
+    <p>Now compare your anonymized staging schema against production to catch drift before it breaks anything.</p>
+    <a href="../app.html" class="btn">Compare Schemas Free →</a>
+  </div>
+
+  <div style="margin-top: 48px;">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px;">How It Works</h2>
+    <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🔍</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Auto-Detects PII</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Recognizes <code>email</code>, <code>ssn</code>, <code>phone</code>, <code>credit_card</code>, <code>salary</code>, <code>ip_address</code> and 30+ other sensitive column patterns automatically.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🛡️</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Smart Masking Strategies</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Emails get fake addresses. Names get randomized. SSNs get hashed. Credit cards get masked. Each column type gets the right anonymization approach.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🗄️</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">5 Dialects Supported</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Dialect-specific functions and syntax for safe, runnable UPDATE scripts.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🔒</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Privacy-First & GDPR-Ready</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">All generation happens in your browser. No schema or data ever leaves your machine. Generate scripts for compliant dev/staging environments.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top: 60px;">
+  <div class="container">
+    <p>© 2026 SchemaLens. Built in public over 222 days. Part of the $100 AI Startup Race.</p>
+    <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">
+      <a href="../index.html">Home</a> · <a href="../app.html">Schema Diff</a> · <a href="../tools.html">All Tools</a> · <a href="../pricing.html">Pricing</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+
+// ── Fake Data Dictionaries ──
+const FIRST_NAMES = ['James','Mary','Robert','Patricia','John','Jennifer','Michael','Linda','David','Elizabeth','William','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen'];
+const LAST_NAMES = ['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin'];
+const DOMAINS = ['example.com','demo.org','test.net','sandbox.io','dev.local'];
+const COMPANIES = ['Acme Corp','Globex','Initech','Umbrella','Stark Ind','Wayne Ent','Cyberdyne','Massive Dynamic','Hooli','Pied Piper'];
+const CITIES = ['Springfield','Riverside','Fairview','Madison','Georgetown','Salem','Clayton','Oxford','Milford','Milton'];
+const COUNTRIES = ['USA','UK','Canada','Germany','France','Japan','Australia','Brazil','India','Netherlands'];
+const STREETS = ['Oak Ave','Maple Dr','Cedar Ln','Pine St','Elm St','Main St','Park Rd','Washington Ave','Lake Rd','Hill St'];
+const STATES = ['CA','TX','NY','FL','IL','PA','OH','GA','NC','MI'];
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c=='x'?r:(r&0x3|0x8)).toString(16); }); }
+function hex(n) { return Array.from({length:n}, () => Math.floor(Math.random()*16).toString(16)).join(''); }
+function fakeEmail() { const fn = rand(FIRST_NAMES).toLowerCase(), ln = rand(LAST_NAMES).toLowerCase(); return `${fn}.${ln}${randInt(1,999)}@${rand(DOMAINS)}`; }
+function fakePhone() { return `+1-${randInt(100,999)}-${randInt(100,999)}-${randInt(1000,9999)}`; }
+function fakeSSN() { return `${randInt(100,999)}-${randInt(10,99)}-${randInt(1000,9999)}`; }
+function fakeAddress() { return `${randInt(1,9999)} ${rand(STREETS)}, ${rand(CITIES)}, ${rand(STATES)} ${randInt(10000,99999)}`; }
+function fakeCreditCard() { return `****-****-****-${String(randInt(1000,9999))}`; }
+function fakeDOB() {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - randInt(18, 70));
+  d.setMonth(randInt(0,11));
+  d.setDate(randInt(1,28));
+  return d.toISOString().split('T')[0];
+}
+function fakeIP() { return `10.${randInt(0,255)}.${randInt(0,255)}.${randInt(1,255)}`; }
+function fakeUUID() { return uuid(); }
+
+// ── Sensitive Column Detection ──
+const SENSITIVE_PATTERNS = [
+  { patterns: ['email','e_mail','mail'], mask: 'email', label: 'Email' },
+  { patterns: ['phone','tel','mobile','cell','fax'], mask: 'phone', label: 'Phone' },
+  { patterns: ['first_name','firstname','fname','given_name'], mask: 'first_name', label: 'First Name' },
+  { patterns: ['last_name','lastname','lname','surname','family_name'], mask: 'last_name', label: 'Last Name' },
+  { patterns: ['full_name','fullname','name'], mask: 'full_name', label: 'Full Name' },
+  { patterns: ['ssn','social_security','socialsecurity','national_id','nin','tax_id','tin'], mask: 'ssn', label: 'SSN / ID' },
+  { patterns: ['address','street','mailing_address','billing_address','shipping_address'], mask: 'address', label: 'Address' },
+  { patterns: ['city'], mask: 'city', label: 'City' },
+  { patterns: ['country'], mask: 'country', label: 'Country' },
+  { patterns: ['zip','zipcode','postal_code','postalcode'], mask: 'zip', label: 'ZIP' },
+  { patterns: ['state','province'], mask: 'state', label: 'State' },
+  { patterns: ['ip','ip_address','ipaddress','remote_ip','client_ip'], mask: 'ip', label: 'IP Address' },
+  { patterns: ['password','pwd','passwd','pass_hash'], mask: 'password', label: 'Password' },
+  { patterns: ['token','api_token','auth_token','access_token','refresh_token','secret','api_secret'], mask: 'token', label: 'Token / Secret' },
+  { patterns: ['key','api_key','private_key','public_key','secret_key','encryption_key'], mask: 'key', label: 'Key' },
+  { patterns: ['credit_card','creditcard','card_number','cardnumber','cc_number','ccnum','pan'], mask: 'credit_card', label: 'Credit Card' },
+  { patterns: ['dob','date_of_birth','dateofbirth','birthdate','birth_date','birthday'], mask: 'dob', label: 'Date of Birth' },
+  { patterns: ['salary','income','wage','pay_rate','hourly_rate','compensation'], mask: 'salary', label: 'Salary' },
+  { patterns: ['company','organization','org','employer'], mask: 'company', label: 'Company' },
+  { patterns: ['uuid','guid','unique_id'], mask: 'uuid', label: 'UUID' },
+  { patterns: ['latitude','longitude','lat','lng','lon','gps','coordinates','location'], mask: 'location', label: 'Location' },
+  { patterns: ['biometric','fingerprint','faceprint','iris'], mask: 'biometric', label: 'Biometric' },
+  { patterns: ['medical','health','diagnosis','condition','prescription','allergy'], mask: 'medical', label: 'Medical' },
+  { patterns: ['passport','drivers_license','dl_number','license_number'], mask: 'id_doc', label: 'ID Document' },
+  { patterns: ['bank_account','account_number','routing_number','iban','swift','bic'], mask: 'bank', label: 'Bank Account' },
+];
+
+function detectSensitivity(colName) {
+  const lower = colName.toLowerCase();
+  for (const rule of SENSITIVE_PATTERNS) {
+    for (const pat of rule.patterns) {
+      if (lower === pat || lower.endsWith('_' + pat) || lower.startsWith(pat + '_')) {
+        return rule;
+      }
+    }
+  }
+  return null;
+}
+
+function generateMaskedValue(maskType, dialect) {
+  switch (maskType) {
+    case 'email': return fakeEmail();
+    case 'phone': return fakePhone();
+    case 'first_name': return rand(FIRST_NAMES);
+    case 'last_name': return rand(LAST_NAMES);
+    case 'full_name': return `${rand(FIRST_NAMES)} ${rand(LAST_NAMES)}`;
+    case 'ssn': return fakeSSN();
+    case 'address': return fakeAddress();
+    case 'city': return rand(CITIES);
+    case 'country': return rand(COUNTRIES);
+    case 'zip': return String(randInt(10000,99999));
+    case 'state': return rand(STATES);
+    case 'ip': return fakeIP();
+    case 'password': return hex(16);
+    case 'token': return hex(32);
+    case 'key': return hex(24);
+    case 'credit_card': return fakeCreditCard();
+    case 'dob': return fakeDOB();
+    case 'salary': return String(randInt(30000,150000));
+    case 'company': return rand(COMPANIES);
+    case 'uuid': return fakeUUID();
+    case 'location': return `${randInt(-90,90)}.${randInt(0,999999)},${randInt(-180,180)}.${randInt(0,999999)}`;
+    case 'biometric': return '[BIOMETRIC DATA REMOVED]';
+    case 'medical': return '[MEDICAL DATA REMOVED]';
+    case 'id_doc': return `[ID DOCUMENT ${randInt(100000,999999)}]`;
+    case 'bank': return `[BANK ACCOUNT ${randInt(10000000,99999999)}]`;
+    default: return '[REDACTED]';
+  }
+}
+
+function sqlEscape(val, dialect) {
+  if (val === null || val === undefined) return 'NULL';
+  let s = String(val);
+  if (dialect === 'mysql') s = s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+  else s = s.replace(/'/g, "''");
+  return `'${s}'`;
+}
+
+// ── SQL Parser (lightweight) ──
+function tokenize(text) {
+  const tokens = [];
+  let current = '', inString = false, stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
+      if (current.trim()) tokens.push(current.trim());
+      current = ch; inString = true; stringChar = ch; continue;
+    }
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') { inString = false; tokens.push(current); current = ''; }
+      continue;
+    }
+    if (/\s/.test(ch)) { if (current.trim()) tokens.push(current.trim()); current = ''; }
+    else if (ch === '(' || ch === ')' || ch === ',') { if (current.trim()) tokens.push(current.trim()); tokens.push(ch); current = ''; }
+    else { current += ch; }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
+
+function parseCreateTable(sql) {
+  const stmts = [];
+  const chunks = sql.split(/;/g);
+  for (const chunk of chunks) {
+    const trimmed = chunk.trim();
+    if (!trimmed) continue;
+    const upper = trimmed.toUpperCase();
+    if (!upper.includes('CREATE TABLE')) continue;
+    const nameMatch = trimmed.match(/CREATE TABLE\s+(?:IF NOT EXISTS\s+)?[`"\[]?(\w+)[`"\]]?/i);
+    if (!nameMatch) continue;
+    const tableName = nameMatch[1];
+    const firstParen = trimmed.indexOf('(');
+    const lastParen = trimmed.lastIndexOf(')');
+    if (firstParen === -1 || lastParen === -1 || lastParen <= firstParen) continue;
+    const body = trimmed.substring(firstParen + 1, lastParen);
+    const tokens = tokenize(body);
+    const columns = [];
+    let i = 0;
+    while (i < tokens.length) {
+      if (tokens[i].toUpperCase() === 'CONSTRAINT') { i += 2; continue; }
+      const kw = tokens[i].toUpperCase();
+      if (['PRIMARY','UNIQUE','FOREIGN','INDEX','KEY','CHECK','FULLTEXT','SPATIAL'].includes(kw)) {
+        while (i < tokens.length && tokens[i] !== ',') i++;
+        if (tokens[i] === ',') i++;
+        continue;
+      }
+      const colName = tokens[i].replace(/["`\[\]]/g, '');
+      i++;
+      if (i >= tokens.length) break;
+      const typeTokens = [];
+      const constraintKws = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','AS','STORED','VIRTUAL'];
+      while (i < tokens.length && !constraintKws.includes(tokens[i].toUpperCase()) && tokens[i] !== ',') {
+        typeTokens.push(tokens[i]);
+        i++;
+      }
+      const colType = typeTokens.join(' ');
+      const col = { name: colName, type: colType, nullable: true, defaultValue: null, primaryKey: false, autoIncrement: false };
+      while (i < tokens.length && tokens[i] !== ',') {
+        const t = tokens[i].toUpperCase();
+        if (t === 'NOT' && tokens[i+1]?.toUpperCase() === 'NULL') { col.nullable = false; i += 2; }
+        else if (t === 'NULL') { i++; }
+        else if (t === 'PRIMARY' && tokens[i+1]?.toUpperCase() === 'KEY') { col.primaryKey = true; col.nullable = false; i += 2; }
+        else if (t === 'UNIQUE') { i++; }
+        else if (t === 'DEFAULT') {
+          i++;
+          const dv = [];
+          const stop = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+          while (i < tokens.length && !stop.includes(tokens[i].toUpperCase()) && tokens[i] !== ',') { dv.push(tokens[i]); i++; }
+          col.defaultValue = dv.join(' ') || null;
+        }
+        else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') { col.autoIncrement = true; i++; }
+        else if (t === 'IDENTITY') { col.autoIncrement = true; i++; if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; } }
+        else if (t === 'GENERATED' && tokens[i+1]?.toUpperCase() === 'ALWAYS') { col.autoIncrement = true; while (i < tokens.length && tokens[i] !== ',') i++; }
+        else { i++; }
+      }
+      columns.push(col);
+      if (tokens[i] === ',') i++;
+    }
+    stmts.push({ name: tableName, columns });
+  }
+  return stmts;
+}
+
+// ── Masking Script Generation ──
+function generateMaskingSQL(table, dialect) {
+  const lines = [];
+  const sensitiveCols = [];
+  for (const col of table.columns) {
+    const rule = detectSensitivity(col.name);
+    if (rule) sensitiveCols.push({ col, rule });
+  }
+  if (sensitiveCols.length === 0) return { lines: [], sensitiveCols: [], riskScore: 0 };
+
+  const pkCol = table.columns.find(c => c.primaryKey);
+
+  for (const { col, rule } of sensitiveCols) {
+    let val;
+    if (rule.mask === 'password' || rule.mask === 'token' || rule.mask === 'key') {
+      if (dialect === 'mssql') val = 'HASHBYTES(\'SHA2_256\', CONVERT(VARCHAR(36), NEWID()))';
+      else if (dialect === 'oracle') val = 'STANDARD_HASH(SYS_GUID(), \'SHA256\')';
+      else if (dialect === 'postgres') val = 'ENCODE(DIGEST(GEN_RANDOM_UUID()::TEXT, \'sha256\'), \'hex\')';
+      else if (dialect === 'mysql') val = 'SHA2(UUID(), 256)';
+      else val = sqlEscape(hex(32), dialect);
+    } else if (rule.mask === 'uuid') {
+      if (dialect === 'mssql') val = 'NEWID()';
+      else if (dialect === 'oracle') val = 'SYS_GUID()';
+      else if (dialect === 'postgres') val = 'GEN_RANDOM_UUID()';
+      else if (dialect === 'mysql') val = 'UUID()';
+      else val = sqlEscape(fakeUUID(), dialect);
+    } else {
+      val = sqlEscape(generateMaskedValue(rule.mask, dialect), dialect);
+    }
+    lines.push(`UPDATE ${table.name} SET ${col.name} = ${val};`);
+  }
+
+  const riskScore = Math.round((sensitiveCols.length / table.columns.length) * 100);
+  return { lines, sensitiveCols, riskScore };
+}
+
+// ── UI Functions ──
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const panel = document.getElementById('outputPanel');
+
+  if (!sql.trim()) { panel.innerHTML = '<div class="empty-state">Paste SQL first.</div>'; return; }
+
+  const tables = parseCreateTable(sql);
+  if (tables.length === 0) { panel.innerHTML = '<div class="empty-state">No CREATE TABLE statements found.</div>'; return; }
+
+  let totalCols = 0, totalSensitive = 0, maxRisk = 0;
+  const allLines = [];
+  const detectionRows = [];
+
+  for (const t of tables) {
+    totalCols += t.columns.length;
+    const result = generateMaskingSQL(t, dialect);
+    totalSensitive += result.sensitiveCols.length;
+    if (result.riskScore > maxRisk) maxRisk = result.riskScore;
+
+    if (result.lines.length > 0) {
+      allLines.push(`-- Masking for table: ${t.name} (${result.sensitiveCols.length} sensitive columns)`);
+      allLines.push(...result.lines);
+      allLines.push('');
+      for (const { col, rule } of result.sensitiveCols) {
+        detectionRows.push(`<tr><td>${t.name}.${col.name}</td><td>${rule.label}</td><td>${col.type}</td></tr>`);
+      }
+    }
+  }
+
+  if (allLines.length === 0) {
+    panel.innerHTML = '<div class="empty-state">✅ No sensitive columns detected. Your schema looks safe!</div>';
+    return;
+  }
+
+  const riskClass = maxRisk > 50 ? 'risk-high' : (maxRisk > 20 ? 'risk-medium' : 'risk-low');
+  const riskLabel = maxRisk > 50 ? 'High' : (maxRisk > 20 ? 'Medium' : 'Low');
+
+  const html = `<div class="stats-row">
+    <div class="stat"><div class="stat-value">${tables.length}</div><div class="stat-label">Tables</div></div>
+    <div class="stat"><div class="stat-value ${riskClass}">${totalSensitive}</div><div class="stat-label">Sensitive Columns</div></div>
+    <div class="stat"><div class="stat-value ${riskClass}">${maxRisk}%</div><div class="stat-label">Risk Score</div></div>
+  </div>
+  <p class="notice" style="margin-bottom:12px;">Risk level: <strong class="${riskClass}">${riskLabel}</strong> — ${totalSensitive} of ${totalCols} columns contain PII.</p>
+  <div class="output-wrap"><pre>${escapeHtml(allLines.join('\n'))}</pre></div>`;
+
+  panel.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyOutput() {
+  const pre = document.querySelector('#outputPanel pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    const btn = document.querySelector('button[onclick="copyOutput()"]');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function downloadSQL() {
+  const pre = document.querySelector('#outputPanel pre');
+  if (!pre) return;
+  const blob = new Blob([pre.textContent], { type: 'text/sql' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'masking-script.sql';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function loadSample() {
+  document.getElementById('sqlInput').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  phone VARCHAR(20),
+  ssn VARCHAR(11),
+  date_of_birth DATE,
+  address TEXT,
+  city VARCHAR(50),
+  state VARCHAR(2),
+  zip_code VARCHAR(10),
+  country VARCHAR(50),
+  salary DECIMAL(10,2),
+  ip_address VARCHAR(45),
+  api_token VARCHAR(64),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  credit_card_last4 VARCHAR(4),
+  shipping_address TEXT,
+  billing_address TEXT,
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE logs (
+  id SERIAL PRIMARY KEY,
+  event_type VARCHAR(50),
+  message TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);`;
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste CREATE TABLE statements and click Generate to create anonymization scripts.</div>';
+}
+</script>
+
+</body>
+</html>
