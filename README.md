@@ -162,6 +162,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 66. [Schema Diff Report Generator](https://schemalens.tech/tools/schema-diff-report.html) — Generate branded PDF reports from schema diffs for Jira, Linear, and PRs
 67. [GitHub PR Schema Diff](https://schemalens.tech/tools/github-pr-diff.html) — Paste any public GitHub PR URL and instantly review the schema changes
 68. [Schema Diff Speed Challenge](https://schemalens.tech/tools/schema-diff-speed-challenge.html) — Race the clock to spot schema changes manually, then see how SchemaLens finds them instantly
+69. [SQL Schema Roast](https://schemalens.tech/tools/schema-roast.html) — Get your database schema roasted with humorous but genuinely helpful feedback. Shareable roast cards
 
 [View all 60+ tools →](https://schemalens.tech/tools.html)
 

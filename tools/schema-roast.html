@@ -3,56 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SQL Schema Health Check — Free Database Linter | SchemaLens</title>
-<meta name="description" content="Check your SQL schema for missing primary keys, unindexed foreign keys, missing timestamps, and other database design issues. Free, browser-based, privacy-first.">
-<meta property="og:title" content="SQL Schema Health Check — Free Database Linter">
-<meta property="og:description" content="Check your SQL schema for missing primary keys, unindexed foreign keys, missing timestamps, and other database design issues.">
-  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+<title>SQL Schema Roast — Get Your Database Roasted | SchemaLens</title>
+<meta name="description" content="Paste your SQL schema and get roasted by SchemaLens. Humorous but helpful feedback on your database design. Free, browser-based, shareable.">
+<meta property="og:title" content="SQL Schema Roast — Get Your Database Roasted">
+<meta property="og:description" content="Paste your SQL schema and get roasted. Humorous but helpful feedback on database design.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://schemalens.tech/tools/schema-health-check.html">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-roast.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "SQL Schema Health Check",
+  "name": "SQL Schema Roast",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "featureList": "Lints SQL schemas for missing primary keys, unindexed foreign keys, missing timestamps, and other design issues across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle",
-  "url": "https://schemalens.tech/tools/schema-health-check.html"
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Humorous schema design feedback, shareable roast cards, naming roasts, index roasts, architecture roasts",
+  "url": "https://schemalens.tech/tools/schema-roast.html"
 }
 </script>
 <link rel="stylesheet" href="../style.css">
 <style>
-.health-score { font-size: 3rem; font-weight: 800; text-align: center; margin: 1rem 0; }
-.health-score.good { color: var(--success); }
-.health-score.warn { color: var(--warning); }
-.health-score.bad { color: var(--danger); }
-.score-bar { height: 12px; border-radius: 6px; background: var(--surface); overflow: hidden; margin-bottom: 1.5rem; }
-.score-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
-.issue-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; }
-.issue-card.critical { border-left: 4px solid var(--danger); }
-.issue-card.warning { border-left: 4px solid var(--warning); }
-.issue-card.info { border-left: 4px solid var(--primary); }
-.issue-severity { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
-.issue-severity.critical { color: var(--danger); }
-.issue-severity.warning { color: var(--warning); }
-.issue-severity.info { color: var(--primary); }
-.issue-message { font-size: 0.95rem; margin-bottom: 0.25rem; }
-.issue-fix { font-size: 0.85rem; color: var(--text-muted); }
-.issue-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-.table-health-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
-.table-health-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-.table-health-name { font-weight: 700; font-size: 1.1rem; }
-.table-health-score { font-size: 0.9rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; }
-.table-health-score.good { background: rgba(34,197,94,0.15); color: var(--success); }
-.table-health-score.warn { background: rgba(234,179,8,0.15); color: var(--warning); }
-.table-health-score.bad { background: rgba(239,68,68,0.15); color: var(--danger); }
+.roast-score { font-size: 4rem; font-weight: 900; text-align: center; margin: 0.5rem 0; line-height: 1; }
+.roast-tier { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; }
+.roast-bar { height: 14px; border-radius: 7px; background: var(--surface); overflow: hidden; margin-bottom: 1.5rem; }
+.roast-bar-fill { height: 100%; border-radius: 7px; transition: width 0.6s ease; }
+.roast-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; margin-bottom: 0.75rem; position: relative; overflow: hidden; }
+.roast-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.roast-card.naming::before { background: #f59e0b; }
+.roast-card.type::before { background: #8b5cf6; }
+.roast-card.index::before { background: #ef4444; }
+.roast-card.architecture::before { background: #3b82f6; }
+.roast-card.relationship::before { background: #ec4899; }
+.roast-card.consistency::before { background: #10b981; }
+.roast-category { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.roast-category.naming { color: #f59e0b; }
+.roast-category.type { color: #8b5cf6; }
+.roast-category.index { color: #ef4444; }
+.roast-category.architecture { color: #3b82f6; }
+.roast-category.relationship { color: #ec4899; }
+.roast-category.consistency { color: #10b981; }
+.roast-text { font-size: 1.05rem; line-height: 1.5; }
+.roast-fix { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border); }
+.compliment-card { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
+.compliment-text { color: var(--success); font-size: 1rem; }
+.canvas-container { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; margin: 1.5rem 0; }
+.canvas-container canvas { max-width: 100%; height: auto; border-radius: 8px; }
 .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
 </style>
 <script>
@@ -85,8 +82,8 @@
 </nav>
 
 <div style="max-width:960px;margin:0 auto;padding:2rem 1rem;">
-  <h1 style="font-size:1.8rem;margin-bottom:0.5rem;">SQL Schema Health Check</h1>
-  <p style="color:var(--text-muted);margin-bottom:1.5rem;">Paste your <code>CREATE TABLE</code> statements and get an instant health report. Detects missing primary keys, unindexed foreign keys, missing timestamps, and more.</p>
+  <h1 style="font-size:1.9rem;margin-bottom:0.5rem;">🔥 SQL Schema Roast</h1>
+  <p style="color:var(--text-muted);margin-bottom:1.5rem;">Paste your <code>CREATE TABLE</code> statements. We'll roast your schema with love, humor, and genuinely useful advice. Share the burn.</p>
 
   <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;">
     <select id="dialect" class="dialect-select" style="padding:0.5rem 0.75rem;border-radius:6px;background:var(--surface);color:var(--text);border:1px solid var(--border);">
@@ -94,9 +91,9 @@
       <option value="mysql">MySQL / MariaDB</option>
       <option value="sqlite">SQLite</option>
       <option value="mssql">SQL Server</option>
-        <option value="oracle">Oracle</option>
+      <option value="oracle">Oracle</option>
     </select>
-    <button class="btn btn-primary" id="checkBtn">Check Health</button>
+    <button class="btn btn-primary" id="roastBtn" style="background:linear-gradient(135deg,#ef4444,#f59e0b);border:none;">🔥 Roast My Schema</button>
     <button class="btn btn-secondary" id="clearBtn">Clear</button>
     <button class="btn btn-secondary" id="sampleBtn">Load Sample</button>
   </div>
@@ -104,8 +101,10 @@
   <textarea id="sqlInput" placeholder="-- Paste your CREATE TABLE statements here
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  email VARCHAR NOT NULL UNIQUE,
+  name VARCHAR(100),
+  role VARCHAR(20) DEFAULT 'user',
+  team_id INTEGER REFERENCES teams(id)
 );" style="width:100%;min-height:240px;padding:1rem;border-radius:8px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);font-family:monospace;font-size:0.9rem;resize:vertical;"></textarea>
 
   <div id="results" style="margin-top:1.5rem;display:none;"></div>
@@ -121,9 +120,7 @@ CREATE TABLE users (
       <a href="../pricing.html">Pricing</a>
       <a href="../open.html">Open Startup</a>
       <a href="../api.html">API</a>
-      <a href="../team.html">Team</a>
-      <a href="../testimonials.html">Wall of Love</a>
-      <a href="schema-roast.html">🔥 Schema Roast</a>
+      <a href="../community.html">Community</a>
     </div>
     <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
   </div>
@@ -137,7 +134,7 @@ function toggleTheme() {
   localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
 }
 
-// ─── Parser (subset from app.html) ───
+// ─── Parser (subset from app.html / schema-health-check) ───
 function stripComments(sql) {
   return sql.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ');
 }
@@ -204,8 +201,7 @@ function normalizeName(name, dialect) {
   if ((n[0] === '"' && n[n.length-1] === '"') || (n[0] === '`' && n[n.length-1] === '`') || (n[0] === '[' && n[n.length-1] === ']')) {
     n = n.slice(1, -1);
   }
-  if (dialect === 'postgres' || dialect === 'sqlite') return n.toLowerCase();
-  if (dialect === 'mysql') return n.toLowerCase();
+  if (dialect === 'postgres' || dialect === 'sqlite' || dialect === 'mysql') return n.toLowerCase();
   return n;
 }
 
@@ -250,7 +246,6 @@ function parseCreateTable(stmt, dialect) {
   i++;
   const columns = [];
   const constraints = [];
-  const indexes = [];
   while (i < tokens.length && tokens[i] !== ')') {
     if (tokens[i].toUpperCase() === 'CONSTRAINT') {
       i++;
@@ -319,7 +314,7 @@ function parseCreateTable(stmt, dialect) {
       else { i++; }
     }
   }
-  return { name: tableName, columns, constraints, indexes };
+  return { name: tableName, columns, constraints, indexes: [] };
 }
 
 function parseCreateIndex(stmt, dialect) {
@@ -342,7 +337,7 @@ function parseCreateIndex(stmt, dialect) {
 }
 
 function parseSQL(sql, dialect) {
-  const schema = { tables: [], indexes: [], enums: [], errors: [] };
+  const schema = { tables: [], indexes: [], errors: [] };
   const stmts = splitStatements(stripComments(sql));
   for (const stmt of stmts) {
     if (!stmt.trim()) continue;
@@ -356,7 +351,6 @@ function parseSQL(sql, dialect) {
       if (idx) schema.indexes.push(idx);
     }
   }
-  // Attach indexes to tables
   for (const idx of schema.indexes) {
     const tbl = schema.tables.find(t => t.name === idx.table);
     if (tbl) tbl.indexes = (tbl.indexes || []).concat([idx]);
@@ -364,7 +358,7 @@ function parseSQL(sql, dialect) {
   return schema;
 }
 
-// ─── Reserved Words (subset) ───
+// ─── Roast Engine ───
 const RESERVED_WORDS = new Set([
   'SELECT','INSERT','UPDATE','DELETE','FROM','WHERE','JOIN','ORDER','GROUP','HAVING',
   'CREATE','DROP','ALTER','TABLE','INDEX','VIEW','TRIGGER','FUNCTION','PROCEDURE',
@@ -377,194 +371,236 @@ const RESERVED_WORDS = new Set([
   'WINDOW','OVER','PARTITION','RANGE','ROWS','PRECEDING','FOLLOWING','CURRENT','ROW'
 ]);
 
-// ─── Health Check Engine ───
-function checkHealth(schema, dialect) {
-  const issues = [];
-  const add = (severity, message, table, column, fix) => {
-    issues.push({ severity, message, table: table || '', column: column || '', fix: fix || '', category: '' });
-  };
+function generateRoasts(schema, dialect) {
+  const roasts = [];
+  const compliments = [];
+  const addRoast = (category, text, fix, weight=1) => roasts.push({ category, text, fix, weight });
+  const addCompliment = (text) => compliments.push({ text });
 
-  const allIndexCols = new Set();
-  const allIndexes = [];
-  for (const tbl of schema.tables) {
-    for (const idx of (tbl.indexes || [])) {
-      for (const c of idx.columns) allIndexCols.add(tbl.name + '.' + c);
-      allIndexes.push({ table: tbl.name, ...idx });
-    }
-  }
-
-  // Track column types across tables for consistency check
+  const allFks = [];
   const colTypeMap = {};
+  let totalColumns = 0;
+  let totalIndexes = 0;
 
   for (const tbl of schema.tables) {
-    const hasPK = tbl.constraints.some(c => c.type === 'PRIMARY KEY') || tbl.columns.some(c => c.primaryKey);
-    if (!hasPK) {
-      add('critical', `Table "${tbl.name}" has no PRIMARY KEY.`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN id SERIAL PRIMARY KEY;`);
+    totalColumns += tbl.columns.length;
+    totalIndexes += (tbl.indexes || []).length;
+
+    // ── Naming ──
+    for (const col of tbl.columns) {
+      if (RESERVED_WORDS.has(col.name.toUpperCase())) {
+        addRoast('naming', `Column \`${col.name}\` on \`${tbl.name}\` is a reserved SQL keyword. Your queries are playing with fire 🔥`, `Rename to \`${tbl.name}_${col.name}\` or something less explosive.`);
+      }
+      if (col.name.length === 1 && !col.primaryKey) {
+        addRoast('naming', `Column \`${col.name}\` on \`${tbl.name}\` is a single character. Is this a schema or a text message?`, `Use a descriptive name like \`description\` instead of \`d\`.`);
+      }
+      if (['data','info','item','thing','stuff','val','value','tmp','temp'].includes(col.name.toLowerCase())) {
+        addRoast('naming', `You named a column \`${col.name}\`. Might as well call it \`stuff\`.`, `Be specific: \`customer_email\`, \`order_total\`, \`session_token\`.`);
+      }
+      if (col.name.toLowerCase().startsWith('is_') && !['BOOLEAN','BOOL','BIT','TINYINT'].includes(col.type)) {
+        addRoast('naming', `\`${col.name}\` starts with \`is_\` but its type is ${col.type}. That's a plot twist.`, `Rename or change type to BOOLEAN.`);
+      }
+    }
+    if (tbl.name.toLowerCase().startsWith('tbl_') || tbl.name.toLowerCase().startsWith('table_')) {
+      addRoast('naming', `\`${tbl.name}\` — the prefix adds so much clarity. Not.`, `Just call it \`${tbl.name.replace(/^tbl_|^table_/i,'')}\`.`);
     }
 
+    // ── Types ──
+    for (const col of tbl.columns) {
+      const ut = col.type.toUpperCase();
+      if ((ut === 'VARCHAR' || ut === 'CHAR' || ut === 'NVARCHAR') && !ut.includes('(')) {
+        addRoast('type', `\`${col.name}\` is ${col.type} with no length. Living dangerously.`, `Use ${col.type}(255) or be explicit about your limits.`);
+      }
+      if ((ut === 'TEXT' || ut === 'CLOB' || ut === 'NTEXT') && /name|title|slug|code|sku|label|status|role|type|color/.test(col.name)) {
+        addRoast('type', `\`${col.name}\` uses ${col.type} for a short string. Even enums have standards.`, `Consider VARCHAR(255) or an ENUM/CHECK constraint.`);
+      }
+      if ((dialect === 'postgres' || dialect === 'sqlite') && (ut === 'TINYINT' || ut === 'INT1')) {
+        addRoast('type', `\`${col.name}\` uses TINYINT in ${dialect === 'postgres' ? 'PostgreSQL' : 'SQLite'}. It's called BOOLEAN. We have the technology.`, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} TYPE BOOLEAN;`);
+      }
+      if (ut === 'BOOLEAN' || ut === 'BOOL' || ut === 'BIT') {
+        if (col.nullable && !col.default) {
+          addRoast('type', `Boolean \`${col.name}\` has no DEFAULT. Schrödinger's column: neither true nor false until observed.`, `Add DEFAULT FALSE.`);
+        }
+      }
+      if (ut === 'FLOAT' || ut === 'REAL') {
+        addRoast('type', `\`${col.name}\` is ${col.type}. Hope you like rounding errors in production.`, `Use DECIMAL or NUMERIC for money and precise values.`);
+      }
+    }
+
+    // ── Indexes ──
     const fkCols = new Set();
-    const fkConstraints = [];
     for (const c of tbl.constraints) {
       if (c.type === 'FOREIGN KEY') {
         for (const col of c.columns) fkCols.add(col);
-        fkConstraints.push(c);
+        allFks.push({ table: tbl.name, ...c });
       }
     }
     for (const col of tbl.columns) {
-      if (col.foreignKey) {
-        fkCols.add(col.name);
-        fkConstraints.push({ columns: [col.name], refTable: col.foreignKey.table, refColumns: col.foreignKey.columns, onDelete: null, onUpdate: null });
-      }
+      if (col.foreignKey) fkCols.add(col.name);
     }
     for (const colName of fkCols) {
       const indexed = (tbl.indexes || []).some(idx => idx.columns[0] === colName);
       if (!indexed) {
-        add('warning', `Foreign key column "${colName}" on "${tbl.name}" has no supporting index.`, tbl.name, colName, `CREATE INDEX idx_${tbl.name}_${colName} ON ${tbl.name} (${colName});`);
+        addRoast('index', `Foreign key \`${colName}\` on \`${tbl.name}\` has no index. Bold strategy.`, `CREATE INDEX idx_${tbl.name}_${colName} ON ${tbl.name} (${colName});`);
       }
     }
-    // Check missing ON DELETE/ON UPDATE
-    for (const fk of tbl.constraints) {
-      if (fk.type === 'FOREIGN KEY') {
-        if (!fk.onDelete && !fk.onUpdate) {
-          add('info', `Foreign key "${fk.name || ''}" on "${tbl.name}" has no ON DELETE or ON UPDATE clause.`, tbl.name, fk.columns[0], `Consider ON DELETE CASCADE or ON DELETE SET NULL for data integrity.`);
-        }
+    if (tbl.columns.length > 3 && (tbl.indexes || []).filter(i => !i.unique).length === 0) {
+      addRoast('index', `\`${tbl.name}\` has ${tbl.columns.length} columns and zero extra indexes. Are you running a database or a CSV collection?`, `Add indexes on columns used in WHERE, JOIN, and ORDER BY.`);
+    }
+    const idxSigs = {};
+    for (const idx of (tbl.indexes || [])) {
+      const sig = idx.columns.join(',');
+      if (idxSigs[sig]) {
+        addRoast('index', `\`${tbl.name}\` has duplicate indexes on (${sig}). One for each mood?`, `DROP INDEX ${idx.name}; — keep ${idxSigs[sig]}.`);
+      } else {
+        idxSigs[sig] = idx.name;
       }
     }
 
+    // ── Architecture ──
+    const hasPK = tbl.constraints.some(c => c.type === 'PRIMARY KEY') || tbl.columns.some(c => c.primaryKey);
+    if (!hasPK) {
+      addRoast('architecture', `\`${tbl.name}\` has no PRIMARY KEY. Anarchy. Pure anarchy.`, `ALTER TABLE ${tbl.name} ADD COLUMN id SERIAL PRIMARY KEY;`);
+    }
+    if (tbl.columns.length > 50) {
+      addRoast('architecture', `\`${tbl.name}\` has ${tbl.columns.length} columns. That's not a table, that's a spreadsheet.`, `Normalize into related tables with foreign keys.`);
+    }
+    if (tbl.columns.length > 0 && tbl.constraints.length === 0 && !tbl.columns.some(c => c.primaryKey)) {
+      addRoast('architecture', `\`${tbl.name}\` has zero constraints. YOLO database design.`, `Add NOT NULL, UNIQUE, or CHECK constraints.`);
+    }
     const colNames = tbl.columns.map(c => c.name);
     const hasCreatedAt = colNames.some(n => /created_at|createdat|inserted_at/.test(n));
     const hasUpdatedAt = colNames.some(n => /updated_at|updatedat|modified_at/.test(n));
-    const hasDeletedAt = colNames.some(n => /deleted_at|deletedat|soft_delete/.test(n));
     if (!hasCreatedAt) {
-      add('info', `Table "${tbl.name}" is missing a created_at timestamp.`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
+      addRoast('architecture', `\`${tbl.name}\` is missing \`created_at\`. Time is a social construct anyway.`, `ALTER TABLE ${tbl.name} ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
     }
     if (!hasUpdatedAt) {
-      add('info', `Table "${tbl.name}" is missing an updated_at timestamp.`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
+      addRoast('architecture', `\`${tbl.name}\` has no \`updated_at\`. When did this row change? We'll never know.`, `ALTER TABLE ${tbl.name} ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
     }
-    if (!hasDeletedAt && tbl.columns.length > 2) {
-      add('info', `Table "${tbl.name}" is missing a soft-delete column (deleted_at).`, tbl.name, '', `ALTER TABLE ${tbl.name} ADD COLUMN deleted_at TIMESTAMP NULL;`);
+    if (!colNames.some(n => /deleted_at|deletedat|soft_delete/.test(n)) && tbl.columns.length > 2) {
+      addRoast('architecture', `\`${tbl.name}\` has no soft-delete column. Deletion is forever. Like your regrets.`, `ALTER TABLE ${tbl.name} ADD COLUMN deleted_at TIMESTAMP NULL;`);
     }
 
-    // Per-column checks
+    // ── Consistency tracking ──
     for (const col of tbl.columns) {
-      const upperType = col.type.toUpperCase();
-      const shortName = col.name.length;
-
-      // Track for cross-table consistency
       if (!colTypeMap[col.name]) colTypeMap[col.name] = {};
-      colTypeMap[col.name][tbl.name] = upperType;
-
-      // Reserved word check
-      if (RESERVED_WORDS.has(col.name.toUpperCase())) {
-        add('warning', `Column "${col.name}" on "${tbl.name}" is a reserved SQL keyword.`, tbl.name, col.name, `Rename to ${tbl.name}_${col.name} or use a non-reserved name.`);
-      }
-
-      // VARCHAR without length
-      if (upperType === 'VARCHAR' || upperType === 'CHAR' || upperType === 'NVARCHAR') {
-        add('warning', `Column "${col.name}" on "${tbl.name}" is a ${col.type} without explicit length.`, tbl.name, col.name, `Use ${col.type}(255) or TEXT instead.`);
-      }
-
-      // TINYINT in postgres/sqlite
-      if ((dialect === 'postgres' || dialect === 'sqlite') && (upperType === 'TINYINT' || upperType === 'INT1')) {
-        add('warning', `Column "${col.name}" on "${tbl.name}" uses TINYINT — consider BOOLEAN in ${dialect === 'postgres' ? 'PostgreSQL' : 'SQLite'}.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} TYPE BOOLEAN;`);
-      }
-
-      // TEXT for short strings
-      if ((upperType === 'TEXT' || upperType === 'CLOB' || upperType === 'NTEXT') && /name|title|slug|code|sku|label|status|role|type|color/.test(col.name)) {
-        add('info', `Column "${col.name}" on "${tbl.name}" uses ${col.type} for a short string. Consider VARCHAR with a length limit.`, tbl.name, col.name, `Use VARCHAR(255) instead of ${col.type} for predictable storage and indexing.`);
-      }
-
-      // Missing NOT NULL on critical columns
-      if (col.nullable && !col.primaryKey && !col.autoIncrement && /id$|email|username|phone|uuid|slug|code/.test(col.name)) {
-        add('warning', `Column "${col.name}" on "${tbl.name}" is nullable but looks like a required identifier.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} SET NOT NULL;`);
-      }
-
-      // Boolean without DEFAULT
-      if ((upperType === 'BOOLEAN' || upperType === 'BOOL' || upperType === 'BIT') && col.nullable && !col.default) {
-        add('info', `Boolean column "${col.name}" on "${tbl.name}" has no DEFAULT. Consider adding one.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ALTER COLUMN ${col.name} SET DEFAULT FALSE;`);
-      }
-
-      // Short column names
-      if (shortName <= 1 && !col.primaryKey) {
-        add('info', `Column "${col.name}" on "${tbl.name}" has a very short name. Consider a more descriptive name.`, tbl.name, col.name, `Rename to something descriptive (e.g., description instead of d).`);
-      }
-
-      // Enum misuse: VARCHAR for status/role/type without CHECK
-      if ((upperType.startsWith('VARCHAR') || upperType.startsWith('TEXT') || upperType.startsWith('CHAR')) && /status|state|role|type|priority|level|gender/.test(col.name)) {
-        const hasCheck = tbl.constraints.some(c => c.type === 'CHECK' && c.expression && c.expression.toUpperCase().includes(col.name.toUpperCase()));
-        if (!hasCheck && dialect !== 'sqlite') {
-          add('info', `Column "${col.name}" on "${tbl.name}" stores categorical data in ${col.type}. Consider ENUM or CHECK constraint.`, tbl.name, col.name, `ALTER TABLE ${tbl.name} ADD CONSTRAINT chk_${col.name} CHECK (${col.name} IN ('value1', 'value2'));`);
-        }
-      }
-    }
-
-    if (tbl.columns.length > 50) {
-      add('warning', `Table "${tbl.name}" has ${tbl.columns.length} columns. Consider normalizing into related tables.`, tbl.name, '', 'Split into multiple tables with foreign key relationships.');
-    }
-
-    if (tbl.columns.length > 0 && tbl.constraints.length === 0 && !tbl.columns.some(c => c.primaryKey)) {
-      add('info', `Table "${tbl.name}" has no constraints. Consider adding NOT NULL, UNIQUE, or CHECK constraints.`, tbl.name, '', 'Add constraints to enforce data integrity.');
-    }
-
-    const totalIndexes = (tbl.indexes || []).length;
-    if (totalIndexes === 0 && tbl.columns.length > 3) {
-      add('info', `Table "${tbl.name}" has no indexes beyond the primary key.`, tbl.name, '', 'Add indexes on columns used in WHERE, JOIN, and ORDER BY clauses.');
-    }
-
-    // Duplicate index detection
-    const idxSignatures = {};
-    for (const idx of (tbl.indexes || [])) {
-      const sig = idx.columns.join(',');
-      if (idxSignatures[sig]) {
-        add('warning', `Table "${tbl.name}" has duplicate indexes on columns (${sig}).`, tbl.name, '', `DROP INDEX ${idx.name}; — keep ${idxSignatures[sig]}.`);
-      } else {
-        idxSignatures[sig] = idx.name;
-      }
+      colTypeMap[col.name][tbl.name] = col.type;
     }
   }
 
-  // Cross-table checks
-  const colNameCounts = {};
-  for (const tbl of schema.tables) {
-    for (const col of tbl.columns) {
-      colNameCounts[col.name] = (colNameCounts[col.name] || 0) + 1;
-    }
-  }
-  for (const [name, count] of Object.entries(colNameCounts)) {
-    if (count > 2 && !['id','created_at','updated_at'].includes(name)) {
-      add('info', `Column name "${name}" appears in ${count} tables. This can cause ambiguity in JOINs.`, '', name, 'Consider prefixing with table name (e.g., user_name).');
-    }
-  }
-
-  // Inconsistent types across tables
+  // Cross-table consistency
   for (const [colName, tableMap] of Object.entries(colTypeMap)) {
     const types = Object.values(tableMap);
     const uniqueTypes = [...new Set(types)];
     if (uniqueTypes.length > 1) {
-      add('info', `Column "${colName}" has inconsistent types across tables: ${uniqueTypes.join(', ')}.`, '', colName, 'Standardize the type across all tables for consistency.');
+      addRoast('consistency', `\`${colName}\` is ${uniqueTypes.join(' / ')} across different tables. Pick a lane.`, `Standardize to one type everywhere.`);
     }
   }
 
-  return issues;
+  // Compliments for things done well
+  if (schema.tables.length > 0) {
+    const pkRate = schema.tables.filter(t => t.constraints.some(c => c.type === 'PRIMARY KEY') || t.columns.some(c => c.primaryKey)).length / schema.tables.length;
+    if (pkRate === 1) compliments.push({ text: "Every table has a PRIMARY KEY. Someone read the manual. 📚" });
+    if (totalIndexes >= schema.tables.length) compliments.push({ text: `${totalIndexes} indexes across ${schema.tables.length} tables. You're not afraid of performance.` });
+    if (schema.tables.length >= 3 && allFks.length > 0) compliments.push({ text: `Proper foreign keys. Your data has boundaries. 🛡️` });
+  }
+
+  return { roasts, compliments };
 }
 
-function computeScore(issues) {
-  const critical = issues.filter(i => i.severity === 'critical').length;
-  const warning = issues.filter(i => i.severity === 'warning').length;
-  const info = issues.filter(i => i.severity === 'info').length;
-  let score = 100 - critical * 15 - warning * 5 - info * 1;
-  return Math.max(0, Math.min(100, Math.round(score)));
+function computeRoastScore(roasts) {
+  let score = 0;
+  for (const r of roasts) score += (r.weight || 1) * 4;
+  return Math.min(100, Math.round(score));
 }
 
-function getScoreBadge(score) {
-  if (score >= 90) return { label: 'Schema Guardian', emoji: '🛡️' };
-  if (score >= 75) return { label: 'Migration Aware', emoji: '✅' };
-  if (score >= 50) return { label: 'Needs Attention', emoji: '⚠️' };
-  return { label: 'Critical Issues', emoji: '🚨' };
+function getRoastTier(score) {
+  if (score >= 85) return { label: 'Charred Beyond Recognition', emoji: '💀', color: '#7f1d1d' };
+  if (score >= 65) return { label: 'Well Done', emoji: '🔥', color: '#ef4444' };
+  if (score >= 45) return { label: 'Medium Rare', emoji: '🍖', color: '#f59e0b' };
+  if (score >= 25) return { label: 'Lightly Toasted', emoji: '🍞', color: '#eab308' };
+  return { label: 'Schema Saint', emoji: '✨', color: '#22c55e' };
 }
 
-function generateShareText(score, badge, issueCount, tableCount) {
-  return `I scored ${score}/100 on the SQL Schema Health Check — ${badge.emoji} ${badge.label}.\n\n${issueCount} issue(s) found across ${tableCount} table(s).\n\nCheck your own schema for free → https://schemalens.tech/tools/schema-health-check.html`;
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function renderRoast(r) {
+  return `<div class="roast-card ${r.category}">
+    <div class="roast-category ${r.category}">${r.category}</div>
+    <div class="roast-text">${escapeHtml(r.text)}</div>
+    ${r.fix ? `<div class="roast-fix">💡 ${escapeHtml(r.fix)}</div>` : ''}
+  </div>`;
+}
+
+function generateShareText(score, tier, roastCount, tableCount) {
+  return `I scored ${score}/100 on the SQL Schema Roast — ${tier.emoji} ${tier.label}.\n\n${roastCount} burn(s) across ${tableCount} table(s).\n\nGet roasted → https://schemalens.tech/tools/schema-roast.html`;
+}
+
+// ─── Canvas Card Generator ───
+function drawRoastCard(score, tier, topRoasts, tableCount) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 1200, 630);
+  grad.addColorStop(0, '#0f0f0f');
+  grad.addColorStop(1, '#1a1a2e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 630);
+
+  // Border glow
+  ctx.strokeStyle = tier.color;
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, 1192, 622);
+
+  // Brand
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText('SchemaLens', 60, 70);
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '20px sans-serif';
+  ctx.fillText('schemalens.tech', 60, 100);
+
+  // Score
+  ctx.fillStyle = tier.color;
+  ctx.font = 'bold 180px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(score.toString(), 600, 280);
+
+  // /100
+  ctx.fillStyle = '#64748b';
+  ctx.font = '40px sans-serif';
+  ctx.fillText('/100', 600, 330);
+
+  // Tier
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.fillText(`${tier.emoji} ${tier.label}`, 600, 400);
+
+  // Top roasts
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = '24px sans-serif';
+  let y = 480;
+  for (let i = 0; i < Math.min(2, topRoasts.length); i++) {
+    const text = topRoasts[i].text.length > 70 ? topRoasts[i].text.slice(0, 67) + '...' : topRoasts[i].text;
+    ctx.fillText(`• ${text}`, 80, y);
+    y += 40;
+  }
+
+  // Stats
+  ctx.fillStyle = '#64748b';
+  ctx.font = '20px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${tableCount} tables analyzed`, 1120, 580);
+
+  return canvas;
 }
 
 // ─── UI ───
@@ -618,6 +654,18 @@ CREATE TABLE teams (
 CREATE TABLE teams (
   id INT IDENTITY(1,1) PRIMARY KEY,
   name NVARCHAR(100)
+);`,
+  oracle: `CREATE TABLE users (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email VARCHAR2(255) NOT NULL UNIQUE,
+  name VARCHAR2(100),
+  role VARCHAR2(20) DEFAULT 'user',
+  team_id NUMBER REFERENCES teams(id)
+);
+
+CREATE TABLE teams (
+  id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR2(100)
 );`
 };
 
@@ -631,93 +679,110 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('results').style.display = 'none';
 });
 
-let lastHealthResult = null;
+let lastResult = null;
 
-document.getElementById('checkBtn').addEventListener('click', () => {
+document.getElementById('roastBtn').addEventListener('click', () => {
   const sql = document.getElementById('sqlInput').value;
   const dialect = document.getElementById('dialect').value;
   const schema = parseSQL(sql, dialect);
-  const issues = checkHealth(schema, dialect);
-  const score = computeScore(issues);
-  const badge = getScoreBadge(score);
+  const { roasts, compliments } = generateRoasts(schema, dialect);
+  const score = computeRoastScore(roasts);
+  const tier = getRoastTier(score);
 
-  let scoreClass = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
+  // Sort roasts by weight descending, then shuffle lightly for variety
+  roasts.sort((a, b) => (b.weight || 1) - (a.weight || 1));
 
   let html = '';
-  html += `<div class="health-score ${scoreClass}">${score}<span style="font-size:1rem;font-weight:500;color:var(--text-muted);">/100</span></div>`;
-  html += `<div class="score-bar"><div class="score-bar-fill" style="width:${score}%;background:${score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)'}"></div></div>`;
-  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:0.5rem;"><strong>${badge.emoji} ${badge.label}</strong></p>`;
-  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem;">${issues.length} issue${issues.length !== 1 ? 's' : ''} found across ${schema.tables.length} table${schema.tables.length !== 1 ? 's' : ''}</p>`;
+  html += `<div class="roast-score" style="color:${tier.color};">${score}<span style="font-size:1.2rem;font-weight:600;color:var(--text-muted);">/100</span></div>`;
+  html += `<div class="roast-tier" style="color:${tier.color};">${tier.emoji} ${tier.label}</div>`;
+  html += `<div class="roast-bar"><div class="roast-bar-fill" style="width:${score}%;background:${tier.color};"></div></div>`;
+  html += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem;">${roasts.length} burn(s) and ${compliments.length} compliment(s) across ${schema.tables.length} table(s)</p>`;
 
   // Share buttons
-  const shareText = encodeURIComponent(generateShareText(score, badge, issues.length, schema.tables.length));
-  const shareUrl = encodeURIComponent('https://schemalens.tech/tools/schema-health-check.html');
+  const shareText = encodeURIComponent(generateShareText(score, tier, roasts.length, schema.tables.length));
+  const shareUrl = encodeURIComponent('https://schemalens.tech/tools/schema-roast.html');
   html += `<div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">`;
   html += `<button class="btn btn-secondary" id="copyResultBtn" style="font-size:0.85rem;">📋 Copy Result</button>`;
   html += `<a class="btn btn-secondary" href="https://twitter.com/intent/tweet?text=${shareText}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">𝕏 Share on X</a>`;
   html += `<a class="btn btn-secondary" href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">🔗 Share on LinkedIn</a>`;
-  html += `<a class="btn btn-secondary" href="/api/share?health=${score}&badge=${encodeURIComponent(badge.label)}&issues=${issues.length}&tables=${schema.tables.length}" target="_blank" rel="noopener" style="font-size:0.85rem;text-decoration:none;">🌐 Share Link</a>`;
+  html += `<button class="btn btn-secondary" id="downloadCardBtn" style="font-size:0.85rem;">🖼️ Download Card</button>`;
   html += `</div>`;
 
-  if (schema.errors.length) {
-    html += `<div class="issue-card critical"><div class="issue-severity critical">Parse Error</div><div class="issue-message">${schema.errors.length} CREATE TABLE statement(s) could not be parsed.</div></div>`;
+  // Canvas container
+  html += `<div class="canvas-container" id="cardContainer"></div>`;
+
+  // Compliments first (positive reinforcement)
+  for (const c of compliments) {
+    html += `<div class="compliment-card"><div class="compliment-text">${escapeHtml(c.text)}</div></div>`;
   }
 
-  const criticals = issues.filter(i => i.severity === 'critical');
-  const warnings = issues.filter(i => i.severity === 'warning');
-  const infos = issues.filter(i => i.severity === 'info');
+  // Top roasts
+  const topRoasts = roasts.slice(0, 6);
+  for (const r of topRoasts) {
+    html += renderRoast(r);
+  }
 
-  for (const issue of criticals) html += renderIssue(issue);
-  for (const issue of warnings) html += renderIssue(issue);
-  for (const issue of infos) html += renderIssue(issue);
+  if (roasts.length > 6) {
+    html += `<details style="margin:1rem 0;"><summary style="cursor:pointer;color:var(--text-muted);">Show ${roasts.length - 6} more burns...</summary>`;
+    for (const r of roasts.slice(6)) {
+      html += renderRoast(r);
+    }
+    html += `</details>`;
+  }
 
-  if (issues.length === 0 && schema.tables.length > 0) {
-    html += `<div class="empty-state"><p>🎉 No issues found. Your schema looks great!</p></div>`;
+  if (roasts.length === 0 && schema.tables.length > 0) {
+    html += `<div class="empty-state"><p>🎉 Nothing to roast. Your schema is immaculate... or too simple to judge.</p></div>`;
   } else if (schema.tables.length === 0) {
-    html += `<div class="empty-state"><p>Paste some CREATE TABLE statements to get started.</p></div>`;
+    html += `<div class="empty-state"><p>Paste some CREATE TABLE statements to get roasted.</p></div>`;
   }
 
   // CTA
   html += `<div style="margin-top:2rem;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-align:center;">`;
-  html += `<p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.95rem;">SchemaLens found ${issues.length} issue(s) automatically. Generate the fix script in one click with Pro.</p>`;
-  html += `<a href="../app.html" class="btn btn-primary" style="text-decoration:none;">Fix with SchemaLens →</a>`;
+  html += `<p style="margin:0 0 0.75rem;color:var(--text-muted);font-size:0.95rem;">Roasts are fun. Fixing them is better. Generate migration scripts for every issue with SchemaLens Pro.</p>`;
+  html += `<a href="../app.html" class="btn btn-primary" style="text-decoration:none;">Fix My Schema →</a>`;
   html += `</div>`;
 
   const results = document.getElementById('results');
   results.innerHTML = html;
   results.style.display = 'block';
 
-  lastHealthResult = { score, badge: badge.label, issues: issues.length, tables: schema.tables.length, dialect };
+  lastResult = { score, tier, roasts: roasts.length, tables: schema.tables.length, dialect, topRoasts };
 
-  // Copy button handler
+  // Generate and insert canvas card
   setTimeout(() => {
-    const btn = document.getElementById('copyResultBtn');
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const text = generateShareText(score, badge, issues.length, schema.tables.length);
+    const container = document.getElementById('cardContainer');
+    if (container && lastResult) {
+      const canvas = drawRoastCard(lastResult.score, lastResult.tier, lastResult.topRoasts, lastResult.tables);
+      container.appendChild(canvas);
+    }
+  }, 0);
+
+  // Button handlers
+  setTimeout(() => {
+    const copyBtn = document.getElementById('copyResultBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const text = generateShareText(score, tier, roasts.length, schema.tables.length);
         navigator.clipboard.writeText(text).then(() => {
-          btn.textContent = '✅ Copied!';
-          setTimeout(() => btn.textContent = '📋 Copy Result', 2000);
+          copyBtn.textContent = '✅ Copied!';
+          setTimeout(() => copyBtn.textContent = '📋 Copy Result', 2000);
         });
+      });
+    }
+    const dlBtn = document.getElementById('downloadCardBtn');
+    if (dlBtn) {
+      dlBtn.addEventListener('click', () => {
+        const canvas = document.querySelector('#cardContainer canvas');
+        if (canvas) {
+          const link = document.createElement('a');
+          link.download = `schema-roast-${score}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        }
       });
     }
   }, 0);
 });
-
-function renderIssue(issue) {
-  return `<div class="issue-card ${issue.severity}">
-    <div class="issue-severity ${issue.severity}">${issue.severity}</div>
-    <div class="issue-message">${escapeHtml(issue.message)}</div>
-    ${issue.fix ? `<div class="issue-fix">Fix: ${escapeHtml(issue.fix)}</div>` : ''}
-    ${issue.table ? `<div class="issue-meta">Table: ${escapeHtml(issue.table)}${issue.column ? ' · Column: ' + escapeHtml(issue.column) : ''}</div>` : ''}
-  </div>`;
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>

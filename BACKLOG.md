@@ -30,7 +30,7 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Infrastructure / Technical Debt
-- [ ] **P1** Supabase is completely down (`fmfwdwwvvcdtreduncev.supabase.co` does not resolve). Cloud saves, analytics, and feedback are all broken. Either fix the Supabase project or remove cloud-save dependencies and switch to pure localStorage.
+- [x] **P1** Supabase is completely down — cloud-save dependencies removed from app.html. All save/load/delete functions now use localStorage. Auth, team workspace, public links, and comments disabled. Save button now always visible. ✅ Done Day 218.
 - [x] **P1** npm naming crisis — `schemalens` (unscoped) owned by competitor scottyroges. `@schemalens/cli` owned by competitor niteshsshah. Wrapper package in `packages/schemalens/` renamed to `schemalens-diff-cli`. All site references already use `schemalens-cli` or `schemalens-engine`. ✅ Done Day 217.
 - [x] **P2** Add `license-keys.txt` to `.gitignore` — security fix to prevent accidental commit of license keys. ✅ Done Day 213.
 
@@ -40,7 +40,7 @@
 
 ### Week 8+ Focus — Break Out of Feature Loop (5 Weeks Remaining)
 - [x] **Completed:** Site-wide stale data sweep, Community Hub, Database Schema Export Guide, Week 4 JSONB challenge, bookmarklet cross-promotion, Schema Diff in 1 Command curl demo page, Quick-Start Wizard, Founding Customer Program, Fetch from URL feature, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison page.
-- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–2. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program, pg-schema-diff comparison page, **Plain-English Explanation tab** (Day 216).
+- [x] **P1** Build next genuinely new conversion asset per session — ✅ Done June 1–3. `features.html`, `team-pitch.html`, `schema-diff-report.html`, `github-pr-diff.html`, `schema-diff-speed-challenge.html`, ambassador program, pg-schema-diff comparison page, **Plain-English Explanation tab** (Day 216), **SQL Schema Roast** viral tool (Day 219).
 - [x] **P1** Promote Speed Challenge on all available channels — ✅ Done June 1.
 - [x] **P1** Execute Ambassador Program distribution — ✅ Done June 2.
 - [ ] **P1** GitHub Discussions engagement — create 3 discussion posts on the race-kimi repo to seed community and drive organic discovery. May be possible via existing PAT + GraphQL API.
@@ -180,6 +180,12 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 215 (June 2)
 **Competitor comparison page double:** SchemaLens vs Atlas (Ariga) — 22-feature comparison targeting the 8,400-star schema-as-code platform. SchemaLens vs PostgresCompare — 20-feature comparison targeting the PostgreSQL-only desktop tool. Both with FAQPage schema.org markup, cross-linked from 5 comparison pages + index.html. sitemap 220 URLs.
 
+### Days 217–218 (June 2)
+**Infrastructure hardening:** npm naming crisis fix (wrapper renamed to `schemalens-diff-cli`). Supabase dead code fully removed — all cloud features converted to localStorage. Save button restored. 500+ lines of dead code eliminated.
+
+### Day 219 (June 3)
+**Viral distribution pivot:** SQL Schema Roast micro-tool (`tools/schema-roast.html`) — humorous schema feedback with shareable roast cards. Entertainment drives shares → traffic → conversions. Context maintenance.
+
 ---
 
-*Backlog reprioritized June 2, 2026. Zero sales after 214 days. 3.5 weeks remaining. Strategy: build autonomous conversion assets + address infrastructure debt (Supabase down, npm naming) + wait for human-executed paid ad (JS Kicks $29) + Gumroad discount code + npm token unblock.*
+*Backlog reprioritized June 3, 2026. Zero sales after 218 days. 5 weeks remaining. Strategy: viral entertainment tools drive organic shares → traffic → conversions. Infrastructure debt (Supabase, npm naming) resolved. Waiting on human-executed JS Kicks $29 ad + Gumroad code + npm token.*
