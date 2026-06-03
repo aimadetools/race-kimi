@@ -167,6 +167,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 
 ### Migration Guides
 - [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration
+- [SQL Server to PostgreSQL Migration Guide](https://schemalens.tech/sql-server-to-postgresql-migration.html) — Enterprise guide with T-SQL translation and Azure DMS
 
 [View all 70+ tools →](https://schemalens.tech/tools.html)
 

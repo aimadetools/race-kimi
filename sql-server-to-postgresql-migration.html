@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Server to PostgreSQL Migration Guide — Enterprise Step-by-Step (2026)</title>
+<meta name="description" content="Complete enterprise guide for migrating from SQL Server to PostgreSQL. Schema conversion, T-SQL to PL/pgSQL, data migration with pg_dump and tools, and Azure-to-PostgreSQL strategies.">
+<meta property="og:title" content="SQL Server to PostgreSQL Migration Guide — Enterprise Step-by-Step (2026)">
+<meta property="og:description" content="Complete enterprise guide for migrating from SQL Server to PostgreSQL. Schema conversion, T-SQL to PL/pgSQL, data migration, and Azure strategies.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.tech/sql-server-to-postgresql-migration.html">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<link rel="canonical" href="https://schemalens.tech/sql-server-to-postgresql-migration.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "SQL Server to PostgreSQL Migration Guide",
+  "description": "Step-by-step enterprise guide for migrating a database from SQL Server to PostgreSQL including schema conversion, data migration, and validation.",
+  "totalTime": "PT8H",
+  "estimatedCost": {"@type": "MonetaryAmount", "currency": "USD", "value": "0"},
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Export SQL Server Schema",
+      "text": "Use SQL Server Management Studio (SSMS) or sqlcmd to generate CREATE TABLE scripts.",
+      "url": "https://schemalens.tech/sql-server-to-postgresql-migration.html#step-1"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Translate Schema to PostgreSQL",
+      "text": "Convert SQL Server CREATE TABLE statements to PostgreSQL syntax using a dialect translator.",
+      "url": "https://schemalens.tech/sql-server-to-postgresql-migration.html#step-2"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Migrate Data",
+      "text": "Use pg_dump, custom ETL, or Azure DMS to move data from SQL Server to PostgreSQL.",
+      "url": "https://schemalens.tech/sql-server-to-postgresql-migration.html#step-3"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Validate and Test",
+      "text": "Compare row counts, run application tests, and verify constraints and indexes.",
+      "url": "https://schemalens.tech/sql-server-to-postgresql-migration.html#step-4"
+    }
+  ]
+}
+</script>
+<style>
+  :root{--bg:#0f172a;--surface:#1e293b;--border:#334155;--text:#f1f5f9;--text-muted:#94a3b8;--accent:#38bdf8;--accent-2:#818cf8;--danger:#f87171;--warning:#fbbf24;--success:#34d399;--code-bg:#0b1220;--code-text:#e2e8f0;--radius:12px;--radius-sm:8px;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  .container{max-width:800px;margin:0 auto;padding:24px}
+  .page-header{text-align:center;padding:48px 0 32px}
+  .page-header h1{font-size:2.2rem;margin:0 0 12px;line-height:1.2}
+  .page-header p{color:var(--text-muted);font-size:1.1rem;max-width:640px;margin:0 auto}
+  .badge{display:inline-block;background:rgba(56,189,248,0.1);color:var(--accent);border:1px solid rgba(56,189,248,0.2);border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:600;margin-bottom:16px}
+  h2{font-size:1.5rem;margin:40px 0 16px;color:var(--text);border-bottom:1px solid var(--border);padding-bottom:8px}
+  h3{font-size:1.2rem;margin:28px 0 12px;color:var(--text-muted)}
+  p,li{color:var(--text-muted);font-size:1rem}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:var(--code-bg);color:var(--code-text);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:0.9em}
+  pre{background:var(--code-bg);color:var(--code-text);padding:16px;border-radius:var(--radius-sm);overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:0.9rem;line-height:1.5;border:1px solid var(--border)}
+  pre code{background:none;padding:0}
+  ul,ol{padding-left:20px}
+  li{margin-bottom:8px}
+  .tip{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:var(--radius-sm);padding:16px 20px;margin:20px 0;color:var(--success)}
+  .tip::before{content:"💡 ";font-weight:700}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:var(--radius-sm);padding:16px 20px;margin:20px 0;color:var(--warning)}
+  .warning-box::before{content:"⚠️ ";font-weight:700}
+  .cta-box{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.08));border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;margin:32px 0}
+  .cta-box h3{margin:0 0 10px;font-size:1.2rem;color:var(--text)}
+  .cta-box p{color:var(--text-muted);margin-bottom:16px}
+  .btn-primary{background:var(--accent);color:#0f172a;border:none;border-radius:var(--radius-sm);padding:12px 24px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn-primary:hover{opacity:.9;text-decoration:none}
+  .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 20px;font-size:0.95rem;cursor:pointer;text-decoration:none;display:inline-block;margin-left:8px}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.95rem}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+  th{color:var(--text-muted);font-weight:600;background:var(--surface)}
+  td{color:var(--text-muted)}
+  tr:hover td{background:rgba(255,255,255,0.02)}
+  footer{text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:40px}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;margin:10px 0;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer}
+  .checklist-item input[type=checkbox]{margin-top:4px}
+  .checklist-item.done{opacity:0.5;text-decoration:line-through}
+  .checklist-item label{cursor:pointer;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <div class="badge">Enterprise Guide · 2026</div>
+    <h1>SQL Server to PostgreSQL Migration Guide</h1>
+    <p>A complete guide for enterprise teams migrating from SQL Server to PostgreSQL — from schema conversion and T-SQL translation to data migration and production cutover.</p>
+  </div>
+
+  <div class="cta-box">
+    <h3>🚀 Jump straight to schema translation</h3>
+    <p>Paste your SQL Server CREATE TABLE statements and get PostgreSQL-ready SQL in seconds.</p>
+    <a href="tools/sql-dialect-translator.html?from=mssql&to=postgres" class="btn-primary">Translate SQL Server → PostgreSQL</a>
+    <a href="app.html" class="btn-secondary">Diff Two Schemas</a>
+  </div>
+
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#why">Why Migrate from SQL Server to PostgreSQL?</a></li>
+    <li><a href="#before">Pre-Migration Checklist</a></li>
+    <li><a href="#step-1">Step 1: Export SQL Server Schema</a></li>
+    <li><a href="#step-2">Step 2: Translate Schema to PostgreSQL</a></li>
+    <li><a href="#step-3">Step 3: Migrate Your Data</a></li>
+    <li><a href="#step-4">Step 4: Validate and Test</a></li>
+    <li><a href="#types">Common Type Mapping Issues</a></li>
+    <li><a href="#pitfalls">Migration Pitfalls to Avoid</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+
+  <h2 id="why">Why Migrate from SQL Server to PostgreSQL?</h2>
+  <p>Enterprise teams are increasingly moving from SQL Server to PostgreSQL for these reasons:</p>
+  <ul>
+    <li><strong>Cost reduction</strong> — Eliminate SQL Server licensing costs ($7,000+ per core for Enterprise Edition). PostgreSQL is open-source and free.</li>
+    <li><strong>Cloud flexibility</strong> — PostgreSQL runs natively on AWS RDS, Google Cloud SQL, Azure Database for PostgreSQL, and self-managed VMs without vendor lock-in.</li>
+    <li><strong>Modern data types</strong> — Native JSONB, arrays, UUID, full-text search, geospatial (PostGIS), and vector (pgvector) support.</li>
+    <li><strong>Active open-source community</strong> — Faster security patches, broader tooling ecosystem, and no single vendor controlling the roadmap.</li>
+    <li><strong>CI/CD integration</strong> — PostgreSQL's transactional DDL makes schema migrations safer and more predictable in automated pipelines.</li>
+  </ul>
+
+  <h2 id="before">Pre-Migration Checklist</h2>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Inventory all SQL Server databases, schemas, tables, views, stored procedures, functions, and triggers</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Document SQL Server edition, version, collation, and compatibility level</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Identify SQL Server-only features (CLR integration, Service Broker, Replication, Always On)</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Map SQL Server logins and users to PostgreSQL roles</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Estimate data size, migration window, and acceptable downtime</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Set up target PostgreSQL instance (14+ recommended) with appropriate resources</label>
+  </div>
+  <div class="checklist-item" onclick="this.classList.toggle('done');this.querySelector('input').checked=this.classList.contains('done')">
+    <input type="checkbox"><label>Create a rollback plan and backup strategy</label>
+  </div>
+
+  <h2 id="step-1">Step 1: Export SQL Server Schema</h2>
+  <p>Use SQL Server Management Studio (SSMS) to generate schema scripts:</p>
+  <ol>
+    <li>Right-click your database → <strong>Tasks</strong> → <strong>Generate Scripts</strong></li>
+    <li>Select specific tables or script entire database</li>
+    <li>In "Set Scripting Options", click <strong>Advanced</strong></li>
+    <li>Set "Types of data to script" to <strong>Schema only</strong></li>
+    <li>Set "Script for Server Version" to your target (or leave as current)</li>
+  </ol>
+
+  <p>Alternatively, use <code>sqlcmd</code> or <code>mssql-scripter</code> from the command line:</p>
+  <pre><code>mssql-scripter -S localhost -d MyDatabase -U sa --schema-and-data false \
+  > sqlserver_schema.sql</code></pre>
+
+  <div class="tip">
+    Export one schema at a time if you have multiple schemas in SQL Server. PostgreSQL schemas are similar but permission models differ significantly.
+  </div>
+
+  <p>Review the exported file for SQL Server-specific syntax:</p>
+  <ul>
+    <li><code>[Bracketed]</code> identifiers — PostgreSQL uses double quotes</li>
+    <li><code>IDENTITY(1,1)</code> — Will become <code>SERIAL</code> or <code>GENERATED ALWAYS AS IDENTITY</code></li>
+    <li><code>NVARCHAR</code> / <code>NCHAR</code> — PostgreSQL uses <code>VARCHAR</code> with UTF-8</li>
+    <li><code>DATETIME2</code> / <code>SMALLDATETIME</code> — PostgreSQL uses <code>TIMESTAMP</code></li>
+    <li><code>UNIQUEIDENTIFIER</code> — PostgreSQL uses <code>UUID</code></li>
+    <li><code>CLUSTERED</code> / <code>NONCLUSTERED</code> indexes — PostgreSQL uses different index types</li>
+    <li><code>WITH (PAD_INDEX = ON ...)</code> — Storage clauses that PostgreSQL ignores</li>
+  </ul>
+
+  <h2 id="step-2">Step 2: Translate Schema to PostgreSQL</h2>
+  <p>SQL Server and PostgreSQL have fundamentally different type systems, identifier rules, and default behaviors.</p>
+
+  <h3>Option A: Automated Translation (Fastest)</h3>
+  <p>Use the <a href="tools/sql-dialect-translator.html?from=mssql&to=postgres">SQL Dialect Translator</a> to convert your SQL Server schema export to PostgreSQL syntax. It handles type mapping, identity column conversion, and identifier quoting.</p>
+
+  <h3>Option B: SchemaLens Diff (Recommended for Schema Redesigns)</h3>
+  <p>If you're modernizing the schema as part of migration, paste your SQL Server schema and target PostgreSQL schema into <a href="app.html">SchemaLens</a>. It shows structural differences and generates migration SQL.</p>
+
+  <h3>Option C: Manual Translation</h3>
+  <p>For small schemas, manually rewrite CREATE TABLE statements using the type mapping table below.</p>
+
+  <div class="cta-box">
+    <h3>🛠️ Save days of manual translation</h3>
+    <p>The SQL Dialect Translator converts SQL Server schemas to PostgreSQL in seconds — including NVARCHAR→VARCHAR, IDENTITY→SERIAL, and bracketed identifier conversion.</p>
+    <a href="tools/sql-dialect-translator.html?from=mssql&to=postgres" class="btn-primary">Try the Translator →</a>
+  </div>
+
+  <h2 id="step-3">Step 3: Migrate Your Data</h2>
+  <p>After translating the schema and creating tables in PostgreSQL, move the data.</p>
+
+  <h3>Option 1: Azure Database Migration Service (DMS) — Azure SQL Only</h3>
+  <p>If migrating from <strong>Azure SQL Database</strong> or <strong>Azure SQL Managed Instance</strong>, use <a href="https://azure.microsoft.com/en-us/services/database-migration/" target="_blank">Azure DMS</a>. It handles schema conversion, data movement, and cutover with minimal downtime.</p>
+
+  <h3>Option 2: pg_dump / pg_restore with Foreign Data Wrapper</h3>
+  <p>For on-premise SQL Server, use the <code>tds_fdw</code> foreign data wrapper to connect PostgreSQL directly to SQL Server:</p>
+  <pre><code>-- In PostgreSQL
+CREATE EXTENSION tds_fdw;
+
+CREATE SERVER sqlserver_server
+  FOREIGN DATA WRAPPER tds_fdw
+  OPTIONS (servername 'sqlserver_host', port '1433', database 'MyDB');
+
+CREATE USER MAPPING FOR postgres
+  SERVER sqlserver_server
+  OPTIONS (username 'sa', password 'password');
+
+-- Import foreign schema
+IMPORT FOREIGN SCHEMA dbo
+  FROM SERVER sqlserver_server
+  INTO public;</code></pre>
+
+  <h3>Option 3: Custom ETL with Python</h3>
+  <p>For complex transformations, use Python with <code>pyodbc</code> and <code>SQLAlchemy</code>:</p>
+  <pre><code>import pandas as pd
+from sqlalchemy import create_engine
+
+sqlserver = create_engine('mssql+pyodbc://user:pass@dsn')
+postgres = create_engine('postgresql://user:pass@host/db')
+
+# Read from SQL Server
+df = pd.read_sql('SELECT * FROM dbo.Users', sqlserver)
+
+# Transform if needed (e.g., convert UNIQUEIDENTIFIER to UUID string)
+df['id'] = df['id'].astype(str)
+
+# Write to PostgreSQL
+df.to_sql('users', postgres, if_exists='append', index=False)</code></pre>
+
+  <h3>Option 4: SSIS → PostgreSQL ODBC</h3>
+  <p>Use SQL Server Integration Services (SSIS) with a PostgreSQL ODBC driver. This is common in enterprise environments that already have SSIS packages.</p>
+
+  <div class="warning-box">
+    <strong>Watch out for collation differences.</strong> SQL Server collation (e.g., <code>SQL_Latin1_General_CP1_CI_AS</code>) determines case sensitivity and sorting. PostgreSQL uses collation at the database or column level. Ensure your PostgreSQL collation matches application expectations.
+  </div>
+
+  <h2 id="step-4">Step 4: Validate and Test</h2>
+  <p>Enterprise migrations require rigorous validation:</p>
+
+  <h3>Schema Validation</h3>
+  <ul>
+    <li>Compare table and column counts</li>
+    <li>Verify all indexes were recreated (note: clustered indexes become regular indexes in PostgreSQL)</li>
+    <li>Check foreign key constraints</li>
+    <li>Validate default values and sequences</li>
+    <li>Ensure triggers and stored procedures were rewritten in PL/pgSQL</li>
+  </ul>
+
+  <h3>Data Validation</h3>
+  <ul>
+    <li>Row count comparison per table</li>
+    <li>Checksum sampling on critical tables</li>
+    <li>NULL constraint verification</li>
+    <li>Date range validation (SQL Server <code>DATETIME</code> min: 1753-01-01, PostgreSQL <code>TIMESTAMP</code> min: 4713 BC)</li>
+  </ul>
+
+  <h3>Application Testing</h3>
+  <ul>
+    <li>Run full regression test suite against PostgreSQL</li>
+    <li>Performance benchmark key queries (execution plans will differ)</li>
+    <li>Verify connection pooling behavior (PgBouncer recommended)</li>
+  </ul>
+
+  <h3>Use SchemaLens for Diff Validation</h3>
+  <p>Export both schemas and diff them:</p>
+  <pre><code>-- SQL Server (via SSMS or sqlcmd)
+-- Generate Scripts → Schema Only
+
+-- PostgreSQL
+pg_dump --schema-only -U postgres mydb > postgres_schema.sql</code></pre>
+  <p>Then paste both into <a href="app.html">SchemaLens</a> to catch any remaining differences.</p>
+
+  <div class="cta-box">
+    <h3>🔍 Catch schema differences before go-live</h3>
+    <p>SchemaLens compares your SQL Server and PostgreSQL schemas side-by-side and highlights tables, columns, indexes, and constraints that didn't migrate correctly.</p>
+    <a href="app.html" class="btn-primary">Compare Schemas Free →</a>
+  </div>
+
+  <h2 id="types">Common Type Mapping Issues</h2>
+  <table>
+    <thead>
+      <tr><th>SQL Server Type</th><th>PostgreSQL Type</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>INT IDENTITY(1,1)</code></td><td><code>SERIAL</code></td><td>Use <code>BIGSERIAL</code> for BIGINT identity</td></tr>
+      <tr><td><code>BIGINT IDENTITY(1,1)</code></td><td><code>BIGSERIAL</code></td><td>Direct equivalent</td></tr>
+      <tr><td><code>BIT</code></td><td><code>BOOLEAN</code></td><td>SQL Server BIT can be 0, 1, or NULL</td></tr>
+      <tr><td><code>TINYINT</code></td><td><code>SMALLINT</code></td><td>PostgreSQL has no unsigned types</td></tr>
+      <tr><td><code>SMALLINT</code></td><td><code>SMALLINT</code></td><td>No change needed</td></tr>
+      <tr><td><code>INT</code></td><td><code>INTEGER</code></td><td>No change needed</td></tr>
+      <tr><td><code>BIGINT</code></td><td><code>BIGINT</code></td><td>No change needed</td></tr>
+      <tr><td><code>FLOAT</code></td><td><code>DOUBLE PRECISION</code></td><td>Or <code>REAL</code> for 4-byte float</td></tr>
+      <tr><td><code>REAL</code></td><td><code>REAL</code></td><td>No change needed</td></tr>
+      <tr><td><code>DECIMAL(p,s)</code></td><td><code>NUMERIC(p,s)</code></td><td>No change needed</td></tr>
+      <tr><td><code>MONEY</code></td><td><code>NUMERIC(19,4)</code></td><td>PostgreSQL has MONEY but it's discouraged</td></tr>
+      <tr><td><code>SMALLMONEY</code></td><td><code>NUMERIC(10,4)</code></td><td>No direct equivalent</td></tr>
+      <tr><td><code>VARCHAR(n)</code></td><td><code>VARCHAR(n)</code></td><td>No change needed</td></tr>
+      <tr><td><code>NVARCHAR(n)</code></td><td><code>VARCHAR(n)</code></td><td>PostgreSQL uses UTF-8 natively</td></tr>
+      <tr><td><code>CHAR(n)</code></td><td><code>CHAR(n)</code></td><td>No change needed</td></tr>
+      <tr><td><code>NCHAR(n)</code></td><td><code>CHAR(n)</code></td><td>PostgreSQL uses UTF-8 natively</td></tr>
+      <tr><td><code>TEXT</code></td><td><code>TEXT</code></td><td>No change needed</td></tr>
+      <tr><td><code>NTEXT</code></td><td><code>TEXT</code></td><td>Deprecated in SQL Server anyway</td></tr>
+      <tr><td><code>VARCHAR(MAX)</code></td><td><code>TEXT</code></td><td>PostgreSQL TEXT is unlimited</td></tr>
+      <tr><td><code>NVARCHAR(MAX)</code></td><td><code>TEXT</code></td><td>PostgreSQL TEXT is unlimited</td></tr>
+      <tr><td><code>DATETIME</code></td><td><code>TIMESTAMP</code></td><td>Or <code>TIMESTAMPTZ</code> with timezone</td></tr>
+      <tr><td><code>DATETIME2</code></td><td><code>TIMESTAMP</code></td><td>Higher precision than DATETIME</td></tr>
+      <tr><td><code>SMALLDATETIME</code></td><td><code>TIMESTAMP</code></td><td>Less precision, same mapping</td></tr>
+      <tr><td><code>DATETIMEOFFSET</code></td><td><code>TIMESTAMPTZ</code></td><td>Timezone-aware timestamp</td></tr>
+      <tr><td><code>DATE</code></td><td><code>DATE</code></td><td>No change needed</td></tr>
+      <tr><td><code>TIME</code></td><td><code>TIME</code></td><td>No change needed</td></tr>
+      <tr><td><code>UNIQUEIDENTIFIER</code></td><td><code>UUID</code></td><td>Use <code>gen_random_uuid()</code> as default</td></tr>
+      <tr><td><code>BINARY(n)</code></td><td><code>BYTEA</code></td><td>Fixed-length binary</td></tr>
+      <tr><td><code>VARBINARY(n)</code></td><td><code>BYTEA</code></td><td>Variable-length binary</td></tr>
+      <tr><td><code>IMAGE</code></td><td><code>BYTEA</code></td><td>Deprecated in SQL Server</td></tr>
+      <tr><td><code>VARBINARY(MAX)</code></td><td><code>BYTEA</code></td><td>For large binary objects</td></tr>
+      <tr><td><code>XML</code></td><td><code>XML</code></td><td>PostgreSQL has native XML type</td></tr>
+      <tr><td><code>SQL_VARIANT</code></td><td><code>JSONB</code> or <code>TEXT</code></td><td>No direct equivalent; redesign recommended</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="pitfalls">Migration Pitfalls to Avoid</h2>
+  <ul>
+    <li><strong>Forgetting about schemas vs databases</strong> — SQL Server databases are roughly equivalent to PostgreSQL schemas within a single database cluster. You may need to consolidate multiple SQL Server databases into one PostgreSQL database with multiple schemas.</li>
+    <li><strong>Ignoring collation</strong> — Case-insensitive collation in SQL Server (`CI`) is not the default in PostgreSQL. You may need <code>citext</code> extension or explicit lower()/upper() in queries.</li>
+    <li><strong>Assuming TOP = LIMIT</strong> — <code>SELECT TOP 10</code> becomes <code>SELECT ... LIMIT 10</code>. The syntax is different and TOP with ORDER BY behaves slightly differently.</li>
+    <li><strong>NULL handling in concatenation</strong> — SQL Server: <code>NULL + 'text' = NULL</code>. PostgreSQL: <code>NULL || 'text' = NULL</code>. Same behavior, but <code>CONCAT()</code> in SQL Server treats NULL as empty string.</li>
+    <li><strong>Transaction behavior</strong> — SQL Server has implicit transactions in some contexts. PostgreSQL requires explicit BEGIN/COMMIT unless auto-commit is on.</li>
+    <li><strong>Cross-database queries</strong> — <code>SELECT * FROM OtherDB.dbo.Table</code> doesn't work in PostgreSQL. Use <code>dblink</code> or <code>postgres_fdw</code> for cross-database access.</li>
+    <li><strong>Temp tables</strong> — SQL Server <code>#temp</code> tables are session-scoped. PostgreSQL temporary tables (<code>CREATE TEMP TABLE</code>) behave similarly but have different visibility rules.</li>
+    <li><strong>Error handling</strong> — T-SQL <code>TRY...CATCH</code> becomes PL/pgSQL <code>BEGIN...EXCEPTION</code>. Syntax and behavior differ.</li>
+  </ul>
+
+  <h2 id="faq">Frequently Asked Questions</h2>
+  <h3>How long does a SQL Server to PostgreSQL migration take?</h3>
+  <p>For a 50-100 table schema with under 100GB of data, plan for 1-2 weeks including testing. Large enterprise schemas (1000+ tables) with TB-scale data can take 1-3 months. The schema translation is typically 20% of the effort; data migration, stored procedure rewriting, and application testing consume the rest.</p>
+
+  <h3>Can we migrate without downtime?</h3>
+  <p>Yes, using <strong>logical replication</strong> or <strong>change data capture (CDC)</strong>. Tools like <a href="https://debezium.io/" target="_blank">Debezium</a> can stream SQL Server changes to PostgreSQL in real-time. Azure DMS also supports online migration for Azure SQL Database.</p>
+
+  <h3>What about SQL Server Agent jobs?</h3>
+  <p>SQL Server Agent jobs must be rewritten. In PostgreSQL, use <code>pg_cron</code> extension for scheduled tasks, or external schedulers like Linux cron, Airflow, or Dagster.</p>
+
+  <h3>How do we handle SQL Server Reporting Services (SSRS)?</h3>
+  <p>SSRS doesn't exist in PostgreSQL. Options include: <a href="https://metabase.com/" target="_blank">Metabase</a>, <a href="https://superset.apache.org/" target="_blank">Apache Superset</a>, <a href="https://grafana.com/" target="_blank">Grafana</a>, or commercial tools like Tableau and Power BI (which connect to PostgreSQL natively).</p>
+
+  <h3>Is Azure Database for PostgreSQL a good target?</h3>
+  <p>Yes, if you're already in Azure. It's fully managed PostgreSQL with built-in backups, monitoring, and scaling. However, self-managed PostgreSQL on Azure VMs or AKS gives you more control over extensions and configuration.</p>
+
+  <h3>Do we need to rewrite all stored procedures?</h3>
+  <p>Most likely yes. T-SQL and PL/pgSQL are different languages. Simple procedures may translate automatically, but complex logic with cursors, dynamic SQL, or CLR integration will need manual rewriting. Consider moving business logic to the application layer where possible.</p>
+
+  <div class="cta-box">
+    <h3>Ready to migrate? Start with your schema.</h3>
+    <p>Convert your SQL Server CREATE TABLE statements to PostgreSQL syntax in seconds, then diff the result to catch anything the translator missed.</p>
+    <a href="tools/sql-dialect-translator.html?from=mssql&to=postgres" class="btn-primary">Translate Schema →</a>
+    <a href="app.html" class="btn-secondary">Diff & Validate →</a>
+  </div>
+
+  <footer>
+    <p>Built by <a href="index.html">SchemaLens</a> · <a href="tools.html">70+ Free SQL Tools</a> · <a href="privacy-policy.html">Privacy</a></p>
+    <p style="margin-top:8px">Have feedback? <a href="mailto:hello@schemalens.tech">hello@schemalens.tech</a></p>
+  </footer>
+</div>
+</body>
+</html>
