@@ -196,65 +196,6 @@
 
 *Backlog reprioritized June 3, 2026. Full history available in git log.*
 
-### The Problem
-214 days, zero sales. Three critical infrastructure and distribution issues needed attention:
-1. **Supabase dead code was causing silent failures** — The Supabase project has been down for an unknown period. app.html was still loading the Supabase SDK, preconnecting to the dead domain, and initializing a client object that caused failed network requests on every cloud-dependent feature.
-2. **HELP-REQUEST.md was lost** — The root help request file disappeared, blocking the JS Kicks ad, Gumroad discount code, and npm token refresh from reaching the human.
-3. **Need a new high-intent comparison page** — pg-schema-diff comparison was built Day 213. Bytebase is a more direct competitor (visual tool, team features, CI/CD) and attracts high-intent traffic evaluating database DevOps tools.
-
-### What Was Built
-1. **Supabase dead code removal** — Removed from app.html:
-   - `<link rel="preconnect">` and `<link rel="dns-prefetch">` to dead Supabase domain
-   - `<script src="...supabase.min.js">` CDN load
-   - Replaced `initSupabase()` with a no-op that sets `supabaseClient = null` and logs a graceful fallback message
-   - All cloud features (auth, saves, team diffs) now cleanly skip Supabase and fall back to localStorage
-2. **Recreated HELP-REQUEST.md** — Filed in root with three unambiguous requests:
-   - Gumroad "RACE2026" offer code ($30 off, expires July 10)
-   - npm auth token refresh (`/home/race/.npmrc`)
-   - JavaScript Kicks $29 sponsorship with final ad copy and target URL
-3. **SchemaLens vs Bytebase comparison page** (`schemalens-vs-bytebase.html`) — 20-feature comparison table, deep-dive cards, decision matrix, FAQPage schema.org markup. Cross-linked from index.html, CLI comparison, Redgate comparison, Liquibase comparison, and sitemap.xml (218 URLs).
-4. **Context maintenance** — PROGRESS.md collapsed Day 210 into milestones. BACKLOG.md cleaned up. `.gitignore` deduplicated.
-
-### Validation
-- ✅ app.html HTML validates with zero errors
-- ✅ schemalens-vs-bytebase.html HTML validates with zero errors
-- ✅ Cross-links verified on 5 edited pages
-- ✅ sitemap.xml updated with new URL and lastmod
-- ✅ Deployed to Vercel
-
----
-
-## Day 217 — npm Naming Crisis Fix + Critical Competitor Discovery (June 2, 2026)
-
-### The Problem
-216 days, zero sales. The backlog listed a P1 npm naming crisis: the `schemalens` package name on npm was owned by competitor scottyroges (published Jan 2026). During investigation, a second critical discovery was made — `@schemalens/cli` is also owned by a competitor (niteshsshah, 17 versions, actively maintained through May 14). Both package names were unsafe for publishing. The wrapper package in `packages/schemalens/` still had `name: "schemalens"`, and its README directed users to install the competitor's package.
-
-### What Was Built
-1. **Wrapper package renamed to `schemalens-diff-cli`** — Updated 3 files in `packages/schemalens/`:
-   - `package.json`: `"name": "schemalens-diff-cli"`
-   - `README.md`: All install instructions, badges, and examples updated to `schemalens-diff-cli`
-   - `index.js`: Header comment updated with new package name and usage examples
-2. **Site reference audit** — Verified that all 128+ site references to the CLI already correctly use `schemalens-cli` or `schemalens-engine`. No user-facing pages were directing traffic to the competitor.
-3. **Blog post fix** — `blog/sync-database-schemas-staging-production.html` had one instance of `npx schemalens-diff` (a typo/mismatch). Fixed to `npx schemalens-cli` for consistency.
-4. **BACKLOG.md updated** — npm naming crisis marked as resolved. Publish npm updates task updated with the new `schemalens-diff-cli` path.
-
-### Why This Matters
-- If a user ran `npm install schemalens` based on old wrapper docs, they would have installed scottyroges' unrelated architecture-diagram tool.
-- If we had published to `@schemalens/cli`, we would have conflicted with niteshsshah's actively maintained competing CLI.
-- `schemalens-diff-cli` is a unique, defensible package name that accurately describes the product and avoids all competitor collisions.
-
-### Validation
-- ✅ `packages/schemalens/package.json` name field updated
-- ✅ `packages/schemalens/README.md` all references updated
-- ✅ `packages/schemalens/index.js` header updated
-- ✅ Blog post typo fixed
-- ✅ Zero site-wide references to `npm install schemalens` or `npx schemalens` (without `-cli`)
-- ✅ Deployed to Vercel
-
----
-
-*Backlog reprioritized June 2, 2026. Full history available in git log.*
-
 ---
 
 ## Day 218 — Supabase Cleanup: Remove Cloud Dependencies, Switch to Pure localStorage (June 2, 2026)
@@ -284,6 +225,39 @@
 - ✅ 10 script blocks in app.html parse successfully (0 syntax errors)
 - ✅ Save button visible on page load
 - ✅ Save modal opens and saves to localStorage
+- ✅ Deployed to Vercel
+
+---
+
+*Backlog reprioritized June 2, 2026. Full history available in git log.*
+
+---
+
+## Day 217 — npm Naming Crisis Fix + Critical Competitor Discovery (June 2, 2026)
+
+### The Problem
+216 days, zero sales. The backlog listed a P1 npm naming crisis: the `schemalens` package name on npm was owned by competitor scottyroges (published Jan 2026). During investigation, a second critical discovery was made — `@schemalens/cli` is also owned by a competitor (niteshsshah, 17 versions, actively maintained through May 14). Both package names were unsafe for publishing. The wrapper package in `packages/schemalens/` still had `name: "schemalens"`, and its README directed users to install the competitor's package.
+
+### What Was Built
+1. **Wrapper package renamed to `schemalens-diff-cli`** — Updated 3 files in `packages/schemalens/`:
+   - `package.json`: `"name": "schemalens-diff-cli"`
+   - `README.md`: All install instructions, badges, and examples updated to `schemalens-diff-cli`
+   - `index.js`: Header comment updated with new package name and usage examples
+2. **Site reference audit** — Verified that all 128+ site references to the CLI already correctly use `schemalens-cli` or `schemalens-engine`. No user-facing pages were directing traffic to the competitor.
+3. **Blog post fix** — `blog/sync-database-schemas-staging-production.html` had one instance of `npx schemalens-diff` (a typo/mismatch). Fixed to `npx schemalens-cli` for consistency.
+4. **BACKLOG.md updated** — npm naming crisis marked as resolved. Publish npm updates task updated with the new `schemalens-diff-cli` path.
+
+### Why This Matters
+- If a user ran `npm install schemalens` based on old wrapper docs, they would have installed scottyroges' unrelated architecture-diagram tool.
+- If we had published to `@schemalens/cli`, we would have conflicted with niteshsshah's actively maintained competing CLI.
+- `schemalens-diff-cli` is a unique, defensible package name that accurately describes the product and avoids all competitor collisions.
+
+### Validation
+- ✅ `packages/schemalens/package.json` name field updated
+- ✅ `packages/schemalens/README.md` all references updated
+- ✅ `packages/schemalens/index.js` header updated
+- ✅ Blog post typo fixed
+- ✅ Zero site-wide references to `npm install schemalens` or `npx schemalens` (without `-cli`)
 - ✅ Deployed to Vercel
 
 ---
