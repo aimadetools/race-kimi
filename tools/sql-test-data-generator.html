@@ -1,449 +1,674 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://cdn.vercel-insights.com">
-  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Free SQL Test Data Generator — SchemaLens</title>
-  <meta name="description" content="Generate realistic fake SQL test data instantly. Paste a CREATE TABLE statement or define columns manually, choose a dialect, and get INSERT statements. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
-  <meta property="og:title" content="Free SQL Test Data Generator — SchemaLens">
-  <meta property="og:description" content="Generate realistic fake SQL test data instantly. Paste CREATE TABLE or define columns, pick a dialect, and get INSERT statements. No signup required.">
-  <meta property="og:image" content="https://schemalens.tech/og-image.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/tools/sql-test-data-generator.html">
-  <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SQL Test Data Generator",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": "Generate realistic fake SQL INSERT statements from CREATE TABLE definitions or manual column specs. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Type-aware fake data: names, emails, addresses, dates, booleans, UUIDs, and more.",
-    "url": "https://schemalens.tech/tools/sql-test-data-generator.html"
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Test Data Generator — Realistic INSERT Statements from CREATE TABLE | SchemaLens</title>
+<meta name="description" content="Generate realistic test data INSERT statements from your SQL CREATE TABLE definitions. Smart column-name detection, 5 dialects, bulk generation. Free, browser-based, privacy-first.">
+<meta property="og:title" content="SQL Test Data Generator — Realistic INSERT Statements from CREATE TABLE">
+<meta property="og:description" content="Generate realistic test data INSERT statements from your SQL CREATE TABLE definitions. Smart column-name detection, 5 dialects, bulk generation.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/sql-test-data-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SQL Test Data Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates realistic INSERT statements from CREATE TABLE definitions. Smart data generation based on column names and types. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Bulk generation up to 500 rows.",
+  "url": "https://schemalens.tech/tools/sql-test-data-generator.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .converter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  @media (max-width: 900px) { .converter-grid { grid-template-columns: 1fr; } }
+
+  .converter-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
   }
-  </script>
-  <link rel="stylesheet" href="../style.css">
-  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-  <style>
-    .page-header { padding: 48px 0 24px; text-align: center; }
-    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
-    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+  .converter-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
 
-    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
-    .panel h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .toolbar select {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem; cursor: pointer;
+  }
+  .toolbar button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  }
+  .toolbar button:hover { background: var(--primary-hover); }
+  .toolbar button.secondary {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  }
+  .toolbar button.secondary:hover { background: var(--surface-hover); }
 
-    .toolbar { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 20px 0 16px; }
-    .toolbar label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
-    .toolbar select, .toolbar button, .toolbar input {
-      background: var(--surface); color: var(--text); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.95rem;
-    }
-    .toolbar button { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; cursor: pointer; }
-    .toolbar button:hover { background: var(--primary-light); }
+  textarea#sqlInput {
+    width: 100%; min-height: 280px; padding: 1rem; border-radius: var(--radius);
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.9rem; resize: vertical;
+  }
 
-    textarea.code-input {
-      width: 100%; min-height: 160px; background: var(--bg); color: var(--text);
-      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px;
-      font-family: var(--mono); font-size: 0.9rem; resize: vertical; box-sizing: border-box;
-    }
+  .output-wrap {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: auto; max-height: 420px;
+  }
+  .output-wrap pre {
+    margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    color: var(--code-text); white-space: pre;
+  }
 
-    .cols-header { display: grid; grid-template-columns: 1fr 140px 140px 36px; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 0 4px; }
-    .col-def-row { display: grid; grid-template-columns: 1fr 140px 140px 36px; gap: 10px; align-items: center; margin-bottom: 8px; }
-    .col-def-row input, .col-def-row select {
-      background: var(--bg); color: var(--text); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 7px 10px; font-size: 0.9rem; font-family: var(--mono); width: 100%;
-    }
-    .col-def-row button {
-      background: transparent; color: var(--danger); border: 1px solid var(--danger);
-      border-radius: var(--radius-sm); width: 32px; height: 32px; cursor: pointer; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center; padding: 0;
-    }
-    .col-def-row button:hover { background: rgba(239,68,68,0.1); }
+  .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
 
-    .add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: transparent;
-      color: var(--primary); border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
-      cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 8px; }
-    .add-btn:hover { border-color: var(--primary); background: rgba(99,102,241,0.05); }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stats-row .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; text-align: center;
+  }
+  .stats-row .stat-value { font-size: 1.4rem; font-weight: 700; }
+  .stats-row .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-    .output-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      overflow: hidden; display: flex; flex-direction: column; margin-bottom: 20px; }
-    .output-label { padding: 10px 14px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
-      border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .output-label button { background: transparent; color: var(--text-muted); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; cursor: pointer; }
-    .output-label button:hover { color: var(--primary); border-color: var(--primary); }
-    pre.output { margin: 0; padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
-      overflow-x: auto; white-space: pre; background: var(--bg); color: var(--text); }
+  .notice { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
 
-    .hint { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } .cols-header, .col-def-row { grid-template-columns: 1fr 100px 100px 36px; } }
-  </style>
+  .smart-tag {
+    display: inline-block; background: rgba(99,102,241,0.12); color: var(--primary);
+    font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-left: 6px;
+  }
+
+  .preview-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
+  .preview-table th, .preview-table td {
+    border: 1px solid var(--border); padding: 8px 10px; text-align: left;
+  }
+  .preview-table th { background: var(--surface); font-weight: 600; }
+  .preview-table td { font-family: var(--mono); }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="/favicon.svg">
 </head>
 <body>
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="../index.html" class="logo" style="display:flex;align-items:center;gap:8px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        SchemaLens
-      </a>
-      <div class="nav-links">
-        <a href="../app.html">App</a>
-        <a href="../tools.html">Tools</a>
-        <a href="../blog.html">Blog</a>
-        <a href="../pricing.html">Pricing</a>
-      </div>
-    </div>
-  </nav>
 
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
   <div class="container">
-    <div class="page-header">
-      <h1>SQL Test Data Generator</h1>
-      <p>Generate realistic fake INSERT statements from your CREATE TABLE definition. Pick a dialect, set the row count, and copy the output.</p>
-    </div>
+    <h1>SQL Test Data Generator</h1>
+    <p>Paste your CREATE TABLE statements and get realistic INSERT statements with fake data. Smart column-name detection for emails, names, dates, prices, and more.</p>
+  </div>
+</div>
 
-    <div class="toolbar">
-      <label>SQL Dialect</label>
-      <select id="dialectSelect">
-        <option value="postgres">PostgreSQL</option>
-        <option value="mysql">MySQL</option>
-        <option value="sqlite">SQLite</option>
-        <option value="mssql">SQL Server</option>
-        <option value="oracle">Oracle</option>
-      </select>
-      <label>Rows</label>
-      <input type="number" id="rowCount" value="10" min="1" max="1000" style="width:80px;text-align:center;">
-      <button id="generateBtn">Generate INSERTs</button>
-      <button id="clearBtn" style="background:transparent;color:var(--text-muted);border-color:var(--border);">Clear</button>
-    </div>
+<main class="container">
+  <div class="converter-grid">
+    <div class="converter-card">
+      <h2>Input SQL</h2>
+      <div class="toolbar">
+        <label for="dialect">Dialect:</label>
+        <select id="dialect">
+          <option value="postgres">PostgreSQL</option>
+          <option value="mysql">MySQL</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mssql">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+        <label for="rowCount">Rows:</label>
+        <select id="rowCount">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
+          <option value="500">500</option>
+        </select>
+      </div>
+      <textarea id="sqlInput" placeholder="Paste CREATE TABLE statements...
 
-    <div class="two-col">
-      <div class="panel">
-        <h3>📝 Paste CREATE TABLE</h3>
-        <textarea id="ddlInput" class="code-input" placeholder="Paste a CREATE TABLE statement and click Parse...
-
-Example:
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE,
-  created_at TIMESTAMP DEFAULT NOW()
+  email VARCHAR(255) NOT NULL UNIQUE,
+  full_name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 0,
+  category VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'draft',
+  created_at TIMESTAMP DEFAULT now()
 );"></textarea>
-        <div style="display:flex;gap:10px;margin-top:10px;">
-          <button id="parseBtn" class="add-btn" style="margin-top:0;background:var(--primary);color:#fff;border-style:solid;">Parse Columns</button>
-          <span class="hint">Auto-detects column names and types from your DDL.</span>
-        </div>
+      <div class="toolbar" style="margin-top:12px;">
+        <button onclick="generate()">🎲 Generate Test Data</button>
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="clearInput()">Clear</button>
       </div>
-
-      <div class="panel">
-        <h3>⚙️ Columns</h3>
-        <div class="cols-header">
-          <span>Column</span>
-          <span>Type</span>
-          <span>Data Kind</span>
-          <span></span>
-        </div>
-        <div id="columnsList"></div>
-        <button id="addColBtn" class="add-btn">+ Add Column</button>
-      </div>
+      <p class="notice">Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Smart data based on column names & types.</p>
     </div>
 
-    <div class="output-wrap">
-      <div class="output-label">
-        <span>Generated SQL</span>
-        <div style="display:flex;gap:8px;">
-          <button id="copyBtn">Copy</button>
-          <button id="downloadBtn">Download .sql</button>
-        </div>
+    <div class="converter-card">
+      <h2>Generated INSERT Statements</h2>
+      <div class="toolbar">
+        <button onclick="copyOutput()">📋 Copy SQL</button>
+        <button class="secondary" onclick="downloadSQL()">⬇ Download .sql</button>
       </div>
-      <pre id="output" class="output">-- Click "Generate INSERTs" to create test data</pre>
-    </div>
-
-    <div class="panel" style="text-align:center;margin-bottom:40px;">
-      <p style="margin:0 0 10px;color:var(--text-muted);">Need to compare schemas after your data changes?</p>
-      <a href="../app.html" class="btn btn-primary">Open SchemaLens App</a>
+      <div id="outputPanel">
+        <div class="empty-state">Paste CREATE TABLE statements and click Generate to create realistic test data.</div>
+      </div>
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="container">
-      <p>SchemaLens — SQL Schema Diff &amp; Migration Generator</p>
-      <p><a href="../index.html">Home</a> · <a href="../app.html">App</a> · <a href="../tools.html">Tools</a> · <a href="../blog.html">Blog</a> · <a href="../pricing.html">Pricing</a></p>
+  <div class="cta-box">
+    <h3>🔄 Evolving your schema?</h3>
+    <p>After you generate test data, use SchemaLens to compare schema versions and generate safe migration scripts.</p>
+    <a href="../app.html" class="btn">Compare Schemas Free →</a>
+  </div>
+
+  <div style="margin-top: 48px;">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px;">How It Works</h2>
+    <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🧠</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Smart Column Detection</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Recognizes <code>email</code>, <code>name</code>, <code>price</code>, <code>status</code>, <code>created_at</code> and 30+ other patterns to generate realistic data.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🗄️</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">5 Dialects Supported</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Respects dialect-specific syntax like <code>RETURNING</code> and <code>TOP</code>.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">⚡</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Bulk Generation</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Generate up to 500 rows per table in one click. Perfect for seeding development databases and writing integration tests.</p>
+      </div>
+      <div class="feature-card" style="padding: 20px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🔒</div>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Privacy-First</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">All generation happens in your browser. Your schema and data never leave your machine.</p>
+      </div>
     </div>
-  </footer>
+  </div>
+</main>
 
-  <script>
-    // Inline lightweight fake data generator
-    const FIRST_NAMES = ["James","Mary","John","Patricia","Robert","Jennifer","Michael","Linda","William","Elizabeth","David","Barbara","Richard","Susan","Joseph","Jessica","Thomas","Sarah","Charles","Karen","Christopher","Nancy","Daniel","Lisa","Matthew","Betty","Anthony","Margaret","Mark","Sandra","Donald","Ashley","Steven","Kimberly","Paul","Emily","Andrew","Donna","Joshua","Michelle","Kenneth","Dorothy","Kevin","Carol","Brian","Amanda","George","Melissa","Edward","Deborah"];
-    const LAST_NAMES = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez","Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin","Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson","Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores","Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts"];
-    const DOMAINS = ["example.com","mail.com","test.org","demo.net","acme.io","foobar.dev","sample.co","lorem.biz","ipsum.info","dolor.app"];
-    const COMPANIES = ["Acme Corp","Globex","Initech","Hooli","Massive Dynamic","Wayne Enterprises","Stark Industries","Cyberdyne","Umbrella Corp","Soylent Corp","Aperture Science","Black Mesa","Tyrell Corp","Weyland-Yutani","Omni Consumer Products"];
-    const JOBS = ["Software Engineer","Product Manager","Data Analyst","DevOps Engineer","Designer","QA Engineer","CTO","CEO","Sales Rep","Marketing Manager","HR Specialist","Support Agent","Accountant","Consultant","Writer"];
-    const CITIES = ["New York","Los Angeles","Chicago","Houston","Phoenix","Philadelphia","San Antonio","San Diego","Dallas","San Jose","Austin","Jacksonville","Fort Worth","Columbus","Charlotte","San Francisco","Indianapolis","Seattle","Denver","Washington"];
-    const COUNTRIES = ["USA","UK","Canada","Germany","France","Australia","Japan","Brazil","India","Netherlands","Sweden","Italy","Spain","Mexico","South Korea"];
-    const STREETS = ["Main St","Broadway","Oak Ave","Maple Dr","Cedar Ln","Pine Rd","Elm St","Washington Ave","Lake Shore Dr","Hillcrest Rd","Sunset Blvd","Park Ave","River Rd","Highland Ave","Forest Dr"];
-    const LOREM = ["lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua","ut","enim","ad","minim","veniam","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat"];
+<footer class="footer" style="margin-top: 60px;">
+  <div class="container">
+    <p>© 2026 SchemaLens. Built in public over 221 days. Part of the $100 AI Startup Race.</p>
+    <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">
+      <a href="../index.html">Home</a> · <a href="../app.html">Schema Diff</a> · <a href="../tools.html">All Tools</a> · <a href="../pricing.html">Pricing</a>
+    </p>
+  </div>
+</footer>
 
-    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-    function randBool() { return Math.random() < 0.5; }
-    function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }); }
-    function dateStr() {
-      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
-      return d.toISOString().slice(0,10);
+<script>
+
+// ── Fake Data Dictionaries ──
+const FIRST_NAMES = ['James','Mary','Robert','Patricia','John','Jennifer','Michael','Linda','David','Elizabeth','William','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Christopher','Nancy','Daniel','Lisa','Matthew','Betty','Anthony','Margaret','Mark','Sandra'];
+const LAST_NAMES = ['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris','Sanchez','Clark','Ramirez','Lewis','Robinson'];
+const DOMAINS = ['gmail.com','yahoo.com','outlook.com','icloud.com','protonmail.com','hey.com','fastmail.com','example.com','acme.org','demo.net'];
+const COMPANIES = ['Acme Corp','Globex','Initech','Umbrella','Stark Ind','Wayne Ent','Cyberdyne','Massive Dynamic','Hooli','Pied Piper','Aviato','Bachmanity','EndFrame','Nucleus','Raviga'];
+const PRODUCTS = ['Widget Pro','SuperGadget','MegaTool','HyperDrive','NanoChip','QuantumPad','CyberKey','DataVault','CloudSync','StreamBox','NetRouter','SafeLock','PowerCell','FlexCable','SmartHub'];
+const CITIES = ['New York','Los Angeles','Chicago','Houston','Phoenix','Philadelphia','San Antonio','San Diego','Dallas','San Jose','Austin','Jacksonville','Fort Worth','Columbus','Charlotte','San Francisco','Indianapolis','Seattle','Denver','Washington'];
+const COUNTRIES = ['USA','UK','Canada','Germany','France','Japan','Australia','Brazil','India','Netherlands','Spain','Italy','Sweden','Mexico','Singapore'];
+const STREETS = ['Main St','Oak Ave','Park Rd','Elm St','Maple Dr','Cedar Ln','Pine St','Washington Ave','Lake Rd','Hill St','Sunset Blvd','River Rd','Forest Dr','Broadway','Center St'];
+const STATUSES = ['active','inactive','pending','archived','deleted','draft','published','review','approved','rejected'];
+const ROLES = ['admin','user','editor','viewer','moderator','guest','superadmin','developer','analyst','support'];
+const CATEGORIES = ['Electronics','Software','Services','Hardware','Consulting','Training','Support','Cloud','Security','Data'];
+const COLORS = ['#FF5733','#33FF57','#3357FF','#F333FF','#33FFF5','#FF8C33','#8C33FF','#33FF8C','#FF3380','#80FF33','#3380FF','#FF5733','#57FF33','#5733FF'];
+const TAGS = ['featured','new','popular','trending','beta','stable','legacy','experimental','deprecated','premium'];
+const URL_PATHS = ['/home','/about','/products','/contact','/blog','/pricing','/docs','/api','/login','/signup','/dashboard','/settings','/profile','/search','/cart'];
+const LOREM_WORDS = ['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','ut','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat'];
+const TITLES = ['Getting Started Guide','Advanced Configuration','API Reference','User Manual','Deployment Checklist','Security Best Practices','Performance Tuning','Migration Guide','Troubleshooting','Release Notes'];
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function randFloat(min, max, decimals) { const n = Math.random() * (max - min) + min; return n.toFixed(decimals); }
+function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c=='x'?r:(r&0x3|0x8)).toString(16); }); }
+function hex(n) { return '0x' + Array.from({length:n}, () => Math.floor(Math.random()*16).toString(16)).join(''); }
+function lorem(words) {
+  let s = '';
+  for (let i=0;i<words;i++) { s += rand(LOREM_WORDS) + ' '; }
+  return s.trim().replace(/^\w/, c => c.toUpperCase()) + '.';
+}
+function slug() { return (rand(LOREM_WORDS) + '-' + rand(LOREM_WORDS) + '-' + randInt(1,999)).toLowerCase(); }
+function phone() {
+  const a = randInt(100,999), b = randInt(100,999), c = randInt(1000,9999);
+  return `+1-${a}-${b}-${c}`;
+}
+function ip() { return `${randInt(1,255)}.${randInt(0,255)}.${randInt(0,255)}.${randInt(1,255)}`; }
+function dateStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - randInt(0,365));
+  return d.toISOString().split('T')[0];
+}
+function dateTimeStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - randInt(0,365));
+  d.setMinutes(randInt(0,59));
+  return d.toISOString().replace('T',' ').split('.')[0];
+}
+function timeStr() { return `${String(randInt(0,23)).padStart(2,'0')}:${String(randInt(0,59)).padStart(2,'0')}:${String(randInt(0,59)).padStart(2,'0')}`; }
+
+// ── Smart Value Generator ──
+function smartValue(col, rowIndex, dialect) {
+  const name = col.name.toLowerCase();
+  const type = col.type.toLowerCase();
+
+  // Column name pattern matching
+  if (name.includes('email') || name.endsWith('_email')) {
+    const fn = rand(FIRST_NAMES).toLowerCase(), ln = rand(LAST_NAMES).toLowerCase();
+    return `${fn}.${ln}${rowIndex}@${rand(DOMAINS)}`;
+  }
+  if (name.includes('first_name') || name === 'firstname') return rand(FIRST_NAMES);
+  if (name.includes('last_name') || name === 'lastname') return rand(LAST_NAMES);
+  if (name.includes('full_name') || name === 'fullname' || name === 'name') {
+    return `${rand(FIRST_NAMES)} ${rand(LAST_NAMES)}`;
+  }
+  if (name.includes('phone') || name.includes('tel')) return phone();
+  if (name.includes('address') && !name.includes('ip')) return `${randInt(1,9999)} ${rand(STREETS)}, ${rand(CITIES)}`;
+  if (name === 'city') return rand(CITIES);
+  if (name === 'country') return rand(COUNTRIES);
+  if (name === 'zip' || name === 'zipcode' || name === 'postal_code') return String(randInt(10000,99999));
+  if (name === 'state' || name === 'province') return rand(['CA','TX','NY','FL','IL','PA','OH','GA','NC','MI']);
+  if (name.includes('company') || name.includes('organization') || name.includes('org')) return rand(COMPANIES);
+  if (name === 'title' || name === 'subject') return `${rand(TITLES)} ${randInt(1,99)}`;
+  if (name.includes('description') || name.includes('bio') || name.includes('comment') || name.includes('notes') || name.includes('body') || name.includes('content')) return lorem(randInt(8,25));
+  if (name === 'slug' || name === 'handle' || name === 'username') {
+    return `${rand(LOREM_WORDS)}_${randInt(1,999)}`.toLowerCase();
+  }
+  if (name === 'url' || name.includes('website') || name.includes('link') || name.includes('avatar') || name.includes('image') || name.includes('logo')) {
+    return `https://example.com${rand(URL_PATHS)}-${randInt(1,999)}`;
+  }
+  if (name.includes('color') || name.includes('colour') || name.includes('hex')) return rand(COLORS);
+  if (name.includes('tag') || name.includes('label') || name.includes('category')) return rand(CATEGORIES);
+  if (name === 'status') return rand(STATUSES);
+  if (name === 'role') return rand(ROLES);
+  if (name.includes('price') || name.includes('cost') || name.includes('amount') || name.includes('fee') || name.includes('salary')) {
+    return randFloat(9.99, 999.99, 2);
+  }
+  if (name.includes('quantity') || name.includes('stock') || name.includes('count') || name.includes('score') || name.includes('rating')) {
+    if (name.includes('rating') || name.includes('score')) return randInt(1,5);
+    return randInt(0,1000);
+  }
+  if (name.includes('percent') || name.includes('progress') || name.includes('completion')) return randInt(0,100);
+  if (name === 'ip' || name.includes('ip_address')) return ip();
+  if (name === 'uuid' || name === 'guid') return uuid();
+  if (name.includes('password') || name.includes('hash') || name.includes('token') || name.includes('secret') || name.includes('key')) {
+    return hex(16);
+  }
+  if (name.includes('created_at') || name.includes('updated_at') || name.includes('deleted_at') || name.includes('timestamp')) {
+    if (type.includes('date') && !type.includes('time')) return dateStr();
+    if (dialect === 'mssql') return `'${dateTimeStr()}'`;
+    if (dialect === 'oracle') return `TO_TIMESTAMP('${dateTimeStr()}', 'YYYY-MM-DD HH24:MI:SS')`;
+    return `'${dateTimeStr()}'`;
+  }
+  if (name.includes('date') || name.includes('dob') || name.includes('birth')) return dateStr();
+  if (name.includes('time') && !name.includes('timestamp')) return timeStr();
+  if (name === 'year') return randInt(2015,2026);
+  if (name === 'month') return randInt(1,12);
+  if (name === 'day') return randInt(1,28);
+  if (name === 'week') return randInt(1,52);
+  if (name === 'hour') return randInt(0,23);
+  if (name === 'minute') return randInt(0,59);
+  if (name === 'second') return randInt(0,59);
+  if (name.includes('lang') || name.includes('locale')) return rand(['en','es','fr','de','ja','pt','zh','ru','it','ko']);
+  if (name.includes('currency')) return rand(['USD','EUR','GBP','JPY','CAD','AUD']);
+  if (name.includes('sku')) return `SKU-${String(randInt(1000,9999))}-${String.fromCharCode(65+randInt(0,25))}${String.fromCharCode(65+randInt(0,25))}`;
+  if (name.includes('product') || name.includes('item')) return `${rand(PRODUCTS)} ${randInt(1,99)}`;
+
+  // Type-based fallback
+  if (type.includes('varchar') || type.includes('char') || type.includes('text') || type.includes('string') || type.includes('clob') || type.includes('nvarchar')) {
+    const len = parseInt(type.match(/\d+/)?.[0] || '50');
+    if (len > 200) return lorem(randInt(5,20));
+    return lorem(randInt(2, Math.min(8, Math.floor(len/10) || 2)));
+  }
+  if (type.includes('int') || type.includes('serial') || type.includes('identity') || type.includes('autoincrement') || type.includes('number(')) {
+    if (col.primaryKey || col.autoIncrement) return rowIndex + 1;
+    if (type.includes('tinyint') && (type.includes('(1)') || name.includes('is_'))) return rand([0,1]);
+    if (type.includes('bigint')) return randInt(1000000,9999999);
+    return randInt(1,10000);
+  }
+  if (type.includes('decimal') || type.includes('numeric') || type.includes('float') || type.includes('double') || type.includes('real') || type.includes('money') || type.includes('currency')) {
+    const m = type.match(/\((\d+),\s*(\d+)\)/);
+    const decimals = m ? parseInt(m[2]) : 2;
+    return randFloat(0, 9999, decimals);
+  }
+  if (type.includes('bool') || type.includes('bit')) {
+    if (dialect === 'mssql' || dialect === 'sqlite') return rand([0,1]);
+    return rand([true,false]);
+  }
+  if (type.includes('date')) {
+    if (type.includes('time')) {
+      if (dialect === 'mssql') return `'${dateTimeStr()}'`;
+      if (dialect === 'oracle') return `TO_TIMESTAMP('${dateTimeStr()}', 'YYYY-MM-DD HH24:MI:SS')`;
+      return `'${dateTimeStr()}'`;
     }
-    function datetimeStr() {
-      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
-      return d.toISOString().slice(0,19).replace('T',' ');
-    }
-    function tsStr() {
-      const d = new Date(randInt(2020,2025), randInt(0,11), randInt(1,28), randInt(0,23), randInt(0,59), randInt(0,59));
-      return d.toISOString();
-    }
-    function sentence(n=8) {
-      let words = [];
-      for (let i=0;i<n;i++) words.push(rand(LOREM));
-      words[0] = words[0][0].toUpperCase() + words[0].slice(1);
-      return words.join(' ') + '.';
-    }
-    function paragraph() { return sentence(6) + ' ' + sentence(10) + ' ' + sentence(8); }
+    return `'${dateStr()}'`;
+  }
+  if (type.includes('time') && !type.includes('date')) return `'${timeStr()}'`;
+  if (type.includes('uuid') || type.includes('uniqueidentifier')) return uuid();
+  if (type.includes('json')) return JSON.stringify({ id: rowIndex + 1, name: rand(PRODUCTS), active: true });
+  if (type.includes('enum')) {
+    const vals = type.match(/'([^']+)'/g);
+    if (vals) return vals[randInt(0, vals.length - 1)].replace(/'/g, '');
+    return 'a';
+  }
+  if (type.includes('blob') || type.includes('bytea') || type.includes('binary')) return hex(8);
 
-    const GENERATORS = {
-      first_name: () => rand(FIRST_NAMES),
-      last_name: () => rand(LAST_NAMES),
-      full_name: () => rand(FIRST_NAMES) + ' ' + rand(LAST_NAMES),
-      email: () => rand(FIRST_NAMES).toLowerCase() + '.' + rand(LAST_NAMES).toLowerCase() + '@' + rand(DOMAINS),
-      company: () => rand(COMPANIES),
-      job_title: () => rand(JOBS),
-      phone: () => `+1 (${randInt(200,999)}) ${randInt(200,999)}-${randInt(1000,9999)}`,
-      address: () => `${randInt(100,9999)} ${rand(STREETS)}, ${rand(CITIES)}`,
-      city: () => rand(CITIES),
-      country: () => rand(COUNTRIES),
-      username: () => rand(FIRST_NAMES).toLowerCase() + randInt(10,99),
-      password: () => Math.random().toString(36).slice(2,10) + randInt(10,99) + '!',
-      url: () => 'https://www.' + rand(DOMAINS),
-      sentence: () => sentence(),
-      paragraph: () => paragraph(),
-      uuid: () => uuid(),
-      boolean: () => randBool(),
-      date: () => dateStr(),
-      datetime: () => datetimeStr(),
-      timestamp: () => tsStr(),
-      integer: () => randInt(1,100000),
-      smallint: () => randInt(-32768,32767),
-      bigint: () => randInt(1000000,999999999),
-      decimal: () => (Math.random() * 10000).toFixed(2),
-      float: () => (Math.random() * 10000).toFixed(4),
-      text: () => paragraph(),
-      varchar: () => sentence(randInt(3,12)),
-      char: () => Math.random().toString(36).slice(2, randInt(3,8)).toUpperCase(),
-      enum: (vals) => rand(vals),
-      generic: () => 'value_' + randInt(1,9999)
-    };
+  return 'test';
+}
 
-    // Map SQL types to generator keys
-    function typeToKind(type) {
-      const t = type.toLowerCase();
-      if (t.includes('int') && !t.includes('big')) return 'integer';
-      if (t.includes('bigint')) return 'bigint';
-      if (t.includes('smallint') || t.includes('tinyint')) return 'smallint';
-      if (t.includes('decimal') || t.includes('numeric') || t.includes('money')) return 'decimal';
-      if (t.includes('float') || t.includes('real') || t.includes('double')) return 'float';
-      if (t.includes('bool')) return 'boolean';
-      if (t.includes('date') && !t.includes('time')) return 'date';
-      if (t.includes('timestamp') || t.includes('datetime')) return 'timestamp';
-      if (t.includes('time') && !t.includes('timestamp')) return 'datetime';
-      if (t.includes('uuid') || t.includes('uniqueidentifier')) return 'uuid';
-      if (t.includes('text') || t.includes('clob') || t.includes('blob')) return 'text';
-      if (t.includes('char') || t.includes('string')) return 'varchar';
-      if (t.includes('enum')) return 'enum';
-      return 'generic';
-    }
+function sqlEscape(val, dialect) {
+  if (val === null || val === undefined) return 'NULL';
+  if (typeof val === 'number' || typeof val === 'boolean') {
+    if (dialect === 'mssql' && typeof val === 'boolean') return val ? '1' : '0';
+    if (dialect === 'sqlite' && typeof val === 'boolean') return val ? '1' : '0';
+    return String(val);
+  }
+  if (typeof val === 'object') return `'${JSON.stringify(val).replace(/'/g, "''")}'`;
+  let s = String(val);
+  if (dialect === 'mysql') s = s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+  else s = s.replace(/'/g, "''");
+  return `'${s}'`;
+}
 
-    const KINDS = Object.keys(GENERATORS);
-
-    // --- UI state ---
-    let columns = [];
-
-    function renderColumns() {
-      const list = document.getElementById('columnsList');
-      list.innerHTML = '';
-      columns.forEach((col, idx) => {
-        const row = document.createElement('div');
-        row.className = 'col-def-row';
-        row.innerHTML = `
-          <input type="text" value="${escapeHtml(col.name)}" placeholder="column_name" onchange="updateCol(${idx},'name',this.value)">
-          <input type="text" value="${escapeHtml(col.type)}" placeholder="VARCHAR(255)" onchange="updateCol(${idx},'type',this.value)">
-          <select onchange="updateCol(${idx},'kind',this.value)">
-            ${KINDS.map(k => `<option value="${k}" ${col.kind===k?'selected':''}>${k}</option>`).join('')}
-          </select>
-          <button onclick="removeCol(${idx})" title="Remove">×</button>
-        `;
-        list.appendChild(row);
-      });
-    }
-
-    window.updateCol = (idx, field, val) => { columns[idx][field] = val; };
-    window.removeCol = (idx) => { columns.splice(idx,1); renderColumns(); };
-
-    document.getElementById('addColBtn').onclick = () => {
-      columns.push({ name:'', type:'VARCHAR(255)', kind:'varchar' });
-      renderColumns();
-    };
-
-    document.getElementById('parseBtn').onclick = () => {
-      const sql = document.getElementById('ddlInput').value;
-      columns = parseColumnsFromDDL(sql);
-      renderColumns();
-    };
-
-    document.getElementById('clearBtn').onclick = () => {
-      document.getElementById('ddlInput').value = '';
-      columns = [];
-      renderColumns();
-      document.getElementById('output').textContent = '-- Click "Generate INSERTs" to create test data';
-    };
-
-    document.getElementById('generateBtn').onclick = generate;
-    document.getElementById('copyBtn').onclick = () => {
-      const out = document.getElementById('output').textContent;
-      navigator.clipboard.writeText(out).then(() => alert('Copied to clipboard'));
-    };
-    document.getElementById('downloadBtn').onclick = () => {
-      const out = document.getElementById('output').textContent;
-      const blob = new Blob([out], {type:'text/sql'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'test-data.sql';
-      a.click();
-    };
-
-    function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-    function parseColumnsFromDDL(sql) {
-      const cols = [];
-      const match = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[\w"`\[\]]+\s*\((.*)\)\s*[^)]*$/is);
-      if (!match) return cols;
-      const body = match[1];
-      const parts = splitBody(body);
-      for (const part of parts) {
-        const p = part.trim();
-        if (!p) continue;
-        const upper = p.toUpperCase();
-        if (upper.startsWith('CONSTRAINT') || upper.startsWith('PRIMARY') || upper.startsWith('UNIQUE') || upper.startsWith('FOREIGN') || upper.startsWith('CHECK') || upper.startsWith('INDEX')) continue;
-        const tokens = tokenize(p);
-        if (tokens.length < 2) continue;
-        const name = tokens[0].replace(/["`\[\]]/g,'');
-        const typeTokens = [];
-        const stopWords = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED','GENERATED','STORED','VIRTUAL','PERSISTED','TABLESPACE','STORAGE'];
-        let i = 1;
-        while (i < tokens.length) {
-          const t = tokens[i].toUpperCase();
-          if (stopWords.includes(t)) break;
-          typeTokens.push(tokens[i]);
-          i++;
-        }
-        const type = typeTokens.join(' ');
-        const kind = typeToKind(type);
-        let enumVals = null;
-        if (kind === 'enum') {
-          const enumMatch = p.match(/ENUM\s*\(([^)]+)\)/i);
-          if (enumMatch) {
-            enumVals = enumMatch[1].split(',').map(v => v.trim().replace(/^['"]|['"]$/g,''));
-          }
-        }
-        cols.push({ name, type, kind, enumVals });
-      }
-      return cols;
-    }
-
-    function splitBody(body) {
-      const parts = []; let current = ''; let depth = 0; let inString = false; let stringChar = '';
-      for (let i = 0; i < body.length; i++) {
-        const ch = body[i]; const prev = body[i-1];
-        if (!inString && (ch === "'" || ch === '"' || ch === '`')) { inString = true; stringChar = ch; }
-        else if (inString && ch === stringChar && prev !== '\\') { inString = false; }
-        if (!inString) { if (ch === '(') depth++; else if (ch === ')') depth--; else if (ch === ',' && depth === 0) { parts.push(current.trim()); current = ''; continue; } }
-        current += ch;
-      }
-      if (current.trim()) parts.push(current.trim());
-      return parts;
-    }
-
-    function tokenize(text) {
-      const tokens = []; let current = ''; let inString = false; let stringChar = '';
-      for (let i = 0; i < text.length; i++) {
-        const ch = text[i]; const prev = text[i-1];
-        if (!inString && (ch === "'" || ch === '"' || ch === '`')) { if (current.trim()) tokens.push(current.trim()); current = ch; inString = true; stringChar = ch; continue; }
-        if (inString) { current += ch; if (ch === stringChar && prev !== '\\') { inString = false; tokens.push(current); current = ''; } continue; }
-        if (/\s/.test(ch)) { if (current.trim()) tokens.push(current.trim()); current = ''; }
-        else if (ch === '(' || ch === ')' || ch === ',') { if (current.trim()) tokens.push(current.trim()); tokens.push(ch); current = ''; }
-        else { current += ch; }
-      }
+// ── SQL Parser (lightweight) ──
+function tokenize(text) {
+  const tokens = [];
+  let current = '', inString = false, stringChar = '';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], prev = text[i-1];
+    if (!inString && (ch === "'" || ch === '"' || ch === '`')) {
       if (current.trim()) tokens.push(current.trim());
-      return tokens;
+      current = ch; inString = true; stringChar = ch; continue;
     }
-
-    function quoteId(name, dialect) {
-      if (dialect === 'postgres') return '"' + name + '"';
-      if (dialect === 'mysql') return '`' + name + '`';
-      if (dialect === 'mssql') return '[' + name + ']';
-      if (dialect === 'oracle') return '"' + name.toUpperCase() + '"';
-      return '"' + name + '"';
+    if (inString) {
+      current += ch;
+      if (ch === stringChar && prev !== '\\') { inString = false; tokens.push(current); current = ''; }
+      continue;
     }
+    if (/\s/.test(ch)) { if (current.trim()) tokens.push(current.trim()); current = ''; }
+    else if (ch === '(' || ch === ')' || ch === ',') { if (current.trim()) tokens.push(current.trim()); tokens.push(ch); current = ''; }
+    else { current += ch; }
+  }
+  if (current.trim()) tokens.push(current.trim());
+  return tokens;
+}
 
-    function quoteValue(val, type, dialect) {
-      if (val === true || val === false) {
-        if (dialect === 'postgres') return val ? 'TRUE' : 'FALSE';
-        if (dialect === 'sqlite') return val ? '1' : '0';
-        return val ? 'TRUE' : 'FALSE';
+function parseCreateTable(sql) {
+  const stmts = [];
+  const chunks = sql.split(/;/g);
+  for (const chunk of chunks) {
+    const trimmed = chunk.trim();
+    if (!trimmed) continue;
+    const upper = trimmed.toUpperCase();
+    if (!upper.includes('CREATE TABLE')) continue;
+
+    // Extract table name
+    const nameMatch = trimmed.match(/CREATE TABLE\s+(?:IF NOT EXISTS\s+)?[`"\[]?(\w+)[`"\]]?/i);
+    if (!nameMatch) continue;
+    const tableName = nameMatch[1];
+
+    // Extract body between first ( and last )
+    const firstParen = trimmed.indexOf('(');
+    const lastParen = trimmed.lastIndexOf(')');
+    if (firstParen === -1 || lastParen === -1 || lastParen <= firstParen) continue;
+    const body = trimmed.substring(firstParen + 1, lastParen);
+
+    const tokens = tokenize(body);
+    const columns = [];
+    let i = 0;
+
+    while (i < tokens.length) {
+      // Skip constraint names: CONSTRAINT foo
+      if (tokens[i].toUpperCase() === 'CONSTRAINT') { i += 2; continue; }
+      // Skip inline constraints that start with keywords
+      const kw = tokens[i].toUpperCase();
+      if (['PRIMARY','UNIQUE','FOREIGN','INDEX','KEY','CHECK','FULLTEXT','SPATIAL'].includes(kw)) {
+        // Skip until comma or end
+        while (i < tokens.length && tokens[i] !== ',') i++;
+        if (tokens[i] === ',') i++;
+        continue;
       }
-      if (typeof val === 'number') return String(val);
-      const t = type.toLowerCase();
-      if (t.includes('int') || t.includes('serial') || t.includes('bool') || t.includes('float') || t.includes('double') || t.includes('decimal') || t.includes('numeric') || t.includes('real') || t.includes('money')) {
-        if (typeof val === 'string' && !isNaN(Number(val))) return val;
+
+      // Parse column definition
+      const colName = tokens[i].replace(/["`\[\]]/g, '');
+      i++;
+      if (i >= tokens.length) break;
+
+      const typeTokens = [];
+      const constraintKws = ['NOT','NULL','PRIMARY','KEY','UNIQUE','DEFAULT','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','CHARACTER','SET','ON','CONSTRAINT','FOREIGN','INDEX','CLUSTERED','NONCLUSTERED','GENERATED','ALWAYS','AS','STORED','VIRTUAL'];
+      while (i < tokens.length && !constraintKws.includes(tokens[i].toUpperCase()) && tokens[i] !== ',') {
+        typeTokens.push(tokens[i]);
+        i++;
       }
-      if (dialect === 'mssql' && t.includes('uniqueidentifier')) return "'" + val + "'";
-      return "'" + String(val).replace(/'/g, "''") + "'";
-    }
+      const colType = typeTokens.join(' ');
 
-    function generate() {
-      const dialect = document.getElementById('dialectSelect').value;
-      const rowCount = parseInt(document.getElementById('rowCount').value, 10) || 10;
-      if (columns.length === 0) { alert('Add at least one column.'); return; }
-      const tableName = detectTableName(document.getElementById('ddlInput').value) || 'test_table';
-      const lines = [];
+      const col = {
+        name: colName,
+        type: colType,
+        nullable: true,
+        defaultValue: null,
+        primaryKey: false,
+        autoIncrement: false,
+        foreignKey: null
+      };
 
-      for (let r = 0; r < rowCount; r++) {
-        const names = columns.map(c => quoteId(c.name, dialect));
-        const vals = columns.map(c => {
-          let v;
-          if (c.kind === 'enum' && c.enumVals && c.enumVals.length) v = GENERATORS.enum(c.enumVals);
-          else v = GENERATORS[c.kind] ? GENERATORS[c.kind]() : GENERATORS.generic();
-          return quoteValue(v, c.type, dialect);
-        });
-        lines.push(`INSERT INTO ${quoteId(tableName, dialect)} (${names.join(', ')}) VALUES (${vals.join(', ')});`);
+      while (i < tokens.length && tokens[i] !== ',') {
+        const t = tokens[i].toUpperCase();
+        if (t === 'NOT' && tokens[i+1]?.toUpperCase() === 'NULL') { col.nullable = false; i += 2; }
+        else if (t === 'NULL') { i++; }
+        else if (t === 'PRIMARY' && tokens[i+1]?.toUpperCase() === 'KEY') { col.primaryKey = true; col.nullable = false; i += 2; }
+        else if (t === 'UNIQUE') { i++; }
+        else if (t === 'DEFAULT') {
+          i++;
+          const dv = [];
+          const stop = ['NOT','NULL','PRIMARY','KEY','UNIQUE','AUTO_INCREMENT','AUTOINCREMENT','IDENTITY','REFERENCES','CHECK','COLLATE','COMMENT','ON','CLUSTERED','NONCLUSTERED'];
+          while (i < tokens.length && !stop.includes(tokens[i].toUpperCase()) && tokens[i] !== ',') { dv.push(tokens[i]); i++; }
+          col.defaultValue = dv.join(' ') || null;
+        }
+        else if (t === 'AUTO_INCREMENT' || t === 'AUTOINCREMENT') { col.autoIncrement = true; i++; }
+        else if (t === 'IDENTITY') { col.autoIncrement = true; i++; if (tokens[i] === '(') { while (i < tokens.length && tokens[i] !== ')') i++; i++; } }
+        else if (t === 'REFERENCES') {
+          i++;
+          col.foreignKey = { table: tokens[i]?.replace(/["`]/g,'') || '', columns: [] };
+          i++;
+          if (tokens[i] === '(') { i++; while (i < tokens.length && tokens[i] !== ')') { if (tokens[i] !== ',') col.foreignKey.columns.push(tokens[i].replace(/["`]/g,'')); i++; } i++; }
+        }
+        else if (t === 'GENERATED' && tokens[i+1]?.toUpperCase() === 'ALWAYS') { col.autoIncrement = true; while (i < tokens.length && tokens[i] !== ',') i++; }
+        else { i++; }
       }
 
-      document.getElementById('output').textContent = lines.join('\n');
+      columns.push(col);
+      if (tokens[i] === ',') i++;
     }
 
-    function detectTableName(sql) {
-      const m = sql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w"`\[\]]+(?:\.[\w"`\[\]]+)?)/i);
-      if (!m) return null;
-      return m[1].replace(/["`\[\]]/g,'');
-    }
+    stmts.push({ name: tableName, columns });
+  }
+  return stmts;
+}
 
-    // Seed with a default column
-    columns = [{name:'id', type:'SERIAL', kind:'integer'}, {name:'name', type:'VARCHAR(255)', kind:'full_name'}, {name:'email', type:'VARCHAR(255)', kind:'email'}];
-    renderColumns();
-  </script>
+// ── INSERT Generation ──
+function generateInserts(table, rowCount, dialect) {
+  const lines = [];
+  const nonAutoCols = table.columns.filter(c => !c.autoIncrement);
+
+  // Some dialects support multi-row inserts
+  if (dialect === 'postgres' || dialect === 'mysql' || dialect === 'sqlite') {
+    const colNames = nonAutoCols.map(c => c.name).join(', ');
+    for (let r = 0; r < rowCount; r++) {
+      const vals = nonAutoCols.map(c => sqlEscape(smartValue(c, r, dialect), dialect));
+      lines.push(`INSERT INTO ${table.name} (${colNames}) VALUES (${vals.join(', ')});`);
+    }
+  } else if (dialect === 'mssql') {
+    const colNames = nonAutoCols.map(c => c.name).join(', ');
+    for (let r = 0; r < rowCount; r++) {
+      const vals = nonAutoCols.map(c => sqlEscape(smartValue(c, r, dialect), dialect));
+      lines.push(`INSERT INTO ${table.name} (${colNames}) VALUES (${vals.join(', ')});`);
+    }
+  } else if (dialect === 'oracle') {
+    const colNames = nonAutoCols.map(c => c.name).join(', ');
+    for (let r = 0; r < rowCount; r++) {
+      const vals = nonAutoCols.map(c => sqlEscape(smartValue(c, r, dialect), dialect));
+      lines.push(`INSERT INTO ${table.name} (${colNames}) VALUES (${vals.join(', ')});`);
+    }
+  }
+  return lines;
+}
+
+// ── UI Functions ──
+function generate() {
+  const sql = document.getElementById('sqlInput').value;
+  const dialect = document.getElementById('dialect').value;
+  const rowCount = parseInt(document.getElementById('rowCount').value);
+  const panel = document.getElementById('outputPanel');
+
+  if (!sql.trim()) { panel.innerHTML = '<div class="empty-state">Paste SQL first.</div>'; return; }
+
+  const tables = parseCreateTable(sql);
+  if (tables.length === 0) { panel.innerHTML = '<div class="empty-state">No CREATE TABLE statements found.</div>'; return; }
+
+  let totalRows = 0, totalCols = 0;
+  const allLines = [];
+  for (const t of tables) {
+    totalCols += t.columns.length;
+    totalRows += rowCount;
+    allLines.push(`-- ${t.name}`);
+    allLines.push(...generateInserts(t, rowCount, dialect));
+    allLines.push('');
+  }
+
+  const html = `<div class="stats-row">
+    <div class="stat"><div class="stat-value">${tables.length}</div><div class="stat-label">Tables</div></div>
+    <div class="stat"><div class="stat-value">${totalCols}</div><div class="stat-label">Columns</div></div>
+    <div class="stat"><div class="stat-value">${totalRows}</div><div class="stat-label">Rows</div></div>
+  </div>
+  <div class="output-wrap"><pre>${escapeHtml(allLines.join('\n'))}</pre></div>`;
+  panel.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyOutput() {
+  const pre = document.querySelector('#outputPanel pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    const btn = document.querySelector('button[onclick="copyOutput()"]');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function downloadSQL() {
+  const pre = document.querySelector('#outputPanel pre');
+  if (!pre) return;
+  const blob = new Blob([pre.textContent], { type: 'text/sql' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'test-data.sql';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function loadSample() {
+  document.getElementById('sqlInput').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  full_name VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  phone VARCHAR(20),
+  city VARCHAR(50),
+  country VARCHAR(50),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 0,
+  category VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'draft',
+  sku VARCHAR(30) UNIQUE,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  product_id INTEGER NOT NULL REFERENCES products(id),
+  quantity INTEGER NOT NULL DEFAULT 1,
+  total_amount DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT now()
+);`;
+}
+
+function clearInput() {
+  document.getElementById('sqlInput').value = '';
+  document.getElementById('outputPanel').innerHTML = '<div class="empty-state">Paste CREATE TABLE statements and click Generate to create realistic test data.</div>';
+}
+</script>
+
 </body>
 </html>

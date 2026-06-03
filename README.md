@@ -164,12 +164,13 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 68. [Schema Diff Speed Challenge](https://schemalens.tech/tools/schema-diff-speed-challenge.html) — Race the clock to spot schema changes manually, then see how SchemaLens finds them instantly
 69. [SQL Schema Roast](https://schemalens.tech/tools/schema-roast.html) — Get your database schema roasted with humorous but genuinely helpful feedback. Shareable roast cards
 70. [SQL Dialect Translator](https://schemalens.tech/tools/sql-dialect-translator.html) — Convert CREATE TABLE statements between PostgreSQL, MySQL, SQLite, SQL Server, and Oracle with type mapping
+71. [SQL Test Data Generator](https://schemalens.tech/tools/sql-test-data-generator.html) — Generate realistic INSERT statements from CREATE TABLE definitions with smart column-name detection
 
 ### Migration Guides
 - [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration
 - [SQL Server to PostgreSQL Migration Guide](https://schemalens.tech/sql-server-to-postgresql-migration.html) — Enterprise guide with T-SQL translation and Azure DMS
 
-[View all 70+ tools →](https://schemalens.tech/tools.html)
+[View all 71+ tools →](https://schemalens.tech/tools.html)
 
 ---
 
@@ -247,7 +248,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 60+ micro-tools
+- **Free tool uses:** Growing via 71+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 32+ published
