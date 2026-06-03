@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap — SchemaLens</title>
+  <meta name="description" content="See what's shipped and what's next for SchemaLens. 72+ micro-tools, 5 database dialects, CLI, VS Code extension, Chrome extension, and GitHub Action.">
+  <meta property="og:title" content="Roadmap — SchemaLens">
+  <meta property="og:description" content="See what's shipped and what's next for SchemaLens. Built in public over 224 days.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/roadmap.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "SchemaLens Roadmap",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Core Schema Diff Engine", "item": {"@type": "Thing", "name": "Core Schema Diff Engine", "description": "Visual diff for PostgreSQL, MySQL, SQLite, SQL Server, Oracle."}},
+      {"@type": "ListItem", "position": 2, "name": "Migration Generation", "item": {"@type": "Thing", "name": "Migration Generation", "description": "ALTER TABLE scripts with rollback support for all 5 dialects."}},
+      {"@type": "ListItem", "position": 3, "name": "CLI & Integrations", "item": {"@type": "Thing", "name": "CLI & Integrations", "description": "npx schemalens-cli, VS Code extension, Chrome extension, GitHub Action."}},
+      {"@type": "ListItem", "position": 4, "name": "72+ Free Micro-Tools", "item": {"@type": "Thing", "name": "72+ Free Micro-Tools", "description": "SQL generators, converters, health checks, and educational games."}}
+    ]
+  }
+  </script>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <style>
+    .roadmap-hero { text-align: center; padding: 80px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .roadmap-hero h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .roadmap-hero p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 28px; }
+    .roadmap-container { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
+    .roadmap-section { margin-bottom: 48px; }
+    .roadmap-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .roadmap-item { display: flex; gap: 16px; padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); margin-bottom: 12px; transition: transform 0.15s; }
+    .roadmap-item:hover { transform: translateX(4px); }
+    .roadmap-icon { font-size: 1.4rem; flex-shrink: 0; width: 32px; text-align: center; }
+    .roadmap-content { flex: 1; }
+    .roadmap-content h4 { margin: 0 0 4px; font-size: 1rem; color: var(--text); }
+    .roadmap-content p { margin: 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+    .roadmap-badge { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .badge-shipped { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .badge-planned { background: rgba(99,102,241,0.15); color: #818cf8; }
+    .badge-next { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .roadmap-cta { text-align: center; padding: 48px 24px; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border-radius: var(--radius); margin-top: 32px; }
+    .roadmap-cta h3 { margin-bottom: 12px; font-size: 1.2rem; }
+    .roadmap-cta p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; }
+    .roadmap-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; max-width: 600px; margin: 32px auto; }
+    .roadmap-stat { text-align: center; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .roadmap-stat .num { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .roadmap-stat .lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="roadmap-hero">
+    <div class="badge" style="display:inline-block;background:var(--primary);color:#fff;font-size:0.75rem;font-weight:700;padding:6px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">Built in Public</div>
+    <h1>Roadmap.<br><span style="color:var(--primary);">Shipped & Coming Soon.</span></h1>
+    <p>224 days of relentless shipping. Zero stealth mode. Every feature, every pivot, every lesson — documented here.</p>
+  </header>
+
+  <div class="roadmap-stats">
+    <div class="roadmap-stat"><div class="num">72+</div><div class="lbl">Micro-tools shipped</div></div>
+    <div class="roadmap-stat"><div class="num">227</div><div class="lbl">SEO pages live</div></div>
+    <div class="roadmap-stat"><div class="num">5</div><div class="lbl">Database dialects</div></div>
+    <div class="roadmap-stat"><div class="num">4</div><div class="lbl">Integrations</div></div>
+  </div>
+
+  <div class="roadmap-container">
+
+    <section class="roadmap-section">
+      <h2>✅ Shipped</h2>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🧠</div>
+        <div class="roadmap-content">
+          <h4>Core Schema Diff Engine <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>Visual semantic diff for CREATE TABLE, INDEX, VIEW, TRIGGER, FUNCTION, and PROCEDURE across PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">📝</div>
+        <div class="roadmap-content">
+          <h4>Migration Generation <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>Auto-generates dialect-correct ALTER TABLE scripts plus rollback migrations. Breaking change detection with 14 warning categories.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🖥️</div>
+        <div class="roadmap-content">
+          <h4>CLI & Desktop Integrations <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p><code>npx schemalens-cli</code> for terminal diffing. VS Code extension with inline schema diff. Chrome extension with GitHub PR integration.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">⚙️</div>
+        <div class="roadmap-content">
+          <h4>CI/CD GitHub Action <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>Diff schemas on every pull request. Posts risk-scored comments. Blocks breaking changes before merge. Free tier available.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🎁</div>
+        <div class="roadmap-content">
+          <h4>72+ Free Micro-Tools <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>SQL to TypeScript/Go/Python/Java/Rust converters. INSERT/UPDATE/DELETE/UPSERT generators. Schema health checker. Query explainer. Design interview practice. Schema roast. And more.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🔓</div>
+        <div class="roadmap-content">
+          <h4>Open Source Engine <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>MIT-licensed diff engine published as <code>schemalens-engine</code> on npm. Use it in your own projects.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">📄</div>
+        <div class="roadmap-content">
+          <h4>Plain-English Explanations <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>Translates schema changes into human-readable sentences with breaking-change warnings. No competitor offers this.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🎮</div>
+        <div class="roadmap-content">
+          <h4>Viral Educational Games <span class="roadmap-badge badge-shipped">Live</span></h4>
+          <p>SchemaGuessr, Schema Diff Speed Challenge, Schema Breaking Change Quiz, and SQL Schema Roast.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap-section">
+      <h2>🚧 In Progress</h2>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">💰</div>
+        <div class="roadmap-content">
+          <h4>First Paying Customer <span class="roadmap-badge badge-next">Race Goal</span></h4>
+          <p>224 days, zero sales. We're in the final 5-week sprint of the $100 AI Startup Race. Every feature, every page, every tool has led to this moment.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">📢</div>
+        <div class="roadmap-content">
+          <h4>Autonomous Distribution Engine <span class="roadmap-badge badge-next">Active</span></h4>
+          <p>Dev.to articles, Hacker News posts, newsletter sponsorships, and directory submissions — all prepared and ready to execute.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap-section">
+      <h2>🔮 Planned</h2>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🔗</div>
+        <div class="roadmap-content">
+          <h4>Live Database Connection <span class="roadmap-badge badge-planned">Planned</span></h4>
+          <p>Connect directly to PostgreSQL, MySQL, and SQL Server to diff live schemas without exporting SQL dumps.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">👥</div>
+        <div class="roadmap-content">
+          <h4>Team Workspace <span class="roadmap-badge badge-planned">Planned</span></h4>
+          <p>Shared diff history, team comments, role-based access, and organization-wide license management.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">🤖</div>
+        <div class="roadmap-content">
+          <h4>AI-Powered Migration Suggestions <span class="roadmap-badge badge-planned">Planned</span></h4>
+          <p>LLM-assisted migration scripts with safety checks, performance notes, and best-practice recommendations.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-icon">📊</div>
+        <div class="roadmap-content">
+          <h4>Schema Drift Monitoring <span class="roadmap-badge badge-planned">Planned</span></h4>
+          <p>Nightly schema snapshots with drift alerts via email, Slack, or webhook. Catch unintended changes before they break production.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="roadmap-cta">
+      <h3>Want something on this roadmap?</h3>
+      <p>We read every request. The best ideas come from developers actually using the tool.</p>
+      <a href="app.html" class="btn btn-primary" style="margin-right:8px;">Open App & Send Feedback</a>
+      <a href="community.html" class="btn btn-secondary">Join the Community</a>
+    </div>
+
+  </div>
+
+  <footer class="footer" style="border-top:1px solid var(--border);margin-top:48px;">
+    <div class="container" style="padding:32px 24px;text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">
+        <a href="/" style="color:var(--text-muted);text-decoration:none;">SchemaLens</a> — Compare SQL schemas. Spot changes instantly. Generate migrations.
+      </p>
+      <p style="color:var(--text-muted);font-size:0.8rem;margin-top:8px;">
+        <a href="roadmap.html" style="color:var(--primary);text-decoration:none;">Roadmap</a> ·
+        <a href="changelog.html" style="color:var(--text-muted);text-decoration:none;">Changelog</a> ·
+        <a href="community.html" style="color:var(--text-muted);text-decoration:none;">Community</a> ·
+        <a href="open-source.html" style="color:var(--text-muted);text-decoration:none;">Open Source</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
