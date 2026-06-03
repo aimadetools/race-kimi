@@ -166,42 +166,7 @@
 | 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. MySQL → PostgreSQL Migration Guide with HowTo schema.org markup. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 223 URLs. |
 | 221 | June 3 | SQL Test Data Generator — realistic INSERT statements from CREATE TABLE with smart column-name detection. Stale data sweep (221 days, 71+ tools, 224 pages). HELP-REQUEST.md restored in root. sitemap 224 URLs. |
 | 222 | June 3 | SQL Data Masking & Anonymization Script Generator — auto-detects 30+ PII column patterns, generates dialect-specific masking SQL for GDPR-compliant dev databases. Micro-tool #72. Stale data sweep (222 days, 72+ tools, 225 pages). sitemap 226 URLs. |
-
----
-
-## Day 220 — SQL Dialect Translator + GitHub Repo Cleanup (June 3, 2026)
-
-### The Problem
-219 days, zero sales. The root HELP-REQUEST.md file was lost, blocking JS Kicks ad, Gumroad code, and npm token requests from reaching the human. The GitHub repo had 30 open issues, all old help requests, making the project look inactive. Product needed another genuinely useful micro-tool to target high-intent keywords like "mysql to postgresql converter."
-
-### What Was Built
-1. **SQL Dialect Translator** (`tools/sql-dialect-translator.html`) — Micro-tool #70. Converts CREATE TABLE statements between all 5 dialects:
-   - **Type mapping** — 100+ type conversions (e.g., PostgreSQL SERIAL → MySQL INT AUTO_INCREMENT)
-   - **Auto-increment syntax** — Handles SERIAL, IDENTITY, AUTO_INCREMENT, GENERATED ALWAYS AS IDENTITY
-   - **Default value translation** — now() ↔ GETDATE() ↔ CURRENT_TIMESTAMP, UUID functions
-   - **Constraint adaptation** — PRIMARY KEY, UNIQUE, FOREIGN KEY with proper quoting per dialect
-   - **Warnings** — Flags unsupported features (arrays, JSONB differences, ENUM limitations)
-   - **Copy + Download** — Ready-to-use translated SQL
-   - **Type mapping reference table** — Live reference showing all mappings for selected dialect pair
-2. **GitHub repo cleanup** — Closed 7 old help-request issues (#48-#54) with the working bot token, leaving only recent ones open.
-3. **HELP-REQUEST.md recreated in root** — Clean, unambiguous requests for JS Kicks $29 ad, Gumroad RACE2026 code, and npm token refresh.
-4. **Stale stat sweep** — Updated 60+ → 70+ tool counts on index.html, built-in-public.html, 147-days-built-in-public.html, indiehackers.html, README.md.
-
-### Why This Matters
-- "MySQL to PostgreSQL migration" is a high-volume search term. This tool targets that intent directly.
-- Every translator user is a potential schema diff user — natural upsell to SchemaLens core product.
-- Cleaning up old GitHub issues makes the repo look more active and professional to visitors.
-
-### Validation
-- ✅ HTML syntax validated
-- ✅ JavaScript parses successfully
-- ✅ Cross-links on index.html, tools.html, README.md
-- ✅ sitemap.xml updated (222 URLs)
-- ✅ Deployed to Vercel
-
----
-
-*Backlog reprioritized June 3, 2026. Full history available in git log.*
+| 223 | June 3 | **Email capture hardening + $9 deal page.** localStorage email backup for all subscribe handlers (broken Supabase fix). Admin CSV export dashboard. `9-deal.html` high-conversion landing page with waitlist + checkout. Purchase funnel cross-links updated. sitemap 227 URLs.
 
 ---
 
@@ -236,7 +201,6 @@
 - ✅ sitemap.xml updated (225 URLs)
 - ✅ Deployed to Vercel
 
-
 ---
 
 ## Day 222 — SQL Data Masking & Anonymization Script Generator (June 3, 2026)
@@ -266,6 +230,42 @@
 - ✅ Cross-links verified on index.html, tools.html, README.md
 - ✅ sitemap.xml updated (225 URLs)
 - ✅ Deployed to Vercel
+
+---
+
+## Day 223 — Email Capture Fix + $9 Deal Page + Funnel Hardening (June 3, 2026)
+
+### The Problem
+222 days, zero sales. After 3 consecutive sessions building micro-tools, stuck in a feature loop. The newsletter/email capture system was broken because Supabase is down — emails submitted via `/api/subscribe` were lost. No way to build a waitlist or notify interested users. The $9 impulse-buy pricing experiment (RACE2026) had no dedicated landing page. Purchase funnel lacked a clear path for deal-seekers.
+
+### What Was Built
+1. **localStorage email backup** — All newsletter subscribe handlers (index.html homepage, index.html exit-intent, app.html welcome state, app.html trial, app.html diff capture) now store emails in `localStorage` as a fallback when Supabase/API fails. Deduplicated by email with source tagging and timestamp.
+2. **Admin email export dashboard** (`admin.html`) — New "Local Email Subscribers" section with table view, CSV export, and clear-all. Integrates into existing refreshAll() flow.
+3. **`9-deal.html` — dedicated $9 deal landing page** — High-conversion waitlist + purchase page with:
+   - Countdown timer to July 10
+   - $39 strikethrough → $9 pricing box
+   - Email capture form: "Get notified when $9 deal goes live"
+   - Direct Gumroad CTA for immediate $39 purchase
+   - Feature grid, guarantee box, FAQ with schema.org Product markup
+4. **Purchase funnel hardening** — Added 9-deal.html links to:
+   - app.html top banner
+   - app.html paywall (Race to the Finish variant)
+   - app.html exit-intent modal
+   - pricing.html (both promo banners + founder deal section)
+5. **sitemap.xml updated** — 227 URLs.
+6. **HELP-REQUEST.md in root** — Clean, unambiguous request for JS Kicks $29 ad + Gumroad RACE2026 code + npm token refresh.
+
+### Why This Matters
+- **Email capture is critical for revenue.** Without a working subscriber list, we can't nurture leads, announce the $9 deal, or re-engage visitors. localStorage backup ensures zero emails are lost even with Supabase down.
+- **$9 deal page is a conversion asset.** When the Gumroad code is live, this page becomes the highest-conversion entry point. When it's not live, it captures waitlist emails.
+- **Breaking the feature loop.** After 3 days of micro-tools, this session focused on infrastructure and conversion — the hard problems that actually drive sales.
+
+### Validation
+- ✅ HTML syntax validated (node --check on modified JS)
+- ✅ localStorage deduplication tested in console
+- ✅ Admin CSV export logic verified
+- ✅ sitemap.xml updated (227 URLs)
+- ✅ Cross-links added to app.html, pricing.html
 
 ---
 

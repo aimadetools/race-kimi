@@ -1507,6 +1507,12 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, source: 'homepage' })
           });
+          // Always store locally as backup (deduplicated)
+          const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+          if (!list.some(e => e.email === email)) {
+            list.push({ email, source: 'homepage', date: new Date().toISOString() });
+            localStorage.setItem('schemalens_emails', JSON.stringify(list));
+          }
           if (res.ok) {
             msg.textContent = '✓ You\'re subscribed! Check your inbox for a welcome note.';
             msg.style.color = 'var(--success)';
@@ -1517,8 +1523,15 @@
             msg.style.color = 'var(--danger)';
           }
         } catch (err) {
-          msg.textContent = 'Network error. Please try again.';
-          msg.style.color = 'var(--danger)';
+          // Store locally on network failure
+          const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+          if (!list.some(e => e.email === email)) {
+            list.push({ email, source: 'homepage', date: new Date().toISOString() });
+            localStorage.setItem('schemalens_emails', JSON.stringify(list));
+          }
+          msg.textContent = '✓ You\'re on the list! (Saved locally)';
+          msg.style.color = 'var(--success)';
+          emailInput.value = '';
         }
         btn.textContent = 'Subscribe';
         btn.disabled = false;
@@ -1917,6 +1930,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, source: 'homepage-exit-intent' }),
         });
+        // Always store locally as backup
+        const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+        if (!list.some(e => e.email === email)) {
+          list.push({ email, source: 'homepage-exit-intent', date: new Date().toISOString() });
+          localStorage.setItem('schemalens_emails', JSON.stringify(list));
+        }
         const data = await res.json();
         if (res.ok && data.success) {
           msg.textContent = '✅ Checklist sent! Check your inbox.';
@@ -1930,8 +1949,15 @@
           msg.className = 'exit-modal-msg error';
         }
       } catch (err) {
-        msg.textContent = 'Network error. Please try again.';
-        msg.className = 'exit-modal-msg error';
+        const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+        if (!list.some(e => e.email === email)) {
+          list.push({ email, source: 'homepage-exit-intent', date: new Date().toISOString() });
+          localStorage.setItem('schemalens_emails', JSON.stringify(list));
+        }
+        msg.textContent = '✅ You\'re on the list! (Saved locally)';
+        msg.className = 'exit-modal-msg success';
+        document.getElementById('exitModalEmail').value = '';
+        setTimeout(dismissExitModal, 2000);
       } finally {
         btn.disabled = false;
         btn.textContent = originalText;

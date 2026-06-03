@@ -695,6 +695,21 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>📧 Local Email Subscribers (localStorage Backup)</h3>
+          <span class="admin-badge" id="badgeLocalEmails">0</span>
+        </div>
+        <div class="admin-section-body" id="localEmailsBody">
+          <div class="admin-empty">No local emails captured yet.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshLocalEmails()">Refresh</button>
+          <button class="primary" onclick="exportLocalEmails()">Export CSV</button>
+          <button onclick="clearLocalEmails()">Clear All</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>📈 Recent Analytics Events</h3>
           <span class="admin-badge" id="badgeAnalytics">0</span>
         </div>
@@ -1932,6 +1947,7 @@
       refreshFounding();
       refreshSales();
       refreshPHMonitor();
+      refreshLocalEmails();
     }
 
     // Launch Day Command Center
@@ -1959,6 +1975,44 @@
     }
     setInterval(updateLaunchCountdown, 1000);
     updateLaunchCountdown();
+
+    function refreshLocalEmails() {
+      const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+      document.getElementById('badgeLocalEmails').textContent = String(list.length);
+      const container = document.getElementById('localEmailsBody');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="admin-empty">No local emails captured yet.</div>';
+        return;
+      }
+      // Sort by date desc
+      list.sort((a, b) => new Date(b.date) - new Date(a.date));
+      let html = '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85rem;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Email</th><th style="text-align:left;padding:8px;">Source</th><th style="text-align:left;padding:8px;">Date</th></tr></thead><tbody>';
+      for (const item of list) {
+        const date = item.date ? new Date(item.date).toLocaleString() : 'Unknown';
+        html += `<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;font-family:monospace;">${item.email}</td><td style="padding:8px;">${item.source || 'unknown'}</td><td style="padding:8px;color:var(--text-muted);">${date}</td></tr>`;
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function exportLocalEmails() {
+      const list = JSON.parse(localStorage.getItem('schemalens_emails') || '[]');
+      if (list.length === 0) { alert('No emails to export.'); return; }
+      const csv = ['email,source,date'].concat(list.map(e => `"${e.email}","${e.source || ''}","${e.date || ''}"`)).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `schemalens-emails-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearLocalEmails() {
+      if (!confirm('Delete all locally stored emails? This cannot be undone.')) return;
+      localStorage.removeItem('schemalens_emails');
+      refreshLocalEmails();
+    }
 
     function saveChecklist() {
       const checks = Array.from(document.querySelectorAll('.launch-checklist input')).map(cb => cb.checked);
