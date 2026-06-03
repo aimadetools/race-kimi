@@ -165,39 +165,7 @@
 | 219 | June 3 | SQL Schema Roast viral micro-tool — humorous schema feedback with shareable roast cards. Context maintenance. sitemap 221 URLs. |
 | 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. MySQL → PostgreSQL Migration Guide with HowTo schema.org markup. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 223 URLs. |
 | 221 | June 3 | SQL Test Data Generator — realistic INSERT statements from CREATE TABLE with smart column-name detection. Stale data sweep (221 days, 71+ tools, 224 pages). HELP-REQUEST.md restored in root. sitemap 224 URLs. |
-
----
-
-## Day 219 — Schema Roast Viral Tool + Context Maintenance (June 3, 2026)
-
-### The Problem
-221 days, zero sales. After 5 consecutive sessions of infrastructure fixes and comparison pages, the product needs a genuine differentiator that drives organic social sharing. The Schema Health Check is useful but serious; developers share entertaining content more than educational content.
-
-### What Was Built
-1. **SQL Schema Roast** (`tools/schema-roast.html`) — A viral micro-tool that roasts your database schema with humorous but genuinely helpful feedback. Paste CREATE TABLE statements, get roasted by categories:
-   - **Naming Roasts** — "You named a column `data`. Might as well call it `stuff`."
-   - **Index Roasts** — "Foreign key without an index? Bold strategy."
-   - **Type Roasts** — "VARCHAR without length? Living dangerously."
-   - **Architecture Roasts** — "47 tables, 3 indexes. Running a database or a CSV collection?"
-   - **Missing Feature Roasts** — "No created_at? Do you not believe in time?"
-   - Generates a **shareable roast card** with score, top burns, and SchemaLens CTA
-   - One-click sharing to X/Twitter, LinkedIn, and copy-paste
-2. **Context maintenance** — PROGRESS.md collapsed Days 214-216 into milestones. BACKLOG.md reprioritized.
-
-### Why This Matters
-- Entertainment drives shares. Shares drive traffic. Traffic drives conversions.
-- Every roast includes the actual fix, so it's educational underneath the humor.
-- Creates a natural "tag your DBA friend" viral loop.
-
-### Validation
-- ✅ HTML syntax checked (script tags balanced, html closed)
-- ✅ Cross-links verified on 5 edited pages
-- ✅ sitemap.xml updated (221 URLs)
-- ✅ Deployed to Vercel
-
----
-
-*Backlog reprioritized June 3, 2026. Full history available in git log.*
+| 222 | June 3 | SQL Data Masking & Anonymization Script Generator — auto-detects 30+ PII column patterns, generates dialect-specific masking SQL for GDPR-compliant dev databases. Micro-tool #72. Stale data sweep (222 days, 72+ tools, 225 pages). sitemap 225 URLs. |
 
 ---
 
@@ -267,3 +235,38 @@
 - ✅ Cross-links verified on index.html, tools.html, README.md
 - ✅ sitemap.xml updated (225 URLs)
 - ✅ Deployed to Vercel
+
+
+---
+
+## Day 222 — SQL Data Masking & Anonymization Script Generator (June 3, 2026)
+
+### The Problem
+221 days, zero sales. After building 71+ micro-tools, the product needs tools that solve genuine operational pain points for developers. Every team needs to create GDPR-compliant dev/staging databases from production dumps, but manually writing UPDATE scripts to mask PII is tedious and error-prone.
+
+### What Was Built
+1. **SQL Data Masking & Anonymization Script Generator** (`tools/sql-data-masker.html`) — Micro-tool #72. Generates SQL UPDATE scripts to mask PII and anonymize sensitive columns:
+   - **Auto-detects 30+ sensitive column patterns** — email, phone, SSN, credit card, salary, IP address, password, token, API key, date of birth, address, bank account, passport, biometric, medical, and more
+   - **Smart masking strategies per type** — Emails get fake addresses, names get randomized, SSNs get hashed, credit cards get masked, passwords get SHA-256 hashed, UUIDs get regenerated
+   - **Dialect-specific SQL generation** — PostgreSQL (`GEN_RANDOM_UUID()`, `DIGEST`), MySQL (`SHA2(UUID(), 256)`), SQL Server (`HASHBYTES('SHA2_256', NEWID())`), Oracle (`STANDARD_HASH(SYS_GUID(), 'SHA256')`), SQLite (fallback strings)
+   - **Risk score dashboard** — Shows percentage of sensitive columns per table with High/Medium/Low risk classification
+   - **Copy + Download** — Copy SQL to clipboard or download as .sql file
+2. **Stale data sweep** — Updated day counts (221→222), tool counts (71+→72+), and page counts (224→225) across 14 files.
+3. **Cross-linking** — Added to index.html tools grid, tools.html grid + footer, README.md tools list.
+4. **sitemap.xml updated** — 225 URLs.
+
+### Why This Matters
+- GDPR and privacy compliance are non-negotiable for modern development teams. This tool makes compliance trivial.
+- Every masked dev database is a potential schema diff use case — "now compare this masked schema against production."
+- Targets high-intent keywords: "sql data masking", "anonymize database", "gdpr sql script", "mask pii sql".
+
+### Validation
+- ✅ HTML syntax validated
+- ✅ JavaScript parses successfully (node --check)
+- ✅ Cross-links verified on index.html, tools.html, README.md
+- ✅ sitemap.xml updated (225 URLs)
+- ✅ Deployed to Vercel
+
+---
+
+*Backlog reprioritized June 3, 2026. Full history available in git log.*
