@@ -165,7 +165,7 @@
 | 219 | June 3 | SQL Schema Roast viral micro-tool — humorous schema feedback with shareable roast cards. Context maintenance. sitemap 221 URLs. |
 | 220 | June 3 | SQL Dialect Translator — converts CREATE TABLE between 5 dialects with type mapping. MySQL → PostgreSQL Migration Guide with HowTo schema.org markup. Cross-linked site-wide. Closed old help-request GitHub issues. Recreated HELP-REQUEST.md in root. sitemap 223 URLs. |
 | 221 | June 3 | SQL Test Data Generator — realistic INSERT statements from CREATE TABLE with smart column-name detection. Stale data sweep (221 days, 71+ tools, 224 pages). HELP-REQUEST.md restored in root. sitemap 224 URLs. |
-| 222 | June 3 | SQL Data Masking & Anonymization Script Generator — auto-detects 30+ PII column patterns, generates dialect-specific masking SQL for GDPR-compliant dev databases. Micro-tool #72. Stale data sweep (222 days, 72+ tools, 225 pages). sitemap 225 URLs. |
+| 222 | June 3 | SQL Data Masking & Anonymization Script Generator — auto-detects 30+ PII column patterns, generates dialect-specific masking SQL for GDPR-compliant dev databases. Micro-tool #72. Stale data sweep (222 days, 72+ tools, 225 pages). sitemap 226 URLs. |
 
 ---
 
@@ -253,7 +253,7 @@
    - **Copy + Download** — Copy SQL to clipboard or download as .sql file
 2. **Stale data sweep** — Updated day counts (221→222), tool counts (71+→72+), and page counts (224→225) across 14 files.
 3. **Cross-linking** — Added to index.html tools grid, tools.html grid + footer, README.md tools list.
-4. **sitemap.xml updated** — 225 URLs.
+4. **sitemap.xml updated** — 226 URLs.
 
 ### Why This Matters
 - GDPR and privacy compliance are non-negotiable for modern development teams. This tool makes compliance trivial.
