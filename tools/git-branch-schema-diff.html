@@ -26,7 +26,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "featureList": "Compare database schema files between Git branches, tags, or commits. Fetch schemas from public GitHub repos. Generate ALTER TABLE migration scripts.",
+  "featureList": "Compare database schema files between Git branches, tags, or commits. Fetch schemas from public GitHub, GitLab, and Bitbucket repos. Generate ALTER TABLE migration scripts.",
   "url": "https://schemalens.tech/tools/git-branch-schema-diff.html"
 }
 </script>
@@ -217,7 +217,7 @@ header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margi
 <header>
   <div class="container">
     <h1>Git Branch Schema Diff</h1>
-    <p>Compare database schema files between any two Git branches, tags, or commits. Fetch from public GitHub repos and diff instantly in SchemaLens.</p>
+    <p>Compare database schema files between any two Git branches, tags, or commits. Fetch from public GitHub, GitLab, or Bitbucket repos and diff instantly in SchemaLens.</p>
   </div>
 </header>
 
@@ -226,7 +226,19 @@ header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margi
   <div class="card">
     <div class="form-grid">
       <div class="input-group full-width">
-        <label for="repoInput">GitHub Repository (owner/repo)</label>
+        <label for="providerSelect">Git Provider</label>
+        <select id="providerSelect" onchange="onProviderChange()">
+          <option value="github" selected>GitHub</option>
+          <option value="gitlab">GitLab</option>
+          <option value="bitbucket">Bitbucket</option>
+        </select>
+      </div>
+      <div class="input-group full-width">
+        <label for="repoUrlInput">Paste repository URL (optional — auto-parses owner/repo)</label>
+        <input type="text" id="repoUrlInput" placeholder="https://github.com/rails/rails" onchange="parseRepoUrl()">
+      </div>
+      <div class="input-group full-width">
+        <label for="repoInput">Repository (owner/repo or project path)</label>
         <input type="text" id="repoInput" placeholder="e.g. rails/rails" value="rails/rails">
       </div>
       <div class="input-group full-width">
@@ -299,6 +311,7 @@ const PRESETS = [
   {
     name: 'Rails 7.1 → 7.2',
     desc: 'ActiveRecord test schema',
+    provider: 'github',
     repo: 'rails/rails',
     path: 'activerecord/test/schema/schema.rb',
     base: 'v7.1.0',
@@ -307,6 +320,7 @@ const PRESETS = [
   {
     name: 'Django 4.2 → 5.0',
     desc: 'Django contrib auth schema',
+    provider: 'github',
     repo: 'django/django',
     path: 'django/contrib/auth/migrations/0001_initial.py',
     base: '4.2',
@@ -315,6 +329,7 @@ const PRESETS = [
   {
     name: 'WordPress 6.4 → 6.5',
     desc: 'WordPress core schema',
+    provider: 'github',
     repo: 'WordPress/WordPress',
     path: 'wp-admin/schema.php',
     base: '6.4.0',
@@ -323,6 +338,7 @@ const PRESETS = [
   {
     name: 'Laravel 10 → 11',
     desc: 'Laravel default migration',
+    provider: 'github',
     repo: 'laravel/laravel',
     path: 'database/migrations/0001_01_01_000000_create_users_table.php',
     base: 'v10.0.0',
@@ -331,6 +347,7 @@ const PRESETS = [
   {
     name: 'React + Next.js (example)',
     desc: 'Prisma schema evolution',
+    provider: 'github',
     repo: 'vercel/next.js',
     path: 'examples/with-prisma/prisma/schema.prisma',
     base: 'v14.0.0',
@@ -339,8 +356,27 @@ const PRESETS = [
   {
     name: 'Supabase (example)',
     desc: 'Supabase platform schema',
+    provider: 'github',
     repo: 'supabase/supabase',
     path: 'supabase/migrations/20211115164213_add_schema.sql',
+    base: 'master',
+    head: 'master'
+  },
+  {
+    name: 'GitLab CE 16 → 17',
+    desc: 'GitLab database schema',
+    provider: 'gitlab',
+    repo: 'gitlab-org/gitlab',
+    path: 'db/structure.sql',
+    base: 'v16.0.0',
+    head: 'v17.0.0'
+  },
+  {
+    name: 'Bitbucket Server (example)',
+    desc: 'Atlassian schema dump',
+    provider: 'bitbucket',
+    repo: 'atlassian/bitbucket-server',
+    path: 'app/src/main/resources/schema.sql',
     base: 'master',
     head: 'master'
   }
@@ -358,11 +394,75 @@ function renderPresets() {
 
 function applyPreset(index) {
   const p = PRESETS[index];
+  document.getElementById('providerSelect').value = p.provider || 'github';
   document.getElementById('repoInput').value = p.repo;
   document.getElementById('pathInput').value = p.path;
   document.getElementById('baseRef').value = p.base;
   document.getElementById('headRef').value = p.head;
   showStatus('Preset loaded: ' + p.name, 'success');
+}
+
+function onProviderChange() {
+  const provider = document.getElementById('providerSelect').value;
+  const repoInput = document.getElementById('repoInput');
+  if (provider === 'gitlab') {
+    repoInput.placeholder = 'e.g. gitlab-org/gitlab';
+  } else if (provider === 'bitbucket') {
+    repoInput.placeholder = 'e.g. atlassian/bitbucket-server';
+  } else {
+    repoInput.placeholder = 'e.g. rails/rails';
+  }
+}
+
+function parseRepoUrl() {
+  const urlInput = document.getElementById('repoUrlInput').value.trim();
+  if (!urlInput) return;
+  let provider = 'github';
+  let owner = '';
+  let repo = '';
+  try {
+    const url = new URL(urlInput);
+    const pathParts = url.pathname.split('/').filter(Boolean);
+    if (url.hostname === 'github.com' || url.hostname === 'www.github.com') {
+      provider = 'github';
+      if (pathParts.length >= 2) {
+        owner = pathParts[0];
+        repo = pathParts[1];
+      }
+    } else if (url.hostname === 'gitlab.com' || url.hostname === 'www.gitlab.com') {
+      provider = 'gitlab';
+      if (pathParts.length >= 2) {
+        owner = pathParts[0];
+        repo = pathParts[1];
+      }
+    } else if (url.hostname === 'bitbucket.org' || url.hostname === 'www.bitbucket.org') {
+      provider = 'bitbucket';
+      if (pathParts.length >= 2) {
+        owner = pathParts[0];
+        repo = pathParts[1];
+      }
+    }
+    if (owner && repo) {
+      document.getElementById('providerSelect').value = provider;
+      document.getElementById('repoInput').value = owner + '/' + repo;
+      onProviderChange();
+      showStatus('Parsed ' + provider + ' repo: ' + owner + '/' + repo, 'success');
+    }
+  } catch (e) {
+    // Try simple regex fallback for non-URL inputs
+    const ghMatch = urlInput.match(/github\.com[/:]([^/]+)\/([^/]+?)(?:\.git)?$/i);
+    const glMatch = urlInput.match(/gitlab\.com[/:]([^/]+)\/([^/]+?)(?:\.git)?$/i);
+    const bbMatch = urlInput.match(/bitbucket\.org[/:]([^/]+)\/([^/]+?)(?:\.git)?$/i);
+    if (ghMatch) { provider = 'github'; owner = ghMatch[1]; repo = ghMatch[2]; }
+    else if (glMatch) { provider = 'gitlab'; owner = glMatch[1]; repo = glMatch[2]; }
+    else if (bbMatch) { provider = 'bitbucket'; owner = bbMatch[1]; repo = bbMatch[2]; }
+    if (owner && repo) {
+      document.getElementById('providerSelect').value = provider;
+      document.getElementById('repoInput').value = owner + '/' + repo;
+      onProviderChange();
+      showStatus('Parsed ' + provider + ' repo: ' + owner + '/' + repo, 'success');
+    }
+  }
 }
 
 function loadPreset() {
