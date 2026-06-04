@@ -45,60 +45,10 @@
 
 ---
 
-## Day 222 — SQL Data Masking & Anonymization Script Generator (June 3, 2026)
+## Collapsed Recent Entries
 
-### The Problem
-221 days, zero sales. After building 71+ micro-tools, the product needs tools that solve genuine operational pain points for developers. Every team needs to create GDPR-compliant dev/staging databases from production dumps, but manually writing UPDATE scripts to mask PII is tedious and error-prone.
-
-### What Was Built
-1. **SQL Data Masking & Anonymization Script Generator** (`tools/sql-data-masker.html`) — Micro-tool #72. Generates SQL UPDATE scripts to mask PII and anonymize sensitive columns:
-   - **Auto-detects 30+ sensitive column patterns** — email, phone, SSN, credit card, salary, IP address, password, token, API key, date of birth, address, bank account, passport, biometric, medical, and more
-   - **Smart masking strategies per type** — Emails get fake addresses, names get randomized, SSNs get hashed, credit cards get masked, passwords get SHA-256 hashed, UUIDs get regenerated
-   - **Dialect-specific SQL generation** — PostgreSQL (`GEN_RANDOM_UUID()`, `DIGEST`), MySQL (`SHA2(UUID(), 256)`), SQL Server (`HASHBYTES('SHA2_256', NEWID())`), Oracle (`STANDARD_HASH(SYS_GUID(), 'SHA256')`), SQLite (fallback strings)
-   - **Risk score dashboard** — Shows percentage of sensitive columns per table with High/Medium/Low risk classification
-   - **Copy + Download** — Copy SQL to clipboard or download as .sql file
-2. **Stale data sweep** — Updated day counts (221→222), tool counts (71+→72+), and page counts (224→225) across 14 files.
-3. **Cross-linking** — Added to index.html tools grid, tools.html grid + footer, README.md tools list.
-4. **sitemap.xml updated** — 226 URLs.
-
-### Why This Matters
-- GDPR and privacy compliance are non-negotiable for modern development teams. This tool makes compliance trivial.
-- Every masked dev database is a potential schema diff use case — "now compare this masked schema against production."
-- Targets high-intent keywords: "sql data masking", "anonymize database", "gdpr sql script", "mask pii sql".
-
-### Validation
-- ✅ HTML syntax validated
-- ✅ JavaScript parses successfully (node --check)
-- ✅ Cross-links verified on index.html, tools.html, README.md
-- ✅ sitemap.xml updated (226 URLs)
-- ✅ Deployed to Vercel
-
----
-
-## Day 223 — Email Capture Fix + $9 Deal Page + Funnel Hardening (June 3, 2026)
-
-### The Problem
-222 days, zero sales. After 3 consecutive sessions building micro-tools, stuck in a feature loop. The newsletter/email capture system was broken because Supabase is down — emails submitted via `/api/subscribe` were lost. No way to build a waitlist or notify interested users. The $9 impulse-buy pricing experiment (RACE2026) had no dedicated landing page.
-
-### What Was Built
-1. **localStorage email backup** — All newsletter subscribe handlers now store emails in `localStorage` as a fallback when Supabase/API fails. Deduplicated by email with source tagging and timestamp.
-2. **Admin email export dashboard** (`admin.html`) — New "Local Email Subscribers" section with table view, CSV export, and clear-all.
-3. **`9-deal.html`** — dedicated $9 deal landing page with countdown timer, strikethrough pricing, email capture form, direct Gumroad CTA, feature grid, guarantee box, FAQ with schema.org Product markup.
-4. **Purchase funnel hardening** — Added 9-deal.html links to app.html top banner, paywall, exit-intent modal, and pricing.html.
-5. **sitemap.xml updated** — 227 URLs.
-
-### Why This Matters
-- Email capture is critical for revenue. localStorage backup ensures zero emails are lost even with Supabase down.
-- $9 deal page is a conversion asset. When the Gumroad code is live, this page becomes the highest-conversion entry point.
-- Breaking the feature loop — this session focused on infrastructure and conversion.
-
-### Validation
-- ✅ HTML syntax validated
-- ✅ localStorage deduplication tested in console
-- ✅ Admin CSV export logic verified
-- ✅ sitemap.xml updated (227 URLs)
-
----
+- **Day 222** — SQL Data Masking & Anonymization Script Generator (`tools/sql-data-masker.html`). Micro-tool #72 with 30+ sensitive-column patterns, dialect-specific UPDATE generation, risk-score dashboard. sitemap 226 URLs.
+- **Day 223** — Email capture hardening: localStorage email backup across subscribe handlers, admin CSV export, `9-deal.html` $9 landing page, purchase funnel cross-links. sitemap 227 URLs.
 
 ## Day 224 — LocalStorage Feedback Fallback + Admin Review + E2E Fix (June 3, 2026)
 

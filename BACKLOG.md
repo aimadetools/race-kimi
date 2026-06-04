@@ -21,21 +21,18 @@
 ### Distribution — Zero Sales After 225 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Safe path: `schemalens-diff-cli` and new names (`sql-schema-diff`, `schema-diff` are unclaimed).
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [x] **P2** Build `schema-diff` npm package — `packages/schema-diff/` created with zero-config CLI, 7 output formats, CI-native flags, and `schema-diff.html` landing page. Ready to publish when token restored. ✅ Done Day 225.
+- [x] **Completed (consolidated):** Build `schema-diff` npm package with zero-config CLI, 7 output formats, CI-native flags, and `schema-diff.html` landing page. Ready to publish when token restored. ✅ Day 225.
 
 ### Conversion — Fix the Funnel
-- [x] **P1** Review localStorage feedback from non-converter survey — built automated analyzer in admin.html. Current finding: 0 responses captured. Analyzer will surface top 1-2 blockers as soon as submissions arrive. ✅ Done Day 226.
+- [x] **Completed (consolidated):** Review localStorage feedback — built automated analyzer in admin.html. Current finding: 0 responses captured. Analyzer will surface top 1-2 blockers as soon as submissions arrive. ✅ Day 226.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Infrastructure / Technical Debt
-- [x] **P1** Supabase completely down — cloud-save dependencies removed. All features use localStorage. ✅ Done Day 218.
-- [x] **P1** npm naming crisis — `schemalens` (unscoped) and `@schemalens/cli` owned by competitors. Wrapper renamed to `schemalens-diff-cli`. ✅ Done Day 217.
-- [x] **P2** Add `license-keys.txt` to `.gitignore` — security fix. ✅ Done Day 213.
+- [x] **Completed (consolidated):** Supabase dead-code removal (all cloud features → localStorage), npm naming crisis fix (wrapper renamed to `schemalens-diff-cli`), `license-keys.txt` added to `.gitignore`. ✅ Days 213–218.
 
 ### Week 7–8 Focus — Break Out of Feature Loop
-- [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page.
-- [ ] **P1** GitHub Discussions engagement — ATTEMPTED. Discussions not enabled on repo. Bot token has push access but not admin scope. ✅ Closed 7 old help-request issues instead. Day 220.
+- [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page. GitHub Discussions engagement attempted; closed 7 old help-request issues instead. Day 220.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
@@ -178,8 +175,8 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Day 219 (June 3)
 **Viral distribution pivot:** SQL Schema Roast micro-tool (`tools/schema-roast.html`) — humorous schema feedback with shareable roast cards. Entertainment drives shares → traffic → conversions. Context maintenance.
 
-### Days 220–224 (June 3)
-**Autonomous outreach + infrastructure:** SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening with localStorage fallback, 9-deal.html landing page, localStorage feedback fallback with admin dashboard, roadmap page. sitemap 228 URLs.
+### Days 220–226 (June 3–4)
+**Autonomous outreach + infrastructure + distribution:** SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening with localStorage fallback, 9-deal.html landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
 
 ---
 
