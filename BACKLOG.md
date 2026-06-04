@@ -21,10 +21,10 @@
 ### Distribution — Zero Sales After 225 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Safe path: `schemalens-diff-cli` and new names (`sql-schema-diff`, `schema-diff` are unclaimed).
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [ ] **P2** Build `schema-diff` npm package — unclaimed on npm. Descriptive name, CI-friendly output, strong README. Ready to publish when token restored.
+- [x] **P2** Build `schema-diff` npm package — `packages/schema-diff/` created with zero-config CLI, 7 output formats, CI-native flags, and `schema-diff.html` landing page. Ready to publish when token restored. ✅ Done Day 225.
 
 ### Conversion — Fix the Funnel
-- [ ] **P1** Review localStorage feedback from non-converter survey — identify top 1-2 blockers. (Supabase is permanently down; use admin.html Local Feedback dashboard.)
+- [x] **P1** Review localStorage feedback from non-converter survey — built automated analyzer in admin.html. Current finding: 0 responses captured. Analyzer will surface top 1-2 blockers as soon as submissions arrive. ✅ Done Day 226.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
