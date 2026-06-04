@@ -1,0 +1,54 @@
+{
+  "name": "schema-diff",
+  "version": "1.0.0",
+  "description": "Compare SQL database schemas and generate migrations. Zero-config CLI with CI/CD integrations for GitHub Actions, GitLab CI, and Jenkins. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.",
+  "main": "index.js",
+  "bin": {
+    "schema-diff": "index.js"
+  },
+  "files": [
+    "index.js",
+    "engine.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {},
+  "keywords": [
+    "schema-diff",
+    "sql-schema-diff",
+    "database-diff",
+    "schema-compare",
+    "sql-diff",
+    "database-migration",
+    "alter-table",
+    "postgres",
+    "postgresql",
+    "mysql",
+    "sqlite",
+    "mssql",
+    "oracle",
+    "cli",
+    "ci-cd",
+    "github-actions",
+    "gitlab-ci",
+    "breaking-change-detection",
+    "migration-generator",
+    "ddl-diff"
+  ],
+  "author": "SchemaLens <hello@schemalens.tech>",
+  "license": "MIT",
+  "homepage": "https://schemalens.tech",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aimadetools/race-kimi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aimadetools/race-kimi/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -2,7 +2,7 @@
 
 > Compare SQL schemas. Spot changes instantly. Generate migrations.
 
-[![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)
+[![npm](https://img.shields.io/npm/v/schemalens-cli?label=cli&style=flat-square)](https://www.npmjs.com/package/schemalens-cli)\n[![npm](https://img.shields.io/npm/v/schema-diff?label=schema-diff&style=flat-square&color=cb3837)](https://www.npmjs.com/package/schema-diff)
 [![npm](https://img.shields.io/npm/v/schemalens-engine?label=engine&style=flat-square)](https://www.npmjs.com/package/schemalens-engine)
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?style=flat-square&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)
@@ -10,11 +10,11 @@
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
-**[🌐 Web App](https://schemalens.tech)** · **[📦 CLI](https://schemalens.tech/cli/)** · **[⚡ GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Pricing](https://schemalens.tech/pricing.html)**
+**[🌐 Web App](https://schemalens.tech)** · **[📦 CLI](https://schemalens.tech/cli/)** · **[📦 schema-diff](https://schemalens.tech/schema-diff.html)** · **[⚡ GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Pricing](https://schemalens.tech/pricing.html)**
 
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
-Also available as a CLI: `npx schemalens-cli diff old.sql new.sql`  
+Also available as a CLI:\n- `npx schemalens-cli diff old.sql new.sql` — full-featured CLI\n- `npx schema-diff old.sql new.sql` — zero-config CLI with CI-native output (GitHub Actions, GitLab CI, JUnit XML)
 Core engine: `npm install schemalens-engine`  
 VS Code Extension: [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=schemalens.schemalens)  
 Chrome Extension: [Install from Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde)  
@@ -184,7 +184,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 - **VS Code Extension** — Diff open SQL files directly from your editor (`vscode-extension/`)
 - **Chrome Extension** — Diff SQL files on GitHub blob pages and PR "Files changed" pages with one click ([Web Store](https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde) · `chrome-extension/`)
 - **Bookmarklet** — Drag to your bookmarks bar. Click on any page with SQL to instantly open it in SchemaLens. No install required. ([Get it](https://schemalens.tech/tools/bookmarklet.html))
-- **CLI** — `npx schemalens-cli` for headless diffing from your terminal
+- **schema-diff CLI** — `npx schema-diff old.sql new.sql` — zero-config CLI with GitHub Actions, GitLab CI, and JUnit XML output. [Learn more](https://schemalens.tech/schema-diff.html)\n- **CLI** — `npx schemalens-cli` for headless diffing from your terminal
 - **Open Source Engine** — `npm install schemalens-engine` to embed the diff engine in your own tools ([docs](https://schemalens.tech/open-source.html))
 
 ---
