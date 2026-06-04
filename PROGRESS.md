@@ -132,10 +132,11 @@
 - Works entirely client-side; no Supabase dependency.
 
 ### Validation
+- ✅ 129/129 e2e tests pass (Chromium)
 - ✅ JS syntax validated (`node --check` on extracted admin script)
 - ✅ Analyzer tested with 5 seeded feedback entries — correctly identified price and dialect as top blockers
 - ✅ Empty-state message shown when no feedback exists
-- ✅ Committed to git
+- ✅ Committed and pushed to git; Vercel production deploy triggered
 
 ---
 
