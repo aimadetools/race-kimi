@@ -718,6 +718,19 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>📊 Local Feedback Analysis</h3>
+          <span class="admin-badge" id="badgeAnalysis">Auto</span>
+        </div>
+        <div class="admin-section-body" id="feedbackAnalysisBody">
+          <div class="admin-empty">Click Analyze to compute top blockers from local feedback.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="analyzeLocalFeedback()">Analyze</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>💬 Local Feedback & Survey Responses (localStorage Backup)</h3>
           <span class="admin-badge" id="badgeLocalFeedback">0</span>
         </div>
@@ -2039,7 +2052,126 @@
       refreshLocalEmails();
     }
 
+    function analyzeLocalFeedback() {
+      const list = JSON.parse(localStorage.getItem('schemalens_feedback') || '[]');
+      const container = document.getElementById('feedbackAnalysisBody');
+      if (!list.length) {
+        container.innerHTML = '<div class="admin-empty">No local feedback captured yet. The non-converter survey runs on the Pro paywall in <code>app.html</code>. Once users submit responses, this analyzer will surface the top 1–2 blockers automatically.</div>';
+        return;
+      }
+
+      // Reason breakdown (button clicks from paywall)
+      const reasonLabels = {
+        too_expensive: '💰 Too expensive',
+        missing_features: '🔧 Missing features',
+        not_now: '⏰ Not right now',
+        try_free_first: '🆓 Will try free tier first'
+      };
+      const reasonCounts = {};
+      const categoryCounts = {};
+      const keywordMap = [
+        { keys: ['price','expensive','cost','cheap','$'], label: 'Pricing', color: '#ef4444' },
+        { keys: ['feature','missing','need','want','add','support for'], label: 'Missing features', color: '#f59e0b' },
+        { keys: ['dialect','mysql','postgres','postgresql','sql server','oracle','sqlite','mssql'], label: 'Dialect support', color: '#3b82f6' },
+        { keys: ['ci','github','gitlab','action','pipeline','jenkins'], label: 'CI/CD', color: '#8b5cf6' },
+        { keys: ['vscode','extension','plugin'], label: 'VS Code extension', color: '#06b6d4' },
+        { keys: ['ui','ux','design','layout','look'], label: 'UI/UX', color: '#ec4899' },
+        { keys: ['slow','performance','fast','speed','lag'], label: 'Performance', color: '#10b981' },
+        { keys: ['bug','error','broken','crash','fail'], label: 'Bugs / Errors', color: '#f97316' },
+        { keys: ['support','help','contact','email'], label: 'Support', color: '#6366f1' },
+        { keys: ['team','workspace','collaboration','share'], label: 'Team/Collab', color: '#14b8a6' },
+        { keys: ['limit','free','trial','table limit','15 tables'], label: 'Free-tier limits', color: '#84cc16' },
+        { keys: ['export','pdf','sql','markdown','json'], label: 'Export formats', color: '#a855f7' },
+        { keys: ['license','lifetime','subscription','buy','purchase'], label: 'Licensing', color: '#eab308' }
+      ];
+      const keywordCounts = keywordMap.map(k => ({ ...k, count: 0 }));
+
+      for (const item of list) {
+        const cat = item.category || 'other';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        if (cat === 'upgrade-blocker-reason' && item.reason) {
+          reasonCounts[item.reason] = (reasonCounts[item.reason] || 0) + 1;
+        }
+        const text = (item.message || '').toLowerCase();
+        for (const kw of keywordCounts) {
+          if (kw.keys.some(k => text.includes(k))) kw.count++;
+        }
+      }
+
+      const totalReasons = Object.values(reasonCounts).reduce((a, b) => a + b, 0) || 1;
+      const sortedReasons = Object.entries(reasonCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([key, count]) => ({ key, label: reasonLabels[key] || key, count, pct: (count / totalReasons * 100).toFixed(1) }));
+
+      const sortedKeywords = keywordCounts.filter(k => k.count > 0).sort((a, b) => b.count - a.count);
+
+      const topReason = sortedReasons[0];
+      const topKeyword = sortedKeywords[0];
+
+      // Insights / recommendations
+      const recommendations = [];
+      if (topReason) {
+        if (topReason.key === 'too_expensive') recommendations.push('Top blocker: price. Push the $9 deal page and open-source/student license programs.');
+        else if (topReason.key === 'missing_features') recommendations.push('Top blocker: missing features. Update the roadmap page and highlight the GitHub Action + VS Code extension.');
+        else if (topReason.key === 'not_now') recommendations.push('Top blocker: timing. Add a 7-day Pro trial + email drip to stay top-of-mind.');
+        else if (topReason.key === 'try_free_first') recommendations.push('Top blocker: free-tier confidence. Increase free table limit or add a "share to unlock" Pro trial.');
+      }
+      if (topKeyword) {
+        if (topKeyword.label === 'Pricing') recommendations.push('Keyword signal: users mention pricing — test a $19 tier or extend the RACE2026 code.');
+        else if (topKeyword.label === 'Missing features') recommendations.push('Keyword signal: feature gaps — prioritize the top requested dialect or CI output.');
+        else if (topKeyword.label === 'CI/CD') recommendations.push('Keyword signal: CI/CD demand — promote the GitHub Action and schema-diff npm package more visibly.');
+        else if (topKeyword.label === 'Dialect support') recommendations.push('Keyword signal: dialect gaps — add landing pages for the missing engine dialects.');
+      }
+
+      function bar(label, count, pct, color) {
+        return `<div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.85rem;">
+            <span>${label}</span><strong>${count} <span style="color:var(--text-muted);font-weight:500;">(${pct}%)</span></strong>
+          </div>
+          <div style="background:var(--surface-hover);border-radius:6px;height:22px;overflow:hidden;">
+            <div style="width:${pct}%;background:${color || 'var(--primary)'};height:100%;border-radius:6px;"></div>
+          </div>
+        </div>`;
+      }
+
+      const reasonHtml = sortedReasons.length
+        ? `<div style="margin-bottom:16px;"><h4 style="margin:0 0 10px;font-size:0.95rem;">Reason Breakdown (paywall buttons)</h4>${sortedReasons.map(r => bar(r.label, r.count, r.pct, '#6366f1')).join('')}</div>`
+        : '<p style="font-size:0.85rem;color:var(--text-muted);">No button-based reasons yet.</p>';
+
+      const keywordHtml = sortedKeywords.length
+        ? `<div style="margin-bottom:16px;"><h4 style="margin:0 0 10px;font-size:0.95rem;">Top Keywords (free-text)</h4>${sortedKeywords.slice(0, 6).map(k => bar(k.label, k.count, (k.count / list.length * 100).toFixed(1), k.color)).join('')}</div>`
+        : '<p style="font-size:0.85rem;color:var(--text-muted);">No keyword matches yet.</p>';
+
+      const insightHtml = recommendations.length
+        ? `<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:8px;padding:14px;margin-bottom:16px;">
+            <h4 style="margin:0 0 8px;font-size:0.95rem;">🎯 Top Blockers & Recommended Actions</h4>
+            <ul style="margin:0;padding-left:18px;font-size:0.9rem;color:var(--text);">${recommendations.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join('')}</ul>
+          </div>`
+        : '<p style="font-size:0.85rem;color:var(--text-muted);">Not enough data to identify blockers.</p>';
+
+      container.innerHTML = `<div style="padding:14px 18px;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+          <div style="flex:1;min-width:140px;background:var(--surface-hover);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:700;">${list.length}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Total responses</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--surface-hover);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:700;">${categoryCounts['upgrade-blocker-reason'] || 0}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Button reasons</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--surface-hover);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:700;">${categoryCounts['upgrade-blocker'] || 0}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Free-text blockers</div>
+          </div>
+        </div>
+        ${insightHtml}
+        ${reasonHtml}
+        ${keywordHtml}
+      </div>`;
+    }
+
     function refreshLocalFeedback() {
+      analyzeLocalFeedback();
       const list = JSON.parse(localStorage.getItem('schemalens_feedback') || '[]');
       document.getElementById('badgeLocalFeedback').textContent = String(list.length);
       document.getElementById('statLocalFeedback').textContent = list.length;
