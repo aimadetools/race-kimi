@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Branch Schema Diff — Compare Database Schemas Across Commits | SchemaLens</title>
+<meta name="description" content="Compare database schema files between Git branches, tags, or commits. Instantly diff db/schema.rb, migrations, or CREATE TABLE dumps from any public GitHub repo.">
+<meta property="og:title" content="Git Branch Schema Diff — Compare Database Schemas Across Commits">
+<meta property="og:description" content="Diff schema files between any two Git branches, tags, or commits. Works with Rails, Django, Laravel, and raw SQL schemas.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/git-branch-schema-diff.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://schemalens.tech/tools/git-branch-schema-diff.html">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Git Branch Schema Diff",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Compare database schema files between Git branches, tags, or commits. Fetch schemas from public GitHub repos. Generate ALTER TABLE migration scripts.",
+  "url": "https://schemalens.tech/tools/git-branch-schema-diff.html"
+}
+</script>
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --radius: 12px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header { text-align: center; padding: 48px 24px 32px; }
+header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.input-group input, .input-group select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+.input-group input:focus, .input-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.input-group.full-width { grid-column: 1 / -1; }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-success { background: var(--success); color: #fff; }
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.preset-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  color: var(--text);
+  text-align: left;
+  transition: border-color 0.15s, transform 0.15s;
+  font-size: 0.9rem;
+}
+.preset-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+.preset-btn .name { font-weight: 600; display: block; margin-bottom: 2px; }
+.preset-btn .desc { font-size: 0.8rem; color: var(--text-muted); }
+
+.status { margin-top: 16px; font-size: 0.9rem; }
+.status.error { color: var(--danger); }
+.status.success { color: var(--success); }
+.status.loading { color: var(--warning); }
+
+.schema-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+@media (max-width: 768px) {
+  .schema-compare { grid-template-columns: 1fr; }
+}
+.schema-pane {
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.schema-pane-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.schema-pane pre {
+  margin: 0;
+  padding: 14px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #e2e8f0;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.cta-banner {
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+.cta-banner h3 { margin-bottom: 8px; }
+.cta-banner p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px; }
+
+.footer-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 32px;
+  padding-bottom: 40px;
+}
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <h1>Git Branch Schema Diff</h1>
+    <p>Compare database schema files between any two Git branches, tags, or commits. Fetch from public GitHub repos and diff instantly in SchemaLens.</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="input-group full-width">
+        <label for="repoInput">GitHub Repository (owner/repo)</label>
+        <input type="text" id="repoInput" placeholder="e.g. rails/rails" value="rails/rails">
+      </div>
+      <div class="input-group full-width">
+        <label for="pathInput">Schema file path</label>
+        <input type="text" id="pathInput" placeholder="e.g. activerecord/test/schema/schema.rb" value="activerecord/test/schema/schema.rb">
+      </div>
+      <div class="input-group">
+        <label for="baseRef">Base branch / tag / commit</label>
+        <input type="text" id="baseRef" placeholder="e.g. v7.1.0" value="v7.1.0">
+      </div>
+      <div class="input-group">
+        <label for="headRef">Head branch / tag / commit</label>
+        <input type="text" id="headRef" placeholder="e.g. v7.2.0" value="v7.2.0">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="fetchSchemas()">🔍 Fetch & Diff Schemas</button>
+      <button class="btn btn-secondary" onclick="loadPreset()">📋 Load Preset</button>
+    </div>
+    <div id="status" class="status hidden"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="font-size:1.1rem;margin-bottom:8px;">⚡ Quick Presets</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px;">Click any preset to auto-fill the form with a real-world schema comparison.</p>
+    <div class="preset-grid" id="presetGrid"></div>
+  </div>
+
+  <div id="resultCard" class="card hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <h3 style="font-size:1.2rem;">📊 Fetched Schemas</h3>
+      <div class="btn-row" style="margin-top:0;">
+        <a id="diffLink" href="#" class="btn btn-success" target="_blank">⚡ Diff in SchemaLens →</a>
+        <button class="btn btn-secondary" onclick="copyShareLink()">🔗 Copy Share Link</button>
+      </div>
+    </div>
+    <div class="schema-compare">
+      <div class="schema-pane">
+        <div class="schema-pane-header">
+          <span id="baseLabel">Base</span>
+          <span style="color:var(--text-muted);font-size:0.8rem;font-weight:400;" id="baseSize">0 chars</span>
+        </div>
+        <pre id="baseSchema"><code>Loading...</code></pre>
+      </div>
+      <div class="schema-pane">
+        <div class="schema-pane-header">
+          <span id="headLabel">Head</span>
+          <span style="color:var(--text-muted);font-size:0.8rem;font-weight:400;" id="headSize">0 chars</span>
+        </div>
+        <pre id="headSchema"><code>Loading...</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <h3>🚀 Want to diff your own schemas?</h3>
+    <p>Paste two CREATE TABLE dumps into SchemaLens and get an instant visual diff + migration script.</p>
+    <a href="../app.html" class="btn btn-primary">Open SchemaLens App →</a>
+  </div>
+
+  <div class="footer-note">
+    Works with any public GitHub repository. For private repos, paste your schema dumps directly into <a href="../app.html" style="color:var(--primary);">SchemaLens</a>.
+    <br>SchemaLens does not store your schema data. All diffing happens in your browser.
+  </div>
+
+</div>
+
+<script>
+const PRESETS = [
+  {
+    name: 'Rails 7.1 → 7.2',
+    desc: 'ActiveRecord test schema',
+    repo: 'rails/rails',
+    path: 'activerecord/test/schema/schema.rb',
+    base: 'v7.1.0',
+    head: 'v7.2.0'
+  },
+  {
+    name: 'Django 4.2 → 5.0',
+    desc: 'Django contrib auth schema',
+    repo: 'django/django',
+    path: 'django/contrib/auth/migrations/0001_initial.py',
+    base: '4.2',
+    head: '5.0'
+  },
+  {
+    name: 'WordPress 6.4 → 6.5',
+    desc: 'WordPress core schema',
+    repo: 'WordPress/WordPress',
+    path: 'wp-admin/schema.php',
+    base: '6.4.0',
+    head: '6.5.0'
+  },
+  {
+    name: 'Laravel 10 → 11',
+    desc: 'Laravel default migration',
+    repo: 'laravel/laravel',
+    path: 'database/migrations/0001_01_01_000000_create_users_table.php',
+    base: 'v10.0.0',
+    head: 'v11.0.0'
+  },
+  {
+    name: 'React + Next.js (example)',
+    desc: 'Prisma schema evolution',
+    repo: 'vercel/next.js',
+    path: 'examples/with-prisma/prisma/schema.prisma',
+    base: 'v14.0.0',
+    head: 'v14.2.0'
+  },
+  {
+    name: 'Supabase (example)',
+    desc: 'Supabase platform schema',
+    repo: 'supabase/supabase',
+    path: 'supabase/migrations/20211115164213_add_schema.sql',
+    base: 'master',
+    head: 'master'
+  }
+];
+
+function renderPresets() {
+  const grid = document.getElementById('presetGrid');
+  grid.innerHTML = PRESETS.map((p, i) => `
+    <button class="preset-btn" onclick="applyPreset(${i})">
+      <span class="name">${escapeHtml(p.name)}</span>
+      <span class="desc">${escapeHtml(p.desc)}</span>
+    </button>
+  `).join('');
+}
+
+function applyPreset(index) {
+  const p = PRESETS[index];
+  document.getElementById('repoInput').value = p.repo;
+  document.getElementById('pathInput').value = p.path;
+  document.getElementById('baseRef').value = p.base;
+  document.getElementById('headRef').value = p.head;
+  showStatus('Preset loaded: ' + p.name, 'success');
+}
+
+function loadPreset() {
+  applyPreset(0);
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status ' + type;
+  el.classList.remove('hidden');
+}
+
+function hideStatus() {
+  document.getElementById('status').classList.add('hidden');
+}
+
+function buildRawUrl(repo, path, ref) {
+  return `https://raw.githubusercontent.com/${repo}/${ref}/${path}`;
+}
+
+async function fetchSchema(repo, path, ref) {
+  const url = buildRawUrl(repo, path, ref);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${ref}`);
+  return await res.text();
+}
+
+async function fetchSchemas() {
+  const repo = document.getElementById('repoInput').value.trim();
+  const path = document.getElementById('pathInput').value.trim();
+  const baseRef = document.getElementById('baseRef').value.trim();
+  const headRef = document.getElementById('headRef').value.trim();
+
+  if (!repo || !path || !baseRef || !headRef) {
+    showStatus('Please fill in all fields.', 'error');
+    return;
+  }
+  if (!repo.includes('/')) {
+    showStatus('Repository must be in "owner/repo" format.', 'error');
+    return;
+  }
+
+  showStatus('Fetching schemas...', 'loading');
+  document.getElementById('resultCard').classList.add('hidden');
+
+  try {
+    const [baseText, headText] = await Promise.all([
+      fetchSchema(repo, path, baseRef),
+      fetchSchema(repo, path, headRef)
+    ]);
+
+    document.getElementById('baseSchema').textContent = baseText;
+    document.getElementById('headSchema').textContent = headText;
+    document.getElementById('baseLabel').textContent = baseRef;
+    document.getElementById('headLabel').textContent = headRef;
+    document.getElementById('baseSize').textContent = baseText.length.toLocaleString() + ' chars';
+    document.getElementById('headSize').textContent = headText.length.toLocaleString() + ' chars';
+
+    // Build SchemaLens link
+    const dialect = detectDialect(path, baseText);
+    const diffUrl = buildDiffUrl(baseText, headText, dialect);
+    document.getElementById('diffLink').href = diffUrl;
+
+    document.getElementById('resultCard').classList.remove('hidden');
+    showStatus('Schemas fetched successfully!', 'success');
+
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('git_branch_diff_fetched', { repo, path, baseRef, headRef });
+    }
+  } catch (err) {
+    showStatus('Error: ' + err.message + '. Make sure the repo is public and the path/ref exist.', 'error');
+  }
+}
+
+function detectDialect(path, text) {
+  const lower = path.toLowerCase();
+  if (lower.endsWith('.prisma')) return 'postgres';
+  if (text.includes('SERIAL') || text.includes('JSONB')) return 'postgres';
+  if (text.includes('AUTO_INCREMENT')) return 'mysql';
+  if (text.includes('INTEGER PRIMARY KEY AUTOINCREMENT')) return 'sqlite';
+  return 'postgres';
+}
+
+function buildDiffUrl(schemaA, schemaB, dialect) {
+  // Use localStorage to pass large schemas (avoids URL length limits)
+  const importKey = 'ghImport-' + Date.now();
+  try {
+    localStorage.setItem(importKey + '-a', schemaA);
+    localStorage.setItem(importKey + '-b', schemaB);
+    localStorage.setItem(importKey + '-dialect', dialect);
+  } catch (e) {
+    // Fallback to URL params if localStorage is full
+    const base = '../app.html';
+    const params = new URLSearchParams();
+    params.set('schemaA', schemaA.substring(0, 6000));
+    params.set('schemaB', schemaB.substring(0, 6000));
+    params.set('dialect', dialect);
+    params.set('ref', 'git-branch-diff');
+    return base + '?' + params.toString();
+  }
+  return '../app.html?ghImport=' + importKey + '&ref=git-branch-diff';
+}
+
+function copyShareLink() {
+  const link = document.getElementById('diffLink').href;
+  navigator.clipboard.writeText(link).then(() => {
+    showStatus('Share link copied to clipboard!', 'success');
+  }).catch(() => {
+    showStatus('Failed to copy link.', 'error');
+  });
+}
+
+// Auto-load from URL params
+(function() {
+  renderPresets();
+  const params = new URLSearchParams(location.search);
+  if (params.get('repo')) document.getElementById('repoInput').value = params.get('repo');
+  if (params.get('path')) document.getElementById('pathInput').value = params.get('path');
+  if (params.get('base')) document.getElementById('baseRef').value = params.get('base');
+  if (params.get('head')) document.getElementById('headRef').value = params.get('head');
+  if (params.get('auto') === '1') {
+    fetchSchemas();
+  }
+})();
+</script>
+
+</body>
+</html>

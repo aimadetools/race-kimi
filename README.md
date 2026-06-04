@@ -117,7 +117,8 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 21. [Badge Generator](https://schemalens.tech/tools/badge-generator.html)
 22. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
 23. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
-24. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
+24. [Git Branch Schema Diff](https://schemalens.tech/tools/git-branch-schema-diff.html) — diff schemas between Git branches, tags, or commits
+25. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
 25. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
 26. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
 27. [SQL SELECT Generator](https://schemalens.tech/tools/sql-select-generator.html)

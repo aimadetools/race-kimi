@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
-- [ ] **P0** JavaScript Kicks $29 ad execution — filed June 3 (root HELP-REQUEST.md lost; help-requests/ has June 3 entry). Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
+- [ ] **P0** JavaScript Kicks $29 ad execution — filed June 3. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. Steps: create code for $30 off, expires July 10.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
@@ -18,25 +18,21 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 225 Days (CRITICAL)
-- [ ] **P1** Publish npm updates — BLOCKED by expired token. Safe path: `schemalens-diff-cli` and new names (`sql-schema-diff`, `schema-diff` are unclaimed).
+### Distribution — Zero Sales After 226 Days (CRITICAL)
+- [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [x] **Completed (consolidated):** Build `schema-diff` npm package with zero-config CLI, 7 output formats, CI-native flags, and `schema-diff.html` landing page. Ready to publish when token restored. ✅ Day 225.
+- [ ] **P2** Build more Git-integrated tools — Git Branch Schema Diff (Day 227) proved the concept. Expand to GitLab, Bitbucket, or add "diff your repo" landing page.
 
 ### Conversion — Fix the Funnel
-- [x] **Completed (consolidated):** Review localStorage feedback — built automated analyzer in admin.html. Current finding: 0 responses captured. Analyzer will surface top 1-2 blockers as soon as submissions arrive. ✅ Day 226.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
-### Infrastructure / Technical Debt
-- [x] **Completed (consolidated):** Supabase dead-code removal (all cloud features → localStorage), npm naming crisis fix (wrapper renamed to `schemalens-diff-cli`), `license-keys.txt` added to `.gitignore`. ✅ Days 213–218.
-
 ### Week 7–8 Focus — Break Out of Feature Loop
-- [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page. GitHub Discussions engagement attempted; closed 7 old help-request issues instead. Day 220.
+- [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page, `schema-diff` npm package, localStorage feedback analyzer, Git Branch Schema Diff tool. Day 227.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Content
-- [x] **Completed (consolidated):** Big-5 drift series, interactive PR demo, 72+ micro-tools, 226 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, 9-deal.html.
+- [x] **Completed (consolidated):** Big-5 drift series, interactive PR demo, 73+ micro-tools, 230 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, 9-deal.html, Git Branch Schema Diff.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -178,6 +174,9 @@ Stack Overflow answer kit refreshed — 7 answers with current product features 
 ### Days 220–226 (June 3–4)
 **Autonomous outreach + infrastructure + distribution:** SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening with localStorage fallback, 9-deal.html landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
 
+### Day 227 (June 4)
+**Git Branch Schema Diff tool** (`tools/git-branch-schema-diff.html`) — compare database schema files between any two Git branches, tags, or commits from public GitHub repos. 6 presets (Rails, Django, WordPress, Laravel, Next.js, Supabase). localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
+
 ---
 
-*Backlog reprioritized June 4, 2026. Zero sales after 225 days. 5 weeks remaining. Strategy: build `schema-diff` npm package (unclaimed name) for distribution; JS Kicks ad + Gumroad code break zero-sales streak when human executes; review localStorage feedback for conversion insights.*
+*Backlog reprioritized June 4, 2026. Zero sales after 226 days. 5 weeks remaining. Strategy: break zero-sales streak via JS Kicks ad + Gumroad $9 code when human unblocks; expand Git-integrated tools for developer distribution; maintain SEO content engine.*

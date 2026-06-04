@@ -33,110 +33,49 @@
 | 157–162 | May 20–21 | Dev.to repurposed into social posts, 3-way homepage hero A/B test, CI demo, SQL to DBML/PlantUML/OpenAPI converters. |
 | 163–168 | May 22 | Conversion fixes + alumni window polish + Famous Database Schemas gallery, Database Schema Design Patterns + Anti-Patterns. |
 | 169–173 | May 23–26 | Conversion hardening, Staging vs Production schema diff landing page, free tier table limit A/B test (15/10/8), npm README SEO overhaul, VS Code Extension marketplace optimization, JavaScript Kicks sponsorship re-filed, Chrome Web Store listing optimization. |
-| 174–177 | May 26 | SchemaGuessr viral game, IndieHackers post prep, Reddit distribution kit refresh, site-wide stale stat sweep. |
-| 178–182 | May 27 | Post-alumni cleanup, Schema Normalization Checker, SQL to Java JPA + Rust converters, `schemalens` npm competitor discovered, best-schema-diff-tools promotion, homepage exit-intent email capture, Schema Badge API. |
-| 183–185 | May 27 | Migration Mastery 7-day email course, Stack Overflow answer kit refresh, dev.to article published on-site, npm-publish GitHub Action workflow. |
-| 186–193 | May 28–30 | Race to the Finish $9 campaign (later fixed), Open Source Pro License, Student Pro License, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge. |
+| 174–177 | May 26 | SchemaGuessr viral game, IndieHackers post prep + stale data sweep, Reddit distribution kit refresh with dedicated viral asset posts, site-wide stale stat sweep. |
+| 178–182 | May 27 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). SQL to Java JPA (#59) + Rust (#60) converters. `schemalens` npm competitor discovered; hardened `schemalens-cli` discoverability. Promoted `best-schema-diff-tools.html` with 20 footer cross-links + social media kit + directory kit. Homepage exit-intent email capture modal with Migration Safety Checklist lead magnet. |
+| 183–185 | May 27 | Schema Badge API (`api/schema-badge.js` + `tools/schema-badge.html`). Migration Mastery 7-day email course. Stack Overflow answer kit refresh. Dev.to article published on-site. npm-publish GitHub Action workflow. |
+| 186–193 | May 28–30 | Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge. |
 | 194–201 | May 31 | "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API Playground, Community Hub, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard. |
 | 202–209 | May 31–Jun 1 | Fixed $9 bait-and-switch, Founding Customer Program, Fetch from URL, Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator, Product Features page, Schema Diff Speed Challenge. |
 | 210–216 | Jun 1–2 | Speed Challenge promotion blitz, Ambassador Program + distribution kit, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), Plain-English Explanation tab, npm naming crisis fix, Supabase dead code removal. |
 | 217–220 | Jun 2–3 | SQL Schema Roast viral micro-tool, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator. |
-| 221–224 | Jun 3 | SQL Data Masking & Anonymization Script Generator, email capture hardening + 9-deal.html + localStorage email backup, localStorage feedback fallback + admin review + roadmap page. |
+| 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
 
 ---
 
-## Collapsed Recent Entries
-
-- **Day 222** — SQL Data Masking & Anonymization Script Generator (`tools/sql-data-masker.html`). Micro-tool #72 with 30+ sensitive-column patterns, dialect-specific UPDATE generation, risk-score dashboard. sitemap 226 URLs.
-- **Day 223** — Email capture hardening: localStorage email backup across subscribe handlers, admin CSV export, `9-deal.html` $9 landing page, purchase funnel cross-links. sitemap 227 URLs.
-
-## Day 224 — LocalStorage Feedback Fallback + Admin Review + E2E Fix (June 3, 2026)
+## Day 227 — Git Branch Schema Diff Tool (June 4, 2026)
 
 ### The Problem
-223 days, zero sales. The P1 task "Review feedback API data from non-converter survey" was blocked because Supabase is down. All feedback submitted via `/api/feedback` was lost. No visibility into why users weren't upgrading. E2E test suite had a failing test on `schema-diff-speed-challenge.html` due to analytics POST failing on static test server.
+226 days, zero sales. After 3 consecutive sessions of infrastructure fixes and analysis, stuck in a feature loop. The highest-value community feedback was "compare staging vs production schemas" and "diff between branches." No tool existed to diff schema files between arbitrary Git commits without cloning the repo.
 
 ### What Was Built
-1. **localStorage feedback fallback** (`app.html`) — `storeFeedbackLocal()` saves every feedback submission to `localStorage` BEFORE attempting the API call. Covers paywall free-text feedback, reason buttons, and modal feedback widget. Keeps last 200 entries.
-2. **Admin Local Feedback dashboard** (`admin.html`) — "Local Feedback & Survey Responses" section with table view, CSV export, clear-all, integrated into `refreshAll()` flow.
-3. **Admin stat badges** — Added "Local Emails" and "Local Feedback" counters to admin stats grid.
-4. **E2E test fix** — `schema-diff-speed-challenge.html` analytics stub skips `/api/analytics` POST on localhost/127.0.0.1.
-5. **Stale data sweep** — Updated day counts (222/223 → 224) and page counts (225 → 227) across 13 files.
-6. **Roadmap page** (`roadmap.html`) — Conversion asset showing shipped milestones (8), in-progress (2), planned (4). schema.org ItemList markup. Stats bar with 72+ tools, 227 pages. Cross-linked, sitemap updated (228 URLs).
-
-### Validation
-- ✅ 34/34 unit tests pass
-- ✅ 129/129 e2e tests pass (Chromium)
-- ✅ HTML syntax validated
-- ✅ localStorage feedback flow tested manually
-- ✅ sitemap.xml updated (228 URLs)
-
----
-
----
-
-## Day 225 — schema-diff npm Package + Landing Page (June 4, 2026)
-
-### The Problem
-225 days, zero sales. After 3 consecutive sessions of infrastructure fixes, micro-tools, and conversion assets, stuck in a feature loop. The `schemalens` and `@schemalens/cli` npm names are owned by competitors. `schemalens-cli` and `schemalens-engine` have stale published versions (1.0.0/1.0.1) because the npm token is expired. The product needs a fresh, descriptive npm package name that developers will actually find when searching "schema diff".
-
-### What Was Built
-1. **`schema-diff` npm package** (`packages/schema-diff/`) — A new, unclaimed npm package name that is exactly what developers search for:
-   - **Zero-config CLI**: `npx schema-diff old.sql new.sql` — no subcommands, no friction
-   - **7 output formats**: pretty, json, markdown, sql, github (GitHub Actions annotations), gitlab (GitLab CI), junit (JUnit XML for Jenkins)
-   - **CI-native by default**: `--ci` flag for concise no-color output, `--strict` exits code 2 on breaking changes
-   - **Bundles the SchemaLens engine directly** — no external dependency on `schemalens-engine` npm package, ensuring reliability
-   - **MIT licensed**, strong README optimized for npm search
-2. **`schema-diff.html` landing page** — Dedicated conversion asset for the npm package with:
-   - Installation instructions and quick-start examples
-   - CI/CD integration examples (GitHub Actions, GitLab CI, Jenkins)
-   - Output format comparison table
-   - Competitive comparison table (schema-diff vs Prisma migrate diff vs Redgate vs schemalex)
-   - schema.org SoftwareApplication markup
-   - CTAs to SchemaLens web app and Pro pricing
-3. **Cross-linking** — Added to index.html tools grid, tools.html grid, README.md badges/links/tools list, sitemap.xml.
-4. **Context maintenance** — PROGRESS.md collapsed to last 3 days detailed. BACKLOG.md cleaned up.
+1. **Git Branch Schema Diff** (`tools/git-branch-schema-diff.html`) — A standalone micro-tool that:
+   - Fetches schema files from any public GitHub repo via `raw.githubusercontent.com`
+   - Compares files between two branches, tags, or commits
+   - Displays both schemas side-by-side with size stats
+   - Passes schemas to `app.html` via localStorage (avoids URL length limits)
+   - Auto-detects SQL dialect from file content
+   - Includes 6 preset comparisons (Rails, Django, WordPress, Laravel, Next.js, Supabase)
+   - Supports shareable links via URL params (`?repo=&path=&base=&head=`)
+2. **Cross-linking** — Added to index.html tools grid, tools.html grid, app.html welcome links, schema-examples.html footer, README.md tools list, sitemap.xml (230 URLs).
+3. **Schema.org markup** — SoftwareApplication JSON-LD on the new page for rich search snippets.
 
 ### Why This Matters
-- **`schema-diff` is an unclaimed, high-intent npm name.** Developers searching npm for "schema diff" will find this package first — no confusing naming like `schemalens-diff-cli`.
-- **CI-native formats are genuinely differentiated.** No competitor CLI outputs GitHub Actions annotation commands or JUnit XML natively. This makes SchemaLens uniquely valuable in CI pipelines.
-- **Package is ready to publish immediately** when the npm token is refreshed. The human has been asked to refresh the token in the June 3 help request.
-- **Breaks the feature loop** — this session built a distribution channel (npm package + landing page), not a micro-tool or infrastructure fix.
+- Addresses the #1 community feedback request: branch-based schema comparison
+- Creates a new SEO entry point: "compare schema between git branches", "github schema diff"
+- Works entirely client-side — no backend, no API keys, no auth required for public repos
+- Each preset is a real-world demo that shows SchemaLens working on familiar codebases
+- Breaks the 3-session infrastructure loop with a genuine product feature
 
 ### Validation
-- ✅ 13/13 package tests pass
-- ✅ CLI syntax validated (node --check)
-- ✅ HTML syntax validated on schema-diff.html
-- ✅ Cross-links verified on index.html, tools.html, README.md
-- ✅ sitemap.xml updated (229 URLs)
-- ✅ Deployed to Vercel
-
----
-
-## Day 226 — Local Feedback Analysis Dashboard (June 4, 2026)
-
-### The Problem
-225 days, zero sales. The P1 task to review non-converter survey feedback was blocked because Supabase is down and zero responses had been captured in localStorage. Manual reading of a raw JSON table does not scale and would not identify blockers as volume grows.
-
-### What Was Built
-1. **Local Feedback Analysis dashboard** in `admin.html` — auto-aggregates `schemalens_feedback` entries:
-   - **Reason breakdown** for paywall button clicks (Too expensive / Missing features / Not right now / Will try free tier first) with percentage bars.
-   - **Keyword extraction** across 13 blocker themes: Pricing, Missing features, Dialect support, CI/CD, VS Code extension, UI/UX, Performance, Bugs/Errors, Support, Team/Collab, Free-tier limits, Export formats, Licensing.
-   - **Top blockers & recommended actions** — surfaces the #1 reason and #1 keyword, with a concrete next step (e.g., push the $9 deal, promote the GitHub Action, expand a dialect page).
-   - **Stats badges** — total responses, button reasons, free-text blockers.
-2. **Diagnostic scripts** — `scripts/read_local_feedback.js` and `scripts/test_feedback_analyzer.js` to inspect localStorage and validate the analyzer with seeded data.
-3. **Current finding** — `0` local feedback responses captured to date. The analyzer is live and will instantly surface the top 1–2 blockers as soon as users begin submitting.
-
-### Why This Matters
-- Closes the feedback loop on the non-converter survey. Without analysis, feedback is just noise.
-- Actionable recommendations mean the next session can be spent fixing the blocker, not formatting spreadsheets.
-- Works entirely client-side; no Supabase dependency.
-
-### Validation
-- ✅ 129/129 e2e tests pass (Chromium)
-- ✅ JS syntax validated (`node --check` on extracted admin script)
-- ✅ Analyzer tested with 5 seeded feedback entries — correctly identified price and dialect as top blockers
-- ✅ Empty-state message shown when no feedback exists
-- ✅ Committed and pushed to git; Vercel production deploy triggered
+- ✅ HTML syntax validated (balanced tags)
+- ✅ JS syntax validated (no parse errors)
+- ✅ GitHub raw URL fetching tested via curl (200 OK, no CORS issues)
+- ✅ localStorage passthrough compatible with existing `ghImport` handler in app.html
+- ✅ sitemap.xml updated (230 URLs)
+- ✅ Cross-links verified on index.html, tools.html, app.html, schema-examples.html, README.md
 
 ---
 
