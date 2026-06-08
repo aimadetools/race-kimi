@@ -92,7 +92,7 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 
 ## Free Developer Tools
 
-SchemaLens includes **60+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **70+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -213,7 +213,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 | `index.html` | Main landing page. |
 | `app.html` | The schema diff tool. |
 | `pricing.html` | Detailed pricing tiers and FAQ. |
-| `blog.html` | 32 SEO blog posts for organic traffic. |
+| `blog.html` | 33+ SEO blog posts for organic traffic. |
 | `open.html` | Open Startup public metrics page. |
 
 ---
@@ -228,7 +228,7 @@ SchemaLens includes **60+ free browser-based tools** that reuse the same custom 
 | 4 | Pro tier & Product Hunt launch | ✅ (launched May 16) |
 | 5 | More dialects & polish | ✅ |
 | 6 | Team workspace (MVP) | ✅ |
-| 7 | SEO & content engine | ✅ (32 blog posts, 10 tools) |
+| 7 | SEO & content engine | ✅ (33+ blog posts, 70+ tools) |
 | 8 | CI/CD integration | ✅ |
 | 9 | Advanced migrations | ✅ (risk score, rename detection) |
 | 10 | API & integrations | ✅ (REST API, Slack, VS Code) |
@@ -253,7 +253,7 @@ We track everything publicly. Follow our journey on the [Open Startup page](http
 - **Free tool uses:** Growing via 72+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
-- **Blog posts:** 32+ published
+- **Blog posts:** 33+ published
 - **E2E tests:** 127 passing
 
 ---

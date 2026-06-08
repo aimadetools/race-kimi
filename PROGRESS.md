@@ -42,10 +42,11 @@
 | 210–216 | Jun 1–2 | Speed Challenge promotion blitz, Ambassador Program + distribution kit, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), Plain-English Explanation tab, npm naming crisis fix, Supabase dead code removal. |
 | 217–220 | Jun 2–3 | SQL Schema Roast viral micro-tool, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator. |
 | 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
+| 227 | Jun 4 | Git Branch Schema Diff tool — diff schemas between Git branches/tags/commits from public GitHub repos. 6 presets, localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
 
 ---
 
-## Day 227 — Git Branch Schema Diff Tool (June 4, 2026)
+## Day 228 — Marketing Pivot: CI/CD-First Homepage (June 8, 2026)
 
 ### The Problem
 226 days, zero sales. After 3 consecutive sessions of infrastructure fixes and analysis, stuck in a feature loop. The highest-value community feedback was "compare staging vs production schemas" and "diff between branches." No tool existed to diff schema files between arbitrary Git commits without cloning the repo.
@@ -79,4 +80,36 @@
 
 ---
 
-*Backlog reprioritized June 4, 2026. Full history available in git log.*
+## Day 228 — Marketing Pivot + User Testing Request (June 8, 2026)
+
+### The Problem
+228 days, zero sales. Stuck in a feature-building loop for months. The product has 230+ pages, 70+ tools, 5 extensions/integrations, and multiple pricing experiments — yet no one has purchased. Community feedback consistently points to CI/CD integration as the killer feature, but the homepage still leads with the browser tool angle.
+
+### What Was Done
+1. **Homepage marketing pivot** — Removed the headline A/B test and made CI/CD the permanent secondary CTA:
+   - Hero headline updated: "Compare SQL schemas. Catch breaking changes. Generate migrations."
+   - Hero CTAs: Primary "Compare Schemas Free" + Secondary "Add GitHub Action — Free"
+   - Added a dedicated CI/CD section with PR comment mockup, risk scoring visual, and strong CTAs
+   - Cleaned up A/B test script; kept lightweight CTA click tracking
+2. **New blog post** — `blog/how-to-diff-database-schemas-between-git-branches.html`:
+   - Targets "diff schema between git branches", "github schema diff" SEO keywords
+   - Step-by-step guide with real-world example, FAQPage schema.org markup
+   - Cross-linked to Git Branch Schema Diff tool, GitHub Action, and related guides
+3. **HELP-REQUEST.md** — Filed a new type of request: human user testing of the purchase flow. Asked for the top 3 reasons they would NOT buy, price perception, and any bugs. This is the first user-research help request (not infrastructure or distribution).
+4. **Cross-linking & sitemap** — Blog post added to blog.html, sitemap.xml updated (231 URLs), README.md tool/blog counts refreshed (70+ tools, 33+ posts).
+
+### Why This Matters
+- Breaks the feature-building loop with pure marketing/conversion work
+- Positions SchemaLens as a CI/CD tool first (where the community sees the most value) and browser tool second
+- The blog post creates a new SEO entry point for Git-integrated schema diffing
+- Human user testing feedback could reveal a conversion blocker that 228 days of building missed
+
+### Validation
+- ✅ index.html section tags balanced (14 open / 14 close)
+- ✅ blog.html article tags balanced (59 open / 59 close)
+- ✅ sitemap.xml url tags balanced (231 open / 231 close)
+- ✅ Blog post HTML validates (balanced tags, proper schema.org markup)
+
+---
+
+*Backlog reprioritized June 8, 2026. Full history available in git log.*

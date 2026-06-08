@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Diff Database Schemas Between Git Branches — SchemaLens</title>
+  <meta name="description" content="Compare database schema files between Git branches, tags, or commits without cloning the repo. Free browser-based tool with instant migration generation.">
+  <meta property="og:title" content="How to Diff Database Schemas Between Git Branches">
+  <meta property="og:description" content="Compare schema.sql between Git branches without cloning. Generate migration scripts instantly. Free tool.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-diff-database-schemas-between-git-branches.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Diff Database Schemas Between Git Branches",
+  "description": "Compare database schema files between Git branches, tags, or commits without cloning the repo. Free browser-based tool with instant migration generation.",
+  "url": "https://schemalens.tech/blog/how-to-diff-database-schemas-between-git-branches.html",
+  "datePublished": "2026-06-08",
+  "dateModified": "2026-06-08",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/how-to-diff-database-schemas-between-git-branches.html"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I diff schemas between any two Git commits?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. SchemaLens accepts any valid Git ref: branch names, tags, or full commit SHAs. As long as the repo is public on GitHub, you can compare schema files between any two points in history."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to clone the repository?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. SchemaLens fetches schema files directly from GitHub's raw content CDN. You only need the repo name, file path, and two branch/tag/commit references."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work with private repositories?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The browser-based Git Branch Diff tool currently supports public GitHub repos only. For private repos, use the SchemaLens GitHub Action inside your CI pipeline, or download the schema files manually and paste them into the main SchemaLens app."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What SQL dialects are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SchemaLens auto-detects the SQL dialect from the file content and supports PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. The generated migration scripts match whichever dialect your schema uses."
+      }
+    }
+  ]
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p, .blog-post li { line-height: 1.7; color: var(--text); }
+    .blog-post a { color: var(--primary); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .blog-post blockquote {
+      border-left: 3px solid var(--primary);
+      margin: 1.5rem 0;
+      padding-left: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .blog-post .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.06) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../features.html">Features</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<main class="section" style="padding-top: 40px;">
+  <div class="container blog-post">
+    <h1>How to Diff Database Schemas Between Git Branches</h1>
+    <p class="blog-meta">June 8, 2026 · 6 min read · <a href="../index.html">SchemaLens</a></p>
+
+    <p>One of the most common questions we hear from engineering teams is: <em>"How do I know what changed in my database schema between the branch I'm reviewing and production?"</em></p>
+
+    <p>Until recently, the answer involved a lot of manual work: clone the repo, check out both branches, export schemas, open them side by side, and squint at the differences. That friction meant schema reviews were often skipped — and breaking changes slipped into production.</p>
+
+    <p>Today, you can compare schema files between any two Git branches, tags, or commits <strong>directly in your browser</strong>, without cloning anything. Here's how.</p>
+
+    <div class="cta-box">
+      <h3>🌿 Try it now</h3>
+      <p>Compare schema files between Git branches instantly. No clone, no install, no signup.</p>
+      <a href="../tools/git-branch-schema-diff.html" class="btn btn-primary">Open Git Branch Schema Diff →</a>
+    </div>
+
+    <h2>The Problem: Schema Reviews Are Invisible</h2>
+
+    <p>Code reviews are standard practice. Every PR gets line-by-line scrutiny. But schema changes? They often get a cursory glance at best. The problem is tooling:</p>
+
+    <ul>
+      <li><strong>ORM migrations hide the real schema.</strong> Reviewing a Rails <code>db/migrate</code> file or a Prisma migration tells you <em>what the developer intended</em>, not the actual end state.</li>
+      <li><strong>Schema dumps are huge.</strong> A <code>pg_dump</code> or <code>mysqldump</code> output for a 50-table schema is thousands of lines. No one wants to read that in a PR diff.</li>
+      <li><strong>Context switching kills focus.</strong> To verify a schema change, you leave the PR, open your database tool, export both schemas, and compare them manually. Most reviewers skip this step.</li>
+    </ul>
+
+    <p>The result: dropped columns, missing indexes, and type changes that break production — all approved because the reviewer never saw the actual schema diff.</p>
+
+    <h2>The Solution: Browser-Based Branch Comparison</h2>
+
+    <p>SchemaLens now supports comparing schema files between any two Git refs from public GitHub repositories. Here's what that means in practice:</p>
+
+    <ol>
+      <li>Paste a GitHub repo URL (e.g., <code>rails/rails</code>)</li>
+      <li>Enter the schema file path (e.g., <code>db/schema.rb</code> or <code>schema.sql</code>)</li>
+      <li>Pick a base branch/tag/commit (e.g., <code>main</code>)</li>
+      <li>Pick a head branch/tag/commit (e.g., <code>feature/user-roles</code>)</li>
+      <li>Click <strong>Compare</strong> and see the semantic diff instantly</li>
+    </ol>
+
+    <p>The tool fetches both files directly from GitHub's raw content CDN, parses them with SchemaLens's custom SQL parser, and shows you a visual diff: tables added or removed, columns changed, indexes modified, constraints updated. It also generates the migration script to get from base to head.</p>
+
+    <h2>Real-World Example: Reviewing a Feature Branch</h2>
+
+    <p>Imagine your team is reviewing a PR that adds a <code>role</code> column to the <code>users</code> table and creates a new <code>permissions</code> table. The PR includes the migration files, but you want to verify the end-state schema is correct.</p>
+
+    <p>Instead of checking out the branch locally, you open the <a href="../tools/git-branch-schema-diff.html">Git Branch Schema Diff</a> tool and enter:</p>
+
+    <pre>Repo:   your-org/your-app
+File:   db/schema.sql
+Base:   main
+Head:   feature/user-permissions</pre>
+
+    <p>Within seconds, you see:</p>
+
+    <ul>
+      <li>✅ <code>users.role</code> added as <code>VARCHAR(50) NOT NULL DEFAULT 'user'</code></li>
+      <li>✅ New table <code>permissions</code> with correct foreign key to <code>users.id</code></li>
+      <li>⚠️ <code>users.email</code> lost its <code>UNIQUE</code> constraint — <strong>potential breaking change</strong></li>
+    </ul>
+
+    <p>You leave a PR comment about the missing unique constraint, the author fixes it, and a production incident is prevented.</p>
+
+    <h2>When to Use Branch Diff vs. CI/CD Integration</h2>
+
+    <p>SchemaLens offers two complementary workflows for catching schema changes:</p>
+
+    <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+      <thead>
+        <tr style="border-bottom: 2px solid var(--border);">
+          <th style="text-align:left; padding: 8px;">Workflow</th>
+          <th style="text-align:left; padding: 8px;">Best For</th>
+          <th style="text-align:left; padding: 8px;">Trigger</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px;"><a href="../tools/git-branch-schema-diff.html">Browser Branch Diff</a></td>
+          <td style="padding: 8px;">Ad-hoc reviews, open source analysis, debugging</td>
+          <td style="padding: 8px;">Manual — whenever you need it</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px;"><a href="../github-action.html">GitHub Action</a></td>
+          <td style="padding: 8px;">Automated checks on every PR, team enforcement</td>
+          <td style="padding: 8px;">Automatic — runs in CI on every push</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>For individual developers and occasional reviews, the browser tool is perfect. For teams that want to enforce schema review on every PR, the <a href="../github-action.html">GitHub Action</a> posts diff summaries directly as PR comments and can fail the build on breaking changes.</p>
+
+    <h2>Supported Repos and File Formats</h2>
+
+    <p>The browser-based branch diff works with any public GitHub repository. It auto-detects the SQL dialect from the file content, so you can compare:</p>
+
+    <ul>
+      <li>Raw SQL dumps (<code>schema.sql</code>, <code>dump.sql</code>)</li>
+      <li>Rails schema files (<code>db/schema.rb</code> — partial support for Ruby DSL)</li>
+      <li>Django migration summaries</li>
+      <li>Any file containing <code>CREATE TABLE</code> statements</li>
+    </ul>
+
+    <p>Both the base and head can be any valid Git reference: branch names, tags (e.g., <code>v2.1.0</code>), or full 40-character commit SHAs.</p>
+
+    <h2>Try It on Real Projects</h2>
+
+    <p>The tool includes presets for well-known open source projects so you can see how it works immediately:</p>
+
+    <ul>
+      <li><strong>Rails:</strong> Compare <code>db/schema.rb</code> between <code>7-0-stable</code> and <code>main</code></li>
+      <li><strong>Django:</strong> Compare <code>django/db/backends/postgresql/schema.py</code> between releases</li>
+      <li><strong>WordPress:</strong> Compare <code>wp-admin/includes/schema.php</code> between versions</li>
+      <li><strong>Supabase:</strong> Compare <code>supabase/migrations</code> files between branches</li>
+    </ul>
+
+    <p>These presets are not just demos — they're useful for understanding how mature projects evolve their schemas over time.</p>
+
+    <h2>From Diff to Migration</h2>
+
+    <p>Seeing the diff is only half the value. Once SchemaLens identifies the changes, it can generate the migration script in your chosen dialect:</p>
+
+    <pre>-- PostgreSQL
+ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
+
+CREATE TABLE permissions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  resource VARCHAR(100) NOT NULL,
+  action VARCHAR(50) NOT NULL
+);
+
+CREATE INDEX idx_permissions_user_id ON permissions(user_id);</pre>
+
+    <p>Copy, paste into your migration framework, and deploy. The entire workflow — from "I wonder what changed" to "here's the migration" — takes under a minute.</p>
+
+    <h2>Privacy and Security</h2>
+
+    <p>Because SchemaLens runs entirely in your browser, the schema files are fetched from GitHub's CDN directly to your machine. They never pass through SchemaLens servers. For public repositories, this means zero authentication and zero data retention.</p>
+
+    <p>For private repositories, use the <a href="../github-action.html">GitHub Action</a> inside your own CI environment, or download the schema files and use the main <a href="../app.html">SchemaLens app</a> offline.</p>
+
+    <div class="cta-box">
+      <h3>Start comparing schemas between branches</h3>
+      <p>Free. No signup. No clone required.</p>
+      <a href="../tools/git-branch-schema-diff.html" class="btn btn-primary" style="margin-right: 8px;">Open Git Branch Diff →</a>
+      <a href="../github-action.html" class="btn btn-secondary">Add GitHub Action →</a>
+    </div>
+
+    <h2>Related Reading</h2>
+    <ul>
+      <li><a href="../staging-vs-production-schema-diff.html">How to Compare Staging vs Production Schemas</a></li>
+      <li><a href="../github-action.html">SchemaLens GitHub Action Setup Guide</a></li>
+      <li><a href="../blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+      <li><a href="../blog/schema-diff-pr-comments-github-action.html">How to Add Schema Diff Comments to Every Pull Request</a></li>
+      <li><a href="../blog/sync-database-schemas-staging-production.html">Sync Database Schemas: Staging to Production</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer style="border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px;">
+  <div class="container" style="text-align: center;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Built with 💜 by <a href="../index.html">SchemaLens</a> · 
+      <a href="../open.html">Open Startup</a> · 
+      <a href="../open-source.html">Open Source</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

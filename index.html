@@ -77,89 +77,24 @@
     window.PH_RESULTS = { enabled: false, upvotes: 0, ranking: 0, comments: 0, badgeUrl: '' };
   </script>
   <script>
-    // Homepage A/B tests (May 2026)
+    // Homepage CTA tracking (June 2026)
     (function() {
-      // Test 1: Headline variant (control = tool-first, cli = CLI-first, cicd = CI/CD-first)
-      const headlineKey = 'sl_headline_variant_v2';
-      let headlineVariant = localStorage.getItem(headlineKey);
-      if (!headlineVariant) {
-        const r = Math.random();
-        if (r < 0.33) headlineVariant = 'control';
-        else if (r < 0.66) headlineVariant = 'cli';
-        else headlineVariant = 'cicd';
-        localStorage.setItem(headlineKey, headlineVariant);
-      }
-
-      // Test 2: Hero badge variant (CLI pill vs VS Code pill vs neither vs both)
-      const badgeKey = 'sl_badge_variant_v1';
-      let badgeVariant = localStorage.getItem(badgeKey);
-      if (!badgeVariant) {
-        const r = Math.random();
-        if (r < 0.25) badgeVariant = 'both';
-        else if (r < 0.5) badgeVariant = 'cli-only';
-        else if (r < 0.75) badgeVariant = 'vscode-only';
-        else badgeVariant = 'neither';
-        localStorage.setItem(badgeKey, badgeVariant);
-      }
-
-      function applyVariants() {
-        if (typeof track === 'function') {
-          track('ab_test_assigned', { variant: headlineVariant, test: 'homepage_headline_may2026_v2' });
-          track('ab_test_assigned', { variant: badgeVariant, test: 'homepage_badge_may2026' });
-        }
-
-        // Headline test
-        if (headlineVariant === 'cli') {
-          const h1 = document.querySelector('header.hero h1');
-          if (h1) {
-            h1.innerHTML = 'Generate database migrations<br><span>without the CLI.</span><br>Compare schemas free.';
-          }
-        }
-        if (headlineVariant === 'cicd') {
-          const h1 = document.querySelector('header.hero h1');
-          if (h1) {
-            h1.innerHTML = 'Catch breaking schema changes<br><span>in every PR.</span><br>Before production.';
-          }
-          const p = document.querySelector('header.hero > p');
-          if (p) {
-            p.innerHTML = 'A free GitHub Action that diffs <code>schema.sql</code> on every pull request, posts a risk-scored diff summary, and blocks breaking changes before merge. Plus 70+ browser-based SQL tools — no signup needed.';
-          }
-          const cta = document.getElementById('hero-cta');
-          if (cta) {
-            cta.href = 'github-action.html';
-            cta.textContent = 'Add GitHub Action — Free';
-          }
-        }
-
-        // Badge test
-        const cliBadge = document.getElementById('hero-cli-badge');
-        const vscodeBadge = document.getElementById('hero-vscode-badge');
-        if (cliBadge) {
-          cliBadge.style.display = (badgeVariant === 'both' || badgeVariant === 'cli-only') ? '' : 'none';
-        }
-        if (vscodeBadge) {
-          vscodeBadge.style.display = (badgeVariant === 'both' || badgeVariant === 'vscode-only') ? '' : 'none';
-        }
-
-        // Track CTA clicks with both variant labels
-        document.querySelectorAll('header.hero .hero-actions a, #hero-cli-badge a, #hero-vscode-badge a').forEach(function(a) {
+      function applyTracking() {
+        document.querySelectorAll('header.hero .hero-actions a, #hero-cli-badge a, #hero-vscode-badge a, #hero-gha-badge a, #hero-chrome-badge a').forEach(function(a) {
           a.addEventListener('click', function() {
             if (typeof track === 'function') {
               track('cta_click', {
-                headline_variant: headlineVariant,
-                badge_variant: badgeVariant,
-                test: 'homepage_combined_may2026',
+                test: 'homepage_june2026',
                 cta: a.textContent.trim()
               });
             }
           });
         });
       }
-
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyVariants);
+        document.addEventListener('DOMContentLoaded', applyTracking);
       } else {
-        applyVariants();
+        applyTracking();
       }
     })();
   </script>
@@ -524,7 +459,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 3 19.5"/><path d="M12 2a10 10 0 0 0-3 19.5"/></svg>
         Core engine is <a href="open-source.html" style="color:var(--success);text-decoration:underline;">open source (MIT)</a>
       </div>
-      <h1>Compare SQL schemas.<br><span>Generate migrations.</span><br>Zero setup.</h1>
+      <h1>Compare SQL schemas.<br><span>Catch breaking changes.</span><br>Generate migrations.</h1>
       <p>Paste two <code>CREATE TABLE</code> dumps. Spot every difference instantly. Get ready-to-run <code>ALTER TABLE</code> scripts in PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — in your browser, CLI, or VS Code.</p>
       <div style="margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
         <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:0.8rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> PostgreSQL</span>
@@ -534,8 +469,8 @@
         <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:0.8rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> Oracle</span>
       </div>
       <div class="hero-actions">
-        <a href="app.html" class="btn btn-primary btn-lg" id="hero-cta">Compare Schemas Free — Pro Unlocked</a>
-        <a href="get-started.html" class="btn btn-secondary btn-lg">Find Your Setup</a>
+        <a href="app.html" class="btn btn-primary btn-lg" id="hero-cta">Compare Schemas Free</a>
+        <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action — Free</a>
       </div>
       <div style="margin-top:14px;font-size:0.85rem;color:var(--text-muted);">
         🚀 <a href="founding-member.html" style="color:var(--success);font-weight:600;">Get free lifetime Pro when you share SchemaLens with your network →</a>
@@ -888,6 +823,37 @@
           <a href="app.html?demo=oracle" class="btn btn-primary">Run Oracle Demo</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.06) 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); border-radius: 999px; padding: 6px 16px; font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-bottom: 16px;">
+          <span>🔄</span> CI/CD Integration
+        </div>
+        <h2 class="section-title" style="margin-bottom: 8px;">Catch breaking schema changes in every PR</h2>
+        <p class="section-subtitle" style="max-width: 600px; margin: 0 auto;">Add our free GitHub Action to your repo. It diffs <code>schema.sql</code> on every pull request, posts a risk-scored summary, and fails the build on dangerous migrations.</p>
+      </div>
+      <div style="max-width: 720px; margin: 0 auto 28px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.12);">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--code-bg); border-bottom: 1px solid var(--border);">
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">💬 SchemaLens Bot commented on PR #142</span>
+        </div>
+        <div style="padding: 16px 20px; font-size: 0.9rem; line-height: 1.6;">
+          <p style="margin: 0 0 10px;"><strong>🔍 Schema Diff Summary</strong> · 3 tables changed · <span style="color: var(--danger); font-weight: 600;">1 breaking change detected</span></p>
+          <div style="background: var(--surface); border-radius: 8px; padding: 12px; margin-bottom: 10px; font-family: var(--mono); font-size: 0.8rem;">
+            <div style="color: var(--success); margin-bottom: 4px;">+ ADDED users.role VARCHAR(50)</div>
+            <div style="color: var(--warning); margin-bottom: 4px;">~ MODIFIED posts.title VARCHAR(100) → VARCHAR(255)</div>
+            <div style="color: var(--danger);">⚠️ BREAKING: users.email UNIQUE constraint removed</div>
+          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Generated migration script available. <a href="github-action.html" style="color: var(--primary);">View full diff →</a></p>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+        <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action — Free</a>
+        <a href="ci-demo.html" class="btn btn-secondary btn-lg">See Live Demo</a>
+      </div>
+      <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">Also works with GitLab CI, CircleCI, and Jenkins. <a href="github-action.html" style="color: var(--primary);">View all integrations →</a></p>
     </div>
   </section>
 
