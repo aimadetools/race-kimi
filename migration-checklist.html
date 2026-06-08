@@ -299,7 +299,8 @@
       <div class="form-message" id="formMessage"></div>
 
       <div class="share-bar">
-        <button class="btn-secondary" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <a href="assets/migration-checklist.pdf" download class="btn-secondary">📄 Download PDF</a>
+        <button class="btn-secondary" onclick="window.print()">🖨️ Print</button>
         <button class="btn-secondary" onclick="copyLink()">🔗 Copy Link</button>
         <a href="https://twitter.com/intent/tweet?text=Database%20Migration%20Safety%20Checklist%20%E2%80%94%2012%20points%20to%20review%20before%20every%20deploy&url=https%3A%2F%2Fschemalens.tech%2Fmigration-checklist.html" target="_blank" rel="noopener" class="btn-secondary">𝕏 Share on X</a>
       </div>
@@ -493,7 +494,7 @@
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        msg.textContent = '✅ Checklist sent! Check your inbox for the welcome email.';
+        msg.textContent = '✅ Checklist sent! Download the PDF above or check your inbox for the welcome email.';
         msg.className = 'form-message success';
         document.getElementById('emailInput').value = '';
         if (window.trackEvent) trackEvent('checklist_subscribe', { source: 'migration-checklist' });
