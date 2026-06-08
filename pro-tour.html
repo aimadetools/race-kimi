@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Pro Tour — See What You're Missing</title>
+  <meta name="description" content="Interactive tour of SchemaLens Pro features. Unlimited tables, full migration SQL, PDF export, breaking change detection, and more. $39 lifetime.">
+  <meta property="og:title" content="SchemaLens Pro Tour — See What You're Missing">
+  <meta property="og:description" content="Interactive tour of SchemaLens Pro features. Unlimited tables, full migration SQL, PDF export, breaking change detection, and more. $39 lifetime.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/pro-tour.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root { --bg:#0b0b0f; --surface:#14141b; --border:#23232d; --text:#e5e5e5; --text-muted:#9ca3af; --primary:#6366f1; --primary-light:#818cf8; --success:#10b981; --danger:#ef4444; --warning:#f59e0b; --radius:10px; }
+    html[data-theme="light"] { --bg:#f8f9fb; --surface:#fff; --border:#e5e7eb; --text:#111827; --text-muted:#6b7280; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    .pt-nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(11,11,15,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+    .pt-nav-inner { max-width:1100px; margin:0 auto; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; }
+    .pt-logo { display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--text); font-weight:700; font-size:1.05rem; }
+    .pt-logo svg { color:var(--primary); }
+    .pt-cta { background:var(--primary); color:#fff; text-decoration:none; padding:8px 18px; border-radius:20px; font-weight:600; font-size:0.85rem; transition:transform .15s; }
+    .pt-cta:hover { transform:translateY(-1px); }
+    .pt-hero { text-align:center; padding:120px 24px 60px; max-width:720px; margin:0 auto; }
+    .pt-hero h1 { font-size:2.4rem; font-weight:800; line-height:1.15; margin-bottom:12px; }
+    .pt-hero p { font-size:1.1rem; color:var(--text-muted); margin-bottom:28px; }
+    .pt-hero .price { font-size:1.3rem; font-weight:700; color:var(--success); margin-bottom:8px; }
+    .pt-hero .price span { text-decoration:line-through; color:var(--text-muted); font-size:1rem; margin-right:6px; }
+    .pt-step { max-width:1100px; margin:0 auto; padding:60px 24px; display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:center; }
+    .pt-step:nth-child(even) { direction:rtl; }
+    .pt-step:nth-child(even) > * { direction:ltr; }
+    .pt-step-text h2 { font-size:1.6rem; font-weight:700; margin-bottom:12px; }
+    .pt-step-text p { color:var(--text-muted); font-size:1rem; margin-bottom:16px; }
+    .pt-step-text ul { list-style:none; padding:0; margin:0 0 20px; }
+    .pt-step-text li { padding:6px 0; color:var(--text); font-size:0.95rem; display:flex; align-items:flex-start; gap:8px; }
+    .pt-step-text li::before { content:"✓"; color:var(--success); font-weight:700; flex-shrink:0; }
+    .pt-mockup { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.35); }
+    .pt-mockup-header { display:flex; align-items:center; gap:6px; padding:10px 14px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); }
+    .pt-dot { width:10px; height:10px; border-radius:50%; }
+    .pt-dot.r { background:var(--danger); } .pt-dot.y { background:var(--warning); } .pt-dot.g { background:var(--success); }
+    .pt-mockup-body { padding:16px; font-size:0.85rem; font-family:ui-monospace,monospace; }
+    .pt-badge { display:inline-block; background:rgba(99,102,241,0.15); color:var(--primary-light); font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
+    .pt-bar { height:28px; border-radius:6px; background:var(--bg); margin-bottom:8px; display:flex; align-items:center; padding:0 10px; font-size:0.75rem; color:var(--text-muted); animation:ptSlideIn 0.8s ease both; }
+    .pt-bar.add { border-left:3px solid var(--success); }
+    .pt-bar.mod { border-left:3px solid var(--warning); }
+    .pt-bar.del { border-left:3px solid var(--danger); }
+    .pt-sql { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:12px; font-size:0.78rem; line-height:1.6; color:var(--text-muted); overflow-x:auto; animation:ptFadeIn 1s ease both; }
+    .pt-sql .kw { color:var(--primary-light); font-weight:600; }
+    .pt-sql .st { color:var(--success); }
+    .pt-sql .cmt { color:var(--text-muted); font-style:italic; }
+    .pt-risk { display:flex; align-items:center; gap:10px; margin:12px 0; }
+    .pt-risk-bar { flex:1; height:8px; background:var(--bg); border-radius:4px; overflow:hidden; }
+    .pt-risk-fill { height:100%; border-radius:4px; width:0; animation:ptRiskGrow 1.2s ease forwards; }
+    .pt-risk-fill.low { background:var(--success); }
+    .pt-risk-fill.high { background:var(--danger); }
+    .pt-export-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .pt-export-chip { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 12px; font-size:0.75rem; color:var(--text-muted); animation:ptSlideUp 0.5s ease both; }
+    .pt-footer-cta { text-align:center; padding:80px 24px; background:linear-gradient(180deg, transparent, rgba(99,102,241,0.06)); }
+    .pt-footer-cta h2 { font-size:2rem; font-weight:800; margin-bottom:12px; }
+    .pt-footer-cta p { color:var(--text-muted); font-size:1.05rem; max-width:520px; margin:0 auto 24px; }
+    .pt-btn-lg { display:inline-block; background:var(--primary); color:#fff; text-decoration:none; padding:14px 32px; border-radius:10px; font-weight:700; font-size:1.05rem; transition:transform .15s, box-shadow .15s; }
+    .pt-btn-lg:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,0.3); }
+    .pt-guarantee { font-size:0.85rem; color:var(--text-muted); margin-top:12px; }
+    @keyframes ptSlideIn { from { opacity:0; transform:translateX(-12px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes ptFadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes ptRiskGrow { to { width:var(--w); } }
+    @keyframes ptSlideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width:860px) {
+      .pt-step { grid-template-columns:1fr; }
+      .pt-step:nth-child(even) { direction:ltr; }
+      .pt-hero h1 { font-size:1.8rem; }
+    }
+  </style>
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) document.documentElement.dataset.theme = 'light';
+  })();
+  </script>
+</head>
+<body>
+  <nav class="pt-nav">
+    <div class="pt-nav-inner">
+      <a href="/" class="pt-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        SchemaLens
+      </a>
+      <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="pt-cta" target="_blank" rel="noopener">Get Pro — $39</a>
+    </div>
+  </nav>
+
+  <section class="pt-hero">
+    <h1>See what Pro unlocks</h1>
+    <p>The free tier shows you the problem. Pro gives you the solution — instantly.</p>
+    <div class="price"><span>$99</span> $39 lifetime</div>
+    <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="pt-btn-lg" target="_blank" rel="noopener">⚡ Upgrade to Pro — $39</a>
+    <p class="pt-guarantee">30-day money-back guarantee · No subscription · Instant license</p>
+  </section>
+
+  <!-- Step 1: Unlimited Tables -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Free vs Pro</span>
+      <h2>Unlimited schema comparisons</h2>
+      <p>The free tier stops at 15 tables. Most production schemas have 30, 50, or 200+ tables. Pro handles them all.</p>
+      <ul>
+        <li>Diff schemas of any size — no table limits</li>
+        <li>Compare entire databases, not just snippets</li>
+        <li>Batch-process multi-schema migrations</li>
+      </ul>
+      <a href="app.html" style="color:var(--primary-light);font-weight:600;">Try the free tier first →</a>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:600;">Visual Diff</span>
+          <span style="font-size:0.7rem;color:var(--danger);background:rgba(239,68,68,0.12);padding:2px 8px;border-radius:4px;">Free limit reached</span>
+        </div>
+        <div class="pt-bar add" style="animation-delay:0.1s">users — 4 columns added</div>
+        <div class="pt-bar mod" style="animation-delay:0.2s">orders — 2 columns modified</div>
+        <div class="pt-bar del" style="animation-delay:0.3s">old_logs — table removed</div>
+        <div class="pt-bar add" style="animation-delay:0.4s">audit_trail — new table</div>
+        <div style="margin-top:10px;padding:10px;background:rgba(239,68,68,0.08);border:1px dashed var(--danger);border-radius:6px;text-align:center;font-size:0.8rem;color:var(--danger);">
+          🔒 23 more tables hidden — <a href="#" style="color:var(--primary-light);">Unlock Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: Full Migration SQL -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Pro Feature</span>
+      <h2>Complete migration scripts</h2>
+      <p>Free shows a preview. Pro generates the full <code>ALTER TABLE</code> script for every change — copy, paste, deploy.</p>
+      <ul>
+        <li>Forward migration: get from old schema to new</li>
+        <li>Rollback migration: reverse every change safely</li>
+        <li>All 5 dialects: PostgreSQL, MySQL, SQLite, SQL Server, Oracle</li>
+      </ul>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="font-weight:600;margin-bottom:8px;">Migration SQL</div>
+        <div class="pt-sql" style="animation-delay:0.2s">
+<span class="kw">ALTER TABLE</span> users <span class="kw">ADD COLUMN</span> phone <span class="st">VARCHAR</span>(20);<br>
+<span class="kw">ALTER TABLE</span> users <span class="kw">ADD COLUMN</span> preferences JSONB <span class="kw">DEFAULT</span> '{}';<br>
+<span class="kw">ALTER TABLE</span> orders <span class="kw">ALTER COLUMN</span> total <span class="kw">TYPE</span> <span class="st">DECIMAL</span>(12,2);<br>
+<span class="kw">CREATE INDEX</span> CONCURRENTLY idx_users_phone <span class="kw">ON</span> users(phone);<br>
+<span class="kw">CREATE TABLE</span> audit_logs (...);
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <span style="background:rgba(16,185,129,0.12);color:var(--success);font-size:0.7rem;padding:3px 10px;border-radius:4px;">✓ 12 changes generated</span>
+          <span style="background:rgba(99,102,241,0.12);color:var(--primary-light);font-size:0.7rem;padding:3px 10px;border-radius:4px;">PostgreSQL dialect</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3: Breaking Changes -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Pro Feature</span>
+      <h2>Breaking change detection</h2>
+      <p>Pro scans every diff for production-killing changes: dropped columns, type mismatches, lost constraints. Each diff gets a risk score.</p>
+      <ul>
+        <li>0–100 risk score on every comparison</li>
+        <li>Flags dropped columns referenced by views</li>
+        <li>Warns on NOT NULL additions without defaults</li>
+        <li>Detects unsafe index drops</li>
+      </ul>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="font-weight:600;margin-bottom:8px;">Risk Assessment</div>
+        <div class="pt-risk">
+          <span style="font-size:0.8rem;font-weight:700;min-width:50px;">72/100</span>
+          <div class="pt-risk-bar"><div class="pt-risk-fill high" style="--w:72%;"></div></div>
+          <span style="font-size:0.7rem;color:var(--danger);font-weight:600;">High Risk</span>
+        </div>
+        <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:6px;padding:10px;margin-bottom:8px;">
+          <div style="font-size:0.8rem;font-weight:600;color:var(--danger);margin-bottom:4px;">⚠️ BREAKING CHANGE</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">Dropped column <code>legacy_id</code> is referenced by view <code>user_profiles</code>. The view will fail after deployment.</div>
+        </div>
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:10px;">
+          <div style="font-size:0.8rem;font-weight:600;color:var(--warning);margin-bottom:4px;">⚠️ WARNING</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">Adding <code>NOT NULL</code> to <code>email</code> without a <code>DEFAULT</code> will fail on existing rows.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 4: Export Formats -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Pro Feature</span>
+      <h2>Export to Markdown, PDF & JSON</h2>
+      <p>Share schema reviews with your team in the format they prefer. Perfect for PR descriptions, compliance docs, and Slack updates.</p>
+      <ul>
+        <li>Markdown: paste directly into GitHub PRs</li>
+        <li>PDF: attach to compliance or audit records</li>
+        <li>JSON: pipe into CI/CD pipelines</li>
+        <li>SQL: run migrations immediately</li>
+      </ul>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="font-weight:600;margin-bottom:10px;">Export</div>
+        <div class="pt-export-row">
+          <div class="pt-export-chip" style="animation-delay:0.1s">📋 Markdown</div>
+          <div class="pt-export-chip" style="animation-delay:0.2s">📄 PDF</div>
+          <div class="pt-export-chip" style="animation-delay:0.3s">{ } JSON</div>
+          <div class="pt-export-chip" style="animation-delay:0.4s">🐬 PostgreSQL</div>
+          <div class="pt-export-chip" style="animation-delay:0.5s">🐬 MySQL</div>
+          <div class="pt-export-chip" style="animation-delay:0.6s">📦 SQLite</div>
+        </div>
+        <div class="pt-sql" style="margin-top:14px;animation-delay:0.5s">
+## Schema Diff Report<br><br>
+**Tables:** 3 added, 2 modified, 1 removed<br>
+**Risk Score:** 72/100 (High)<br>
+**Breaking Changes:** 2<br><br>
+### Changes<br>
+| Table | Change | Type |<br>
+|-------|--------|------|<br>
+| users | +phone | Added |<br>
+| orders | ~total | Modified |
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 5: Rollback -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Pro Feature</span>
+      <h2>Rollback safety net</h2>
+      <p>Every Pro migration includes a reverse script. If your deploy goes wrong, you have the exact commands to undo it — tested and ready.</p>
+      <ul>
+        <li>Auto-generated rollback for every change</li>
+        <li>Preserves original column types and constraints</li>
+        <li>Handles table recreations safely</li>
+      </ul>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <span style="font-weight:600;">Rollback SQL</span>
+          <span style="font-size:0.7rem;color:var(--success);background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:4px;">Auto-generated</span>
+        </div>
+        <div class="pt-sql" style="animation-delay:0.2s">
+<span class="cmt">-- Reverse all changes if deployment fails</span><br>
+<span class="kw">ALTER TABLE</span> users <span class="kw">DROP COLUMN</span> phone;<br>
+<span class="kw">ALTER TABLE</span> users <span class="kw">DROP COLUMN</span> preferences;<br>
+<span class="kw">ALTER TABLE</span> orders <span class="kw">ALTER COLUMN</span> total <span class="kw">TYPE</span> <span class="st">DECIMAL</span>(10,2);<br>
+<span class="kw">DROP INDEX</span> idx_users_phone;<br>
+<span class="kw">DROP TABLE</span> audit_logs;
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 6: Shareable Links -->
+  <section class="pt-step">
+    <div class="pt-step-text">
+      <span class="pt-badge">Pro Feature</span>
+      <h2>Shareable diff links</h2>
+      <p>Generate a permanent link to any schema comparison. Send it to teammates for async review — no screenshots, no copy-paste.</p>
+      <ul>
+        <li>One-click link generation</li>
+        <li>Links include full diff state</li>
+        <li>Perfect for Slack, email, or PR comments</li>
+      </ul>
+    </div>
+    <div class="pt-mockup">
+      <div class="pt-mockup-header"><span class="pt-dot r"></span><span class="pt-dot y"></span><span class="pt-dot g"></span></div>
+      <div class="pt-mockup-body">
+        <div style="font-weight:600;margin-bottom:10px;">Share</div>
+        <div style="display:flex;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;">
+          <span style="font-size:0.75rem;color:var(--text-muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://schemalens.tech/app.html?share=abc123...</span>
+          <span style="font-size:0.7rem;color:var(--success);font-weight:600;">✓ Copied</span>
+        </div>
+        <div style="margin-top:12px;font-size:0.8rem;color:var(--text-muted);">
+          <div style="margin-bottom:6px;">Shared via:</div>
+          <div style="display:flex;gap:8px;">
+            <span style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:0.7rem;">🐦 X / Twitter</span>
+            <span style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:0.7rem;">💼 LinkedIn</span>
+            <span style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:0.7rem;">📋 Copy Link</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-footer-cta">
+    <h2>One payment. Forever.</h2>
+    <p>SchemaLens Pro is $39 once — no subscription, no renewal, no surprise charges. Use it for every migration for the rest of your career.</p>
+    <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="pt-btn-lg" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
+    <p class="pt-guarantee">30-day money-back guarantee · Instant license key delivery · Used by developers at startups and Fortune 500s</p>
+    <p style="margin-top:16px;font-size:0.85rem;"><a href="open-source-license.html" style="color:var(--primary-light);">Open source maintainer? Get Pro free →</a> · <a href="student-license.html" style="color:var(--primary-light);">Student? Get Pro free →</a></p>
+  </section>
+
+  <footer style="text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--text-muted);font-size:0.85rem;">
+    <a href="/" style="color:var(--text-muted);text-decoration:none;">SchemaLens</a> — Compare SQL schemas. Spot changes instantly. Generate migrations.
+  </footer>
+</body>
+</html>
