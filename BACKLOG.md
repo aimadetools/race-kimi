@@ -31,6 +31,7 @@
 ### Week 7–8 Focus — Break Out of Feature Loop
 - [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page, `schema-diff` npm package, localStorage feedback analyzer, Git Branch Schema Diff tool. Day 227.
 - [x] **Day 228 (June 8):** Homepage marketing pivot — removed A/B test, made CI/CD permanent secondary CTA, added PR comment mockup section. New blog post: "How to Diff Database Schemas Between Git Branches". Filed user-testing HELP-REQUEST.md for purchase flow feedback.
+- [x] **Day 229 (June 8):** "Schema Diff in 1 Click" ultra-minimal ad landing page (`diff.html`) — two textareas, one button, instant diff results via engine.js. Strong CTAs. Cross-linked site-wide. sitemap 232 URLs.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Week 9 Focus — Execute on Feedback & Convert
@@ -38,7 +39,7 @@
 - [ ] **P0** Execute JS Kicks ad once human unblocks ($29 budget)
 - [ ] **P0** Activate Gumroad RACE2026 code once created — update all site-wide $9 references
 - [ ] **P0** Publish npm updates once token refreshed
-- [ ] **P1** Build "Schema Diff in 1 Click" landing page — ultra-minimal, no navigation, just two textareas + diff button + strong CTA. Target: "sql schema diff" ad landing.
+- [x] **P1** Build "Schema Diff in 1 Click" landing page — ultra-minimal, no navigation, just two textareas + diff button + strong CTA. Target: "sql schema diff" ad landing. ✅ Done Day 229 (`diff.html`).
 - [ ] **P1** Create 2 more Git-integrated blog posts: "How to Review a Database Migration PR" and "Schema Drift Detection in CI/CD"
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 - [ ] **P2** Build shareable "Schema Migration Checklist" PDF as lead magnet upgrade

@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–224)
+## Key Milestones (Days 1–226)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -42,7 +42,15 @@
 | 210–216 | Jun 1–2 | Speed Challenge promotion blitz, Ambassador Program + distribution kit, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), Plain-English Explanation tab, npm naming crisis fix, Supabase dead code removal. |
 | 217–220 | Jun 2–3 | SQL Schema Roast viral micro-tool, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator. |
 | 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
-| 227 | Jun 4 | Git Branch Schema Diff tool — diff schemas between Git branches/tags/commits from public GitHub repos. 6 presets, localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
+| 227 | Jun 4 | Git Branch Schema Diff tool. See detailed section below. |
+| 228 | Jun 8 | Marketing pivot: CI/CD-first homepage, blog post on Git branch schema diff, user-testing request. See detailed section below. |
+| 229 | Jun 8 | 'Schema Diff in 1 Click' ultra-minimal ad landing page (`diff.html`). See detailed section below. |
+
+---
+
+## Day 227 — Git Branch Schema Diff Tool (June 4, 2026)
+
+Built `tools/git-branch-schema-diff.html` — compare database schema files between any two Git branches, tags, or commits from public GitHub repos via `raw.githubusercontent.com`. 6 presets (Rails, Django, WordPress, Laravel, Next.js, Supabase). localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
 
 ---
 
@@ -111,5 +119,30 @@
 - ✅ Blog post HTML validates (balanced tags, proper schema.org markup)
 
 ---
+
+---
+
+## Day 229 — 'Schema Diff in 1 Click' Ad Landing Page (June 8, 2026)
+
+### What Was Built
+1. **`diff.html`** — Ultra-minimal ad landing page:
+   - Two textareas (Old Schema / New Schema) with syntax-highlighted feel
+   - One big "Compare Schemas" button — instant client-side diff via `engine/engine.js`
+   - Summary stats cards (tables added/removed/modified/renamed, breaking changes)
+   - Risk score bar with color-coded levels
+   - Detailed change list with badges (Added/Removed/Modified)
+   - Migration SQL output with copy-to-clipboard button
+   - Strong conversion CTAs: "Open in Full App →", "Add GitHub Action — Free", "Upgrade to Pro — $39"
+   - URL param pre-fill support (`?a=`, `?b=`, `?dialect=`) for ad campaign tracking
+   - "Try Example" button loads a realistic PostgreSQL schema diff instantly
+   - Zero navigation distraction — only a SchemaLens logo linking home
+2. **Cross-linking** — Added to index.html tools grid, tools.html grid, app.html welcome links, README.md tools list
+3. **sitemap.xml** — Updated (232 URLs)
+
+### Validation
+- ✅ HTML tags balanced
+- ✅ Engine API tested via Node.js (sample diff: 1 added, 2 modified, 1 breaking, Low Risk)
+- ✅ localStorage passthrough to app.html compatible with existing `ghImport` handler
+- ✅ Committed and pushed to GitHub (auto-deploys on Vercel)
 
 *Backlog reprioritized June 8, 2026. Full history available in git log.*
