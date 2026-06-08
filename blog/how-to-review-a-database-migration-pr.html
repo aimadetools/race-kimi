@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Review a Database Migration PR — SchemaLens</title>
+  <meta name="description" content="A practical checklist for reviewing database migration pull requests. Catch breaking changes, missing indexes, and risky ALTER statements before they merge.">
+  <meta property="og:title" content="How to Review a Database Migration PR">
+  <meta property="og:description" content="The complete checklist for reviewing database migration PRs. Catch breaking changes before they merge.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/how-to-review-a-database-migration-pr.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Review a Database Migration PR",
+  "description": "A practical checklist for reviewing database migration pull requests. Catch breaking changes, missing indexes, and risky ALTER statements before they merge.",
+  "url": "https://schemalens.tech/blog/how-to-review-a-database-migration-pr.html",
+  "datePublished": "2026-06-08",
+  "dateModified": "2026-06-08",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/how-to-review-a-database-migration-pr.html"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the most dangerous database migration changes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most dangerous changes are: dropping tables or columns, adding NOT NULL without a default, removing indexes used by popular queries, changing column types that cause data loss, and removing foreign keys without updating application code. These can cause production outages, data loss, or application errors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I review a migration PR without checking out the branch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use SchemaLens to diff the schema files between the PR branch and main directly in your browser. Paste both schema versions into the diff tool to see a semantic comparison of tables, columns, constraints, and indexes without cloning the repository."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should migration PRs include both up and down migrations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, always include rollback (down) migrations. Production incidents happen, and the ability to revert a migration quickly is essential. Review the down migration just as carefully as the up migration — an incomplete rollback can leave the database in an inconsistent state."
+      }
+    }
+  ]
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p, .blog-post li { line-height: 1.7; color: var(--text); }
+    .blog-post a { color: var(--primary); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .blog-post blockquote {
+      border-left: 3px solid var(--primary);
+      margin: 1.5rem 0;
+      padding-left: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .blog-post .cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.06) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; }
+    .blog-post .checklist {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .blog-post .checklist li { margin-bottom: 0.75rem; }
+    .blog-post .checklist li:last-child { margin-bottom: 0; }
+    .blog-post .danger { color: #ff7b72; font-weight: 600; }
+    .blog-post .warning { color: #ffa657; font-weight: 600; }
+    .blog-post .safe { color: #7ee787; font-weight: 600; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../features.html">Features</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<main class="section" style="padding-top: 40px;">
+  <div class="container blog-post">
+    <h1>How to Review a Database Migration PR</h1>
+    <p class="blog-meta">June 8, 2026 · 8 min read · <a href="../index.html">SchemaLens</a></p>
+
+    <p>Code review is a solved problem. Linters catch style issues. Tests catch logic bugs. Type checkers catch interface mismatches. But database migrations? They still get the <em>"looks fine, ship it"</em> treatment — until a missing index tanks query performance, or a dropped column breaks a background job at 2 AM.</p>
+
+    <p>This post is a practical checklist for reviewing database migration pull requests. It covers what to look for, what tools to use, and how to catch the changes that linters and tests will never find.</p>
+
+    <div class="cta-box">
+      <h3>🔍 Diff schemas in 1 click</h3>
+      <p>Paste old and new schema files to see exactly what changed — tables, columns, indexes, constraints, and more.</p>
+      <a href="../diff.html" class="btn btn-primary">Open Schema Diff →</a>
+    </div>
+
+    <h2>Why Migration PRs Need Special Treatment</h2>
+
+    <p>Database migrations are different from normal code changes in three critical ways:</p>
+
+    <ul>
+      <li><strong>They run in production once.</strong> You can't "revert and redeploy" a migration the same way you revert a buggy API endpoint. Rolling back a migration is a separate, often manual operation.</li>
+      <li><strong>They hold locks.</strong> An <code>ALTER TABLE</code> on a large table can lock reads and writes for minutes or hours. Some operations rebuild the entire table. Reviewers need to know which changes are fast and which are not.</li>
+      <li><strong>They affect multiple systems.</strong> A dropped column breaks not just the app, but also ETL pipelines, analytics dashboards, third-party integrations, and background workers. The PR author may not even know about all the consumers.</li>
+    </ul>
+
+    <p>Because of this, migration PRs deserve a review process that goes deeper than "does this SQL compile?"</p>
+
+    <h2>The 5-Minute Migration PR Checklist</h2>
+
+    <p>Here's the checklist every migration PR should pass before merging:</p>
+
+    <div class="checklist">
+      <ol>
+        <li><span class="danger">Breaking changes:</span> Are any tables or columns being dropped? Are foreign keys being removed? Is a <code>NOT NULL</code> being added without a default?</li>
+        <li><span class="warning">Performance impact:</span> Does the migration add an index? Does it modify a large table? Will it hold locks? Is there a note about estimated runtime?</li>
+        <li><span class="safe">Rollback plan:</span> Is there a down migration? Does it actually restore the previous state, or does it leave the database in a broken intermediate state?</li>
+        <li><span class="safe">Schema correctness:</span> Does the final schema match the intent? Are indexes named consistently? Are foreign keys pointing to the right columns?</li>
+        <li><span class="warning">Cross-system impact:</span> Are there notes about downstream consumers? Does the PR description mention analytics, exports, or integrations that depend on the changed schema?</li>
+      </ol>
+    </div>
+
+    <p>If the PR touches a table with more than a million rows, add a sixth item: <strong>Has this been tested on a copy of production data?</strong> Some migrations that run in seconds on a developer laptop take hours in production.</p>
+
+    <h2>Red Flags: Changes That Should Block Merge</h2>
+
+    <p>These changes should trigger an immediate "request changes" review:</p>
+
+    <table style="width:100%; border-collapse: collapse; margin: 1.5rem 0;">
+      <thead>
+        <tr style="border-bottom: 2px solid var(--border);">
+          <th style="text-align:left; padding: 8px;">Change</th>
+          <th style="text-align:left; padding: 8px;">Why It's Dangerous</th>
+          <th style="text-align:left; padding: 8px;">What To Ask</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px;"><code>DROP TABLE</code> or <code>DROP COLUMN</code></td>
+          <td style="padding: 8px;">Data loss. Breaks downstream consumers.</td>
+          <td style="padding: 8px;">"Is this column still referenced by any code, job, or report?"</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px;"><code>ALTER COLUMN ... TYPE</code></td>
+          <td style="padding: 8px;">May truncate data or change behavior.</td>
+          <td style="padding: 8px;">"Will existing data fit the new type? Is there a cast strategy?"</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px;"><code>ADD NOT NULL</code> without <code>DEFAULT</code></td>
+          <td style="padding: 8px;">Fails on existing NULL rows.</td>
+          <td style="padding: 8px;">"What should the default value be? Two-step migration?"</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px;">Removing an index</td>
+          <td style="padding: 8px;">Query performance regression.</td>
+          <td style="padding: 8px;">"Is this index unused, or is it used by a report/job?"</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px;">Removing a foreign key</td>
+          <td style="padding: 8px;">Referential integrity loss.</td>
+          <td style="padding: 8px;">"Is application code handling orphaned rows?"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>How to Actually See the Schema Changes</h2>
+
+    <p>Reading the migration file is not enough. Migration files show <em>intent</em>, not <em>outcome</em>. A migration might add a column, but does the final <code>CREATE TABLE</code> look right? Did the author forget an index? Is the foreign key constraint named correctly?</p>
+
+    <p>The best way to review a migration PR is to diff the <strong>before and after schema</strong>. Here's the workflow:</p>
+
+    <ol>
+      <li>Export the current schema from <code>main</code> (or your target branch)</li>
+      <li>Export the schema after applying the migration</li>
+      <li>Diff them with a semantic schema diff tool</li>
+      <li>Review the changes as a structured list, not a wall of SQL</li>
+    </ol>
+
+    <p>With SchemaLens, you can do this in under a minute. Paste the old schema in the left panel, the new schema in the right panel, and get an instant breakdown of what changed:</p>
+
+    <pre>Summary: 1 table modified, 2 columns added, 1 index added
+
+Modified: orders
+  + Column: discount_code VARCHAR(20)
+  + Column: refunded_at TIMESTAMP NULL
+  + Index: idx_orders_discount_code
+
+Migration SQL:
+  ALTER TABLE orders ADD COLUMN discount_code VARCHAR(20);
+  ALTER TABLE orders ADD COLUMN refunded_at TIMESTAMP NULL;
+  CREATE INDEX idx_orders_discount_code ON orders(discount_code);</pre>
+
+    <p>This is vastly easier to review than reading a 300-line <code>pg_dump</code> output or trying to mentally simulate what a migration file does.</p>
+
+    <div class="cta-box">
+      <h3>⚡ Diff schemas in seconds</h3>
+      <p>Paste two schemas and see exactly what changed — no signup required.</p>
+      <a href="../app.html" class="btn btn-primary">Open SchemaLens →</a>
+    </div>
+
+    <h2>Automating the Review with CI</h2>
+
+    <p>For teams that review a lot of migrations, automate the diff. The <a href="../github-action.html">SchemaLens GitHub Action</a> can post a schema diff summary as a PR comment every time a <code>.sql</code> file changes. Reviewers see the semantic diff right in the PR thread without running any commands.</p>
+
+    <p>The Action can also fail the build when breaking changes are detected, turning the checklist above into an automatic gate:</p>
+
+    <pre>name: Schema Diff
+on:
+  pull_request:
+    paths: ['**/*.sql', 'db/migrations/**']
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: SchemaLens Diff
+        run: |
+          node ci/schemalens-diff.js schema_base.sql schema.sql \
+            --dialect postgres --format markdown --output report.md</pre>
+
+    <p>This doesn't replace human judgment — it augments it. The reviewer still decides whether the change is safe, but they now have structured data instead of a gut feeling.</p>
+
+    <h2>Reviewing Rollback Migrations</h2>
+
+    <p>Every up migration needs a down migration. But a down migration is only useful if it actually works. Here's what to check:</p>
+
+    <ul>
+      <li><strong>Does the down migration reverse every change in the up?</strong> If the up adds two columns and an index, the down should drop both columns and the index.</li>
+      <li><strong>Will the down migration fail on production data?</strong> Dropping a <code>NOT NULL</code> column is easy. Adding it back is not — existing rows may now be NULL.</li>
+      <li><strong>Is the down migration tested?</strong> Run it against a copy of production data. Some down migrations only work on empty databases.</li>
+    </ul>
+
+    <blockquote>
+      "We never roll back" is not a valid excuse for skipping down migrations. The one time you need to roll back at 3 AM during an outage, you'll be glad you have one.
+    </blockquote>
+
+    <h2>The Migration PR Template</h2>
+
+    <p>Add this template to your repository's <code>.github/pull_request_template.md</code> or your code review tool:</p>
+
+    <pre>## Database Migration Checklist
+
+- [ ] This migration has been tested on a copy of production data
+- [ ] Estimated runtime on production: ___ minutes
+- [ ] This migration acquires locks: Yes / No
+- [ ] Down migration is included and tested
+- [ ] Breaking changes are documented in PR description
+- [ ] Downstream consumers (reports, jobs, integrations) have been notified</pre>
+
+    <p>Forcing authors to think through these questions before opening the PR catches 80% of migration issues before a reviewer even looks at the code.</p>
+
+    <h2>Summary</h2>
+
+    <ul>
+      <li>Migration PRs need a different review process than code PRs because they run once, hold locks, and affect multiple systems.</li>
+      <li>Always check for breaking changes, performance impact, rollback plans, schema correctness, and cross-system impact.</li>
+      <li>Diff the before and after schema semantically — reading the migration file alone is not enough.</li>
+      <li>Use CI automation to post diff reports as PR comments and flag breaking changes automatically.</li>
+      <li>Require down migrations and test them against realistic data.</li>
+      <li>Use a PR template to force authors to think through runtime, locks, and downstream impact before requesting review.</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Make migration review effortless</h3>
+      <p>Diff schemas, generate migrations, and catch breaking changes — all in your browser.</p>
+      <a href="../app.html" class="btn btn-primary" style="margin-right: 8px;">Open SchemaLens →</a>
+      <a href="../github-action.html" class="btn btn-secondary">Add GitHub Action →</a>
+    </div>
+
+    <h2>Related Reading</h2>
+    <ul>
+      <li><a href="../blog/schemalens-in-your-ci-cd-pipeline.html">SchemaLens in Your CI/CD Pipeline</a></li>
+      <li><a href="../blog/schema-diff-pr-comments-github-action.html">How to Add Schema Diff Comments to Every Pull Request</a></li>
+      <li><a href="../staging-vs-production-schema-diff.html">How to Compare Staging vs Production Schemas</a></li>
+      <li><a href="../blog/how-to-diff-database-schemas-between-git-branches.html">How to Diff Database Schemas Between Git Branches</a></li>
+      <li><a href="../blog/dangerous-schema-changes.html">10 Dangerous Schema Changes That Break Production</a></li>
+    </ul>
+  </div>
+</main>
+
+<footer style="border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px;">
+  <div class="container" style="text-align: center;">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Built with 💜 by <a href="../index.html">SchemaLens</a> · 
+      <a href="../open.html">Open Startup</a> · 
+      <a href="../open-source.html">Open Source</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
