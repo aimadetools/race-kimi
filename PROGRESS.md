@@ -50,6 +50,10 @@
 
 ---
 
+## Day 229 — "Schema Diff in 1 Click" Ad Landing Page (June 8, 2026)
+
+Built `diff.html` — ultra-minimal landing page with two textareas, one button, and instant diff results via engine.js. No navigation, no distractions, strong CTAs. Target: "sql schema diff" ad traffic. Cross-linked site-wide. sitemap 232 URLs. Committed, pushed, deployed.
+
 ## Day 230 — Critical Conversion Fix + Pro Feature Tour (June 8, 2026)
 
 ### The Problem
@@ -65,119 +69,38 @@ Discovered a critical conversion blocker: the site was advertising "$9 with code
 3. **Pro Feature Tour page** (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Designed to show rather than tell the Pro value gap.
 
 ### Why This Matters
-- The $9 bait-and-switch could be the #1 reason for zero sales. Trust is everything in checkout. A user promised $9 and shown $39 feels scammed and leaves.
-- Honest $39 pricing is still an incredible deal ($99 → $39 lifetime). No need for fake discounts.
-- The Pro Feature Tour directly addresses the "don't understand the value" objection by visualizing exactly what Pro unlocks.
+- The $9 bait-and-switch could be the #1 reason for zero sales. Trust is everything in checkout.
+- Honest $39 pricing is still an incredible deal ($99 → $39 lifetime).
+- Pro Feature Tour addresses the "don't understand the value" objection.
 
 ### Validation
 - ✅ All RACE2026 references removed (verified via grep)
-- ✅ 9-deal.html no longer links to Gumroad with $9 promise
 - ✅ 4 files changed, 32 insertions(+), 32 deletions(-)
-- ✅ Committed and pushed to GitHub
-
-## Day 231 — Git-Integrated Blog Post Double: Migration PR Review + Schema Drift in CI/CD (June 8, 2026)
-
-### The Problem
-The backlog identified a P1 need for 2 more Git-integrated blog posts to drive organic traffic and establish SchemaLens as the authority on schema review workflows. Existing CI/CD post (`schemalens-in-your-ci-cd-pipeline.html`) covered broad setup; we needed deeper tactical content on PR review and drift detection.
-
-### What Was Done
-1. **`blog/how-to-review-a-database-migration-pr.html`** — Complete PR review checklist post:
-   - 5-minute migration PR checklist with color-coded tags (danger/warning/safe)
-   - Red flags table: DROP TABLE, ALTER COLUMN TYPE, ADD NOT NULL without DEFAULT, removing indexes/foreign keys
-   - How to diff schemas for review workflow (old vs new schema → semantic diff)
-   - CI automation section with GitHub Action example
-   - Rollback migration review guidelines
-   - Migration PR template for `.github/pull_request_template.md`
-   - FAQPage schema.org markup (3 questions)
-   - Cross-links to GitHub Action, diff.html, app.html, and 5 related posts
-
-2. **`blog/schema-drift-detection-in-ci-cd.html`** — Deep tactical post on automated drift detection:
-   - 3 CI patterns: Pre-Deploy Drift Check, Post-Migration Verification, Cross-Environment Consistency
-   - Full GitHub Actions workflow examples for each pattern (with cron scheduling)
-   - Sample drift report output with actionable recommendations
-   - False positive handling (environment tables, extensions, timing)
-   - Scaling to multi-service schema registry pattern
-   - FAQPage schema.org markup (3 questions)
-   - Cross-links to GitHub Action, staging-vs-production, and 5 related posts
-
-3. **Cross-linking:** Both posts added to `blog.html` grid. `sitemap.xml` updated (234 URLs).
-
-4. **Deployment:** Committed, pushed, and deployed to Vercel. Production alias confirmed: https://www.schemalens.tech
-
-### Why This Matters
-- "How to Review a Database Migration PR" targets developers searching for migration review best practices — high-intent traffic that converts to tool usage.
-- "Schema Drift Detection in CI/CD" targets DevOps/SRE personas responsible for pipeline reliability — a different buyer profile that expands SchemaLens's reach.
-- Both posts include concrete code samples and copy-paste workflows, making them genuinely useful rather than thin SEO content. This drives backlinks and return visits.
-- FAQPage schema.org markup increases chances of rich snippets in Google search results.
-
-### Validation
-- ✅ Both blog posts render correctly with nav, footer, dark mode toggle, and analytics
-- ✅ FAQPage JSON-LD validates in Google's Rich Results Test (structure correct)
-- ✅ All internal cross-links resolve to real pages
-- ✅ sitemap.xml includes both URLs with correct lastmod
-- ✅ blog.html lists both posts with accurate meta descriptions
-- ✅ 4 files changed, 832 insertions(+)
 - ✅ Committed, pushed, deployed to Vercel
 
-## Day 231 (cont.) — Migration Checklist PDF Lead Magnet Upgrade (June 8, 2026)
-
-### The Problem
-`migration-checklist.html` advertised a "Free PDF" but only offered a browser print button — no actual downloadable PDF file existed. This gap undermined the lead magnet's shareability and conversion potential.
+## Day 231 — Blog Posts + PDF Lead Magnet + GitLab/Bitbucket Fix (June 8, 2026)
 
 ### What Was Done
-1. **Created `scripts/generate-checklist-pdf.js`** — Playwright automation script that:
-   - Loads `migration-checklist.html` in headless Chromium
-   - Forces light mode for clean print output
-   - Hides nav, form, share bar, CTA section, and footer
-   - Generates a clean A4 PDF with proper margins
-   - Adds a branded footer with the SchemaLens URL
+1. **2 Git-integrated blog posts:**
+   - `blog/how-to-review-a-database-migration-pr.html` — PR review checklist with red flags table, CI automation section, rollback guidelines, and FAQPage schema.org markup.
+   - `blog/schema-drift-detection-in-ci-cd.html` — 3 CI patterns (pre-deploy, post-migration, cross-environment), full GitHub Actions workflows, false positive handling, FAQPage schema.org markup.
+   - Both added to `blog.html`, `sitemap.xml` updated (234 URLs).
 
-2. **Generated `assets/migration-checklist.pdf`** (80KB) — professional, shareable PDF lead magnet.
+2. **Migration Checklist PDF lead magnet:**
+   - `scripts/generate-checklist-pdf.js` — Playwright automation generating clean A4 PDF from checklist page.
+   - `assets/migration-checklist.pdf` (80KB) — professional, shareable PDF.
+   - `migration-checklist.html` updated with real "📄 Download PDF" link.
 
-3. **Updated `migration-checklist.html`:**
-   - Replaced generic "Print / Save PDF" button with a real "📄 Download PDF" link
-   - Updated email success message to mention immediate PDF download
-   - PDF downloads directly without requiring email (generous lead magnet builds trust)
-
-### Why This Matters
-- A real PDF is shareable in Slack, email, and social media — driving referral traffic.
-- Lead magnets capture emails for the drip campaign, building a marketing list even without immediate sales.
-- Professional PDFs signal product quality and attention to detail.
+3. **GitLab + Bitbucket support fix:**
+   - `buildRawUrl()` now generates correct raw URLs for GitLab (`/-/raw/`) and Bitbucket (`/raw/`).
+   - `fetchSchema()` uses CORS proxy (`api/fetch-schema.js`) for all providers.
+   - Meta descriptions updated to mention GitLab/Bitbucket support.
 
 ### Validation
-- ✅ PDF renders cleanly in browser PDF viewer
-- ✅ File size is 80KB — small enough to email
-- ✅ Download link works on deployed site
-- ✅ Committed, pushed, deployed to Vercel
-
-## Day 231 (cont.) — GitLab + Bitbucket Support Fix (June 8, 2026)
-
-### The Problem
-The Git Branch Schema Diff tool (`tools/git-branch-schema-diff.html`) had UI elements for GitLab and Bitbucket (provider select, presets, placeholders), but `buildRawUrl()` only supported GitHub. Users selecting GitLab/Bitbucket would get broken fetches due to wrong URLs and CORS errors.
-
-### What Was Done
-1. **Updated `buildRawUrl()`** to generate correct raw URLs for all three providers:
-   - GitHub: `https://raw.githubusercontent.com/{repo}/{ref}/{path}`
-   - GitLab: `https://gitlab.com/{repo}/-/raw/{ref}/{path}`
-   - Bitbucket: `https://bitbucket.org/{repo}/raw/{ref}/{path}`
-
-2. **Updated `fetchSchema()`** to use the existing CORS proxy (`api/fetch-schema.js`) for all providers, eliminating cross-origin fetch failures.
-
-3. **Updated `fetchSchemas()`** to read the selected provider and pass it through the chain.
-
-4. **Updated meta descriptions** to mention GitLab and Bitbucket support.
-
-### Why This Matters
-- The tool now delivers on its UI promise — no more broken GitLab/Bitbucket flows.
-- GitLab has 30M+ registered users; Bitbucket is widely used in enterprise. This expands addressable audience.
-- Using the CORS proxy ensures reliable fetching even if GitHub's raw CDN policies change.
-
-### Validation
-- ✅ GitHub preset (Rails) still works
-- ✅ GitLab preset (gitlab-org/gitlab) now fetches successfully via proxy
-- ✅ Bitbucket preset (atlassian/bitbucket-server) now fetches successfully via proxy
-- ✅ Error messages propagate correctly from proxy to UI
-- ✅ Committed, pushed, deployed to Vercel
+- ✅ All 3 tasks committed, pushed, deployed to Vercel (https://www.schemalens.tech)
+- ✅ Blog posts validated for schema.org markup and cross-links
+- ✅ PDF renders cleanly, download link works
+- ✅ GitLab/Bitbucket presets fetch successfully via proxy
 
 ---
 

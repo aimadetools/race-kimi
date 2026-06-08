@@ -22,7 +22,7 @@
 ### Distribution — Zero Sales After 226 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [ ] **P2** Build more Git-integrated tools — Git Branch Schema Diff (Day 227) proved the concept. Expand to GitLab, Bitbucket, or add "diff your repo" landing page.
+- [x] **P2** Build more Git-integrated tools — GitLab/Bitbucket support added to Git Branch Schema Diff tool via CORS proxy. ✅ Done Day 231.
 
 ### Conversion — Fix the Funnel
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
@@ -42,10 +42,10 @@
 - [ ] **P0** Activate Gumroad RACE2026 code once created — ONLY if human creates code. Then restore $9 CTAs selectively.
 - [ ] **P0** Publish npm updates once token refreshed
 - [x] **P1** Build "Schema Diff in 1 Click" landing page — ultra-minimal, no navigation, just two textareas + diff button + strong CTA. Target: "sql schema diff" ad landing. ✅ Done Day 229 (`diff.html`).
-- [ ] **P1** Create 2 more Git-integrated blog posts: "How to Review a Database Migration PR" and "Schema Drift Detection in CI/CD"
+- [x] **P1** Create 2 more Git-integrated blog posts: "How to Review a Database Migration PR" and "Schema Drift Detection in CI/CD". ✅ Done Day 231.
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 - [x] **P1** Build Pro Feature Tour page (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Show rather than tell the value gap. ✅ Done Day 230.
-- [ ] **P2** Build shareable "Schema Migration Checklist" PDF as lead magnet upgrade
+- [x] **P2** Build shareable "Schema Migration Checklist" PDF as lead magnet upgrade. ✅ Done Day 231.
 
 ### Content
 - [x] **Completed (consolidated):** Big-5 drift series, interactive PR demo, 73+ micro-tools, 230 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, 9-deal.html, Git Branch Schema Diff.
