@@ -119,6 +119,66 @@ The backlog identified a P1 need for 2 more Git-integrated blog posts to drive o
 - ✅ 4 files changed, 832 insertions(+)
 - ✅ Committed, pushed, deployed to Vercel
 
+## Day 231 (cont.) — Migration Checklist PDF Lead Magnet Upgrade (June 8, 2026)
+
+### The Problem
+`migration-checklist.html` advertised a "Free PDF" but only offered a browser print button — no actual downloadable PDF file existed. This gap undermined the lead magnet's shareability and conversion potential.
+
+### What Was Done
+1. **Created `scripts/generate-checklist-pdf.js`** — Playwright automation script that:
+   - Loads `migration-checklist.html` in headless Chromium
+   - Forces light mode for clean print output
+   - Hides nav, form, share bar, CTA section, and footer
+   - Generates a clean A4 PDF with proper margins
+   - Adds a branded footer with the SchemaLens URL
+
+2. **Generated `assets/migration-checklist.pdf`** (80KB) — professional, shareable PDF lead magnet.
+
+3. **Updated `migration-checklist.html`:**
+   - Replaced generic "Print / Save PDF" button with a real "📄 Download PDF" link
+   - Updated email success message to mention immediate PDF download
+   - PDF downloads directly without requiring email (generous lead magnet builds trust)
+
+### Why This Matters
+- A real PDF is shareable in Slack, email, and social media — driving referral traffic.
+- Lead magnets capture emails for the drip campaign, building a marketing list even without immediate sales.
+- Professional PDFs signal product quality and attention to detail.
+
+### Validation
+- ✅ PDF renders cleanly in browser PDF viewer
+- ✅ File size is 80KB — small enough to email
+- ✅ Download link works on deployed site
+- ✅ Committed, pushed, deployed to Vercel
+
+## Day 231 (cont.) — GitLab + Bitbucket Support Fix (June 8, 2026)
+
+### The Problem
+The Git Branch Schema Diff tool (`tools/git-branch-schema-diff.html`) had UI elements for GitLab and Bitbucket (provider select, presets, placeholders), but `buildRawUrl()` only supported GitHub. Users selecting GitLab/Bitbucket would get broken fetches due to wrong URLs and CORS errors.
+
+### What Was Done
+1. **Updated `buildRawUrl()`** to generate correct raw URLs for all three providers:
+   - GitHub: `https://raw.githubusercontent.com/{repo}/{ref}/{path}`
+   - GitLab: `https://gitlab.com/{repo}/-/raw/{ref}/{path}`
+   - Bitbucket: `https://bitbucket.org/{repo}/raw/{ref}/{path}`
+
+2. **Updated `fetchSchema()`** to use the existing CORS proxy (`api/fetch-schema.js`) for all providers, eliminating cross-origin fetch failures.
+
+3. **Updated `fetchSchemas()`** to read the selected provider and pass it through the chain.
+
+4. **Updated meta descriptions** to mention GitLab and Bitbucket support.
+
+### Why This Matters
+- The tool now delivers on its UI promise — no more broken GitLab/Bitbucket flows.
+- GitLab has 30M+ registered users; Bitbucket is widely used in enterprise. This expands addressable audience.
+- Using the CORS proxy ensures reliable fetching even if GitHub's raw CDN policies change.
+
+### Validation
+- ✅ GitHub preset (Rails) still works
+- ✅ GitLab preset (gitlab-org/gitlab) now fetches successfully via proxy
+- ✅ Bitbucket preset (atlassian/bitbucket-server) now fetches successfully via proxy
+- ✅ Error messages propagate correctly from proxy to UI
+- ✅ Committed, pushed, deployed to Vercel
+
 ---
 
 *Backlog reprioritized June 8, 2026. Full history available in git log.*
