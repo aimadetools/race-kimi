@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Git Branch Schema Diff — Compare Database Schemas Across Commits | SchemaLens</title>
-<meta name="description" content="Compare database schema files between Git branches, tags, or commits. Instantly diff db/schema.rb, migrations, or CREATE TABLE dumps from any public GitHub repo.">
+<meta name="description" content="Compare database schema files between Git branches, tags, or commits. Instantly diff db/schema.rb, migrations, or CREATE TABLE dumps from any public GitHub, GitLab, or Bitbucket repo.">
 <meta property="og:title" content="Git Branch Schema Diff — Compare Database Schemas Across Commits">
-<meta property="og:description" content="Diff schema files between any two Git branches, tags, or commits. Works with Rails, Django, Laravel, and raw SQL schemas.">
+<meta property="og:description" content="Diff schema files between any two Git branches, tags, or commits. Works with GitHub, GitLab, Bitbucket, Rails, Django, Laravel, and raw SQL schemas.">
 <meta property="og:image" content="https://schemalens.tech/og-image.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://schemalens.tech/tools/git-branch-schema-diff.html">
@@ -486,15 +486,27 @@ function hideStatus() {
   document.getElementById('status').classList.add('hidden');
 }
 
-function buildRawUrl(repo, path, ref) {
+function buildRawUrl(provider, repo, path, ref) {
+  if (provider === 'gitlab') {
+    return `https://gitlab.com/${repo}/-/raw/${ref}/${path}`;
+  }
+  if (provider === 'bitbucket') {
+    return `https://bitbucket.org/${repo}/raw/${ref}/${path}`;
+  }
   return `https://raw.githubusercontent.com/${repo}/${ref}/${path}`;
 }
 
-async function fetchSchema(repo, path, ref) {
-  const url = buildRawUrl(repo, path, ref);
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${ref}`);
-  return await res.text();
+async function fetchSchema(provider, repo, path, ref) {
+  const url = buildRawUrl(provider, repo, path, ref);
+  // Use CORS proxy for all providers to ensure reliable cross-origin fetching
+  const proxyUrl = '/api/fetch-schema?url=' + encodeURIComponent(url);
+  const res = await fetch(proxyUrl);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${res.status} for ${ref}`);
+  }
+  const data = await res.json();
+  return data.content;
 }
 
 async function fetchSchemas() {
@@ -502,6 +514,7 @@ async function fetchSchemas() {
   const path = document.getElementById('pathInput').value.trim();
   const baseRef = document.getElementById('baseRef').value.trim();
   const headRef = document.getElementById('headRef').value.trim();
+  const provider = document.getElementById('providerSelect').value;
 
   if (!repo || !path || !baseRef || !headRef) {
     showStatus('Please fill in all fields.', 'error');
@@ -517,8 +530,8 @@ async function fetchSchemas() {
 
   try {
     const [baseText, headText] = await Promise.all([
-      fetchSchema(repo, path, baseRef),
-      fetchSchema(repo, path, headRef)
+      fetchSchema(provider, repo, path, baseRef),
+      fetchSchema(provider, repo, path, headRef)
     ]);
 
     document.getElementById('baseSchema').textContent = baseText;
