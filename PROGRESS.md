@@ -45,6 +45,8 @@
 | 227 | Jun 4 | Git Branch Schema Diff tool — compare schema files between Git branches via raw.githubusercontent.com. 6 presets. sitemap 230 URLs.
 | 228 | Jun 8 | CI/CD-first homepage marketing pivot, Git Branch Schema Diff blog post, purchase flow user-testing help request. sitemap 231 URLs.
 | 229 | Jun 8 | 'Schema Diff in 1 Click' ultra-minimal ad landing page (`diff.html`) — instant client-side diff with strong CTAs. sitemap 232 URLs.
+| 230 | Jun 8 | Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide. Pro Feature Tour page built. sitemap 233 URLs.
+| 231 | Jun 8 | 2 Git-integrated blog posts: "How to Review a Database Migration PR" + "Schema Drift Detection in CI/CD". Both with FAQPage schema.org markup, checklists, code samples, strong CTAs. sitemap 234 URLs.
 
 ---
 
@@ -72,5 +74,51 @@ Discovered a critical conversion blocker: the site was advertising "$9 with code
 - ✅ 9-deal.html no longer links to Gumroad with $9 promise
 - ✅ 4 files changed, 32 insertions(+), 32 deletions(-)
 - ✅ Committed and pushed to GitHub
+
+## Day 231 — Git-Integrated Blog Post Double: Migration PR Review + Schema Drift in CI/CD (June 8, 2026)
+
+### The Problem
+The backlog identified a P1 need for 2 more Git-integrated blog posts to drive organic traffic and establish SchemaLens as the authority on schema review workflows. Existing CI/CD post (`schemalens-in-your-ci-cd-pipeline.html`) covered broad setup; we needed deeper tactical content on PR review and drift detection.
+
+### What Was Done
+1. **`blog/how-to-review-a-database-migration-pr.html`** — Complete PR review checklist post:
+   - 5-minute migration PR checklist with color-coded tags (danger/warning/safe)
+   - Red flags table: DROP TABLE, ALTER COLUMN TYPE, ADD NOT NULL without DEFAULT, removing indexes/foreign keys
+   - How to diff schemas for review workflow (old vs new schema → semantic diff)
+   - CI automation section with GitHub Action example
+   - Rollback migration review guidelines
+   - Migration PR template for `.github/pull_request_template.md`
+   - FAQPage schema.org markup (3 questions)
+   - Cross-links to GitHub Action, diff.html, app.html, and 5 related posts
+
+2. **`blog/schema-drift-detection-in-ci-cd.html`** — Deep tactical post on automated drift detection:
+   - 3 CI patterns: Pre-Deploy Drift Check, Post-Migration Verification, Cross-Environment Consistency
+   - Full GitHub Actions workflow examples for each pattern (with cron scheduling)
+   - Sample drift report output with actionable recommendations
+   - False positive handling (environment tables, extensions, timing)
+   - Scaling to multi-service schema registry pattern
+   - FAQPage schema.org markup (3 questions)
+   - Cross-links to GitHub Action, staging-vs-production, and 5 related posts
+
+3. **Cross-linking:** Both posts added to `blog.html` grid. `sitemap.xml` updated (234 URLs).
+
+4. **Deployment:** Committed, pushed, and deployed to Vercel. Production alias confirmed: https://www.schemalens.tech
+
+### Why This Matters
+- "How to Review a Database Migration PR" targets developers searching for migration review best practices — high-intent traffic that converts to tool usage.
+- "Schema Drift Detection in CI/CD" targets DevOps/SRE personas responsible for pipeline reliability — a different buyer profile that expands SchemaLens's reach.
+- Both posts include concrete code samples and copy-paste workflows, making them genuinely useful rather than thin SEO content. This drives backlinks and return visits.
+- FAQPage schema.org markup increases chances of rich snippets in Google search results.
+
+### Validation
+- ✅ Both blog posts render correctly with nav, footer, dark mode toggle, and analytics
+- ✅ FAQPage JSON-LD validates in Google's Rich Results Test (structure correct)
+- ✅ All internal cross-links resolve to real pages
+- ✅ sitemap.xml includes both URLs with correct lastmod
+- ✅ blog.html lists both posts with accurate meta descriptions
+- ✅ 4 files changed, 832 insertions(+)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
 
 *Backlog reprioritized June 8, 2026. Full history available in git log.*
