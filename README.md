@@ -118,9 +118,10 @@ SchemaLens includes **70+ free browser-based tools** that reuse the same custom 
 22. [Embed Widget](https://schemalens.tech/tools/embed-generator.html)
 23. [Schema Diff Examples](https://schemalens.tech/schema-examples.html)
 24. [Git Branch Schema Diff](https://schemalens.tech/tools/git-branch-schema-diff.html) — diff schemas between Git branches, tags, or commits
-25. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
-25. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
-26. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
+25. [1-Click Schema Diff](https://schemalens.tech/diff.html) — ultra-minimal ad landing page for instant diffs
+26. [Safe Migration Checker](https://schemalens.tech/tools/safe-migration-checker.html)
+27. [Reserved Words Checker](https://schemalens.tech/tools/sql-reserved-words-checker.html)
+28. [SQL to ORM Converter](https://schemalens.tech/tools/sql-to-orm-converter.html)
 27. [SQL SELECT Generator](https://schemalens.tech/tools/sql-select-generator.html)
 28. [SQL to TypeScript Generator](https://schemalens.tech/tools/sql-to-typescript.html)
 29. [SQL Query Explainer](https://schemalens.tech/tools/sql-query-explainer.html)

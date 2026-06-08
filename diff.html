@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Schema Diff — Compare Instantly (Free, No Signup)</title>
+<meta name="description" content="Compare two SQL schemas in one click. Free online tool — paste your CREATE TABLE dumps, see changes instantly, generate migration scripts. No signup, no upload.">
+<meta property="og:title" content="SQL Schema Diff — Compare Instantly (Free, No Signup)">
+<meta property="og:description" content="Paste two CREATE TABLE dumps. Spot changes instantly. Generate ready-to-run ALTER TABLE scripts. No signup required.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/diff.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SchemaLens — SQL Schema Diff",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Compare SQL schemas side by side, Generate ALTER TABLE migrations, Detect breaking changes, Risk score, 100% browser-based",
+  "url": "https://schemalens.tech/diff.html"
+}
+</script>
+<style>
+  .minimal-header { padding: 16px 0; }
+  .minimal-header a { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+  .page-wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 80px; }
+  .hero-simple { text-align: center; padding: 32px 0 28px; }
+  .hero-simple h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .hero-simple p { color: var(--text-muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto; }
+  .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 16px; }
+  @media (max-width: 760px) { .editor-grid { grid-template-columns: 1fr; } }
+  .editor-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .editor-box label { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--code-bg); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+  .editor-box label .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .editor-box label .dot.old { background: var(--danger); }
+  .editor-box label .dot.new { background: var(--success); }
+  .editor-box textarea { flex: 1; min-height: 220px; background: transparent; color: var(--text); border: none; padding: 14px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; resize: vertical; outline: none; }
+  .editor-box textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
+  .controls { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .controls select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.95rem; cursor: pointer; }
+  .controls button { padding: 12px 28px; font-size: 1rem; }
+  .results { display: none; }
+  .results.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .summary-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; text-align: center; }
+  .stat-card .num { font-size: 1.8rem; font-weight: 700; }
+  .stat-card .num.added { color: var(--success); }
+  .stat-card .num.removed { color: var(--danger); }
+  .stat-card .num.modified { color: var(--warning); }
+  .stat-card .num.breaking { color: var(--danger); }
+  .stat-card .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+  .risk-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 24px; }
+  .risk-section .risk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+  .risk-bar { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .risk-bar .fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
+  .risk-bar .fill.low { background: var(--success); }
+  .risk-bar .fill.medium { background: var(--warning); }
+  .risk-bar .fill.high { background: var(--danger); }
+  .change-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .change-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+  .change-card .change-title { display: flex; align-items: center; gap: 10px; font-weight: 600; margin-bottom: 10px; }
+  .badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+  .badge-added { background: rgba(52,211,153,0.15); color: var(--success); }
+  .badge-removed { background: rgba(248,113,113,0.15); color: var(--danger); }
+  .badge-modified { background: rgba(251,191,36,0.15); color: var(--warning); }
+  .change-card ul { margin: 0; padding-left: 18px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+  .change-card ul li { margin-bottom: 2px; }
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; max-height: 300px; overflow-y: auto; position: relative; }
+  .copy-code-btn { position: absolute; top: 10px; right: 10px; background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; }
+  .copy-code-btn:hover { color: var(--text); border-color: var(--hover-border); }
+  .cta-section { background: linear-gradient(135deg, var(--primary), #8b5cf6); border-radius: var(--radius); padding: 28px; text-align: center; color: #fff; margin-top: 28px; }
+  .cta-section h3 { font-size: 1.3rem; margin-bottom: 8px; }
+  .cta-section p { opacity: 0.9; margin-bottom: 16px; font-size: 0.95rem; }
+  .cta-section .btn-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .cta-section .btn-group a { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--primary); padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .cta-section .btn-group a:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+  .cta-section .btn-group a.ghost { background: rgba(255,255,255,0.15); color: #fff; }
+  .cta-section .btn-group a.ghost:hover { background: rgba(255,255,255,0.25); }
+  .trust-line { text-align: center; margin-top: 48px; color: var(--text-muted); font-size: 0.85rem; }
+  .trust-line a { color: var(--primary); }
+  .error-toast { background: rgba(248,113,113,0.12); border: 1px solid var(--danger); color: var(--danger); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 16px; display: none; }
+  .error-toast.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="container minimal-header">
+  <a href="index.html">
+    <span class="logo-mark">SL</span>
+    SchemaLens
+  </a>
+</div>
+
+<div class="page-wrap">
+  <div class="hero-simple">
+    <h1>SQL Schema Diff</h1>
+    <p>Paste two schemas. Click one button. See every change — tables, columns, indexes, and constraints.</p>
+  </div>
+
+  <div class="error-toast" id="errorToast"></div>
+
+  <div class="editor-grid">
+    <div class="editor-box">
+      <label><span class="dot old"></span> Old Schema</label>
+      <textarea id="schemaA" placeholder="Paste your old CREATE TABLE dump here..."></textarea>
+    </div>
+    <div class="editor-box">
+      <label><span class="dot new"></span> New Schema</label>
+      <textarea id="schemaB" placeholder="Paste your new CREATE TABLE dump here..."></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <select id="dialect">
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL</option>
+      <option value="sqlite">SQLite</option>
+      <option value="mssql">SQL Server</option>
+      <option value="oracle">Oracle</option>
+    </select>
+    <button class="btn btn-primary btn-lg" id="diffBtn" onclick="runDiff()">Compare Schemas</button>
+    <button class="btn btn-secondary" onclick="loadSample()">Try Example</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="summary-bar" id="summaryBar"></div>
+
+    <div class="risk-section" id="riskSection" style="display:none;">
+      <div class="risk-header">
+        <span>Risk Score</span>
+        <strong id="riskLabel">Low</strong>
+      </div>
+      <div class="risk-bar"><div class="fill" id="riskFill"></div></div>
+    </div>
+
+    <div class="change-list" id="changeList"></div>
+
+    <div style="margin-bottom: 24px;">
+      <h3 style="font-size: 1rem; margin-bottom: 10px;">Migration SQL</h3>
+      <div class="code-block" style="position: relative;">
+        <button class="copy-code-btn" onclick="copyMigration()">Copy</button>
+        <code id="migrationCode"></code>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h3>Want more power?</h3>
+      <p>Visual diffs, breaking-change detection, export to Markdown/PDF, and CI/CD integration.</p>
+      <div class="btn-group">
+        <a href="app.html" id="openAppLink">Open in Full App →</a>
+        <a href="github-action.html" class="ghost">Add GitHub Action — Free</a>
+        <a href="pricing.html" class="ghost">Upgrade to Pro — $39</a>
+      </div>
+    </div>
+  </div>
+
+  <p class="trust-line">
+    100% browser-based — your schemas never leave your device.
+    <a href="index.html">Learn more</a> · <a href="github-action.html">CI/CD</a> · <a href="pricing.html">Pricing</a>
+  </p>
+</div>
+
+<script src="engine/engine.js"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(location.search);
+  const a = params.get('a') || params.get('schemaA');
+  const b = params.get('b') || params.get('schemaB');
+  const d = params.get('dialect');
+  if (a) document.getElementById('schemaA').value = decodeURIComponent(a);
+  if (b) document.getElementById('schemaB').value = decodeURIComponent(b);
+  if (d) document.getElementById('dialect').value = d;
+})();
+
+function showError(msg) {
+  const el = document.getElementById('errorToast');
+  el.textContent = msg;
+  el.classList.add('active');
+  setTimeout(() => el.classList.remove('active'), 5000);
+}
+
+function loadSample() {
+  const oldSchema = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  body TEXT
+);`;
+
+  const newSchema = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  full_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  avatar_url TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  body TEXT,
+  published_at TIMESTAMP,
+  status VARCHAR(20) DEFAULT 'draft'
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);`;
+
+  document.getElementById('schemaA').value = oldSchema;
+  document.getElementById('schemaB').value = newSchema;
+  document.getElementById('dialect').value = 'postgres';
+  runDiff();
+}
+
+let lastMigration = '';
+let lastDiff = null;
+
+function runDiff() {
+  const sqlA = document.getElementById('schemaA').value;
+  const sqlB = document.getElementById('schemaB').value;
+  const dialect = document.getElementById('dialect').value;
+
+  if (!sqlA.trim() || !sqlB.trim()) {
+    showError('Please paste both schemas to compare.');
+    return;
+  }
+
+  const btn = document.getElementById('diffBtn');
+  btn.disabled = true;
+  btn.textContent = 'Comparing…';
+
+  try {
+    const schemaA = parseSQL(sqlA, dialect);
+    const schemaB = parseSQL(sqlB, dialect);
+    const diff = diffSchemas(schemaA, schemaB);
+    const breaking = detectBreakingChanges(diff);
+    const risk = calculateRiskScore(diff);
+    const migration = generateMigration(diff, dialect);
+
+    lastDiff = diff;
+    lastMigration = migration;
+
+    renderResults(diff, breaking, risk, migration);
+    updateAppLink(sqlA, sqlB, dialect);
+
+    document.getElementById('results').classList.add('active');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    showError('Error comparing schemas: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Compare Schemas';
+  }
+}
+
+function renderResults(diff, breaking, risk, migration) {
+  const added = diff.tablesAdded?.length || 0;
+  const removed = diff.tablesRemoved?.length || 0;
+  const modified = diff.tablesModified?.length || 0;
+  const renamed = diff.tablesRenamed?.length || 0;
+  const breakingCount = breaking?.length || 0;
+
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="stat-card"><div class="num added">+${added}</div><div class="label">Tables Added</div></div>
+    <div class="stat-card"><div class="num removed">-${removed}</div><div class="label">Tables Removed</div></div>
+    <div class="stat-card"><div class="num modified">~${modified}</div><div class="label">Tables Modified</div></div>
+    ${renamed ? `<div class="stat-card"><div class="num modified">↔${renamed}</div><div class="label">Tables Renamed</div></div>` : ''}
+    <div class="stat-card"><div class="num ${breakingCount ? 'breaking' : 'added'}">${breakingCount}</div><div class="label">Breaking Changes</div></div>
+  `;
+
+  if (risk) {
+    document.getElementById('riskSection').style.display = 'block';
+    document.getElementById('riskLabel').textContent = risk.label || 'Low';
+    const fill = document.getElementById('riskFill');
+    fill.style.width = (risk.score || 0) + '%';
+    let level = 'low';
+    if (risk.score > 75) level = 'high';
+    else if (risk.score > 50) level = 'medium';
+    else if (risk.score > 25) level = 'medium';
+    fill.className = 'fill ' + level;
+  } else {
+    document.getElementById('riskSection').style.display = 'none';
+  }
+
+  let html = '';
+  for (const t of diff.tablesAdded || []) {
+    html += renderChangeCard(t.name, 'added', [`New table with ${t.columns?.length || 0} column(s)`]);
+  }
+  for (const t of diff.tablesRemoved || []) {
+    html += renderChangeCard(t.name, 'removed', [`Table removed (${t.columns?.length || 0} columns)`]);
+  }
+  for (const t of diff.tablesRenamed || []) {
+    html += renderChangeCard(`${t.oldTable.name} → ${t.newTable.name}`, 'modified', [`Table renamed`]);
+  }
+  for (const td of diff.tablesModified || []) {
+    const lines = [];
+    for (const c of td.columnsAdded || []) lines.push(`+ Column "${c.name}" (${c.type}${c.nullable === false ? ', NOT NULL' : ''})`);
+    for (const c of td.columnsRemoved || []) lines.push(`- Column "${c.name}" removed`);
+    for (const c of td.columnsRenamed || []) lines.push(`↔ Column "${c.oldName}" renamed to "${c.newName}"`);
+    for (const c of td.columnsModified || []) lines.push(`~ Column "${c.name}" changed: ${c.oldType} → ${c.newType}`);
+    for (const c of td.constraintsAdded || []) lines.push(`+ Constraint: ${c.type}${c.name ? ' (' + c.name + ')' : ''}`);
+    for (const c of td.constraintsRemoved || []) lines.push(`- Constraint removed: ${c.type}${c.name ? ' (' + c.name + ')' : ''}`);
+    for (const c of td.indexesAdded || []) lines.push(`+ Index: ${c.name || c.columns?.join(', ')}`);
+    for (const c of td.indexesRemoved || []) lines.push(`- Index removed: ${c.name || c.columns?.join(', ')}`);
+    html += renderChangeCard(td.name, 'modified', lines);
+  }
+
+  if (!html) {
+    html = `<div class="change-card"><div class="change-title"><span>✓</span> No changes detected</div><p style="color:var(--text-muted);font-size:0.9rem;margin:0;">The two schemas are identical.</p></div>`;
+  }
+  document.getElementById('changeList').innerHTML = html;
+
+  document.getElementById('migrationCode').textContent = migration || '-- No migration needed';
+}
+
+function renderChangeCard(name, status, lines) {
+  const badgeClass = status === 'added' ? 'badge-added' : status === 'removed' ? 'badge-removed' : 'badge-modified';
+  const badgeText = status === 'added' ? 'Added' : status === 'removed' ? 'Removed' : 'Modified';
+  return `<div class="change-card">
+    <div class="change-title"><span class="badge ${badgeClass}">${badgeText}</span> ${escapeHtml(name)}</div>
+    <ul>${lines.map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul>
+  </div>`;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+}
+
+function copyMigration() {
+  if (!lastMigration) return;
+  navigator.clipboard.writeText(lastMigration).then(() => {
+    const btn = document.querySelector('.copy-code-btn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+function updateAppLink(sqlA, sqlB, dialect) {
+  const link = document.getElementById('openAppLink');
+  // Use localStorage for large schemas to avoid URL limits
+  const key = 'diffhtml_' + Date.now();
+  try {
+    localStorage.setItem(key + '-a', sqlA);
+    localStorage.setItem(key + '-b', sqlB);
+    localStorage.setItem(key + '-dialect', dialect);
+    link.href = 'app.html?ghImport=' + encodeURIComponent(key);
+  } catch (e) {
+    // Fallback to URL params for small schemas
+    link.href = 'app.html?schemaA=' + encodeURIComponent(sqlA.slice(0, 2000)) + '&schemaB=' + encodeURIComponent(sqlB.slice(0, 2000)) + '&dialect=' + dialect;
+  }
+}
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</body>
+</html>
