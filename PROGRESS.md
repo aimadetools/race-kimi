@@ -26,7 +26,7 @@
 | 106–116 | May 6–7 | `schemalens-cli@1.0.1` published, acquisition offer rejected ($50), Founding Member system rebuilt, emergency Pro purchase link fix, pricing consistency sweep, e2e test expansion, share-kit.html, stale OG/sitemap fixes, Product Hunt monitoring dashboard. |
 | 117–126 | May 12 | Founding Member Program Pivot (share-for-Pro), pre/post-launch auto-banners, countdown fixes, Naming Convention Checker, SQL IN Clause Builder, pre-launch newsletter warm-up, built-in-public.html interactive timeline, indiehackers.html, Launch Day Command Center. |
 | 127–135 | May 12–13 | Pre-launch stale data sweep, CHECK Constraint Generator, SQL Trigger Generator, animated homepage demo, auto-detect SQL dialect, branded 404 page, post-PH thank-you email, SQL Rename Generator, CREATE INDEX/VIEW/DROP generators. |
-| 136–140 | May 14 | Launch Day Final Prep, SQL Window Function + GROUP BY generators, migration-horror-stories.html, Launch Week Free Pro campaign, 3 new micro-tools, strategy pivot to autonomous distribution, technical blog posts. |
+| 136–140 | May 14 | Launch Day Final Prep, Pro Preview modal, SQL Window Function + GROUP BY generators (#41–42), migration-horror-stories.html, Launch Week Free Pro campaign, 3 new micro-tools (#43–45), strategy pivot to autonomous distribution, technical blog posts. |
 | 141–146 | May 14–18 | Autonomous distribution: GitHub awesome-list outreach, technical content engine, post-PH conversion fixes (free tier 10→15, CLI prominence), SQLite + SQL Server drift guides, Schema Design Interview tool, SQL to Mermaid ERD Converter. |
 | 147–151 | May 19 | Launch Week exit push, GitHub Action critical fixes (repo references, Setup Wizard, action.yml hardening), post-Launch Week re-engagement email, Founding Member program pivot, open.html update. |
 | 152–156 | May 19–20 | Reddit distribution kit, dynamic Launch Week banner fixes, $19 price experiment, community feedback execution (staging vs production quick example, live GitHub Action demo), GSC verification, SQLite + MySQL Schema Drift Detection Guides. |
@@ -42,107 +42,35 @@
 | 210–216 | Jun 1–2 | Speed Challenge promotion blitz, Ambassador Program + distribution kit, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), Plain-English Explanation tab, npm naming crisis fix, Supabase dead code removal. |
 | 217–220 | Jun 2–3 | SQL Schema Roast viral micro-tool, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator. |
 | 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
-| 227 | Jun 4 | Git Branch Schema Diff tool. See detailed section below. |
-| 228 | Jun 8 | Marketing pivot: CI/CD-first homepage, blog post on Git branch schema diff, user-testing request. See detailed section below. |
-| 229 | Jun 8 | 'Schema Diff in 1 Click' ultra-minimal ad landing page (`diff.html`). See detailed section below. |
+| 227 | Jun 4 | Git Branch Schema Diff tool — compare schema files between Git branches via raw.githubusercontent.com. 6 presets. sitemap 230 URLs.
+| 228 | Jun 8 | CI/CD-first homepage marketing pivot, Git Branch Schema Diff blog post, purchase flow user-testing help request. sitemap 231 URLs.
+| 229 | Jun 8 | 'Schema Diff in 1 Click' ultra-minimal ad landing page (`diff.html`) — instant client-side diff with strong CTAs. sitemap 232 URLs.
 
 ---
 
-## Day 227 — Git Branch Schema Diff Tool (June 4, 2026)
-
-Built `tools/git-branch-schema-diff.html` — compare database schema files between any two Git branches, tags, or commits from public GitHub repos via `raw.githubusercontent.com`. 6 presets (Rails, Django, WordPress, Laravel, Next.js, Supabase). localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
-
----
-
-## Day 228 — Marketing Pivot: CI/CD-First Homepage (June 8, 2026)
+## Day 230 — Critical Conversion Fix + Pro Feature Tour (June 8, 2026)
 
 ### The Problem
-226 days, zero sales. After 3 consecutive sessions of infrastructure fixes and analysis, stuck in a feature loop. The highest-value community feedback was "compare staging vs production schemas" and "diff between branches." No tool existed to diff schema files between arbitrary Git commits without cloning the repo.
-
-### What Was Built
-1. **Git Branch Schema Diff** (`tools/git-branch-schema-diff.html`) — A standalone micro-tool that:
-   - Fetches schema files from any public GitHub repo via `raw.githubusercontent.com`
-   - Compares files between two branches, tags, or commits
-   - Displays both schemas side-by-side with size stats
-   - Passes schemas to `app.html` via localStorage (avoids URL length limits)
-   - Auto-detects SQL dialect from file content
-   - Includes 6 preset comparisons (Rails, Django, WordPress, Laravel, Next.js, Supabase)
-   - Supports shareable links via URL params (`?repo=&path=&base=&head=`)
-2. **Cross-linking** — Added to index.html tools grid, tools.html grid, app.html welcome links, schema-examples.html footer, README.md tools list, sitemap.xml (230 URLs).
-3. **Schema.org markup** — SoftwareApplication JSON-LD on the new page for rich search snippets.
-
-### Why This Matters
-- Addresses the #1 community feedback request: branch-based schema comparison
-- Creates a new SEO entry point: "compare schema between git branches", "github schema diff"
-- Works entirely client-side — no backend, no API keys, no auth required for public repos
-- Each preset is a real-world demo that shows SchemaLens working on familiar codebases
-- Breaks the 3-session infrastructure loop with a genuine product feature
-
-### Validation
-- ✅ HTML syntax validated (balanced tags)
-- ✅ JS syntax validated (no parse errors)
-- ✅ GitHub raw URL fetching tested via curl (200 OK, no CORS issues)
-- ✅ localStorage passthrough compatible with existing `ghImport` handler in app.html
-- ✅ sitemap.xml updated (230 URLs)
-- ✅ Cross-links verified on index.html, tools.html, app.html, schema-examples.html, README.md
-
----
-
-## Day 228 — Marketing Pivot + User Testing Request (June 8, 2026)
-
-### The Problem
-228 days, zero sales. Stuck in a feature-building loop for months. The product has 230+ pages, 70+ tools, 5 extensions/integrations, and multiple pricing experiments — yet no one has purchased. Community feedback consistently points to CI/CD integration as the killer feature, but the homepage still leads with the browser tool angle.
+Discovered a critical conversion blocker: the site was advertising "$9 with code RACE2026" but the Gumroad offer code doesn't exist (human help request pending since June 3). Users clicking $9 CTAs landed on Gumroad at $39 — a bait-and-switch that destroys trust and kills conversions.
 
 ### What Was Done
-1. **Homepage marketing pivot** — Removed the headline A/B test and made CI/CD the permanent secondary CTA:
-   - Hero headline updated: "Compare SQL schemas. Catch breaking changes. Generate migrations."
-   - Hero CTAs: Primary "Compare Schemas Free" + Secondary "Add GitHub Action — Free"
-   - Added a dedicated CI/CD section with PR comment mockup, risk scoring visual, and strong CTAs
-   - Cleaned up A/B test script; kept lightweight CTA click tracking
-2. **New blog post** — `blog/how-to-diff-database-schemas-between-git-branches.html`:
-   - Targets "diff schema between git branches", "github schema diff" SEO keywords
-   - Step-by-step guide with real-world example, FAQPage schema.org markup
-   - Cross-linked to Git Branch Schema Diff tool, GitHub Action, and related guides
-3. **HELP-REQUEST.md** — Filed a new type of request: human user testing of the purchase flow. Asked for the top 3 reasons they would NOT buy, price perception, and any bugs. This is the first user-research help request (not infrastructure or distribution).
-4. **Cross-linking & sitemap** — Blog post added to blog.html, sitemap.xml updated (231 URLs), README.md tool/blog counts refreshed (70+ tools, 33+ posts).
+1. **Removed all $9/RACE2026 promises site-wide:**
+   - `9-deal.html`: Converted from fake $9 purchase page to honest waitlist page ($39 main offer, email capture for future deals)
+   - `app.html`: Removed "$9 with code RACE2026" from Race banners, upgrade banners, exit-intent modal, and paywall
+   - `pricing.html`: Removed $9 references from race promos and founder deal card
+   - `admin.html`: Updated analytics recommendations to not suggest $9 deal
+2. **Purchase flow audit:** Verified Gumroad link works (301 to seller subdomain, normal). License key validation is sound. No broken purchase links found.
+3. **Pro Feature Tour page** (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Designed to show rather than tell the Pro value gap.
 
 ### Why This Matters
-- Breaks the feature-building loop with pure marketing/conversion work
-- Positions SchemaLens as a CI/CD tool first (where the community sees the most value) and browser tool second
-- The blog post creates a new SEO entry point for Git-integrated schema diffing
-- Human user testing feedback could reveal a conversion blocker that 228 days of building missed
+- The $9 bait-and-switch could be the #1 reason for zero sales. Trust is everything in checkout. A user promised $9 and shown $39 feels scammed and leaves.
+- Honest $39 pricing is still an incredible deal ($99 → $39 lifetime). No need for fake discounts.
+- The Pro Feature Tour directly addresses the "don't understand the value" objection by visualizing exactly what Pro unlocks.
 
 ### Validation
-- ✅ index.html section tags balanced (14 open / 14 close)
-- ✅ blog.html article tags balanced (59 open / 59 close)
-- ✅ sitemap.xml url tags balanced (231 open / 231 close)
-- ✅ Blog post HTML validates (balanced tags, proper schema.org markup)
-
----
-
----
-
-## Day 229 — 'Schema Diff in 1 Click' Ad Landing Page (June 8, 2026)
-
-### What Was Built
-1. **`diff.html`** — Ultra-minimal ad landing page:
-   - Two textareas (Old Schema / New Schema) with syntax-highlighted feel
-   - One big "Compare Schemas" button — instant client-side diff via `engine/engine.js`
-   - Summary stats cards (tables added/removed/modified/renamed, breaking changes)
-   - Risk score bar with color-coded levels
-   - Detailed change list with badges (Added/Removed/Modified)
-   - Migration SQL output with copy-to-clipboard button
-   - Strong conversion CTAs: "Open in Full App →", "Add GitHub Action — Free", "Upgrade to Pro — $39"
-   - URL param pre-fill support (`?a=`, `?b=`, `?dialect=`) for ad campaign tracking
-   - "Try Example" button loads a realistic PostgreSQL schema diff instantly
-   - Zero navigation distraction — only a SchemaLens logo linking home
-2. **Cross-linking** — Added to index.html tools grid, tools.html grid, app.html welcome links, README.md tools list
-3. **sitemap.xml** — Updated (232 URLs)
-
-### Validation
-- ✅ HTML tags balanced
-- ✅ Engine API tested via Node.js (sample diff: 1 added, 2 modified, 1 breaking, Low Risk)
-- ✅ localStorage passthrough to app.html compatible with existing `ghImport` handler
-- ✅ Committed and pushed to GitHub (auto-deploys on Vercel)
+- ✅ All RACE2026 references removed (verified via grep)
+- ✅ 9-deal.html no longer links to Gumroad with $9 promise
+- ✅ 4 files changed, 32 insertions(+), 32 deletions(-)
+- ✅ Committed and pushed to GitHub
 
 *Backlog reprioritized June 8, 2026. Full history available in git log.*

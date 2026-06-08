@@ -11,7 +11,7 @@
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
 - [ ] **P0** JavaScript Kicks $29 ad execution — filed June 3. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. Steps: create code for $30 off, expires July 10.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. Steps: create code for $30 off, expires July 10. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
 - [ ] **P0** Purchase flow user testing — filed June 8. Human visits site as potential customer, tries to buy, reports top 3 blockers. First user-research request.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
@@ -32,16 +32,19 @@
 - [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page, `schema-diff` npm package, localStorage feedback analyzer, Git Branch Schema Diff tool. Day 227.
 - [x] **Day 228 (June 8):** Homepage marketing pivot — removed A/B test, made CI/CD permanent secondary CTA, added PR comment mockup section. New blog post: "How to Diff Database Schemas Between Git Branches". Filed user-testing HELP-REQUEST.md for purchase flow feedback.
 - [x] **Day 229 (June 8):** "Schema Diff in 1 Click" ultra-minimal ad landing page (`diff.html`) — two textareas, one button, instant diff results via engine.js. Strong CTAs. Cross-linked site-wide. sitemap 232 URLs.
+- [x] **Day 230 (June 8):** Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide since Gumroad code doesn't exist. Purchase flow audit. Pro Feature Tour page built.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Week 9 Focus — Execute on Feedback & Convert
 - [ ] **P0** Act on human user-testing feedback — fix whatever blocker they identify
 - [ ] **P0** Execute JS Kicks ad once human unblocks ($29 budget)
-- [ ] **P0** Activate Gumroad RACE2026 code once created — update all site-wide $9 references
+- [x] **P0** Fix $9 bait-and-switch — removed all RACE2026 promises site-wide (9-deal.html, app.html, pricing.html, admin.html). Honest $39 pricing restored. ✅ Done Day 230.
+- [ ] **P0** Activate Gumroad RACE2026 code once created — ONLY if human creates code. Then restore $9 CTAs selectively.
 - [ ] **P0** Publish npm updates once token refreshed
 - [x] **P1** Build "Schema Diff in 1 Click" landing page — ultra-minimal, no navigation, just two textareas + diff button + strong CTA. Target: "sql schema diff" ad landing. ✅ Done Day 229 (`diff.html`).
 - [ ] **P1** Create 2 more Git-integrated blog posts: "How to Review a Database Migration PR" and "Schema Drift Detection in CI/CD"
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
+- [x] **P1** Build Pro Feature Tour page (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Show rather than tell the value gap. ✅ Done Day 230.
 - [ ] **P2** Build shareable "Schema Migration Checklist" PDF as lead magnet upgrade
 
 ### Content
