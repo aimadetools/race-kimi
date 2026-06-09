@@ -33,8 +33,12 @@ inputs:
     description: 'Create a GitHub Check Run with the diff result (true/false). Requires GITHUB_TOKEN with checks:write.'
     default: 'false'
     required: false
+  run-only-on-schema-change:
+    description: 'Skip the diff if no .sql files were modified in this PR (true/false). Only applies to pull_request events.'
+    default: 'false'
+    required: false
   github-token:
-    description: 'GitHub token for posting PR comments and creating check runs'
+    description: 'GitHub token for posting PR comments, creating check runs, and checking changed files'
     required: false
 runs:
   using: 'composite'
@@ -47,6 +51,44 @@ runs:
           echo "  - run: sudo apt-get install -y jq"
           exit 1
         fi
+        case "${{ inputs.dialect }}" in
+          postgres|mysql|sqlite|mssql|oracle) ;;
+          *) echo "::error::Invalid dialect '${{ inputs.dialect }}'. Must be one of: postgres, mysql, sqlite, mssql, oracle"; exit 1 ;;
+        esac
+
+    - name: Check for schema file changes
+      id: changed
+      if: inputs.run-only-on-schema-change == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      run: |
+        set -euo pipefail
+        BASE_SHA="${{ github.event.pull_request.base.sha }}"
+        HEAD_SHA="${{ github.sha }}"
+        if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -q '\.sql$'; then
+          echo "sql_changed=true" >> "$GITHUB_OUTPUT"
+          echo "Schema files changed in this PR — will run diff."
+        else
+          echo "sql_changed=false" >> "$GITHUB_OUTPUT"
+          echo "No schema files changed in this PR — skipping diff."
+        fi
+
+    - name: Skip diff (no schema changes)
+      if: inputs.run-only-on-schema-change == 'true' && github.event_name == 'pull_request' && steps.changed.outputs.sql_changed == 'false'
+      shell: bash
+      run: |
+        echo "No .sql files changed in this PR. Schema diff skipped."
+        {
+          echo "## ✅ SchemaLens Schema Diff"
+          echo ""
+          echo "No \`.sql\` files were modified in this pull request, so the schema diff was skipped to save CI time."
+          echo ""
+          echo "If you expected a diff, ensure your schema files have the \`.sql\` extension or set \`run-only-on-schema-change: false\`."
+        } >> "$GITHUB_STEP_SUMMARY"
+        exit 0
+
+    - name: Validate schema paths
+      shell: bash
+      run: |
         if [ ! -r "${{ inputs.old-schema-path }}" ]; then
           echo "::error::old-schema-path '${{ inputs.old-schema-path }}' does not exist or is not readable"
           exit 1
@@ -55,10 +97,6 @@ runs:
           echo "::error::new-schema-path '${{ inputs.new-schema-path }}' does not exist or is not readable"
           exit 1
         fi
-        case "${{ inputs.dialect }}" in
-          postgres|mysql|sqlite|mssql|oracle) ;;
-          *) echo "::error::Invalid dialect '${{ inputs.dialect }}'. Must be one of: postgres, mysql, sqlite, mssql, oracle"; exit 1 ;;
-        esac
 
     - name: Diff schemas with SchemaLens
       id: diff
@@ -138,17 +176,69 @@ runs:
         BCOUNT=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)')
         echo "breaking_count=${BCOUNT}" >> "$GITHUB_OUTPUT"
 
+        # Extract summary fields for step summary
+        RISK=$(echo "$RESPONSE" | jq -r '.riskScore.label // "Unknown"')
+        SCORE=$(echo "$RESPONSE" | jq -r '.riskScore.score // 0')
+        TA=$(echo "$RESPONSE" | jq -r '.summary.tablesAdded // 0')
+        TR=$(echo "$RESPONSE" | jq -r '.summary.tablesRemoved // 0')
+        TM=$(echo "$RESPONSE" | jq -r '.summary.tablesModified // 0')
+        HAS_MIGRATION=$(echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1 && echo "true" || echo "false")
+        HAS_MARKDOWN=$(echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1 && echo "true" || echo "false")
+        HAS_TEASER=$(echo "$RESPONSE" | jq -e '.migrationTeaser' >/dev/null 2>&1 && echo "true" || echo "false")
+        TOTAL_LINES=$(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0')
+
+        # Build Job Summary markdown
+        {
+          echo "## 🔍 SchemaLens Schema Diff Report"
+          echo ""
+          echo "| Metric | Value |"
+          echo "|--------|-------|"
+          echo "| 🟢 Tables Added | ${TA} |"
+          echo "| 🔴 Tables Removed | ${TR} |"
+          echo "| 🟡 Tables Modified | ${TM} |"
+          echo "| ⚠️ Breaking Changes | ${BCOUNT} |"
+          echo "| 📊 Risk Score | ${SCORE}/100 (${RISK}) |"
+          echo ""
+
+          if [ "$HAS_MIGRATION" = "true" ]; then
+            MIGRATION=$(echo "$RESPONSE" | jq -r '.migration')
+            echo "### Generated Migration"
+            echo '```sql'
+            echo "$MIGRATION"
+            echo '```'
+            echo ""
+          elif [ "$HAS_MARKDOWN" = "true" ]; then
+            MARKDOWN=$(echo "$RESPONSE" | jq -r '.markdown')
+            echo "### Diff Summary"
+            echo "$MARKDOWN"
+            echo ""
+          elif [ "$HAS_TEASER" = "true" ]; then
+            TEASER=$(echo "$RESPONSE" | jq -r '.migrationTeaser')
+            echo "### Migration Preview (Free Tier)"
+            echo '```sql'
+            echo "$TEASER"
+            echo '```'
+            echo ""
+            if [ "$TOTAL_LINES" -gt 5 ]; then
+              echo "> 💡 **${TOTAL_LINES} total migration lines.** [Unlock the full migration with SchemaLens Pro →](https://schemalens.tech/pricing.html)"
+              echo ""
+            fi
+          fi
+
+          echo "---"
+          echo "*Generated by [SchemaLens GitHub Action](https://schemalens.tech/github-action.html)*"
+        } >> "$GITHUB_STEP_SUMMARY"
+
         # Print formatted output to logs
         echo ""
         echo "=== SchemaLens Diff Result ==="
-        if echo "$RESPONSE" | jq -e '.markdown' >/dev/null 2>&1; then
+        if [ "$HAS_MARKDOWN" = "true" ]; then
           echo "$RESPONSE" | jq -r '.markdown'
-        elif echo "$RESPONSE" | jq -e '.migration' >/dev/null 2>&1; then
+        elif [ "$HAS_MIGRATION" = "true" ]; then
           echo "$RESPONSE" | jq -r '.migration'
-        elif echo "$RESPONSE" | jq -e '.migrationTeaser' >/dev/null 2>&1; then
+        elif [ "$HAS_TEASER" = "true" ]; then
           echo "--- SchemaLens Free Diff (upgrade for full migration) ---"
           echo "$RESPONSE" | jq -r '.migrationTeaser'
-          TOTAL_LINES=$(echo "$RESPONSE" | jq -r '.totalMigrationLines // 0')
           echo "... ${TOTAL_LINES} total lines. Get Pro at https://schemalens.tech/pricing.html"
         fi
         echo "================================"
