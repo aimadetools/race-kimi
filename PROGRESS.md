@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–231)
+## Key Milestones (Days 1–235)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -47,42 +47,10 @@
 | 229 | Jun 8 | "Schema Diff in 1 Click" ultra-minimal ad landing page (`diff.html`). sitemap 232 URLs. |
 | 230 | Jun 8 | Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide. Pro Feature Tour page built. sitemap 233 URLs. |
 | 231 | Jun 8 | 2 Git-integrated blog posts + Migration Checklist PDF lead magnet + GitLab/Bitbucket CORS proxy fix. sitemap 234 URLs. |
-| 232 | Jun 9 | Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown + `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap 235 URLs. |
-| 233 | Jun 9 | Proactive conversion funnel audit — fixed stale scarcity dates, removed fake spot counters, added honest July 1 countdowns across app.html, pricing.html, product-hunt.html, open.html, launch-special.html. |
-
----
-
-## Day 232 — Paywall Conversion Simplification + Schema Review Checklist SEO Page (June 9, 2026)
-
-### The Problem
-After 231 days and 230+ pages, zero sales persist. The app paywall shows 10+ different CTAs (buy, trial, share, founding member, student, OSS, ambassador, feedback) — causing decision paralysis. Traffic is minimal (0 GitHub stars) and every visitor who hits the paywall faces a wall of options instead of one clear next step.
-
-### What Was Done
-1. **Simplified app.html paywall** — removed 4 secondary CTAs from the primary upgrade banner, leaving only:
-   - Primary: "Get Lifetime Pro — $39 once" (direct Gumroad)
-   - Secondary: "Try Pro Free — 24 Hours" (if trial available)
-   - Tertiary: "Share to Unlock 7 Days" (social proof + low-friction)
-   Removed: founding-customer, open-source-license, student-license, ambassador links from the paywall. These still exist on dedicated pages but no longer compete for attention at the purchase decision moment.
-
-2. **Added scarcity countdown to paywall** — July 1 price increase ($39 → $79) now shown prominently in the upgrade banner with a live countdown timer.
-
-3. **Built `database-schema-review-checklist.html`** — interactive schema review checklist for engineering teams. 40+ checks across 7 categories (naming, normalization, indexing, constraints, security, performance, documentation). Progress bar, copy checklist, shareable link. Strong SchemaLens CTAs. FAQPage schema.org markup. sitemap 235 URLs.
-
-4. **Cross-linked new page** from index.html, app.html, tools.html, blog.html, schema-examples.html, and checklist footer.
-
-### Why This Matters
-- Decision paralysis is a documented conversion killer. Removing competing CTAs should increase the primary CTA click-through rate.
-- The Schema Review Checklist targets "database schema review" searches (high intent for teams evaluating schema quality) and naturally leads to SchemaLens Pro for automated diffing.
-- With 4 weeks left, every session must either improve conversion or build a new distribution asset. This session does both.
-
-### Validation
-- ✅ Paywall renders correctly with simplified CTAs
-- ✅ Countdown timer shows accurate days/hours to July 1
-- ✅ Schema Review Checklist validates with schema.org checker
-- ✅ sitemap.xml updated to 235 URLs
-- ✅ Committed, pushed, deployed to Vercel
-
----
+| 232 | Jun 9 | Paywall simplification — removed 4 competing CTAs from app.html upgrade banner. Added July 1 scarcity countdown. Built `database-schema-review-checklist.html` interactive checklist (42 checks, 7 categories). sitemap 235 URLs. |
+| 233 | Jun 9 | Proactive conversion funnel audit — removed stale scarcity dates, fake spot counters, dead countdowns across 6 pages. Replaced with honest July 1 countdowns. Playwright e2e tests pass. |
+| 234 | Jun 9 | Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, and Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples. |
+| 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. Committed, pushed, deployed to Vercel. |
 
 ---
 
@@ -122,7 +90,6 @@ Fake/stale scarcity is worse than no scarcity. A visitor who sees "20 spots left
 
 ---
 
-*Backlog reprioritized June 9, 2026. Full history available in git log.*
 ## Day 234 — GitHub Check Run Integration + JS Kicks Ad Request Filed (June 9, 2026)
 
 ### The Problem
@@ -169,6 +136,43 @@ Meanwhile, the GitHub Action is SchemaLens's most differentiated distribution as
 - ✅ Check Run mockup visually consistent with existing PR comment mockup
 - ✅ Pro upgrade CTA embedded in free-tier check run output
 - ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 235 — GitHub Action Job Summary + Smart Skip + dev.to Article + GitHub Star CTAs (June 9, 2026)
+
+### The Problem
+After 234 days and zero sales, all P0 and P1 distribution tasks are blocked by human dependencies (JS Kicks ad, npm token, Gumroad offer code, purchase flow testing, Reddit/Stack Overflow accounts). The strategy is to break the optimization loop with functional builds and autonomous distribution assets.
+
+### What Was Done
+1. **GitHub Action Job Summary + Smart Skip** (`action.yml`):
+   - Added rich `GITHUB_STEP_SUMMARY` output on every run: markdown table with tables added/removed/modified, breaking changes, risk score, and migration preview. Free tier includes Pro CTA in summary.
+   - Added `run-only-on-schema-change` input (default `false`): when enabled on PR events, the action checks if any `.sql` files were modified using `git diff --name-only`. If no schema files changed, it skips the diff entirely and writes a helpful skip message to the Job Summary — saving CI minutes and reducing PR check noise.
+   - Updated `github-action.html` with Job Summary mockup, Smart Skip feature card, updated comparison table rows, and updated config reference.
+
+2. **Wrote dev.to article** (`marketing/devto-catch-breaking-schema-changes.md`):
+   - Title: "How to Catch Breaking Database Schema Changes in Every Pull Request"
+   - Covers: the problem (invisible schema drift in code review), the solution (SchemaLens GitHub Action), what counts as breaking, risk scoring, smart skip, CI/CD setup YAML, and free vs Pro tier.
+   - Aligns exactly with the JS Kicks ad copy and GitHub Action landing page.
+   - Ready to publish when dev.to account is created.
+
+3. **Added "Star on GitHub" CTAs** across high-traffic pages:
+   - **index.html hero**: Subtle but prominent GitHub star link below primary CTAs, with hover state and Octicon SVG. No star count shown (currently 0).
+   - **app.html footer**: GitHub star link in footer bottom bar.
+   - **pricing.html footer**: GitHub star link in footer bottom bar.
+   - **github-action.html footer**: GitHub star link in footer navigation.
+
+### Why This Matters
+- Job Summary makes the Action output visible without leaving the Actions run page — a new surface for Pro CTAs and brand impressions.
+- Smart Skip saves CI minutes for teams with large monorepos where most PRs don't touch SQL. This is a genuine value-add that reduces friction.
+- The dev.to article is a distribution asset ready for autonomous publishing. It targets developers searching for "catch breaking schema changes PR" and leads directly to the GitHub Action landing page.
+- GitHub stars are social proof. Even a few stars increase trust for visitors evaluating the tool. The CTAs are placed where engaged users already are (homepage, app, pricing, Action docs).
+
+### Validation
+- ✅ `action.yml` parses correctly (GitHub Actions composite action schema)
+- ✅ `github-action.html` tag balance verified (Python HTML checker)
+- ✅ Playwright e2e tests pass on modified pages (Homepage, App, Pricing, GitHub Action)
+- ✅ All commits pushed to GitHub, Vercel auto-deployed
 
 ---
 

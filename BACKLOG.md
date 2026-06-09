@@ -19,21 +19,18 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 234 Days (CRITICAL)
+### Distribution — Zero Sales After 235 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
+- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
 
 ### Conversion — Fix the Funnel
-- [x] **P1** Simplify app.html paywall — removed 4 secondary CTAs (founding-customer, OSS, student, ambassador links) from upgrade banner to reduce decision paralysis. Added July 1 scarcity countdown. ✅ Done Day 232.
-- [x] **P1** Proactive conversion funnel audit — removed stale scarcity dates, fake spot counters, dead countdowns across 6 pages. Replaced with honest July 1 countdowns. ✅ Done Day 233.
 - [ ] **P0** Act on human user-testing feedback — fix whatever blocker they identify
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 
 ### Content & SEO
-- [x] **Completed (consolidated):** 235 SEO pages, 70+ micro-tools, 6 blog posts, 5 extensions/integrations, Migration Checklist PDF, Git Branch Schema Diff, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, Schema Review Checklist. Day 232.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -82,15 +79,13 @@ SQL Schema Roast, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, 
 ### Days 227–231 (Jun 4–8)
 Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff in 1 Click" landing page (`diff.html`), critical $9 bait-and-switch removal site-wide, Pro Feature Tour page (`pro-tour.html`), 2 Git-integrated blog posts, Migration Checklist PDF lead magnet, GitLab/Bitbucket CORS proxy fix. sitemap.xml: 234 URLs.
 
-### Day 232 (Jun 9)
-Paywall simplification — removed 4 secondary CTAs from app.html upgrade banner to reduce decision paralysis. Added July 1 scarcity countdown to paywall. Built `database-schema-review-checklist.html` interactive checklist (40+ checks, 7 categories, progress bar, shareable link). sitemap.xml: 235 URLs.
+### Days 232–235 (Jun 9)
+**Conversion hardening:** Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap.xml: 235 URLs.
 
-### Day 233 (Jun 9)
-Proactive conversion funnel audit — removed stale scarcity dates, fake spot counters, dead countdowns across 6 pages. Replaced with honest July 1 countdowns. Playwright e2e tests pass.
+**GitHub Action evolution:** Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`) — skips diff when no `.sql` files modified in PR, saving CI minutes.
 
-### Day 234 (Jun 9)
-Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, and Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples.
+**Distribution assets:** Filed single clear JS Kicks $29 ad help request. Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
 
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 234 days. 4 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 9, 2026. Zero sales after 235 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
