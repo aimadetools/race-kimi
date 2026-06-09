@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Jenkins — Free Schema Diff in Every Build</title>
+  <meta name="description" content="Add schema diff checks to your Jenkins pipeline for free. Catch breaking database changes in every build. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
+  <meta property="og:title" content="SchemaLens Jenkins — Free Schema Diff in Every Build">
+  <meta property="og:description" content="Catch breaking database changes in every Jenkins build. Free pipeline template with console reports, build descriptions, and breaking-change gates.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/jenkins-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Jenkins Integration",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Free SQL schema diff in Jenkins, console output reports, build description summaries, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/jenkins-schema-diff.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fca5a5; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .step { display: flex; gap: 16px; margin: 24px 0; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step-body { flex: 1; }
+    .step-body h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .step-body p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .dialect-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .dialect-tags span { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; color: var(--text-muted); }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table td { color: var(--text-muted); }
+    .comparison-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    @media (prefers-color-scheme: dark) {
+      .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    }
+    .jenkins-accent { color: #d24939; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api-guide.html">API</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="gitlab-schema-diff.html">GitLab CI</a>
+      <a href="bitbucket-schema-diff.html">Bitbucket</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>SchemaLens <span class="jenkins-accent">Jenkins</span> <span class="badge-free">Free</span></h1>
+      <p>Catch breaking database changes in every build. Zero config, zero cost — add schema diff checks to your Jenkins pipeline in 60 seconds.</p>
+      <div class="dialect-tags">
+        <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Add to your pipeline — copy, paste, done</h2>
+      <div class="code-block">
+<span class="comment">// Jenkinsfile</span>
+<span class="key">pipeline</span> {
+  <span class="key">agent</span> <span class="key">any</span>
+  <span class="key">environment</span> {
+    <span class="key">SCHEMA_PATH</span>        = <span class="str">'db/schema.sql'</span>
+    <span class="key">DIALECT</span>            = <span class="str">'postgres'</span>
+    <span class="key">FAIL_ON_BREAKING</span>   = <span class="str">'true'</span>
+    <span class="key">SKIP_NO_SQL_CHANGE</span> = <span class="str">'true'</span>
+  }
+  <span class="key">stages</span> {
+    <span class="key">stage</span>(<span class="str">'Schema Diff'</span>) {
+      <span class="key">steps</span> {
+        <span class="key">sh</span> <span class="str">'curl -s https://schemalens.tech/ci/jenkins-diff.sh | bash'</span>
+      }
+    }
+  }
+  <span class="key">post</span> {
+    <span class="key">always</span> { <span class="key">archiveArtifacts</span> <span class="key">artifacts</span>: <span class="str">'schema_diff_report.md'</span> }
+  }
+}
+      </div>
+      <a href="Jenkinsfile" class="btn btn-primary" download>Download Jenkinsfile</a>
+      <a href="https://www.jenkins.io/doc/book/pipeline/jenkinsfile/" class="btn btn-secondary" target="_blank" rel="noopener">Jenkinsfile Docs</a>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">📋 What the build console looks like</h3>
+      <div style="background: #0f172a; border-radius: var(--radius); padding: 16px; font-size: 0.85rem; color: #e2e8f0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.6;">
+        <div style="color: #64748b; margin-bottom: 8px;">[Pipeline] stage<br>[Pipeline] { (Schema Diff)</div>
+        <div style="color: #86efac; margin-bottom: 8px;">[SchemaLens] Comparing schemas...</div>
+        <div style="margin: 8px 0;">
+          <p style="color: #7dd3fc; font-weight: 600;">🔍 SchemaLens Schema Diff Report</p>
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin: 8px 0; color: #e2e8f0;">
+            <tr style="border-bottom:1px solid #334155;"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+            <tr style="border-bottom:1px solid #334155;"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+            <tr style="border-bottom:1px solid #334155;"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+            <tr style="border-bottom:1px solid #334155;"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+            <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+          </table>
+          <pre style="background: #1e293b; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+        </div>
+        <div style="color: #64748b;">[Pipeline] archiveArtifacts<br>[Pipeline] }</div>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">🏷️ Build description with risk score</h3>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #d24939;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
+          <strong>Build #42</strong>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">— Success</span>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 0.85rem; color: var(--text-muted);">
+          <strong>SchemaLens:</strong> Risk: Medium (42/100) | +1 -0 ~2 | 1 breaking
+        </div>
+        <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.85rem;">The build description is updated automatically so anyone browsing the build history can spot risky schema changes at a glance — no need to open the console log.</p>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">📦 Archived artifact</h3>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #d24939;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
+          <strong>schema_diff_report.md</strong>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">2.4 KB</span>
+        </div>
+        <div style="line-height: 1.6; padding-left: 24px;">
+          <p>Team members can download the full markdown report from the <strong>Build Artifacts</strong> section. The report includes:</p>
+          <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-muted);">
+            <li>Complete diff summary with table counts</li>
+            <li>Breaking change list with severity levels</li>
+            <li>Generated migration SQL (full script with Pro)</li>
+            <li>Risk score and recommendation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2>Why add schema diff to Jenkins?</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Prevent production incidents</h3>
+        <p>Breaking changes like dropped columns, removed indexes, or altered constraints get flagged before merge — not after deploy.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📋 Console output reports</h3>
+        <p>The full schema diff appears directly in the Jenkins build console. No external dashboards required — review drift where you already review logs.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🏷️ Build description summaries</h3>
+        <p>Every build gets its description updated with risk score, table counts, and breaking change count. Spot risky builds in the build history instantly.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Smart skip</h3>
+        <p>Set <code>SKIP_NO_SQL_CHANGE: 'true'</code> and the stage skips entirely when no <code>.sql</code> files were modified — saving build time and agent resources.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⚡ Zero setup required</h3>
+        <p>No database connections, no CLI installation, no license key. Just point the stage at two SQL files.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🚦 Fail the build on breaking changes</h3>
+        <p>Set <code>FAIL_ON_BREAKING: 'true'</code> and the build fails if any dangerous schema changes are detected.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📊 Risk score at a glance</h3>
+        <p>Each diff gets a 0-100 risk score. High-risk migrations get extra scrutiny in code review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔓 100% free for open source</h3>
+        <p>The free tier includes breaking change detection, risk scoring, console reports, and artifact archiving. No credit card required.</p>
+      </div>
+    </div>
+
+    <h2>How it works</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Dump your schema</h3>
+        <p>Export your database schema to a SQL file as part of your workflow (e.g., <code>pg_dump --schema-only</code> or commit your schema file to the repo).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Compare before and after</h3>
+        <p>The stage compares the schema from your target branch against the schema in the current build. Any drift is surfaced instantly.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>See the diff in console & build description</h3>
+        <p>Enable <code>POST_BUILD_COMMENT: 'true'</code> and add a <code>GITHUB_TOKEN</code> or <code>GITLAB_TOKEN</code> credential. The stage posts a formatted summary to your PR or MR automatically.</p>
+      </div>
+    </div>
+
+    <h2>Free vs Pro</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Feature</th><th>Free Tier</th><th>Pro (optional)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Schema diff summary</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Breaking change detection</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Risk score</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Console output & build description</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Archived artifacts</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Smart skip (no SQL changes)</td><td>✅</td><td>✅</td></tr>
+        <tr><td>PR/MR comments (GitHub/GitLab)</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Full migration SQL</td><td>First 5 lines</td><td>✅ Complete script</td></tr>
+        <tr><td>Markdown export</td><td>✅</td><td>✅</td></tr>
+        <tr><td>JSON export</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Rate limit</td><td>15/min</td><td>30/min</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Full configuration reference</h2>
+    <div class="code-block">
+<span class="comment">// Jenkins environment variables (Manage Jenkins → Credentials, or pipeline environment block)</span>
+<span class="key">SL_LICENSE_KEY</span>       <span class="comment">// optional — SchemaLens Pro license key for full migration output</span>
+<span class="key">GITHUB_TOKEN</span>         <span class="comment">// optional — GitHub PAT with repo scope for PR comments</span>
+<span class="key">GITLAB_TOKEN</span>         <span class="comment">// optional — GitLab token with api scope for MR comments</span>
+
+<span class="comment">// Pipeline environment variables</span>
+<span class="key">SCHEMA_PATH</span>              <span class="str">'db/schema.sql'</span>      <span class="comment">// Path to current schema SQL file</span>
+<span class="key">DIALECT</span>                  <span class="str">'postgres'</span>           <span class="comment">// postgres | mysql | sqlite | mssql | oracle</span>
+<span class="key">FAIL_ON_BREAKING</span>         <span class="str">'false'</span>              <span class="comment">// true = fail build on breaking changes</span>
+<span class="key">SKIP_NO_SQL_CHANGE</span>       <span class="str">'false'</span>              <span class="comment">// true = skip stage when no .sql files changed</span>
+<span class="key">POST_BUILD_COMMENT</span>       <span class="str">'false'</span>              <span class="comment">// true = post to PR/MR (needs SCM token)</span>
+<span class="key">FORMAT</span>                   <span class="str">'markdown'</span>           <span class="comment">// markdown | json | sql (sql needs Pro)</span>
+    </div>
+
+    <h2>Example: PostgreSQL project with PR comments</h2>
+    <div class="code-block">
+<span class="comment">// Jenkinsfile</span>
+<span class="key">pipeline</span> {
+  <span class="key">agent</span> <span class="key">any</span>
+
+  <span class="key">environment</span> {
+    <span class="key">SCHEMA_PATH</span>        = <span class="str">'db/schema.sql'</span>
+    <span class="key">DIALECT</span>            = <span class="str">'postgres'</span>
+    <span class="key">FAIL_ON_BREAKING</span>   = <span class="str">'true'</span>
+    <span class="key">SKIP_NO_SQL_CHANGE</span> = <span class="str">'true'</span>
+    <span class="key">POST_BUILD_COMMENT</span> = <span class="str">'true'</span>
+  }
+
+  <span class="key">stages</span> {
+    <span class="key">stage</span>(<span class="str">'Schema Diff'</span>) {
+      <span class="key">steps</span> {
+        <span class="key">script</span> {
+          <span class="comment">// Smart skip</span>
+          <span class="key">if</span> (env.SKIP_NO_SQL_CHANGE == <span class="str">'true'</span>) {
+            <span class="key">def</span> target = env.CHANGE_TARGET ?: <span class="str">'main'</span>
+            <span class="key">def</span> changed = sh(
+              <span class="key">script</span>: <span class="str">'git diff --name-only origin/'</span> + target + <span class="str">'..HEAD || true'</span>,
+              <span class="key">returnStdout</span>: <span class="key">true</span>
+            ).trim()
+            <span class="key">if</span> (!changed.contains(<span class="str">'.sql'</span>)) {
+              echo <span class="str">'[SchemaLens] No SQL changes — skipping.'</span>
+              currentBuild.description = <span class="str">'Skipped — no SQL changes'</span>
+              <span class="key">return</span>
+            }
+          }
+
+          <span class="comment">// Ensure tools</span>
+          sh <span class="str">'which jq >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq jq curl) || true'</span>
+
+          <span class="comment">// Fetch base schema</span>
+          sh <span class="str">'''git fetch origin "${CHANGE_TARGET:-main}" && git show "origin/${CHANGE_TARGET:-main}:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql'''</span>
+
+          <span class="comment">// Call SchemaLens API</span>
+          sh <span class="str">'''set -euo pipefail
+            ENDPOINT="https://schemalens.tech/api/free-diff"
+            [ -n "${SL_LICENSE_KEY:-}" ] && ENDPOINT="https://schemalens.tech/api/diff"
+            BODY=$(jq -n --arg a "$(cat /tmp/schema_base.sql)" --arg b "$(cat "$SCHEMA_PATH")" --arg d "$DIALECT" --arg f "$FORMAT" '{schemaA:$a,schemaB:$b,dialect:$d,format:$f}')
+            curl -s -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
+            jq -r '.markdown // .migrationTeaser' /tmp/response.json > schema_diff_report.md
+          '''</span>
+
+          <span class="comment">// Show report</span>
+          sh <span class="str">'cat schema_diff_report.md'</span>
+
+          <span class="comment">// Update build description</span>
+          <span class="key">def</span> score = sh(<span class="key">script</span>: <span class="str">'jq -r ".riskScore.score // 0" /tmp/response.json'</span>, <span class="key">returnStdout</span>: <span class="key">true</span>).trim()
+          <span class="key">def</span> label = sh(<span class="key">script</span>: <span class="str">'jq -r ".riskScore.label // \"Unknown\"" /tmp/response.json'</span>, <span class="key">returnStdout</span>: <span class="key">true</span>).trim()
+          <span class="key">def</span> bc = sh(<span class="key">script</span>: <span class="str">'jq -r "(.summary.breakingChangeCount // (.breakingChanges | length) // 0)" /tmp/response.json'</span>, <span class="key">returnStdout</span>: <span class="key">true</span>).trim()
+          currentBuild.description = <span class="str">"Risk: ${label} (${score}/100) | ${bc} breaking"</span>
+
+          <span class="comment">// Fail on breaking</span>
+          <span class="key">if</span> (env.FAIL_ON_BREAKING == <span class="str">'true'</span> && bc != <span class="str">'0'</span>) {
+            error(<span class="str">"[SchemaLens] ${bc} breaking change(s) detected."</span>)
+          }
+        }
+      }
+    }
+  }
+
+  <span class="key">post</span> {
+    <span class="key">always</span> {
+      <span class="key">archiveArtifacts</span> <span class="key">artifacts</span>: <span class="str">'schema_diff_report.md'</span>, <span class="key">allowEmptyArchive</span>: <span class="key">true</span>
+    }
+  }
+}
+    </div>
+
+    <div class="cta-bar" style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%); color: #fff; border: none;">
+      <h2 style="color:#fff;">Start catching schema drift today</h2>
+      <p style="color:rgba(255,255,255,0.9);">Free forever for open source. Upgrade to Pro for full migration generation.</p>
+      <a href="app.html" class="btn btn-light" style="background:#fff; color:var(--primary);">Try SchemaLens Free</a>
+      <a href="pricing.html" class="btn btn-secondary" style="border-color:rgba(255,255,255,0.4); color:#fff;">View Pro Pricing</a>
+    </div>
+
+    <div class="cta-bar" style="background: var(--surface); border: 1px solid var(--border);">
+      <h2>Need this for your team?</h2>
+      <p>Get a personalized walkthrough of SchemaLens for your engineering team — including SSO, shared workspaces, and Slack alerts.</p>
+      <a href="book-demo.html" class="btn btn-primary">Book a Demo</a>
+      <a href="team-schema-audit.html" class="btn btn-secondary">Free Team Audit</a>
+    </div>
+
+    <footer style="margin-top:64px; padding:32px 0; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem; text-align:center;">
+      <p>
+        <a href="index.html">Home</a> ·
+        <a href="app.html">App</a> ·
+        <a href="tools.html">Tools</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="api-guide.html">API</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="gitlab-schema-diff.html">GitLab CI</a> ·
+        <a href="bitbucket-schema-diff.html">Bitbucket</a> ·
+        <a href="ci-cd-integration.html">CI/CD</a> ·
+        <a href="vscode-extension.html">VS Code</a> ·
+        <a href="open-source.html">Open Source</a> ·
+        <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener">Star on GitHub</a>
+      </p>
+      <p>© 2026 SchemaLens. Built for engineers.</p>
+    </footer>
+  </div>
+</body>
+</html>

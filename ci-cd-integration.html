@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab & Bitbucket</title>
-  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, and Bitbucket Pipelines.">
-  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab & Bitbucket">
-  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, and Bitbucket.">
+  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket & Jenkins</title>
+  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, Bitbucket Pipelines, and Jenkins.">
+  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket & Jenkins">
+  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, Bitbucket, and Jenkins.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/ci-cd-integration.html">
@@ -49,6 +49,7 @@
       "Automated schema diff in GitHub Actions",
       "GitLab CI pipeline integration",
       "Bitbucket Pipelines support",
+      "Jenkins pipeline integration",
       "Breaking change detection in CI",
       "Markdown diff reports as PR comments",
       "Zero dependencies — standalone Node.js script",
@@ -236,6 +237,40 @@ pipelines:
             - node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=schema_diff_report.md
           artifacts:
             - schema_diff_report.md</code><button class="copy-btn" onclick="copyWorkflow(this,'bitbucket')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--bg);" id="jenkins">
+    <div class="container">
+      <h2 class="section-title text-center">Jenkins</h2>
+      <p class="section-subtitle text-center">Add a schema diff stage to your Jenkinsfile. Works with multibranch pipelines and freestyle jobs.</p>
+      <div style="text-align:center; margin: 16px 0;">
+        <a href="jenkins-schema-diff.html" class="btn btn-primary">🚀 View Full Jenkins Guide with Build Descriptions</a>
+      </div>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="jenkins-workflow">// Jenkinsfile
+pipeline {
+  agent any
+  environment {
+    SCHEMA_PATH = 'db/schema.sql'
+    DIALECT = 'postgres'
+    FAIL_ON_BREAKING = 'true'
+    SKIP_NO_SQL_CHANGE = 'true'
+  }
+  stages {
+    stage('Schema Diff') {
+      steps {
+        sh 'curl -s https://schemalens.tech/ci/jenkins-diff.sh | bash'
+      }
+    }
+  }
+  post {
+    always {
+      archiveArtifacts artifacts: 'schema_diff_report.md'
+    }
+  }
+}</code><button class="copy-btn" onclick="copyWorkflow(this,'jenkins')">Copy</button></pre>
       </div>
     </div>
   </section>
