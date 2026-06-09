@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket & Jenkins</title>
-  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, Bitbucket Pipelines, and Jenkins.">
-  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket & Jenkins">
-  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, Bitbucket, and Jenkins.">
+  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins & CircleCI</title>
+  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, and CircleCI.">
+  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins & CircleCI">
+  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, Bitbucket, Jenkins, and CircleCI.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/ci-cd-integration.html">
@@ -271,6 +271,31 @@ pipeline {
     }
   }
 }</code><button class="copy-btn" onclick="copyWorkflow(this,'jenkins')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--surface);" id="circleci">
+    <div class="container">
+      <h2 class="section-title text-center">CircleCI</h2>
+      <p class="section-subtitle text-center">Add a schema diff job to your CircleCI workflow. Works with any GitHub-connected project.</p>
+      <div style="text-align:center; margin: 16px 0;">
+        <a href="circleci-schema-diff.html" class="btn btn-primary">🚀 View Full CircleCI Guide with PR Comments</a>
+      </div>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="circleci-workflow"># .circleci/config.yml
+version: 2.1
+jobs:
+  schema-diff:
+    docker:
+      - image: cimg/node:20.0
+    steps:
+      - checkout
+      - run:
+          name: Schema Diff
+          command: curl -s https://schemalens.tech/ci/circleci-diff.sh | bash
+      - store_artifacts:
+          path: schema_diff_report.md</code><button class="copy-btn" onclick="copyWorkflow(this,'circleci')">Copy</button></pre>
       </div>
     </div>
   </section>

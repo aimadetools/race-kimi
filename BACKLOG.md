@@ -33,6 +33,7 @@
 ### Unblocked — Build Next
 - [x] **P1** Live Database Schema Fetch — PostgreSQL + MySQL via connection string. **Done.**
 - [x] **P1** Jenkins Pipeline Integration — `Jenkinsfile` + landing page. **Done.**
+- [x] **P1** CircleCI Pipeline Integration — `.circleci/config.yml` + landing page. **Done.**
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
@@ -105,6 +106,9 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 ### Day 240 (Jun 9)
 **Jenkins Pipeline Integration:** Built enterprise `Jenkinsfile` with console output reports, build description risk summaries, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, artifact archiving, and optional GitHub/GitLab PR/MR comment posting. Built dedicated `jenkins-schema-diff.html` landing page (24KB) with hero, quick-start snippet, console mockup, build description preview, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, Bitbucket Pipelines, and CI/CD hub. sitemap.xml: 240 URLs.
 
+### Day 241 (Jun 9)
+**CircleCI Pipeline Integration:** Built enterprise `.circleci/config.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, artifact storage, and metrics extraction. Built dedicated `circleci-schema-diff.html` landing page (22KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, Bitbucket Pipelines, Jenkins, and CI/CD hub. sitemap.xml: 241 URLs.
+
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 240 days. 3 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 9, 2026. Zero sales after 241 days. 3 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*

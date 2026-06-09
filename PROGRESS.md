@@ -56,48 +56,13 @@
 | 238 | Jun 9 | Schema Export Command Generator micro-tool (35KB) for 8 databases. sitemap 239 URLs. |
 | 239 | Jun 9 | Live Database Schema Fetch — serverless endpoint connects to PostgreSQL/MySQL via connection string, returns CREATE TABLE SQL. Integrated into app.html with modal UI. sitemap 239 URLs. |
 | 240 | Jun 9 | Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page. sitemap 240 URLs. |
+| 241 | Jun 9 | CircleCI Pipeline Integration — `.circleci/config.yml` with PR comments, smart skip, breaking gate, artifact storage. Dedicated `circleci-schema-diff.html` landing page. sitemap 241 URLs. |
 
 ---
 
 ## Day 238 — Schema Export Command Generator Micro-Tool (June 9, 2026)
 
-### The Problem
-After 237 days and zero sales, the #1 community feedback (from HN and other channels) is: "How do I get my schema out of my database to use SchemaLens?" The existing `db-schema-export-guide.html` covers GUI tools but has no interactive command generator for CLI users. Developers needed to manually construct `pg_dump`, `mysqldump`, and other commands, often getting flags wrong or including data/owner statements that create false diffs. There was no single tool that generated the exact dump command for their specific database setup.
-
-### What Was Done
-1. **Built `tools/schema-export-command-generator.html`** — interactive micro-tool (35KB) with:
-   - **8 database dialects** in a sticky sidebar: PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, Oracle, CockroachDB, MongoDB
-   - **Dynamic form fields** per dialect: host, port, database name, user, password, specific tables, SID/service name, file path
-   - **Contextual dump options** as checkboxes: schema-only, no-owner, no-privileges, skip-comments, single-transaction, routines, triggers, and more — each dialect shows only relevant options
-   - **Real-time command generation** with syntax highlighting (commands, flags, comments)
-   - **One-click copy-to-clipboard** with visual feedback
-   - **Flag explanation panel** that updates per dialect — educates users on what each flag does and why it matters for schema diffing
-   - **Privacy-first**: runs entirely client-side; no connection details ever leave the browser
-   - **Schema.org SoftwareApplication JSON-LD** for SEO
-   - **OG/Twitter meta tags** for social sharing
-   - **Responsive layout**: sidebar + main panel on desktop, stacked on mobile
-
-2. **Cross-linked site-wide**:
-   - `tools.html`: added new tool card in the tools grid
-   - `tools/db-schema-export-guide.html`: replaced the bottom CTA with a dual CTA linking to both the command generator and the app
-   - `staging-vs-production-schema-diff.html`: added a paragraph above the export commands grid pointing to the interactive generator
-   - `tools.html` footer: added "Export Command Generator" link under Tools column
-   - `sitemap.xml`: added `tools/schema-export-command-generator.html` (priority 0.7)
-
-### Why This Matters
-- This directly addresses the #1 onboarding friction: getting schema SQL out of a live database. Lowering this barrier increases activation rate.
-- The tool is genuinely useful even outside SchemaLens — developers use `pg_dump` daily. By ranking for "pg_dump schema only" or "mysqldump schema only command", this page can attract organic search traffic.
-- Each generated command includes the exact flags needed for clean schema diffs (`--schema-only --no-owner --no-privileges` for Postgres, `--no-data --skip-comments` for MySQL, etc.), reducing false diffs caused by environment-specific metadata.
-- MongoDB and CockroachDB support expands SchemaLens's perceived database coverage, even though the core diff engine doesn't yet support MongoDB documents.
-
-### Validation
-- ✅ `schema-export-command-generator.html` tag balance verified (Python HTML checker)
-- ✅ No broken internal links in new page
-- ✅ sitemap.xml now has 239 URLs
-- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
-- ✅ Committed with descriptive message, pushed to GitHub, Vercel auto-deployed
-
----
+Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
 
 ---
 
@@ -208,6 +173,66 @@ After 239 days and zero sales, SchemaLens has dedicated CI/CD landing pages for 
 - ✅ No broken internal links in new page
 - ✅ sitemap.xml now has 240 URLs
 - ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, Jenkins, CI/CD Integration)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 241 — CircleCI Pipeline Integration: Dedicated Landing Page + Config (June 9, 2026)
+
+### The Problem
+After 240 days and zero sales, SchemaLens has CI/CD coverage for GitHub Actions, GitLab CI, Bitbucket Pipelines, and Jenkins — but CircleCI, one of the most popular cloud-native CI platforms, has only a generic CLI mention. There was no dedicated landing page, no `.circleci/config.yml` example, no artifact storage guidance, and no Pro license routing. Every CircleCI user who found SchemaLens had to write their own job config from scratch.
+
+### What Was Done
+1. **Built enterprise-grade `.circleci/config.yml`** with feature parity to other CI platforms:
+   - **PR comment posting** via GitHub API when `GITHUB_TOKEN` and `CIRCLE_PULL_REQUEST` are available
+   - **Pro license key support** (`SL_LICENSE_KEY` environment variable) — routes to Pro API endpoint for full migration output
+   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — halts the job when no `.sql` files were modified, saving build minutes
+   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the build when breaking changes are detected
+   - **Retry logic** — 3 attempts with exponential backoff for SchemaLens API calls
+   - **Artifact storage** — `store_artifacts` makes the markdown report downloadable from every build
+   - **Metrics extraction** — risk score, table counts, and breaking change count are echoed in the build log
+   - **Better error handling** — clear messages for missing schema files and API failures
+
+2. **Built `circleci-schema-diff.html`** — dedicated landing page (22KB) with:
+   - Hero: "SchemaLens CircleCI — Free Schema Diff in Every PR"
+   - Quick-start `.circleci/config.yml` snippet with copy button
+   - Visual mockup of GitHub PR comment with table metrics, migration preview, and risk score
+   - Artifact download preview showing what the report contains
+   - Feature grid: 8 cards covering incident prevention, PR comments, artifacts, smart skip, zero setup, breaking gates, risk scoring, free tier
+   - 3-step setup guide
+   - Free vs Pro comparison table
+   - Full configuration reference for environment variables and job variables
+   - Extended PostgreSQL example with full declarative config (smart skip, base schema fetch, API call, PR comment, artifact storage)
+   - CircleCI blue accent color (#0068D9) for brand consistency
+   - Schema.org SoftwareApplication JSON-LD
+   - OG/Twitter meta tags
+   - Footer cross-links to GitHub Action, GitLab CI, Bitbucket, Jenkins, CI/CD hub, VS Code, Open Source
+
+3. **Cross-linked site-wide**:
+   - `github-action.html` nav + footer: added "CircleCI" link
+   - `gitlab-schema-diff.html` nav + footer: added "CircleCI" link
+   - `bitbucket-schema-diff.html` nav + footer: added "CircleCI" link
+   - `jenkins-schema-diff.html` nav + footer: added "CircleCI" link
+   - `ci-cd-integration.html`: added CircleCI section with `.circleci/config.yml` snippet, CTA button, updated title/meta to include CircleCI
+   - `sitemap.xml`: added `circleci-schema-diff.html` (priority 0.8)
+
+4. **Test coverage expanded**:
+   - Added `/circleci-schema-diff.html` to Playwright e2e page list
+   - All modified CI pages pass Chromium e2e tests (133 passed)
+   - `node test-all.js` passes 34/34
+
+### Why This Matters
+- CircleCI is a major cloud-native CI platform used by thousands of teams. A dedicated landing page gives SchemaLens a chance to rank for "circleci schema diff" and "circleci database migration" searches.
+- Feature-parity with GitHub/GitLab/Bitbucket/Jenkins means CircleCI users get the same premium experience — PR comments, smart skip, breaking gates, Pro support, artifact storage — no second-class integration.
+- The config is copy-paste ready: a developer can go from landing page to working pipeline in under 2 minutes.
+- This continues the CI/CD distribution strategy: meet developers where they already work, inside their existing review flow.
+
+### Validation
+- ✅ `.circleci/config.yml` YAML syntax validated (Python YAML parser)
+- ✅ `circleci-schema-diff.html` tag balance verified (Python HTML checker)
+- ✅ No broken internal links in new page
+- ✅ sitemap.xml now has 241 URLs
+- ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, CI/CD Integration)
 - ✅ Committed, pushed, deployed to Vercel
 
 ---

@@ -81,6 +81,7 @@ const pages = [
   { path: '/gitlab-schema-diff.html', name: 'GitLab CI Landing' },
   { path: '/bitbucket-schema-diff.html', name: 'Bitbucket Pipelines Landing' },
   { path: '/jenkins-schema-diff.html', name: 'Jenkins Pipeline Landing' },
+  { path: '/circleci-schema-diff.html', name: 'CircleCI Pipeline Landing' },
   { path: '/book-demo.html', name: 'Book Demo' },
   { path: '/team.html', name: 'Team' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },

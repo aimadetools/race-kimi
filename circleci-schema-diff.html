@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens GitLab CI — Free Schema Diff in Merge Requests</title>
-  <meta name="description" content="Add schema diff checks to your GitLab CI pipeline for free. Catch breaking database changes in every merge request. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
-  <meta property="og:title" content="SchemaLens GitLab CI — Free Schema Diff in Merge Requests">
-  <meta property="og:description" content="Catch breaking database changes in every GitLab merge request. Free CI template with MR comments, artifact reports, and breaking-change gates.">
+  <title>SchemaLens CircleCI — Free Schema Diff in Every PR</title>
+  <meta name="description" content="Add schema diff checks to your CircleCI pipeline for free. Catch breaking database changes in every pull request. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
+  <meta property="og:title" content="SchemaLens CircleCI — Free Schema Diff in Every PR">
+  <meta property="og:description" content="Catch breaking database changes in every CircleCI build. Free pipeline template with PR comments, artifact reports, and breaking-change gates.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/gitlab-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/circleci-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SchemaLens GitLab CI Integration",
+    "name": "SchemaLens CircleCI Integration",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -23,8 +23,8 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "Free SQL schema diff in GitLab CI, merge request comments, artifact reports, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
-    "url": "https://schemalens.tech/gitlab-schema-diff.html"
+    "featureList": "Free SQL schema diff in CircleCI, pull request comments, artifact reports, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/circleci-schema-diff.html"
   }
   </script>
   <link rel="stylesheet" href="style.css">
@@ -61,7 +61,7 @@
     @media (prefers-color-scheme: dark) {
       .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
     }
-    .gitlab-accent { color: #fc6d26; }
+    .circleci-accent { color: #0068d9; }
   </style>
 </head>
 <body>
@@ -73,60 +73,46 @@
       <a href="pricing.html">Pricing</a>
       <a href="api-guide.html">API</a>
       <a href="github-action.html">GitHub Action</a>
+      <a href="gitlab-schema-diff.html">GitLab CI</a>
       <a href="bitbucket-schema-diff.html">Bitbucket</a>
       <a href="jenkins-schema-diff.html">Jenkins</a>
-      <a href="circleci-schema-diff.html">CircleCI</a>
       <a href="ci-cd-integration.html">CI/CD</a>
     </nav>
 
     <div class="page-header">
-      <h1>SchemaLens <span class="gitlab-accent">GitLab CI</span> <span class="badge-free">Free</span></h1>
-      <p>Catch breaking database changes in every merge request. Zero config, zero cost — add schema diff checks to your GitLab pipeline in 60 seconds.</p>
+      <h1>SchemaLens <span class="circleci-accent">CircleCI</span> <span class="badge-free">Free</span></h1>
+      <p>Catch breaking database changes in every pull request. Zero config, zero cost — add schema diff checks to your CircleCI pipeline in 60 seconds.</p>
       <div class="dialect-tags">
         <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
       </div>
     </div>
 
     <div class="cta-bar">
-      <h2>🚀 Add to your pipeline — copy, paste, done</h2>
+      <h2>Add to your pipeline — copy, paste, done</h2>
       <div class="code-block">
-<span class="comment"># .gitlab-ci.yml</span>
-<span class="key">stages</span>:
-  - <span class="str">validate</span>
-
-<span class="key">schema-diff</span>:
-  <span class="key">stage</span>: <span class="str">validate</span>
-  <span class="key">image</span>: <span class="str">node:20-alpine</span>
-  <span class="key">variables</span>:
-    <span class="key">SCHEMA_PATH</span>: <span class="str">"db/schema.sql"</span>
-    <span class="key">DIALECT</span>: <span class="str">"postgres"</span>
-    <span class="key">POST_MR_COMMENT</span>: <span class="str">"true"</span>
-    <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
-  <span class="key">before_script</span>:
-    - <span class="str">apk add --no-cache git curl jq</span>
-  <span class="key">script</span>:
-    - <span class="str">git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME</span>
-    - <span class="str">git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql</span>
-    - <span class="str">node ci/schemalens-diff.js /tmp/schema_base.sql $SCHEMA_PATH --dialect=$DIALECT --format=markdown --output=/tmp/report.md</span>
-    - <span class="str">cat /tmp/report.md</span>
-  <span class="key">rules</span>:
-    - <span class="key">if</span>: <span class="str">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
-      <span class="key">changes</span>:
-        - <span class="str">"**/*.sql"</span>
-  <span class="key">artifacts</span>:
-    <span class="key">paths</span>:
-      - <span class="str">/tmp/report.md</span>
-    <span class="key">expire_in</span>: <span class="str">1 week</span>
+<span class="comment"># .circleci/config.yml</span>
+<span class="key">version</span>: <span class="num">2.1</span>
+<span class="key">jobs</span>:
+  <span class="key">schema-diff</span>:
+    <span class="key">docker</span>:
+      - <span class="key">image</span>: <span class="str">cimg/node:20.0</span>
+    <span class="key">steps</span>:
+      - <span class="key">checkout</span>
+      - <span class="key">run</span>:
+          <span class="key">name</span>: <span class="str">Schema Diff</span>
+          <span class="key">command</span>: <span class="str">curl -s https://schemalens.tech/ci/circleci-diff.sh | bash</span>
+      - <span class="key">store_artifacts</span>:
+          <span class="key">path</span>: <span class="str">schema_diff_report.md</span>
       </div>
-      <a href=".gitlab-ci.yml" class="btn btn-primary" download>Download .gitlab-ci.yml</a>
-      <a href="https://gitlab.com/-/snippets" class="btn btn-secondary" target="_blank" rel="noopener">GitLab Snippets</a>
+      <a href=".circleci/config.yml" class="btn btn-primary" download>Download .circleci/config.yml</a>
+      <a href="https://circleci.com/docs/configuration-reference/" class="btn btn-secondary" target="_blank" rel="noopener">CircleCI Docs</a>
     </div>
 
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
-      <h3 style="font-size: 1rem; margin-bottom: 12px;">💬 What the MR comment looks like</h3>
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">💬 What the PR comment looks like</h3>
       <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-          <div style="width: 28px; height: 28px; border-radius: 50%; background: #fc6d26; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700;">SL</div>
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: #0068d9; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700;">SL</div>
           <div>
             <strong>SchemaLens Bot</strong>
             <div style="font-size: 0.8rem; color: var(--text-muted);">commented 2 minutes ago</div>
@@ -144,21 +130,21 @@
           <p style="font-size: 0.9rem; margin: 10px 0 6px;"><strong>Generated Migration</strong></p>
           <pre style="background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0;"><code>ALTER TABLE users
   ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
-          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Generated by <a href="gitlab-schema-diff.html" style="color: var(--primary);">SchemaLens GitLab CI</a></em></p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Generated by <a href="circleci-schema-diff.html" style="color: var(--primary);">SchemaLens CircleCI</a></em></p>
         </div>
       </div>
     </div>
 
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
-      <h3 style="font-size: 1rem; margin-bottom: 12px;">📦 What the pipeline artifact looks like</h3>
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">📦 Artifact in CircleCI</h3>
       <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #fc6d26;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #0068d9;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
           <strong>schema_diff_report.md</strong>
           <span style="font-size: 0.75rem; color: var(--text-muted);">2.4 KB</span>
         </div>
         <div style="line-height: 1.6; padding-left: 24px;">
-          <p>Team members can download the full markdown report from the <strong>Build &gt; Artifacts</strong> section of any merge request pipeline. The report includes:</p>
+          <p>Team members can download the full markdown report from the <strong>Artifacts</strong> tab of any CircleCI build. The report includes:</p>
           <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-muted);">
             <li>Complete diff summary with table counts</li>
             <li>Breaking change list with severity levels</li>
@@ -169,31 +155,31 @@
       </div>
     </div>
 
-    <h2>Why add schema diff to GitLab CI?</h2>
+    <h2>Why add schema diff to CircleCI?</h2>
     <div class="feature-grid">
       <div class="feature-card">
         <h3>🛡️ Prevent production incidents</h3>
         <p>Breaking changes like dropped columns, removed indexes, or altered constraints get flagged before merge — not after deploy.</p>
       </div>
       <div class="feature-card">
-        <h3>💬 MR comments, automatically</h3>
-        <p>Every merge request gets a clear schema diff summary posted as a comment. Reviewers see exactly what changed without leaving GitLab.</p>
+        <h3>💬 PR comments, automatically</h3>
+        <p>Every pull request gets a clear schema diff summary posted as a comment. Reviewers see exactly what changed without leaving GitHub.</p>
       </div>
       <div class="feature-card">
         <h3>📦 Downloadable artifacts</h3>
-        <p>The full markdown report is attached to every pipeline as an artifact. Download it for compliance docs, audits, or offline review.</p>
+        <p>The full markdown report is attached to every build as a CircleCI artifact. Download it for compliance docs, audits, or offline review.</p>
       </div>
       <div class="feature-card">
         <h3>⏭️ Smart skip</h3>
-        <p>Set <code>SKIP_NO_SQL_CHANGE: "true"</code> and the job skips entirely when no <code>.sql</code> files were modified — saving CI minutes.</p>
+        <p>Set <code>SKIP_NO_SQL_CHANGE: "true"</code> and the job skips entirely when no <code>.sql</code> files were modified — saving build minutes.</p>
       </div>
       <div class="feature-card">
         <h3>⚡ Zero setup required</h3>
         <p>No database connections, no CLI installation, no license key. Just point the job at two SQL files.</p>
       </div>
       <div class="feature-card">
-        <h3>🚦 Fail the pipeline on breaking changes</h3>
-        <p>Set <code>FAIL_ON_BREAKING: "true"</code> and the pipeline fails if any dangerous schema changes are detected.</p>
+        <h3>🚦 Fail the build on breaking changes</h3>
+        <p>Set <code>FAIL_ON_BREAKING: "true"</code> and the build fails if any dangerous schema changes are detected.</p>
       </div>
       <div class="feature-card">
         <h3>📊 Risk score at a glance</h3>
@@ -201,7 +187,7 @@
       </div>
       <div class="feature-card">
         <h3>🔓 100% free for open source</h3>
-        <p>The free tier includes breaking change detection, risk scoring, MR comments, and artifact reports. No credit card required.</p>
+        <p>The free tier includes breaking change detection, risk scoring, PR comments, and artifact reports. No credit card required.</p>
       </div>
     </div>
 
@@ -217,14 +203,14 @@
       <div class="step-num">2</div>
       <div class="step-body">
         <h3>Compare before and after</h3>
-        <p>The job compares the schema from your target branch against the schema in the MR. Any drift is surfaced instantly.</p>
+        <p>The job compares the schema from your target branch against the schema in the PR. Any drift is surfaced instantly.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Get an MR comment with the diff</h3>
-        <p>Enable <code>POST_MR_COMMENT: "true"</code> and add a <code>GITLAB_TOKEN</code> variable. The job posts a formatted summary directly on the merge request.</p>
+        <h3>Get a PR comment with the diff</h3>
+        <p>Enable <code>POST_PR_COMMENT: "true"</code> and add a <code>GITHUB_TOKEN</code> environment variable. The job posts a formatted summary directly on the pull request.</p>
       </div>
     </div>
 
@@ -237,8 +223,8 @@
         <tr><td>Schema diff summary</td><td>✅</td><td>✅</td></tr>
         <tr><td>Breaking change detection</td><td>✅</td><td>✅</td></tr>
         <tr><td>Risk score</td><td>✅</td><td>✅</td></tr>
-        <tr><td>MR comments</td><td>✅</td><td>✅</td></tr>
-        <tr><td>Pipeline artifacts</td><td>✅</td><td>✅</td></tr>
+        <tr><td>PR comments</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Artifact reports</td><td>✅</td><td>✅</td></tr>
         <tr><td>Smart skip (no SQL changes)</td><td>✅</td><td>✅</td></tr>
         <tr><td>Full migration SQL</td><td>First 5 lines</td><td>✅ Complete script</td></tr>
         <tr><td>Markdown export</td><td>✅</td><td>✅</td></tr>
@@ -249,80 +235,89 @@
 
     <h2>Full configuration reference</h2>
     <div class="code-block">
-<span class="comment"># CI/CD Variables (Settings → CI/CD → Variables)</span>
-<span class="key">GITLAB_TOKEN</span>     <span class="comment"># optional — Project access token with api scope for MR comments</span>
+<span class="comment"># CircleCI project settings → Environment Variables</span>
+<span class="key">GITHUB_TOKEN</span>     <span class="comment"># optional — GitHub PAT with repo scope for PR comments</span>
 <span class="key">SL_LICENSE_KEY</span>   <span class="comment"># optional — SchemaLens Pro license key for full migration output</span>
 
-<span class="comment"># Job variables</span>
+<span class="comment"># Job environment variables</span>
 <span class="key">SCHEMA_PATH</span>              <span class="str">"db/schema.sql"</span>      <span class="comment"># Path to current schema SQL file</span>
 <span class="key">DIALECT</span>                  <span class="str">"postgres"</span>           <span class="comment"># postgres | mysql | sqlite | mssql | oracle</span>
-<span class="key">FAIL_ON_BREAKING</span>         <span class="str">"false"</span>              <span class="comment"># true = fail pipeline on breaking changes</span>
-<span class="key">POST_MR_COMMENT</span>          <span class="str">"false"</span>              <span class="comment"># true = post report as MR comment (needs GITLAB_TOKEN)</span>
+<span class="key">FAIL_ON_BREAKING</span>         <span class="str">"false"</span>              <span class="comment"># true = fail build on breaking changes</span>
 <span class="key">SKIP_NO_SQL_CHANGE</span>       <span class="str">"false"</span>              <span class="comment"># true = skip job when no .sql files changed</span>
+<span class="key">POST_PR_COMMENT</span>          <span class="str">"false"</span>              <span class="comment"># true = post report as PR comment (needs token)</span>
+<span class="key">FORMAT</span>                   <span class="str">"markdown"</span>           <span class="comment"># markdown | json | sql (sql needs Pro)</span>
     </div>
 
-    <h2>Example: PostgreSQL project with MR comments</h2>
+    <h2>Example: PostgreSQL project with PR comments</h2>
     <div class="code-block">
-<span class="comment"># .gitlab-ci.yml</span>
-<span class="key">stages</span>:
-  - <span class="str">validate</span>
+<span class="comment"># .circleci/config.yml</span>
+<span class="key">version</span>: <span class="num">2.1</span>
 
-<span class="key">schema-diff</span>:
-  <span class="key">stage</span>: <span class="str">validate</span>
-  <span class="key">image</span>: <span class="str">node:20-alpine</span>
-  <span class="key">variables</span>:
-    <span class="key">SCHEMA_PATH</span>: <span class="str">"db/schema.sql"</span>
-    <span class="key">DIALECT</span>: <span class="str">"postgres"</span>
-    <span class="key">POST_MR_COMMENT</span>: <span class="str">"true"</span>
-    <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
-    <span class="key">SKIP_NO_SQL_CHANGE</span>: <span class="str">"true"</span>
-  <span class="key">before_script</span>:
-    - <span class="str">apk add --no-cache git curl jq</span>
-  <span class="key">script</span>:
-    - <span class="comment"># Fetch base branch schema</span>
-    - <span class="str">git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME</span>
-    - <span class="str">git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql</span>
-    - <span class="comment"># Run diff via SchemaLens API</span>
-    - |
-      BODY=$(jq -n \
-        --arg schemaA "$(cat /tmp/schema_base.sql)" \
-        --arg schemaB "$(cat $SCHEMA_PATH)" \
-        --arg dialect "$DIALECT" \
-        --arg format "markdown" \
-        '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
-      curl -s -X POST "https://schemalens.tech/api/free-diff" \
-        -H "Content-Type: application/json" \
-        -d "$BODY" > /tmp/response.json
-    - <span class="comment"># Generate report</span>
-    - <span class="str">jq -r '.markdown // .migrationTeaser' /tmp/response.json > /tmp/schema_diff_report.md</span>
-    - <span class="str">cat /tmp/schema_diff_report.md</span>
-    - <span class="comment"># Post MR comment</span>
-    - |
-      if [ "$POST_MR_COMMENT" = "true" ] && [ -n "$GITLAB_TOKEN" ]; then
-        REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-        curl -s -X POST \
-          -H "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-          -H "Content-Type: application/json" \
-          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes" \
-          -d "{\"body\": \"${REPORT}\"}"
-      fi
-    - <span class="comment"># Fail on breaking changes</span>
-    - |
-      BCOUNT=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/response.json)
-      if [ "$FAIL_ON_BREAKING" = "true" ] && [ "$BCOUNT" != "0" ]; then
-        echo "Breaking changes detected: $BCOUNT"
-        exit 1
-      fi
-  <span class="key">rules</span>:
-    - <span class="key">if</span>: <span class="str">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
-      <span class="key">changes</span>:
-        - <span class="str">"db/schema.sql"</span>
-        - <span class="str">"migrations/*.sql"</span>
-        - <span class="str">"**/*.sql"</span>
-  <span class="key">artifacts</span>:
-    <span class="key">paths</span>:
-      - <span class="str">/tmp/schema_diff_report.md</span>
-    <span class="key">expire_in</span>: <span class="str">1 week</span>
+<span class="key">executors</span>:
+  <span class="key">node-executor</span>:
+    <span class="key">docker</span>:
+      - <span class="key">image</span>: <span class="str">cimg/node:20.0</span>
+
+<span class="key">jobs</span>:
+  <span class="key">schema-diff</span>:
+    <span class="key">executor</span>: <span class="key">node-executor</span>
+    <span class="key">environment</span>:
+      <span class="key">SCHEMA_PATH</span>: <span class="str">db/schema.sql</span>
+      <span class="key">DIALECT</span>: <span class="str">postgres</span>
+      <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
+      <span class="key">SKIP_NO_SQL_CHANGE</span>: <span class="str">"true"</span>
+      <span class="key">POST_PR_COMMENT</span>: <span class="str">"true"</span>
+    <span class="key">steps</span>:
+      - <span class="key">checkout</span>
+      - <span class="key">run</span>:
+          <span class="key">name</span>: <span class="str">Smart Skip</span>
+          <span class="key">command</span>: |
+            <span class="key">if</span> [ "$SKIP_NO_SQL_CHANGE" = "true" ]; then
+              CHANGED=$(git diff --name-only origin/${CIRCLE_BRANCH}..HEAD 2>/dev/null || echo "")
+              <span class="key">if</span> ! echo "$CHANGED" | grep -q '\.sql$'; then
+                echo "No SQL changes — skipping."
+                circleci-agent step halt
+              <span class="key">fi</span>
+            <span class="key">fi</span>
+      - <span class="key">run</span>:
+          <span class="key">name</span>: <span class="str">Fetch base schema</span>
+          <span class="key">command</span>: |
+            git fetch origin main 2>/dev/null || true
+            git show "origin/main:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+      - <span class="key">run</span>:
+          <span class="key">name</span>: <span class="str">Run SchemaLens diff</span>
+          <span class="key">command</span>: |
+            set -euo pipefail
+            ENDPOINT="https://schemalens.tech/api/free-diff"
+            [ -n "${SL_LICENSE_KEY:-}" ] && ENDPOINT="https://schemalens.tech/api/diff"
+            BODY=$(jq -n --arg a "$(cat /tmp/schema_base.sql)" --arg b "$(cat "$SCHEMA_PATH")" --arg d "$DIALECT" --arg f "$FORMAT" '{schemaA:$a,schemaB:$b,dialect:$d,format:$f}')
+            curl -s -X POST "$ENDPOINT" -H "Content-Type: application/json" ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} -d "$BODY" > /tmp/response.json
+            jq -r '.markdown // .migrationTeaser' /tmp/response.json > /tmp/schema_diff_report.md
+            cat /tmp/schema_diff_report.md
+      - <span class="key">run</span>:
+          <span class="key">name</span>: <span class="str">Post PR comment</span>
+          <span class="key">command</span>: |
+            <span class="key">if</span> [ "$POST_PR_COMMENT" = "true" ] && [ -n "${GITHUB_TOKEN:-}" ] && [ -n "${CIRCLE_PULL_REQUEST:-}" ]; then
+              PR_NUM=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/.*\///')
+              REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+              curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/issues/${PR_NUM}/comments" \
+                -d "{\"body\": \"## SchemaLens Report\\n\\n${REPORT}\"}" || true
+            <span class="key">fi</span>
+          <span class="key">when</span>: <span class="key">always</span>
+      - <span class="key">store_artifacts</span>:
+          <span class="key">path</span>: <span class="str">/tmp/schema_diff_report.md</span>
+          <span class="key">destination</span>: <span class="str">schema_diff_report.md</span>
+
+<span class="key">workflows</span>:
+  <span class="key">schema-diff</span>:
+    <span class="key">jobs</span>:
+      - <span class="key">schema-diff</span>:
+          <span class="key">filters</span>:
+            <span class="key">branches</span>:
+              <span class="key">ignore</span>:
+                - <span class="str">main</span>
+                - <span class="str">master</span>
     </div>
 
     <div class="cta-bar" style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%); color: #fff; border: none;">
@@ -333,7 +328,7 @@
     </div>
 
     <div class="cta-bar" style="background: var(--surface); border: 1px solid var(--border);">
-      <h2>🏢 Need this for your team?</h2>
+      <h2>Need this for your team?</h2>
       <p>Get a personalized walkthrough of SchemaLens for your engineering team — including SSO, shared workspaces, and Slack alerts.</p>
       <a href="book-demo.html" class="btn btn-primary">Book a Demo</a>
       <a href="team-schema-audit.html" class="btn btn-secondary">Free Team Audit</a>
@@ -347,9 +342,9 @@
         <a href="pricing.html">Pricing</a> ·
         <a href="api-guide.html">API</a> ·
         <a href="github-action.html">GitHub Action</a> ·
+        <a href="gitlab-schema-diff.html">GitLab CI</a> ·
         <a href="bitbucket-schema-diff.html">Bitbucket</a> ·
         <a href="jenkins-schema-diff.html">Jenkins</a> ·
-        <a href="circleci-schema-diff.html">CircleCI</a> ·
         <a href="ci-cd-integration.html">CI/CD</a> ·
         <a href="vscode-extension.html">VS Code</a> ·
         <a href="open-source.html">Open Source</a> ·
