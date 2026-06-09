@@ -99,11 +99,36 @@
           <span class="key">new-schema-path</span>: <span class="str">./schema/current.sql</span>
           <span class="key">dialect</span>: <span class="str">postgres</span>
           <span class="key">post-comment</span>: <span class="str">true</span>
+          <span class="key">create-check-run</span>: <span class="str">true</span>
           <span class="key">github-token</span>: <span class="str">${{ secrets.GITHUB_TOKEN }}</span>
           <span class="key">fail-on-breaking</span>: <span class="str">true</span>
       </div>
       <a href="https://github.com/aimadetools/race-kimi/blob/main/action.yml" class="btn btn-primary" target="_blank" rel="noopener">View on GitHub</a>
       <a href="tools/github-action-setup.html" class="btn btn-secondary">⚡ Setup Wizard</a>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">✅ What the PR Check Run looks like</h3>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="width: 16px; height: 16px; border-radius: 50%; background: #22c55e; display: flex; align-items: center; justify-content: center;">
+            <svg width="10" height="10" viewBox="0 0 16 16" fill="white"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06L6 11.19l7.22-7.22a.75.75 0 0 1 1.06 0z"/></svg>
+          </div>
+          <div>
+            <strong style="font-size: 0.9rem;">SchemaLens Schema Diff</strong>
+            <span style="color: var(--text-muted); font-size: 0.8rem;"> — Successful in 2s</span>
+          </div>
+        </div>
+        <div style="line-height: 1.6; padding-left: 26px;">
+          <p><strong>Risk: Medium (42/100) · Breaking: 1</strong></p>
+          <p>SchemaLens detected <strong>1</strong> added, <strong>0</strong> removed, and <strong>2</strong> modified tables. Risk level: <strong>Medium</strong> (42/100). <strong>1</strong> breaking change(s) found.</p>
+          <pre style="background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;
+
+-- ... 12 total migration lines.</code></pre>
+          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>💡 12 total migration lines. <a href="pricing.html" style="color: var(--primary);">Unlock the full migration script with SchemaLens Pro</a></em></p>
+        </div>
+      </div>
     </div>
 
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
@@ -148,6 +173,10 @@
       <div class="feature-card">
         <h3>🛡️ Prevent production incidents</h3>
         <p>Breaking changes like dropped columns, removed indexes, or altered constraints get flagged before merge — not after deploy.</p>
+      </div>
+      <div class="feature-card">
+        <h3>✅ Native PR Checks</h3>
+        <p>Create a real GitHub Check Run that appears in the PR checks tab — just like your test suite. Team members see risk scores and migration previews without leaving GitHub.</p>
       </div>
       <div class="feature-card">
         <h3>💬 PR comments, automatically</h3>
@@ -204,6 +233,7 @@
         <tr><td>Breaking change detection</td><td>✅</td><td>✅</td></tr>
         <tr><td>Risk score</td><td>✅</td><td>✅</td></tr>
         <tr><td>PR comments</td><td>✅</td><td>✅</td></tr>
+        <tr><td>GitHub Check Runs</td><td>✅</td><td>✅</td></tr>
         <tr><td>Full migration SQL</td><td>First 5 lines</td><td>✅ Complete script</td></tr>
         <tr><td>Markdown export</td><td>✅</td><td>✅</td></tr>
         <tr><td>JSON export</td><td>✅</td><td>✅</td></tr>
@@ -222,7 +252,8 @@
   <span class="key">license-key</span>: <span class="str">${{ secrets.SCHEMALENS_KEY }}</span>  <span class="comment"># optional — unlocks full migration SQL</span>
   <span class="key">fail-on-breaking</span>: <span class="str">false</span>            <span class="comment"># optional — fail workflow if breaking changes found</span>
   <span class="key">post-comment</span>: <span class="str">false</span>                <span class="comment"># optional — post result as PR comment</span>
-  <span class="key">github-token</span>: <span class="str">${{ secrets.GITHUB_TOKEN }}</span>  <span class="comment"># required if post-comment is true</span>
+  <span class="key">create-check-run</span>: <span class="str">false</span>            <span class="comment"># optional — create a GitHub Check Run (needs checks:write)</span>
+  <span class="key">github-token</span>: <span class="str">${{ secrets.GITHUB_TOKEN }}</span>  <span class="comment"># required if post-comment or create-check-run is true</span>
     </div>
 
     <h2>Example: PostgreSQL project</h2>
