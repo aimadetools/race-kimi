@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Schema Export Command Generator — pg_dump, mysqldump, sqlite3 & more | SchemaLens</title>
+<meta name="description" content="Generate the exact command-line dump command for your database. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle, CockroachDB, and MongoDB. Copy-paste ready.">
+<meta property="og:title" content="Database Schema Export Command Generator">
+<meta property="og:description" content="Generate the exact pg_dump, mysqldump, sqlite3, sqlcmd, or expdp command for your database. Copy, run, and paste into SchemaLens.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-export-command-generator.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://schemalens.tech/tools/schema-export-command-generator.html">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Database Schema Export Command Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Generates exact command-line schema dump commands for PostgreSQL, MySQL, SQLite, SQL Server, Oracle, CockroachDB, and MongoDB. Customizable options for schema-only, no-owner, specific tables, and more.",
+  "url": "https://schemalens.tech/tools/schema-export-command-generator.html"
+}
+</script>
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+  .tool-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 840px) {
+    .tool-layout { grid-template-columns: 1fr; }
+  }
+
+  .sidebar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: sticky;
+    top: 24px;
+  }
+  .sidebar h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 12px; }
+  .dialect-list { list-style: none; padding: 0; margin: 0; }
+  .dialect-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 0.95rem; font-weight: 500;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+  }
+  .dialect-list li:hover { background: var(--bg); border-color: var(--border); }
+  .dialect-list li.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .dialect-list li .icon { font-size: 1.1rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+  .field label .opt { font-weight: 400; font-size: 0.8rem; color: var(--text-muted); }
+  .field input, .field select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.95rem;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--primary); }
+
+  .checkbox-group {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .checkbox-group label {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 12px;
+    font-size: 0.9rem; cursor: pointer; user-select: none;
+  }
+  .checkbox-group label:hover { border-color: var(--primary); }
+  .checkbox-group input { accent-color: var(--primary); }
+
+  .output-box {
+    background: #0b0f19;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .output-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .output-header span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+  .copy-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .copy-btn:hover { border-color: var(--primary); }
+  pre#commandOutput {
+    margin: 0; padding: 20px;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .token-cmd { color: #c084fc; }
+  .token-flag { color: #60a5fa; }
+  .token-str { color: #86efac; }
+  .token-comment { color: #64748b; }
+
+  .explain-list {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .explain-list li {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.9rem; color: var(--text-muted);
+  }
+  .explain-list li:last-child { border-bottom: none; }
+  .explain-list li code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-size: 0.85rem; color: var(--code-text);
+  }
+  .explain-list li strong { color: var(--text); }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 28px;
+  }
+  .cta-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+  .cta-box p { color: var(--text-muted); margin-bottom: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  .note {
+    background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;
+  }
+  .note strong { color: #10b981; }
+
+  .warn {
+    background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;
+  }
+  .warn strong { color: #f59e0b; }
+</style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>🗃️ Schema Export Command Generator</h1>
+    <p>Generate the exact command to dump your database schema. Copy it, run it locally, then paste the result into SchemaLens.</p>
+  </div>
+</div>
+
+<main class="container">
+  <div class="tool-layout">
+    <aside class="sidebar">
+      <h3>Select Database</h3>
+      <ul class="dialect-list" id="dialectList">
+        <li class="active" data-dialect="postgres" onclick="setDialect('postgres')"><span class="icon">🐘</span> PostgreSQL</li>
+        <li data-dialect="mysql" onclick="setDialect('mysql')"><span class="icon">🐬</span> MySQL</li>
+        <li data-dialect="mariadb" onclick="setDialect('mariadb')"><span class="icon">🌊</span> MariaDB</li>
+        <li data-dialect="sqlite" onclick="setDialect('sqlite')"><span class="icon">🪶</span> SQLite</li>
+        <li data-dialect="sqlserver" onclick="setDialect('sqlserver')"><span class="icon">🗄️</span> SQL Server</li>
+        <li data-dialect="oracle" onclick="setDialect('oracle')"><span class="icon">⚡</span> Oracle</li>
+        <li data-dialect="cockroach" onclick="setDialect('cockroach')"><span class="icon">🪳</span> CockroachDB</li>
+        <li data-dialect="mongodb" onclick="setDialect('mongodb')"><span class="icon">🍃</span> MongoDB</li>
+      </ul>
+    </aside>
+
+    <div class="main-panel">
+      <div class="card">
+        <h2>Connection Details</h2>
+        <div class="form-grid" id="connFields">
+          <!-- Populated by JS -->
+        </div>
+
+        <h2 style="margin-top:8px;">Dump Options</h2>
+        <div class="checkbox-group" id="optionChecks">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="note" id="dialectNote">
+          <strong>💡 Tip:</strong> Use <code>--schema-only</code> (or equivalent) to exclude data and get a clean schema diff in SchemaLens.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Generated Command</h2>
+        <div class="output-box">
+          <div class="output-header">
+            <span id="shellLabel">bash</span>
+            <button class="copy-btn" onclick="copyCommand()">Copy</button>
+          </div>
+          <pre id="commandOutput"></pre>
+        </div>
+        <div class="warn" style="margin-top:12px;" id="securityWarn">
+          <strong>🔒 Security:</strong> This tool runs entirely in your browser. No connection details are sent to any server.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>What Each Flag Does</h2>
+        <ul class="explain-list" id="explainList">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
+
+      <div class="cta-box">
+        <h3>Got your schema dump?</h3>
+        <p>Paste both schemas into SchemaLens and get an instant diff with breaking-change detection and migration script generation.</p>
+        <a href="../app.html" class="btn btn-primary">Compare Schemas Free →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" style="margin-top:48px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="../index.html">Home</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../about.html">About</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../app.html">Open App</a>
+      </div>
+      <div class="footer-col">
+        <h4>Guides</h4>
+        <a href="../staging-vs-production-schema-diff.html">Staging vs Production</a>
+        <a href="../zero-downtime-migration-guide.html">Zero-Downtime Migrations</a>
+        <a href="../database-schema-sync.html">Schema Sync</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="connection-string-parser.html">Connection String Parser</a>
+        <a href="sql-query-explainer.html">Query Explainer</a>
+        <a href="schema-health-check.html">Schema Health Check</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SchemaLens. All rights reserved.</span>
+      <span>Built in the $100 AI Startup Race.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const dialects = {
+  postgres: {
+    name: 'PostgreSQL',
+    cmd: 'pg_dump',
+    fields: [
+      { id: 'host', label: 'Host', placeholder: 'localhost', value: 'localhost' },
+      { id: 'port', label: 'Port', placeholder: '5432', value: '5432' },
+      { id: 'db', label: 'Database name', placeholder: 'mydb', value: 'mydb' },
+      { id: 'user', label: 'User', placeholder: 'postgres', value: 'postgres' },
+      { id: 'password', label: 'Password', placeholder: 'leave empty to use PGPASSWORD env var', value: '' },
+      { id: 'tables', label: 'Specific tables (comma-separated)', placeholder: 'users,orders,products', value: '' }
+    ],
+    options: [
+      { id: 'schemaOnly', label: 'Schema only (no data)', flag: '--schema-only', checked: true },
+      { id: 'noOwner', label: 'No owner', flag: '--no-owner', checked: true },
+      { id: 'noPrivileges', label: 'No privileges', flag: '--no-privileges', checked: true },
+      { id: 'ifExists', label: 'Clean drops (IF EXISTS)', flag: '--clean --if-exists', checked: false },
+      { id: 'noComments', label: 'No comments', flag: '--no-comments', checked: true },
+      { id: 'createDB', label: 'Include CREATE DATABASE', flag: '--create', checked: false },
+      { id: 'inserts', label: 'Use INSERT instead of COPY', flag: '--inserts', checked: false }
+    ],
+    explain: [
+      { flag: '--schema-only', desc: 'Dumps only schema definitions (CREATE TABLE, INDEX, etc.) without table data.' },
+      { flag: '--no-owner', desc: 'Removes <code>ALTER TABLE ... OWNER TO</code> statements. Essential for comparing across environments.' },
+      { flag: '--no-privileges', desc: 'Removes <code>GRANT/REVOKE</code> statements so diffs focus on schema, not permissions.' },
+      { flag: '--clean --if-exists', desc: 'Adds <code>DROP TABLE IF EXISTS</code> before each CREATE. Useful for full rebuild scripts.' },
+      { flag: '--no-comments', desc: 'Removes comment statements that often differ between dev/staging/production.' },
+      { flag: '--create', desc: 'Includes <code>CREATE DATABASE</code> at the top of the dump.' },
+      { flag: '--inserts', desc: 'Uses INSERT instead of COPY for data dumps. Irrelevant with --schema-only.' }
+    ],
+    build: (vals, opts) => {
+      let cmd = 'pg_dump';
+      if (vals.host) cmd += ` -h ${vals.host}`;
+      if (vals.port && vals.port !== '5432') cmd += ` -p ${vals.port}`;
+      if (vals.user) cmd += ` -U ${vals.user}`;
+      if (opts.schemaOnly) cmd += ' --schema-only';
+      if (opts.noOwner) cmd += ' --no-owner';
+      if (opts.noPrivileges) cmd += ' --no-privileges';
+      if (opts.ifExists) cmd += ' --clean --if-exists';
+      if (opts.noComments) cmd += ' --no-comments';
+      if (opts.createDB) cmd += ' --create';
+      if (opts.inserts) cmd += ' --inserts';
+      if (vals.tables) {
+        vals.tables.split(',').forEach(t => {
+          cmd += ` -t ${t.trim()}`;
+        });
+      }
+      cmd += ` ${vals.db} > schema.sql`;
+      if (vals.password) {
+        cmd = `PGPASSWORD=${vals.password} ` + cmd;
+      } else {
+        cmd = '# Set PGPASSWORD env var or use .pgpass file\n' + cmd;
+      }
+      return cmd;
+    }
+  },
+  mysql: {
+    name: 'MySQL',
+    cmd: 'mysqldump',
+    fields: [
+      { id: 'host', label: 'Host', placeholder: 'localhost', value: 'localhost' },
+      { id: 'port', label: 'Port', placeholder: '3306', value: '3306' },
+      { id: 'db', label: 'Database name', placeholder: 'mydb', value: 'mydb' },
+      { id: 'user', label: 'User', placeholder: 'root', value: 'root' },
+      { id: 'password', label: 'Password', placeholder: 'leave empty to prompt', value: '' },
+      { id: 'tables', label: 'Specific tables (comma-separated)', placeholder: 'users,orders,products', value: '' }
+    ],
+    options: [
+      { id: 'noData', label: 'No data (schema only)', flag: '--no-data', checked: true },
+      { id: 'skipComments', label: 'Skip comments', flag: '--skip-comments', checked: true },
+      { id: 'noCreateDB', label: 'No CREATE DATABASE', flag: '--no-create-db', checked: true },
+      { id: 'routines', label: 'Include routines', flag: '--routines', checked: false },
+      { id: 'events', label: 'Include events', flag: '--events', checked: false },
+      { id: 'triggers', label: 'Include triggers', flag: '--triggers', checked: false },
+      { id: 'singleTransaction', label: 'Single transaction', flag: '--single-transaction', checked: true }
+    ],
+    explain: [
+      { flag: '--no-data', desc: 'Dumps only CREATE TABLE and other DDL. No INSERT statements.' },
+      { flag: '--skip-comments', desc: 'Removes header comments with dump timestamps that cause false diffs.' },
+      { flag: '--no-create-db', desc: 'Omits <code>CREATE DATABASE</code> and <code>USE</code> statements.' },
+      { flag: '--routines', desc: 'Includes stored procedures and functions in the dump.' },
+      { flag: '--events', desc: 'Includes scheduled events in the dump.' },
+      { flag: '--triggers', desc: 'Includes trigger definitions in the dump.' },
+      { flag: '--single-transaction', desc: 'Executes dump in a single transaction for consistency (InnoDB only).' }
+    ],
+    build: (vals, opts) => {
+      let cmd = 'mysqldump';
+      if (vals.host && vals.host !== 'localhost') cmd += ` -h ${vals.host}`;
+      if (vals.port && vals.port !== '3306') cmd += ` -P ${vals.port}`;
+      if (vals.user) cmd += ` -u ${vals.user}`;
+      if (vals.password) cmd += ` -p'${vals.password}'`;
+      else cmd += ` -p`;
+      if (opts.noData) cmd += ' --no-data';
+      if (opts.skipComments) cmd += ' --skip-comments';
+      if (opts.noCreateDB) cmd += ' --no-create-db';
+      if (opts.routines) cmd += ' --routines';
+      if (opts.events) cmd += ' --events';
+      if (opts.triggers) cmd += ' --triggers';
+      if (opts.singleTransaction) cmd += ' --single-transaction';
+      cmd += ` ${vals.db}`;
+      if (vals.tables) {
+        vals.tables.split(',').forEach(t => {
+          cmd += ` ${t.trim()}`;
+        });
+      }
+      cmd += ` > schema.sql`;
+      if (!vals.password) {
+        cmd = '# You will be prompted for password\n' + cmd;
+      }
+      return cmd;
+    }
+  },
+  mariadb: {
+    name: 'MariaDB',
+    cmd: 'mysqldump',
+    fields: [
+      { id: 'host', label: 'Host', placeholder: 'localhost', value: 'localhost' },
+      { id: 'port', label: 'Port', placeholder: '3306', value: '3306' },
+      { id: 'db', label: 'Database name', placeholder: 'mydb', value: 'mydb' },
+      { id: 'user', label: 'User', placeholder: 'root', value: 'root' },
+      { id: 'password', label: 'Password', placeholder: 'leave empty to prompt', value: '' },
+      { id: 'tables', label: 'Specific tables (comma-separated)', placeholder: 'users,orders,products', value: '' }
+    ],
+    options: [
+      { id: 'noData', label: 'No data (schema only)', flag: '--no-data', checked: true },
+      { id: 'skipComments', label: 'Skip comments', flag: '--skip-comments', checked: true },
+      { id: 'noCreateDB', label: 'No CREATE DATABASE', flag: '--no-create-db', checked: true },
+      { id: 'routines', label: 'Include routines', flag: '--routines', checked: false },
+      { id: 'events', label: 'Include events', flag: '--events', checked: false },
+      { id: 'triggers', label: 'Include triggers', flag: '--triggers', checked: false },
+      { id: 'singleTransaction', label: 'Single transaction', flag: '--single-transaction', checked: true }
+    ],
+    explain: [
+      { flag: '--no-data', desc: 'Dumps only CREATE TABLE and other DDL. No INSERT statements.' },
+      { flag: '--skip-comments', desc: 'Removes header comments with dump timestamps that cause false diffs.' },
+      { flag: '--no-create-db', desc: 'Omits <code>CREATE DATABASE</code> and <code>USE</code> statements.' },
+      { flag: '--routines', desc: 'Includes stored procedures and functions in the dump.' },
+      { flag: '--events', desc: 'Includes scheduled events in the dump.' },
+      { flag: '--triggers', desc: 'Includes trigger definitions in the dump.' },
+      { flag: '--single-transaction', desc: 'Executes dump in a single transaction for consistency (InnoDB only).' }
+    ],
+    build: (vals, opts) => {
+      let cmd = 'mysqldump';
+      if (vals.host && vals.host !== 'localhost') cmd += ` -h ${vals.host}`;
+      if (vals.port && vals.port !== '3306') cmd += ` -P ${vals.port}`;
+      if (vals.user) cmd += ` -u ${vals.user}`;
+      if (vals.password) cmd += ` -p'${vals.password}'`;
+      else cmd += ` -p`;
+      if (opts.noData) cmd += ' --no-data';
+      if (opts.skipComments) cmd += ' --skip-comments';
+      if (opts.noCreateDB) cmd += ' --no-create-db';
+      if (opts.routines) cmd += ' --routines';
+      if (opts.events) cmd += ' --events';
+      if (opts.triggers) cmd += ' --triggers';
+      if (opts.singleTransaction) cmd += ' --single-transaction';
+      cmd += ` ${vals.db}`;
+      if (vals.tables) {
+        vals.tables.split(',').forEach(t => {
+          cmd += ` ${t.trim()}`;
+        });
+      }
+      cmd += ` > schema.sql`;
+      if (!vals.password) {
+        cmd = '# You will be prompted for password\n' + cmd;
+      }
+      return cmd;
+    }
+  },
+  sqlite: {
+    name: 'SQLite',
+    cmd: 'sqlite3',
+    fields: [
+      { id: 'file', label: 'Database file path', placeholder: './mydb.db', value: './mydb.db' }
+    ],
+    options: [
+      { id: 'schema', label: '.schema output', flag: '.schema', checked: true },
+      { id: 'fullSchema', label: 'Full schema + indexes', flag: '.fullschema', checked: false },
+      { id: 'dump', label: '.dump (includes INSERTs)', flag: '.dump', checked: false },
+      { id: 'noData', label: 'Schema only from .dump', flag: 'grep -v "^INSERT"', checked: false }
+    ],
+    explain: [
+      { flag: '.schema', desc: 'Prints all CREATE statements. Simplest output for diffing.' },
+      { flag: '.fullschema', desc: 'Same as .schema plus the sqlite3 command that produced it.' },
+      { flag: '.dump', desc: 'Full dump including INSERT statements. Use grep to filter if needed.' },
+      { flag: 'grep -v "^INSERT"', desc: 'Filters out data rows from a .dump, leaving only schema.' }
+    ],
+    build: (vals, opts) => {
+      if (opts.schema) {
+        return `sqlite3 ${vals.file} ".schema" > schema.sql`;
+      }
+      if (opts.fullSchema) {
+        return `sqlite3 ${vals.file} ".fullschema" > schema.sql`;
+      }
+      if (opts.dump && !opts.noData) {
+        return `sqlite3 ${vals.file} ".dump" > schema.sql`;
+      }
+      if (opts.dump && opts.noData) {
+        return `sqlite3 ${vals.file} ".dump" | grep -v "^INSERT" > schema.sql`;
+      }
+      return `sqlite3 ${vals.file} ".schema" > schema.sql`;
+    }
+  },
+  sqlserver: {
+    name: 'SQL Server',
+    cmd: 'sqlcmd',
+    fields: [
+      { id: 'server', label: 'Server', placeholder: 'localhost', value: 'localhost' },
+      { id: 'db', label: 'Database name', placeholder: 'MyDatabase', value: 'MyDatabase' },
+      { id: 'user', label: 'User (omit for Windows auth)', placeholder: 'sa', value: '' },
+      { id: 'password', label: 'Password', placeholder: '', value: '' }
+    ],
+    options: [
+      { id: 'schemaOnly', label: 'Schema only', flag: 'SCHEMA_ONLY', checked: true },
+      { id: 'noConstraints', label: 'No constraints', flag: 'NO_CONSTRAINTS', checked: false },
+      { id: 'scriptDrops', label: 'Script DROP statements', flag: 'SCRIPT_DROPS', checked: false }
+    ],
+    explain: [
+      { flag: 'SCHEMA_ONLY', desc: 'Uses <code>SCRIPT DATA = FALSE</code> to exclude INSERT/data statements.' },
+      { flag: 'NO_CONSTRAINTS', desc: 'Omits CHECK and FOREIGN KEY constraints from the script.' },
+      { flag: 'SCRIPT_DROPS', desc: 'Prepends DROP statements before each CREATE.' }
+    ],
+    build: (vals, opts) => {
+      let auth = '';
+      if (vals.user) {
+        auth = ` -U ${vals.user} -P ${vals.password || 'YourPassword'}`;
+      } else {
+        auth = ' -E'; // Windows auth
+      }
+      let query = `SELECT 'CREATE TABLE [' + SCHEMA_NAME(schema_id) + '].[' + name + '] (' + 
+  (SELECT STRING_AGG('[' + c.name + '] ' + t.name + 
+    CASE WHEN t.name IN ('varchar','nvarchar','char','nchar') THEN '(' + IIF(c.max_length=-1,'MAX',CAST(c.max_length AS VARCHAR)) + ')' 
+         WHEN t.name IN ('decimal','numeric') THEN '(' + CAST(c.precision AS VARCHAR) + ',' + CAST(c.scale AS VARCHAR) + ')' 
+         ELSE '' END, ', ') 
+   FROM sys.columns c JOIN sys.types t ON c.user_type_id = t.user_type_id 
+   WHERE c.object_id = o.object_id) + ');'
+FROM sys.objects o WHERE type = 'U';`;
+      // Simpler approach: use sqlpackage or sqlcmd with scripting
+      let cmd = `sqlcmd -S ${vals.server}${auth} -d ${vals.db} -Q "SCRIPT DATABASE ${vals.db} TO 'schema.sql'"`;
+      // Better practical command:
+      cmd = `# Option 1: Using SSMS Generate Scripts Wizard (recommended)\n# Right-click DB → Tasks → Generate Scripts → Schema only\n\n# Option 2: Using sqlpackage CLI (install separately)\nsqlpackage /Action:Extract /SourceServerName:${vals.server} /SourceDatabaseName:${vals.db}${vals.user ? ' /SourceUser:' + vals.user + ' /SourcePassword:' + (vals.password || 'YourPassword') : ''} /TargetFile:schema.dacpac`;
+      if (opts.schemaOnly) {
+        cmd += '\n\n# Option 3: Using mssql-scripter (Python tool)\nmssql-scripter -S ' + vals.server + ' -d ' + vals.db + auth + ' --schema-and-data false --file-path schema.sql';
+      }
+      return cmd;
+    }
+  },
+  oracle: {
+    name: 'Oracle',
+    cmd: 'expdp',
+    fields: [
+      { id: 'user', label: 'User / Schema', placeholder: 'HR', value: 'HR' },
+      { id: 'password', label: 'Password', placeholder: 'password', value: '' },
+      { id: 'sid', label: 'SID / Service Name', placeholder: 'ORCLPDB1', value: 'ORCLPDB1' },
+      { id: 'directory', label: 'DATA_PUMP_DIR name', placeholder: 'DATA_PUMP_DIR', value: 'DATA_PUMP_DIR' }
+    ],
+    options: [
+      { id: 'metadataOnly', label: 'Metadata only (CONTENT=METADATA_ONLY)', flag: 'CONTENT=METADATA_ONLY', checked: true },
+      { id: 'excludeStats', label: 'Exclude statistics', flag: 'EXCLUDE=STATISTICS', checked: true },
+      { id: 'includeDrop', label: 'Include DROP statements', flag: 'INCLUDE=TABLE:\"IN \\'DROP\\'\"', checked: false }
+    ],
+    explain: [
+      { flag: 'CONTENT=METADATA_ONLY', desc: 'Exports only DDL without table data.' },
+      { flag: 'EXCLUDE=STATISTICS', desc: 'Removes DBMS_STATS calls that vary between environments.' },
+      { flag: 'INCLUDE=TABLE', desc: 'Filters which object types appear in the export.' }
+    ],
+    build: (vals, opts) => {
+      let cmd = `expdp ${vals.user}/${vals.password || 'password'}@${vals.sid}`;
+      cmd += ` DIRECTORY=${vals.directory}`;
+      cmd += ` DUMPFILE=${vals.user.toLowerCase()}_schema.dmp`;
+      if (opts.metadataOnly) cmd += ' CONTENT=METADATA_ONLY';
+      if (opts.excludeStats) cmd += ' EXCLUDE=STATISTICS';
+      if (opts.includeDrop) cmd += ' INCLUDE=TABLE:"IN \'DROP\'"';
+      cmd += '\n\n# Then extract DDL from the dump file:\nimpdp ' + vals.user + '/' + (vals.password || 'password') + '@' + vals.sid + ' DIRECTORY=' + vals.directory + ' DUMPFILE=' + vals.user.toLowerCase() + '_schema.dmp SQLFILE=schema.sql';
+      return cmd;
+    }
+  },
+  cockroach: {
+    name: 'CockroachDB',
+    cmd: 'cockroach dump',
+    fields: [
+      { id: 'host', label: 'Host', placeholder: 'localhost', value: 'localhost' },
+      { id: 'port', label: 'Port', placeholder: '26257', value: '26257' },
+      { id: 'db', label: 'Database name', placeholder: 'mydb', value: 'mydb' },
+      { id: 'user', label: 'User', placeholder: 'root', value: 'root' },
+      { id: 'password', label: 'Password', placeholder: '', value: '' },
+      { id: 'tables', label: 'Specific tables (comma-separated)', placeholder: 'users,orders,products', value: '' }
+    ],
+    options: [
+      { id: 'schemaOnly', label: 'Schema only', flag: '--dump-mode=schema', checked: true },
+      { id: 'noComments', label: 'No comments', flag: '--no-comments', checked: true },
+      { id: 'insecure', label: 'Insecure mode (no TLS)', flag: '--insecure', checked: false }
+    ],
+    explain: [
+      { flag: '--dump-mode=schema', desc: 'Exports only schema definitions without data rows.' },
+      { flag: '--no-comments', desc: 'Suppresses comment statements in the output.' },
+      { flag: '--insecure', desc: 'Connects without TLS. Only use on local dev clusters.' }
+    ],
+    build: (vals, opts) => {
+      let cmd = 'cockroach dump';
+      if (vals.db) cmd += ` ${vals.db}`;
+      if (vals.tables) {
+        vals.tables.split(',').forEach(t => {
+          cmd += ` ${t.trim()}`;
+        });
+      }
+      cmd += ` --host=${vals.host}`;
+      if (vals.port && vals.port !== '26257') cmd += ` --port=${vals.port}`;
+      if (vals.user) cmd += ` --user=${vals.user}`;
+      if (opts.insecure) cmd += ' --insecure';
+      if (opts.schemaOnly) cmd += ' --dump-mode=schema';
+      if (opts.noComments) cmd += ' --no-comments';
+      cmd += ' > schema.sql';
+      if (vals.password) {
+        cmd = `COCKROACH_PW=${vals.password}\n# or use: cockroach sql --certs-dir=certs\n` + cmd;
+      }
+      return cmd;
+    }
+  },
+  mongodb: {
+    name: 'MongoDB',
+    cmd: 'mongodump',
+    fields: [
+      { id: 'host', label: 'Host', placeholder: 'localhost', value: 'localhost' },
+      { id: 'port', label: 'Port', placeholder: '27017', value: '27017' },
+      { id: 'db', label: 'Database name', placeholder: 'mydb', value: 'mydb' },
+      { id: 'user', label: 'User (optional)', placeholder: 'admin', value: '' },
+      { id: 'password', label: 'Password (optional)', placeholder: '', value: '' },
+      { id: 'authDB', label: 'Authentication database', placeholder: 'admin', value: 'admin' }
+    ],
+    options: [
+      { id: 'schemaOnly', label: 'Schema validation only', flag: '--collection validation', checked: true },
+      { id: 'jsonSchema', label: 'Export validation rules as JSON Schema', flag: 'jsonSchema', checked: true }
+    ],
+    explain: [
+      { flag: 'mongodump --db', desc: 'Dumps collections and indexes. SchemaLens focuses on validation rules and indexes.' },
+      { flag: '--authenticationDatabase', desc: 'Required when using authenticated connections.' },
+      { flag: 'db.getCollectionInfos()', desc: 'Run in mongosh to get JSON Schema validation rules for diffing.' }
+    ],
+    build: (vals, opts) => {
+      let cmd = `mongosh ${vals.host}:${vals.port}/${vals.db}`;
+      let auth = '';
+      if (vals.user) {
+        auth = ` -u ${vals.user} -p ${vals.password || 'password'} --authenticationDatabase ${vals.authDB}`;
+        cmd += auth;
+      }
+      cmd += ` --eval "JSON.stringify(db.getCollectionInfos({},{validation:1,options:1}),null,2)" > schema.json`;
+      cmd = '# MongoDB is schemaless, but you can export validation rules and indexes:\n' + cmd;
+      cmd += '\n\n# Alternative: dump indexes with mongodump\nmongodump --host=' + vals.host + ' --port=' + vals.port + ' --db=' + vals.db;
+      if (vals.user) cmd += auth;
+      cmd += ' --out=./mongo_dump';
+      return cmd;
+    }
+  }
+};
+
+let currentDialect = 'postgres';
+
+function setDialect(d) {
+  currentDialect = d;
+  document.querySelectorAll('.dialect-list li').forEach(li => {
+    li.classList.toggle('active', li.dataset.dialect === d);
+  });
+  renderForm();
+  generate();
+}
+
+function renderForm() {
+  const d = dialects[currentDialect];
+  const fieldsEl = document.getElementById('connFields');
+  const optsEl = document.getElementById('optionChecks');
+  const explainEl = document.getElementById('explainList');
+  const noteEl = document.getElementById('dialectNote');
+
+  fieldsEl.innerHTML = d.fields.map(f => `
+    <div class="field">
+      <label for="${f.id}">${f.label}${f.placeholder && !f.value ? ' <span class="opt">(' + f.placeholder + ')</span>' : ''}</label>
+      <input type="${f.id === 'password' ? 'password' : 'text'}" id="${f.id}" value="${f.value || ''}" placeholder="${f.placeholder || ''}" oninput="generate()">
+    </div>
+  `).join('');
+
+  optsEl.innerHTML = d.options.map(o => `
+    <label>
+      <input type="checkbox" id="${o.id}" ${o.checked ? 'checked' : ''} onchange="generate()">
+      ${o.label}
+    </label>
+  `).join('');
+
+  explainEl.innerHTML = d.explain.map(e => `
+    <li><code>${e.flag}</code> — ${e.desc}</li>
+  `).join('');
+
+  const tips = {
+    postgres: 'Use <code>--schema-only --no-owner --no-privileges</code> for the cleanest output across environments.',
+    mysql: 'Add <code>--skip-comments</code> to remove auto-generated timestamps that cause false diffs.',
+    mariadb: 'Same as MySQL — <code>--skip-comments</code> prevents timestamp comments from appearing as changes.',
+    sqlite: '<code>.schema</code> is usually enough. Use <code>.dump | grep -v "^INSERT"</code> if you need constraints and triggers.',
+    sqlserver: 'SQL Server scripting via command line is limited. The <code>sqlpackage</code> or <code>mssql-scripter</code> tools work best.',
+    oracle: '<code>CONTENT=METADATA_ONLY</code> gives you a clean DDL dump. Use <code>impdp SQLFILE=</code> to extract plain SQL.',
+    cockroach: 'CockroachDB supports the same <code>pg_dump</code> protocol. You can also use <code>pg_dump</code> directly if you prefer.',
+    mongodb: 'MongoDB is schemaless, but validation rules and indexes can be diffed. Export them as JSON Schema.'
+  };
+  noteEl.innerHTML = `<strong>💡 Tip:</strong> ${tips[currentDialect]}`;
+}
+
+function getValues() {
+  const d = dialects[currentDialect];
+  const vals = {};
+  d.fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    vals[f.id] = el ? el.value : '';
+  });
+  return vals;
+}
+
+function getOptions() {
+  const d = dialects[currentDialect];
+  const opts = {};
+  d.options.forEach(o => {
+    const el = document.getElementById(o.id);
+    opts[o.id] = el ? el.checked : false;
+  });
+  return opts;
+}
+
+function generate() {
+  const d = dialects[currentDialect];
+  const vals = getValues();
+  const opts = getOptions();
+  const cmd = d.build(vals, opts);
+  const pre = document.getElementById('commandOutput');
+
+  // Simple syntax highlighting
+  let html = cmd
+    .replace(/^(#.*$)/gm, '<span class="token-comment">$1</span>')
+    .replace(/\b(pg_dump|mysqldump|sqlite3|sqlcmd|sqlpackage|mssql-scripter|expdp|impdp|mongodump|mongosh|cockroach)\b/g, '<span class="token-cmd">$1</span>')
+    .replace(/\s(-{1,2}[\w-]+)/g, ' <span class="token-flag">$1</span>');
+
+  pre.innerHTML = html;
+}
+
+async function copyCommand() {
+  const d = dialects[currentDialect];
+  const vals = getValues();
+  const opts = getOptions();
+  const cmd = d.build(vals, opts);
+  try {
+    await navigator.clipboard.writeText(cmd);
+    const btn = document.querySelector('.copy-btn');
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 1500);
+  } catch (e) {
+    alert('Could not copy. Please select and copy manually.');
+  }
+}
+
+renderForm();
+generate();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+</body>
+</html>
