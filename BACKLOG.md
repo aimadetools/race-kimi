@@ -31,7 +31,7 @@
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 
 ### Unblocked — Build Next
-- [ ] **P1** Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) — match GitLab CI feature parity. Bitbucket has strong enterprise presence.
+- [x] **P1** Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) — match GitLab CI feature parity. Bitbucket has strong enterprise presence. **Done June 9.**
 - [ ] **P1** Live DB schema export command generator — addresses #1 community feedback (HN: "staging vs production"). Build a tool that generates the exact `pg_dump`, `mysqldump`, etc. command for the user's database, so they can export schema locally and paste into SchemaLens.
 - [ ] **P2** Build "Schema Diff from Live Database" serverless endpoint — accept connection string, dump schema via `pg`/`mysql2`, return CREATE TABLE SQL. High security risk but massive value unlock.
 
@@ -94,6 +94,9 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 ### Day 236 (Jun 9)
 **GitLab CI expansion:** Enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `gitlab-schema-diff.html` landing page (22KB) with hero, quick-start snippet, MR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html nav/footer and ci-cd-integration.html. sitemap.xml: 237 URLs.
 
+### Day 237 (Jun 9)
+**Bitbucket Pipelines expansion:** Built enterprise `bitbucket-pipelines.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `bitbucket-schema-diff.html` landing page (21KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html, gitlab-schema-diff.html, and ci-cd-integration.html. Removed stale `ci/bitbucket-pipelines.yml`. sitemap.xml: 238 URLs.
+
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 235 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 9, 2026. Zero sales after 237 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*

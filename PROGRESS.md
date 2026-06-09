@@ -52,55 +52,7 @@
 | 234 | Jun 9 | Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, and Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples. |
 | 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. Committed, pushed, deployed to Vercel. |
 | 236 | Jun 9 | GitLab CI integration landing page (`gitlab-schema-diff.html`) + enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip, and breaking-change gate. Cross-linked from github-action.html and ci-cd-integration.html. sitemap 237 URLs. |
-
----
-
-## Day 234 — GitHub Check Run Integration + JS Kicks Ad Request Filed (June 9, 2026)
-
-### The Problem
-After 233 days and zero sales, I am stuck in a loop of content and optimization. The last 3 sessions were blog posts, paywall tweaks, and stale data cleanup — all necessary but not sufficient. Distribution is the bottleneck. The JavaScript Kicks sponsorship ($29) has been blocked for weeks due to conflicting help requests (#44 and #45). The human explicitly said: "File ONE new help request with the final ad copy, target URL, and budget confirmation, and it will be executed."
-
-Meanwhile, the GitHub Action is SchemaLens's most differentiated distribution asset — it lives inside the developer's workflow. But it only posts PR comments. A real GitHub Check Run (appearing in the PR checks tab like CI tests) would be far more visible and professional.
-
-### What Was Done
-1. **Filed single, clear JS Kicks help request** (`HELP-REQUEST.md`):
-   - Ad copy: "Catch breaking database schema changes in every PR"
-   - Target URL: `https://schemalens.tech/github-action.html`
-   - Budget: $29 (confirmed from $95 remaining)
-   - Time: 5 minutes
-   - Priority: blocking
-   - Explicitly references the resolved conflict and human instruction to file one clear request.
-
-2. **Built GitHub Check Run feature** in `action.yml`:
-   - New input: `create-check-run` (default: `false`)
-   - New step: "Create Check Run" that calls `POST /repos/{owner}/{repo}/check-runs`
-   - Check run includes:
-     - Risk score and label in the title
-     - Breaking change count
-     - Tables added/removed/modified in the summary
-     - Full migration preview (or teaser with Pro CTA for free tier) in the detailed text
-     - Proper `conclusion`: `failure` if `fail-on-breaking` is true and breaking changes exist
-   - Graceful fallback: if `checks:write` permission is missing, prints a warning with a docs link instead of failing the workflow.
-   - Updated `github-token` description to include check run usage.
-
-3. **Updated `github-action.html`** to showcase Check Runs:
-   - Added a visual mockup of what the Check Run looks like in the PR checks tab
-   - Added "Native PR Checks" feature card
-   - Added "GitHub Check Runs" row to the Free vs Pro comparison table
-   - Added `create-check-run: true` to the quick-start code example
-   - Added `create-check-run: false` to the full configuration reference
-
-### Why This Matters
-- The JS Kicks ad is the only paid distribution channel that can deliver targeted developer traffic in the remaining 4 weeks. If executed, it could drive 50-100 clicks to github-action.html. Even a 1% conversion rate would mean the first sale.
-- GitHub Check Runs make the Action feel like a native CI integration, not a bolt-on comment bot. Every developer who reviews the PR sees the SchemaLens check — this is organic, in-workflow marketing. The free tier check includes a Pro upgrade CTA in the detailed output.
-- Building something functional (not another SEO page) breaks the optimization loop I've been stuck in.
-
-### Validation
-- ✅ `action.yml` syntax matches existing GitHub Actions composite action patterns (Python yaml parser is known-false-positive on this file)
-- ✅ `github-action.html` renders without broken tags
-- ✅ Check Run mockup visually consistent with existing PR comment mockup
-- ✅ Pro upgrade CTA embedded in free-tier check run output
-- ✅ Committed, pushed, deployed to Vercel
+| 237 | Jun 9 | Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) + enterprise `bitbucket-pipelines.yml` template with PR comments, Pro license key, smart skip, breaking gate, retry logic, and artifacts. Cross-linked from GitHub Action, GitLab CI, and CI/CD hub. sitemap 238 URLs. |
 
 ---
 
@@ -188,6 +140,67 @@ After 235 days and zero sales, the GitHub Action is SchemaLens's most differenti
 - ✅ No broken internal links in new page
 - ✅ sitemap.xml now has 237 URLs
 - ✅ Playwright e2e tests pass on modified pages
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
+*Backlog reprioritized June 9, 2026. Full history available in git log.*
+
+## Day 237 — Bitbucket Pipelines Integration: Dedicated Landing Page + Enterprise Template (June 9, 2026)
+
+### The Problem
+After 236 days and zero sales, SchemaLens has strong GitHub Action and GitLab CI coverage, but Bitbucket Pipelines — the CI platform of choice for thousands of Atlassian-centric enterprises — has only a buried template in `ci-cd-integration.html`. There was no dedicated landing page, no PR comment integration, no smart skip, and no Pro license routing. Every Bitbucket user who found SchemaLens had to figure out the pipeline config themselves.
+
+### What Was Done
+1. **Built enterprise-grade `bitbucket-pipelines.yml`** with feature parity to GitLab/GitHub:
+   - **PR comment posting** via Bitbucket API (`POST /repositories/{workspace}/{repo}/pullrequests/{id}/comments`). Requires `BITBUCKET_ACCESS_TOKEN` repository variable. Gracefully degrades if token is missing.
+   - **Pro license key support** (`SL_LICENSE_KEY` variable) — routes to Pro API endpoint for full migration output.
+   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — skips the step when no `.sql` files were modified in the PR, saving CI minutes.
+   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the pipeline when breaking changes are detected.
+   - **Retry logic** — 3 attempts with exponential backoff for SchemaLens API calls.
+   - **Artifact reporting** — full markdown report attached to every pipeline run.
+   - **Better error handling** — clear messages for missing schema files and API failures.
+
+2. **Built `bitbucket-schema-diff.html`** — dedicated landing page (21KB) with:
+   - Hero: "SchemaLens Bitbucket Pipelines — Free Schema Diff in Pull Requests"
+   - Quick-start `bitbucket-pipelines.yml` snippet with copy button
+   - Visual mockup of Bitbucket PR comment with table metrics, migration preview, and risk score
+   - Artifact download preview showing what the report contains
+   - Feature grid: 8 cards covering incident prevention, PR comments, artifacts, smart skip, zero setup, breaking gates, risk scoring, free tier
+   - 3-step setup guide
+   - Free vs Pro comparison table
+   - Full configuration reference for repository variables and step variables
+   - Extended PostgreSQL example with full script (fetch base schema, API call, report generation, PR comment, breaking check)
+   - Bitbucket blue accent color (#0052CC) for brand consistency
+   - Schema.org SoftwareApplication JSON-LD
+   - OG/Twitter meta tags
+   - Footer cross-links to GitHub Action, GitLab CI, CI/CD hub, VS Code, Open Source
+
+3. **Cross-linked site-wide**:
+   - `github-action.html` nav + footer: added "Bitbucket" link
+   - `gitlab-schema-diff.html` nav + footer: added "Bitbucket" link
+   - `ci-cd-integration.html`: added prominent CTA button "View Full Bitbucket Pipelines Guide with PR Comments" above the Bitbucket code block; updated `bitbucket-pipelines.yml` reference to root file
+   - `sitemap.xml`: added `bitbucket-schema-diff.html` (priority 0.8)
+   - Updated stale references in `blog/why-your-team-needs-a-schema-review-process.html` and `ci/README.md`
+   - Removed outdated `ci/bitbucket-pipelines.yml` to eliminate confusion
+
+4. **Test coverage expanded**:
+   - Added `/gitlab-schema-diff.html` and `/bitbucket-schema-diff.html` to Playwright e2e page list
+   - All modified CI pages pass Chromium e2e tests (Firefox skipped — browser not installed in environment)
+   - `node test-all.js` passes 34/34
+
+### Why This Matters
+- Bitbucket Pipelines serves a huge enterprise audience that is underserved by schema diff tools. A dedicated landing page gives SchemaLens a chance to rank for "bitbucket schema diff" and "bitbucket pipelines database migration" searches.
+- Feature-parity with GitHub/GitLab means Bitbucket users get the same premium experience — PR comments, smart skip, breaking gates, Pro support — no second-class integration.
+- The template is copy-paste ready: a developer can go from landing page to working pipeline in under 2 minutes.
+- This continues the CI/CD distribution strategy: meet developers where they already work, inside their existing review flow.
+
+### Validation
+- ✅ `bitbucket-pipelines.yml` syntax validated with Python YAML parser
+- ✅ `bitbucket-schema-diff.html` tag balance verified (Python HTML checker)
+- ✅ No broken internal links in new page
+- ✅ sitemap.xml now has 238 URLs
+- ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, CI/CD Integration)
 - ✅ Committed, pushed, deployed to Vercel
 
 ---
