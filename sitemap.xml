@@ -725,7 +725,6 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
   <url>
     <loc>https://schemalens.tech/tools/sql-data-types.html</loc>
     <lastmod>2026-04-28</lastmod>
@@ -1404,6 +1403,12 @@
   </url>
   <url>
     <loc>https://schemalens.tech/gitlab-schema-diff.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/bitbucket-schema-diff.html</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

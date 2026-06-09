@@ -98,7 +98,7 @@ The pipeline will:
 
 ## Bitbucket Pipelines
 
-Add `bitbucket-pipelines.yml` to your repository (see `ci/bitbucket-pipelines.yml` in this repo for the template).
+Add `bitbucket-pipelines.yml` to your repository (see `bitbucket-pipelines.yml` in this repo for the template).
 
 The pipeline will:
 1. Trigger on pull requests that modify `.sql` files
@@ -109,7 +109,7 @@ The pipeline will:
 
 ### Setup
 
-1. Copy `ci/bitbucket-pipelines.yml` to your repository root as `bitbucket-pipelines.yml`
+1. Copy `bitbucket-pipelines.yml` to your repository root as `bitbucket-pipelines.yml`
 2. Adjust `db/schema.sql` to match your schema file path
 3. (Optional) Add repository variables:
    - `BITBUCKET_USERNAME` — your Bitbucket username

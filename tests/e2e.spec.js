@@ -78,6 +78,8 @@ const pages = [
   { path: '/schema-templates.html', name: 'Schema Templates' },
   { path: '/migration-recipes.html', name: 'Migration Recipes' },
   { path: '/github-action.html', name: 'GitHub Action Landing' },
+  { path: '/gitlab-schema-diff.html', name: 'GitLab CI Landing' },
+  { path: '/bitbucket-schema-diff.html', name: 'Bitbucket Pipelines Landing' },
   { path: '/book-demo.html', name: 'Book Demo' },
   { path: '/team.html', name: 'Team' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },

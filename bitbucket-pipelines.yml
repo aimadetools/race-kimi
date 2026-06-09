@@ -1,0 +1,90 @@
+image: node:20
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Schema Diff
+          image: node:20
+          variables:
+            SCHEMA_PATH: "db/schema.sql"
+            DIALECT: "postgres"
+            POST_PR_COMMENT: "false"
+            FAIL_ON_BREAKING: "false"
+            SKIP_NO_SQL_CHANGE: "false"
+          script:
+            - apt-get update && apt-get install -y jq curl
+            - |
+              if [ ! -f "$SCHEMA_PATH" ]; then
+                echo "Schema file not found: $SCHEMA_PATH"
+                exit 1
+              fi
+            - |
+              if [ "$SKIP_NO_SQL_CHANGE" = "true" ]; then
+                git fetch origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+                if git diff --name-only "origin/$BITBUCKET_PR_DESTINATION_BRANCH..$BITBUCKET_COMMIT" | grep -q '\.sql$'; then
+                  echo "Schema files changed in this PR — running diff."
+                else
+                  echo "No .sql files changed in this PR — skipping schema diff to save CI minutes."
+                  exit 0
+                fi
+              fi
+            - |
+              git fetch origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+              git show "origin/$BITBUCKET_PR_DESTINATION_BRANCH:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+            - |
+              ENDPOINT="https://schemalens.tech/api/free-diff"
+              if [ -n "$SL_LICENSE_KEY" ]; then
+                ENDPOINT="https://schemalens.tech/api/diff"
+                echo "Using SchemaLens Pro endpoint."
+              else
+                echo "Using SchemaLens free endpoint."
+              fi
+
+              BODY=$(jq -n \
+                --arg schemaA "$(cat /tmp/schema_base.sql)" \
+                --arg schemaB "$(cat "$SCHEMA_PATH")" \
+                --arg dialect "$DIALECT" \
+                --arg format "markdown" \
+                '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+
+              HTTP_STATUS=000
+              for attempt in 1 2 3; do
+                HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                  -H "Content-Type: application/json" \
+                  ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
+                  -d "$BODY" || echo "000")
+                if [ "$HTTP_STATUS" = "200" ]; then
+                  break
+                fi
+                echo "SchemaLens API attempt $attempt failed (HTTP $HTTP_STATUS). Retrying..."
+                sleep "$((attempt * 2))"
+              done
+
+              if [ "$HTTP_STATUS" != "200" ]; then
+                echo "SchemaLens API failed after 3 attempts (last HTTP status: $HTTP_STATUS)"
+                cat /tmp/response.json || true
+                exit 1
+              fi
+            - |
+              jq -r '.markdown // .migrationTeaser // "No report generated."' /tmp/response.json > schema_diff_report.md
+              cat schema_diff_report.md
+            - |
+              if [ "$POST_PR_COMMENT" = "true" ] && [ -n "$BITBUCKET_ACCESS_TOKEN" ]; then
+                REPORT=$(cat schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+                curl -s -X POST \
+                  -H "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" \
+                  -H "Content-Type: application/json" \
+                  "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pullrequests/$BITBUCKET_PR_ID/comments" \
+                  -d "{\"content\": {\"raw\": \"$REPORT\"}}" || echo "Warning: failed to post PR comment."
+              elif [ "$POST_PR_COMMENT" = "true" ]; then
+                echo "Warning: POST_PR_COMMENT is true but BITBUCKET_ACCESS_TOKEN is not set. Skipping PR comment."
+              fi
+            - |
+              BCOUNT=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/response.json)
+              if [ "$FAIL_ON_BREAKING" = "true" ] && [ "$BCOUNT" != "0" ]; then
+                echo "Breaking changes detected: $BCOUNT"
+                exit 1
+              fi
+          artifacts:
+            - schema_diff_report.md

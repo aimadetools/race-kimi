@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens GitLab CI — Free Schema Diff in Merge Requests</title>
-  <meta name="description" content="Add schema diff checks to your GitLab CI pipeline for free. Catch breaking database changes in every merge request. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
-  <meta property="og:title" content="SchemaLens GitLab CI — Free Schema Diff in Merge Requests">
-  <meta property="og:description" content="Catch breaking database changes in every GitLab merge request. Free CI template with MR comments, artifact reports, and breaking-change gates.">
+  <title>SchemaLens Bitbucket Pipelines — Free Schema Diff in Pull Requests</title>
+  <meta name="description" content="Add schema diff checks to your Bitbucket Pipelines for free. Catch breaking database changes in every pull request. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
+  <meta property="og:title" content="SchemaLens Bitbucket Pipelines — Free Schema Diff in Pull Requests">
+  <meta property="og:description" content="Catch breaking database changes in every Bitbucket pull request. Free CI template with PR comments, artifact reports, and breaking-change gates.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://schemalens.tech/gitlab-schema-diff.html">
+  <meta property="og:url" content="https://schemalens.tech/bitbucket-schema-diff.html">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "SchemaLens GitLab CI Integration",
+    "name": "SchemaLens Bitbucket Pipelines Integration",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -23,8 +23,8 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "Free SQL schema diff in GitLab CI, merge request comments, artifact reports, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
-    "url": "https://schemalens.tech/gitlab-schema-diff.html"
+    "featureList": "Free SQL schema diff in Bitbucket Pipelines, pull request comments, artifact reports, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/bitbucket-schema-diff.html"
   }
   </script>
   <link rel="stylesheet" href="style.css">
@@ -35,10 +35,6 @@
     .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
     .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
     .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; }
-    .code-block .comment { color: #64748b; }
-    .code-block .key { color: #7dd3fc; }
-    .code-block .str { color: #86efac; }
-    .code-block .num { color: #fca5a5; }
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
     .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
     .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
@@ -61,7 +57,7 @@
     @media (prefers-color-scheme: dark) {
       .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
     }
-    .gitlab-accent { color: #fc6d26; }
+    .bitbucket-accent { color: #0052cc; }
   </style>
 </head>
 <body>
@@ -73,13 +69,13 @@
       <a href="pricing.html">Pricing</a>
       <a href="api-guide.html">API</a>
       <a href="github-action.html">GitHub Action</a>
-      <a href="bitbucket-schema-diff.html">Bitbucket</a>
+      <a href="gitlab-schema-diff.html">GitLab CI</a>
       <a href="ci-cd-integration.html">CI/CD</a>
     </nav>
 
     <div class="page-header">
-      <h1>SchemaLens <span class="gitlab-accent">GitLab CI</span> <span class="badge-free">Free</span></h1>
-      <p>Catch breaking database changes in every merge request. Zero config, zero cost — add schema diff checks to your GitLab pipeline in 60 seconds.</p>
+      <h1>SchemaLens <span class="bitbucket-accent">Bitbucket Pipelines</span> <span class="badge-free">Free</span></h1>
+      <p>Catch breaking database changes in every pull request. Zero config, zero cost — add schema diff checks to your Bitbucket pipeline in 60 seconds.</p>
       <div class="dialect-tags">
         <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
       </div>
@@ -87,44 +83,36 @@
 
     <div class="cta-bar">
       <h2>🚀 Add to your pipeline — copy, paste, done</h2>
-      <div class="code-block">
-<span class="comment"># .gitlab-ci.yml</span>
-<span class="key">stages</span>:
-  - <span class="str">validate</span>
+      <pre class="code-block"><code># bitbucket-pipelines.yml
+image: node:20
 
-<span class="key">schema-diff</span>:
-  <span class="key">stage</span>: <span class="str">validate</span>
-  <span class="key">image</span>: <span class="str">node:20-alpine</span>
-  <span class="key">variables</span>:
-    <span class="key">SCHEMA_PATH</span>: <span class="str">"db/schema.sql"</span>
-    <span class="key">DIALECT</span>: <span class="str">"postgres"</span>
-    <span class="key">POST_MR_COMMENT</span>: <span class="str">"true"</span>
-    <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
-  <span class="key">before_script</span>:
-    - <span class="str">apk add --no-cache git curl jq</span>
-  <span class="key">script</span>:
-    - <span class="str">git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME</span>
-    - <span class="str">git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql</span>
-    - <span class="str">node ci/schemalens-diff.js /tmp/schema_base.sql $SCHEMA_PATH --dialect=$DIALECT --format=markdown --output=/tmp/report.md</span>
-    - <span class="str">cat /tmp/report.md</span>
-  <span class="key">rules</span>:
-    - <span class="key">if</span>: <span class="str">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
-      <span class="key">changes</span>:
-        - <span class="str">"**/*.sql"</span>
-  <span class="key">artifacts</span>:
-    <span class="key">paths</span>:
-      - <span class="str">/tmp/report.md</span>
-    <span class="key">expire_in</span>: <span class="str">1 week</span>
-      </div>
-      <a href=".gitlab-ci.yml" class="btn btn-primary" download>Download .gitlab-ci.yml</a>
-      <a href="https://gitlab.com/-/snippets" class="btn btn-secondary" target="_blank" rel="noopener">GitLab Snippets</a>
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Schema Diff
+          image: node:20
+          variables:
+            SCHEMA_PATH: "db/schema.sql"
+            DIALECT: "postgres"
+            POST_PR_COMMENT: "true"
+            FAIL_ON_BREAKING: "true"
+          script:
+            - git fetch origin $BITBUCKET_PR_DESTINATION_BRANCH
+            - git show origin/$BITBUCKET_PR_DESTINATION_BRANCH:$SCHEMA_PATH > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+            - node ci/schemalens-diff.js /tmp/schema_base.sql $SCHEMA_PATH --dialect=$DIALECT --format=markdown --output=schema_diff_report.md
+            - cat schema_diff_report.md
+          artifacts:
+            - schema_diff_report.md</code></pre>
+      <a href="bitbucket-pipelines.yml" class="btn btn-primary" download>Download bitbucket-pipelines.yml</a>
+      <a href="https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/" class="btn btn-secondary" target="_blank" rel="noopener">Bitbucket Docs</a>
     </div>
 
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
-      <h3 style="font-size: 1rem; margin-bottom: 12px;">💬 What the MR comment looks like</h3>
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">💬 What the PR comment looks like</h3>
       <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-          <div style="width: 28px; height: 28px; border-radius: 50%; background: #fc6d26; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700;">SL</div>
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: #0052cc; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700;">SL</div>
           <div>
             <strong>SchemaLens Bot</strong>
             <div style="font-size: 0.8rem; color: var(--text-muted);">commented 2 minutes ago</div>
@@ -142,7 +130,7 @@
           <p style="font-size: 0.9rem; margin: 10px 0 6px;"><strong>Generated Migration</strong></p>
           <pre style="background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0;"><code>ALTER TABLE users
   ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
-          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Generated by <a href="gitlab-schema-diff.html" style="color: var(--primary);">SchemaLens GitLab CI</a></em></p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Generated by <a href="bitbucket-schema-diff.html" style="color: var(--primary);">SchemaLens Bitbucket Pipelines</a></em></p>
         </div>
       </div>
     </div>
@@ -151,12 +139,12 @@
       <h3 style="font-size: 1rem; margin-bottom: 12px;">📦 What the pipeline artifact looks like</h3>
       <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #fc6d26;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #0052cc;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
           <strong>schema_diff_report.md</strong>
           <span style="font-size: 0.75rem; color: var(--text-muted);">2.4 KB</span>
         </div>
         <div style="line-height: 1.6; padding-left: 24px;">
-          <p>Team members can download the full markdown report from the <strong>Build &gt; Artifacts</strong> section of any merge request pipeline. The report includes:</p>
+          <p>Team members can download the full markdown report from the <strong>Artifacts</strong> tab of any pipeline run. The report includes:</p>
           <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-muted);">
             <li>Complete diff summary with table counts</li>
             <li>Breaking change list with severity levels</li>
@@ -167,15 +155,15 @@
       </div>
     </div>
 
-    <h2>Why add schema diff to GitLab CI?</h2>
+    <h2>Why add schema diff to Bitbucket Pipelines?</h2>
     <div class="feature-grid">
       <div class="feature-card">
         <h3>🛡️ Prevent production incidents</h3>
         <p>Breaking changes like dropped columns, removed indexes, or altered constraints get flagged before merge — not after deploy.</p>
       </div>
       <div class="feature-card">
-        <h3>💬 MR comments, automatically</h3>
-        <p>Every merge request gets a clear schema diff summary posted as a comment. Reviewers see exactly what changed without leaving GitLab.</p>
+        <h3>💬 PR comments, automatically</h3>
+        <p>Every pull request gets a clear schema diff summary posted as a comment. Reviewers see exactly what changed without leaving Bitbucket.</p>
       </div>
       <div class="feature-card">
         <h3>📦 Downloadable artifacts</h3>
@@ -183,11 +171,11 @@
       </div>
       <div class="feature-card">
         <h3>⏭️ Smart skip</h3>
-        <p>Set <code>SKIP_NO_SQL_CHANGE: "true"</code> and the job skips entirely when no <code>.sql</code> files were modified — saving CI minutes.</p>
+        <p>Set <code>SKIP_NO_SQL_CHANGE: "true"</code> and the step skips entirely when no <code>.sql</code> files were modified — saving CI minutes.</p>
       </div>
       <div class="feature-card">
         <h3>⚡ Zero setup required</h3>
-        <p>No database connections, no CLI installation, no license key. Just point the job at two SQL files.</p>
+        <p>No database connections, no CLI installation, no license key. Just point the step at two SQL files.</p>
       </div>
       <div class="feature-card">
         <h3>🚦 Fail the pipeline on breaking changes</h3>
@@ -199,7 +187,7 @@
       </div>
       <div class="feature-card">
         <h3>🔓 100% free for open source</h3>
-        <p>The free tier includes breaking change detection, risk scoring, MR comments, and artifact reports. No credit card required.</p>
+        <p>The free tier includes breaking change detection, risk scoring, PR comments, and artifact reports. No credit card required.</p>
       </div>
     </div>
 
@@ -215,14 +203,14 @@
       <div class="step-num">2</div>
       <div class="step-body">
         <h3>Compare before and after</h3>
-        <p>The job compares the schema from your target branch against the schema in the MR. Any drift is surfaced instantly.</p>
+        <p>The step compares the schema from your target branch against the schema in the PR. Any drift is surfaced instantly.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Get an MR comment with the diff</h3>
-        <p>Enable <code>POST_MR_COMMENT: "true"</code> and add a <code>GITLAB_TOKEN</code> variable. The job posts a formatted summary directly on the merge request.</p>
+        <h3>Get a PR comment with the diff</h3>
+        <p>Enable <code>POST_PR_COMMENT: "true"</code> and add a <code>BITBUCKET_ACCESS_TOKEN</code> repository variable. The step posts a formatted summary directly on the pull request.</p>
       </div>
     </div>
 
@@ -235,7 +223,7 @@
         <tr><td>Schema diff summary</td><td>✅</td><td>✅</td></tr>
         <tr><td>Breaking change detection</td><td>✅</td><td>✅</td></tr>
         <tr><td>Risk score</td><td>✅</td><td>✅</td></tr>
-        <tr><td>MR comments</td><td>✅</td><td>✅</td></tr>
+        <tr><td>PR comments</td><td>✅</td><td>✅</td></tr>
         <tr><td>Pipeline artifacts</td><td>✅</td><td>✅</td></tr>
         <tr><td>Smart skip (no SQL changes)</td><td>✅</td><td>✅</td></tr>
         <tr><td>Full migration SQL</td><td>First 5 lines</td><td>✅ Complete script</td></tr>
@@ -246,82 +234,100 @@
     </table>
 
     <h2>Full configuration reference</h2>
-    <div class="code-block">
-<span class="comment"># CI/CD Variables (Settings → CI/CD → Variables)</span>
-<span class="key">GITLAB_TOKEN</span>     <span class="comment"># optional — Project access token with api scope for MR comments</span>
-<span class="key">SL_LICENSE_KEY</span>   <span class="comment"># optional — SchemaLens Pro license key for full migration output</span>
+    <pre class="code-block"><code># Repository variables (Repository settings → Repository variables)
+BITBUCKET_ACCESS_TOKEN  # optional — OAuth token with pullrequest:write for PR comments
+SL_LICENSE_KEY          # optional — SchemaLens Pro license key for full migration output
 
-<span class="comment"># Job variables</span>
-<span class="key">SCHEMA_PATH</span>              <span class="str">"db/schema.sql"</span>      <span class="comment"># Path to current schema SQL file</span>
-<span class="key">DIALECT</span>                  <span class="str">"postgres"</span>           <span class="comment"># postgres | mysql | sqlite | mssql | oracle</span>
-<span class="key">FAIL_ON_BREAKING</span>         <span class="str">"false"</span>              <span class="comment"># true = fail pipeline on breaking changes</span>
-<span class="key">POST_MR_COMMENT</span>          <span class="str">"false"</span>              <span class="comment"># true = post report as MR comment (needs GITLAB_TOKEN)</span>
-<span class="key">SKIP_NO_SQL_CHANGE</span>       <span class="str">"false"</span>              <span class="comment"># true = skip job when no .sql files changed</span>
-    </div>
+# Step variables
+SCHEMA_PATH              "db/schema.sql"      # Path to current schema SQL file
+DIALECT                  "postgres"           # postgres | mysql | sqlite | mssql | oracle
+FAIL_ON_BREAKING         "false"              # true = fail pipeline on breaking changes
+POST_PR_COMMENT          "false"              # true = post report as PR comment (needs token)
+SKIP_NO_SQL_CHANGE       "false"              # true = skip step when no .sql files changed</code></pre>
 
-    <h2>Example: PostgreSQL project with MR comments</h2>
-    <div class="code-block">
-<span class="comment"># .gitlab-ci.yml</span>
-<span class="key">stages</span>:
-  - <span class="str">validate</span>
+    <h2>Example: PostgreSQL project with PR comments</h2>
+    <pre class="code-block"><code># bitbucket-pipelines.yml
+image: node:20
 
-<span class="key">schema-diff</span>:
-  <span class="key">stage</span>: <span class="str">validate</span>
-  <span class="key">image</span>: <span class="str">node:20-alpine</span>
-  <span class="key">variables</span>:
-    <span class="key">SCHEMA_PATH</span>: <span class="str">"db/schema.sql"</span>
-    <span class="key">DIALECT</span>: <span class="str">"postgres"</span>
-    <span class="key">POST_MR_COMMENT</span>: <span class="str">"true"</span>
-    <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
-    <span class="key">SKIP_NO_SQL_CHANGE</span>: <span class="str">"true"</span>
-  <span class="key">before_script</span>:
-    - <span class="str">apk add --no-cache git curl jq</span>
-  <span class="key">script</span>:
-    - <span class="comment"># Fetch base branch schema</span>
-    - <span class="str">git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME</span>
-    - <span class="str">git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql</span>
-    - <span class="comment"># Run diff via SchemaLens API</span>
-    - |
-      BODY=$(jq -n \
-        --arg schemaA "$(cat /tmp/schema_base.sql)" \
-        --arg schemaB "$(cat $SCHEMA_PATH)" \
-        --arg dialect "$DIALECT" \
-        --arg format "markdown" \
-        '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
-      curl -s -X POST "https://schemalens.tech/api/free-diff" \
-        -H "Content-Type: application/json" \
-        -d "$BODY" > /tmp/response.json
-    - <span class="comment"># Generate report</span>
-    - <span class="str">jq -r '.markdown // .migrationTeaser' /tmp/response.json > /tmp/schema_diff_report.md</span>
-    - <span class="str">cat /tmp/schema_diff_report.md</span>
-    - <span class="comment"># Post MR comment</span>
-    - |
-      if [ "$POST_MR_COMMENT" = "true" ] && [ -n "$GITLAB_TOKEN" ]; then
-        REPORT=$(cat /tmp/schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-        curl -s -X POST \
-          -H "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-          -H "Content-Type: application/json" \
-          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes" \
-          -d "{\"body\": \"${REPORT}\"}"
-      fi
-    - <span class="comment"># Fail on breaking changes</span>
-    - |
-      BCOUNT=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/response.json)
-      if [ "$FAIL_ON_BREAKING" = "true" ] && [ "$BCOUNT" != "0" ]; then
-        echo "Breaking changes detected: $BCOUNT"
-        exit 1
-      fi
-  <span class="key">rules</span>:
-    - <span class="key">if</span>: <span class="str">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
-      <span class="key">changes</span>:
-        - <span class="str">"db/schema.sql"</span>
-        - <span class="str">"migrations/*.sql"</span>
-        - <span class="str">"**/*.sql"</span>
-  <span class="key">artifacts</span>:
-    <span class="key">paths</span>:
-      - <span class="str">/tmp/schema_diff_report.md</span>
-    <span class="key">expire_in</span>: <span class="str">1 week</span>
-    </div>
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Schema Diff
+          image: node:20
+          variables:
+            SCHEMA_PATH: "db/schema.sql"
+            DIALECT: "postgres"
+            POST_PR_COMMENT: "true"
+            FAIL_ON_BREAKING: "true"
+            SKIP_NO_SQL_CHANGE: "true"
+          script:
+            - apt-get update &amp;&amp; apt-get install -y jq curl
+            - |
+              if [ ! -f "$SCHEMA_PATH" ]; then
+                echo "Schema file not found: $SCHEMA_PATH"
+                exit 1
+              fi
+            - |
+              if [ "$SKIP_NO_SQL_CHANGE" = "true" ]; then
+                git fetch origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+                if git diff --name-only "origin/$BITBUCKET_PR_DESTINATION_BRANCH..$BITBUCKET_COMMIT" | grep -q '\.sql$'; then
+                  echo "Schema files changed — running diff."
+                else
+                  echo "No .sql files changed — skipping schema diff to save CI minutes."
+                  exit 0
+                fi
+              fi
+            - |
+              git fetch origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+              git show "origin/$BITBUCKET_PR_DESTINATION_BRANCH:$SCHEMA_PATH" > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+            - |
+              ENDPOINT="https://schemalens.tech/api/free-diff"
+              if [ -n "$SL_LICENSE_KEY" ]; then
+                ENDPOINT="https://schemalens.tech/api/diff"
+                echo "Using SchemaLens Pro endpoint."
+              fi
+
+              BODY=$(jq -n \
+                --arg schemaA "$(cat /tmp/schema_base.sql)" \
+                --arg schemaB "$(cat "$SCHEMA_PATH")" \
+                --arg dialect "$DIALECT" \
+                --arg format "markdown" \
+                '{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}')
+
+              for attempt in 1 2 3; do
+                HTTP_STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" -X POST "$ENDPOINT" \
+                  -H "Content-Type: application/json" \
+                  ${SL_LICENSE_KEY:+-H "X-License-Key: $SL_LICENSE_KEY"} \
+                  -d "$BODY" || echo "000")
+                if [ "$HTTP_STATUS" = "200" ]; then break; fi
+                echo "Attempt $attempt failed ($HTTP_STATUS). Retrying..."
+                sleep "$((attempt * 2))"
+              done
+
+              if [ "$HTTP_STATUS" != "200" ]; then
+                echo "SchemaLens API failed after 3 attempts"
+                exit 1
+              fi
+            - jq -r '.markdown // .migrationTeaser' /tmp/response.json > schema_diff_report.md
+            - cat schema_diff_report.md
+            - |
+              if [ "$POST_PR_COMMENT" = "true" ] &amp;&amp; [ -n "$BITBUCKET_ACCESS_TOKEN" ]; then
+                REPORT=$(cat schema_diff_report.md | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+                curl -s -X POST \
+                  -H "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" \
+                  -H "Content-Type: application/json" \
+                  "https://api.bitbucket.org/2.0/repositories/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pullrequests/$BITBUCKET_PR_ID/comments" \
+                  -d "{\"content\": {\"raw\": \"$REPORT\"}}" || echo "Warning: failed to post PR comment."
+              fi
+            - |
+              BCOUNT=$(jq -r '(.summary.breakingChangeCount // (.breakingChanges | length) // 0)' /tmp/response.json)
+              if [ "$FAIL_ON_BREAKING" = "true" ] &amp;&amp; [ "$BCOUNT" != "0" ]; then
+                echo "Breaking changes detected: $BCOUNT"
+                exit 1
+              fi
+          artifacts:
+            - schema_diff_report.md</code></pre>
 
     <div class="cta-bar" style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%); color: #fff; border: none;">
       <h2 style="color:#fff;">Start catching schema drift today</h2>
@@ -345,7 +351,7 @@
         <a href="pricing.html">Pricing</a> ·
         <a href="api-guide.html">API</a> ·
         <a href="github-action.html">GitHub Action</a> ·
-        <a href="bitbucket-schema-diff.html">Bitbucket</a> ·
+        <a href="gitlab-schema-diff.html">GitLab CI</a> ·
         <a href="ci-cd-integration.html">CI/CD</a> ·
         <a href="vscode-extension.html">VS Code</a> ·
         <a href="open-source.html">Open Source</a> ·
