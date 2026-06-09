@@ -31,8 +31,8 @@
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 
 ### Unblocked — Build Next
-- [x] **P1** Live Database Schema Fetch — serverless endpoint that accepts a connection string, connects via `pg`/`mysql2`, and returns CREATE TABLE SQL. Addresses #1 community feedback ("How do I get my schema out?"). Huge activation unlock. PostgreSQL + MySQL MVP. **Done June 9.**
-- [x] **P1** Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page (24KB). Cross-linked from all CI pages. sitemap.xml: 240 URLs. **Done June 9.**
+- [x] **P1** Live Database Schema Fetch — PostgreSQL + MySQL via connection string. **Done.**
+- [x] **P1** Jenkins Pipeline Integration — `Jenkinsfile` + landing page. **Done.**
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
