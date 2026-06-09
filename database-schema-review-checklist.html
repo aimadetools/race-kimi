@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Schema Review Checklist — 42 Checks for Production-Ready SQL | SchemaLens</title>
+  <meta name="description" content="A comprehensive 42-point database schema review checklist. Check naming conventions, normalization, indexing, constraints, security, performance, and documentation before shipping to production.">
+  <link rel="canonical" href="https://schemalens.tech/database-schema-review-checklist.html">
+  <meta property="og:title" content="Database Schema Review Checklist — 42 Checks for Production-Ready SQL">
+  <meta property="og:description" content="A comprehensive 42-point database schema review checklist. Check naming conventions, normalization, indexing, constraints, security, performance, and documentation.">
+  <meta property="og:url" content="https://schemalens.tech/database-schema-review-checklist.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Database Schema Review Checklist — 42 Checks for Production-Ready SQL">
+  <meta name="twitter:description" content="A comprehensive 42-point database schema review checklist. Check naming conventions, normalization, indexing, constraints, security, performance, and documentation.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a database schema review checklist?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A database schema review checklist is a structured list of checks that developers and DBAs run through before deploying a schema to production. It covers naming conventions, normalization, indexing, constraints, security, performance, and documentation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often should I review my database schema?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Review your schema before every major release, after significant migrations, and at least once per quarter for long-running projects. Automated tools like SchemaLens can catch drift between environments in CI/CD."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the most common schema design mistakes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Common mistakes include: missing indexes on foreign keys, inconsistent naming conventions, lack of constraints (NOT NULL, UNIQUE, CHECK), storing sensitive data unencrypted, missing created_at/updated_at timestamps, and tables without primary keys."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can SchemaLens automatically review my schema?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SchemaLens diffs two schemas and detects changes in tables, columns, indexes, constraints, triggers, views, and functions. It generates migration scripts, breaking-change warnings, and a risk score — giving you an automated second opinion on every schema change."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="lib/analytics-client.js"></script>
+  <style>
+    .checklist-hero {
+      padding: 100px 0 60px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .checklist-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--text), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .checklist-hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin: 0 auto 2rem;
+    }
+    .checklist-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar-wrap {
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      padding: 0 24px;
+    }
+    .progress-bar-track {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .progress-bar-text {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius-sm);
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-weight: 500;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+    }
+
+    .checklist-section {
+      padding: 40px 0;
+    }
+    .checklist-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+      user-select: none;
+    }
+    .category-header:hover {
+      border-color: var(--hover-border);
+    }
+    .category-header h2 {
+      font-size: 1.15rem;
+      margin: 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .category-header .category-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      background: var(--bg);
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+    }
+    .category-items {
+      display: none;
+      margin-bottom: 1.5rem;
+    }
+    .category-items.open {
+      display: block;
+    }
+    .checklist-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .checklist-item:hover {
+      border-color: var(--hover-border);
+    }
+    .checklist-item.checked {
+      background: rgba(16,185,129,0.06);
+      border-color: rgba(16,185,129,0.3);
+    }
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .checklist-content h3 {
+      font-size: 1rem;
+      margin: 0 0 0.25rem;
+      font-weight: 600;
+    }
+    .checklist-content p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .checklist-content .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+    }
+    .tag.danger { background: rgba(248,113,113,0.12); color: var(--danger); }
+    .tag.warning { background: rgba(251,191,36,0.12); color: var(--warning); }
+    .tag.tip { background: rgba(52,211,153,0.12); color: var(--success); }
+
+    .share-bar {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .cta-section {
+      padding: 60px 0;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+      border-top: 1px solid var(--border);
+    }
+    .cta-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .cta-section p {
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 1.5rem;
+    }
+
+    @media print {
+      .nav, .share-bar, .cta-section, .footer, .btn-primary, .btn-secondary, .progress-bar-wrap {
+        display: none !important;
+      }
+      body { background: #fff; color: #000; }
+      .checklist-hero {
+        background: none;
+        padding: 20px 0;
+        border-bottom: 2px solid #000;
+      }
+      .checklist-hero h1 {
+        background: none;
+        -webkit-text-fill-color: #000;
+        color: #000;
+      }
+      .checklist-item {
+        background: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+      .category-header {
+        background: none;
+        border: 1px solid #ccc;
+      }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="checklist-hero">
+    <div class="container">
+      <div class="checklist-badge">📋 Interactive Checklist — 42 Checks</div>
+      <h1>Database Schema Review Checklist</h1>
+      <p>Review your SQL schema before it ships to production. 42 checks across 7 categories — naming, normalization, indexing, constraints, security, performance, and documentation.</p>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-bar-text" id="progressText">0 of 42 checks completed</div>
+      </div>
+
+      <div class="share-bar">
+        <button class="btn-secondary" onclick="expandAll()">📂 Expand All</button>
+        <button class="btn-secondary" onclick="collapseAll()">📁 Collapse All</button>
+        <button class="btn-secondary" onclick="copyChecklist()">📋 Copy Checklist</button>
+        <button class="btn-secondary" onclick="window.print()">🖨️ Print</button>
+        <a href="https://twitter.com/intent/tweet?text=Database%20Schema%20Review%20Checklist%20%E2%80%94%2042%20checks%20for%20production-ready%20SQL&url=https%3A%2F%2Fschemalens.tech%2Fdatabase-schema-review-checklist.html" target="_blank" rel="noopener" class="btn-secondary">𝕏 Share</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="checklist-section">
+    <div class="checklist-container" id="checklistContainer">
+
+      <div class="category" data-category="naming">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>🏷️ Naming Conventions</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items open">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Consistent table naming (snake_case)</h3><p>All tables use the same case convention. Mixed snake_case, camelCase, and PascalCase in one schema creates confusion.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Column names are descriptive and unabbreviated</h3><p>Avoid abbreviations like <code>usr_id</code>, <code>dt</code>, or <code>amt</code>. Use <code>user_id</code>, <code>created_at</code>, <code>amount_cents</code>.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Foreign key columns match referenced primary key name</h3><p>If <code>users.id</code> is the PK, the FK should be <code>user_id</code> (or <code>users_id</code> if your convention requires it). Mismatched names make JOINs harder to reason about.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Index names follow a consistent pattern</h3><p>Use <code>idx_&lt;table&gt;_&lt;columns&gt;</code> or <code>&lt;table&gt;_&lt;columns&gt;_idx</code>. Consistency makes it easy to spot missing indexes in EXPLAIN output.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No reserved words used as identifiers</h3><p>Avoid naming columns <code>order</code>, <code>group</code>, <code>user</code>, <code>password</code>, or <code>index</code>. These require quoting and cause subtle bugs in ORMs and query builders.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Timestamps follow a consistent naming convention</h3><p>Pick <code>created_at</code> / <code>updated_at</code> or <code>created_at</code> / <code>modified_at</code> and stick to it everywhere. Mixed conventions break ORM automations.</p><span class="tag warning">Caution</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="normalization">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>📐 Normalization</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No repeating groups in columns</h3><p>Columns like <code>tag_1</code>, <code>tag_2</code>, <code>tag_3</code> violate 1NF. Use a junction table instead.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Every table has a primary key</h3><p>Tables without a primary key cannot be reliably updated or deleted by ORMs, and some replication setups require one.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No redundant data stored in multiple places</h3><p>If <code>users.full_name</code> is derived from <code>users.first_name</code> and <code>users.last_name</code>, it is denormalized. Use a generated column or compute in the application.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Junction tables use composite primary keys</h3><p>A many-to-many junction table should have a composite PK on the two foreign key columns. This prevents duplicate relationships.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Enum values use a lookup table (not CHECK constraints alone)</h3><p>CHECK constraints are fast but cannot store metadata. A lookup table lets you add descriptions, ordering, and soft-delete statuses without schema changes.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>JSON/JSONB columns are used only for truly schemaless data</h3><p>Storing structured data in JSON that should be in columns defeats indexing, constraints, and type safety. Reserve JSON for extensibility and nested documents.</p><span class="tag warning">Caution</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="indexing">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>🔍 Indexing</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Every foreign key has a supporting index</h3><p>Without an index, foreign key checks, cascades, and JOINs become full table scans. This is the #1 performance killer in schema design.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Composite indexes follow column selectivity order</h3><p>Put the most selective column first in a composite index. An index on <code>(status, created_at)</code> is useless if 90% of rows share the same status.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No duplicate or redundant indexes</h3><p>An index on <code>(a)</code> is redundant if you already have <code>(a, b)</code>. Duplicate indexes waste disk space and slow down writes.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Partial indexes are used for filtered queries</h3><p>If you frequently query <code>WHERE deleted_at IS NULL</code>, a partial index on that condition is smaller and faster than indexing the entire table.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Covering indexes are considered for hot queries</h3><p>If a query only selects columns that are in the index, the database can satisfy the query from the index alone — no table lookup needed.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>GIN/GiST indexes for JSONB and full-text search</h3><p>JSONB queries and <code>tsvector</code> full-text search require GIN or GiST indexes. B-tree indexes cannot help these query patterns.</p><span class="tag tip">Best Practice</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="constraints">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>🔐 Constraints &amp; Keys</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>NOT NULL is used deliberately, not by accident</h3><p>Every column should explicitly declare NULL or NOT NULL. Relying on defaults varies by dialect and creates portability issues.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>UNIQUE constraints exist where business logic requires them</h3><p>Emails, usernames, order numbers, and slugs should have UNIQUE constraints. Application-level uniqueness checks race under load.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>CHECK constraints validate business rules</h3><p>Use CHECK for range validation (<code>price &gt;= 0</code>), enum-like constraints (<code>status IN ('pending', 'paid')</code>), and format checks (<code>LENGTH(phone) &gt;= 10</code>).</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Foreign keys have ON DELETE / ON UPDATE rules</h3><p>Explicitly choose RESTRICT, CASCADE, SET NULL, or SET DEFAULT. The default varies by dialect and can surprise you in production.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Default values are semantically correct</h3><p><code>DEFAULT 0</code> on a price field, <code>DEFAULT ''</code> on a JSON field, or <code>DEFAULT '1970-01-01'</code> on a timestamp are all dangerous. Use NULL or meaningful defaults.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No soft-delete columns without an index</h3><p>If you use <code>deleted_at</code> for soft deletes, every query must filter on it. Without an index, deleted rows pollute your query plans.</p><span class="tag warning">Caution</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="security">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>🛡️ Security</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Passwords and tokens are never stored in plain text</h3><p>Use bcrypt, Argon2, or scrypt for passwords. API tokens should be hashed before storage. Plain text credentials are a compliance violation.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>PII columns are identified and documented</h3><p>Email, phone, address, SSN, and credit card columns should be flagged. Consider encryption at rest or column-level encryption for the most sensitive fields.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Row-level security (RLS) is enabled where appropriate</h3><p>PostgreSQL RLS prevents users from reading or modifying rows they do not own. It is the last line of defense against authorization bugs.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Database roles follow least-privilege principle</h3><p>The application user should not have CREATE, DROP, or ALTER privileges in production. Separate roles for migrations, reads, and writes.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Connection strings do not expose credentials in logs</h3><p>Ensure connection string parsing and logging strips passwords. Many ORMs log the full connection string on startup by default.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Audit columns (created_at, updated_at) exist on all tables</h3><p>Audit trails are required for compliance (SOC 2, GDPR) and for debugging production incidents. Every table should track when rows are created and modified.</p><span class="tag tip">Best Practice</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="performance">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>⚡ Performance</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>VARCHAR length limits are justified</h3><p><code>VARCHAR(255)</code> is a cargo-cult default. Use realistic limits (<code>VARCHAR(320)</code> for emails, <code>VARCHAR(2048)</code> for URLs). Excessive limits waste memory in sort buffers.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Appropriate data types for numeric values</h3><p>Money should use <code>DECIMAL</code> or <code>NUMERIC</code>, not <code>FLOAT</code> or <code>DOUBLE</code>. IDs should use <code>BIGINT</code> or <code>UUID</code>, not <code>INT</code> if you expect &gt;2B rows.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Large text/blob columns are in separate tables if rarely queried</h3><p>Storing <code>TEXT</code> or <code>BLOB</code> in the main table bloats row size and slows full-table scans. Split rarely-accessed large fields into a separate table.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Partitioning is considered for tables &gt;10M rows</h3><p>Time-series data, logs, and event tables should be partitioned by range. Partition pruning makes queries on recent data orders of magnitude faster.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Columns that are frequently sorted have indexes</h3><p>Queries with <code>ORDER BY created_at DESC</code> need an index on <code>created_at</code>. Without it, the database sorts the entire result set in memory or on disk.</p><span class="tag warning">Caution</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>No N+1 query patterns are enabled by schema design</h3><p>Schemas with deep nesting or polymorphic associations often force ORMs into N+1 queries. Use explicit foreign keys and avoid polymorphic associations where possible.</p><span class="tag warning">Caution</span></div></label>
+        </div>
+      </div>
+
+      <div class="category" data-category="documentation">
+        <div class="category-header" onclick="toggleCategory(this)">
+          <h2>📝 Documentation</h2>
+          <span class="category-count"><span class="cat-done">0</span>/6</span>
+        </div>
+        <div class="category-items">
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Every table has a COMMENT describing its purpose</h3><p>Table comments (<code>COMMENT ON TABLE</code>) are the single most valuable documentation investment. They show up in schema explorers and data dictionaries.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Column comments explain non-obvious fields</h3><p>A column named <code>status</code> needs a comment explaining what each value means. A column named <code>score</code> needs units and scale documented.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>An ERD or schema diagram exists and is up to date</h3><p>New developers should be able to understand table relationships at a glance. Tools like dbdiagram.io or SchemaLens can generate ERDs from SQL.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Migration history is tracked in version control</h3><p>Every schema change should be a migration file in Git. Ad-hoc changes in production are untraceable and unrepeatable.</p><span class="tag danger">Critical</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>A data dictionary or schema catalog is maintained</h3><p>Beyond comments, maintain a living document that lists tables, ownership, retention policies, and PII classifications. This is essential for GDPR and SOC 2.</p><span class="tag tip">Best Practice</span></div></label>
+          <label class="checklist-item"><input type="checkbox" onchange="updateProgress()"><div class="checklist-content"><h3>Deprecation plan exists for columns marked for removal</h3><p>Never drop a column in one deploy. Stop writing to it, null it out, monitor for reads, then remove it in a later migration. Document the timeline.</p><span class="tag warning">Caution</span></div></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>Automate your schema reviews</h2>
+      <p>Paste two SQL schemas into SchemaLens and get an instant visual diff, breaking-change warnings, and migration scripts — all in your browser.</p>
+      <a href="app.html" class="btn-primary">Try SchemaLens Free →</a>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">Also check out the <a href="migration-checklist.html" style="color:var(--primary);">Migration Safety Checklist</a> and <a href="schema-examples.html" style="color:var(--primary);">Real-World Schema Examples</a>.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="blog.html">Blog</a>
+          <a href="changelog.html">Changelog</a>
+          <a href="open.html">Open Startup</a>
+          <a href="app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="sql-diff-online.html">SQL Diff Online</a>
+          <a href="schema-migration-tool.html">Migration Tool</a>
+          <a href="tools/sql-validator.html">SQL Validator</a>
+          <a href="tools/sql-formatter.html">SQL Formatter</a>
+          <a href="tools/migration-cost-calculator.html">Cost Calculator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="migration-checklist.html">Migration Checklist</a>
+          <a href="database-schema-review-checklist.html">Schema Review Checklist</a>
+          <a href="blog.html">Blog</a>
+          <a href="api-guide.html">API Quick Start</a>
+          <a href="ci-cd-integration.html">CI/CD Integration</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  function toggleCategory(header) {
+    const items = header.nextElementSibling;
+    items.classList.toggle('open');
+  }
+  function expandAll() {
+    document.querySelectorAll('.category-items').forEach(el => el.classList.add('open'));
+  }
+  function collapseAll() {
+    document.querySelectorAll('.category-items').forEach(el => el.classList.remove('open'));
+  }
+  function updateProgress() {
+    const total = document.querySelectorAll('.checklist-item input[type="checkbox"]').length;
+    const checked = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked').length;
+    const pct = Math.round((checked / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = checked + ' of ' + total + ' checks completed (' + pct + '%)';
+
+    // Update per-category counts
+    document.querySelectorAll('.category').forEach(cat => {
+      const catTotal = cat.querySelectorAll('input[type="checkbox"]').length;
+      const catChecked = cat.querySelectorAll('input[type="checkbox"]:checked').length;
+      cat.querySelector('.cat-done').textContent = catChecked;
+      // Visual checked state on item
+      cat.querySelectorAll('.checklist-item').forEach(item => {
+        const cb = item.querySelector('input[type="checkbox"]');
+        item.classList.toggle('checked', cb && cb.checked);
+      });
+    });
+  }
+  function copyChecklist() {
+    const lines = [];
+    document.querySelectorAll('.category').forEach(cat => {
+      const header = cat.querySelector('.category-header h2').textContent.trim();
+      lines.push(header);
+      cat.querySelectorAll('.checklist-item').forEach(item => {
+        const title = item.querySelector('h3').textContent.trim();
+        const cb = item.querySelector('input[type="checkbox"]');
+        lines.push((cb && cb.checked ? '[x] ' : '[ ] ') + title);
+      });
+      lines.push('');
+    });
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      const btn = event.target.closest('button');
+      const original = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = original, 2000);
+    });
+  }
+  // Initialize
+  updateProgress();
+  </script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>

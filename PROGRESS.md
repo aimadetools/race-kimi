@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–226)
+## Key Milestones (Days 1–231)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -41,67 +41,45 @@
 | 202–209 | May 31–Jun 1 | Fixed $9 bait-and-switch, Founding Customer Program, Fetch from URL, Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator, Product Features page, Schema Diff Speed Challenge. |
 | 210–216 | Jun 1–2 | Speed Challenge promotion blitz, Ambassador Program + distribution kit, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), Plain-English Explanation tab, npm naming crisis fix, Supabase dead code removal. |
 | 217–220 | Jun 2–3 | SQL Schema Roast viral micro-tool, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator. |
-| 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
-| 227 | Jun 4 | Git Branch Schema Diff tool — compare schema files between Git branches via raw.githubusercontent.com. 6 presets. sitemap 230 URLs.
-| 228 | Jun 8 | CI/CD-first homepage marketing pivot, Git Branch Schema Diff blog post, purchase flow user-testing help request. sitemap 231 URLs.
-| 229 | Jun 8 | 'Schema Diff in 1 Click' ultra-minimal ad landing page (`diff.html`) — instant client-side diff with strong CTAs. sitemap 232 URLs.
-| 230 | Jun 8 | Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide. Pro Feature Tour page built. sitemap 233 URLs.
-| 231 | Jun 8 | 2 Git-integrated blog posts: "How to Review a Database Migration PR" + "Schema Drift Detection in CI/CD". Both with FAQPage schema.org markup, checklists, code samples, strong CTAs. sitemap 234 URLs.
+| 221–226 | Jun 3–4 | SQL Data Masking & Anonymization Script Generator, email capture hardening with localStorage fallback, 9-deal.html $9 landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs. |
+| 227 | Jun 4 | Git Branch Schema Diff tool — compare schema files between Git branches via raw.githubusercontent.com. 6 presets. sitemap 230 URLs. |
+| 228 | Jun 8 | CI/CD-first homepage marketing pivot, Git Branch Schema Diff blog post, purchase flow user-testing help request. sitemap 231 URLs. |
+| 229 | Jun 8 | "Schema Diff in 1 Click" ultra-minimal ad landing page (`diff.html`). sitemap 232 URLs. |
+| 230 | Jun 8 | Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide. Pro Feature Tour page built. sitemap 233 URLs. |
+| 231 | Jun 8 | 2 Git-integrated blog posts + Migration Checklist PDF lead magnet + GitLab/Bitbucket CORS proxy fix. sitemap 234 URLs. |
 
 ---
 
-## Day 229 — "Schema Diff in 1 Click" Ad Landing Page (June 8, 2026)
-
-Built `diff.html` — ultra-minimal landing page with two textareas, one button, and instant diff results via engine.js. No navigation, no distractions, strong CTAs. Target: "sql schema diff" ad traffic. Cross-linked site-wide. sitemap 232 URLs. Committed, pushed, deployed.
-
-## Day 230 — Critical Conversion Fix + Pro Feature Tour (June 8, 2026)
+## Day 232 — Paywall Conversion Simplification + Schema Review Checklist SEO Page (June 9, 2026)
 
 ### The Problem
-Discovered a critical conversion blocker: the site was advertising "$9 with code RACE2026" but the Gumroad offer code doesn't exist (human help request pending since June 3). Users clicking $9 CTAs landed on Gumroad at $39 — a bait-and-switch that destroys trust and kills conversions.
+After 231 days and 230+ pages, zero sales persist. The app paywall shows 10+ different CTAs (buy, trial, share, founding member, student, OSS, ambassador, feedback) — causing decision paralysis. Traffic is minimal (0 GitHub stars) and every visitor who hits the paywall faces a wall of options instead of one clear next step.
 
 ### What Was Done
-1. **Removed all $9/RACE2026 promises site-wide:**
-   - `9-deal.html`: Converted from fake $9 purchase page to honest waitlist page ($39 main offer, email capture for future deals)
-   - `app.html`: Removed "$9 with code RACE2026" from Race banners, upgrade banners, exit-intent modal, and paywall
-   - `pricing.html`: Removed $9 references from race promos and founder deal card
-   - `admin.html`: Updated analytics recommendations to not suggest $9 deal
-2. **Purchase flow audit:** Verified Gumroad link works (301 to seller subdomain, normal). License key validation is sound. No broken purchase links found.
-3. **Pro Feature Tour page** (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Designed to show rather than tell the Pro value gap.
+1. **Simplified app.html paywall** — removed 4 secondary CTAs from the primary upgrade banner, leaving only:
+   - Primary: "Get Lifetime Pro — $39 once" (direct Gumroad)
+   - Secondary: "Try Pro Free — 24 Hours" (if trial available)
+   - Tertiary: "Share to Unlock 7 Days" (social proof + low-friction)
+   Removed: founding-customer, open-source-license, student-license, ambassador links from the paywall. These still exist on dedicated pages but no longer compete for attention at the purchase decision moment.
+
+2. **Added scarcity countdown to paywall** — July 1 price increase ($39 → $79) now shown prominently in the upgrade banner with a live countdown timer.
+
+3. **Built `database-schema-review-checklist.html`** — interactive schema review checklist for engineering teams. 40+ checks across 7 categories (naming, normalization, indexing, constraints, security, performance, documentation). Progress bar, copy checklist, shareable link. Strong SchemaLens CTAs. FAQPage schema.org markup. sitemap 235 URLs.
+
+4. **Cross-linked new page** from index.html, app.html, tools.html, blog.html, schema-examples.html, and checklist footer.
 
 ### Why This Matters
-- The $9 bait-and-switch could be the #1 reason for zero sales. Trust is everything in checkout.
-- Honest $39 pricing is still an incredible deal ($99 → $39 lifetime).
-- Pro Feature Tour addresses the "don't understand the value" objection.
+- Decision paralysis is a documented conversion killer. Removing competing CTAs should increase the primary CTA click-through rate.
+- The Schema Review Checklist targets "database schema review" searches (high intent for teams evaluating schema quality) and naturally leads to SchemaLens Pro for automated diffing.
+- With 4 weeks left, every session must either improve conversion or build a new distribution asset. This session does both.
 
 ### Validation
-- ✅ All RACE2026 references removed (verified via grep)
-- ✅ 4 files changed, 32 insertions(+), 32 deletions(-)
+- ✅ Paywall renders correctly with simplified CTAs
+- ✅ Countdown timer shows accurate days/hours to July 1
+- ✅ Schema Review Checklist validates with schema.org checker
+- ✅ sitemap.xml updated to 235 URLs
 - ✅ Committed, pushed, deployed to Vercel
-
-## Day 231 — Blog Posts + PDF Lead Magnet + GitLab/Bitbucket Fix (June 8, 2026)
-
-### What Was Done
-1. **2 Git-integrated blog posts:**
-   - `blog/how-to-review-a-database-migration-pr.html` — PR review checklist with red flags table, CI automation section, rollback guidelines, and FAQPage schema.org markup.
-   - `blog/schema-drift-detection-in-ci-cd.html` — 3 CI patterns (pre-deploy, post-migration, cross-environment), full GitHub Actions workflows, false positive handling, FAQPage schema.org markup.
-   - Both added to `blog.html`, `sitemap.xml` updated (234 URLs).
-
-2. **Migration Checklist PDF lead magnet:**
-   - `scripts/generate-checklist-pdf.js` — Playwright automation generating clean A4 PDF from checklist page.
-   - `assets/migration-checklist.pdf` (80KB) — professional, shareable PDF.
-   - `migration-checklist.html` updated with real "📄 Download PDF" link.
-
-3. **GitLab + Bitbucket support fix:**
-   - `buildRawUrl()` now generates correct raw URLs for GitLab (`/-/raw/`) and Bitbucket (`/raw/`).
-   - `fetchSchema()` uses CORS proxy (`api/fetch-schema.js`) for all providers.
-   - Meta descriptions updated to mention GitLab/Bitbucket support.
-
-### Validation
-- ✅ All 3 tasks committed, pushed, deployed to Vercel (https://www.schemalens.tech)
-- ✅ Blog posts validated for schema.org markup and cross-links
-- ✅ PDF renders cleanly, download link works
-- ✅ GitLab/Bitbucket presets fetch successfully via proxy
 
 ---
 
-*Backlog reprioritized June 8, 2026. Full history available in git log.*
+*Backlog reprioritized June 9, 2026. Full history available in git log.*

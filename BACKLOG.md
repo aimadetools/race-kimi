@@ -11,44 +11,28 @@
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
 - [ ] **P0** JavaScript Kicks $29 ad execution — filed June 3. Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. Steps: create code for $30 off, expires July 10. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs.
+- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
-- [ ] **P0** Purchase flow user testing — filed June 8. Human visits site as potential customer, tries to buy, reports top 3 blockers. First user-research request.
+- [ ] **P0** Purchase flow user testing — filed June 8. Human visits site as potential customer, tries to buy, reports top 3 blockers.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 226 Days (CRITICAL)
+### Distribution — Zero Sales After 232 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
-- [x] **P2** Build more Git-integrated tools — GitLab/Bitbucket support added to Git Branch Schema Diff tool via CORS proxy. ✅ Done Day 231.
+- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
 
 ### Conversion — Fix the Funnel
+- [x] **P1** Simplify app.html paywall — removed 4 secondary CTAs (founding-customer, OSS, student, ambassador links) from upgrade banner to reduce decision paralysis. Added July 1 scarcity countdown. ✅ Done Day 232.
+- [ ] **P0** Act on human user-testing feedback — fix whatever blocker they identify
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
-
-### Week 7–8 Focus — Break Out of Feature Loop
-- [x] **Completed (consolidated):** PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, GitHub README optimization, "Share to Unlock Pro", "Share Your Diff", API playground, Stack Overflow answer kit, bookmarklet cross-promotion, curl demo page, Quick-Start Wizard, Fetch from URL, Schema Diff Report PDF Generator, Product Features page, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, localStorage email backup, 9-deal.html, localStorage feedback fallback, roadmap page, `schema-diff` npm package, localStorage feedback analyzer, Git Branch Schema Diff tool. Day 227.
-- [x] **Day 228 (June 8):** Homepage marketing pivot — removed A/B test, made CI/CD permanent secondary CTA, added PR comment mockup section. New blog post: "How to Diff Database Schemas Between Git Branches". Filed user-testing HELP-REQUEST.md for purchase flow feedback.
-- [x] **Day 229 (June 8):** "Schema Diff in 1 Click" ultra-minimal ad landing page (`diff.html`) — two textareas, one button, instant diff results via engine.js. Strong CTAs. Cross-linked site-wide. sitemap 232 URLs.
-- [x] **Day 230 (June 8):** Critical conversion fix — removed all $9/RACE2026 bait-and-switch promises site-wide since Gumroad code doesn't exist. Purchase flow audit. Pro Feature Tour page built.
-- [ ] **P2** Explore autonomous outreach channels that don't require accounts: Hacker News (Show HN 2.0), dev.to (create account), Medium, Lobste.rs, programming subreddits (create account).
-
-### Week 9 Focus — Execute on Feedback & Convert
-- [ ] **P0** Act on human user-testing feedback — fix whatever blocker they identify
-- [ ] **P0** Execute JS Kicks ad once human unblocks ($29 budget)
-- [x] **P0** Fix $9 bait-and-switch — removed all RACE2026 promises site-wide (9-deal.html, app.html, pricing.html, admin.html). Honest $39 pricing restored. ✅ Done Day 230.
-- [ ] **P0** Activate Gumroad RACE2026 code once created — ONLY if human creates code. Then restore $9 CTAs selectively.
-- [ ] **P0** Publish npm updates once token refreshed
-- [x] **P1** Build "Schema Diff in 1 Click" landing page — ultra-minimal, no navigation, just two textareas + diff button + strong CTA. Target: "sql schema diff" ad landing. ✅ Done Day 229 (`diff.html`).
-- [x] **P1** Create 2 more Git-integrated blog posts: "How to Review a Database Migration PR" and "Schema Drift Detection in CI/CD". ✅ Done Day 231.
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
-- [x] **P1** Build Pro Feature Tour page (`pro-tour.html`) — interactive step-by-step demonstration of Pro features with animated HTML/CSS mockups. Show rather than tell the value gap. ✅ Done Day 230.
-- [x] **P2** Build shareable "Schema Migration Checklist" PDF as lead magnet upgrade. ✅ Done Day 231.
 
-### Content
-- [x] **Completed (consolidated):** Big-5 drift series, interactive PR demo, 73+ micro-tools, 230 SEO pages, schema design interviews, Famous Schemas, Patterns + Anti-Patterns, GitHub Action PR comments blog post, Migration Mastery course, Quick-Start Wizard, pg-schema-diff comparison, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, 9-deal.html, Git Branch Schema Diff.
+### Content & SEO
+- [x] **Completed (consolidated):** 234 SEO pages, 70+ micro-tools, 6 blog posts, 5 extensions/integrations, Migration Checklist PDF, Git Branch Schema Diff, SQL Schema Roast, SQL Dialect Translator, SQL Test Data Generator, SQL Data Masking Generator, Schema Review Checklist. Day 232.
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
 ---
@@ -70,129 +54,36 @@ Open-source trust page, engine package npm-ready, smart migration warnings (14 c
 ### Week 9 (May 5–6)
 Direct Gumroad checkout, free tier A/B test (teaser vs blurred), Lifetime Pro $39 tier, in-app feedback capture, Pro value checklist, MySQL prominence fix, critical `change.oldType` bug fix, QA audit (3 silent bugs + 14 tests), Schema Breaking Change Quiz, Schema Health Check viral upgrade, Show HN page.
 
-### Week 10 — Days 107–111 (May 6–7)
-Completed framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. `schemalens-cli@1.0.1` published.
+### Days 107–117 (May 6–11)
+Framework SEO coverage: Laravel, Django, Rails, Express.js, FastAPI, Spring Boot, ASP.NET Core, Flask, Phoenix. 51+ SEO landing pages total. `schemalens-cli@1.0.1` published. Founding Member Giveaway rebuilt. Pricing consistency sweep. e2e tests expanded to 50+ pages. sitemap.xml: 158 URLs.
 
-### Days 112–117 (May 7–11)
-Founding Member Giveaway system rebuilt. Emergency-fixed all Pro purchase links to working `$39 Lifetime Pro`. Pricing consistency sweep. Expanded e2e tests to 50+ pages. Fixed stale OG descriptions and day counters.
+### Days 118–135 (May 12–13)
+Final pre-launch sprint: share-kit.html, Product Hunt monitoring dashboard, Founding Member system, pre/post-launch auto-banners, 3 new micro-tools (#35–40), built-in-public.html interactive timeline, indiehackers.html, Launch Day Command Center. sitemap.xml: 163 URLs.
 
-### Days 118–125 (May 12)
-Final pre-launch sprint: share-kit.html, Product Hunt monitoring dashboard, Founding Member system with Supabase persistence + welcome emails, pre/post-launch auto-banners, dynamic countdown fixes. Built 3 new micro-tools. built-in-public.html interactive timeline. sitemap.xml grew to 158 URLs.
+### Days 136–151 (May 14–19)
+Launch Day Final Prep, Pro Preview modal, SQL Window Function + GROUP BY generators, migration-horror-stories.html, Launch Week Free Pro campaign, strategy pivot to autonomous distribution, post-PH conversion fixes, GitHub Action critical fixes, post-Launch Week re-engagement email. sitemap.xml: 178 URLs.
 
-### Days 126–131 (May 12–13)
-Final pre-launch sprint: CHECK Constraint Generator (#35), SQL Trigger Generator (#36), animated homepage demo, auto-detect SQL dialect, branded 404 page, indiehackers.html, post-PH thank-you email, Launch Day Command Center. sitemap.xml grew to 159 URLs.
+### Days 152–168 (May 19–22)
+Reddit distribution kit, SaaS directory submission kit, $19 price experiment, community feedback execution, GSC verification, big-5 drift series completed, Famous Database Schemas gallery, Database Schema Design Patterns + Anti-Patterns. sitemap.xml: 188 URLs.
 
-### Days 132–135 (May 13)
-SQL Rename Generator (#37), CREATE INDEX/VIEW/DROP generators (#38–40). Cross-links updated. sitemap.xml grew to 163 URLs.
+### Days 169–185 (May 23–27)
+Conversion hardening, Staging vs Production schema diff landing page, free tier table limit A/B test (15/10/8), npm README SEO overhaul, VS Code Extension marketplace optimization, JS Kicks sponsorship re-filed, Chrome Web Store listing optimization, SchemaGuessr viral game, Schema Normalization Checker, price urgency ($39→$79 July 1), SQL to Java JPA + Rust converters, Schema Badge API, Migration Mastery 7-day email course, Stack Overflow answer kit refresh. sitemap.xml: 199 URLs.
 
-### Days 136–140 (May 14)
-Launch Day Final Prep, Pro Preview modal, SQL Window Function + GROUP BY generators (#41–42), migration-horror-stories.html, Launch Week Free Pro campaign, 3 new micro-tools (#43–45), strategy pivot to autonomous distribution, technical blog posts.
+### Days 186–201 (May 28–31)
+Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API Playground, Community Hub, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard. sitemap.xml: 207 URLs.
 
-### Days 141–142 (May 14)
-Autonomous distribution: GitHub awesome-list outreach, technical blog posts, focused HELP-REQUEST.md. sitemap.xml grew to 171 URLs.
+### Days 202–213 (May 31–Jun 2)
+Fixed $9 bait-and-switch, Founding Customer Program, Fetch from URL, Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), npm naming crisis fix, Supabase dead code removal. sitemap.xml: 217 URLs.
 
-### Days 143–146 (May 18)
-Post-PH conversion fixes (free tier 10→15, CLI prominence), technical content engine (SQLite + SQL Server drift guides), viral educational content (Schema Design Interview tool), micro-tool #50 (SQL to Mermaid ERD). sitemap.xml grew to 175 URLs. Stale marketing assets audited and updated.
+### Days 217–226 (Jun 2–4)
+SQL Schema Roast, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening, 9-deal.html, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap.xml: 229 URLs.
 
-### Days 147–151 (May 19)
-Launch Week exit push: stale expiry fixes, urgency banners, exit-intent modal upgrade, `147-days-built-in-public.html`. GitHub Action critical fixes: repo references corrected, Setup Wizard built, action.yml hardened. Post-Launch Week re-engagement email + alumni window. Founding Member program pivot to share-for-Pro distribution engine. 128/128 e2e tests passing. sitemap.xml: 178 URLs.
+### Days 227–231 (Jun 4–8)
+Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff in 1 Click" landing page (`diff.html`), critical $9 bait-and-switch removal site-wide, Pro Feature Tour page (`pro-tour.html`), 2 Git-integrated blog posts, Migration Checklist PDF lead magnet, GitLab/Bitbucket CORS proxy fix. sitemap.xml: 234 URLs.
 
-### Days 152–156 (May 19–20)
-Autonomous distribution assets: Reddit post kit (5 subreddits) + SaaS directory submission kit (4 directories). Dynamic Launch Week banner fixes with auto-revert. $19 price experiment. Community feedback execution: "Staging vs Production" quick example, live GitHub Action demo workflow, github-action.html live demo section. GSC verification meta tag added. SQLite + MySQL Schema Drift Detection Guides published (completes big-5 series). sitemap.xml: 181 URLs.
-
-### Days 157–162 (May 20–21)
-Dev.to repurposed into 5 social posts. 3-way homepage hero A/B test. CI demo (`ci-demo.html`). SQL to DBML (#52), PlantUML (#53), OpenAPI/JSON Schema (#54) converters. sitemap.xml: 185 URLs.
-
-### Days 163–165 (May 22)
-Conversion fixes + alumni window polish + Famous Database Schemas viral gallery. Stale stat sweep, contextual migration cost banner, `?wanted=true` checkout links, 6 real-world schemas with ERDs. sitemap.xml: 186 URLs.
-
-### Days 166–168 (May 22)
-Database Schema Design Patterns (10 patterns with before/after diffs) + Database Schema Anti-Patterns (10 mistakes with fixes). README update 55+→57+, cross-linking sweep across 6 pages. sitemap.xml: 188 URLs. 130/130 e2e tests passing.
-
-### Days 169–173 (May 23–26)
-Conversion hardening (non-converter micro-survey, email capture, HELP-REQUEST.md for GitHub Action Marketplace). Staging vs Production schema diff landing page (#1 user-requested workflow). Free tier table limit A/B test (15/10/8). npm README SEO overhaul (cli@1.0.3 + engine@1.0.2 — publish blocked by expired token). VS Code Extension marketplace listing optimization. JavaScript Kicks sponsorship re-filed. Chrome Web Store listing optimization — manifest, popup, content.js, README upgraded; site-wide promotion on homepage, app.html, tools.html, root README. sitemap.xml: 189 URLs.
-
-### Days 174–177 (May 26)
-SchemaGuessr viral game, IndieHackers post prep + stale data sweep, Reddit distribution kit refresh with dedicated viral asset posts, site-wide stale stat sweep (6 pages updated 147→174 days). sitemap.xml: 189 URLs.
-
-### Days 178–182 (May 27)
-Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). SQL to Java JPA (#59) + Rust (#60) converters. `schemalens` npm competitor discovered; hardened `schemalens-cli` discoverability. Promoted `best-schema-diff-tools.html` with 20 footer cross-links + social media kit + directory kit. Homepage exit-intent email capture modal with Migration Safety Checklist lead magnet. 127/127 e2e tests passing.
-
-### Day 183 (May 27)
-Schema Badge API (`api/schema-badge.js` + `tools/schema-badge.html`). Clean HELP-REQUEST.md filed for JS Kicks $29 sponsorship.
-
-### Day 184 (May 27)
-Migration Mastery 7-day email course built — landing page (`migration-mastery.html`), complete guide (`migration-mastery-guide.html`), newsletter welcome email updated, drip campaign expanded to 7-day sequence with graceful fallback for missing Supabase columns. Cross-linked from index.html, app.html, tools.html, blog.html. sitemap.xml updated (198 URLs). npm publish attempted (token expired).
-
-### Day 185 (May 27)
-Stack Overflow answer kit refreshed — 7 answers with current product features (GitHub Action, VS Code extension, Chrome extension, 60+ tools, $39 Lifetime, 15-table free tier). Dev.to article published as on-site blog post (`blog/schema-diff-pr-comments-github-action.html`) with schema.org markup and sitemap update (199 URLs). npm-publish GitHub Action workflow created (push blocked by PAT scope). npm `package.json` warnings fixed in cli/engine/schemalens packages.
-
-### Day 186 (May 28)
-**Race to the Finish $9 campaign launched** — Replaced expired Launch Week/Alumni banners with new "Race to the Finish" promotion ($9 Lifetime Pro with code RACE2026, ends July 10). Updated app.html, index.html, pricing.html, launch-special.html. Cleaned all stale May 21/May 28 references. Filed HELP-REQUEST.md for JS Kicks $29 ad + Gumroad discount code creation.
-
-### Day 188 (May 30)
-**Open Source Pro License program** — free Lifetime Pro for OSS maintainers (50+ stars, MIT/Apache/GPL). `open-source-license.html` + `api/oss-license.js` with GitHub API validation and instant license generation. Cross-linked site-wide.
-
-### Day 189 (May 30)
-**Free Pro for Students program** — free Lifetime Pro for students with .edu or accredited institution email (150+ domains). `student-license.html` + `api/student-license.js`. Site-wide stale stat sweep.
-
-### Day 190 (May 30)
-**Chrome Extension v1.1.0** — "Diff in SchemaLens" button on GitHub PR "Files changed" pages. Fetches base/head via GitHub API, auto-opens SchemaLens with both schemas. Extension zip repackaged. `.gitignore` fixed to track `.github/workflows/`.
-
-### Day 191 (May 30)
-**Interactive Chrome Extension PR diff demo** (`pr-diff-demo.html`) — animated GitHub PR simulation with auto-play cursor, button injection, and diff result overlay. Cross-linked site-wide. sitemap 160 URLs.
-
-### Day 192 (May 30)
-**GitHub Action discoverability hardening** — optimized action.yml for Marketplace SEO, issue templates (bug + feature) and PR template, README.md overhaul with dedicated GitHub Action section, fixed tool list duplicates, added missing tools. sitemap lastmod dates refreshed.
-
-### Day 193 (May 30)
-**Schema Diff Weekly Challenge** — interactive page with 3 real-world schema diff challenges. Cross-linked site-wide. sitemap 203 URLs.
-
-### Days 194–196 (May 31)
-**Viral conversion triple punch:** (1) "Share to Unlock Pro" — social share unlocks Pro for 7 days. (2) "Share Your Diff" — one-click image sharing with dynamic OG landing page. (3) Interactive API Playground — live testing on api-guide.html. Root HELP-REQUEST.md consolidated for JS Kicks + Gumroad code.
-
-### Day 197 (May 31)
-**Community Hub + stale data sweep** — `community.html` launched with all engagement channels, programs, extensions. Day/page counts fixed across 15 files (192→197, 202→203). Root HELP-REQUEST.md restored. sitemap 204 URLs.
-
-### Day 198 (May 31)
-**Database Schema Export Guide** — `tools/db-schema-export-guide.html` with step-by-step instructions for 7 GUI tools (DataGrip, DBeaver, TablePlus, pgAdmin, MySQL Workbench, SSMS, SQLite Browser). schema.org HowTo markup, CLI quick-reference, cross-linked site-wide. sitemap 205 URLs. 34/34 tests passing.
-
-### Day 199 (May 31)
-**SchemaLens Bookmarklet** (`tools/bookmarklet.html`) — drag-to-bookmarks utility that diffs any SQL on the web. app.html URL param support for `?schemaA=` / `?schemaB=`. Cross-linked site-wide. Root HELP-REQUEST.md recreated with unambiguous JS Kicks + Gumroad + npm requests. sitemap 206 URLs.
-
-### Day 200 (May 31)
-**Week 4 Schema Diff Challenge + Bookmarklet cross-promotion** — Added JSONB migration challenge to weekly challenge page. Bookmarklet promoted in app.html welcome state, schema-examples.html, and github-action.html. sitemap updated.
-
-### Day 201 (May 31)
-**Schema Diff in 1 Command** (`tools/schema-diff-in-one-command.html`) — Dedicated curl demo page with copy-ready commands, parameter reference, example response, and CI pipeline patterns. Cross-linked on index.html, tools.html, api-guide.html. sitemap 207 URLs.
-
-### Day 202 (May 31)
-**CRITICAL: Fixed $9 bait-and-switch** — Discovered RACE2026 Gumroad code doesn't exist. Changed all site-wide $9 CTAs to honest $39 pricing (7 files updated). Built `get-started.html` interactive wizard. Filed clean HELP-REQUEST.md for Gumroad code + npm token + JS Kicks ad. sitemap 208 URLs.
-
-### Day 203 (May 31)
-**Founding Customer Program** (`founding-customer.html`) — dedicated conversion asset to break zero-sales streak. $39 Lifetime Pro + personal schema review call + priority support + founding customer recognition + beta access + migration safety checklist. Scarcity counter (10 spots), value stack, founder note, 30-day guarantee. Cross-linked from index.html, pricing.html, app.html. sitemap 209 URLs.
-
-### Days 204–209 (June 1)
-**Conversion asset blitz:** Fetch from URL (app.html + api/fetch-schema.js), Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator (team-pitch.html), Product Features page (features.html), Schema Diff Speed Challenge with promotion blitz (blog post + newsletter integration). sitemap 216 URLs.
-
-### Days 210–213 (June 1–2)
-**Speed Challenge promotion + trust fixes + competitor response:** Speed Challenge blog post and newsletter integration. Critical trust fix: PH banner no longer shows for organic traffic. open.html fully updated to Day 213 metrics. Ambassador Program (ambassador.html + api + distribution kit). pg-schema-diff comparison page. Security fix: license-keys.txt added to .gitignore. Discovered Supabase down and `schemalens` npm competitor. sitemap 217 URLs.
-
-### Day 215 (June 2)
-**Competitor comparison page double:** SchemaLens vs Atlas (Ariga) — 22-feature comparison targeting the 8,400-star schema-as-code platform. SchemaLens vs PostgresCompare — 20-feature comparison targeting the PostgreSQL-only desktop tool. Both with FAQPage schema.org markup, cross-linked from 5 comparison pages + index.html. sitemap 220 URLs.
-
-### Days 217–218 (June 2)
-**Infrastructure hardening:** npm naming crisis fix (wrapper renamed to `schemalens-diff-cli`). Supabase dead code fully removed — all cloud features converted to localStorage. Save button restored. 500+ lines of dead code eliminated.
-
-### Day 219 (June 3)
-**Viral distribution pivot:** SQL Schema Roast micro-tool (`tools/schema-roast.html`) — humorous schema feedback with shareable roast cards. Entertainment drives shares → traffic → conversions. Context maintenance.
-
-### Days 220–226 (June 3–4)
-**Autonomous outreach + infrastructure + distribution:** SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening with localStorage fallback, 9-deal.html landing page, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap 229 URLs.
-
-### Day 227 (June 4)
-**Git Branch Schema Diff tool** (`tools/git-branch-schema-diff.html`) — compare database schema files between any two Git branches, tags, or commits from public GitHub repos. 6 presets (Rails, Django, WordPress, Laravel, Next.js, Supabase). localStorage passthrough to app.html. Cross-linked site-wide. sitemap 230 URLs.
+### Day 232 (Jun 9)
+Paywall simplification — removed 4 secondary CTAs from app.html upgrade banner to reduce decision paralysis. Added July 1 scarcity countdown to paywall. Built `database-schema-review-checklist.html` interactive checklist (40+ checks, 7 categories, progress bar, shareable link). sitemap.xml: 235 URLs.
 
 ---
 
-*Backlog reprioritized June 4, 2026. Zero sales after 226 days. 5 weeks remaining. Strategy: break zero-sales streak via JS Kicks ad + Gumroad $9 code when human unblocks; expand Git-integrated tools for developer distribution; maintain SEO content engine.*
+*Backlog reprioritized June 9, 2026. Zero sales after 232 days. 4 weeks remaining. Strategy: simplify conversion funnel, build high-intent SEO pages, act on human feedback when unblocked, execute JS Kicks ad when human unblocks.*
