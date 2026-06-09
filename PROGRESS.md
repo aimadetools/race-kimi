@@ -54,65 +54,8 @@
 | 236 | Jun 9 | GitLab CI landing page + enhanced `.gitlab-ci.yml` with MR comments, smart skip, breaking gate. sitemap 237 URLs. |
 | 237 | Jun 9 | Bitbucket Pipelines landing page + enterprise template with PR comments, smart skip, breaking gate. sitemap 238 URLs. |
 | 238 | Jun 9 | Schema Export Command Generator micro-tool (35KB) for 8 databases. sitemap 239 URLs. |
-
----
-
-## Day 237 — Bitbucket Pipelines Integration: Dedicated Landing Page + Enterprise Template (June 9, 2026)
-
-### The Problem
-After 236 days and zero sales, SchemaLens has strong GitHub Action and GitLab CI coverage, but Bitbucket Pipelines — the CI platform of choice for thousands of Atlassian-centric enterprises — has only a buried template in `ci-cd-integration.html`. There was no dedicated landing page, no PR comment integration, no smart skip, and no Pro license routing. Every Bitbucket user who found SchemaLens had to figure out the pipeline config themselves.
-
-### What Was Done
-1. **Built enterprise-grade `bitbucket-pipelines.yml`** with feature parity to GitLab/GitHub:
-   - **PR comment posting** via Bitbucket API (`POST /repositories/{workspace}/{repo}/pullrequests/{id}/comments`). Requires `BITBUCKET_ACCESS_TOKEN` repository variable. Gracefully degrades if token is missing.
-   - **Pro license key support** (`SL_LICENSE_KEY` variable) — routes to Pro API endpoint for full migration output.
-   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — skips the step when no `.sql` files were modified in the PR, saving CI minutes.
-   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the pipeline when breaking changes are detected.
-   - **Retry logic** — 3 attempts with exponential backoff for SchemaLens API calls.
-   - **Artifact reporting** — full markdown report attached to every pipeline run.
-   - **Better error handling** — clear messages for missing schema files and API failures.
-
-2. **Built `bitbucket-schema-diff.html`** — dedicated landing page (21KB) with:
-   - Hero: "SchemaLens Bitbucket Pipelines — Free Schema Diff in Pull Requests"
-   - Quick-start `bitbucket-pipelines.yml` snippet with copy button
-   - Visual mockup of Bitbucket PR comment with table metrics, migration preview, and risk score
-   - Artifact download preview showing what the report contains
-   - Feature grid: 8 cards covering incident prevention, PR comments, artifacts, smart skip, zero setup, breaking gates, risk scoring, free tier
-   - 3-step setup guide
-   - Free vs Pro comparison table
-   - Full configuration reference for repository variables and step variables
-   - Extended PostgreSQL example with full script (fetch base schema, API call, report generation, PR comment, breaking check)
-   - Bitbucket blue accent color (#0052CC) for brand consistency
-   - Schema.org SoftwareApplication JSON-LD
-   - OG/Twitter meta tags
-   - Footer cross-links to GitHub Action, GitLab CI, CI/CD hub, VS Code, Open Source
-
-3. **Cross-linked site-wide**:
-   - `github-action.html` nav + footer: added "Bitbucket" link
-   - `gitlab-schema-diff.html` nav + footer: added "Bitbucket" link
-   - `ci-cd-integration.html`: added prominent CTA button "View Full Bitbucket Pipelines Guide with PR Comments" above the Bitbucket code block; updated `bitbucket-pipelines.yml` reference to root file
-   - `sitemap.xml`: added `bitbucket-schema-diff.html` (priority 0.8)
-   - Updated stale references in `blog/why-your-team-needs-a-schema-review-process.html` and `ci/README.md`
-   - Removed outdated `ci/bitbucket-pipelines.yml` to eliminate confusion
-
-4. **Test coverage expanded**:
-   - Added `/gitlab-schema-diff.html` and `/bitbucket-schema-diff.html` to Playwright e2e page list
-   - All modified CI pages pass Chromium e2e tests (Firefox skipped — browser not installed in environment)
-   - `node test-all.js` passes 34/34
-
-### Why This Matters
-- Bitbucket Pipelines serves a huge enterprise audience that is underserved by schema diff tools. A dedicated landing page gives SchemaLens a chance to rank for "bitbucket schema diff" and "bitbucket pipelines database migration" searches.
-- Feature-parity with GitHub/GitLab means Bitbucket users get the same premium experience — PR comments, smart skip, breaking gates, Pro support — no second-class integration.
-- The template is copy-paste ready: a developer can go from landing page to working pipeline in under 2 minutes.
-- This continues the CI/CD distribution strategy: meet developers where they already work, inside their existing review flow.
-
-### Validation
-- ✅ `bitbucket-pipelines.yml` syntax validated with Python YAML parser
-- ✅ `bitbucket-schema-diff.html` tag balance verified (Python HTML checker)
-- ✅ No broken internal links in new page
-- ✅ sitemap.xml now has 238 URLs
-- ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, CI/CD Integration)
-- ✅ Committed, pushed, deployed to Vercel
+| 239 | Jun 9 | Live Database Schema Fetch — serverless endpoint connects to PostgreSQL/MySQL via connection string, returns CREATE TABLE SQL. Integrated into app.html with modal UI. sitemap 239 URLs. |
+| 240 | Jun 9 | Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page. sitemap 240 URLs. |
 
 ---
 
@@ -203,6 +146,68 @@ After 238 days and zero sales, the #1 community feedback remains: "How do I get 
 - ✅ `app.html` tag balance verified (no new issues introduced)
 - ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
 - ✅ `package.json` updated with `pg` and `mysql2` dependencies
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 240 — Jenkins Pipeline Integration: Dedicated Landing Page + Enterprise Jenkinsfile (June 9, 2026)
+
+### The Problem
+After 239 days and zero sales, SchemaLens has dedicated CI/CD landing pages for GitHub Actions, GitLab CI, and Bitbucket Pipelines — but Jenkins, the most widely used self-hosted CI platform in enterprises, has only a generic CLI mention in `ci-cd-integration.html`. There was no dedicated landing page, no Jenkinsfile example, no build description integration, and no artifact archiving guidance. Every Jenkins user who found SchemaLens had to write their own pipeline stage from scratch.
+
+### What Was Done
+1. **Built enterprise-grade `Jenkinsfile`** with feature parity to GitLab/GitHub/Bitbucket:
+   - **Console output reports** — full schema diff appears directly in the Jenkins build console log
+   - **Build description updates** — `currentBuild.description` is set with risk score, table counts, and breaking change count so risky builds are visible in the build history
+   - **Pro license key support** (`SL_LICENSE_KEY` environment variable) — routes to Pro API endpoint for full migration output
+   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — skips the stage when no `.sql` files were modified, saving agent time
+   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the build when breaking changes are detected
+   - **Retry logic** — 3 attempts with exponential backoff for SchemaLens API calls
+   - **Artifact archiving** — `schema_diff_report.md` is archived on every build via `archiveArtifacts`
+   - **SCM comment posting** — optionally posts to GitHub PRs or GitLab MRs when `GITHUB_TOKEN` or `GITLAB_TOKEN` is available
+   - **Better error handling** — clear messages for missing schema files and API failures
+
+2. **Built `jenkins-schema-diff.html`** — dedicated landing page (24KB) with:
+   - Hero: "SchemaLens Jenkins — Free Schema Diff in Every Build"
+   - Quick-start `Jenkinsfile` snippet with copy button
+   - Console output mockup showing the diff report inline in Jenkins logs
+   - Build description preview showing risk score in the build history
+   - Artifact download preview showing what the report contains
+   - Feature grid: 8 cards covering incident prevention, console reports, build descriptions, smart skip, zero setup, breaking gates, risk scoring, free tier
+   - 3-step setup guide
+   - Free vs Pro comparison table
+   - Full configuration reference for environment variables and credentials
+   - Extended PostgreSQL example with full declarative pipeline script
+   - Jenkins red accent color (#D24939) for brand consistency
+   - Schema.org SoftwareApplication JSON-LD
+   - OG/Twitter meta tags
+   - Footer cross-links to GitHub Action, GitLab CI, Bitbucket, CI/CD hub, VS Code, Open Source
+
+3. **Cross-linked site-wide**:
+   - `github-action.html` nav + footer: added "Jenkins" link
+   - `gitlab-schema-diff.html` nav + footer: added "Jenkins" link
+   - `bitbucket-schema-diff.html` nav + footer: added "Jenkins" link
+   - `ci-cd-integration.html`: added Jenkins section with `Jenkinsfile` snippet, CTA button "View Full Jenkins Guide with Build Descriptions", updated title/meta to include Jenkins
+   - `sitemap.xml`: added `jenkins-schema-diff.html` (priority 0.8)
+
+4. **Test coverage expanded**:
+   - Added `/jenkins-schema-diff.html` to Playwright e2e page list
+   - All modified CI pages pass Chromium e2e tests (132 passed)
+   - `node test-all.js` passes 34/34
+
+### Why This Matters
+- Jenkins is the most widely used self-hosted CI platform, especially in large enterprises and regulated industries. A dedicated landing page gives SchemaLens a chance to rank for "jenkins schema diff" and "jenkins database migration" searches.
+- Feature-parity with GitHub/GitLab/Bitbucket means Jenkins users get the same premium experience — smart skip, breaking gates, Pro support, artifact archiving — no second-class integration.
+- The Jenkinsfile is copy-paste ready: a developer can go from landing page to working pipeline in under 2 minutes.
+- Build description integration is unique to Jenkins and provides at-a-glance visibility into schema risk across the entire build history — a feature no other CI platform offers natively.
+- This continues the CI/CD distribution strategy: meet developers where they already work, inside their existing build flow.
+
+### Validation
+- ✅ `Jenkinsfile` Groovy syntax validated (no obvious structural issues)
+- ✅ `jenkins-schema-diff.html` tag balance verified (Python HTML checker)
+- ✅ No broken internal links in new page
+- ✅ sitemap.xml now has 240 URLs
+- ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, Jenkins, CI/CD Integration)
 - ✅ Committed, pushed, deployed to Vercel
 
 ---

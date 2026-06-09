@@ -32,6 +32,7 @@
 
 ### Unblocked — Build Next
 - [x] **P1** Live Database Schema Fetch — serverless endpoint that accepts a connection string, connects via `pg`/`mysql2`, and returns CREATE TABLE SQL. Addresses #1 community feedback ("How do I get my schema out?"). Huge activation unlock. PostgreSQL + MySQL MVP. **Done June 9.**
+- [x] **P1** Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page (24KB). Cross-linked from all CI pages. sitemap.xml: 240 URLs. **Done June 9.**
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
@@ -98,6 +99,12 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 ### Day 238 (Jun 9)
 **Schema Export Command Generator:** Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
 
+### Day 239 (Jun 9)
+**Live Database Schema Fetch:** Built `/api/live-schema.js` Vercel serverless function connecting to PostgreSQL (`pg`) and MySQL (`mysql2`) via connection string, returning CREATE TABLE SQL. Security hardened (CORS, timeout, password redaction, shell metacharacter rejection). Integrated into `app.html` with modal UI, loading states, and analytics. Cross-linked from db-schema-export-guide.html and staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
+
+### Day 240 (Jun 9)
+**Jenkins Pipeline Integration:** Built enterprise `Jenkinsfile` with console output reports, build description risk summaries, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, artifact archiving, and optional GitHub/GitLab PR/MR comment posting. Built dedicated `jenkins-schema-diff.html` landing page (24KB) with hero, quick-start snippet, console mockup, build description preview, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, Bitbucket Pipelines, and CI/CD hub. sitemap.xml: 240 URLs.
+
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 238 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 9, 2026. Zero sales after 240 days. 3 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
