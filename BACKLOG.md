@@ -10,7 +10,7 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
-- [ ] **P0** JavaScript Kicks $29 ad execution — re-filed June 9 (single clear request). Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
+- [ ] **P0** JavaScript Kicks $29 ad execution — filed June 9 (single clear request). Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
 - [ ] **P0** Purchase flow user testing — filed June 8. Human visits site as potential customer, tries to buy, reports top 3 blockers.
@@ -31,9 +31,7 @@
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 
 ### Unblocked — Build Next
-- [x] **P1** Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) — match GitLab CI feature parity. Bitbucket has strong enterprise presence. **Done June 9.**
-- [x] **P1** Live DB schema export command generator — addresses #1 community feedback (HN: "staging vs production"). Build a tool that generates the exact `pg_dump`, `mysqldump`, etc. command for the user's database, so they can export schema locally and paste into SchemaLens. **Done June 9.**
-- [ ] **P2** Build "Schema Diff from Live Database" serverless endpoint — accept connection string, dump schema via `pg`/`mysql2`, return CREATE TABLE SQL. High security risk but massive value unlock.
+- [x] **P1** Live Database Schema Fetch — serverless endpoint that accepts a connection string, connects via `pg`/`mysql2`, and returns CREATE TABLE SQL. Addresses #1 community feedback ("How do I get my schema out?"). Huge activation unlock. PostgreSQL + MySQL MVP. **Done June 9.**
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
@@ -95,7 +93,7 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 **GitLab CI expansion:** Enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `gitlab-schema-diff.html` landing page (22KB) with hero, quick-start snippet, MR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html nav/footer and ci-cd-integration.html. sitemap.xml: 237 URLs.
 
 ### Day 237 (Jun 9)
-**Bitbucket Pipelines expansion:** Built enterprise `bitbucket-pipelines.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `bitbucket-schema-diff.html` landing page (21KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html, gitlab-schema-diff.html, and ci-cd-integration.html. Removed stale `ci/bitbucket-pipelines.yml`. sitemap.xml: 238 URLs.
+**Bitbucket Pipelines expansion:** Built enterprise `bitbucket-pipelines.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `bitbucket-schema-diff.html` landing page (21KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, and CI/CD hub. Removed stale `ci/bitbucket-pipelines.yml`. sitemap.xml: 238 URLs.
 
 ### Day 238 (Jun 9)
 **Schema Export Command Generator:** Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.

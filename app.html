@@ -1694,6 +1694,7 @@ CREATE TABLE users (
           <button onclick="loadSample('mysql')">Load sample (MySQL)</button>
           <button onclick="loadSample('mssql')">Load sample (SQL Server)</button>
           <button onclick="loadSample('oracle')">Load sample (Oracle)</button>
+          <button onclick="openLiveDbModal('A')" style="color:var(--primary);font-weight:600;">🔌 Connect Database</button>
         </div>
       </div>
       <div class="editor-panel" id="panelB">
@@ -1714,6 +1715,7 @@ CREATE TABLE users (
 );"></textarea>
         <div class="sample-links">
           <button onclick="loadSampleB()">Copy from A &amp; modify</button>
+          <button onclick="openLiveDbModal('B')" style="color:var(--primary);font-weight:600;">🔌 Connect Database</button>
         </div>
       </div>
     </div>
@@ -2334,6 +2336,32 @@ DROP TABLE audit_logs;</code></pre>
   <div class="modal-overlay exit-intent-modal" id="exitIntentModal">
     <div class="modal" id="exitIntentModalContent">
       <!-- Variant injected by JS based on isRaceToFinish() -->
+    </div>
+  </div>
+
+  <!-- Live Database Connection Modal -->
+  <div class="modal-overlay" id="liveDbModal">
+    <div class="modal" style="max-width:520px;">
+      <h3>🔌 Connect to Database</h3>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">Fetch your schema directly from a live database. Connection details are used once and never stored.</p>
+      <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:0.85rem;color:#fca5a5;">
+        <strong>⚠️ Privacy Notice:</strong> Your connection string is sent to SchemaLens servers only to fetch the schema. It is not logged, stored, or retained. For maximum privacy, use the <a href="tools/schema-export-command-generator.html" target="_blank" style="color:var(--primary);text-decoration:underline;">command generator</a> to export locally.
+      </div>
+      <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;">Database Dialect</label>
+      <select id="liveDbDialect" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;margin-bottom:14px;">
+        <option value="postgres">PostgreSQL</option>
+        <option value="mysql">MySQL / MariaDB</option>
+      </select>
+      <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;">Connection String</label>
+      <input type="password" id="liveDbConnectionString" placeholder="postgresql://user:pass@host:5432/dbname" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;margin-bottom:6px;">
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Examples: <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">postgresql://user:pass@localhost:5432/mydb</code> or <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">mysql://user:pass@localhost:3306/mydb</code></p>
+      <div id="liveDbError" style="color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeLiveDbModal()">Cancel</button>
+        <button class="btn btn-primary" id="liveDbConnectBtn" onclick="connectLiveDatabase()">
+          <span id="liveDbBtnText">Fetch Schema</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -9490,6 +9518,79 @@ async function fetchSchemaFromUrl(side) {
   } finally {
     btn.textContent = originalText;
     btn.disabled = false;
+  }
+}
+
+// Live Database Connection
+let liveDbTargetSide = 'A';
+
+function openLiveDbModal(side) {
+  liveDbTargetSide = side || 'A';
+  document.getElementById('liveDbModal').classList.add('active');
+  document.getElementById('liveDbConnectionString').value = '';
+  document.getElementById('liveDbError').style.display = 'none';
+  document.getElementById('liveDbError').textContent = '';
+  document.getElementById('liveDbConnectBtn').disabled = false;
+  document.getElementById('liveDbBtnText').textContent = 'Fetch Schema';
+  document.getElementById('liveDbConnectionString').focus();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('live_db_modal_opened', { side });
+}
+
+function closeLiveDbModal() {
+  document.getElementById('liveDbModal').classList.remove('active');
+}
+
+document.getElementById('liveDbModal').addEventListener('click', (e) => {
+  if (e.target.id === 'liveDbModal') closeLiveDbModal();
+});
+
+async function connectLiveDatabase() {
+  const dialect = document.getElementById('liveDbDialect').value;
+  const connectionString = document.getElementById('liveDbConnectionString').value.trim();
+  const errorEl = document.getElementById('liveDbError');
+  const btn = document.getElementById('liveDbConnectBtn');
+  const btnText = document.getElementById('liveDbBtnText');
+
+  if (!connectionString) {
+    errorEl.textContent = 'Please enter a connection string.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  errorEl.style.display = 'none';
+  btn.disabled = true;
+  btnText.textContent = 'Connecting…';
+
+  try {
+    const response = await fetch('/api/live-schema.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ connectionString, dialect })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to fetch schema');
+    }
+
+    const textarea = document.getElementById('schema' + liveDbTargetSide);
+    textarea.value = data.schema || '';
+    updateStats();
+    const welcomeState = document.querySelector('.welcome-state');
+    if (welcomeState) welcomeState.classList.add('hidden');
+    const welcomeHint = document.querySelector('.welcome-hint');
+    if (welcomeHint) welcomeHint.classList.add('hidden');
+    closeLiveDbModal();
+
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('live_db_fetched', { dialect, side: liveDbTargetSide });
+  } catch (err) {
+    errorEl.textContent = 'Error: ' + (err.message || 'Connection failed');
+    errorEl.style.display = 'block';
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('live_db_error', { dialect, error: err.message });
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Fetch Schema';
   }
 }
 

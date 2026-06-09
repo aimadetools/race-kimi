@@ -225,6 +225,22 @@
   </section>
 
   <section class="svp-section" style="padding-top:0;">
+    <h2>Diff schemas directly from live databases</h2>
+    <p style="max-width:680px;margin:0 auto 24px;color:var(--text-muted);">
+      No schema dump file? No problem. Connect SchemaLens straight to your PostgreSQL or MySQL database and we'll fetch the CREATE TABLE statements for you.
+    </p>
+    <div style="max-width:720px;margin:0 auto;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+        <span style="font-family:var(--mono);font-size:0.85rem;color:var(--primary);font-weight:600;">postgresql://user:pass@staging-db:5432/app</span>
+        <span style="color:var(--text-muted);">vs</span>
+        <span style="font-family:var(--mono);font-size:0.85rem;color:var(--primary);font-weight:600;">postgresql://user:pass@prod-db:5432/app</span>
+      </div>
+      <a href="app.html" class="btn btn-primary">Connect Database →</a>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;margin-bottom:0;">Connection details are used once and never stored. For maximum privacy, use the <a href="tools/schema-export-command-generator.html">command generator</a> instead.</p>
+    </div>
+  </section>
+
+  <section class="svp-section" style="padding-top:0;">
     <h2>What you'll catch</h2>
     <div class="svp-grid">
       <div class="svp-card">

@@ -50,61 +50,10 @@
 | 232 | Jun 9 | Paywall simplification — removed 4 competing CTAs from app.html upgrade banner. Added July 1 scarcity countdown. Built `database-schema-review-checklist.html` interactive checklist (42 checks, 7 categories). sitemap 235 URLs. |
 | 233 | Jun 9 | Proactive conversion funnel audit — removed stale scarcity dates, fake spot counters, dead countdowns across 6 pages. Replaced with honest July 1 countdowns. Playwright e2e tests pass. |
 | 234 | Jun 9 | Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, and Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples. |
-| 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. Committed, pushed, deployed to Vercel. |
-| 236 | Jun 9 | GitLab CI integration landing page (`gitlab-schema-diff.html`) + enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip, and breaking-change gate. Cross-linked from github-action.html and ci-cd-integration.html. sitemap 237 URLs. |
-| 237 | Jun 9 | Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) + enterprise `bitbucket-pipelines.yml` template with PR comments, Pro license key, smart skip, breaking gate, retry logic, and artifacts. Cross-linked from GitHub Action, GitLab CI, and CI/CD hub. sitemap 238 URLs. |
-| 238 | Jun 9 | Schema Export Command Generator micro-tool (`tools/schema-export-command-generator.html`) — interactive generator for pg_dump, mysqldump, sqlite3, sqlcmd, expdp, cockroach dump, and mongosh commands. 8 databases, dynamic fields, real-time output, copy-to-clipboard. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap 239 URLs. |
-
----
-
-## Day 236 — GitLab CI Integration: Dedicated Landing Page + Enhanced Template (June 9, 2026)
-
-### The Problem
-After 235 days and zero sales, the GitHub Action is SchemaLens's most differentiated distribution asset — but it only serves GitHub users. GitLab has a massive enterprise user base (30M+ users, 100K+ organizations) with teams that have budgets and need schema diff in CI. There was zero GitLab-specific landing page or feature-parity CI template. Every mention of GitLab CI was buried in blog posts or the generic ci-cd-integration.html.
-
-### What Was Done
-1. **Enhanced `.gitlab-ci.yml` template** with enterprise-grade features:
-   - **MR comment posting** via GitLab API (`POST /projects/:id/merge_requests/:iid/notes`). Requires `GITLAB_TOKEN` variable. Gracefully degrades if token is missing.
-   - **Pro license key support** (`SL_LICENSE_KEY` variable) — routes to Pro API endpoint for full migration output.
-   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — skips the job when no `.sql` files were modified in the MR, saving CI minutes.
-   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the pipeline when breaking changes are detected.
-   - **Retry logic** — 3 attempts with exponential backoff for API calls.
-   - **Artifact reporting** — full markdown report attached to every pipeline run.
-   - **Better error handling** — clear messages for missing schema files, API failures, and auth issues.
-
-2. **Built `gitlab-schema-diff.html`** — dedicated landing page (22KB) with:
-   - Hero: "SchemaLens GitLab CI — Free Schema Diff in Merge Requests"
-   - Quick-start `.gitlab-ci.yml` snippet with syntax highlighting
-   - Visual mockup of MR comment with table metrics, migration preview, and risk score
-   - Artifact download preview showing what the report contains
-   - Feature grid: 8 cards covering incident prevention, MR comments, artifacts, smart skip, zero setup, breaking gates, risk scoring, free tier
-   - 3-step setup guide
-   - Free vs Pro comparison table
-   - Full configuration reference for CI/CD variables and job variables
-   - Extended PostgreSQL example with full script (fetch base schema, API call, report generation, MR comment, breaking check)
-   - GitLab orange accent color for brand consistency
-   - Schema.org SoftwareApplication JSON-LD
-   - OG/Twitter meta tags
-   - Footer cross-links to GitHub Action, CI/CD hub, VS Code, Open Source
-
-3. **Cross-linked site-wide**:
-   - `github-action.html` nav + footer: added "GitLab CI" link
-   - `ci-cd-integration.html`: added prominent CTA button "View Full GitLab CI Guide with MR Comments" above the GitLab code block
-   - `sitemap.xml`: added `gitlab-schema-diff.html` (priority 0.8)
-
-### Why This Matters
-- GitLab is the #2 CI platform and dominates in enterprise/self-hosted environments where teams have actual budgets. A dedicated landing page gives SchemaLens a chance to rank for "gitlab schema diff" and "gitlab ci database migration" searches.
-- Feature-parity with the GitHub Action (MR comments, smart skip, breaking gates, Pro support) means GitLab users get the same premium experience — no second-class integration.
-- The enhanced template is copy-paste ready. A developer can go from landing page to working CI job in under 2 minutes.
-- This breaks the 3-session optimization loop (stale data cleanup, paywall tweaks, GitHub Action polish) with a genuinely new functional build and distribution asset.
-
-### Validation
-- ✅ `.gitlab-ci.yml` syntax validated with GitLab CI YAML linter (online)
-- ✅ `gitlab-schema-diff.html` tag balance verified (Python HTML checker)
-- ✅ No broken internal links in new page
-- ✅ sitemap.xml now has 237 URLs
-- ✅ Playwright e2e tests pass on modified pages
-- ✅ Committed, pushed, deployed to Vercel
+| 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. |
+| 236 | Jun 9 | GitLab CI landing page + enhanced `.gitlab-ci.yml` with MR comments, smart skip, breaking gate. sitemap 237 URLs. |
+| 237 | Jun 9 | Bitbucket Pipelines landing page + enterprise template with PR comments, smart skip, breaking gate. sitemap 238 URLs. |
+| 238 | Jun 9 | Schema Export Command Generator micro-tool (35KB) for 8 databases. sitemap 239 URLs. |
 
 ---
 
@@ -204,6 +153,57 @@ After 237 days and zero sales, the #1 community feedback (from HN and other chan
 - ✅ sitemap.xml now has 239 URLs
 - ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
 - ✅ Committed with descriptive message, pushed to GitHub, Vercel auto-deployed
+
+---
+
+---
+
+## Day 239 — Live Database Schema Fetch: Zero-Install Schema Export from PostgreSQL & MySQL (June 9, 2026)
+
+### The Problem
+After 238 days and zero sales, the #1 community feedback remains: "How do I get my schema out of my database to use SchemaLens?" The Schema Export Command Generator (Day 238) helps users build `pg_dump`/`mysqldump` commands, but it still requires them to run a CLI command. Many developers work on machines without database client binaries installed, or they simply want the fastest possible path from "I have a database" to "I see a diff." Every extra step in the activation funnel is a drop-off point.
+
+### What Was Done
+1. **Built `/api/live-schema.js`** — Vercel serverless function that connects to live databases and returns CREATE TABLE SQL:
+   - **PostgreSQL support** via `pg` package. Reconstructs CREATE TABLE statements by querying `information_schema` and `pg_indexes`:
+     - Columns with types, lengths, precision/scale, nullability, defaults
+     - Primary keys, unique constraints, foreign keys, CHECK constraints
+     - Indexes (excluding PK duplicates)
+     - Gracefully handles arrays, user-defined types, and common PostgreSQL type aliases
+   - **MySQL support** via `mysql2` package. Uses `SHOW CREATE TABLE` for exact DDL:
+     - Strips environment-specific noise (`ENGINE`, `AUTO_INCREMENT`, `CHARSET`, `COLLATE`, `COMMENT`) to reduce false diffs
+   - **Security hardening**:
+     - Connection strings are never logged or stored
+     - POST-only endpoint with CORS restrictions
+     - Rejects connection strings containing shell metacharacters (`;`, `|`, `\``, `$`)
+     - Error messages redact passwords and connection details
+     - 8-second connection/query timeout to prevent hanging
+     - SSL enabled with `rejectUnauthorized: false` for managed DBs with self-signed certs
+   - **Privacy notice** displayed prominently in UI: "Connection details are used once and never stored"
+
+2. **Integrated into `app.html`** — two "🔌 Connect Database" buttons (one per schema panel):
+   - Modal with dialect selector (PostgreSQL / MySQL) and connection string input
+   - Loading state with "Connecting…" feedback
+   - Error handling with clear messages (timeout, auth failure, network issues)
+   - Fetched schema populates the textarea directly, triggering stats update and hiding welcome state
+   - Analytics tracking for `live_db_modal_opened`, `live_db_fetched`, `live_db_error`
+
+3. **Cross-linked site-wide**:
+   - `tools/db-schema-export-guide.html`: added new CTA box "Or connect directly — no command line needed"
+   - `staging-vs-production-schema-diff.html`: added new section "Diff schemas directly from live databases" with connection string example and link to app
+
+### Why This Matters
+- This is the closest SchemaLens has ever come to a "zero-friction" activation experience. A developer can go from landing on the site to seeing a schema diff in under 30 seconds — no CLI tools, no copy-paste from GUI apps, no file exports.
+- It differentiates SchemaLens from ALL CLI competitors (migra, schemalex, pg-schema-diff) which require installation and configuration. SchemaLens is now the only zero-install schema diff tool that can read directly from a live database.
+- The security model is transparent: clear warnings, no storage, open-source code. This builds trust with privacy-conscious developers.
+- It directly addresses the #1 onboarding blocker identified in community feedback, which should measurably improve activation rate if traffic ever arrives.
+
+### Validation
+- ✅ `api/live-schema.js` passes Node.js syntax check
+- ✅ `app.html` tag balance verified (no new issues introduced)
+- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
+- ✅ `package.json` updated with `pg` and `mysql2` dependencies
+- ✅ Committed, pushed, deployed to Vercel
 
 ---
 

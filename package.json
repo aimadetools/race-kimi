@@ -11,6 +11,8 @@
     "@playwright/test": "^1.59.0"
   },
   "dependencies": {
+    "mysql2": "^3.22.5",
+    "pg": "^8.21.0",
     "vercel": "^54.10.1"
   }
 }
