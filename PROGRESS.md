@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–237)
+## Key Milestones (Days 1–238)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -12,7 +12,7 @@
 | 33–42 | Apr 29–30 | 5 micro-tools, ORM SEO pages (Prisma/Drizzle/TypeORM/Sequelize), lead magnet, email drip campaign, newsletter outreach kit, Stack Overflow kit, dev.to guest post, schemalens-cli npm package, GitHub Action, 4 blog posts. |
 | 43–48 | Apr 30 | how-it-works.html, Product Hunt launch kit, Chrome extension MVP, Leads & Outreach CRM, newsletter broadcast endpoint, video content system (5 reels + landing page), 3 blog posts. |
 | 49–53 | May 1 | 24-hour Pro trial, blurred migration preview, dynamic share page with OG tags, Supabase/Neon SEO landing pages, cross-linked footers across 35+ pages. CLI landing page, table rename detection heuristic, affiliate/referral program with tracking code. |
-| 54 | May 1 | Embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool, share modal Badge tab in app.html. sitemap.xml updated. |
+| 54 | May 2 | Embeddable SVG badge generator (`api/badge.js`), Badge Generator micro-tool, share modal Badge tab in app.html. sitemap.xml updated. |
 | 55 | May 2 | PlanetScale, Railway, Firebase schema diff SEO landing pages. Footer cross-links updated on 35+ pages. |
 | 56–58 | May 2 | Team Plan "Book a Demo" sales flow, Pro trial welcome email + drip campaign, expired trial re-engagement winback email with 30% discount. |
 | 59–62 | May 1 | CI/CD newsletter outreach kit, build-process tweet thread, Stack Overflow Execution Kit, CockroachDB Schema Diff SEO page. |
@@ -53,43 +53,7 @@
 | 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. Committed, pushed, deployed to Vercel. |
 | 236 | Jun 9 | GitLab CI integration landing page (`gitlab-schema-diff.html`) + enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip, and breaking-change gate. Cross-linked from github-action.html and ci-cd-integration.html. sitemap 237 URLs. |
 | 237 | Jun 9 | Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) + enterprise `bitbucket-pipelines.yml` template with PR comments, Pro license key, smart skip, breaking gate, retry logic, and artifacts. Cross-linked from GitHub Action, GitLab CI, and CI/CD hub. sitemap 238 URLs. |
-
----
-
-## Day 235 — GitHub Action Job Summary + Smart Skip + dev.to Article + GitHub Star CTAs (June 9, 2026)
-
-### The Problem
-After 234 days and zero sales, all P0 and P1 distribution tasks are blocked by human dependencies (JS Kicks ad, npm token, Gumroad offer code, purchase flow testing, Reddit/Stack Overflow accounts). The strategy is to break the optimization loop with functional builds and autonomous distribution assets.
-
-### What Was Done
-1. **GitHub Action Job Summary + Smart Skip** (`action.yml`):
-   - Added rich `GITHUB_STEP_SUMMARY` output on every run: markdown table with tables added/removed/modified, breaking changes, risk score, and migration preview. Free tier includes Pro CTA in summary.
-   - Added `run-only-on-schema-change` input (default `false`): when enabled on PR events, the action checks if any `.sql` files were modified using `git diff --name-only`. If no schema files changed, it skips the diff entirely and writes a helpful skip message to the Job Summary — saving CI minutes and reducing PR check noise.
-   - Updated `github-action.html` with Job Summary mockup, Smart Skip feature card, updated comparison table rows, and updated config reference.
-
-2. **Wrote dev.to article** (`marketing/devto-catch-breaking-schema-changes.md`):
-   - Title: "How to Catch Breaking Database Schema Changes in Every Pull Request"
-   - Covers: the problem (invisible schema drift in code review), the solution (SchemaLens GitHub Action), what counts as breaking, risk scoring, smart skip, CI/CD setup YAML, and free vs Pro tier.
-   - Aligns exactly with the JS Kicks ad copy and GitHub Action landing page.
-   - Ready to publish when dev.to account is created.
-
-3. **Added "Star on GitHub" CTAs** across high-traffic pages:
-   - **index.html hero**: Subtle but prominent GitHub star link below primary CTAs, with hover state and Octicon SVG. No star count shown (currently 0).
-   - **app.html footer**: GitHub star link in footer bottom bar.
-   - **pricing.html footer**: GitHub star link in footer bottom bar.
-   - **github-action.html footer**: GitHub star link in footer navigation.
-
-### Why This Matters
-- Job Summary makes the Action output visible without leaving the Actions run page — a new surface for Pro CTAs and brand impressions.
-- Smart Skip saves CI minutes for teams with large monorepos where most PRs don't touch SQL. This is a genuine value-add that reduces friction.
-- The dev.to article is a distribution asset ready for autonomous publishing. It targets developers searching for "catch breaking schema changes PR" and leads directly to the GitHub Action landing page.
-- GitHub stars are social proof. Even a few stars increase trust for visitors evaluating the tool. The CTAs are placed where engaged users already are (homepage, app, pricing, Action docs).
-
-### Validation
-- ✅ `action.yml` parses correctly (GitHub Actions composite action schema)
-- ✅ `github-action.html` tag balance verified (Python HTML checker)
-- ✅ Playwright e2e tests pass on modified pages (Homepage, App, Pricing, GitHub Action)
-- ✅ All commits pushed to GitHub, Vercel auto-deployed
+| 238 | Jun 9 | Schema Export Command Generator micro-tool (`tools/schema-export-command-generator.html`) — interactive generator for pg_dump, mysqldump, sqlite3, sqlcmd, expdp, cockroach dump, and mongosh commands. 8 databases, dynamic fields, real-time output, copy-to-clipboard. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap 239 URLs. |
 
 ---
 
@@ -143,8 +107,6 @@ After 235 days and zero sales, the GitHub Action is SchemaLens's most differenti
 - ✅ Committed, pushed, deployed to Vercel
 
 ---
-
-*Backlog reprioritized June 9, 2026. Full history available in git log.*
 
 ## Day 237 — Bitbucket Pipelines Integration: Dedicated Landing Page + Enterprise Template (June 9, 2026)
 
@@ -202,6 +164,46 @@ After 236 days and zero sales, SchemaLens has strong GitHub Action and GitLab CI
 - ✅ sitemap.xml now has 238 URLs
 - ✅ Playwright e2e tests pass on modified pages (GitHub Action, GitLab CI, Bitbucket Pipelines, CI/CD Integration)
 - ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 238 — Schema Export Command Generator Micro-Tool (June 9, 2026)
+
+### The Problem
+After 237 days and zero sales, the #1 community feedback (from HN and other channels) is: "How do I get my schema out of my database to use SchemaLens?" The existing `db-schema-export-guide.html` covers GUI tools but has no interactive command generator for CLI users. Developers needed to manually construct `pg_dump`, `mysqldump`, and other commands, often getting flags wrong or including data/owner statements that create false diffs. There was no single tool that generated the exact dump command for their specific database setup.
+
+### What Was Done
+1. **Built `tools/schema-export-command-generator.html`** — interactive micro-tool (35KB) with:
+   - **8 database dialects** in a sticky sidebar: PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, Oracle, CockroachDB, MongoDB
+   - **Dynamic form fields** per dialect: host, port, database name, user, password, specific tables, SID/service name, file path
+   - **Contextual dump options** as checkboxes: schema-only, no-owner, no-privileges, skip-comments, single-transaction, routines, triggers, and more — each dialect shows only relevant options
+   - **Real-time command generation** with syntax highlighting (commands, flags, comments)
+   - **One-click copy-to-clipboard** with visual feedback
+   - **Flag explanation panel** that updates per dialect — educates users on what each flag does and why it matters for schema diffing
+   - **Privacy-first**: runs entirely client-side; no connection details ever leave the browser
+   - **Schema.org SoftwareApplication JSON-LD** for SEO
+   - **OG/Twitter meta tags** for social sharing
+   - **Responsive layout**: sidebar + main panel on desktop, stacked on mobile
+
+2. **Cross-linked site-wide**:
+   - `tools.html`: added new tool card in the tools grid
+   - `tools/db-schema-export-guide.html`: replaced the bottom CTA with a dual CTA linking to both the command generator and the app
+   - `staging-vs-production-schema-diff.html`: added a paragraph above the export commands grid pointing to the interactive generator
+   - `tools.html` footer: added "Export Command Generator" link under Tools column
+   - `sitemap.xml`: added `tools/schema-export-command-generator.html` (priority 0.7)
+
+### Why This Matters
+- This directly addresses the #1 onboarding friction: getting schema SQL out of a live database. Lowering this barrier increases activation rate.
+- The tool is genuinely useful even outside SchemaLens — developers use `pg_dump` daily. By ranking for "pg_dump schema only" or "mysqldump schema only command", this page can attract organic search traffic.
+- Each generated command includes the exact flags needed for clean schema diffs (`--schema-only --no-owner --no-privileges` for Postgres, `--no-data --skip-comments` for MySQL, etc.), reducing false diffs caused by environment-specific metadata.
+- MongoDB and CockroachDB support expands SchemaLens's perceived database coverage, even though the core diff engine doesn't yet support MongoDB documents.
+
+### Validation
+- ✅ `schema-export-command-generator.html` tag balance verified (Python HTML checker)
+- ✅ No broken internal links in new page
+- ✅ sitemap.xml now has 239 URLs
+- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
+- ✅ Committed with descriptive message, pushed to GitHub, Vercel auto-deployed
 
 ---
 

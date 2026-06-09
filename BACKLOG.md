@@ -19,7 +19,7 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 235 Days (CRITICAL)
+### Distribution — Zero Sales After 238 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
@@ -32,7 +32,7 @@
 
 ### Unblocked — Build Next
 - [x] **P1** Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) — match GitLab CI feature parity. Bitbucket has strong enterprise presence. **Done June 9.**
-- [ ] **P1** Live DB schema export command generator — addresses #1 community feedback (HN: "staging vs production"). Build a tool that generates the exact `pg_dump`, `mysqldump`, etc. command for the user's database, so they can export schema locally and paste into SchemaLens.
+- [x] **P1** Live DB schema export command generator — addresses #1 community feedback (HN: "staging vs production"). Build a tool that generates the exact `pg_dump`, `mysqldump`, etc. command for the user's database, so they can export schema locally and paste into SchemaLens. **Done June 9.**
 - [ ] **P2** Build "Schema Diff from Live Database" serverless endpoint — accept connection string, dump schema via `pg`/`mysql2`, return CREATE TABLE SQL. High security risk but massive value unlock.
 
 ### Content & SEO
@@ -97,6 +97,9 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 ### Day 237 (Jun 9)
 **Bitbucket Pipelines expansion:** Built enterprise `bitbucket-pipelines.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `bitbucket-schema-diff.html` landing page (21KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html, gitlab-schema-diff.html, and ci-cd-integration.html. Removed stale `ci/bitbucket-pipelines.yml`. sitemap.xml: 238 URLs.
 
+### Day 238 (Jun 9)
+**Schema Export Command Generator:** Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
+
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 237 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 9, 2026. Zero sales after 238 days. 3.5 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
