@@ -97,13 +97,8 @@
       <div style="color: var(--text-muted); font-size: 0.95rem;">Pay once, keep forever. Just for Product Hunt visitors.</div>
       <div style="margin-top: 12px; font-size: 0.85rem; color: var(--comment);"><strong style="color: var(--success); font-size: 1.2rem;">$39</strong> one-time</div>
       <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">🔒 14-day money-back guarantee</div>
-      <div class="countdown" id="phCountdown" data-target="2026-05-21T23:59:59Z">
-        <div class="countdown-unit"><span class="num" id="cdD">--</span><span class="lbl">Days</span></div>
-        <div class="countdown-unit"><span class="num" id="cdH">--</span><span class="lbl">Hours</span></div>
-        <div class="countdown-unit"><span class="num" id="cdM">--</span><span class="lbl">Minutes</span></div>
-        <div class="countdown-unit"><span class="num" id="cdS">--</span><span class="lbl">Seconds</span></div>
-      </div>
-      <div id="ph-countdown-text" style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">Launch Week ended May 21. Alumni window open through May 28 — <a href="launch-special.html" style="color:var(--primary);font-weight:600;">claim $39 Lifetime Pro →</a></div>
+      <div id="ph-countdown-text" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">🎉 Launched May 16, 2026. Thanks to the PH community for the support!<br>⏰ <strong style="color:var(--danger);">Price increases to $79 on July 1</strong> — <span id="phJuly1Countdown" style="color:var(--danger);font-weight:600;"></span> left — <a href="launch-special.html" style="color:var(--primary);font-weight:600;">claim $39 Lifetime Pro →</a></div>
+      <script>(function(){const el=document.getElementById('phJuly1Countdown');if(!el)return;function update(){const now=new Date();const end=new Date('2026-07-01T00:00:00Z');const diff=end-now;if(diff<=0){el.textContent='Price increased';return;}const d=Math.floor(diff/(1000*60*60*24));const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));const m=Math.floor((diff%(1000*60*60))/(1000*60));el.textContent=d+'d '+h+'h '+m+'m';}update();setInterval(update,60000);})();</script>
     </div>
     <div class="hero-actions" style="justify-content: center;" id="phHeroActions">
       <a href="app.html" class="btn btn-primary btn-lg">Try It Free — No Signup</a>
@@ -415,7 +410,7 @@
     const now = new Date();
     const txt = document.getElementById('ph-countdown-text');
     if (now > target && txt) {
-      txt.textContent = '🏷️ Alumni pricing ends May 28 — lock in lifetime Pro before the window closes';
+      txt.textContent = '🏷️ Price increases to $79 on July 1 — lock in lifetime Pro at $39 while it lasts';
     }
   }
   function update() {

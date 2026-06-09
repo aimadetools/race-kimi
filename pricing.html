@@ -249,14 +249,10 @@
       </div>
       <script>(function(){const raceEnd=new Date('2026-07-10T23:59:59Z');const now=Date.now();const promo=document.getElementById('raceToFinishPromo');if(promo&&now<=raceEnd)promo.style.display='block';})();</script>
       <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.06)); border: 2px solid var(--danger); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — Lifetime Pro $39</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Help SchemaLens win the $100 AI Startup Race. Get Lifetime Pro for <strong style="color: var(--danger);">$39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim Pro →</a></p>
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">⏰ Price Increases to $79 on July 1</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lock in Lifetime Pro at <strong style="color: var(--danger);">$39</strong> before the price goes up. <strong id="july1CountdownPricing" style="color: var(--danger);"></strong> <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Buy now →</a></p>
       </div>
-
-      <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08)); border: 1px solid var(--primary); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🎁 Founder Deal — First 20 customers only</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lifetime Pro for <strong style="color: var(--primary);">$39 once</strong> during the Race to the Finish. <strong id="founderDealRemaining" style="color: var(--success);">20 spots left.</strong></p>
-      </div>
+      <script>(function(){const el=document.getElementById('july1CountdownPricing');if(!el)return;function update(){const now=new Date();const end=new Date('2026-07-01T00:00:00Z');const diff=end-now;if(diff<=0){el.textContent='Price increased';return;}const d=Math.floor(diff/(1000*60*60*24));const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));const m=Math.floor((diff%(1000*60*60))/(1000*60));el.textContent=d+'d '+h+'h '+m+'m left';}update();setInterval(update,60000);})();</script>
 
       <!-- Migration Cost Calculator Embed -->
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 32px;">
@@ -311,7 +307,7 @@
           <h3>Pro</h3>
           <p style="color: var(--text-muted); font-size: 0.9rem;">For professional developers</p>
           <div class="price">$39<span> once</span></div>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.<br><a href="launch-special.html" style="color: var(--danger); font-weight: 600;">⚡ Limited spots remaining →</a> · <a href="founding-customer.html" style="color: var(--warning); font-weight: 600;">🏆 Founding Customer bonuses →</a></p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.<br><a href="launch-special.html" style="color: var(--danger); font-weight: 600;">⚡ Price increases July 1 →</a></p>
           <p style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--success); font-weight: 600; margin-bottom: 16px;">🚀 Early-access price — lock in before rates increase</p>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 16px; text-align: center;">💡 Or try Pro free for 24 hours in the app — no credit card</p>
           <ul>
