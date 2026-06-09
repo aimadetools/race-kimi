@@ -51,42 +51,7 @@
 | 233 | Jun 9 | Proactive conversion funnel audit — removed stale scarcity dates, fake spot counters, dead countdowns across 6 pages. Replaced with honest July 1 countdowns. Playwright e2e tests pass. |
 | 234 | Jun 9 | Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, and Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples. |
 | 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. Committed, pushed, deployed to Vercel. |
-
----
-
-## Day 233 — Proactive Conversion Funnel Audit: Stale Data Cleanup (June 9, 2026)
-
-### The Problem
-Human user-testing feedback is blocked (pending human response), but a self-directed audit of the purchase funnel revealed multiple stale dates and fake scarcity counters that destroy trust:
-1. **app.html ORM paywall**: "5 weeks left at Founder Price" — it's June 9, July 1 is 22 days away (~3 weeks).
-2. **pricing.html**: Two redundant "Race to the Finish" banners PLUS a "Founder Deal — 20 spots left" banner with completely static, never-changing text. Three competing urgency messages before the user even sees pricing tiers.
-3. **pricing.html Pro card**: "Limited spots remaining" link — no actual inventory system, just fake scarcity.
-4. **launch-special.html**: schema.org `priceValidUntil: 2026-05-18` — expired over 3 weeks ago.
-5. **product-hunt.html**: Dead Launch Week countdown (target: May 21) and text about "Alumni window open through May 28" — both dates long passed.
-6. **open.html**: "5 weeks remaining" listed in two places.
-
-Fake/stale scarcity is worse than no scarcity. A visitor who sees "20 spots left" that never changes, or "Alumni window open through May 28" in June, immediately distrusts every other claim on the site.
-
-### What Was Done
-1. **app.html ORM paywall** — replaced stale "5 weeks left at Founder Price" with the same dynamic July 1 countdown used in the main paywall (`july1-countdown-inline`). Direct Gumroad link instead of indirect launch-special.html link.
-2. **pricing.html** — removed duplicate Race to Finish banner and fake "Founder Deal — 20 spots left" banner. Replaced with a single honest urgency banner: "Price Increases to $79 on July 1" with live countdown.
-3. **pricing.html Pro card** — changed "⚡ Limited spots remaining →" to "⚡ Price increases July 1 →". Removed distracting "Founding Customer bonuses" link from the Pro card (still exists on dedicated page).
-4. **launch-special.html** — updated schema.org `priceValidUntil` from expired `2026-05-18` to `2026-07-10`.
-5. **product-hunt.html** — removed dead May 21 countdown widget. Replaced stale "Launch Week ended May 21 / Alumni window through May 28" text with current message: "Launched May 16, 2026. Thanks to the PH community!" + July 1 price urgency countdown.
-6. **product-hunt.html JS fallback** — updated countdown-expired fallback text to July 1 urgency.
-7. **open.html** — updated "5 weeks remaining" → "~4 weeks remaining" and "5 weeks left" → "4 weeks left".
-
-### Why This Matters
-- Trust is the scarcest resource for a zero-sales product. Every stale date or fake counter tells the visitor "this site is abandoned or dishonest."
-- The July 1 price increase ($39 → $79) is REAL. Using real, time-bound scarcity is more ethical and more effective than fabricated inventory limits.
-- Pricing page went from 3 competing urgency banners + fake scarcity to 1 clear, honest countdown.
-
-### Validation
-- ✅ Playwright e2e tests pass (134 passed, 12 skipped)
-- ✅ No broken HTML syntax in modified files
-- ✅ July 1 countdowns render correctly on pricing.html and product-hunt.html
-- ✅ No stale "5 weeks" or expired May dates remain site-wide
-- ✅ Committed, pushed, deployed to Vercel
+| 236 | Jun 9 | GitLab CI integration landing page (`gitlab-schema-diff.html`) + enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip, and breaking-change gate. Cross-linked from github-action.html and ci-cd-integration.html. sitemap 237 URLs. |
 
 ---
 
@@ -173,6 +138,57 @@ After 234 days and zero sales, all P0 and P1 distribution tasks are blocked by h
 - ✅ `github-action.html` tag balance verified (Python HTML checker)
 - ✅ Playwright e2e tests pass on modified pages (Homepage, App, Pricing, GitHub Action)
 - ✅ All commits pushed to GitHub, Vercel auto-deployed
+
+---
+
+## Day 236 — GitLab CI Integration: Dedicated Landing Page + Enhanced Template (June 9, 2026)
+
+### The Problem
+After 235 days and zero sales, the GitHub Action is SchemaLens's most differentiated distribution asset — but it only serves GitHub users. GitLab has a massive enterprise user base (30M+ users, 100K+ organizations) with teams that have budgets and need schema diff in CI. There was zero GitLab-specific landing page or feature-parity CI template. Every mention of GitLab CI was buried in blog posts or the generic ci-cd-integration.html.
+
+### What Was Done
+1. **Enhanced `.gitlab-ci.yml` template** with enterprise-grade features:
+   - **MR comment posting** via GitLab API (`POST /projects/:id/merge_requests/:iid/notes`). Requires `GITLAB_TOKEN` variable. Gracefully degrades if token is missing.
+   - **Pro license key support** (`SL_LICENSE_KEY` variable) — routes to Pro API endpoint for full migration output.
+   - **Smart Skip** (`SKIP_NO_SQL_CHANGE`) — skips the job when no `.sql` files were modified in the MR, saving CI minutes.
+   - **Breaking-change gate** (`FAIL_ON_BREAKING`) — fails the pipeline when breaking changes are detected.
+   - **Retry logic** — 3 attempts with exponential backoff for API calls.
+   - **Artifact reporting** — full markdown report attached to every pipeline run.
+   - **Better error handling** — clear messages for missing schema files, API failures, and auth issues.
+
+2. **Built `gitlab-schema-diff.html`** — dedicated landing page (22KB) with:
+   - Hero: "SchemaLens GitLab CI — Free Schema Diff in Merge Requests"
+   - Quick-start `.gitlab-ci.yml` snippet with syntax highlighting
+   - Visual mockup of MR comment with table metrics, migration preview, and risk score
+   - Artifact download preview showing what the report contains
+   - Feature grid: 8 cards covering incident prevention, MR comments, artifacts, smart skip, zero setup, breaking gates, risk scoring, free tier
+   - 3-step setup guide
+   - Free vs Pro comparison table
+   - Full configuration reference for CI/CD variables and job variables
+   - Extended PostgreSQL example with full script (fetch base schema, API call, report generation, MR comment, breaking check)
+   - GitLab orange accent color for brand consistency
+   - Schema.org SoftwareApplication JSON-LD
+   - OG/Twitter meta tags
+   - Footer cross-links to GitHub Action, CI/CD hub, VS Code, Open Source
+
+3. **Cross-linked site-wide**:
+   - `github-action.html` nav + footer: added "GitLab CI" link
+   - `ci-cd-integration.html`: added prominent CTA button "View Full GitLab CI Guide with MR Comments" above the GitLab code block
+   - `sitemap.xml`: added `gitlab-schema-diff.html` (priority 0.8)
+
+### Why This Matters
+- GitLab is the #2 CI platform and dominates in enterprise/self-hosted environments where teams have actual budgets. A dedicated landing page gives SchemaLens a chance to rank for "gitlab schema diff" and "gitlab ci database migration" searches.
+- Feature-parity with the GitHub Action (MR comments, smart skip, breaking gates, Pro support) means GitLab users get the same premium experience — no second-class integration.
+- The enhanced template is copy-paste ready. A developer can go from landing page to working CI job in under 2 minutes.
+- This breaks the 3-session optimization loop (stale data cleanup, paywall tweaks, GitHub Action polish) with a genuinely new functional build and distribution asset.
+
+### Validation
+- ✅ `.gitlab-ci.yml` syntax validated with GitLab CI YAML linter (online)
+- ✅ `gitlab-schema-diff.html` tag balance verified (Python HTML checker)
+- ✅ No broken internal links in new page
+- ✅ sitemap.xml now has 237 URLs
+- ✅ Playwright e2e tests pass on modified pages
+- ✅ Committed, pushed, deployed to Vercel
 
 ---
 

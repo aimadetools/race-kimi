@@ -30,6 +30,11 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
 
+### Unblocked — Build Next
+- [ ] **P1** Bitbucket Pipelines landing page (`bitbucket-schema-diff.html`) — match GitLab CI feature parity. Bitbucket has strong enterprise presence.
+- [ ] **P1** Live DB schema export command generator — addresses #1 community feedback (HN: "staging vs production"). Build a tool that generates the exact `pg_dump`, `mysqldump`, etc. command for the user's database, so they can export schema locally and paste into SchemaLens.
+- [ ] **P2** Build "Schema Diff from Live Database" serverless endpoint — accept connection string, dump schema via `pg`/`mysql2`, return CREATE TABLE SQL. High security risk but massive value unlock.
+
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
 
@@ -85,6 +90,9 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 **GitHub Action evolution:** Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`) — skips diff when no `.sql` files modified in PR, saving CI minutes.
 
 **Distribution assets:** Filed single clear JS Kicks $29 ad help request. Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
+
+### Day 236 (Jun 9)
+**GitLab CI expansion:** Enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `gitlab-schema-diff.html` landing page (22KB) with hero, quick-start snippet, MR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html nav/footer and ci-cd-integration.html. sitemap.xml: 237 URLs.
 
 ---
 
