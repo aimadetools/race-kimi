@@ -283,4 +283,30 @@ Tool that turns any schema diff into a production-ready migration playbook:
 
 ---
 
+## Day 242 (continued) — Broken Link Audit & Fix (June 10, 2026)
+
+### The Problem
+A systematic link audit revealed 34 actually broken internal links across the site. These were hurting SEO, creating 404s for users, and reducing trust. The worst offenders were:
+- `tools/sql-reserved-words-checker.html` had 5 broken relative links pointing to `tools/tools/...` instead of `...`
+- `migration-horror-stories.html` linked to `safe-migration-checker.html` and `schema-health-check.html` without the `tools/` prefix
+- `blog/why-your-team-needs-a-schema-review-process.html` linked to a non-existent `.github/workflows/schema-diff.yml`
+
+### What Was Done
+1. **Fixed `tools/sql-reserved-words-checker.html`** — corrected 5 relative links from `tools/X.html` to `X.html`
+2. **Fixed `migration-horror-stories.html`** — added missing `tools/` prefix to `safe-migration-checker.html` and `schema-health-check.html` links
+3. **Fixed blog post** — replaced broken `.github/workflows/schema-diff.yml` link with `github-action.html`, and updated GitLab/Bitbucket links to their dedicated landing pages
+4. **Verified** — re-ran the audit script: 0 broken links remain out of 6,212 checked
+
+### Why This Matters
+- Broken links signal a low-quality site to search engines and hurt crawl budget.
+- Every 404 is a potential customer who clicked something and got frustrated.
+- Fixing these preserves the SEO value of 243 pages and 6,000+ internal links.
+
+### Validation
+- ✅ Custom Python audit script: 0 broken links out of 6,212 checked
+- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 *Backlog reprioritized June 10, 2026. Full history available in git log.*
