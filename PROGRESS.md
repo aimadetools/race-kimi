@@ -231,50 +231,54 @@ After 240 days and zero sales, SchemaLens has CI/CD coverage for GitHub Actions,
 
 ---
 
-## Day 242 — Database Downtime Cost Calculator: Viral Micro-Tool for Engineering Managers (June 10, 2026)
+## Day 242 — Two Viral Micro-Tools: Downtime Cost Calculator + Migration Runbook Generator (June 10, 2026)
 
 ### The Problem
-After 241 days and zero sales, SchemaLens has 70+ developer-focused micro-tools and 241 SEO pages — but almost no content targeting the people who actually approve budgets: engineering managers, VPs of Engineering, and CTOs. These decision-makers care about one metric above all others: **the cost of downtime**. A tool that quantifies outage costs in dollars is inherently viral among leadership because it gives them a concrete number to share in Slack, on LinkedIn, and in board meetings. Every share is a backlink and a brand impression.
+After 241 days and zero sales, SchemaLens has 70+ developer-focused micro-tools and 241 SEO pages — but almost no content targeting engineering managers and SREs (the people who approve budgets), and no tool that turns a schema diff into actionable team documentation. The CI/CD optimization loop (Days 236–241) needed to be broken with novel distribution assets that serve completely different audiences and use cases.
 
 ### What Was Done
-1. **Built `tools/database-downtime-cost-calculator.html`** (23KB) — interactive calculator with:
-   - **Revenue slider** ($100K to $50B annual revenue)
-   - **Employee count slider** (1 to 50,000)
-   - **Industry selector** with multipliers: E-commerce (1.0x), SaaS (1.2x), Financial Services (1.8x), Healthcare (1.6x), Media (1.4x), Manufacturing (0.8x), Education (0.5x)
-   - **Average salary slider** ($30K to $300K)
-   - **Downtime duration slider** (1 to 1440 minutes)
-   - **4 company presets**: Startup ($1M), Scale-up ($10M), Enterprise ($100M), Unicorn ($1B)
-   - **Real-time calculation** with animated counters for cost per minute, hour, day, and total for selected duration
-   - **Formula transparency**: shows exact calculation method (revenue per minute + employee cost per minute × industry multiplier)
-   - **6 famous outage benchmarks**: Amazon (~$220K/min), Meta (~$163K/min), Delta (~$150K/min), British Airways (~$112K/min), Costco (~$47K/min), Google (~$23K/min)
-   - **Shareable URL**: all inputs sync to query params so users can bookmark and share specific scenarios
-   - **One-click copy result**: copies a formatted summary to clipboard
-   - **Social share buttons**: Twitter/X and LinkedIn with pre-populated text
-   - **SchemaLens CTA**: "Most Database Outages Start With a Bad Schema Change" → links to app.html
-   - **Schema.org SoftwareApplication JSON-LD**, OG/Twitter meta tags, canonical URL
 
-2. **Cross-linked site-wide**:
-   - `tools.html`: added tool card + footer link
-   - `index.html`: added feature card in micro-tools grid + footer link
-   - `zero-downtime-migration-guide.html`: added "Calculate Downtime Cost" button next to "Compare Schemas Free" and "Check Migration Safety"
-   - `migration-horror-stories.html`: added "Calculate Downtime Cost" button in the CTA section
-   - `sitemap.xml`: added entry (priority 0.7), sitemap now has 242 URLs
+#### 1. Database Downtime Cost Calculator (`tools/database-downtime-cost-calculator.html`, 23KB)
+Interactive calculator targeting engineering leadership:
+- **Revenue slider** ($100K to $50B), **employee count** (1–50K), **industry multipliers** (0.5x–1.8x), **salary** ($30K–$300K), **duration** (1–1440 min)
+- **4 presets**: Startup, Scale-up, Enterprise, Unicorn
+- **Real-time cost display**: per minute, hour, day, and total
+- **6 famous outage benchmarks**: Amazon, Meta, Delta, British Airways, Costco, Google
+- **Shareable URLs** with query params, **copy-to-clipboard**, **Twitter/LinkedIn share buttons**
+- Schema.org JSON-LD, OG/Twitter meta tags
+
+#### 2. Migration Runbook Generator (`tools/migration-runbook-generator.html`, 33KB)
+Tool that turns any schema diff into a production-ready migration playbook:
+- **Two-schema diff engine** using `node-sql-parser` (5 dialects)
+- **Risk assessment** with Low/Medium/High badge and breaking change count
+- **Pre-migration checklist** with conditional breaking-change items
+- **Ordered execution steps** with safety annotations for each change type
+- **Rollback plan** with reverse-ordered recovery steps
+- **Post-migration monitoring queries** (PostgreSQL/MySQL/SQL Server specific)
+- **Post-migration verification checklist**
+- **Communication templates**: Slack/Teams announcement + email template
+- **One-click copy** per section + **full runbook markdown export** (.md download)
+- Schema.org JSON-LD, OG/Twitter meta tags
+
+#### 3. Cross-linked site-wide
+- `tools.html`: tool cards + footer links for both
+- `index.html`: feature cards + footer links for both
+- `zero-downtime-migration-guide.html`: added downtime calculator CTA
+- `migration-horror-stories.html`: added downtime calculator CTA
+- `migration-checklist.html`: added runbook generator cross-link
+- `sitemap.xml`: added both entries, sitemap now has 243 URLs
 
 ### Why This Matters
-- This is the first SchemaLens tool explicitly built for **budget holders and decision-makers**, not just developers. Managers who use this calculator and share the results become aware of SchemaLens as a solution to the problem they just quantified.
-- "Cost of downtime" content is inherently viral in engineering leadership circles. Similar calculators on other sites get thousands of shares because the output is a shocking, concrete number that validates infrastructure investment.
-- It breaks the CI/CD optimization loop that dominated Days 236–241. Instead of another incremental CI platform page, this is a novel distribution asset with cross-audience appeal.
-- The shareable URL feature turns every user into a distribution channel. When a manager shares "A 60-minute outage would cost my company $47,283," their entire network sees the SchemaLens brand.
-- It directly supports the $39 Lifetime Pro value proposition: "For less than the cost of 1 minute of downtime, get unlimited schema diff protection forever."
+- **Downtime Calculator** is the first SchemaLens asset built for budget holders. "Cost of downtime" content is inherently viral among leadership — every share is a backlink and brand impression. It supports the Pro value proposition: "For less than 1 minute of downtime, get unlimited schema diff protection."
+- **Runbook Generator** transforms SchemaLens from a "diff tool" into a "migration operations platform." Teams can paste schemas and get a document they actually use in production. The markdown export means every runbook generated includes a SchemaLens attribution and drives return visits.
+- Both tools break the CI/CD optimization loop by serving new audiences (managers, SREs, DevOps engineers) with completely different content formats (calculator, document generator).
 
 ### Validation
-- ✅ HTML tag balance verified
-- ✅ All interactive inputs update calculations in real time
-- ✅ Shareable URL parameters work correctly
-- ✅ Copy-to-clipboard function works with fallback
-- ✅ Social share buttons generate correct pre-populated text
-- ✅ sitemap.xml now has 242 URLs
-- ✅ Playwright e2e tests pass on modified pages (`node test-all.js` 34/34)
+- ✅ Both HTML files pass tag balance verification
+- ✅ Downtime calculator: real-time updates, shareable URLs, social sharing work
+- ✅ Runbook generator: diff parsing, risk scoring, markdown export, copy buttons work
+- ✅ sitemap.xml now has 243 URLs
+- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
 - ✅ Committed, pushed, deployed to Vercel
 
 ---
