@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaLens Team — Shared Schema Reviews for Engineering Teams</title>
-  <meta name="description" content="SchemaLens Team adds shared workspaces, cloud save, and Slack alerts to the browser-based schema diff tool your developers already love. $29/mo for your whole team.">
-  <meta property="og:title" content="SchemaLens Team — Shared Schema Reviews for Engineering Teams">
-  <meta property="og:description" content="Shared workspaces, cloud save, Slack alerts, and org-wide billing. The schema diff tool built for teams.">
+  <title>SchemaLens for Teams — Schema Diff CI/CD for Engineering Teams</title>
+  <meta name="description" content="Add schema diff to your team's CI/CD pipeline. Catch breaking database changes in every PR. GitHub Action, GitLab CI, Jenkins, CircleCI. Team plans from $29/mo.">
+  <meta property="og:title" content="SchemaLens for Teams — Schema Diff CI/CD for Engineering Teams">
+  <meta property="og:description" content="Automated schema review for engineering teams. Catch breaking changes in GitHub Actions, GitLab CI, Jenkins, and CircleCI.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/team.html">
@@ -15,8 +15,8 @@
   {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "SchemaLens Team",
-    "description": "Shared schema diff workspace for engineering teams with cloud save, Slack alerts, and org-wide billing.",
+    "name": "SchemaLens for Teams",
+    "description": "Schema diff CI/CD automation for engineering teams. GitHub Action, GitLab CI, Jenkins, CircleCI, breaking change detection, and shared migration reports.",
     "brand": {
       "@type": "Brand",
       "name": "SchemaLens"
@@ -49,6 +49,89 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
   <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+    .platform-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .platform-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .platform-card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .platform-card h4 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+    .platform-card p {
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .step-row {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin: 28px 0;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .step-body { flex: 1; }
+    .step-body h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .step-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 8px; }
+    .badge-free {
+      display: inline-block;
+      background: var(--success);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    .comparison-row.head {
+      font-weight: 600;
+      background: var(--surface);
+      border-radius: 8px 8px 0 0;
+    }
+    @media (max-width: 640px) {
+      .comparison-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .comparison-row.head { display: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -61,15 +144,15 @@
       <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="about.html">About</a>
+        <a href="features.html">Features</a>
         <a href="pricing.html">Pricing</a>
         <a href="blog.html">Blog</a>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
         <a href="open.html">Open Startup</a>
-      <a href="api.html">API</a>
-          <a href="cli/">CLI</a>
-          <a href="team.html">Team</a>
-          <a href="team-schema-audit.html">Team Audit</a>
+        <a href="open-source.html">Open Source</a>
+        <a href="api.html">API</a>
+        <a href="cli/">CLI</a>
+        <a href="team.html">Team</a>
         <a href="testimonials.html">Wall of Love</a>
         <a href="app.html" class="nav-cta">Open App</a>
       </div>
@@ -80,169 +163,288 @@
     <div class="container">
       <div class="hero-badge">
         <span class="dot"></span>
-        For teams that ship together
+        CI/CD-first schema review
       </div>
-      <h1>Schema reviews,<br><span>shared by default.</span></h1>
-      <p>SchemaLens Team turns individual schema diffs into a team workflow. Cloud save, shared workspaces, Slack alerts, and one bill for the whole company.</p>
+      <h1>Catch breaking schema changes<br><span>in every PR — as a team.</span></h1>
+      <p>SchemaLens Team adds shared migration reports, breaking change gates, and pipeline-native schema review to your engineering workflow. No more "oops, that column drop was production."</p>
       <div class="hero-actions">
-        <a href="app.html" class="btn btn-primary btn-lg">Start Your Team Workspace</a>
-        <a href="book-demo.html" class="btn btn-secondary btn-lg">Book a Demo</a>
+        <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action — Free</a>
+        <a href="book-demo.html" class="btn btn-secondary btn-lg">Book a Team Demo</a>
       </div>
-      <p class="hero-note">Team workspaces are live. Sign in on the app, create a team, and share diffs instantly. <a href="team-schema-audit.html">Run a free team schema audit →</a></p>
+      <p class="hero-note">Free tier includes full CI/CD integration. Upgrade for unlimited tables, migration generation, and team-shared reports.</p>
     </div>
   </header>
 
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
-      <h2 class="section-title text-center">Everything in Pro, plus team superpowers</h2>
+      <h2 class="section-title text-center">Works with your existing pipeline</h2>
+      <p class="section-subtitle text-center">Add schema diff checks in minutes. No infrastructure changes required.</p>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="platform-card">
+          <div class="icon">🐙</div>
+          <h4>GitHub Action <span class="badge-free">Free</span></h4>
+          <p>PR comments, Check Run status, risk scores, and migration previews directly in your pull request.</p>
+          <a href="github-action.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+        </div>
+        <div class="platform-card">
+          <div class="icon">🦊</div>
+          <h4>GitLab CI <span class="badge-free">Free</span></h4>
+          <p>MR comments, smart skip when no SQL changed, and breaking-change gates that block risky merges.</p>
+          <a href="gitlab-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+        </div>
+        <div class="platform-card">
+          <div class="icon">🔧</div>
+          <h4>Jenkins <span class="badge-free">Free</span></h4>
+          <p>Console reports, build descriptions, artifact archiving, and smart skip to save CI minutes.</p>
+          <a href="jenkins-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+        </div>
+        <div class="platform-card">
+          <div class="icon">⭕</div>
+          <h4>CircleCI <span class="badge-free">Free</span></h4>
+          <p>PR comments, smart skip, breaking gate, and artifact storage for audit trails.</p>
+          <a href="circleci-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">Also available: <a href="bitbucket-schema-diff.html" style="color: var(--primary);">Bitbucket Pipelines</a> · <a href="ci-cd-integration.html" style="color: var(--primary);">Generic CI/CD</a> · <a href="vscode-extension.html" style="color: var(--primary);">VS Code Extension</a></p>
+    </div>
+  </section>
+
+  <section class="section reveal" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">What Team unlocks</h2>
       <div class="features-grid" style="margin-top: 32px;">
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">☁️</div>
-          <h3>Shared Cloud Workspace</h3>
-          <p>Every diff your team creates is saved to a shared cloud workspace. No more emailing SQL files or losing track of who reviewed what.</p>
+          <div class="feature-icon" style="background: rgba(239,68,68,0.15); color: var(--danger);">🚫</div>
+          <h3>Breaking Change Gates</h3>
+          <p>Automatically block PRs that drop columns, remove indexes, or shrink VARCHARs without approval. Configurable severity rules per repository.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔗</div>
-          <h3>Public &amp; Private Share Links</h3>
-          <p>Share diffs with internal stakeholders via private team links, or with external contractors via public read-only URLs. Full control over visibility.</p>
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">📋</div>
+          <h3>Shared Migration Reports</h3>
+          <p>Every diff generates a Markdown report your whole team can read. Attach to PRs, post to Slack, or archive in your wiki.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">💬</div>
-          <h3>Slack Alerts for Breaking Changes</h3>
-          <p>Get notified in Slack the moment a schema diff contains a breaking change. Route critical alerts to #engineering and summaries to #devops.</p>
+          <div class="feature-icon" style="background: rgba(16,185,129,0.15); color: var(--success);">🤖</div>
+          <h3>Smart Skip</h3>
+          <p>SchemaLens detects when no <code>.sql</code> files changed and skips the diff instantly. Saves CI minutes on every non-migration PR.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(251,191,36,0.15);">📊</div>
-          <h3>Team Activity Dashboard</h3>
-          <p>See who ran which diffs, when, and what changed. Audit trail for compliance teams without slowing down developers.</p>
+          <div class="feature-icon" style="background: rgba(245,158,11,0.15); color: #f59e0b;">📊</div>
+          <h3>Risk Scoring</h3>
+          <p>Every schema change gets a 0-100 risk score. High-risk changes flag for senior review. Low-risk changes auto-approve.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(248,113,113,0.15);">🧾</div>
-          <h3>Org-Wide Billing</h3>
-          <p>One invoice. One admin dashboard. Add and remove team members without individual license juggling. Seats scale with your team.</p>
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🔔</div>
+          <h3>Slack &amp; Webhook Alerts</h3>
+          <p>Notify #engineering when a breaking change is detected. Send summaries to #devops. Integrate with PagerDuty for critical alerts.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon" style="background: rgba(168,85,247,0.15);">🔑</div>
-          <h3>API Access for Automation</h3>
-          <p>Team plans include higher-rate API access. Integrate SchemaLens diffing into your CI/CD, internal dashboards, and custom workflows.</p>
+          <h3>API Access</h3>
+          <p>Higher-rate API access for custom integrations. Build internal dashboards, automation bots, and custom report formats.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" style="background: var(--surface);">
+  <section class="section reveal">
     <div class="container">
-      <h2 class="section-title text-center">How teams use SchemaLens</h2>
-      <div class="features-grid" style="margin-top: 32px;">
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">1</div>
-          <h3>Migration Review in PRs</h3>
-          <p>Developers paste their before/after schemas into SchemaLens, generate a Markdown report, and attach it to the PR. Reviewers approve with confidence.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">2</div>
-          <h3>Staging → Production Checks</h3>
-          <p>Before every deploy, the platform team diffs staging against production. Breaking changes are caught before they reach users.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">3</div>
-          <h3>Legacy Schema Documentation</h3>
-          <p>Consultants and new hires use SchemaLens to map legacy databases. The schema doc generator exports to Markdown for Confluence/Notion.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <h2 class="section-title text-center">Simple, transparent team pricing</h2>
-      <div class="pricing-grid" style="margin-top: 32px;">
-        <div class="pricing-card">
-          <div class="pricing-header">
-            <h3>Free</h3>
-            <div class="pricing-price">$0</div>
-            <p>Forever</p>
+      <h2 class="section-title text-center">How it works</h2>
+      <div style="max-width: 720px; margin: 32px auto 0;">
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Add the workflow file</h3>
+            <p>Copy a 10-line YAML config into <code>.github/workflows/schema-diff.yml</code> (or equivalent for GitLab, Jenkins, CircleCI). No tokens, no signup, no infrastructure.</p>
           </div>
-          <ul class="pricing-features">
-            <li>Up to 15 tables per diff</li>
-            <li>Visual diff</li>
-            <li>Migration preview</li>
-            <li>Single user</li>
-          </ul>
-          <a href="app.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
         </div>
-        <div class="pricing-card featured">
-          <div class="pricing-badge">Best Value</div>
-          <div class="pricing-header">
-            <h3>Pro</h3>
-            <div class="pricing-price">$39<span> once</span></div>
-            <p>Lifetime access · All updates included</p>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Diff runs on every PR</h3>
+            <p>When a developer opens a PR with schema changes, SchemaLens compares the old and new schema, detects breaking changes, and generates a migration script.</p>
           </div>
-          <ul class="pricing-features">
-            <li>Unlimited tables</li>
-            <li>Full migration generation</li>
-            <li>Markdown, PDF, JSON, SQL export</li>
-            <li>Shareable diff URLs</li>
-            <li>Breaking change detection</li>
-            <li>Cloud save</li>
-          </ul>
-          <a href="pricing.html" class="btn btn-primary" style="width: 100%;">Upgrade to Pro</a>
         </div>
-        <div class="pricing-card" style="border: 2px solid var(--primary);">
-          <div class="pricing-badge" style="background: var(--primary); color: #fff;">New</div>
-          <div class="pricing-header">
-            <h3>Team</h3>
-            <div class="pricing-price">$29<span>/mo</span></div>
-            <p>or $290/yr (2 months free)</p>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Review with confidence</h3>
+            <p>The diff report appears as a PR comment or Check Run. Reviewers see exactly what changed, the risk score, and the suggested migration — before merging.</p>
           </div>
-          <ul class="pricing-features">
-            <li>Everything in Pro</li>
-            <li>Shared team workspace</li>
-            <li>Org-wide billing</li>
-            <li>Slack notifications</li>
-            <li>Admin controls</li>
-            <li>Priority API access</li>
-          </ul>
-          <a href="app.html" class="btn btn-primary" style="width: 100%;">Get Started</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="background: var(--surface);" id="get-started">
-    <div class="container">
-      <h2 class="section-title text-center">How to start your team workspace</h2>
-      <p class="section-subtitle text-center">Team sharing is built into the SchemaLens app. No separate signup required.</p>
-      <div class="features-grid" style="margin-top: 32px;">
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">1</div>
-          <h3>Open the App</h3>
-          <p>Sign in with your email on <a href="app.html" style="color:var(--primary);">SchemaLens</a>. Magic link auth — no password needed.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">2</div>
-          <h3>Create or Join a Team</h3>
-          <p>Click your account badge and enter a team name. Anyone who uses the same name joins the same workspace instantly.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">3</div>
-          <h3>Share Diffs</h3>
-          <p>When saving a diff, check "Save to team workspace." Your teammates will see it in the Team Diffs panel immediately.</p>
         </div>
       </div>
       <div class="text-center" style="margin-top: 32px;">
-        <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens</a>
+        <a href="github-action.html" class="btn btn-primary btn-lg">See GitHub Action Setup →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="section-title text-center">Free vs Pro vs Team</h2>
+      <div style="max-width: 800px; margin: 32px auto 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+        <div class="comparison-row head">
+          <div>Feature</div>
+          <div style="text-align:center;">Free</div>
+          <div style="text-align:center;">Pro</div>
+          <div style="text-align:center;">Team</div>
+        </div>
+        <div class="comparison-row">
+          <div>Visual diff in browser</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>CI/CD integration (GitHub, GitLab, Jenkins, CircleCI)</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Tables per diff</div>
+          <div style="text-align:center; color: var(--text-muted);">15</div>
+          <div style="text-align:center; color: var(--success);">Unlimited</div>
+          <div style="text-align:center; color: var(--success);">Unlimited</div>
+        </div>
+        <div class="comparison-row">
+          <div>Migration generation</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Export (Markdown, PDF, SQL, JSON)</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Shareable diff links</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Breaking change detection</div>
+          <div style="text-align:center; color: var(--text-muted);">Basic</div>
+          <div style="text-align:center; color: var(--success);">Advanced</div>
+          <div style="text-align:center; color: var(--success);">Advanced</div>
+        </div>
+        <div class="comparison-row">
+          <div>Shared team workspace</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Slack / webhook alerts</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>Admin & billing</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--danger);">—</div>
+          <div style="text-align:center; color: var(--success);">✓</div>
+        </div>
+        <div class="comparison-row">
+          <div>API rate limit</div>
+          <div style="text-align:center; color: var(--text-muted);">100/day</div>
+          <div style="text-align:center; color: var(--text-muted);">1,000/day</div>
+          <div style="text-align:center; color: var(--success);">Unlimited</div>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top: 24px;">
+        <a href="pricing.html" class="btn btn-primary">View Full Pricing →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <h2 class="section-title text-center">Built for teams that ship fast</h2>
+      <div class="features-grid" style="margin-top: 32px;">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(99,102,241,0.15);">🚀</div>
+          <h3>Zero-Setup Onboarding</h3>
+          <p>No SaaS signup, no OAuth dance, no infrastructure to provision. Copy a workflow file and go. Your team is diffing schemas in 5 minutes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(52,211,153,0.15);">🛡️</div>
+          <h3>Privacy by Default</h3>
+          <p>SchemaLens runs in your CI runner, not our servers. Your schemas never leave your infrastructure. SOC-2 ready philosophy from day one.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: rgba(34,211,238,0.15);">📈</div>
+          <h3>Scales With Your Monorepo</h3>
+          <p>Smart skip means SchemaLens only runs when <code>.sql</code> files change. A 500-service monorepo pays the same CI cost as a single app.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="cta-section">
     <div class="container text-center">
-      <h2>Already using SchemaLens Pro?</h2>
-      <p class="mb-24">Your Team workspace will include all your existing diffs and settings. Upgrading is seamless.</p>
-      <a href="pricing.html" class="btn btn-primary btn-lg">View Pricing</a>
+      <h2>Ready to automate schema review?</h2>
+      <p class="mb-24">Start with the free GitHub Action. Upgrade to Team when you need shared reports, Slack alerts, and admin controls.</p>
+      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action — Free</a>
+      <p style="margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);">Or <a href="book-demo.html" style="color: var(--primary);">book a 15-minute demo</a> for your engineering lead.</p>
     </div>
   </section>
+
+  <section class="cta-section" style="padding-top: 0;">
+    <div class="container">
+      <h2>Get launch updates and tips</h2>
+      <p>New features, blog posts, and schema migration best practices. No spam.</p>
+      <form id="subscribeForm" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+        <input type="email" id="subscribeEmail" placeholder="you@example.com" required style="padding:12px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:16px;min-width:260px;max-width:100%;">
+        <button type="submit" class="btn btn-primary btn-lg" id="subscribeBtn">Subscribe</button>
+      </form>
+      <p id="subscribeMsg" style="margin-top:12px;min-height:24px;color:var(--success);font-weight:500;"></p>
+    </div>
+  </section>
+  <script>
+    (function() {
+      const form = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('subscribeEmail');
+      const btn = document.getElementById('subscribeBtn');
+      const msg = document.getElementById('subscribeMsg');
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+          msg.textContent = 'Please enter a valid email address.';
+          msg.style.color = 'var(--danger)';
+          return;
+        }
+        btn.textContent = 'Subscribing...';
+        btn.disabled = true;
+        try {
+          const res = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source: 'team' })
+          });
+          if (res.ok) {
+            msg.textContent = '✓ You\'re subscribed!';
+            msg.style.color = 'var(--success)';
+            emailInput.value = '';
+          } else {
+            const data = await res.json().catch(() => ({}));
+            msg.textContent = data.error || 'Something went wrong. Please try again.';
+            msg.style.color = 'var(--danger)';
+          }
+        } catch (err) {
+          msg.textContent = 'Network error. Please try again.';
+          msg.style.color = 'var(--danger)';
+        }
+        btn.textContent = 'Subscribe';
+        btn.disabled = false;
+      });
+    })();
+  </script>
 
   <footer class="footer">
     <div class="container">
@@ -258,52 +460,37 @@
           <h4>Product</h4>
           <a href="index.html">Home</a>
           <a href="pricing.html">Pricing</a>
+          <a href="features.html">Features</a>
           <a href="about.html">About</a>
           <a href="blog.html">Blog</a>
           <a href="changelog.html">Changelog</a>
           <a href="affiliate.html">Affiliate</a>
           <a href="open.html">Open Startup</a>
-      <a href="api.html">API</a>
+          <a href="open-source.html">Open Source</a>
+          <a href="api.html">API</a>
           <a href="cli/">CLI</a>
           <a href="team.html">Team</a>
-        <a href="testimonials.html">Wall of Love</a>
+          <a href="testimonials.html">Wall of Love</a>
+        </div>
+        <div class="footer-col">
+          <h4>CI/CD</h4>
+          <a href="github-action.html">GitHub Action</a>
+          <a href="gitlab-schema-diff.html">GitLab CI</a>
+          <a href="jenkins-schema-diff.html">Jenkins</a>
+          <a href="circleci-schema-diff.html">CircleCI</a>
+          <a href="bitbucket-schema-diff.html">Bitbucket</a>
+          <a href="ci-cd-integration.html">Generic CI/CD</a>
         </div>
         <div class="footer-col">
           <h4>Tools</h4>
+          <a href="tools.html">All Tools</a>
           <a href="postgres-schema-diff.html">PostgreSQL Diff</a>
           <a href="mysql-schema-diff.html">MySQL Diff</a>
-          <a href="mariadb-schema-diff.html">MariaDB Diff</a>
           <a href="sqlite-schema-diff.html">SQLite Diff</a>
           <a href="sql-server-schema-diff.html">SQL Server Diff</a>
-          <a href="azure-sql-schema-diff.html">Azure SQL Diff</a>
           <a href="oracle-schema-diff.html">Oracle Diff</a>
-          <a href="cockroachdb-schema-diff.html">CockroachDB Diff</a>
-          <a href="timescaledb-schema-diff.html">TimescaleDB Diff</a>
-          <a href="duckdb-schema-diff.html">DuckDB Diff</a>
-          <a href="clickhouse-schema-diff.html">ClickHouse Diff</a>
-          <a href="bigquery-schema-diff.html">BigQuery Diff</a>
-          <a href="snowflake-schema-diff.html">Snowflake Diff</a>
-          <a href="supabase-schema-diff.html">Supabase Diff</a>
-          <a href="neon-schema-diff.html">Neon Diff</a>
-          <a href="planetscale-schema-diff.html">PlanetScale Diff</a>
-          <a href="railway-schema-diff.html">Railway Diff</a>
-          <a href="firebase-schema-diff.html">Firebase Diff</a>
-          <a href="tools/sql-validator.html">SQL Validator</a>
-          <a href="tools/sql-formatter.html">SQL Formatter</a>
-          <a href="tools/schema-doc-generator.html">Schema Docs</a>
-          <a href="tools/csv-to-sql.html">CSV to SQL</a>
-          <a href="tools/json-to-sql.html">JSON to SQL</a>
           <a href="tools/schema-health-check.html">Health Check</a>
           <a href="tools/sql-index-analyzer.html">Index Analyzer</a>
-          <a href="tools/create-table-generator.html">CREATE TABLE Generator</a>
-        </div>
-        <div class="footer-col">
-          <h4>Compare</h4>
-          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
-          <a href="schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
-          <a href="schemalens-vs-cli-tools.html">SchemaLens vs CLI Tools</a>
-          <a href="schemalens-vs-liquibase-flyway.html">SchemaLens vs Liquibase</a>
-          <a href="pricing.html">Pricing</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
@@ -313,7 +500,9 @@
         </div>
       </div>
       <div class="footer-bottom">
+        <a href="privacy-policy.html">Privacy</a>
         <span>© 2026 SchemaLens. All rights reserved.</span>
+        <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" style="color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg> Star on GitHub</a>
         <span>Built in the $100 AI Startup Race.</span>
       </div>
     </div>
@@ -322,18 +511,30 @@
 <script>
 (function() {
   const key = 'schemalens_analytics';
-  try {
-    let d = JSON.parse(localStorage.getItem(key) || '{}');
-    d.pv = (d.pv || 0) + 1;
-    d.s = d.s || Date.now();
-    localStorage.setItem(key, JSON.stringify(d));
-  } catch(e){}
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
 })();
-</script>
-<script>
-// Team workspace is live — no waitlist needed
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+</script>
 </body>
 </html>
