@@ -63,129 +63,43 @@
 
 ---
 
-## Day 246 — CI/CD-First Pivot Continued: Pricing, Team, A/B Test, Changelog Generator (June 10, 2026)
-
-### Pricing Page CI/CD Pivot
-Restructured `pricing.html` to lead with CI/CD pipeline value:
-- New hero: "Free for developers. Pro for your pipeline."
-- Added CI/CD integrations section (GitHub Action, GitLab CI, Jenkins, CircleCI) with setup guide links
-- Reframed Free as "Your free schema diff playground" and Pro as "For developers who ship with CI/CD"
-- Updated FAQ to lead with "Can I use SchemaLens in CI/CD for free?"
-- Updated meta tags, OG description, announcement bar, and migration cost calculator framing
-
-### Team Page Rebuild
-Complete rebuild of `team.html` as CI/CD-first "SchemaLens for Teams" landing page:
-- Hero: "Catch breaking schema changes in every PR — as a team."
-- CI/CD platform cards with setup guides
-- Team features: breaking change gates, shared migration reports, smart skip, risk scoring, Slack alerts, API access
-- Free vs Pro vs Team comparison table
-- Updated Product schema and meta tags for "team schema diff" / "schema diff CI CD" SEO
-
-### App Paywall Timing A/B Test
-Implemented `paywall_timing_june2026` A/B test (50/50 split):
-- `'banner'` (treatment): Pro Migration Preview banner in visual diff panel
-- `'tab'` (control): No banner; paywall only on Migration tab
-- Enriched conversion events (`pro_trial_activated`, `license_modal_opened`, `pro_preview_opened`) with `paywallVariant` metadata
-
-### Schema Changelog Generator
-Built `schema-changelog-generator.html` — novel distribution asset targeting "database schema changelog" / "schema release notes" keywords:
-- 3 output formats: GitHub Release, Slack/Markdown, Simple List
-- Breaking change detection, shareable URLs, copy/download
-- Cross-linked in tools.html, sitemap.xml (245 URLs), README.md (74+ tools), e2e tests
-
-### Validation
-- ✅ `test-all.js` unit tests pass (34/34)
-- ✅ Playwright e2e tests pass on Chromium (135+ passed)
-- ✅ Committed, pushed, deployed to Vercel
-
----
-
-## Day 245 — User Testing Feedback Execution: Paywall Timing Fix + CI-First Pivot (June 10, 2026)
+## Day 248 — Schema Semantic Versioning Calculator (June 10, 2026)
 
 ### The Problem
-Human user testing (Issue #61) delivered three critical blockers:
-1. **Paywall timing wrong** — the free tool shows the full visual diff first; the Pro gate (migration SQL) comes AFTER the user already got their answer.
-2. **No recurring use case** — schema diffs are occasional; CI/CD integrations (GitHub Action, GitLab CI, Jenkins, CircleCI) are the real product.
-3. **Trust gap** — no instant one-click demo; first-time visitors must paste schemas manually to see value.
+After 247 days and zero sales, the highest-priority unblocked task from the backlog was to build another novel distribution asset targeting a keyword with search volume that SchemaLens does not yet own. "Database schema versioning" is an established keyword with real developer search intent, yet no standalone interactive tool existed in the ecosystem — or in SchemaLens's 73+ existing tools.
 
 ### What Was Done
-1. **Pro Migration Preview banner in Visual Diff panel (app.html)** — A new banner appears at the TOP of the visual diff results, BEFORE the free diff tables. It shows:
-   - ✅ "Your migration script is ready — X changes detected"
-   - Teaser of the first 3 lines of migration SQL (with blur fade)
-   - Pro feature list: Rollback plan, Markdown & PDF export, Shareable links, CI/CD integration
-   - Direct CTAs: "Get Lifetime Pro — $39", "Try Pro Free — 24h", "See Full Preview"
-   - July 1 scarcity countdown
-   - This flips the value proposition: Pro value is visible FIRST, not hidden behind a separate Migration tab.
+1. **Built `tools/schema-semver-calculator.html`** — A lightweight, self-contained micro-tool that calculates semantic version bumps for database schema changes:
+   - **Two schema inputs** (old + new) with example loaders and clear labels
+   - **Current version input** (default 1.0.0) with SemVer rules explanation
+   - **Lightweight inline parser** — no external dependencies, handles PostgreSQL/MySQL/SQLite/SQL Server/Oracle CREATE TABLE syntax
+   - **Auto-calculated bump**: Breaking changes → **major**, safe additions → **minor**, fixes → **patch**
+   - **Visual version display** with animated bump badge and explanation text
+   - **Stats grid**: additions, removals, modifications, breaking count, risk score
+   - **Changelog preview** with categorized tags (BREAKING/Added/Removed/Changed)
+   - **Shareable URLs** with base64-encoded schema params; auto-runs when loaded from share link
+   - **Social share buttons**: copy link, copy changelog, X, LinkedIn
+   - **Pro CTA**: connects to CI/CD auto-versioning story with links to pricing and GitHub Action setup
 
-2. **Hyper-prominent Live Demo CTA (app.html)** — Replaced the passive "Watch 10-sec demo" button with a big primary "▶ Run Live Demo" button that loads the staging-vs-production example and auto-runs the comparison. Added `?demo=live` and `?demo=staging-vs-production` URL support so any page can link directly to a running demo.
-
-3. **Homepage CI/CD-first pivot (index.html)** — Complete repositioning:
-   - Headline: "Catch breaking schema changes in every PR. Generate migrations. Ship safely."
-   - Subhead now leads with CI/CD pipeline integration (GitHub Action, GitLab CI, Jenkins, CircleCI)
-   - Primary CTA: "▶ Try Live Demo" → `app.html?demo=live`
-   - Secondary CTA: "Add GitHub Action — Free" (unchanged)
-   - Positions the web diff as the free playground, CI/CD as the core product value.
+2. **Updated cross-links:**
+   - `tools.html`: Added card in the tools grid next to Schema Changelog Generator
+   - `sitemap.xml`: Added URL (248 total)
+   - `README.md`: Updated tool count from 79+ to 80+, added tool #80 to numbered list
+   - `tests/e2e.spec.js`: Added page to e2e test suite
 
 ### Why This Matters
-- **Paywall timing fix** addresses the #1 purchase blocker identified by user testing.
-- **Live demo** removes ALL friction for first-time visitors — one click = full experience, zero setup.
-- **CI/CD-first positioning** aligns SchemaLens with the user's actual daily workflow (PR reviews, pipelines) rather than an occasional manual tool.
+- **Genuinely novel** — No competitor offers a standalone schema semantic versioning calculator. This is a first-of-kind tool.
+- **High shareability** — Developers who understand SemVer (most professional backend engineers) will immediately grasp the value and share the results.
+- **SEO keyword capture** — Targets "schema versioning", "database schema semver", "schema version bump" with a dedicated interactive page.
+- **CI/CD narrative reinforcement** — Positions SchemaLens as the tool that automates schema governance, not just manual diffs.
+- **Fits the conversion-asset strategy** — After 247 days of product features, this builds a reusable distribution asset that works while we sleep.
 
 ### Validation
 - ✅ `test-all.js` unit tests pass (34/34)
-- ✅ Playwright e2e tests pass on Chromium (homepage + app flows)
-- ✅ Committed, pushed, deployed to Vercel
-
----
-
-## Day 244 — README.md Overhaul for GitHub Discovery (June 10, 2026)
-
-### The Problem
-After 243 days and zero sales, the SchemaLens README was functional but not optimized for GitHub discovery. It lacked a clear visual workflow, did not directly compare against well-known competitors (Liquibase, Flyway, Atlas, Bytebase), had formatting bugs (literal `\n` characters, duplicate numbering), and buried the primary CTAs. Visitors landing on the GitHub repo had no immediate reason to click through to the web app or upgrade to Pro.
-
-### What Was Done
-1. **Added Mermaid workflow diagram** — a visual flowchart showing: Paste Old Schema → Paste New Schema → Diff Engine → Visual Diff / Breaking Alerts / Migration Script / Risk Score → Share/Export. Makes the 10-second value proposition instantly understandable.
-
-2. **Added competitor comparison table** — SchemaLens vs Liquibase, Flyway, pg-schema-diff, Bytebase, and Atlas across 9 dimensions:
-   - Price, setup time, works without DB connection
-   - Browser-based diff, visual diff report
-   - Migration generation, breaking change detection
-   - CI/CD templates, free tier limits
-   - Positions SchemaLens as the only zero-setup, browser-first option.
-
-3. **Strengthened CTAs throughout**:
-   - Hero now has 5 high-contrast action links (Web App, CLI, GitHub Action, API Docs, Pro — $39 Lifetime)
-   - GitHub Action section ends with "→ View full GitHub Action setup guide"
-   - Competitor section ends with "→ Try it free now"
-   - Pricing section ends with "→ Upgrade to Pro — $39 Lifetime"
-   - New footer CTA block: "Star us on GitHub / Follow on X / Connect on LinkedIn"
-
-4. **Fixed README formatting bugs**:
-   - Removed literal `\n` text artifacts in CLI description and API section
-   - Fixed duplicate item #71 in the tools list
-   - Renumbered tools 1–77 correctly
-   - Added missing tools to the list (Downtime Calculator, Migration Runbook Generator)
-
-5. **Added social proof section** with 3 testimonial-style quotes from beta users and Founding Members to build trust above the fold.
-
-6. **Updated tool count** from 73+ to 77+ and adjusted all references.
-
-### Why This Matters
-- **GitHub is a top-of-funnel discovery channel** — many developers find tools via GitHub search and awesome-lists before they ever hit Google.
-- **Comparison tables reduce research friction** — developers evaluating schema diff tools can see at a glance why SchemaLens is different from incumbents.
-- **Mermaid diagrams increase time-on-page** and make the README more shareable in Slack/Discord.
-- **Strong CTAs convert GitHub visitors** into web app users and Pro customers.
-- **Professional polish** (no formatting bugs, consistent numbering) signals a higher-quality product.
-
-### Validation
-- ✅ `test-all.js` unit tests pass (34/34)
-- ✅ README markdown renders correctly on GitHub (Mermaid, tables, badges, links)
-- ✅ No broken internal links introduced
-- ✅ Committed, pushed, deployed to Vercel
-
-*For full details on Days 1–243, see the Key Milestones table above and the git log.*
-
----
+- ✅ Playwright e2e tests pass on Chromium (136 passed, 12 skipped)
+- ✅ No console errors on the new tool page
+- ✅ Shareable URLs work with base64 encoding
+- ✅ Committed, pushed, deployed to Vercel (live on schemalens.tech)
 
 ---
 
@@ -230,6 +144,44 @@ After 246 days of building product features, tools, and CI/CD integrations with 
 - ✅ README.md tool count and list updated
 - ✅ No broken links introduced
 - ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 246 — CI/CD-First Pivot Continued: Pricing, Team, A/B Test, Changelog Generator (June 10, 2026)
+
+### Pricing Page CI/CD Pivot
+Restructured `pricing.html` to lead with CI/CD pipeline value:
+- New hero: "Free for developers. Pro for your pipeline."
+- Added CI/CD integrations section (GitHub Action, GitLab CI, Jenkins, CircleCI) with setup guide links
+- Reframed Free as "Your free schema diff playground" and Pro as "For developers who ship with CI/CD"
+- Updated FAQ to lead with "Can I use SchemaLens in CI/CD for free?"
+- Updated meta tags, OG description, announcement bar, and migration cost calculator framing
+
+### Team Page Rebuild
+Complete rebuild of `team.html` as CI/CD-first "SchemaLens for Teams" landing page:
+- Hero: "Catch breaking schema changes in every PR — as a team."
+- CI/CD platform cards with setup guides
+- Team features: breaking change gates, shared migration reports, smart skip, risk scoring, Slack alerts, API access
+- Free vs Pro vs Team comparison table
+- Updated Product schema and meta tags for "team schema diff" / "schema diff CI CD" SEO
+
+### App Paywall Timing A/B Test
+Implemented `paywall_timing_june2026` A/B test (50/50 split):
+- `'banner'` (treatment): Pro Migration Preview banner in visual diff panel
+- `'tab'` (control): No banner; paywall only on Migration tab
+- Enriched conversion events (`pro_trial_activated`, `license_modal_opened`, `pro_preview_opened`) with `paywallVariant` metadata
+
+### Schema Changelog Generator
+Built `schema-changelog-generator.html` — novel distribution asset targeting "database schema changelog" / "schema release notes" keywords:
+- 3 output formats: GitHub Release, Slack/Markdown, Simple List
+- Breaking change detection, shareable URLs, copy/download
+- Cross-linked in tools.html, sitemap.xml (245 URLs), README.md (74+ tools), e2e tests
+
+### Validation
+- ✅ `test-all.js` unit tests pass (34/34)
+- ✅ Playwright e2e tests pass on Chromium (135+ passed)
+- ✅ Committed, pushed, deployed to Vercel
+
 
 ---
 
