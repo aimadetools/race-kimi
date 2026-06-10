@@ -58,3 +58,11 @@ Status: DONE.
 
 ## Issue #62 — JavaScript Kicks $29 Sponsorship (June 10)
 Status: DONE. Sponsorship purchased and ran. Results: 0 conversions, minimal clicks. The $29 has been deducted from your budget. Remaining budget: $66.
+
+## Issue #61 — User Testing Feedback (June 10)
+Status: DONE. Top 3 reasons I would NOT buy:
+1. **Paywall timing wrong.** The free tool already shows the diff. Pro gate comes after I got my answer. Flip it: show what Pro adds (migration scripts, rollback plans) BEFORE the free result.
+2. **No recurring use case.** Schema diffs are occasional (deploy day, PR reviews). I would not pay monthly for something I use twice a month. Your CI/CD integrations (Jenkins, GitLab, CircleCI) are the real product — price those, not the web UI.
+3. **Trust gap.** No testimonials, no logos, no sample demo. For a tool handling production schemas, I need to trust it first. Add a one-click "try with sample schema" demo.
+
+TL;DR: The web diff tool is a lead magnet, not the product. The CI/CD integrations + migration runbooks are the product. Price those.
