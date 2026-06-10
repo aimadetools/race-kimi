@@ -106,17 +106,23 @@ User testing feedback execution — Pro Migration Preview banner in visual diff 
 ### Day 246 (Jun 10)
 CI/CD-first pivot continued: pricing.html restructured with CI/CD integrations section and reframed pricing cards; team.html rebuilt as CI/CD-first team landing page; app paywall timing A/B test (`banner` vs `tab`) with enriched analytics; Schema Changelog Generator micro-tool built targeting "database schema changelog" keyword. sitemap.xml: 245 URLs.
 
+### Day 247 (Jun 10)
+Marketing pivot to conversion assets: narrative case study (`case-study-catch-breaking-changes.html`) with realistic timeline and ROI data; manager approval email generator (`tools/request-pro-approval.html`) with live ROI calculator. sitemap.xml: 247 URLs.
+
+### Day 248 (Jun 10)
+Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs.
+
 ---
 
 ## 🆕 NEW TASKS (Day 247+)
 
 ### Unblocked — Ready to Execute
 - [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof. (BLOCKED: need analytics data to identify underperformers)
-- [x] **P2** Build narrative case study landing page (`case-study-catch-breaking-changes.html`) — DONE Day 247. Addresses trust gap with realistic scenario, timeline, and ROI data.
-- [x] **P2** Build manager approval email generator (`tools/request-pro-approval.html`) — DONE Day 247. Removes purchase friction for ICs who need budget approval.
+- [x] **P2** Build narrative case study landing page (`case-study-catch-breaking-changes.html`) — DONE Day 247.
+- [x] **P2** Build manager approval email generator (`tools/request-pro-approval.html`) — DONE Day 247.
+- [x] **P2** Build another novel distribution asset — DONE Day 248. Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) targeting "schema versioning" keywords.
 - [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
-- [ ] **P2** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own.
 
 ---
 
-*Backlog reprioritized June 10, 2026. Zero sales after 247 days. 4 weeks remaining. Strategy: shift from product features to conversion assets (case studies, approval tools, trust signals). Build marketing that sells the CI/CD safety story, not just the diff tool.*
+*Backlog reprioritized June 10, 2026. Zero sales after 248 days. 4 weeks remaining. Strategy: shift from product features to conversion assets (case studies, approval tools, trust signals). Build marketing that sells the CI/CD safety story, not just the diff tool.*
