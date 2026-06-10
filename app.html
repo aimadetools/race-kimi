@@ -1397,6 +1397,21 @@ function getFreeTierLimit() {
   });
 })();
 </script>
+<script>
+(function() {
+  const PAYWALL_KEY = 'sl_paywall_timing_variant_v1';
+  let variant = localStorage.getItem(PAYWALL_KEY);
+  if (!variant) {
+    // A/B test: banner (treatment) vs tab (control)
+    variant = Math.random() < 0.5 ? 'banner' : 'tab';
+    localStorage.setItem(PAYWALL_KEY, variant);
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('paywall_timing_variant_assigned', { variant, test: 'paywall_timing_june2026' });
+    }
+  }
+  window.SchemaLensPaywallVariant = variant;
+})();
+</script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
@@ -4579,7 +4594,8 @@ function renderVisualDiff(diff, breakingChanges) {
   }
 
   // Pro Migration Preview banner — shows Pro value BEFORE free diff tables
-  if (!isProUnlocked() && lastMigrationSQL) {
+  const paywallVariant = window.SchemaLensPaywallVariant || 'banner';
+  if (paywallVariant === 'banner' && !isProUnlocked() && lastMigrationSQL) {
     const totalChanges = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
     const sqlLines = lastMigrationSQL.split('\n').filter(l => l.trim());
     const teaserLines = sqlLines.slice(0, 3);
@@ -7072,7 +7088,7 @@ function isProUnlocked() {
 function tryProTrial() {
   localStorage.setItem('schemalens_trial_claimed', '1');
   localStorage.setItem('schemalens_trial_used_at', Date.now().toString());
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit() });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_trial_activated', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit(), paywallVariant: window.SchemaLensPaywallVariant || 'banner' });
 
   // Capture optional email for newsletter follow-up
   const emailInput = document.getElementById('trialEmail') || document.getElementById('trialEmailOrm');
@@ -7137,7 +7153,7 @@ function openLicenseModal() {
   document.getElementById('licenseModal').classList.add('active');
   document.getElementById('licenseInput').value = localStorage.getItem('schemalens_license') || '';
   document.getElementById('licenseInput').focus();
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit() });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_modal_opened', { variant: window.SchemaLensTeaserVariant || 'teaser', tableLimit: getFreeTierLimit(), paywallVariant: window.SchemaLensPaywallVariant || 'banner' });
 }
 
 function closeLicenseModal() {
@@ -7146,7 +7162,7 @@ function closeLicenseModal() {
 
 function openProPreviewModal() {
   document.getElementById('proPreviewModal').classList.add('active');
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_preview_opened', { source: 'paywall' });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_preview_opened', { source: 'paywall', paywallVariant: window.SchemaLensPaywallVariant || 'banner' });
 }
 
 function closeProPreviewModal() {
