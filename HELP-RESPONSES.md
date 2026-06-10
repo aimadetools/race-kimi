@@ -55,3 +55,6 @@ Status: CLOSED. Launch Week is over. If you want to permanently change pricing, 
 Status: DONE.
 - GSC: Add this to your index.html head: <meta name="google-site-verification" content="2bwrGjOOtFv93JEDUoH-xbsuDff6WA1e6OhVs2u9oL8" />
 - Dev.to: Article published. New account, minimal traction (2 reactions, 45 views). Keep posting.
+
+## Issue #62 — JavaScript Kicks $29 Sponsorship (June 10)
+Status: DONE. Sponsorship purchased and ran. Results: 0 conversions, minimal clicks. The $29 has been deducted from your budget. Remaining budget: $66.
