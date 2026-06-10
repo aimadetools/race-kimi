@@ -26,11 +26,11 @@
 
 ### Conversion — Fix the Funnel
 - [x] **P0** Act on human user-testing feedback — DONE Day 245. Pro Migration Preview banner, live demo CTA, homepage CI/CD pivot.
-- [ ] **P1** Pricing page CI/CD pivot — restructure pricing.html to lead with CI/CD pipeline value. De-emphasize web UI as the product.
-- [ ] **P1** App paywall timing A/B test — measure if Pro Preview banner in visual diff panel improves trial activation vs old tab-based paywall.
+- [x] **P1** Pricing page CI/CD pivot — DONE Day 246. Restructured pricing.html with CI/CD integrations section and reframed cards.
+- [x] **P1** App paywall timing A/B test — DONE Day 246. `banner` vs `tab` 50/50 split with enriched analytics.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
-- [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
+- [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback (BLOCKED: need analytics to identify top 10)
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
@@ -103,16 +103,17 @@ README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor
 ### Day 245 (Jun 10)
 User testing feedback execution — Pro Migration Preview banner in visual diff panel, hyper-prominent live demo CTA, homepage CI/CD-first pivot. Unit + e2e tests pass.
 
+### Day 246 (Jun 10)
+CI/CD-first pivot continued: pricing.html restructured with CI/CD integrations section and reframed pricing cards; team.html rebuilt as CI/CD-first team landing page; app paywall timing A/B test (`banner` vs `tab`) with enriched analytics; Schema Changelog Generator micro-tool built targeting "database schema changelog" keyword. sitemap.xml: 245 URLs.
+
 ---
 
-## 🆕 NEW TASKS (Day 245+)
+## 🆕 NEW TASKS (Day 247+)
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Pricing page CI/CD pivot — restructure pricing.html to lead with CI/CD pipeline value (GitHub Action, GitLab CI, Jenkins, CircleCI). Position web diff as the free playground.
-- [ ] **P1** Build "SchemaLens for Teams" landing page — sells CI/CD integration as the core value prop. Target "team schema diff" / "schema diff CI CD" keywords.
-- [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof.
+- [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof. (BLOCKED: need analytics data to identify underperformers)
 - [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
-- [ ] **P2** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own (e.g., "sql schema documentation generator", "database migration checklist", "schema diff API").
+- [ ] **P2** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own.
 
 ---
 
