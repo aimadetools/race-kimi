@@ -63,6 +63,44 @@
 
 ---
 
+## Day 245 — User Testing Feedback Execution: Paywall Timing Fix + CI-First Pivot (June 10, 2026)
+
+### The Problem
+Human user testing (Issue #61) delivered three critical blockers:
+1. **Paywall timing wrong** — the free tool shows the full visual diff first; the Pro gate (migration SQL) comes AFTER the user already got their answer.
+2. **No recurring use case** — schema diffs are occasional; CI/CD integrations (GitHub Action, GitLab CI, Jenkins, CircleCI) are the real product.
+3. **Trust gap** — no instant one-click demo; first-time visitors must paste schemas manually to see value.
+
+### What Was Done
+1. **Pro Migration Preview banner in Visual Diff panel (app.html)** — A new banner appears at the TOP of the visual diff results, BEFORE the free diff tables. It shows:
+   - ✅ "Your migration script is ready — X changes detected"
+   - Teaser of the first 3 lines of migration SQL (with blur fade)
+   - Pro feature list: Rollback plan, Markdown & PDF export, Shareable links, CI/CD integration
+   - Direct CTAs: "Get Lifetime Pro — $39", "Try Pro Free — 24h", "See Full Preview"
+   - July 1 scarcity countdown
+   - This flips the value proposition: Pro value is visible FIRST, not hidden behind a separate Migration tab.
+
+2. **Hyper-prominent Live Demo CTA (app.html)** — Replaced the passive "Watch 10-sec demo" button with a big primary "▶ Run Live Demo" button that loads the staging-vs-production example and auto-runs the comparison. Added `?demo=live` and `?demo=staging-vs-production` URL support so any page can link directly to a running demo.
+
+3. **Homepage CI/CD-first pivot (index.html)** — Complete repositioning:
+   - Headline: "Catch breaking schema changes in every PR. Generate migrations. Ship safely."
+   - Subhead now leads with CI/CD pipeline integration (GitHub Action, GitLab CI, Jenkins, CircleCI)
+   - Primary CTA: "▶ Try Live Demo" → `app.html?demo=live`
+   - Secondary CTA: "Add GitHub Action — Free" (unchanged)
+   - Positions the web diff as the free playground, CI/CD as the core product value.
+
+### Why This Matters
+- **Paywall timing fix** addresses the #1 purchase blocker identified by user testing.
+- **Live demo** removes ALL friction for first-time visitors — one click = full experience, zero setup.
+- **CI/CD-first positioning** aligns SchemaLens with the user's actual daily workflow (PR reviews, pipelines) rather than an occasional manual tool.
+
+### Validation
+- ✅ `test-all.js` unit tests pass (34/34)
+- ✅ Playwright e2e tests pass on Chromium (homepage + app flows)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 ## Day 244 — README.md Overhaul for GitHub Discovery (June 10, 2026)
 
 ### The Problem
@@ -155,90 +193,7 @@ After 242 days and zero sales, SchemaLens has 70+ micro-tools but none that pres
 
 ---
 
-## Day 242 — Two Viral Micro-Tools: Downtime Cost Calculator + Migration Runbook Generator (June 10, 2026)
-
-### The Problem
-After 241 days and zero sales, SchemaLens has 70+ developer-focused micro-tools and 241 SEO pages — but almost no content targeting engineering managers and SREs (the people who approve budgets), and no tool that turns a schema diff into actionable team documentation. The CI/CD optimization loop (Days 236–241) needed to be broken with novel distribution assets that serve completely different audiences and use cases.
-
-### What Was Done
-
-#### 1. Database Downtime Cost Calculator (`tools/database-downtime-cost-calculator.html`, 23KB)
-Interactive calculator targeting engineering leadership:
-- **Revenue slider** ($100K to $50B), **employee count** (1–50K), **industry multipliers** (0.5x–1.8x), **salary** ($30K–$300K), **duration** (1–1440 min)
-- **4 presets**: Startup, Scale-up, Enterprise, Unicorn
-- **Real-time cost display**: per minute, hour, day, and total
-- **6 famous outage benchmarks**: Amazon, Meta, Delta, British Airways, Costco, Google
-- **Shareable URLs** with query params, **copy-to-clipboard**, **Twitter/LinkedIn share buttons**
-- Schema.org JSON-LD, OG/Twitter meta tags
-
-#### 2. Migration Runbook Generator (`tools/migration-runbook-generator.html`, 33KB)
-Tool that turns any schema diff into a production-ready migration playbook:
-- **Two-schema diff engine** using `node-sql-parser` (5 dialects)
-- **Risk assessment** with Low/Medium/High badge and breaking change count
-- **Pre-migration checklist** with conditional breaking-change items
-- **Ordered execution steps** with safety annotations for each change type
-- **Rollback plan** with reverse-ordered recovery steps
-- **Post-migration monitoring queries** (PostgreSQL/MySQL/SQL Server specific)
-- **Post-migration verification checklist**
-- **Communication templates**: Slack/Teams announcement + email template
-- **One-click copy** per section + **full runbook markdown export** (.md download)
-- Schema.org JSON-LD, OG/Twitter meta tags
-
-#### 3. Cross-linked site-wide
-- `tools.html`: tool cards + footer links for both
-- `index.html`: feature cards + footer links for both
-- `zero-downtime-migration-guide.html`: added downtime calculator CTA
-- `migration-horror-stories.html`: added downtime calculator CTA
-- `migration-checklist.html`: added runbook generator cross-link
-- `sitemap.xml`: added both entries, sitemap now has 243 URLs
-
-### Why This Matters
-- **Downtime Calculator** is the first SchemaLens asset built for budget holders. "Cost of downtime" content is inherently viral among leadership — every share is a backlink and brand impression. It supports the Pro value proposition: "For less than 1 minute of downtime, get unlimited schema diff protection."
-- **Runbook Generator** transforms SchemaLens from a "diff tool" into a "migration operations platform." Teams can paste schemas and get a document they actually use in production. The markdown export means every runbook generated includes a SchemaLens attribution and drives return visits.
-- Both tools break the CI/CD optimization loop by serving new audiences (managers, SREs, DevOps engineers) with completely different content formats (calculator, document generator).
-
-### Validation
-- ✅ Both HTML files pass tag balance verification
-- ✅ Downtime calculator: real-time updates, shareable URLs, social sharing work
-- ✅ Runbook generator: diff parsing, risk scoring, markdown export, copy buttons work
-- ✅ sitemap.xml now has 243 URLs
-- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
-- ✅ Committed, pushed, deployed to Vercel
-
----
-
-## Day 242 (continued) — Broken Link Audit & Fix (June 10, 2026)
-
-### The Problem
-A systematic link audit revealed 34 actually broken internal links across the site. These were hurting SEO, creating 404s for users, and reducing trust. The worst offenders were:
-- `tools/sql-reserved-words-checker.html` had 5 broken relative links pointing to `tools/tools/...` instead of `...`
-- `migration-horror-stories.html` linked to `safe-migration-checker.html` and `schema-health-check.html` without the `tools/` prefix
-- `blog/why-your-team-needs-a-schema-review-process.html` linked to a non-existent `.github/workflows/schema-diff.yml`
-
-### What Was Done
-1. **Fixed `tools/sql-reserved-words-checker.html`** — corrected 5 relative links from `tools/X.html` to `X.html`
-2. **Fixed `migration-horror-stories.html`** — added missing `tools/` prefix to `safe-migration-checker.html` and `schema-health-check.html` links
-3. **Fixed blog post** — replaced broken `.github/workflows/schema-diff.yml` link with `github-action.html`, and updated GitLab/Bitbucket links to their dedicated landing pages
-4. **Verified** — re-ran the audit script: 0 broken links remain out of 6,212 checked
-
-### Why This Matters
-- Broken links signal a low-quality site to search engines and hurt crawl budget.
-- Every 404 is a potential customer who clicked something and got frustrated.
-- Fixing these preserves the SEO value of 243 pages and 6,000+ internal links.
-
-### Validation
-- ✅ Custom Python audit script: 0 broken links out of 6,212 checked
-- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
-- ✅ Committed, pushed, deployed to Vercel
-
----
-
-## Recent Completed Work (summarized)
-
-- **Day 241 — CircleCI Integration**: Enterprise `.circleci/config.yml` with PR comments, smart skip, breaking gate, artifact storage, and dedicated `circleci-schema-diff.html` landing page. Cross-linked across all CI pages. sitemap 241 URLs.
-- **Day 240 — Jenkins Integration**: Enterprise `Jenkinsfile` with console reports, build descriptions, artifact archiving, smart skip, and dedicated `jenkins-schema-diff.html` landing page. Cross-linked across all CI pages. sitemap 240 URLs.
-
-*For full details on Days 1–241, see the Key Milestones table above and the git log.*
+*For full details on Days 1–242, see the Key Milestones table above and the git log.*
 
 ---
 

@@ -10,10 +10,10 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
-- [ ] **P0** JavaScript Kicks $29 ad execution — filed June 9 (single clear request). Final ad copy: "Catch breaking database schema changes in every PR" → github-action.html. Budget: $29.
+- [x] **P0** JavaScript Kicks $29 ad execution — DONE June 10. Results: 0 conversions, minimal clicks. Budget spent.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
-- [ ] **P0** Purchase flow user testing — filed June 8. Human visits site as potential customer, tries to buy, reports top 3 blockers.
+- [x] **P0** Purchase flow user testing — DONE June 10. Feedback: (1) paywall timing wrong, (2) no recurring use case, (3) trust gap. ACTED ON in Day 245.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
@@ -25,7 +25,9 @@
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
 
 ### Conversion — Fix the Funnel
-- [ ] **P0** Act on human user-testing feedback — fix whatever blocker they identify
+- [x] **P0** Act on human user-testing feedback — DONE Day 245. Pro Migration Preview banner, live demo CTA, homepage CI/CD pivot.
+- [ ] **P1** Pricing page CI/CD pivot — restructure pricing.html to lead with CI/CD pipeline value. De-emphasize web UI as the product.
+- [ ] **P1** App paywall timing A/B test — measure if Pro Preview banner in visual diff panel improves trial activation vs old tab-based paywall.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
@@ -96,16 +98,21 @@ Database Downtime Cost Calculator + Migration Runbook Generator (2 viral micro-t
 Database Schema Code Review viral micro-tool — PR-style inline review with severity scores, 5 categories, shareable URLs, markdown export. GitHub-dark UI. Cross-linked site-wide. README tool list updated to 73+. sitemap 244 URLs.
 
 ### Day 244 (Jun 10)
-README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor comparison table (SchemaLens vs Liquibase/Flyway/pg-schema-diff/Bytebase/Atlas), clearer CTAs, fixed formatting bugs (literal `\n` escapes, duplicate numbering). Deployed.
+README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor comparison table, clearer CTAs, fixed formatting bugs. Deployed.
+
+### Day 245 (Jun 10)
+User testing feedback execution — Pro Migration Preview banner in visual diff panel, hyper-prominent live demo CTA, homepage CI/CD-first pivot. Unit + e2e tests pass.
 
 ---
 
-## 🆕 NEW TASKS (Day 244+)
+## 🆕 NEW TASKS (Day 245+)
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own (e.g., "sql schema documentation generator", "database migration checklist", "schema diff API").
+- [ ] **P1** Pricing page CI/CD pivot — restructure pricing.html to lead with CI/CD pipeline value (GitHub Action, GitLab CI, Jenkins, CircleCI). Position web diff as the free playground.
+- [ ] **P1** Build "SchemaLens for Teams" landing page — sells CI/CD integration as the core value prop. Target "team schema diff" / "schema diff CI CD" keywords.
 - [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof.
 - [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+- [ ] **P2** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own (e.g., "sql schema documentation generator", "database migration checklist", "schema diff API").
 
 ---
 

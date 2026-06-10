@@ -738,6 +738,63 @@
       cursor: pointer;
       line-height: 1;
     }
+    .pro-migration-preview {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .pro-migration-preview-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .pro-migration-preview-code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .pro-migration-preview-code .blur-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--code-bg));
+      border-radius: 0 0 8px 8px;
+      pointer-events: none;
+    }
+    .pro-migration-preview-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .pro-migration-preview-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .pro-migration-preview-features span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
     .welcome-hint {
       text-align: center;
       padding: 40px 20px;
@@ -1777,8 +1834,12 @@ CREATE TABLE users (
       </div>
 
       <div class="welcome-cta">
-        <button class="btn-watch" id="watchDemoBtn" onclick="runAnimatedDemo()">
-          <span>▶</span> Watch 10-sec demo
+        <button class="btn-watch" id="runLiveDemoBtn" onclick="loadQuickExample('staging-vs-production')" style="padding:16px 32px;font-size:1.05rem;">
+          <span>▶</span> Run Live Demo
+        </button>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-top:10px;">Loads a real staging vs production schema diff — no setup needed.</p>
+        <button class="btn btn-secondary" id="watchDemoBtn" onclick="runAnimatedDemo()" style="margin-top:10px;font-size:0.85rem;padding:8px 16px;">
+          <span>▶</span> Watch 10-sec typing demo
         </button>
       </div>
 
@@ -4515,6 +4576,42 @@ function renderVisualDiff(diff, breakingChanges) {
   for (const b of breakingChanges) {
     if (!tableBreaking.has(b.table)) tableBreaking.set(b.table, []);
     tableBreaking.get(b.table).push(b);
+  }
+
+  // Pro Migration Preview banner — shows Pro value BEFORE free diff tables
+  if (!isProUnlocked() && lastMigrationSQL) {
+    const totalChanges = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
+    const sqlLines = lastMigrationSQL.split('\n').filter(l => l.trim());
+    const teaserLines = sqlLines.slice(0, 3);
+    const hasMore = sqlLines.length > 3;
+    const trialAvailable = !isTrialClaimed();
+    html += `
+      <div class="pro-migration-preview">
+        <div class="pro-migration-preview-header">
+          <span style="font-size:1.2rem;">🔓</span>
+          <span>Your migration script is ready — <strong>${totalChanges} change${totalChanges > 1 ? 's' : ''}</strong> detected</span>
+        </div>
+        <div class="pro-migration-preview-code">
+          ${teaserLines.map(l => esc(l)).join('<br>')}
+          ${hasMore ? '<br><span style="color:var(--text-muted);">-- ... ' + (sqlLines.length - 3) + ' more lines</span>' : ''}
+          <div class="blur-fade"></div>
+        </div>
+        <div class="pro-migration-preview-features">
+          <span>🔁 Rollback plan</span>
+          <span>📄 Markdown & PDF export</span>
+          <span>🔗 Shareable diff links</span>
+          <span>⚡ CI/CD integration</span>
+        </div>
+        <div class="pro-migration-preview-cta">
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
+          ${trialAvailable ? `<button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24h</button>` : ''}
+          <button class="btn btn-secondary" onclick="openProPreviewModal()">👀 See Full Preview</button>
+        </div>
+        <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">
+          ⏰ <strong>Price increases to $79 on July 1</strong> — <span class="july1-countdown-inline"></span> left
+        </div>
+      </div>
+    `;
   }
 
   for (const table of diff.tablesAdded) {
@@ -8621,7 +8718,7 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     updateStats();
   }
 
-  // Demo mode via ?demo=postgres|mysql|sqlite|mssql|oracle|prisma|drizzle|typeorm|sequelize
+  // Demo mode via ?demo=postgres|mysql|sqlite|mssql|oracle|prisma|drizzle|typeorm|sequelize|live|staging-vs-production
   const demo = params.get('demo');
   if (demo && ['postgres','mysql','sqlite','mssql','oracle','prisma','drizzle','typeorm','sequelize'].includes(demo)) {
     loadSample(demo);
@@ -8631,6 +8728,11 @@ document.querySelectorAll('.results-tab').forEach(tab => {
       document.getElementById('compareBtn').click();
       if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('demo_auto_run', { dialect: demo, variant: window.SchemaLensHeadlineVariant || 'A' });
     }, 400);
+    return;
+  }
+  if (demo === 'live' || demo === 'staging-vs-production') {
+    loadQuickExample('staging-vs-production');
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('demo_auto_run', { type: 'live', variant: window.SchemaLensHeadlineVariant || 'A' });
     return;
   }
 
