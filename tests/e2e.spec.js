@@ -141,6 +141,7 @@ const pages = [
   { path: '/features.html', name: 'Product Features' },
   { path: '/tools/schema-diff-speed-challenge.html', name: 'Schema Diff Speed Challenge' },
   { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
+  { path: '/tools/schema-semver-calculator.html', name: 'Schema SemVer Calculator' },
 ];
 
 for (const { path, name } of pages) {

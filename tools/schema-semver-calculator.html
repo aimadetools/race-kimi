@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Schema Semantic Versioning Calculator — Free Tool | SchemaLens</title>
+  <meta name="description" content="Calculate the semantic version bump for your database schema changes. Paste old and new schema, get major/minor/patch recommendations with changelog. Free, instant, no signup.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-semver-calculator.html">
+  <meta property="og:title" content="Database Schema Semantic Versioning Calculator — Free Tool">
+  <meta property="og:description" content="Auto-calculate semantic version bumps for database schema changes. Breaking change = major, additions = minor, fixes = patch.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-semver-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Database Schema Semantic Versioning Calculator">
+  <meta name="twitter:description" content="Auto-calculate semantic version bumps for database schema changes. Breaking change = major, additions = minor, fixes = patch.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .page-header { text-align: center; padding: 48px 0 24px; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+    .version-input-row {
+      display: flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .version-input-row label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    .version-input-row input[type="text"] {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 14px; font-size: 1rem; font-family: var(--mono);
+      width: 120px; text-align: center;
+    }
+
+    .converter-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;
+    }
+    @media (max-width: 900px) { .converter-grid { grid-template-columns: 1fr; } }
+    .converter-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;
+    }
+    .converter-card h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; }
+    .schema-input {
+      width: 100%; min-height: 260px; padding: 14px; border-radius: var(--radius);
+      background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.9rem; resize: vertical; box-sizing: border-box;
+    }
+    .schema-input:focus { outline: none; border-color: var(--primary); }
+
+    .toolbar {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .toolbar button {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer;
+    }
+    .toolbar button:hover { border-color: var(--primary); }
+    .toolbar button.primary { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+    .toolbar button.primary:hover { background: var(--primary-hover); }
+
+    .result-panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px; margin: 24px 0; text-align: center;
+    }
+    .version-display {
+      display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .version-box {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px 24px; font-family: var(--mono); font-size: 1.4rem; font-weight: 700;
+    }
+    .version-arrow {
+      font-size: 1.8rem; color: var(--primary);
+    }
+    .bump-badge {
+      display: inline-block; padding: 6px 16px; border-radius: 999px; font-size: 0.85rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px;
+    }
+    .bump-badge.major { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .bump-badge.minor { background: rgba(234,179,8,0.12); color: #eab308; }
+    .bump-badge.patch { background: rgba(34,197,94,0.12); color: #22c55e; }
+    .bump-badge.none { background: rgba(148,163,184,0.12); color: #94a3b8; }
+
+    .changelog-list {
+      text-align: left; max-width: 640px; margin: 20px auto 0;
+      list-style: none; padding: 0;
+    }
+    .changelog-list li {
+      padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem;
+    }
+    .changelog-list li:last-child { border-bottom: none; }
+    .changelog-list .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;
+      font-weight: 700; margin-right: 8px;
+    }
+    .tag.breaking { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .tag.added { background: rgba(34,197,94,0.12); color: #22c55e; }
+    .tag.changed { background: rgba(234,179,8,0.12); color: #eab308; }
+    .tag.removed { background: rgba(148,163,184,0.12); color: #94a3b8; }
+    .tag.fixed { background: rgba(99,102,241,0.12); color: #6366f1; }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;
+      max-width: 600px; margin: 20px auto 0;
+    }
+    .stat-item {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 14px; text-align: center;
+    }
+    .stat-item .stat-val { font-size: 1.5rem; font-weight: 700; }
+    .stat-item .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+    .share-bar {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 20px;
+    }
+    .share-bar button {
+      padding: 8px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: var(--code-bg); color: var(--text); font-size: 0.85rem; cursor: pointer;
+    }
+    .share-bar button:hover { border-color: var(--primary); }
+
+    .pro-cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06));
+      border: 2px dashed var(--primary); border-radius: var(--radius); padding: 24px;
+      text-align: center; margin: 24px 0;
+    }
+    .pro-cta-box h4 { margin: 0 0 8px; }
+    .pro-cta-box p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 16px; }
+
+    .rules-panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; margin: 20px 0;
+    }
+    .rules-panel h3 { margin: 0 0 12px; font-size: 1.1rem; }
+    .rules-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+    }
+    .rule-item {
+      display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem;
+    }
+    .rule-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .rule-dot.major { background: #ef4444; }
+    .rule-dot.minor { background: #eab308; }
+    .rule-dot.patch { background: #22c55e; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Database Schema Semantic Versioning Calculator",
+    "description": "Calculate semantic version bumps for database schema changes automatically. Breaking changes = major, additions = minor, fixes = patch.",
+    "url": "https://schemalens.tech/tools/schema-semver-calculator.html",
+    "applicationCategory": "DeveloperApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+        <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+      </svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="../app.html">App</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../tools.html">Tools</a>
+    </div>
+    <a href="../app.html" class="btn btn-primary btn-sm">Open App</a>
+  </div>
+</nav>
+
+<main class="container" style="max-width: 1100px;">
+  <section class="page-header">
+    <h1>📦 Schema Semantic Versioning Calculator</h1>
+    <p>Paste your old and new database schema. We automatically calculate the semantic version bump — breaking changes = <strong>major</strong>, new tables/columns = <strong>minor</strong>, fixes = <strong>patch</strong>.</p>
+  </section>
+
+  <div class="version-input-row">
+    <label for="currentVersion">Current Version</label>
+    <input type="text" id="currentVersion" value="1.0.0" placeholder="1.0.0">
+    <span style="color:var(--text-muted); font-size:0.85rem;">Follows <a href="https://semver.org" target="_blank" style="color:var(--primary);">SemVer</a> rules adapted for schemas</span>
+  </div>
+
+  <div class="converter-grid">
+    <div class="converter-card">
+      <h2>📄 Old Schema</h2>
+      <div class="toolbar">
+        <button onclick="loadExampleOld()">Load Example</button>
+        <button onclick="clearOld()">Clear</button>
+      </div>
+      <textarea id="oldSchema" class="schema-input" placeholder="CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"></textarea>
+    </div>
+    <div class="converter-card">
+      <h2>📄 New Schema</h2>
+      <div class="toolbar">
+        <button onclick="loadExampleNew()">Load Example</button>
+        <button onclick="clearNew()">Clear</button>
+      </div>
+      <textarea id="newSchema" class="schema-input" placeholder="CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  total DECIMAL(10,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);"></textarea>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin: 20px 0;">
+    <button class="btn btn-primary" style="padding: 12px 32px; font-size: 1.05rem;" onclick="calculateSemver()">🔢 Calculate Version Bump</button>
+    <span style="color:var(--text-muted); font-size:0.85rem; margin-left:12px;">Works with PostgreSQL, MySQL, SQLite, SQL Server, Oracle</span>
+  </div>
+
+  <section id="resultSection" style="display:none;">
+    <div class="result-panel">
+      <div class="version-display">
+        <div class="version-box" id="oldVersionBox">1.0.0</div>
+        <div class="version-arrow">→</div>
+        <div class="version-box" id="newVersionBox" style="border-color: var(--primary); color: var(--primary);">1.1.0</div>
+      </div>
+      <div id="bumpBadge" class="bump-badge minor">Minor Bump</div>
+      <p id="bumpExplanation" style="color: var(--text-muted); margin-top: 12px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        New tables and columns were added without breaking existing ones.
+      </p>
+
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <h3 style="margin-top: 28px; font-size: 1.1rem;">📝 Changelog Preview</h3>
+      <ul class="changelog-list" id="changelogList"></ul>
+
+      <div class="share-bar">
+        <button onclick="copyShareUrl()">🔗 Copy Share Link</button>
+        <button onclick="copyChangelog()">📋 Copy Changelog</button>
+        <button onclick="shareTwitter()">𝕏 Share on X</button>
+        <button onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+      </div>
+    </div>
+
+    <div class="pro-cta-box">
+      <h4>🚀 Auto-version every schema change in CI/CD</h4>
+      <p>SchemaLens Pro generates semantic version bumps automatically on every PR. Connect to GitHub Actions, GitLab CI, or Jenkins and never forget to version your schema again.</p>
+      <a href="../pricing.html" class="btn btn-primary">Upgrade to Pro — $39 Lifetime</a>
+      <a href="../github-action.html" class="btn btn-secondary" style="margin-left: 8px;">Set Up GitHub Action</a>
+    </div>
+  </section>
+
+  <div class="rules-panel">
+    <h3>📐 How Schema SemVer Works</h3>
+    <div class="rules-grid">
+      <div class="rule-item">
+        <div class="rule-dot major"></div>
+        <div><strong>MAJOR</strong> — Breaking changes: dropped tables/columns, type changes that lose data, removed constraints, renamed identifiers.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-dot minor"></div>
+        <div><strong>MINOR</strong> — Safe additions: new tables, new columns, new indexes, new constraints that don't break existing queries.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-dot patch"></div>
+        <div><strong>PATCH</strong> — Fixes & optimizations: added defaults, widened types, added indexes, fixed constraints, non-breaking renames.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-dot" style="background:#94a3b8;"></div>
+        <div><strong>No change</strong> — Identical schemas, whitespace-only differences, or comment-only changes.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="container" style="text-align:center; padding: 40px 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px;">
+  <p>Built by <a href="../index.html" style="color: var(--primary);">SchemaLens</a> — 80+ free developer tools</p>
+  <p style="margin-top: 8px;">
+    <a href="../schema-diff.html" style="color: var(--text-muted); margin: 0 8px;">Schema Diff</a>
+    <a href="../github-action.html" style="color: var(--text-muted); margin: 0 8px;">GitHub Action</a>
+    <a href="schema-changelog-generator.html" style="color: var(--text-muted); margin: 0 8px;">Changelog Generator</a>
+    <a href="safe-migration-checker.html" style="color: var(--text-muted); margin: 0 8px;">Safe Migration</a>
+  </p>
+</footer>
+
+<script>
+  // ── Lightweight inline schema parser ──
+  function stripComments(sql) {
+    return sql.replace(/\/\*[\s\S]*?\*\//g, '').replace(/--[^\n]*/g, '');
+  }
+
+  function splitStatements(sql) {
+    const stmts = []; let current = ''; let inString = false; let stringChar = '';
+    for (let i = 0; i < sql.length; i++) {
+      const ch = sql[i], prev = sql[i - 1];
+      if (!inString && (ch === "'" || ch === '"' || ch === '`')) { inString = true; stringChar = ch; }
+      else if (inString && ch === stringChar && prev !== '\\') { inString = false; }
+      if (!inString && ch === ';') { stmts.push(current.trim()); current = ''; }
+      else { current += ch; }
+    }
+    if (current.trim()) stmts.push(current.trim());
+    return stmts.filter(s => s.length > 0);
+  }
+
+  function parseSchema(sql) {
+    const tables = {};
+    const stmts = splitStatements(stripComments(sql));
+    for (const stmt of stmts) {
+      const m = stmt.match(/^CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\((.*)\)\s*;?$/is);
+      if (!m) continue;
+      const tname = m[1];
+      const body = m[2];
+      const cols = [];
+      let depth = 0, inStr = false, strCh = '', current = '';
+      for (let i = 0; i < body.length; i++) {
+        const ch = body[i], prev = body[i - 1];
+        if (!inStr && (ch === "'" || ch === '"' || ch === '`')) { inStr = true; strCh = ch; }
+        else if (inStr && ch === strCh && prev !== '\\') { inStr = false; }
+        if (!inStr) { if (ch === '(') depth++; else if (ch === ')') depth--; }
+        if (ch === ',' && depth === 0 && !inStr) {
+          cols.push(current.trim()); current = '';
+        } else { current += ch; }
+      }
+      if (current.trim()) cols.push(current.trim());
+
+      const columns = cols.map(def => {
+        // Skip constraints like PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, INDEX
+        if (/^(PRIMARY\s+KEY|FOREIGN\s+KEY|UNIQUE|CHECK|INDEX|CONSTRAINT|\))\b/i.test(def)) return null;
+        const parts = def.trim().split(/\s+/);
+        if (parts.length < 2) return null;
+        const name = parts[0].replace(/[`"']/g, '');
+        const type = parts[1].replace(/[,$]/g, '');
+        const rest = def.slice(def.indexOf(type) + type.length).toLowerCase();
+        const nullable = !rest.includes('not null');
+        const hasDefault = rest.includes('default');
+        return { name, type, nullable, hasDefault };
+      }).filter(Boolean);
+
+      tables[tname] = { columns };
+    }
+    return tables;
+  }
+
+  function diffSchemas(oldTables, newTables) {
+    const result = {
+      addedTables: [], removedTables: [], modifiedTables: [],
+      addedColumns: 0, removedColumns: 0, modifiedColumns: 0, breakingChanges: []
+    };
+    const allTables = new Set([...Object.keys(oldTables), ...Object.keys(newTables)]);
+    for (const tname of allTables) {
+      const oldT = oldTables[tname];
+      const newT = newTables[tname];
+      if (!oldT && newT) {
+        result.addedTables.push({ name: tname, columns: newT.columns });
+        result.addedColumns += newT.columns.length;
+        continue;
+      }
+      if (oldT && !newT) {
+        result.removedTables.push({ name: tname });
+        result.breakingChanges.push({ type: 'table_dropped', table: tname });
+        continue;
+      }
+      const mod = { name: tname, addedColumns: [], removedColumns: [], modifiedColumns: [] };
+      const allCols = new Set([...oldT.columns.map(c => c.name), ...newT.columns.map(c => c.name)]);
+      for (const cname of allCols) {
+        const oldC = oldT.columns.find(c => c.name === cname);
+        const newC = newT.columns.find(c => c.name === cname);
+        if (!oldC && newC) {
+          mod.addedColumns.push(newC);
+          result.addedColumns++;
+          if (!newC.nullable && !newC.hasDefault) {
+            result.breakingChanges.push({ type: 'column_added_breaking', table: tname, column: cname });
+          }
+          continue;
+        }
+        if (oldC && !newC) {
+          mod.removedColumns.push(oldC);
+          result.removedColumns++;
+          result.breakingChanges.push({ type: 'column_dropped', table: tname, column: cname });
+          continue;
+        }
+        if (oldC && newC) {
+          const typeChanged = oldC.type.toLowerCase() !== newC.type.toLowerCase();
+          const nullMadeStrict = oldC.nullable && !newC.nullable && !newC.hasDefault;
+          if (typeChanged || nullMadeStrict) {
+            mod.modifiedColumns.push({ name: cname, oldType: oldC.type, newType: newC.type, oldNullable: oldC.nullable, newNullable: newC.nullable });
+            result.modifiedColumns++;
+            result.breakingChanges.push({ type: typeChanged ? 'type_changed' : 'nullability_changed', table: tname, column: cname });
+          } else if (oldC.type.toLowerCase() !== newC.type.toLowerCase() || oldC.nullable !== newC.nullable) {
+            mod.modifiedColumns.push({ name: cname, oldType: oldC.type, newType: newC.type });
+            result.modifiedColumns++;
+          }
+        }
+      }
+      if (mod.addedColumns.length || mod.removedColumns.length || mod.modifiedColumns.length) {
+        result.modifiedTables.push(mod);
+      }
+    }
+    return result;
+  }
+
+  function calculateRiskScore(diff) {
+    let score = 0;
+    score += diff.removedTables.length * 30;
+    score += diff.removedColumns * 15;
+    score += diff.modifiedColumns * 10;
+    score += diff.addedTables.length * 2;
+    score += diff.addedColumns * 1;
+    return Math.min(100, score);
+  }
+
+  // ── UI helpers ──
+  function loadExampleOld() {
+    document.getElementById('oldSchema').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(50) DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  status VARCHAR(20) DEFAULT 'draft',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+  }
+
+  function loadExampleNew() {
+    document.getElementById('newSchema').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(100),
+  role VARCHAR(50) DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT,
+  status VARCHAR(20) DEFAULT 'draft',
+  published_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+  }
+
+  function clearOld() { document.getElementById('oldSchema').value = ''; }
+  function clearNew() { document.getElementById('newSchema').value = ''; }
+
+  function parseVersion(v) {
+    const m = String(v).trim().match(/^(\d+)\.(\d+)\.(\d+)(.*)?$/);
+    if (!m) return { major: 1, minor: 0, patch: 0, extra: '' };
+    return { major: parseInt(m[1],10), minor: parseInt(m[2],10), patch: parseInt(m[3],10), extra: m[4] || '' };
+  }
+
+  function formatVersion(v) {
+    return `${v.major}.${v.minor}.${v.patch}${v.extra}`;
+  }
+
+  function calculateSemver() {
+    const oldRaw = document.getElementById('oldSchema').value.trim();
+    const newRaw = document.getElementById('newSchema').value.trim();
+    if (!oldRaw || !newRaw) { alert('Paste both old and new schemas'); return; }
+
+    const current = parseVersion(document.getElementById('currentVersion').value);
+    const oldSchema = parseSchema(oldRaw);
+    const newSchema = parseSchema(newRaw);
+
+    const diff = diffSchemas(oldSchema, newSchema);
+    const hasBreaking = diff.breakingChanges.length > 0;
+
+    const changelog = [];
+    let additions = 0;
+    let removals = 0;
+    let modifications = 0;
+
+    diff.addedTables.forEach(t => {
+      additions++;
+      changelog.push({ type: 'added', text: `Added table "${t.name}"` });
+      (t.columns || []).forEach(c => {
+        changelog.push({ type: 'added', text: `  → Added column "${c.name}" (${c.type})` });
+      });
+    });
+
+    diff.removedTables.forEach(t => {
+      removals++;
+      changelog.push({ type: 'removed', text: `Removed table "${t.name}"` });
+    });
+
+    diff.modifiedTables.forEach(m => {
+      const tname = m.name;
+      m.addedColumns.forEach(c => {
+        additions++;
+        changelog.push({ type: 'added', text: `Added column "${tname}.${c.name}" (${c.type})` });
+      });
+      m.removedColumns.forEach(c => {
+        removals++;
+        changelog.push({ type: 'removed', text: `Removed column "${tname}.${c.name}"` });
+      });
+      m.modifiedColumns.forEach(c => {
+        modifications++;
+        const isBreaking = diff.breakingChanges.some(b => b.table === tname && b.column === c.name);
+        changelog.push({
+          type: isBreaking ? 'breaking' : 'changed',
+          text: `Changed column "${tname}.${c.name}" (${c.oldType || '?'} → ${c.newType || '?'})${isBreaking ? ' [BREAKING]' : ''}`
+        });
+      });
+    });
+
+    let bump = 'none';
+    let next = { ...current };
+    let explanation = 'No schema changes detected.';
+
+    if (hasBreaking) {
+      bump = 'major';
+      next.major++;
+      next.minor = 0;
+      next.patch = 0;
+      explanation = `${diff.breakingChanges.length} breaking change(s) detected. Any removed columns, incompatible type changes, or dropped tables require a major version bump.`;
+    } else if (additions > 0) {
+      bump = 'minor';
+      next.minor++;
+      next.patch = 0;
+      explanation = `${additions} addition(s) detected (new tables, columns, or indexes). Safe additions warrant a minor version bump.`;
+    } else if (modifications > 0 || removals > 0) {
+      bump = 'patch';
+      next.patch++;
+      explanation = `${modifications + removals} non-breaking change(s) detected (fixes, optimizations, or safe modifications). Patch bump recommended.`;
+    }
+
+    document.getElementById('oldVersionBox').textContent = formatVersion(current);
+    document.getElementById('newVersionBox').textContent = formatVersion(next);
+
+    const badge = document.getElementById('bumpBadge');
+    badge.className = 'bump-badge ' + bump;
+    badge.textContent = bump === 'none' ? 'No Change' : bump + ' Bump';
+
+    document.getElementById('bumpExplanation').textContent = explanation;
+
+    const statsGrid = document.getElementById('statsGrid');
+    statsGrid.innerHTML = `
+      <div class="stat-item"><div class="stat-val" style="color:#22c55e">${additions}</div><div class="stat-label">Additions</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#ef4444">${removals}</div><div class="stat-label">Removals</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#eab308">${modifications}</div><div class="stat-label">Modifications</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:${hasBreaking ? '#ef4444' : '#22c55e'}">${diff.breakingChanges.length}</div><div class="stat-label">Breaking</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#6366f1">${calculateRiskScore(diff)}</div><div class="stat-label">Risk Score</div></div>
+    `;
+
+    const list = document.getElementById('changelogList');
+    if (changelog.length === 0) {
+      list.innerHTML = '<li style="color:var(--text-muted)">No structural changes detected.</li>';
+    } else {
+      list.innerHTML = changelog.map(item => {
+        const tagClass = item.type;
+        const tagText = item.type === 'breaking' ? 'BREAKING' : item.type === 'added' ? 'Added' : item.type === 'removed' ? 'Removed' : 'Changed';
+        return `<li><span class="tag ${tagClass}">${tagText}</span>${escapeHtml(item.text)}</li>`;
+      }).join('');
+    }
+
+    document.getElementById('resultSection').style.display = 'block';
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    updateUrl(current, oldRaw, newRaw);
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function updateUrl(version, oldSchema, newSchema) {
+    const params = new URLSearchParams();
+    params.set('v', formatVersion(version));
+    try {
+      params.set('old', btoa(unescape(encodeURIComponent(oldSchema))));
+      params.set('new', btoa(unescape(encodeURIComponent(newSchema))));
+    } catch (e) {}
+    const url = location.protocol + '//' + location.host + location.pathname + '?' + params.toString();
+    history.replaceState(null, '', url);
+  }
+
+  function copyShareUrl() {
+    navigator.clipboard.writeText(location.href).then(() => alert('Share link copied!'));
+  }
+
+  function copyChangelog() {
+    const items = Array.from(document.querySelectorAll('#changelogList li')).map(li => li.textContent.trim());
+    const text = '## Schema Changes\n\n' + items.map(i => '- ' + i).join('\n');
+    navigator.clipboard.writeText(text).then(() => alert('Changelog copied!'));
+  }
+
+  function shareTwitter() {
+    const oldV = document.getElementById('oldVersionBox').textContent;
+    const newV = document.getElementById('newVersionBox').textContent;
+    const text = `My database schema just went from v${oldV} to v${newV} using SchemaLens 📦\n\nAuto-calculate schema semantic versioning:`;
+    const url = 'https://schemalens.tech/tools/schema-semver-calculator.html';
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+  }
+
+  function shareLinkedIn() {
+    const url = 'https://schemalens.tech/tools/schema-semver-calculator.html';
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+  }
+
+  // Load from URL on init
+  (function init() {
+    const params = new URLSearchParams(location.search);
+    if (params.has('v')) document.getElementById('currentVersion').value = params.get('v');
+    if (params.has('old')) {
+      try { document.getElementById('oldSchema').value = decodeURIComponent(escape(atob(params.get('old')))); } catch (e) {}
+    }
+    if (params.has('new')) {
+      try { document.getElementById('newSchema').value = decodeURIComponent(escape(atob(params.get('new')))); } catch (e) {}
+    }
+    if (params.has('old') && params.has('new')) setTimeout(calculateSemver, 300);
+  })();
+</script>
+</body>
+</html>

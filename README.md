@@ -222,12 +222,13 @@ SchemaLens includes **79+ free browser-based tools** that reuse the same custom 
 77. [Migration Runbook Generator](https://schemalens.tech/tools/migration-runbook-generator.html) — Turn any schema diff into a production-ready migration playbook
 78. [Case Study: Catching Breaking Changes](https://schemalens.tech/case-study-catch-breaking-changes.html) — Real-world scenario of how SchemaLens prevented a production outage
 79. [Request Pro Approval Email Generator](https://schemalens.tech/tools/request-pro-approval.html) — Generate a professional manager approval email with ROI data
+80. [Schema Semantic Versioning Calculator](https://schemalens.tech/tools/schema-semver-calculator.html) — Calculate SemVer bumps for schema changes automatically. Breaking = major, additions = minor, fixes = patch
 
 ### Migration Guides
 - [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration
 - [SQL Server to PostgreSQL Migration Guide](https://schemalens.tech/sql-server-to-postgresql-migration.html) — Enterprise guide with T-SQL translation and Azure DMS
 
-**[View all 79+ tools →](https://schemalens.tech/tools.html)**
+**[View all 80+ tools →](https://schemalens.tech/tools.html)**
 
 ---
 
@@ -284,7 +285,7 @@ SchemaLens includes **79+ free browser-based tools** that reuse the same custom 
 | 4 | Pro tier & Product Hunt launch | ✅ (launched May 16) |
 | 5 | More dialects & polish | ✅ |
 | 6 | Team workspace (MVP) | ✅ |
-| 7 | SEO & content engine | ✅ (33+ blog posts, 79+ tools) |
+| 7 | SEO & content engine | ✅ (33+ blog posts, 80+ tools) |
 | 8 | CI/CD integration | ✅ |
 | 9 | Advanced migrations | ✅ (risk score, rename detection) |
 | 10 | API & integrations | ✅ (REST API, Slack, VS Code) |
