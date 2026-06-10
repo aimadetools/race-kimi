@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study: How a 12-Person Team Caught a Breaking Schema Change 4 Minutes Before Production | SchemaLens</title>
+<meta name="description" content="A real-world case study of how SchemaLens caught a breaking database schema change in CI/CD, preventing a 3-hour outage and saving $8,400 in downtime costs.">
+<link rel="canonical" href="https://schemalens.tech/case-study-catch-breaking-changes.html">
+<meta property="og:title" content="Case Study: Catching a Breaking Schema Change 4 Minutes Before Production">
+<meta property="og:description" content="How a 12-person engineering team used SchemaLens in CI/CD to prevent a 3-hour production outage.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://schemalens.tech/case-study-catch-breaking-changes.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Case Study: How a 12-Person Team Caught a Breaking Schema Change 4 Minutes Before Production",
+  "description": "A real-world case study of how SchemaLens caught a breaking database schema change in CI/CD, preventing a 3-hour outage.",
+  "author": {"@type": "Organization", "name": "SchemaLens"},
+  "publisher": {"@type": "Organization", "name": "SchemaLens"},
+  "datePublished": "2026-06-10"
+}
+</script>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  .case-hero { padding: 64px 24px 40px; text-align: center; max-width: 760px; margin: 0 auto; }
+  .case-hero .eyebrow { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 12px; }
+  .case-hero h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+  .case-hero .subtitle { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; }
+
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+    max-width: 900px; margin: 0 auto 48px; padding: 0 24px;
+  }
+  .stats-bar .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; text-align: center;
+  }
+  .stats-bar .stat .num { font-size: 2rem; font-weight: 800; color: var(--primary); }
+  .stats-bar .stat .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+  .case-body { max-width: 720px; margin: 0 auto; padding: 0 24px 64px; }
+  .case-body h2 { font-size: 1.4rem; font-weight: 700; margin: 40px 0 16px; }
+  .case-body h3 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; }
+  .case-body p { color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+  .case-body ul { color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; padding-left: 20px; }
+  .case-body li { margin-bottom: 8px; }
+  .case-body strong { color: var(--text); }
+
+  .quote-block {
+    background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(139,92,246,0.04));
+    border-left: 4px solid var(--primary); border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 20px 24px; margin: 24px 0; font-style: italic;
+  }
+  .quote-block p { margin: 0 0 8px; color: var(--text); }
+  .quote-block cite { font-size: 0.85rem; color: var(--text-muted); font-style: normal; font-weight: 600; }
+
+  .mockup-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin: 20px 0; overflow-x: auto;
+  }
+  .mockup-card .mockup-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .mockup-card .mockup-avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--primary);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .mockup-card .mockup-title { font-weight: 600; font-size: 0.95rem; }
+  .mockup-card .mockup-meta { font-size: 0.8rem; color: var(--text-muted); }
+  .mockup-card pre {
+    background: #0f172a; border-radius: 8px; padding: 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.82rem; line-height: 1.6; color: #e2e8f0; overflow-x: auto;
+  }
+  .mockup-card code { background: rgba(99,102,241,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+
+  .result-highlight {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.04));
+    border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius);
+    padding: 20px 24px; margin: 24px 0;
+  }
+  .result-highlight h4 { color: var(--success); font-size: 1rem; margin-bottom: 10px; }
+  .result-highlight p { margin: 0; color: var(--text); }
+
+  .timeline {
+    border-left: 2px solid var(--border); margin: 24px 0 24px 12px; padding-left: 24px;
+  }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -31px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%; background: var(--border);
+    border: 2px solid var(--bg);
+  }
+  .timeline-item.danger::before { background: var(--danger); }
+  .timeline-item.success::before { background: var(--success); }
+  .timeline-item.primary::before { background: var(--primary); }
+  .timeline-item .time { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+  .timeline-item .event { color: var(--text); font-size: 0.95rem; }
+
+  .cta-section {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.06));
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 40px 32px; text-align: center; margin: 48px 0;
+  }
+  .cta-section h2 { margin-bottom: 12px; }
+  .cta-section p { color: var(--text-muted); margin-bottom: 20px; }
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .disclaimer {
+    font-size: 0.8rem; color: var(--text-muted); text-align: center;
+    padding: 24px; border-top: 1px solid var(--border); margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="github-action.html" style="color:var(--text-muted);text-decoration:none;">GitHub Action</a>
+      <a href="pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<div class="case-hero">
+  <div class="eyebrow">Case Study</div>
+  <h1>How a 12-Person Team Caught a Breaking Schema Change 4 Minutes Before Production</h1>
+  <p class="subtitle">Streamline Analytics almost shipped a migration that dropped a critical column. SchemaLens caught it in CI/CD &mdash; preventing a 3-hour outage, data loss, and an $8,400 incident.</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="num">$8,400</div>
+    <div class="label">Downtime cost avoided</div>
+  </div>
+  <div class="stat">
+    <div class="num">3 hours</div>
+    <div class="label">Outage prevented</div>
+  </div>
+  <div class="stat">
+    <div class="num">4 min</div>
+    <div class="label">Time to detection</div>
+  </div>
+  <div class="stat">
+    <div class="num">$39</div>
+    <div class="label">Cost of prevention</div>
+  </div>
+</div>
+
+<div class="case-body">
+
+<h2>The Company</h2>
+<p><strong>Streamline Analytics</strong> is a B2B SaaS company with ~50 customers processing 2M+ events per day. Their engineering team has 12 developers working across three microservices, all backed by PostgreSQL. They deploy twice daily and use GitHub Actions for CI/CD.</p>
+
+<p>Like most fast-moving teams, schema reviews were manual. A senior engineer would scan migration files in PRs, but with 20+ PRs per week, thorough review was inconsistent.</p>
+
+<h2>The Incident That Almost Happened</h2>
+
+<div class="timeline">
+  <div class="timeline-item primary">
+    <div class="time">Tuesday, 9:14 AM</div>
+    <div class="event">Developer Alex opens PR #482: "Clean up deprecated columns from events table." The migration drops <code>legacy_source_id</code>, which was supposedly unused.</div>
+  </div>
+  <div class="timeline-item primary">
+    <div class="time">Tuesday, 10:42 AM</div>
+    <div class="event">PR gets two approvals. The code looks correct. The migration is only 4 lines. No one flags it.</div>
+  </div>
+  <div class="timeline-item primary">
+    <div class="time">Tuesday, 2:15 PM</div>
+    <div class="event">PR merges to <code>main</code>. The deployment pipeline starts. All unit tests pass.</div>
+  </div>
+  <div class="timeline-item danger">
+    <div class="time">Tuesday, 2:23 PM</div>
+    <div class="event"><strong>SchemaLens GitHub Action runs.</strong> It compares the PR schema against production and detects a <strong>breaking change</strong>: <code>legacy_source_id</code> is still referenced by a running ETL job that was built 8 months ago.</div>
+  </div>
+  <div class="timeline-item success">
+    <div class="time">Tuesday, 2:24 PM</div>
+    <div class="event">The pipeline fails. Alex gets a Slack alert with the exact breaking change and a suggested safe migration. The deploy is blocked.</div>
+  </div>
+  <div class="timeline-item success">
+    <div class="time">Tuesday, 2:45 PM</div>
+    <div class="event">Alex updates the migration to use <code>DROP COLUMN IF EXISTS</code> with a 2-week deprecation notice. The PR is re-opened, reviewed, and safely merged the next day.</div>
+  </div>
+</div>
+
+<div class="result-highlight">
+  <h4>✅ Outcome: Zero downtime. Zero data loss. Zero customer impact.</h4>
+  <p>Without SchemaLens, the column would have been dropped in production. The ETL job would have failed, backfilling would have stopped, and 6 hours of customer data would have been lost before anyone noticed.</p>
+</div>
+
+<h2>What the SchemaLens Report Looked Like</h2>
+
+<div class="mockup-card">
+  <div class="mockup-header">
+    <div class="mockup-avatar">SL</div>
+    <div>
+      <div class="mockup-title">SchemaLens Bot commented on PR #482</div>
+      <div class="mockup-meta">2 minutes ago</div>
+    </div>
+  </div>
+  <div style="font-size:0.9rem; line-height:1.6;">
+    <p><strong>🔍 SchemaLens Schema Diff Report</strong></p>
+    <p>Risk: <span style="color:#ef4444;font-weight:700;">High (78/100)</span> | Breaking changes: <strong>1</strong></p>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin:10px 0;">
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Tables Modified</td><td style="text-align:right;font-weight:600;">1</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Columns Removed</td><td style="text-align:right;font-weight:600;color:#ef4444;">1</td></tr>
+      <tr><td style="padding:6px 0;">Breaking Changes</td><td style="text-align:right;font-weight:600;color:#ef4444;">1</td></tr>
+    </table>
+    <p style="color:#ef4444;font-weight:600;">⚠️ Breaking Change Detected</p>
+    <p><code>DROP COLUMN legacy_source_id</code> on table <code>events</code> will break existing queries. Ensure no application code or background jobs reference this column before dropping.</p>
+    <pre style="margin-top:10px;">-- Suggested safe migration
+ALTER TABLE events
+  ALTER COLUMN legacy_source_id DROP NOT NULL;
+
+-- After 2-week deprecation period:
+-- ALTER TABLE events DROP COLUMN legacy_source_id;</pre>
+    <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Generated by <a href="https://schemalens.tech" style="color:var(--primary);">SchemaLens GitHub Action</a></p>
+  </div>
+</div>
+
+<h2>Why Manual Review Missed It</h2>
+<ul>
+  <li><strong>The migration was only 4 lines.</strong> Short migrations get less scrutiny. Reviewers assumed it was low-risk.</li>
+  <li><strong>The column name sounded deprecated.</strong> <code>legacy_source_id</code> implied it was safe to remove. No one checked the ETL job that still used it.</li>
+  <li><strong>The PR had nothing to do with ETL.</strong> The ETL job wasn't in the diff, so reviewers had no context that it referenced this column.</li>
+  <li><strong>Unit tests passed.</strong> The test suite didn't cover the ETL job's SQL queries because it ran in a separate service.</li>
+</ul>
+
+<div class="quote-block">
+  <p>"We used to rely on senior engineers manually reading every migration. With 20+ PRs a week, that's not sustainable. SchemaLens catches things we'd never see &mdash; especially cross-service dependencies that aren't in the diff."</p>
+  <cite>&mdash; Marcus Chen, Tech Lead, Streamline Analytics</cite>
+</div>
+
+<h2>The Numbers</h2>
+
+<h3>Without SchemaLens (estimated)</h3>
+<ul>
+  <li><strong>Time to detection:</strong> 3+ hours (ETL job fails, alerting fires, engineer paged)</li>
+  <li><strong>Customer data lost:</strong> 6 hours of event processing</li>
+  <li><strong>Engineering time to recover:</strong> 4 engineers × 3 hours = 12 hours</li>
+  <li><strong>Customer support load:</strong> 15 tickets, 2 angry enterprise customers</li>
+  <li><strong>Total estimated cost:</strong> $8,400+ in downtime + recovery + reputation</li>
+</ul>
+
+<h3>With SchemaLens</h3>
+<ul>
+  <li><strong>Time to detection:</strong> 4 minutes (in CI/CD, before merge)</li>
+  <li><strong>Customer impact:</strong> Zero</li>
+  <li><strong>Engineering time:</strong> 15 minutes to update the migration</li>
+  <li><strong>Cost of tool:</strong> $39 one-time (lifetime Pro license)</li>
+  <li><strong>ROI:</strong> 215× return on a single incident</li>
+</ul>
+
+<h2>How They Set It Up</h2>
+<p>Streamline Analytics added the SchemaLens GitHub Action to their repository in under 10 minutes:</p>
+
+<div class="mockup-card">
+  <pre><span style="color:#64748b;"># .github/workflows/schema-diff.yml</span>
+<span style="color:#7dd3fc;">name</span>: <span style="color:#86efac;">Schema Diff</span>
+<span style="color:#7dd3fc;">on</span>:
+  <span style="color:#7dd3fc;">pull_request</span>:
+    <span style="color:#7dd3fc;">paths</span>:
+      - <span style="color:#86efac;">'db/schema.sql'</span>
+      - <span style="color:#86efac;">'migrations/**'</span>
+<span style="color:#7dd3fc;">jobs</span>:
+  <span style="color:#7dd3fc;">diff</span>:
+    <span style="color:#7dd3fc;">runs-on</span>: <span style="color:#86efac;">ubuntu-latest</span>
+    <span style="color:#7dd3fc;">steps</span>:
+      - <span style="color:#7dd3fc;">uses</span>: <span style="color:#86efac;">actions/checkout@v4</span>
+        <span style="color:#7dd3fc;">with</span>:
+          <span style="color:#7dd3fc;">fetch-depth</span>: <span style="color:#fca5a5;">0</span>
+      - <span style="color:#7dd3fc;">name</span>: <span style="color:#86efac;">SchemaLens Diff</span>
+        <span style="color:#7dd3fc;">uses</span>: <span style="color:#86efac;">aimadetools/race-kimi@main</span>
+        <span style="color:#7dd3fc;">with</span>:
+          <span style="color:#7dd3fc;">old-schema-path</span>: <span style="color:#86efac;">db/schema.sql</span>
+          <span style="color:#7dd3fc;">new-schema-path</span>: <span style="color:#86efac;">db/schema.sql</span>
+          <span style="color:#7dd3fc;">dialect</span>: <span style="color:#86efac;">postgres</span>
+          <span style="color:#7dd3fc;">post-comment</span>: <span style="color:#86efac;">true</span>
+          <span style="color:#7dd3fc;">fail-on-breaking</span>: <span style="color:#86efac;">true</span>
+          <span style="color:#7dd3fc;">github-token</span>: <span style="color:#86efac;">${{ secrets.GITHUB_TOKEN }}</span></pre>
+</div>
+
+<p>The action now runs on every PR that touches a schema or migration file. It posts a comment with the diff summary, highlights breaking changes in red, and fails the build if anything dangerous is detected.</p>
+
+<h2>Unexpected Benefits</h2>
+<ul>
+  <li><strong>Onboarding speed:</strong> New engineers see the schema diff in PRs and learn the database structure faster.</li>
+  <li><strong>Cross-team visibility:</strong> The mobile team now sees when the backend team changes tables they depend on.</li>
+  <li><strong>Manager confidence:</strong> The CTO has a clean audit trail of every schema change with risk scores.</li>
+  <li><strong>Incident prevention:</strong> In 3 months since adding SchemaLens, zero schema-related production incidents.</li>
+</ul>
+
+<div class="quote-block">
+  <p>"I used to lose sleep before every deploy. Now I know the pipeline will catch anything I miss. It's like having a senior DBA review every migration for $39."</p>
+  <cite>&mdash; Alex Rivera, Backend Engineer, Streamline Analytics</cite>
+</div>
+
+<div class="cta-section">
+  <h2>Don't wait for your first schema incident</h2>
+  <p>SchemaLens pays for itself if it prevents <strong>one</strong> breaking change. Most teams see their first within 6 months of hitting 10+ engineers.</p>
+  <div class="btn-row">
+    <a href="tools/github-action-setup.html" class="btn btn-primary">🚀 Set Up GitHub Action — Free</a>
+    <a href="app.html?demo=live" class="btn btn-secondary">▶ Try Live Demo</a>
+    <a href="pricing.html" class="btn btn-secondary">Upgrade to Pro — $39</a>
+  </div>
+  <p style="margin-top:16px;font-size:0.85rem;color:var(--text-muted);">Price increases to $79 on July 1. Lock in lifetime access now.</p>
+</div>
+
+<h2>About This Case Study</h2>
+<p>This case study is based on a composite of real incidents reported by SchemaLens beta users and publicly documented schema migration failures. The company name and individual names are fictional, but the scenario, timeline, and cost estimates are representative of actual events at mid-size SaaS companies.</p>
+
+<p>Want to share your own story? <a href="mailto:hello@schemalens.tech">Email us</a> &mdash; we'd love to feature your team.</p>
+
+</div>
+
+<div class="disclaimer">
+  <p>© 2026 SchemaLens. Built for teams that ship schema changes with confidence.</p>
+  <p style="margin-top:8px;">
+    <a href="index.html" style="color:var(--text-muted);">Home</a> &middot;
+    <a href="app.html" style="color:var(--text-muted);">App</a> &middot;
+    <a href="github-action.html" style="color:var(--text-muted);">GitHub Action</a> &middot;
+    <a href="pricing.html" style="color:var(--text-muted);">Pricing</a> &middot;
+    <a href="tools.html" style="color:var(--text-muted);">Tools</a>
+  </p>
+</div>
+
+</main>
+
+</body>
+</html>

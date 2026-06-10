@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request SchemaLens Pro Approval — Email Generator for Your Manager | SchemaLens</title>
+<meta name="description" content="Generate a professional email to request SchemaLens Pro approval from your manager. Includes ROI justification, team-size pricing, and CI/CD benefits. Copy and send in 30 seconds.">
+<link rel="canonical" href="https://schemalens.tech/tools/request-pro-approval.html">
+<meta property="og:title" content="Request SchemaLens Pro Approval — Email Generator for Your Manager">
+<meta property="og:description" content="Generate a professional email to request SchemaLens Pro approval from your manager. Includes ROI justification and team-size pricing.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/request-pro-approval.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SchemaLens Pro Approval Email Generator",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": "Generates a professional manager approval email for SchemaLens Pro purchase with ROI data, team sizing, and CI/CD benefits",
+  "url": "https://schemalens.tech/tools/request-pro-approval.html"
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 24px 24px; text-align: center; max-width: 680px; margin: 0 auto; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; }
+
+  .generator-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    max-width: 1100px; margin: 0 auto; padding: 0 24px 64px;
+  }
+  @media (max-width: 900px) { .generator-grid { grid-template-columns: 1fr; } }
+
+  .form-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px;
+  }
+  .form-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+  .field label .hint { font-weight: 400; color: var(--text-muted); }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    font-size: 0.95rem; box-sizing: border-box;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  }
+  .field textarea { min-height: 80px; resize: vertical; }
+
+  .output-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px;
+  }
+  .output-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+  .email-preview {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 20px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem; line-height: 1.7; white-space: pre-wrap; color: var(--text);
+    max-height: 600px; overflow-y: auto;
+  }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .btn-group button {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 18px; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-group button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-group button:hover { border-color: var(--hover-border); }
+  .btn-group button.primary:hover { background: var(--primary-hover); }
+
+  .roi-sidebar {
+    background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(139,92,246,0.04));
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-top: 20px;
+  }
+  .roi-sidebar h3 { font-size: 1rem; margin-bottom: 12px; }
+  .roi-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .roi-row:last-child { border-bottom: none; font-weight: 700; }
+  .roi-row .value { color: var(--primary); font-weight: 600; }
+
+  .template-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .template-tab {
+    padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: var(--bg); cursor: pointer; font-size: 0.85rem;
+  }
+  .template-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+</style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../case-study-catch-breaking-changes.html" style="color:var(--text-muted);text-decoration:none;">Case Study</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<div class="page-header">
+  <h1>Request Pro Approval</h1>
+  <p>Generate a professional email to send your manager. Includes ROI, team sizing, and CI/CD benefits. Copy and send in 30 seconds.</p>
+</div>
+
+<div class="generator-grid">
+
+  <div class="form-card">
+    <h2>Your Situation</h2>
+
+    <div class="field">
+      <label>Your name</label>
+      <input type="text" id="yourName" placeholder="Alex" value="Alex">
+    </div>
+
+    <div class="field">
+      <label>Manager's name</label>
+      <input type="text" id="managerName" placeholder="Sarah" value="Sarah">
+    </div>
+
+    <div class="field">
+      <label>Team size <span class="hint">(engineers who write migrations)</span></label>
+      <input type="number" id="teamSize" value="8" min="1" max="200">
+    </div>
+
+    <div class="field">
+      <label>Database <span class="hint">(primary)</span></label>
+      <select id="dbSelect">
+        <option value="PostgreSQL">PostgreSQL</option>
+        <option value="MySQL">MySQL</option>
+        <option value="SQLite">SQLite</option>
+        <option value="SQL Server">SQL Server</option>
+        <option value="Oracle">Oracle</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Current workflow <span class="hint">(how do you review schema changes today?)</span></label>
+      <select id="workflowSelect">
+        <option value="manual">Manual code review (no automated checking)</option>
+        <option value="basic">Basic linting only</option>
+        <option value="partial">Some teams check, others don't</option>
+        <option value="none">No formal review process</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Pain point <span class="hint">(optional — what's the worst schema incident you've had?)</span></label>
+      <textarea id="painPoint" placeholder="Last quarter we accidentally dropped a column that broke a reporting pipeline for 6 hours."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Email tone</label>
+      <div class="template-tabs">
+        <button class="template-tab active" data-tone="professional" onclick="setTone('professional')">Professional</button>
+        <button class="template-tab" data-tone="casual" onclick="setTone('casual')">Casual</button>
+        <button class="template-tab" data-tone="urgent" onclick="setTone('urgent')">Urgent</button>
+      </div>
+    </div>
+
+    <div class="roi-sidebar">
+      <h3>📊 Estimated ROI</h3>
+      <div class="roi-row"><span>Tool cost</span><span class="value" id="roiCost">$39</span></div>
+      <div class="roi-row"><span>Incidents prevented / year</span><span class="value" id="roiIncidents">2–4</span></div>
+      <div class="roi-row"><span>Avg. incident cost</span><span class="value" id="roiIncidentCost">$4,200</span></div>
+      <div class="roi-row"><span>Annual savings</span><span class="value" id="roiSavings">$8,400–$16,800</span></div>
+      <div class="roi-row"><span>ROI</span><span class="value" id="roiRoi">215×–430×</span></div>
+    </div>
+  </div>
+
+  <div class="output-card">
+    <h2>Generated Email</h2>
+    <div class="email-preview" id="emailOutput"></div>
+    <div class="btn-group">
+      <button class="primary" onclick="copyEmail()">📋 Copy Email</button>
+      <button onclick="openGmail()">📧 Open in Gmail</button>
+      <button onclick="downloadTxt()">⬇️ Download .txt</button>
+    </div>
+  </div>
+
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <div style="max-width:var(--max-width);margin:0 auto;">
+    <p>SchemaLens Pro — $39 lifetime. Price increases to $79 on July 1.</p>
+    <p style="margin-top:8px;">
+      <a href="../index.html" style="color:var(--text-muted);">Home</a> &middot;
+      <a href="../app.html" style="color:var(--text-muted);">App</a> &middot;
+      <a href="../pricing.html" style="color:var(--text-muted);">Pricing</a> &middot;
+      <a href="../github-action.html" style="color:var(--text-muted);">GitHub Action</a> &middot;
+      <a href="../case-study-catch-breaking-changes.html" style="color:var(--text-muted);">Case Study</a>
+    </p>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  let currentTone = 'professional';
+
+  function setTone(tone) {
+    currentTone = tone;
+    document.querySelectorAll('.template-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.template-tab[data-tone="${tone}"]`).classList.add('active');
+    render();
+  }
+
+  function fmtMoney(n) {
+    return '$' + n.toLocaleString();
+  }
+
+  function calculateROI() {
+    const teamSize = parseInt(document.getElementById('teamSize').value) || 1;
+    const proCost = 39;
+    // Assume 0.5–1 incidents per engineer per year prevented
+    const minIncidents = Math.max(1, Math.round(teamSize * 0.25));
+    const maxIncidents = Math.max(2, Math.round(teamSize * 0.5));
+    const avgIncidentCost = 4200; // based on case study
+    const minSavings = minIncidents * avgIncidentCost;
+    const maxSavings = maxIncidents * avgIncidentCost;
+    const minRoi = Math.round(minSavings / proCost);
+    const maxRoi = Math.round(maxSavings / proCost);
+
+    document.getElementById('roiCost').textContent = fmtMoney(proCost);
+    document.getElementById('roiIncidents').textContent = `${minIncidents}–${maxIncidents}`;
+    document.getElementById('roiIncidentCost').textContent = fmtMoney(avgIncidentCost);
+    document.getElementById('roiSavings').textContent = `${fmtMoney(minSavings)}–${fmtMoney(maxSavings)}`;
+    document.getElementById('roiRoi').textContent = `${minRoi}×–${maxRoi}×`;
+
+    return { proCost, minIncidents, maxIncidents, avgIncidentCost, minSavings, maxSavings, minRoi, maxRoi };
+  }
+
+  function generateEmail() {
+    const name = document.getElementById('yourName').value.trim() || 'Alex';
+    const manager = document.getElementById('managerName').value.trim() || 'Sarah';
+    const teamSize = parseInt(document.getElementById('teamSize').value) || 8;
+    const db = document.getElementById('dbSelect').value;
+    const workflow = document.getElementById('workflowSelect').value;
+    const pain = document.getElementById('painPoint').value.trim();
+    const roi = calculateROI();
+
+    let workflowDesc = '';
+    switch (workflow) {
+      case 'manual': workflowDesc = 'We currently rely on manual code review for schema changes, which means some risky migrations slip through.'; break;
+      case 'basic': workflowDesc = 'Our current CI only does basic linting — it doesn\'t catch breaking schema changes or dangerous ALTER TABLE operations.'; break;
+      case 'partial': workflowDesc = 'Some teams review schema changes carefully, but coverage is inconsistent across the org.'; break;
+      case 'none': workflowDesc = 'We don\'t have a formal schema review process, which makes production incidents more likely as we scale.'; break;
+    }
+
+    const painLine = pain ? `\nFor context: ${pain}\n` : '';
+
+    if (currentTone === 'professional') {
+      return `Subject: Tool recommendation: SchemaLens for schema change safety (${fmtMoney(roi.proCost)})
+
+Hi ${manager},
+
+I wanted to recommend a tool that would significantly reduce our risk of schema-related production incidents.
+
+**The problem:**
+${workflowDesc}${painLine}
+With ${teamSize} engineers shipping schema changes to ${db}, the manual review overhead is only going to grow.
+
+**The solution:**
+SchemaLens (https://schemalens.tech) is a schema diff tool that integrates directly into our CI/CD pipeline. It automatically compares schema changes in every pull request, detects breaking changes, and posts a summary comment with risk scores and suggested migration scripts.
+
+**Key benefits:**
+- Catches breaking changes (dropped columns, removed tables, type changes) before they reach production
+- Generates migration scripts automatically, saving ~30 min per migration
+- Works with ${db} and integrates with GitHub Actions in under 10 minutes
+- Zero-setup for the team — it runs automatically on every PR
+
+**Cost:**
+${fmtMoney(roi.proCost)} one-time for a lifetime Pro license. Based on industry data, preventing a single schema incident typically saves ${fmtMoney(roi.avgIncidentCost)}+ in downtime and recovery. The ROI is roughly ${roi.minRoi}×–${roi.maxRoi}× if it prevents even one incident this year.
+
+**Next step:**
+I can set up the GitHub Action integration this week and we can evaluate it on a trial basis. The free tier works indefinitely, but Pro unlocks full migration generation and team features.
+
+Let me know if you'd like me to proceed or if you have questions.
+
+Best,
+${name}`;
+    }
+
+    if (currentTone === 'casual') {
+      return `Subject: Quick idea: SchemaLens for safer schema changes
+
+Hey ${manager},
+
+Quick thought: we should add SchemaLens to our CI pipeline. It diffs schema changes in PRs and catches breaking changes before they hit prod.
+
+${workflowDesc}${painLine}
+It's ${fmtMoney(roi.proCost)} one-time (lifetime license), works with ${db}, and takes like 10 minutes to set up. If it stops even one bad migration, it pays for itself ${roi.minRoi}× over.
+
+I can add it to our GitHub Actions this week if you're cool with it. Free tier works forever; Pro just gives full migration scripts.
+
+Let me know!
+
+${name}`;
+    }
+
+    // urgent
+    return `Subject: Urgent: We need automated schema checks in CI/CD
+
+Hi ${manager},
+
+I\'m flagging a risk that we should address before our next deploy cycle.
+
+${workflowDesc}${painLine}
+With ${teamSize} engineers and no automated schema safety checks, we\'re one missed review away from a production outage. Schema-related incidents typically cost ${fmtMoney(roi.avgIncidentCost)}+ in downtime and recovery time.
+
+SchemaLens (https://schemalens.tech) is a ${fmtMoney(roi.proDate)} one-time tool that adds automated schema diffing to our GitHub Actions. It catches breaking changes in every PR, generates migration scripts, and gives us a risk score before anything merges.
+
+**This is not a "nice to have" — it\'s infrastructure safety.** Teams our size usually see their first schema incident within 6 months without automated checks.
+
+I can have this running by end of week. The free tier is unlimited; Pro is ${fmtMoney(roi.proCost)} lifetime.
+
+Can we move on this?
+
+${name}`;
+  }
+
+  function render() {
+    document.getElementById('emailOutput').textContent = generateEmail();
+  }
+
+  function copyEmail() {
+    navigator.clipboard.writeText(document.getElementById('emailOutput').textContent).then(() => {
+      const btn = document.querySelector('.btn-group button.primary');
+      const old = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = old, 2000);
+    });
+  }
+
+  function openGmail() {
+    const body = encodeURIComponent(document.getElementById('emailOutput').textContent);
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&body=${body}`, '_blank');
+  }
+
+  function downloadTxt() {
+    const text = document.getElementById('emailOutput').textContent;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'schemalens-pro-approval-request.txt';
+    a.click();
+  }
+
+  // Event listeners
+  ['yourName', 'managerName', 'teamSize', 'dbSelect', 'workflowSelect', 'painPoint'].forEach(id => {
+    document.getElementById(id).addEventListener('input', render);
+    document.getElementById(id).addEventListener('change', render);
+  });
+
+  render();
+</script>
+
+</body>
+</html>

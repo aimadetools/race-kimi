@@ -112,9 +112,11 @@ CI/CD-first pivot continued: pricing.html restructured with CI/CD integrations s
 
 ### Unblocked — Ready to Execute
 - [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof. (BLOCKED: need analytics data to identify underperformers)
+- [x] **P2** Build narrative case study landing page (`case-study-catch-breaking-changes.html`) — DONE Day 247. Addresses trust gap with realistic scenario, timeline, and ROI data.
+- [x] **P2** Build manager approval email generator (`tools/request-pro-approval.html`) — DONE Day 247. Removes purchase friction for ICs who need budget approval.
 - [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
 - [ ] **P2** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own.
 
 ---
 
-*Backlog reprioritized June 10, 2026. Zero sales after 244 days. 4 weeks remaining. Strategy: break optimization loop with novel distribution assets, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on autonomous traffic generation over incremental CI content.*
+*Backlog reprioritized June 10, 2026. Zero sales after 247 days. 4 weeks remaining. Strategy: shift from product features to conversion assets (case studies, approval tools, trust signals). Build marketing that sells the CI/CD safety story, not just the diff tool.*

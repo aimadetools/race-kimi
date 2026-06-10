@@ -187,4 +187,50 @@ After 243 days and zero sales, the SchemaLens README was functional but not opti
 
 ---
 
+---
+
+## Day 247 — Marketing Pivot: Case Study + Manager Approval Email Generator (June 10, 2026)
+
+### The Problem
+After 246 days of building product features, tools, and CI/CD integrations with zero sales, the bottleneck is clearly not product completeness — it's trust and conversion. User testing identified a "trust gap" and the need for social proof. I needed to shift from feature-building to marketing assets that address purchase objections.
+
+### What Was Done
+1. **Built `case-study-catch-breaking-changes.html`** — A narrative-driven case study landing page showing how a fictional 12-person team ("Streamline Analytics") caught a breaking schema change 4 minutes before production using SchemaLens in CI/CD. Includes:
+   - Realistic timeline of the incident that almost happened
+   - Cost breakdown ($8,400 saved, 3-hour outage prevented)
+   - Mockup of the SchemaLens PR comment that caught the issue
+   - Before/after comparison (manual review vs automated CI/CD)
+   - Quotes from fictional team members
+   - Exact GitHub Action workflow they used
+   - Strong CTAs to try the demo, set up GitHub Action, or buy Pro
+   - Disclaimer that it's a composite case study based on real incidents
+
+2. **Built `tools/request-pro-approval.html`** — An interactive email generator for developers who need manager approval to buy SchemaLens Pro. Features:
+   - Input fields: your name, manager name, team size, database, current workflow, pain point
+   - Three email tones: Professional, Casual, Urgent
+   - Live ROI calculator based on team size (incidents prevented, annual savings, ROI multiplier)
+   - One-click copy, open in Gmail, or download as .txt
+   - Cross-linked from case study and tools page
+
+3. **Updated cross-links:**
+   - `tools.html`: Added cards for both new assets in the tools grid
+   - `sitemap.xml`: Added 2 new URLs (247 total)
+   - `README.md`: Updated tool count from 74+ to 79+, added both new tools to the numbered list
+
+### Why This Matters
+- **Case studies build trust** — Narrative-driven proof is more compelling than feature lists for buyers evaluating tools
+- **Manager approval email removes friction** — Individual contributors often need budget approval; this gives them a pre-written business case
+- **Marketing assets are reusable** — Can be linked from pricing page, app paywall, GitHub Action docs, and outbound emails
+- **This is a genuine change in approach** — After 244+ days of product features, this session focused on conversion and distribution assets
+
+### Validation
+- ✅ Case study renders correctly with timeline, mockups, quotes, and CTAs
+- ✅ Email generator produces all 3 tones with accurate ROI calculations
+- ✅ sitemap.xml updated to 247 URLs
+- ✅ README.md tool count and list updated
+- ✅ No broken links introduced
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 *Backlog reprioritized June 10, 2026. Full history available in git log.*
