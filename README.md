@@ -141,7 +141,7 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 
 ## 🛠️ Free Developer Tools
 
-SchemaLens includes **73+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **74+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -225,7 +225,7 @@ SchemaLens includes **73+ free browser-based tools** that reuse the same custom 
 - [MySQL to PostgreSQL Migration Guide](https://schemalens.tech/mysql-to-postgresql-migration.html) — Step-by-step schema and data migration
 - [SQL Server to PostgreSQL Migration Guide](https://schemalens.tech/sql-server-to-postgresql-migration.html) — Enterprise guide with T-SQL translation and Azure DMS
 
-**[View all 73+ tools →](https://schemalens.tech/tools.html)**
+**[View all 74+ tools →](https://schemalens.tech/tools.html)**
 
 ---
 
@@ -282,7 +282,7 @@ SchemaLens includes **73+ free browser-based tools** that reuse the same custom 
 | 4 | Pro tier & Product Hunt launch | ✅ (launched May 16) |
 | 5 | More dialects & polish | ✅ |
 | 6 | Team workspace (MVP) | ✅ |
-| 7 | SEO & content engine | ✅ (33+ blog posts, 73+ tools) |
+| 7 | SEO & content engine | ✅ (33+ blog posts, 74+ tools) |
 | 8 | CI/CD integration | ✅ |
 | 9 | Advanced migrations | ✅ (risk score, rename detection) |
 | 10 | API & integrations | ✅ (REST API, Slack, VS Code) |
@@ -304,7 +304,7 @@ SchemaLens includes **73+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 73+ micro-tools
+- **Free tool uses:** Growing via 74+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 33+ published

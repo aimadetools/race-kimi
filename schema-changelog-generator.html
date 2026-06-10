@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Schema Changelog Generator — Release Notes from SQL Migrations</title>
+  <meta name="description" content="Generate human-readable schema changelogs from SQL migrations. Perfect for GitHub releases, Slack announcements, and team documentation. Free. No signup.">
+  <meta property="og:title" content="Database Schema Changelog Generator — Release Notes from SQL Migrations">
+  <meta property="og:description" content="Turn schema diffs into beautiful changelogs. Added tables, removed columns, type changes — all formatted for GitHub releases and Slack.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-changelog-generator.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Changelog Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Generate Markdown changelogs from SQL schema diffs, GitHub release format, Slack format, breaking change detection, PostgreSQL MySQL SQLite SQL Server Oracle support",
+    "url": "https://schemalens.tech/schema-changelog-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 16px; }
+    @media (max-width: 760px) { .editor-grid { grid-template-columns: 1fr; } }
+    .editor-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+    .editor-box label { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--code-bg); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    .editor-box textarea { flex: 1; min-height: 200px; background: transparent; color: var(--text); border: none; padding: 14px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; resize: vertical; outline: none; }
+    .controls { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+    .controls select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.95rem; cursor: pointer; }
+    .controls button { padding: 12px 28px; font-size: 1rem; }
+    .output-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; display: none; }
+    .output-wrap.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .output-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .changelog-preview { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; white-space: pre-wrap; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">SL</span> SchemaLens</a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="open.html">Open Startup</a>
+        <a href="tools.html">Tools</a>
+        <a href="app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>Schema Changelog Generator</h1>
+    <p>Turn database schema changes into human-readable release notes. Perfect for GitHub releases, Slack announcements, and team wikis.</p>
+  </div>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="editor-grid">
+        <div class="editor-box">
+          <label><span style="color:var(--danger);">●</span> Old Schema</label>
+          <textarea id="oldSchema" placeholder="-- Paste your old CREATE TABLE statements here">CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100)
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  title VARCHAR(255)
+);</textarea>
+        </div>
+        <div class="editor-box">
+          <label><span style="color:var(--success);">●</span> New Schema</label>
+          <textarea id="newSchema" placeholder="-- Paste your new CREATE TABLE statements here">CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(255),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255),
+  published_at TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER,
+  body TEXT
+);</textarea>
+        </div>
+      </div>
+      <div class="controls">
+        <select id="format">
+          <option value="github">GitHub Release</option>
+          <option value="slack">Slack / Markdown</option>
+          <option value="simple">Simple List</option>
+        </select>
+        <button class="btn btn-primary" onclick="generateChangelog()">Generate Changelog</button>
+        <button class="btn btn-secondary" onclick="loadSample()">Load Sample</button>
+      </div>
+
+      <div class="output-wrap" id="outputWrap">
+        <div class="output-actions">
+          <button class="btn btn-secondary" onclick="copyChangelog()">📋 Copy</button>
+          <button class="btn btn-secondary" onclick="downloadChangelog()">⬇ Download .md</button>
+          <a href="app.html" class="btn btn-primary">Open Full Diff →</a>
+        </div>
+        <div class="changelog-preview" id="changelogPreview"></div>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>🚀 GitHub Release Format</h3>
+          <p>Generates emoji-rich Markdown with Added, Changed, Removed, and Breaking Changes sections — ready to paste into GitHub releases.</p>
+        </div>
+        <div class="feature-card">
+          <h3>💬 Slack-Ready</h3>
+          <p>Plain Markdown format that renders beautifully in Slack, Discord, and Microsoft Teams. Share schema changes with your team instantly.</p>
+        </div>
+        <div class="feature-card">
+          <h3>⚠️ Breaking Change Detection</h3>
+          <p>Automatically flags dangerous changes — dropped columns, removed indexes, type shrinks — so they never sneak into production unnoticed.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Shareable URLs</h3>
+          <p>Your schema and format choice are encoded in the URL. Share a direct link to a generated changelog with your team.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>Need migration scripts too?</h2>
+      <p class="mb-24">SchemaLens doesn't just generate changelogs — it creates ready-to-run ALTER TABLE scripts, rollback plans, and breaking change reports.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Try the Full Schema Diff →</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><span class="logo-mark">SL</span> SchemaLens</a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html">Home</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="features.html">Features</a>
+          <a href="blog.html">Blog</a>
+          <a href="tools.html">Tools</a>
+          <a href="app.html">Open App</a>
+        </div>
+        <div class="footer-col">
+          <h4>CI/CD</h4>
+          <a href="github-action.html">GitHub Action</a>
+          <a href="gitlab-schema-diff.html">GitLab CI</a>
+          <a href="jenkins-schema-diff.html">Jenkins</a>
+          <a href="circleci-schema-diff.html">CircleCI</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="about.html">Our Story</a>
+          <a href="about.html">Roadmap</a>
+          <a href="about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <a href="privacy-policy.html">Privacy</a>
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" style="color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg> Star on GitHub</a>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+function parseSchema(sql) {
+  const tables = [];
+  const stmts = splitStatements(sql);
+  for (const stmt of stmts) {
+    const tableMatch = stmt.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\((.*)\)\s*;?/is);
+    if (tableMatch) {
+      const name = tableMatch[1];
+      const body = tableMatch[2];
+      const columns = [];
+      const lines = body.split(',');
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+        const colMatch = line.match(/^(\w+)\s+(\w+(?:\([^)]*\))?)/i);
+        if (colMatch) {
+          columns.push({ name: colMatch[1], type: colMatch[2] });
+        }
+      }
+      tables.push({ name, columns });
+    }
+  }
+  return tables;
+}
+
+function generateChangelog() {
+  const oldSQL = document.getElementById('oldSchema').value;
+  const newSQL = document.getElementById('newSchema').value;
+  const format = document.getElementById('format').value;
+  const oldTables = parseSchema(oldSQL);
+  const newTables = parseSchema(newSQL);
+
+  const added = [];
+  const removed = [];
+  const modified = [];
+  const breaking = [];
+
+  const oldMap = new Map(oldTables.map(t => [t.name, t]));
+  const newMap = new Map(newTables.map(t => [t.name, t]));
+
+  for (const nt of newTables) {
+    const ot = oldMap.get(nt.name);
+    if (!ot) {
+      added.push(nt.name);
+      continue;
+    }
+    const oldCols = new Map(ot.columns.map(c => [c.name, c]));
+    const newCols = new Map(nt.columns.map(c => [c.name, c]));
+    for (const [name, col] of newCols) {
+      if (!oldCols.has(name)) {
+        modified.push(`${nt.name}.${name} (added column)`);
+      } else if (oldCols.get(name).type !== col.type) {
+        modified.push(`${nt.name}.${name} (type: ${oldCols.get(name).type} → ${col.type})`);
+      }
+    }
+    for (const [name, col] of oldCols) {
+      if (!newCols.has(name)) {
+        removed.push(`${nt.name}.${name} (dropped column)`);
+        breaking.push(`${nt.name}.${name} — dropped column`);
+      }
+    }
+  }
+  for (const ot of oldTables) {
+    if (!newMap.has(ot.name)) {
+      removed.push(`${ot.name} (dropped table)`);
+      breaking.push(`${ot.name} — dropped table`);
+    }
+  }
+
+  let md = '';
+  if (format === 'github') {
+    md = '## Schema Changes\n\n';
+    if (added.length) md += '### ✨ Added\n' + added.map(a => `- **\`${a}\`** table`).join('\n') + '\n\n';
+    if (modified.length) md += '### 🔄 Changed\n' + modified.map(m => `- **\`${m.split(' ')[0]}\`** ${m.split(' ').slice(1).join(' ')}`).join('\n') + '\n\n';
+    if (removed.length) md += '### 🗑️ Removed\n' + removed.map(r => `- **\`${r.split(' ')[0]}\`** ${r.split(' ').slice(1).join(' ')}`).join('\n') + '\n\n';
+    if (breaking.length) md += '### ⚠️ Breaking Changes\n' + breaking.map(b => `- **\`${b.split(' — ')[0]}\`** — ${b.split(' — ')[1]}`).join('\n') + '\n\n';
+    md += '_Generated with [SchemaLens](https://schemalens.tech)_';
+  } else if (format === 'slack') {
+    md = '*Schema Changes*\n\n';
+    if (added.length) md += '*Added:*\n' + added.map(a => `• \`${a}\` table`).join('\n') + '\n\n';
+    if (modified.length) md += '*Changed:*\n' + modified.map(m => `• \`${m.split(' ')[0]}\` ${m.split(' ').slice(1).join(' ')}`).join('\n') + '\n\n';
+    if (removed.length) md += '*Removed:*\n' + removed.map(r => `• \`${r.split(' ')[0]}\` ${r.split(' ').slice(1).join(' ')}`).join('\n') + '\n\n';
+    if (breaking.length) md += '*Breaking Changes:*\n' + breaking.map(b => `• \`${b.split(' — ')[0]}\` — ${b.split(' — ')[1]}`).join('\n') + '\n\n';
+  } else {
+    md = 'Schema Changes\n\n';
+    if (added.length) md += 'Added:\n' + added.map(a => `- ${a} table`).join('\n') + '\n\n';
+    if (modified.length) md += 'Changed:\n' + modified.map(m => `- ${m}`).join('\n') + '\n\n';
+    if (removed.length) md += 'Removed:\n' + removed.map(r => `- ${r}`).join('\n') + '\n\n';
+    if (breaking.length) md += 'Breaking Changes:\n' + breaking.map(b => `- ${b}`).join('\n') + '\n\n';
+  }
+
+  document.getElementById('changelogPreview').textContent = md;
+  document.getElementById('outputWrap').classList.add('active');
+
+  // Update URL for shareability
+  const params = new URLSearchParams();
+  params.set('old', btoa(unescape(encodeURIComponent(oldSQL))));
+  params.set('new', btoa(unescape(encodeURIComponent(newSQL))));
+  params.set('fmt', format);
+  history.replaceState(null, '', '?' + params.toString());
+}
+
+function copyChangelog() {
+  const text = document.getElementById('changelogPreview').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.output-actions button');
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
+}
+
+function downloadChangelog() {
+  const text = document.getElementById('changelogPreview').textContent;
+  const blob = new Blob([text], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'schema-changelog.md';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function loadSample() {
+  document.getElementById('oldSchema').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100)
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  title VARCHAR(255)
+);`;
+  document.getElementById('newSchema').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(255),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  title VARCHAR(255),
+  published_at TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER,
+  body TEXT
+);`;
+  generateChangelog();
+}
+
+// Load from URL
+(function() {
+  const params = new URLSearchParams(location.search);
+  if (params.has('old')) {
+    try {
+      document.getElementById('oldSchema').value = decodeURIComponent(escape(atob(params.get('old'))));
+    } catch(e) {}
+  }
+  if (params.has('new')) {
+    try {
+      document.getElementById('newSchema').value = decodeURIComponent(escape(atob(params.get('new'))));
+    } catch(e) {}
+  }
+  if (params.has('fmt')) {
+    document.getElementById('format').value = params.get('fmt');
+  }
+  if (params.has('old') && params.has('new')) {
+    generateChangelog();
+  }
+})();
+</script>
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+<script src="lib/ref-tracking.js"></script>
+</body>
+</html>

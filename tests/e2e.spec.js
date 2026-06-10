@@ -84,6 +84,7 @@ const pages = [
   { path: '/circleci-schema-diff.html', name: 'CircleCI Pipeline Landing' },
   { path: '/book-demo.html', name: 'Book Demo' },
   { path: '/team.html', name: 'Team' },
+  { path: '/schema-changelog-generator.html', name: 'Schema Changelog Generator' },
   { path: '/zero-downtime-migration-guide.html', name: 'Zero-Downtime Migration Guide' },
   { path: '/tools/sql-to-orm-converter.html', name: 'SQL to ORM Converter' },
   { path: '/tools/sql-to-typescript.html', name: 'SQL to TypeScript Generator' },
