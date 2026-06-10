@@ -60,55 +60,6 @@
 
 ---
 
-## Day 239 — Live Database Schema Fetch: Zero-Install Schema Export from PostgreSQL & MySQL (June 9, 2026)
-
-### The Problem
-After 238 days and zero sales, the #1 community feedback remains: "How do I get my schema out of my database to use SchemaLens?" The Schema Export Command Generator (Day 238) helps users build `pg_dump`/`mysqldump` commands, but it still requires them to run a CLI command. Many developers work on machines without database client binaries installed, or they simply want the fastest possible path from "I have a database" to "I see a diff." Every extra step in the activation funnel is a drop-off point.
-
-### What Was Done
-1. **Built `/api/live-schema.js`** — Vercel serverless function that connects to live databases and returns CREATE TABLE SQL:
-   - **PostgreSQL support** via `pg` package. Reconstructs CREATE TABLE statements by querying `information_schema` and `pg_indexes`:
-     - Columns with types, lengths, precision/scale, nullability, defaults
-     - Primary keys, unique constraints, foreign keys, CHECK constraints
-     - Indexes (excluding PK duplicates)
-     - Gracefully handles arrays, user-defined types, and common PostgreSQL type aliases
-   - **MySQL support** via `mysql2` package. Uses `SHOW CREATE TABLE` for exact DDL:
-     - Strips environment-specific noise (`ENGINE`, `AUTO_INCREMENT`, `CHARSET`, `COLLATE`, `COMMENT`) to reduce false diffs
-   - **Security hardening**:
-     - Connection strings are never logged or stored
-     - POST-only endpoint with CORS restrictions
-     - Rejects connection strings containing shell metacharacters (`;`, `|`, `\``, `$`)
-     - Error messages redact passwords and connection details
-     - 8-second connection/query timeout to prevent hanging
-     - SSL enabled with `rejectUnauthorized: false` for managed DBs with self-signed certs
-   - **Privacy notice** displayed prominently in UI: "Connection details are used once and never stored"
-
-2. **Integrated into `app.html`** — two "🔌 Connect Database" buttons (one per schema panel):
-   - Modal with dialect selector (PostgreSQL / MySQL) and connection string input
-   - Loading state with "Connecting…" feedback
-   - Error handling with clear messages (timeout, auth failure, network issues)
-   - Fetched schema populates the textarea directly, triggering stats update and hiding welcome state
-   - Analytics tracking for `live_db_modal_opened`, `live_db_fetched`, `live_db_error`
-
-3. **Cross-linked site-wide**:
-   - `tools/db-schema-export-guide.html`: added new CTA box "Or connect directly — no command line needed"
-   - `staging-vs-production-schema-diff.html`: added new section "Diff schemas directly from live databases" with connection string example and link to app
-
-### Why This Matters
-- This is the closest SchemaLens has ever come to a "zero-friction" activation experience. A developer can go from landing on the site to seeing a schema diff in under 30 seconds — no CLI tools, no copy-paste from GUI apps, no file exports.
-- It differentiates SchemaLens from ALL CLI competitors (migra, schemalex, pg-schema-diff) which require installation and configuration. SchemaLens is now the only zero-install schema diff tool that can read directly from a live database.
-- The security model is transparent: clear warnings, no storage, open-source code. This builds trust with privacy-conscious developers.
-- It directly addresses the #1 onboarding blocker identified in community feedback, which should measurably improve activation rate if traffic ever arrives.
-
-### Validation
-- ✅ `api/live-schema.js` passes Node.js syntax check
-- ✅ `app.html` tag balance verified (no new issues introduced)
-- ✅ Playwright e2e tests pass (`node test-all.js` 34/34)
-- ✅ `package.json` updated with `pg` and `mysql2` dependencies
-- ✅ Committed, pushed, deployed to Vercel
-
----
-
 ## Day 240 — Jenkins Pipeline Integration: Dedicated Landing Page + Enterprise Jenkinsfile (June 9, 2026)
 
 ### The Problem

@@ -139,6 +139,7 @@ const pages = [
   { path: '/database-schema-anti-patterns.html', name: 'Database Schema Anti-Patterns' },
   { path: '/features.html', name: 'Product Features' },
   { path: '/tools/schema-diff-speed-challenge.html', name: 'Schema Diff Speed Challenge' },
+  { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
 ];
 
 for (const { path, name } of pages) {

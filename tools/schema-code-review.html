@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Schema Code Review — Free SQL Schema Review Tool</title>
+  <meta name="description" content="Paste your SQL CREATE TABLE schema and get a detailed code review with inline comments, severity scores, and fix suggestions. Like a senior DBA reviewing your PR.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-code-review.html">
+  <meta property="og:title" content="Database Schema Code Review — Free SQL Schema Review Tool">
+  <meta property="og:description" content="Get a senior DBA-style review of your database schema. Inline comments, severity scores, and fix suggestions. Paste SQL, get reviewed.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-code-review.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    :root {
+      --review-bg: #0d1117;
+      --review-border: #30363d;
+      --review-line: #161b22;
+      --review-line-num: #6e7681;
+      --review-text: #c9d1d9;
+      --review-comment-bg: #161b22;
+      --review-comment-border: #30363d;
+      --severity-critical: #f85149;
+      --severity-warning: #d29922;
+      --severity-info: #58a6ff;
+      --severity-success: #3fb950;
+    }
+    .review-hero { text-align: center; padding: 48px 0 32px; }
+    .review-hero h1 { font-size: 2rem; margin-bottom: 8px; }
+    .review-hero p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+    .input-section { margin-bottom: 24px; }
+    .input-section label { display: block; font-weight: 600; margin-bottom: 8px; }
+    .schema-input {
+      width: 100%; min-height: 280px; padding: 16px;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--review-bg); color: var(--review-text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem; line-height: 1.6; resize: vertical; box-sizing: border-box;
+    }
+    .schema-input:focus { outline: none; border-color: var(--primary); }
+    .btn-review {
+      background: var(--primary); color: #fff; border: none; padding: 12px 28px;
+      border-radius: var(--radius); font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-review:hover { opacity: 0.9; }
+    .btn-review:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .score-card {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;
+      margin: 24px 0;
+    }
+    .score-item {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; text-align: center;
+    }
+    .score-item .score-val {
+      font-size: 1.75rem; font-weight: 700; line-height: 1;
+    }
+    .score-item .score-val.excellent { color: var(--severity-success); }
+    .score-item .score-val.good { color: var(--severity-info); }
+    .score-item .score-val.fair { color: var(--severity-warning); }
+    .score-item .score-val.poor { color: var(--severity-critical); }
+    .score-item .score-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+
+    .review-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .review-filter {
+      padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-muted); font-size: 0.85rem; cursor: pointer;
+    }
+    .review-filter.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .code-review-frame {
+      background: var(--review-bg); border: 1px solid var(--review-border); border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 24px;
+    }
+    .code-review-header {
+      background: var(--review-line); padding: 12px 16px; border-bottom: 1px solid var(--review-border);
+      font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;
+    }
+    .code-line {
+      display: flex; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem; line-height: 1.6;
+    }
+    .code-line:nth-child(even) { background: rgba(255,255,255,0.01); }
+    .line-number {
+      width: 48px; text-align: right; padding: 4px 12px; color: var(--review-line-num);
+      background: var(--review-line); border-right: 1px solid var(--review-border);
+      user-select: none; flex-shrink: 0;
+    }
+    .line-content {
+      padding: 4px 16px; color: var(--review-text); white-space: pre; overflow-x: auto; flex: 1;
+    }
+    .line-content .kw { color: #ff7b72; }
+    .line-content .type { color: #79c0ff; }
+    .line-content .str { color: #a5d6ff; }
+    .line-content .num { color: #79c0ff; }
+    .line-content .comment { color: #8b949e; }
+
+    .inline-comment {
+      margin: 4px 16px 12px 64px; padding: 12px 16px;
+      background: var(--review-comment-bg); border: 1px solid var(--review-comment-border);
+      border-radius: var(--radius-sm); font-size: 0.85rem;
+    }
+    .inline-comment.critical { border-left: 3px solid var(--severity-critical); }
+    .inline-comment.warning { border-left: 3px solid var(--severity-warning); }
+    .inline-comment.info { border-left: 3px solid var(--severity-info); }
+    .inline-comment .comment-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-weight: 600;
+    }
+    .inline-comment.critical .comment-header { color: var(--severity-critical); }
+    .inline-comment.warning .comment-header { color: var(--severity-warning); }
+    .inline-comment.info .comment-header { color: var(--severity-info); }
+    .inline-comment p { margin: 0; color: var(--text-muted); line-height: 1.5; }
+    .inline-comment .fix-btn {
+      margin-top: 8px; padding: 4px 12px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer;
+    }
+    .inline-comment .fix-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .summary-panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; margin-bottom: 24px;
+    }
+    .summary-panel h3 { margin: 0 0 12px; font-size: 1.1rem; }
+    .summary-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+    .summary-stat { text-align: center; }
+    .summary-stat .stat-num { font-size: 1.5rem; font-weight: 700; }
+    .summary-stat .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+    .share-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .share-bar button {
+      padding: 8px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 0.85rem; cursor: pointer;
+    }
+    .share-bar button:hover { border-color: var(--primary); }
+
+    .pro-cta-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06));
+      border: 2px dashed var(--primary); border-radius: var(--radius); padding: 24px;
+      text-align: center; margin: 24px 0;
+    }
+    .pro-cta-box h4 { margin: 0 0 8px; }
+    .pro-cta-box p { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 16px; }
+
+    @media (max-width: 640px) {
+      .line-number { width: 36px; padding: 4px 8px; }
+      .inline-comment { margin-left: 44px; }
+      .review-hero h1 { font-size: 1.5rem; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Database Schema Code Review",
+    "description": "Free SQL schema code review tool with inline comments, severity scoring, and fix suggestions.",
+    "url": "https://schemalens.tech/tools/schema-code-review.html",
+    "applicationCategory": "DeveloperApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+        <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+      </svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="../app.html">App</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../tools.html">Tools</a>
+    </div>
+    <a href="../app.html" class="btn btn-primary btn-sm">Open App</a>
+  </div>
+</nav>
+
+<main class="container" style="max-width: 960px;">
+  <section class="review-hero">
+    <h1>Database Schema Code Review</h1>
+    <p>Paste your <code>CREATE TABLE</code> schema. Get a detailed review with inline comments, severity scores, and fix suggestions — like a senior DBA reviewing your PR.</p>
+  </section>
+
+  <section class="input-section" id="inputSection">
+    <label for="schemaInput">Your SQL Schema</label>
+    <textarea id="schemaInput" class="schema-input" placeholder="CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255),
+  password VARCHAR(255),
+  created_at TIMESTAMP
+);"></textarea>
+    <div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+      <button class="btn-review" id="reviewBtn" onclick="runReview()">🔍 Review Schema</button>
+      <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+      <span style="color:var(--text-muted); font-size:0.85rem;">Works with PostgreSQL, MySQL, SQLite, SQL Server, Oracle</span>
+    </div>
+  </section>
+
+  <section id="resultsSection" style="display:none;">
+    <div class="summary-panel">
+      <h3>📊 Review Summary</h3>
+      <div class="score-card" id="scoreCard"></div>
+      <div class="summary-stats" id="summaryStats"></div>
+      <div class="share-bar">
+        <button onclick="copyShareUrl()">🔗 Copy Share Link</button>
+        <button onclick="shareTwitter()">𝕏 Share on X</button>
+        <button onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+        <button onclick="downloadReport()">📄 Download Markdown</button>
+      </div>
+    </div>
+
+    <div class="review-filters" id="reviewFilters">
+      <button class="review-filter active" data-filter="all" onclick="filterComments('all')">All</button>
+      <button class="review-filter" data-filter="critical" onclick="filterComments('critical')">🔴 Critical</button>
+      <button class="review-filter" data-filter="warning" onclick="filterComments('warning')">🟡 Warnings</button>
+      <button class="review-filter" data-filter="info" onclick="filterComments('info')">🔵 Info</button>
+    </div>
+
+    <div class="code-review-frame" id="codeReview"></div>
+
+    <div class="pro-cta-box" id="proCta">
+      <h4>💼 Want a PDF report for your team?</h4>
+      <p>SchemaLens Pro exports professional schema review reports with your branding, ready for Jira, Confluence, or email.</p>
+      <a href="../pricing.html" class="btn btn-primary">Upgrade to Pro — $39 Lifetime</a>
+    </div>
+  </section>
+</main>
+
+<footer class="container" style="text-align:center; padding: 40px 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px;">
+  <p>Built by <a href="../index.html" style="color: var(--primary);">SchemaLens</a> — 70+ free developer tools</p>
+  <p style="margin-top: 8px;">
+    <a href="../schema-diff.html" style="color: var(--text-muted); margin: 0 8px;">Schema Diff</a>
+    <a href="../tools/schema-health-check.html" style="color: var(--text-muted); margin: 0 8px;">Health Check</a>
+    <a href="../tools/schema-roast.html" style="color: var(--text-muted); margin: 0 8px;">Schema Roast</a>
+    <a href="../tools/safe-migration-checker.html" style="color: var(--text-muted); margin: 0 8px;">Safe Migration</a>
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/node-sql-parser@4.18.0/umd/mysql.min.js"></script>
+<script>
+  let currentComments = [];
+  let currentSchema = '';
+
+  function loadExample() {
+    document.getElementById('schemaInput').value = `CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255),
+  password VARCHAR(255),
+  role VARCHAR(50) DEFAULT 'user',
+  created_at TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  title VARCHAR(255),
+  body TEXT,
+  tags VARCHAR(500),
+  status VARCHAR(20),
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE comments (
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER,
+  user_id INTEGER,
+  body TEXT,
+  created_at TIMESTAMP
+);`;
+  }
+
+  function runReview() {
+    const raw = document.getElementById('schemaInput').value.trim();
+    if (!raw) return alert('Paste a schema first');
+    currentSchema = raw;
+
+    const btn = document.getElementById('reviewBtn');
+    btn.disabled = true;
+    btn.textContent = 'Reviewing…';
+
+    setTimeout(() => {
+      try {
+        const parser = new window.NodeSQLParser.Parser();
+        const ast = parser.astify(raw, { database: 'postgresql' });
+        const tables = Array.isArray(ast) ? ast : [ast];
+        currentComments = analyzeSchema(tables, raw);
+        renderResults(currentComments, raw);
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        updateUrl(raw);
+      } catch (e) {
+        // Fallback: line-based heuristic review if parser fails
+        currentComments = heuristicReview(raw);
+        renderResults(currentComments, raw);
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        updateUrl(raw);
+      }
+      btn.disabled = false;
+      btn.textContent = '🔍 Review Schema';
+    }, 400);
+  }
+
+  function analyzeSchema(tables, raw) {
+    const comments = [];
+    const lines = raw.split('\n');
+    const tableMap = new Map();
+
+    tables.forEach(table => {
+      if (!table || table.type !== 'create') return;
+      const tname = (table.table && table.table[0] && table.table[0].table) || 'unknown';
+      tableMap.set(tname.toLowerCase(), table);
+      const createLine = lines.findIndex(l => l.toLowerCase().includes(`create table`) && l.toLowerCase().includes(tname.toLowerCase()));
+
+      // No primary key
+      const pk = (table.create_definitions || []).find(d => d.primary_key);
+      if (!pk) {
+        comments.push({
+          severity: 'critical', category: 'Performance',
+          line: createLine >= 0 ? createLine + 1 : 1,
+          message: `Table "${tname}" has no PRIMARY KEY.`,
+          detail: 'Every table should have a primary key for row identification, indexing, and ORM compatibility. Add an id SERIAL PRIMARY KEY or similar.'
+        });
+      }
+
+      // No created_at / updated_at
+      const cols = (table.create_definitions || []).filter(d => d.column);
+      const hasCreatedAt = cols.some(c => /created_at|createdat|created/.test((c.column || '').toLowerCase()));
+      const hasUpdatedAt = cols.some(c => /updated_at|updatedat|updated/.test((c.column || '').toLowerCase()));
+      if (!hasCreatedAt) {
+        comments.push({
+          severity: 'warning', category: 'Completeness',
+          line: createLine >= 0 ? createLine + 1 : 1,
+          message: `Table "${tname}" is missing created_at.`,
+          detail: 'Timestamp columns are essential for debugging, audit trails, and sorting. Add created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP.'
+        });
+      }
+      if (!hasUpdatedAt) {
+        comments.push({
+          severity: 'info', category: 'Completeness',
+          line: createLine >= 0 ? createLine + 1 : 1,
+          message: `Table "${tname}" is missing updated_at.`,
+          detail: 'Consider adding updated_at TIMESTAMP with a trigger or application-level update for tracking row modifications.'
+        });
+      }
+
+      // Check each column
+      cols.forEach(col => {
+        const cname = col.column || '';
+        const ctype = (col.definition && col.definition.dataType) || '';
+        const colLine = lines.findIndex(l => new RegExp(`\\b${cname}\\b`, 'i').test(l));
+        const lineNum = colLine >= 0 ? colLine + 1 : 1;
+
+        // Plaintext password
+        if (/password|passwd|pwd|secret/i.test(cname) && /varchar|text|char/i.test(ctype)) {
+          comments.push({
+            severity: 'critical', category: 'Security',
+            line: lineNum,
+            message: `Column "${cname}" stores passwords in plaintext.`,
+            detail: 'Never store passwords in plaintext. Use bcrypt, Argon2, or PBKDF2 hashes. Rename to password_hash and store the hash only.'
+          });
+        }
+
+        // Missing NOT NULL without DEFAULT on critical fields
+        if ((/email|username|name/i.test(cname)) && col.nullable !== false && !col.default_val) {
+          comments.push({
+            severity: 'warning', category: 'Completeness',
+            line: lineNum,
+            message: `Column "${cname}" allows NULL with no default.`,
+            detail: 'Critical identity columns should be NOT NULL to prevent incomplete records and application errors.'
+          });
+        }
+
+        // No index on foreign key
+        if (col.references) {
+          const fkName = cname;
+          const idxExists = (table.create_definitions || []).some(d =>
+            d.index && d.index_columns && d.index_columns.some(ic => (ic.column || '').toLowerCase() === fkName.toLowerCase())
+          );
+          if (!idxExists) {
+            comments.push({
+              severity: 'warning', category: 'Performance',
+              line: lineNum,
+              message: `Foreign key "${cname}" has no index.`,
+              detail: 'Foreign keys without indexes cause full table scans on JOINs and DELETE/UPDATE cascades. Add an index on this column.'
+            });
+          }
+          // Missing ON DELETE
+          if (!col.references.on_delete && !col.references.onDelete) {
+            comments.push({
+              severity: 'info', category: 'Completeness',
+              line: lineNum,
+              message: `Foreign key "${cname}" missing ON DELETE behavior.`,
+              detail: 'Explicitly set ON DELETE RESTRICT, CASCADE, or SET NULL. The default behavior varies by database and can surprise you.'
+            });
+          }
+        }
+
+        // Comma-separated values (1NF violation)
+        if (/tags|categories|items|list|array/i.test(cname) && /varchar|text|char/i.test(ctype)) {
+          comments.push({
+            severity: 'warning', category: 'Normalization',
+            line: lineNum,
+            message: `Column "${cname}" may store comma-separated values.`,
+            detail: 'Storing multiple values in one column violates First Normal Form. Consider a separate join table (e.g., post_tags).'
+          });
+        }
+
+        // Reserved words
+        const reserved = ['order','group','select','insert','update','delete','user','password','index','key','primary','foreign','check','constraint','table','column'];
+        if (reserved.includes(cname.toLowerCase())) {
+          comments.push({
+            severity: 'warning', category: 'Naming',
+            line: lineNum,
+            message: `Column "${cname}" is a reserved word.`,
+            detail: 'Reserved words require quoting in queries and cause subtle bugs. Rename to something descriptive (e.g., "user_account" instead of "user").'
+          });
+        }
+
+        // Missing comments
+        const lineText = lines[colLine] || '';
+        if (!/comment|COMMENT/i.test(lineText)) {
+          comments.push({
+            severity: 'info', category: 'Completeness',
+            line: lineNum,
+            message: `Column "${cname}" has no COMMENT.`,
+            detail: 'Column comments document intent for future developers and data analysts. Add COMMENT \'...\' or equivalent.'
+          });
+        }
+      });
+
+      // Enum without CHECK constraint (heuristic)
+      const statusCol = cols.find(c => /status|state|type|role/i.test((c.column || '').toLowerCase()));
+      if (statusCol) {
+        const cname = statusCol.column;
+        const colLine = lines.findIndex(l => new RegExp(`\\b${cname}\\b`, 'i').test(l));
+        const hasCheck = lines.some(l => /check/i.test(l) && new RegExp(`\\b${cname}\\b`, 'i').test(l));
+        const isEnum = /enum/i.test((statusCol.definition && statusCol.definition.dataType) || '');
+        if (!hasCheck && !isEnum) {
+          comments.push({
+            severity: 'info', category: 'Completeness',
+            line: colLine >= 0 ? colLine + 1 : 1,
+            message: `Column "${cname}" has no CHECK constraint.`,
+            detail: 'Status/state columns benefit from CHECK constraints to prevent invalid values at the database level.'
+          });
+        }
+      }
+    });
+
+    // Cross-table checks
+    const tableNames = Array.from(tableMap.keys());
+    if (tableNames.length > 1) {
+      // Check for naming consistency
+      const pluralTables = tableNames.filter(t => /s$/.test(t));
+      const singularTables = tableNames.filter(t => !/s$/.test(t));
+      if (pluralTables.length > 0 && singularTables.length > 0) {
+        comments.push({
+          severity: 'info', category: 'Naming',
+          line: 1,
+          message: 'Inconsistent table naming: mix of singular and plural.',
+          detail: `Plural: ${pluralTables.join(', ')}; Singular: ${singularTables.join(', ')}. Pick one convention and stick to it.`
+        });
+      }
+    }
+
+    return comments;
+  }
+
+  function heuristicReview(raw) {
+    const comments = [];
+    const lines = raw.split('\n');
+    lines.forEach((line, idx) => {
+      const lower = line.toLowerCase();
+      const lineNum = idx + 1;
+
+      if (/create table/i.test(line) && !/primary key/i.test(raw.substring(idx * 10, idx * 10 + 500))) {
+        // Rough heuristic: if no PK nearby
+      }
+
+      if (/password|passwd|pwd/i.test(lower) && /varchar|text|char/i.test(lower)) {
+        comments.push({
+          severity: 'critical', category: 'Security',
+          line: lineNum, message: 'Possible plaintext password column detected.',
+          detail: 'Never store passwords in plaintext. Use bcrypt or Argon2 hashes.'
+        });
+      }
+      if (/email/i.test(lower) && /varchar|text/i.test(lower) && !/not null/i.test(lower)) {
+        comments.push({
+          severity: 'warning', category: 'Completeness',
+          line: lineNum, message: 'Email column may allow NULL.',
+          detail: 'Email is typically required. Add NOT NULL and a UNIQUE constraint.'
+        });
+      }
+      if (/tags|categories/i.test(lower) && /varchar|text/i.test(lower)) {
+        comments.push({
+          severity: 'warning', category: 'Normalization',
+          line: lineNum, message: 'Possible comma-separated values in column.',
+          detail: 'Consider a normalized join table instead of storing lists in a string.'
+        });
+      }
+      if (/foreign key|references/i.test(lower) && !/on delete/i.test(lower)) {
+        comments.push({
+          severity: 'info', category: 'Completeness',
+          line: lineNum, message: 'Foreign key without ON DELETE behavior.',
+          detail: 'Explicitly define ON DELETE RESTRICT, CASCADE, or SET NULL.'
+        });
+      }
+    });
+
+    if (!/created_at/i.test(raw)) {
+      comments.push({ severity: 'warning', category: 'Completeness', line: 1, message: 'No created_at timestamp found.', detail: 'Add created_at to every table for audit trails and sorting.' });
+    }
+    if (!/updated_at/i.test(raw)) {
+      comments.push({ severity: 'info', category: 'Completeness', line: 1, message: 'No updated_at timestamp found.', detail: 'Consider adding updated_at with a trigger for row modification tracking.' });
+    }
+
+    return comments;
+  }
+
+  function renderResults(comments, raw) {
+    const lines = raw.split('\n');
+    const lineToComments = new Map();
+    comments.forEach(c => {
+      const arr = lineToComments.get(c.line) || [];
+      arr.push(c);
+      lineToComments.set(c.line, arr);
+    });
+
+    // Scores
+    const categories = ['Security','Performance','Naming','Normalization','Completeness'];
+    const scores = {};
+    categories.forEach(cat => {
+      const catComments = comments.filter(c => c.category === cat);
+      const critical = catComments.filter(c => c.severity === 'critical').length;
+      const warning = catComments.filter(c => c.severity === 'warning').length;
+      const info = catComments.filter(c => c.severity === 'info').length;
+      let score = 100 - (critical * 25) - (warning * 10) - (info * 2);
+      scores[cat] = Math.max(0, Math.min(100, score));
+    });
+    const overall = Math.round(categories.reduce((s, c) => s + (scores[c] || 100), 0) / categories.length);
+
+    // Score card
+    const scoreCard = document.getElementById('scoreCard');
+    scoreCard.innerHTML = `
+      <div class="score-item">
+        <div class="score-val ${scoreClass(overall)}">${overall}</div>
+        <div class="score-label">Overall Score</div>
+      </div>
+      ${categories.map(cat => `
+        <div class="score-item">
+          <div class="score-val ${scoreClass(scores[cat])}">${scores[cat]}</div>
+          <div class="score-label">${cat}</div>
+        </div>
+      `).join('')}
+    `;
+
+    // Summary stats
+    const critical = comments.filter(c => c.severity === 'critical').length;
+    const warning = comments.filter(c => c.severity === 'warning').length;
+    const info = comments.filter(c => c.severity === 'info').length;
+    const tables = (raw.match(/CREATE TABLE/gi) || []).length;
+    document.getElementById('summaryStats').innerHTML = `
+      <div class="summary-stat"><div class="stat-num" style="color:var(--severity-critical)">${critical}</div><div class="stat-label">Critical</div></div>
+      <div class="summary-stat"><div class="stat-num" style="color:var(--severity-warning)">${warning}</div><div class="stat-label">Warnings</div></div>
+      <div class="summary-stat"><div class="stat-num" style="color:var(--severity-info)">${info}</div><div class="stat-label">Suggestions</div></div>
+      <div class="summary-stat"><div class="stat-num">${tables}</div><div class="stat-label">Tables</div></div>
+      <div class="summary-stat"><div class="stat-num">${lines.length}</div><div class="stat-label">Lines</div></div>
+    `;
+
+    // Code review frame
+    let html = `<div class="code-review-header"><span>📄 schema.sql</span><span style="margin-left:auto;">${comments.length} comments</span></div>`;
+    lines.forEach((line, idx) => {
+      const lineNum = idx + 1;
+      const highlighted = syntaxHighlight(line);
+      html += `<div class="code-line" data-line="${lineNum}">
+        <div class="line-number">${lineNum}</div>
+        <div class="line-content">${highlighted}</div>
+      </div>`;
+      const cs = lineToComments.get(lineNum);
+      if (cs) {
+        cs.forEach(c => {
+          html += `<div class="inline-comment ${c.severity}" data-severity="${c.severity}" data-category="${c.category}">
+            <div class="comment-header">${severityIcon(c.severity)} ${c.message}</div>
+            <p>${c.detail}</p>
+          </div>`;
+        });
+      }
+    });
+    document.getElementById('codeReview').innerHTML = html;
+  }
+
+  function syntaxHighlight(line) {
+    return line
+      .replace(/(\/\/.+)/g, '<span class="comment">$1</span>')
+      .replace(/\b(CREATE|TABLE|PRIMARY|KEY|FOREIGN|REFERENCES|NOT|NULL|DEFAULT|UNIQUE|CHECK|INDEX|ON|DELETE|CASCADE|RESTRICT|SET|ALTER|DROP|ADD|COLUMN|CONSTRAINT)\b/gi, '<span class="kw">$1</span>')
+      .replace(/\b(SERIAL|INTEGER|BIGINT|SMALLINT|VARCHAR|TEXT|CHAR|BOOLEAN|TIMESTAMP|DATE|TIME|JSON|JSONB|UUID|FLOAT|DOUBLE|DECIMAL|NUMERIC|REAL|BYTEA|BLOB|INT)\b/gi, '<span class="type">$1</span>')
+      .replace(/('([^']*)')/g, '<span class="str">$1</span>')
+      .replace(/\b(\d+)\b/g, '<span class="num">$1</span>');
+  }
+
+  function severityIcon(s) {
+    if (s === 'critical') return '🔴';
+    if (s === 'warning') return '🟡';
+    return '🔵';
+  }
+
+  function scoreClass(score) {
+    if (score >= 90) return 'excellent';
+    if (score >= 70) return 'good';
+    if (score >= 50) return 'fair';
+    return 'poor';
+  }
+
+  function filterComments(filter) {
+    document.querySelectorAll('.review-filter').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+    document.querySelectorAll('.inline-comment').forEach(c => {
+      const show = filter === 'all' || c.dataset.severity === filter;
+      c.style.display = show ? 'block' : 'none';
+    });
+    document.querySelectorAll('.code-line').forEach(line => {
+      const lineNum = line.dataset.line;
+      const hasVisible = Array.from(document.querySelectorAll(`.inline-comment[data-line-ref="${lineNum}"]`)).some(c => c.style.display !== 'none');
+    });
+  }
+
+  function updateUrl(schema) {
+    try {
+      const compressed = btoa(unescape(encodeURIComponent(schema)));
+      const url = new URL(window.location.href);
+      url.searchParams.set('schema', compressed);
+      window.history.replaceState({}, '', url.toString());
+    } catch (e) {}
+  }
+
+  function loadFromUrl() {
+    const url = new URL(window.location.href);
+    const encoded = url.searchParams.get('schema');
+    if (encoded) {
+      try {
+        const schema = decodeURIComponent(escape(atob(encoded)));
+        document.getElementById('schemaInput').value = schema;
+        runReview();
+      } catch (e) {}
+    }
+  }
+
+  function copyShareUrl() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Share link copied to clipboard!');
+    });
+  }
+
+  function shareTwitter() {
+    const text = `I just got my database schema reviewed with SchemaLens. Check it out:`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+  }
+
+  function shareLinkedIn() {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+  }
+
+  function downloadReport() {
+    const lines = currentSchema.split('\n');
+    let md = `# Database Schema Code Review\n\n`;
+    md += `Generated by [SchemaLens](https://schemalens.tech)\n\n`;
+    const critical = currentComments.filter(c => c.severity === 'critical').length;
+    const warning = currentComments.filter(c => c.severity === 'warning').length;
+    const info = currentComments.filter(c => c.severity === 'info').length;
+    md += `## Summary\n- **Critical:** ${critical}\n- **Warnings:** ${warning}\n- **Suggestions:** ${info}\n- **Tables:** ${(currentSchema.match(/CREATE TABLE/gi) || []).length}\n\n`;
+    md += `## Comments\n\n`;
+    currentComments.forEach(c => {
+      md += `### ${severityIcon(c.severity)} ${c.message} (Line ${c.line})\n`;
+      md += `**Category:** ${c.category}  \n`;
+      md += `${c.detail}\n\n`;
+    });
+    md += `---\n*Reviewed with SchemaLens — https://schemalens.tech*\n`;
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'schema-review.md';
+    a.click();
+  }
+
+  window.addEventListener('DOMContentLoaded', loadFromUrl);
+</script>
+
+</body>
+</html>
