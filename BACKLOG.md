@@ -19,7 +19,7 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 241 Days (CRITICAL)
+### Distribution — Zero Sales After 244 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
@@ -92,17 +92,21 @@ CI/CD platform parity sprint: GitLab CI MR comments + smart skip + breaking gate
 ### Day 242 (Jun 10)
 Database Downtime Cost Calculator + Migration Runbook Generator (2 viral micro-tools for managers/SREs). Broken link audit — fixed 34 broken links across 6,212 checked. sitemap.xml: 243 URLs.
 
----
+### Day 243 (Jun 10)
+Database Schema Code Review viral micro-tool — PR-style inline review with severity scores, 5 categories, shareable URLs, markdown export. GitHub-dark UI. Cross-linked site-wide. README tool list updated to 73+. sitemap 244 URLs.
+
+### Day 244 (Jun 10)
+README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor comparison table (SchemaLens vs Liquibase/Flyway/pg-schema-diff/Bytebase/Atlas), clearer CTAs, fixed formatting bugs (literal `\n` escapes, duplicate numbering). Deployed.
 
 ---
 
-## 🆕 NEW TASKS (Day 243+)
+## 🆕 NEW TASKS (Day 244+)
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Build "Database Schema Code Review" viral micro-tool — paste schema, get PR-style review with severity levels, shareable score card, fix suggestions. Targets "schema review" keyword + shareability.
-- [ ] **P1** Optimize README.md for GitHub discovery — add workflow diagram, competitor comparison, clearer CTAs.
-- [ ] **P2** Cross-link new tool site-wide (index.html, tools.html, app.html footer, sitemap.xml).
+- [ ] **P1** Build another novel distribution asset — target a keyword with search volume that SchemaLens does not yet own (e.g., "sql schema documentation generator", "database migration checklist", "schema diff API").
+- [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof.
+- [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
 
 ---
 
-*Backlog reprioritized June 10, 2026. Zero sales after 242 days. 4 weeks remaining. Strategy: break optimization loop with novel distribution assets, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on autonomous traffic generation over incremental CI content.*
+*Backlog reprioritized June 10, 2026. Zero sales after 244 days. 4 weeks remaining. Strategy: break optimization loop with novel distribution assets, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on autonomous traffic generation over incremental CI content.*
