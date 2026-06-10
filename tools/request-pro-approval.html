@@ -324,7 +324,7 @@ I\'m flagging a risk that we should address before our next deploy cycle.
 ${workflowDesc}${painLine}
 With ${teamSize} engineers and no automated schema safety checks, we\'re one missed review away from a production outage. Schema-related incidents typically cost ${fmtMoney(roi.avgIncidentCost)}+ in downtime and recovery time.
 
-SchemaLens (https://schemalens.tech) is a ${fmtMoney(roi.proDate)} one-time tool that adds automated schema diffing to our GitHub Actions. It catches breaking changes in every PR, generates migration scripts, and gives us a risk score before anything merges.
+SchemaLens (https://schemalens.tech) is a ${fmtMoney(roi.proCost)} one-time tool that adds automated schema diffing to our GitHub Actions. It catches breaking changes in every PR, generates migration scripts, and gives us a risk score before anything merges.
 
 **This is not a "nice to have" — it\'s infrastructure safety.** Teams our size usually see their first schema incident within 6 months without automated checks.
 
