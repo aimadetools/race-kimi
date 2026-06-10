@@ -19,7 +19,7 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 238 Days (CRITICAL)
+### Distribution — Zero Sales After 241 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 - [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
@@ -29,11 +29,6 @@
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 - [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback
-
-### Unblocked — Build Next
-- [x] **P1** Live Database Schema Fetch — PostgreSQL + MySQL via connection string. **Done.**
-- [x] **P1** Jenkins Pipeline Integration — `Jenkinsfile` + landing page. **Done.**
-- [x] **P1** CircleCI Pipeline Integration — `.circleci/config.yml` + landing page. **Done.**
 
 ### Content & SEO
 - [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
@@ -78,37 +73,22 @@ Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, Ch
 ### Days 202–213 (May 31–Jun 2)
 Fixed $9 bait-and-switch, Founding Customer Program, Fetch from URL, Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator, Product Features page, Schema Diff Speed Challenge, Ambassador Program, competitor comparison pages (pg-schema-diff, Bytebase, Atlas, PostgresCompare), npm naming crisis fix, Supabase dead code removal. sitemap.xml: 217 URLs.
 
-### Days 217–226 (Jun 2–4)
+### Days 214–226 (Jun 2–4)
 SQL Schema Roast, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening, 9-deal.html, localStorage feedback fallback with admin dashboard, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer. sitemap.xml: 229 URLs.
 
 ### Days 227–231 (Jun 4–8)
 Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff in 1 Click" landing page (`diff.html`), critical $9 bait-and-switch removal site-wide, Pro Feature Tour page (`pro-tour.html`), 2 Git-integrated blog posts, Migration Checklist PDF lead magnet, GitLab/Bitbucket CORS proxy fix. sitemap.xml: 234 URLs.
 
 ### Days 232–235 (Jun 9)
-**Conversion hardening:** Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap.xml: 235 URLs.
+Conversion hardening: Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap.xml: 235 URLs.
 
-**GitHub Action evolution:** Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`) — skips diff when no `.sql` files modified in PR, saving CI minutes.
+GitHub Action evolution: Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`) — skips diff when no `.sql` files modified in PR, saving CI minutes.
 
-**Distribution assets:** Filed single clear JS Kicks $29 ad help request. Wrote dev.to article "Catch Breaking Schema Changes in PRs" ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
+Distribution assets: Filed single clear JS Kicks $29 ad help request. Wrote dev.to article ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
 
-### Day 236 (Jun 9)
-**GitLab CI expansion:** Enhanced `.gitlab-ci.yml` template with MR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `gitlab-schema-diff.html` landing page (22KB) with hero, quick-start snippet, MR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from github-action.html nav/footer and ci-cd-integration.html. sitemap.xml: 237 URLs.
-
-### Day 237 (Jun 9)
-**Bitbucket Pipelines expansion:** Built enterprise `bitbucket-pipelines.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, and artifact reporting. Built dedicated `bitbucket-schema-diff.html` landing page (21KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, and CI/CD hub. Removed stale `ci/bitbucket-pipelines.yml`. sitemap.xml: 238 URLs.
-
-### Day 238 (Jun 9)
-**Schema Export Command Generator:** Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
-
-### Day 239 (Jun 9)
-**Live Database Schema Fetch:** Built `/api/live-schema.js` Vercel serverless function connecting to PostgreSQL (`pg`) and MySQL (`mysql2`) via connection string, returning CREATE TABLE SQL. Security hardened (CORS, timeout, password redaction, shell metacharacter rejection). Integrated into `app.html` with modal UI, loading states, and analytics. Cross-linked from db-schema-export-guide.html and staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
-
-### Day 240 (Jun 9)
-**Jenkins Pipeline Integration:** Built enterprise `Jenkinsfile` with console output reports, build description risk summaries, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, artifact archiving, and optional GitHub/GitLab PR/MR comment posting. Built dedicated `jenkins-schema-diff.html` landing page (24KB) with hero, quick-start snippet, console mockup, build description preview, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, Bitbucket Pipelines, and CI/CD hub. sitemap.xml: 240 URLs.
-
-### Day 241 (Jun 9)
-**CircleCI Pipeline Integration:** Built enterprise `.circleci/config.yml` with PR comment posting, Pro license key support, smart skip (`SKIP_NO_SQL_CHANGE`), breaking-change gate (`FAIL_ON_BREAKING`), retry logic, artifact storage, and metrics extraction. Built dedicated `circleci-schema-diff.html` landing page (22KB) with hero, quick-start snippet, PR comment mockup, artifact preview, feature grid, setup guide, Free vs Pro table, config reference, and extended PostgreSQL example. Cross-linked from GitHub Action, GitLab CI, Bitbucket Pipelines, Jenkins, and CI/CD hub. sitemap.xml: 241 URLs.
+### Days 236–241 (Jun 9)
+CI/CD platform parity sprint: GitLab CI MR comments + smart skip + breaking gate (`gitlab-schema-diff.html`). Bitbucket Pipelines PR comments + artifact reporting (`bitbucket-schema-diff.html`). Schema Export Command Generator (`tools/schema-export-command-generator.html`). Live Database Schema Fetch (`api/live-schema.js` — PostgreSQL/MySQL via connection string). Jenkins Pipeline Integration (`Jenkinsfile` + `jenkins-schema-diff.html`). CircleCI Pipeline Integration (`.circleci/config.yml` + `circleci-schema-diff.html`). sitemap.xml: 241 URLs.
 
 ---
 
-*Backlog reprioritized June 9, 2026. Zero sales after 241 days. 3 weeks remaining. Strategy: break optimization loop with functional builds, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on distribution over content.*
+*Backlog reprioritized June 10, 2026. Zero sales after 241 days. 4 weeks remaining. Strategy: break optimization loop with novel distribution assets, execute JS Kicks ad when human unblocks, act on user-testing feedback when received, focus on autonomous traffic generation over incremental CI content.*

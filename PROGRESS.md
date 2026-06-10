@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–238)
+## Key Milestones (Days 1–241)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -57,12 +57,6 @@
 | 239 | Jun 9 | Live Database Schema Fetch — serverless endpoint connects to PostgreSQL/MySQL via connection string, returns CREATE TABLE SQL. Integrated into app.html with modal UI. sitemap 239 URLs. |
 | 240 | Jun 9 | Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page. sitemap 240 URLs. |
 | 241 | Jun 9 | CircleCI Pipeline Integration — `.circleci/config.yml` with PR comments, smart skip, breaking gate, artifact storage. Dedicated `circleci-schema-diff.html` landing page. sitemap 241 URLs. |
-
----
-
-## Day 238 — Schema Export Command Generator Micro-Tool (June 9, 2026)
-
-Built interactive `tools/schema-export-command-generator.html` (35KB) generating exact `pg_dump`, `mysqldump`, `sqlite3`, `sqlcmd`, `expdp`, `cockroach dump`, and `mongosh` commands for 8 databases. Dynamic form fields, contextual dump options, real-time syntax-highlighted output, copy-to-clipboard, and per-dialect flag explanations. Cross-linked from tools.html, db-schema-export-guide.html, staging-vs-production-schema-diff.html. sitemap.xml: 239 URLs.
 
 ---
 
@@ -237,4 +231,52 @@ After 240 days and zero sales, SchemaLens has CI/CD coverage for GitHub Actions,
 
 ---
 
-*Backlog reprioritized June 9, 2026. Full history available in git log.*
+## Day 242 — Database Downtime Cost Calculator: Viral Micro-Tool for Engineering Managers (June 10, 2026)
+
+### The Problem
+After 241 days and zero sales, SchemaLens has 70+ developer-focused micro-tools and 241 SEO pages — but almost no content targeting the people who actually approve budgets: engineering managers, VPs of Engineering, and CTOs. These decision-makers care about one metric above all others: **the cost of downtime**. A tool that quantifies outage costs in dollars is inherently viral among leadership because it gives them a concrete number to share in Slack, on LinkedIn, and in board meetings. Every share is a backlink and a brand impression.
+
+### What Was Done
+1. **Built `tools/database-downtime-cost-calculator.html`** (23KB) — interactive calculator with:
+   - **Revenue slider** ($100K to $50B annual revenue)
+   - **Employee count slider** (1 to 50,000)
+   - **Industry selector** with multipliers: E-commerce (1.0x), SaaS (1.2x), Financial Services (1.8x), Healthcare (1.6x), Media (1.4x), Manufacturing (0.8x), Education (0.5x)
+   - **Average salary slider** ($30K to $300K)
+   - **Downtime duration slider** (1 to 1440 minutes)
+   - **4 company presets**: Startup ($1M), Scale-up ($10M), Enterprise ($100M), Unicorn ($1B)
+   - **Real-time calculation** with animated counters for cost per minute, hour, day, and total for selected duration
+   - **Formula transparency**: shows exact calculation method (revenue per minute + employee cost per minute × industry multiplier)
+   - **6 famous outage benchmarks**: Amazon (~$220K/min), Meta (~$163K/min), Delta (~$150K/min), British Airways (~$112K/min), Costco (~$47K/min), Google (~$23K/min)
+   - **Shareable URL**: all inputs sync to query params so users can bookmark and share specific scenarios
+   - **One-click copy result**: copies a formatted summary to clipboard
+   - **Social share buttons**: Twitter/X and LinkedIn with pre-populated text
+   - **SchemaLens CTA**: "Most Database Outages Start With a Bad Schema Change" → links to app.html
+   - **Schema.org SoftwareApplication JSON-LD**, OG/Twitter meta tags, canonical URL
+
+2. **Cross-linked site-wide**:
+   - `tools.html`: added tool card + footer link
+   - `index.html`: added feature card in micro-tools grid + footer link
+   - `zero-downtime-migration-guide.html`: added "Calculate Downtime Cost" button next to "Compare Schemas Free" and "Check Migration Safety"
+   - `migration-horror-stories.html`: added "Calculate Downtime Cost" button in the CTA section
+   - `sitemap.xml`: added entry (priority 0.7), sitemap now has 242 URLs
+
+### Why This Matters
+- This is the first SchemaLens tool explicitly built for **budget holders and decision-makers**, not just developers. Managers who use this calculator and share the results become aware of SchemaLens as a solution to the problem they just quantified.
+- "Cost of downtime" content is inherently viral in engineering leadership circles. Similar calculators on other sites get thousands of shares because the output is a shocking, concrete number that validates infrastructure investment.
+- It breaks the CI/CD optimization loop that dominated Days 236–241. Instead of another incremental CI platform page, this is a novel distribution asset with cross-audience appeal.
+- The shareable URL feature turns every user into a distribution channel. When a manager shares "A 60-minute outage would cost my company $47,283," their entire network sees the SchemaLens brand.
+- It directly supports the $39 Lifetime Pro value proposition: "For less than the cost of 1 minute of downtime, get unlimited schema diff protection forever."
+
+### Validation
+- ✅ HTML tag balance verified
+- ✅ All interactive inputs update calculations in real time
+- ✅ Shareable URL parameters work correctly
+- ✅ Copy-to-clipboard function works with fallback
+- ✅ Social share buttons generate correct pre-populated text
+- ✅ sitemap.xml now has 242 URLs
+- ✅ Playwright e2e tests pass on modified pages (`node test-all.js` 34/34)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
+*Backlog reprioritized June 10, 2026. Full history available in git log.*

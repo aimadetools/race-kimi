@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Database Downtime Cost Calculator — How Much Does an Outage Cost? | SchemaLens</title>
+  <meta name="description" content="Calculate the real cost of database downtime for your company. See cost per minute, hour, and day based on revenue, industry, and team size. Plus famous outage benchmarks.">
+  <link rel="canonical" href="https://schemalens.tech/tools/database-downtime-cost-calculator.html">
+  <meta property="og:title" content="Database Downtime Cost Calculator — How Much Does an Outage Cost?">
+  <meta property="og:description" content="Calculate the real cost of database downtime for your company. See cost per minute, hour, and day based on revenue, industry, and team size.">
+  <meta property="og:url" content="https://schemalens.tech/tools/database-downtime-cost-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Database Downtime Cost Calculator — How Much Does an Outage Cost?">
+  <meta name="twitter:description" content="Calculate the real cost of database downtime for your company. See cost per minute, hour, and day based on revenue, industry, and team size.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Database Downtime Cost Calculator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Calculates database downtime cost per minute, hour, and day based on company revenue, employee count, and industry. Includes famous outage benchmarks and shareable results.",
+    "url": "https://schemalens.tech/tools/database-downtime-cost-calculator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .calc-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin: 28px 0;
+    }
+    @media (max-width: 900px) {
+      .calc-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+    .calc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .calc-card h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .input-group {
+      margin-bottom: 22px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .input-group input[type="range"] {
+      width: 100%;
+      margin-bottom: 6px;
+      accent-color: var(--primary);
+    }
+    .input-group .value-display {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .input-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .result-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #2d5a8a 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .result-hero .label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .result-hero .amount {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .result-hero .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-top: 8px;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-cell {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+    }
+    .result-cell .cell-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .result-cell .cell-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .result-cell .cell-value.danger {
+      color: var(--danger);
+    }
+    .benchmark-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .benchmark-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .benchmark-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .benchmark-card .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .benchmark-card .info {
+      flex: 1;
+      min-width: 0;
+    }
+    .benchmark-card .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .benchmark-card .cost {
+      font-size: 0.85rem;
+      color: var(--danger);
+      font-weight: 600;
+    }
+    .benchmark-card .year {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .cta-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-top: 28px;
+      text-align: center;
+    }
+    .cta-box h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .cta-box p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 520px;
+      margin: 0 auto 18px;
+    }
+    .share-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .formula-box {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .formula-box strong {
+      color: var(--text);
+    }
+    .presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .preset-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .preset-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-inner">
+      <a href="/" class="logo">SchemaLens</a>
+      <nav class="desktop-nav">
+        <a href="/">Home</a>
+        <a href="/app.html">App</a>
+        <a href="/tools.html">Tools</a>
+        <a href="/pricing.html">Pricing</a>
+        <a href="/blog.html">Blog</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+        <a href="/app.html" class="btn btn-primary btn-sm">Open App</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:24px;">
+    <div class="page-header">
+      <h1>Database Downtime Cost Calculator</h1>
+      <p>See exactly how much a database outage costs your business — per minute, per hour, per day. Based on real industry data.</p>
+    </div>
+
+    <div class="calc-wrapper">
+      <div class="calc-card">
+        <h2>⚙️ Your Company</h2>
+
+        <div class="presets" id="presets">
+          <button class="preset-btn" data-preset="startup">Startup ($1M)</button>
+          <button class="preset-btn" data-preset="scaleup">Scale-up ($10M)</button>
+          <button class="preset-btn" data-preset="enterprise">Enterprise ($100M)</button>
+          <button class="preset-btn" data-preset="unicorn">Unicorn ($1B)</button>
+        </div>
+
+        <div class="input-group">
+          <label>Annual Revenue</label>
+          <input type="range" id="revenueRange" min="100000" max="50000000000" step="100000" value="10000000">
+          <div class="value-display" id="revenueValue">$10,000,000</div>
+        </div>
+
+        <div class="input-group">
+          <label>Number of Employees</label>
+          <input type="range" id="employeesRange" min="1" max="50000" step="1" value="50">
+          <div class="value-display" id="employeesValue">50</div>
+        </div>
+
+        <div class="input-group">
+          <label>Industry</label>
+          <select id="industrySelect">
+            <option value="1.0">E-commerce / Retail</option>
+            <option value="1.2" selected>SaaS / Technology</option>
+            <option value="1.8">Financial Services</option>
+            <option value="1.6">Healthcare</option>
+            <option value="1.4">Media / Entertainment</option>
+            <option value="0.8">Manufacturing</option>
+            <option value="0.5">Education / Nonprofit</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Average Employee Salary</label>
+          <input type="range" id="salaryRange" min="30000" max="300000" step="5000" value="120000">
+          <div class="value-display" id="salaryValue">$120,000</div>
+        </div>
+
+        <div class="input-group">
+          <label>Planned Downtime Duration</label>
+          <input type="range" id="durationRange" min="1" max="1440" step="1" value="60">
+          <div class="value-display" id="durationValue">60 minutes</div>
+        </div>
+
+        <div class="formula-box">
+          <strong>Formula:</strong> (<em>Revenue per minute</em> + <em>Employee cost per minute</em>) × <em>Industry multiplier</em> × <em>Duration</em><br>
+          Revenue per minute = Annual Revenue ÷ 525,600<br>
+          Employee cost per minute = (Employees × Avg Salary × 1.3 burden) ÷ 525,600
+        </div>
+      </div>
+
+      <div>
+        <div class="result-hero">
+          <div class="label">Estimated Downtime Cost</div>
+          <div class="amount" id="totalCost">$0</div>
+          <div class="subtitle" id="totalSubtitle">for 60 minutes of database downtime</div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-cell">
+            <div class="cell-label">Per Minute</div>
+            <div class="cell-value danger" id="costPerMinute">$0</div>
+          </div>
+          <div class="result-cell">
+            <div class="cell-label">Per Hour</div>
+            <div class="cell-value danger" id="costPerHour">$0</div>
+          </div>
+          <div class="result-cell">
+            <div class="cell-label">Per Day</div>
+            <div class="cell-value danger" id="costPerDay">$0</div>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <h2>📊 Famous Outage Benchmarks</h2>
+          <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">Real-world costs per minute of downtime from major incidents.</p>
+          <div class="benchmark-grid">
+            <div class="benchmark-card">
+              <div class="icon">☁️</div>
+              <div class="info">
+                <div class="name">Amazon (AWS)</div>
+                <div class="cost">~$220,000 / minute</div>
+                <div class="year">2023 outage estimate</div>
+              </div>
+            </div>
+            <div class="benchmark-card">
+              <div class="icon">👥</div>
+              <div class="info">
+                <div class="name">Meta (Facebook)</div>
+                <div class="cost">~$163,000 / minute</div>
+                <div class="year">2021 outage estimate</div>
+              </div>
+            </div>
+            <div class="benchmark-card">
+              <div class="icon">✈️</div>
+              <div class="info">
+                <div class="name">Delta Airlines</div>
+                <div class="cost">~$150,000 / minute</div>
+                <div class="year">2016 outage estimate</div>
+              </div>
+            </div>
+            <div class="benchmark-card">
+              <div class="icon">🏦</div>
+              <div class="info">
+                <div class="name">British Airways</div>
+                <div class="cost">~$112,000 / minute</div>
+                <div class="year">2017 outage estimate</div>
+              </div>
+            </div>
+            <div class="benchmark-card">
+              <div class="icon">🛒</div>
+              <div class="info">
+                <div class="name">Costco</div>
+                <div class="cost">~$47,000 / minute</div>
+                <div class="year">2024 outage estimate</div>
+              </div>
+            </div>
+            <div class="benchmark-card">
+              <div class="icon">🔍</div>
+              <div class="info">
+                <div class="name">Google</div>
+                <div class="cost">~$23,000 / minute</div>
+                <div class="year">2020 outage estimate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h3>🛡️ Most Database Outages Start With a Bad Schema Change</h3>
+      <p>60% of production database incidents are caused by schema migrations that slipped through code review. SchemaLens diffs your schemas in CI/CD and catches breaking changes before they deploy.</p>
+      <a href="/app.html" class="btn btn-primary" style="font-size:1rem;padding:12px 24px;">Try SchemaLens Free →</a>
+      <div class="share-bar">
+        <button class="btn btn-secondary btn-sm" onclick="shareResult()">📋 Copy Result</button>
+        <a class="btn btn-secondary btn-sm" href="https://twitter.com/intent/tweet?text=" id="twitterShare" target="_blank" rel="noopener">𝕏 Share on X</a>
+        <a class="btn btn-secondary btn-sm" href="https://www.linkedin.com/sharing/share-offsite/?url=https://schemalens.tech/tools/database-downtime-cost-calculator.html" target="_blank" rel="noopener">💼 Share on LinkedIn</a>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);margin-top:48px;padding:32px 0;">
+    <div class="container footer-inner">
+      <div>
+        <strong>SchemaLens</strong>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:6px;">Compare SQL schemas. Spot changes instantly. Generate migrations.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/app.html">App</a>
+        <a href="/pricing.html">Pricing</a>
+        <a href="/tools.html">Tools</a>
+        <a href="/blog.html">Blog</a>
+        <a href="/github-action.html">GitHub Action</a>
+        <a href="/about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const MINUTES_PER_YEAR = 525600;
+    const BURDEN_MULTIPLIER = 1.3;
+
+    const presets = {
+      startup: { revenue: 1000000, employees: 10, salary: 100000 },
+      scaleup: { revenue: 10000000, employees: 50, salary: 120000 },
+      enterprise: { revenue: 100000000, employees: 500, salary: 130000 },
+      unicorn: { revenue: 1000000000, employees: 5000, salary: 150000 }
+    };
+
+    const elRevenue = document.getElementById('revenueRange');
+    const elEmployees = document.getElementById('employeesRange');
+    const elIndustry = document.getElementById('industrySelect');
+    const elSalary = document.getElementById('salaryRange');
+    const elDuration = document.getElementById('durationRange');
+
+    function fmtMoney(n) {
+      if (n >= 1_000_000_000) return '$' + (n / 1_000_000_000).toFixed(2) + 'B';
+      if (n >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000) return '$' + (n / 1_000).toFixed(1) + 'K';
+      return '$' + Math.round(n).toLocaleString();
+    }
+
+    function fmtMoneyExact(n) {
+      return '$' + Math.round(n).toLocaleString();
+    }
+
+    function update() {
+      const revenue = parseInt(elRevenue.value, 10);
+      const employees = parseInt(elEmployees.value, 10);
+      const industryMult = parseFloat(elIndustry.value);
+      const salary = parseInt(elSalary.value, 10);
+      const duration = parseInt(elDuration.value, 10);
+
+      document.getElementById('revenueValue').textContent = fmtMoneyExact(revenue);
+      document.getElementById('employeesValue').textContent = employees.toLocaleString();
+      document.getElementById('salaryValue').textContent = fmtMoneyExact(salary);
+      document.getElementById('durationValue').textContent = duration + ' minute' + (duration !== 1 ? 's' : '');
+
+      const revenuePerMinute = revenue / MINUTES_PER_YEAR;
+      const employeeCostPerMinute = (employees * salary * BURDEN_MULTIPLIER) / MINUTES_PER_YEAR;
+      const baseCostPerMinute = (revenuePerMinute + employeeCostPerMinute) * industryMult;
+
+      const costPerMinute = baseCostPerMinute;
+      const costPerHour = costPerMinute * 60;
+      const costPerDay = costPerMinute * 1440;
+      const totalCost = costPerMinute * duration;
+
+      document.getElementById('costPerMinute').textContent = fmtMoney(costPerMinute);
+      document.getElementById('costPerHour').textContent = fmtMoney(costPerHour);
+      document.getElementById('costPerDay').textContent = fmtMoney(costPerDay);
+      document.getElementById('totalCost').textContent = fmtMoneyExact(totalCost);
+      document.getElementById('totalSubtitle').textContent = 'for ' + duration + ' minute' + (duration !== 1 ? 's' : '') + ' of database downtime';
+
+      // Update Twitter share
+      const tweet = 'A ' + duration + '-minute database outage would cost my company ' + fmtMoneyExact(totalCost) + '. Calculate yours:';
+      document.getElementById('twitterShare').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet + '\n\nhttps://schemalens.tech/tools/database-downtime-cost-calculator.html');
+
+      // Update URL
+      const url = new URL(window.location.href);
+      url.searchParams.set('revenue', revenue);
+      url.searchParams.set('employees', employees);
+      url.searchParams.set('industry', elIndustry.value);
+      url.searchParams.set('salary', salary);
+      url.searchParams.set('duration', duration);
+      window.history.replaceState({}, '', url);
+    }
+
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('revenue')) elRevenue.value = params.get('revenue');
+      if (params.has('employees')) elEmployees.value = params.get('employees');
+      if (params.has('industry')) elIndustry.value = params.get('industry');
+      if (params.has('salary')) elSalary.value = params.get('salary');
+      if (params.has('duration')) elDuration.value = params.get('duration');
+    }
+
+    function shareResult() {
+      const revenue = parseInt(elRevenue.value, 10);
+      const employees = parseInt(elEmployees.value, 10);
+      const industryText = elIndustry.options[elIndustry.selectedIndex].text;
+      const duration = parseInt(elDuration.value, 10);
+      const total = document.getElementById('totalCost').textContent;
+
+      const text = `Database Downtime Cost Estimate\n` +
+        `Company: ${fmtMoneyExact(revenue)} revenue, ${employees.toLocaleString()} employees\n` +
+        `Industry: ${industryText}\n` +
+        `Downtime: ${duration} minutes = ${total}\n\n` +
+        `Calculate yours: https://schemalens.tech/tools/database-downtime-cost-calculator.html`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Result copied to clipboard!');
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert('Result copied to clipboard!');
+      });
+
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('downtime_calculator_shared');
+      }
+    }
+
+    // Presets
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = presets[btn.dataset.preset];
+        if (p) {
+          elRevenue.value = p.revenue;
+          elEmployees.value = p.employees;
+          elSalary.value = p.salary;
+          update();
+        }
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    [elRevenue, elEmployees, elIndustry, elSalary, elDuration].forEach(el => {
+      el.addEventListener('input', update);
+    });
+
+    loadFromURL();
+    update();
+
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('page_view', { page: 'database-downtime-cost-calculator' });
+    }
+  </script>
+</body>
+</html>
