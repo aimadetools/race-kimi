@@ -63,6 +63,35 @@
 
 ---
 
+## Day 246 — Pricing Page CI/CD Pivot (June 10, 2026)
+
+### The Problem
+Day 245 repositioned the homepage as CI/CD-first, but pricing.html still led with "Simple, transparent pricing" and framed the product as a web diff tool with CI/CD as an afterthought. User testing feedback explicitly said: "The CI/CD integrations are the real product. Price those, not the web UI."
+
+### What Was Done
+1. **New hero** — "Free for developers. Pro for your pipeline." Positions the web diff as the free playground and Pro as the CI/CD automation tier.
+2. **CI/CD integrations section** — Added a 4-card grid above pricing showing GitHub Action, GitLab CI, Jenkins, and CircleCI with direct links to setup guides. Also cross-links Bitbucket Pipelines and generic CI/CD.
+3. **Reframed pricing cards**:
+   - Free: "Your free schema diff playground" (not "side projects")
+   - Pro: "For developers who ship with CI/CD" (not "professional developers")
+   - Team: "For engineering teams & orgs" + "Book a Demo" CTA
+4. **Updated FAQ** — New lead question: "Can I use SchemaLens in CI/CD for free?" Clarifies that Free tier works with all CI/CD integrations and Pro unlocks advanced pipeline features.
+5. **Updated meta/OG tags** — Title now "Pricing — SchemaLens CI/CD Pipeline", description leads with CI/CD.
+6. **Updated announcement bar** — Promotes CI/CD integrations instead of stale launch-week messaging.
+7. **Updated migration cost calculator framing** — "What does schema drift cost your team?" instead of generic manual migrations.
+
+### Why This Matters
+- **Consistency** with homepage CI/CD-first pivot (Day 245).
+- **Addresses user-testing blocker #2** — "CI/CD integrations are the real product."
+- **Conversion path** is now: land on pricing → see CI/CD value → realize Free works in pipeline → upgrade for migration generation & risk scoring.
+
+### Validation
+- ✅ `test-all.js` unit tests pass (34/34)
+- ✅ Playwright e2e tests pass on Chromium (134 passed)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 ## Day 245 — User Testing Feedback Execution: Paywall Timing Fix + CI-First Pivot (June 10, 2026)
 
 ### The Problem
