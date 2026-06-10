@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Pricing — SchemaLens</title>
-  <meta name="description" content="Start free. Upgrade when you need unlimited schema diffs and migration generation.">
-  <meta property="og:title" content="Pricing — SchemaLens">
-  <meta property="og:description" content="Free for up to 15 tables. Lifetime Pro for $39 one-time.">
+  <title>Pricing — SchemaLens CI/CD Pipeline</title>
+  <meta name="description" content="Free schema diff for developers. Pro CI/CD integrations for teams. GitHub Action, GitLab CI, Jenkins, CircleCI. Lifetime Pro $39.">
+  <meta property="og:title" content="Pricing — SchemaLens CI/CD Pipeline">
+  <meta property="og:description" content="Free schema diff for developers. Pro CI/CD integrations for teams. Lifetime Pro $39 one-time.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/pricing.html">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
@@ -82,7 +82,7 @@
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "SchemaLens Pro",
-    "description": "Unlimited schema diffs and migration generation for professional developers and teams.",
+    "description": "Schema diff CI/CD automation for engineering teams. GitHub Action, GitLab CI, Jenkins, CircleCI. Unlimited schema diffs and migration generation.",
     "brand": {
       "@type": "Organization",
       "name": "SchemaLens"
@@ -201,9 +201,8 @@
 <body>
 
   <div class="announcement-bar">
-    🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
+    ⚡ CI/CD-first pricing — add schema diff to your pipeline free. <a href="github-action.html">GitHub Action →</a> · <a href="gitlab-schema-diff.html">GitLab CI →</a> · <a href="jenkins-schema-diff.html">Jenkins →</a> · <a href="circleci-schema-diff.html">CircleCI →</a>
   </div>
-  <script>(function(){const end=new Date('2026-05-21T23:59:59Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
 
   <nav class="nav">
     <div class="container nav-inner">
@@ -235,8 +234,8 @@
 
   <header class="about-hero">
     <div class="container">
-      <h1>Simple, transparent pricing</h1>
-      <p style="max-width: 520px;">Start free and upgrade when you need more power. No credit card required to try.</p>
+      <h1>Free for developers.<br>Pro for your pipeline.</h1>
+      <p style="max-width: 600px;">Use the web diff as your free playground. Upgrade to Pro for CI/CD integrations, unlimited diffs, migration generation, and team workflows.</p>
     </div>
   </header>
 
@@ -256,8 +255,8 @@
 
       <!-- Migration Cost Calculator Embed -->
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 32px;">
-        <h2 style="text-align:center; font-size: 1.3rem; margin-bottom: 6px;">What do manual migrations cost you?</h2>
-        <p style="text-align:center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Most teams spend $10,000+ per year on manual schema work without realizing it.</p>
+        <h2 style="text-align:center; font-size: 1.3rem; margin-bottom: 6px;">What does schema drift cost your team?</h2>
+        <p style="text-align:center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Manual schema reviews and production incidents cost more than most teams realize. SchemaLens automates the check.</p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 20px;">
           <div>
             <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Team size <span id="calc-team-val" style="color:var(--primary); font-weight:700;">8</span></label>
@@ -284,10 +283,43 @@
         <p style="text-align:center; margin-top: 12px; margin-bottom: 0; font-size: 0.85rem;"><a href="tools/migration-cost-calculator.html" style="color: var(--primary);">See full breakdown →</a></p>
       </div>
 
+      <!-- CI/CD Integrations -->
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 40px;">
+        <h2 style="text-align:center; font-size: 1.3rem; margin-bottom: 6px;">Add SchemaLens to your CI/CD pipeline</h2>
+        <p style="text-align:center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px;">Catch breaking schema changes before they reach production. Free tier works with all integrations.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+            <div style="font-size: 1.6rem; margin-bottom: 8px;">🐙</div>
+            <h4 style="margin: 0 0 6px; font-size: 1rem;">GitHub Action</h4>
+            <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, Check Runs, risk scores</p>
+            <a href="github-action.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+          </div>
+          <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+            <div style="font-size: 1.6rem; margin-bottom: 8px;">🦊</div>
+            <h4 style="margin: 0 0 6px; font-size: 1rem;">GitLab CI</h4>
+            <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">MR comments, smart skip, breaking gate</p>
+            <a href="gitlab-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+          </div>
+          <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+            <div style="font-size: 1.6rem; margin-bottom: 8px;">🔧</div>
+            <h4 style="margin: 0 0 6px; font-size: 1rem;">Jenkins</h4>
+            <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Console reports, build descriptions, artifacts</p>
+            <a href="jenkins-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+          </div>
+          <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+            <div style="font-size: 1.6rem; margin-bottom: 8px;">⭕</div>
+            <h4 style="margin: 0 0 6px; font-size: 1rem;">CircleCI</h4>
+            <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, smart skip, artifact storage</p>
+            <a href="circleci-schema-diff.html" class="btn btn-secondary" style="width:100%; font-size: 0.85rem;">Setup Guide →</a>
+          </div>
+        </div>
+        <p style="text-align:center; margin-top: 16px; margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted);">Also available: <a href="bitbucket-schema-diff.html" style="color: var(--primary);">Bitbucket Pipelines</a> · <a href="ci-cd-integration.html" style="color: var(--primary);">Generic CI/CD</a></p>
+      </div>
+
       <div class="pricing-grid">
         <div class="pricing-card">
           <h3>Free</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">For side projects & quick checks</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Your free schema diff playground</p>
           <div class="price">$0<span>/mo</span></div>
           <ul>
             <li>Diff up to 15 tables</li>
@@ -299,13 +331,13 @@
             <li class="disabled">Export formats</li>
             <li class="disabled">Share links</li>
           </ul>
-          <a href="app.html" class="btn btn-secondary" style="width:100%">Get Started</a>
+          <a href="app.html?demo=live" class="btn btn-secondary" style="width:100%">▶ Try Live Demo</a>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 12px; text-align: center;">💡 Try Pro free for 24 hours — no email required</p>
         </div>
         <div class="pricing-card featured">
           <span class="pricing-badge">Most Popular</span>
           <h3>Pro</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">For professional developers</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For developers who ship with CI/CD</p>
           <div class="price">$39<span> once</span></div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.<br><a href="launch-special.html" style="color: var(--danger); font-weight: 600;">⚡ Price increases July 1 →</a></p>
           <p style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--success); font-weight: 600; margin-bottom: 16px;">🚀 Early-access price — lock in before rates increase</p>
@@ -326,7 +358,7 @@
         </div>
         <div class="pricing-card">
           <h3>Team</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">For engineering teams</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">For engineering teams & orgs</p>
           <div class="price">$29<span>/mo</span></div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">or $290/year (2 months free)</p>
           <ul>
@@ -339,7 +371,7 @@
             <li>SSO (coming soon)</li>
             <li>Dedicated support</li>
           </ul>
-          <a href="book-demo.html" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+          <a href="book-demo.html" class="btn btn-secondary" style="width:100%">Book a Demo</a>
         </div>
         <div class="pricing-card" style="border-color: #f59e0a;">
           <span class="pricing-badge" style="background: #f59e0a; color: #000;">One-Time</span>
@@ -387,8 +419,11 @@
       </div>
 
       <div class="about-content" style="margin-top: 32px;">
+        <h2>Can I use SchemaLens in CI/CD for free?</h2>
+        <p>Yes. The Free plan works with all CI/CD integrations — GitHub Action, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines. You get visual diffs and basic breaking change alerts on every pull request. Upgrade to Pro for migration generation, export formats, and advanced risk scoring inside your pipeline.</p>
+
         <h2>Is my data safe?</h2>
-        <p>Yes. SchemaLens runs entirely in your browser. We built a custom SQL parser in vanilla JavaScript and never upload your schemas to any server. If you close the tab, your data is gone.</p>
+        <p>Yes. The core diff engine runs entirely in your browser or CI runner. We built a custom SQL parser in vanilla JavaScript and never upload your schemas to any server. If you close the tab, your data is gone.</p>
 
         <h2>What SQL dialects do you support?</h2>
         <p>PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and Oracle. All dialects are available on every plan, including Free.</p>
@@ -403,13 +438,13 @@
         <p>We offer a 14-day money-back guarantee on all paid plans. If SchemaLens doesn't save you time, email us and we'll refund you — no questions asked.</p>
 
         <h2>What can I do on the Free plan?</h2>
-        <p>The Free plan lets you diff up to 15 tables at a time, view visual diffs, and use all 5 SQL dialects. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and breaking change detection.</p>
+        <p>The Free plan lets you diff up to 15 tables at a time, view visual diffs, and use all 5 SQL dialects. It also works with our free GitHub Action and CI/CD integrations. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and advanced breaking change detection.</p>
 
         <h2>Can I try Pro before buying?</h2>
-        <p>Yes. In the app, click "Try Pro Free — 24 Hours" when you hit the 10-table limit. No email, no credit card, no signup required. You'll get full migration generation, exports, and share links for 24 hours.</p>
+        <p>Yes. In the app, click "Try Pro Free — 24 Hours" when you hit the 15-table limit. No email, no credit card, no signup required. You'll get full migration generation, exports, and share links for 24 hours.</p>
 
         <h2>Can I use this at work?</h2>
-        <p>Absolutely. Many Pro users are engineering leads who use SchemaLens for code review and staging-to-production checks. The Team plan adds shared workspaces, diff comments, and admin controls for organizations.</p>
+        <p>Absolutely. Many Pro users are engineering leads who use SchemaLens for code review, staging-to-production checks, and CI/CD pipeline gating. The Team plan adds shared workspaces, diff comments, and admin controls for organizations.</p>
 
         <h2>Need my manager's approval?</h2>
         <p><a href="pro-tour.html">Take the interactive Pro tour</a> to see exactly what Pro unlocks. Or <a href="team-pitch.html">generate a ready-to-send business case</a> with ROI and time savings for your manager.</p>
