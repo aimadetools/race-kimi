@@ -63,6 +63,37 @@
 
 ---
 
+## Day 246 — Schema Changelog Generator: Novel Distribution Asset (June 10, 2026)
+
+### The Problem
+After 245 days and zero sales, SchemaLens needs a steady stream of novel distribution assets to break the optimization loop and attract new organic traffic. The backlog explicitly called for targeting a keyword gap SchemaLens does not yet own.
+
+### What Was Done
+1. **Built `schema-changelog-generator.html`** — Interactive micro-tool that turns SQL schema diffs into human-readable changelogs:
+   - **3 output formats**: GitHub Release (emoji-rich Markdown), Slack/Markdown, Simple List
+   - **Breaking change detection**: Automatically flags dropped tables/columns as breaking changes
+   - **Shareable URLs**: Schemas and format choice encoded in query params
+   - **Export**: One-click copy to clipboard or download as `.md` file
+   - **Sample data**: Pre-loaded example showing added table, modified columns, and new foreign key
+
+2. **Cross-linked site-wide**:
+   - `tools.html`: added tool card
+   - `sitemap.xml`: added entry (245 URLs)
+   - `README.md`: updated tool count 73+ → 74+
+   - `tests/e2e.spec.js`: added page load test
+
+### Why This Matters
+- **Keyword targeting**: "database schema changelog", "sql changelog generator", "schema release notes" — keywords with clear search intent that SchemaLens did not previously own.
+- **Virality**: Changelogs are inherently shareable. A developer can generate a changelog, paste it into their GitHub release, and link back to SchemaLens.
+- **Lead magnet**: Free tool → full diff + migration generation in app.html → Pro upgrade.
+
+### Validation
+- ✅ `test-all.js` unit tests pass (34/34)
+- ✅ Playwright e2e tests pass on Chromium (Schema Changelog Generator loads without console errors)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 ## Day 246 — App Paywall Timing A/B Test: Banner vs Tab Control (June 10, 2026)
 
 ### The Problem
