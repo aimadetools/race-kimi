@@ -183,7 +183,7 @@
           <p>SchemaLens flags <strong>removed columns</strong> as breaking changes with a risk score of 95+. The diff highlights the dropped <code>phone</code> column in red and warns: "Removing a column may break dependent views, APIs, or application code." You see the danger before you write the migration.</p>
           <div class="mhs-cta">
             <a href="app.html?old=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29%2C%0A++phone+VARCHAR%2820%29%2C%0A++email+VARCHAR%28255%29+NOT+NULL%0A%29&new=CREATE+TABLE+users+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++name+VARCHAR%28100%29%2C%0A++email+VARCHAR%28255%29+NOT+NULL%0A%29" class="btn btn-primary">See this diff live →</a>
-            <a href="safe-migration-checker.html" class="btn btn-secondary">Try Safe Migration Checker</a>
+            <a href="tools/safe-migration-checker.html" class="btn btn-secondary">Try Safe Migration Checker</a>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@
           <p>SchemaLens tracks <strong>constraints, indexes, and foreign keys</strong> across diffs. When a constraint is removed, the diff highlights it as a structural change and warns: "Removing a foreign key constraint may allow orphaned records and break referential integrity." You see exactly what guarantees are being lost.</p>
           <div class="mhs-cta">
             <a href="app.html?old=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL%2C%0A++CONSTRAINT+fk_order+FOREIGN+KEY+%28order_id%29+REFERENCES+orders%28id%29%0A%29&new=CREATE+TABLE+order_items+%28%0A++id+SERIAL+PRIMARY+KEY%2C%0A++order_id+INT+NOT+NULL%0A%29" class="btn btn-primary">See this diff live →</a>
-            <a href="schema-health-check.html" class="btn btn-secondary">Run Schema Health Check</a>
+            <a href="tools/schema-health-check.html" class="btn btn-secondary">Run Schema Health Check</a>
           </div>
         </div>
       </div>
