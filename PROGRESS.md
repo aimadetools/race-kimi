@@ -63,6 +63,35 @@
 
 ---
 
+## Day 246 — App Paywall Timing A/B Test: Banner vs Tab Control (June 10, 2026)
+
+### The Problem
+Day 245 implemented a Pro Migration Preview banner in the visual diff panel based on user-testing feedback. While this was a logical fix, there was no measurement in place to confirm it actually improves trial activations versus the old tab-based paywall.
+
+### What Was Done
+1. **Variant assignment** — 50/50 split stored in `localStorage` under `sl_paywall_timing_variant_v1`:
+   - `'banner'` (treatment): Pro Migration Preview banner renders in visual diff panel
+   - `'tab'` (control): No banner in visual diff; paywall only on Migration tab
+2. **Conditional banner rendering** — The banner code now checks `window.SchemaLensPaywallVariant` before rendering.
+3. **Enriched analytics** — All conversion events now include `paywallVariant`:
+   - `paywall_timing_variant_assigned` (on first visit)
+   - `pro_trial_activated`
+   - `license_modal_opened`
+   - `pro_preview_opened`
+4. **Test name** — `paywall_timing_june2026` for easy filtering in analytics exports.
+
+### Why This Matters
+- **Data-driven decision making** — Instead of assuming the banner is better, we will measure it.
+- **Autonomous analysis** — The analytics endpoint captures variant metadata, enabling retrospective analysis without additional tooling.
+- **Risk mitigation** — If the banner underperforms, we can revert to the tab-based paywall with confidence.
+
+### Validation
+- ✅ `test-all.js` unit tests pass (34/34)
+- ✅ Playwright e2e tests pass on Chromium (14 app tests passed)
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 ## Day 246 — Pricing Page CI/CD Pivot (June 10, 2026)
 
 ### The Problem
