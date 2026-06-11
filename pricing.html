@@ -55,7 +55,7 @@
         "name": "What can I do on the Free plan?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Free plan lets you diff up to 15 tables at a time, view visual diffs, and use all 5 SQL dialects. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and breaking change detection."
+          "text": "The Free plan gives you unlimited schema diff, full migration SQL generation, rollback scripts, ORM export, and all 5 SQL dialects. It also includes free CI/CD integrations (GitHub Action, GitLab CI, Jenkins, CircleCI). Pro adds export formats (Markdown, PDF, JSON), unlimited saved diff history, shareable links, access to all 80+ micro-tools, and priority support."
         }
       },
       {
@@ -63,7 +63,7 @@
         "name": "Can I try Pro before buying?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. In the app, click Try Pro Free — 24 Hours when you hit the 15-table limit. No email, no credit card, no signup required. You'll get full migration generation, exports, and share links for 24 hours."
+          "text": "The web diff is free forever with no table limits. You can try Pro features (exports, history, share links) free for 24 hours in the app. No email or credit card required."
         }
       },
       {
@@ -241,17 +241,14 @@
 
   <section class="section reveal" style="padding-top: 20px;">
     <div class="container">
-      <div id="raceToFinishPromo" style="display:none;background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(99,102,241,0.08)); border: 2px solid rgba(16,185,129,0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🏁 Race to the Finish — Lifetime Pro $39</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">SchemaLens is competing in the <strong style="color: var(--success);">$100 AI Startup Race</strong>. Help us win: get <strong>Lifetime Pro for $39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Claim Pro →</a></p>
-        <p style="margin: 8px 0 0; font-size: 0.8rem; color: var(--text-muted);">Offer ends July 10, 2026</p>
+      <div style="background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(59,130,246,0.08)); border: 2px solid rgba(16,185,129,0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">🚀 The web diff is free forever</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Unlimited schemas, unlimited migrations, unlimited rollback — no credit card required. <a href="app.html" style="color: var(--success); font-weight: 600;">Try it now →</a></p>
       </div>
-      <script>(function(){const raceEnd=new Date('2026-07-10T23:59:59Z');const now=Date.now();const promo=document.getElementById('raceToFinishPromo');if(promo&&now<=raceEnd)promo.style.display='block';})();</script>
-      <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.06)); border: 2px solid var(--danger); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
-        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">⏰ Price Increases to $79 on July 1</h3>
-        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Lock in Lifetime Pro at <strong style="color: var(--danger);">$39</strong> before the price goes up. <strong id="july1CountdownPricing" style="color: var(--danger);"></strong> <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color: var(--danger); font-weight: 600;">Buy now →</a></p>
+      <div style="background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08)); border: 2px solid rgba(99,102,241,0.4); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; text-align: center;">
+        <h3 style="margin: 0 0 8px; font-size: 1.1rem; color: var(--text);">⚡ Catch breaking changes in every PR</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Add SchemaLens to your CI/CD pipeline and never ship a breaking schema change again. Free for open source. <a href="github-action.html" style="color: var(--primary); font-weight: 600;">Set up in 2 minutes →</a></p>
       </div>
-      <script>(function(){const el=document.getElementById('july1CountdownPricing');if(!el)return;function update(){const now=new Date();const end=new Date('2026-07-01T00:00:00Z');const diff=end-now;if(diff<=0){el.textContent='Price increased';return;}const d=Math.floor(diff/(1000*60*60*24));const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));const m=Math.floor((diff%(1000*60*60))/(1000*60));el.textContent=d+'d '+h+'h '+m+'m left';}update();setInterval(update,60000);})();</script>
 
       <!-- Migration Cost Calculator Embed -->
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 32px;">
@@ -319,36 +316,38 @@
       <div class="pricing-grid">
         <div class="pricing-card">
           <h3>Free</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Your free schema diff playground</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Free forever — no limits</p>
           <div class="price">$0<span>/mo</span></div>
           <ul>
-            <li>Diff up to 15 tables</li>
+            <li>Unlimited schema diff</li>
+            <li>Full migration SQL + rollback</li>
+            <li>ORM export (Prisma, Drizzle)</li>
             <li>Visual diff viewer</li>
             <li>All 5 SQL dialects</li>
-            <li>Local history (browser only)</li>
+            <li>CI/CD integrations (free)</li>
             <li>Community support</li>
-            <li class="disabled">Migration generation</li>
-            <li class="disabled">Export formats</li>
-            <li class="disabled">Share links</li>
+            <li class="disabled">Export Markdown / PDF / JSON</li>
+            <li class="disabled">Saved diff history</li>
+            <li class="disabled">Shareable links</li>
           </ul>
           <a href="app.html?demo=live" class="btn btn-secondary" style="width:100%">▶ Try Live Demo</a>
-          <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 12px; text-align: center;">💡 Try Pro free for 24 hours — no email required</p>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 12px; text-align: center;">The web diff is free forever. No credit card required.</p>
         </div>
         <div class="pricing-card featured">
           <span class="pricing-badge">Most Popular</span>
           <h3>Pro</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">For developers who ship with CI/CD</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Power features for power users</p>
           <div class="price">$39<span> once</span></div>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.<br><a href="launch-special.html" style="color: var(--danger); font-weight: 600;">⚡ Price increases July 1 →</a></p>
-          <p style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--success); font-weight: 600; margin-bottom: 16px;">🚀 Early-access price — lock in before rates increase</p>
-          <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 16px; text-align: center;">💡 Or try Pro free for 24 hours in the app — no credit card</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Lifetime access. No recurring bills.</p>
+          <p style="background: rgba(16,185,129,0.1); border: 1px solid var(--success); border-radius: 8px; padding: 8px 12px; font-size: 0.8rem; color: var(--success); font-weight: 600; margin-bottom: 16px;">🚀 The web diff is free forever — Pro adds convenience</p>
           <ul>
-            <li>Unlimited tables per diff</li>
-            <li>Full migration generation</li>
+            <li>Everything in Free</li>
             <li>Export Markdown, PDF, SQL, JSON</li>
-            <li>Save & share diff links</li>
-            <li>Breaking change detection</li>
+            <li>Unlimited saved diff history</li>
+            <li>Shareable diff links</li>
+            <li>Access to all 80+ micro-tools</li>
             <li>Priority email support</li>
+            <li>No exit-intent popups</li>
             <li class="disabled">Team workspace</li>
             <li class="disabled">API access</li>
           </ul>
@@ -381,7 +380,6 @@
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: -8px; margin-bottom: 16px;">Never pay again. Same features as Pro.</p>
           <ul>
             <li>Everything in Pro</li>
-            <li>Unlimited tables per diff</li>
             <li>All future Pro updates</li>
             <li>No recurring bills</li>
             <li>14-day money-back guarantee</li>
@@ -438,10 +436,10 @@
         <p>We offer a 14-day money-back guarantee on all paid plans. If SchemaLens doesn't save you time, email us and we'll refund you — no questions asked.</p>
 
         <h2>What can I do on the Free plan?</h2>
-        <p>The Free plan lets you diff up to 15 tables at a time, view visual diffs, and use all 5 SQL dialects. It also works with our free GitHub Action and CI/CD integrations. Upgrade to Pro for unlimited tables, migration generation, exports (Markdown, PDF, SQL, JSON), shareable links, and advanced breaking change detection.</p>
+        <p>The Free plan includes unlimited schema diff, full migration SQL generation, rollback scripts, ORM export, and all 5 SQL dialects. It also works with our free GitHub Action and CI/CD integrations. Upgrade to Pro for export formats (Markdown, PDF, JSON), unlimited saved diff history, shareable links, access to all 80+ micro-tools, and priority support.</p>
 
         <h2>Can I try Pro before buying?</h2>
-        <p>Yes. In the app, click "Try Pro Free — 24 Hours" when you hit the 15-table limit. No email, no credit card, no signup required. You'll get full migration generation, exports, and share links for 24 hours.</p>
+        <p>The web diff is free forever with no table limits. You can try Pro features (exports, history, share links) free for 24 hours in the app. No email or credit card required.</p>
 
         <h2>Can I use this at work?</h2>
         <p>Absolutely. Many Pro users are engineering leads who use SchemaLens for code review, staging-to-production checks, and CI/CD pipeline gating. The Team plan adds shared workspaces, diff comments, and admin controls for organizations.</p>

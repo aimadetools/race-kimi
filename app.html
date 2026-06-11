@@ -1385,7 +1385,8 @@
 </script>
 <script>
 function getFreeTierLimit() {
-  return window.SchemaLensTableLimit || 15;
+  // June 2026 pivot: web diff is completely free. Pro is now about power features + CI/CD.
+  return window.SchemaLensTableLimit || 99999;
 }
 
 (function updateFreeTierLimitText() {
@@ -1793,7 +1794,7 @@ CREATE TABLE users (
     </div>
 
     <div id="proHint" class="pro-hint">
-      <span>💡 <strong>Free tier:</strong> visual diff + migration preview for up to <span id="freeTierLimitHint">15</span> tables. <strong>Pro:</strong> unlimited tables, full migration SQL, Markdown & PDF export, and shareable diff links. <strong>New:</strong> Try Pro free for 24 hours — no email required.</span>
+      <span>💡 <strong>Free:</strong> unlimited visual diff + full migration SQL + rollback + ORM export. <strong>Pro:</strong> exports, diff history, shareable links, priority support, and 80+ micro-tools. <a href="pricing.html" style="color:var(--primary);text-decoration:underline;">See Pro features →</a></span>
       <a href="pricing.html">Upgrade →</a>
     </div>
 
@@ -1948,7 +1949,15 @@ CREATE TABLE users (
   <div class="modal-overlay" id="licenseModal">
     <div class="modal">
       <h3>🔓 Unlock SchemaLens Pro</h3>
-      <p>Enter your license key to unlock unlimited tables and full migration generation.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database.</p>
+      <ul style="font-size:0.85rem;color:var(--text);margin:0 0 14px 18px;padding:0;line-height:1.7;">
+        <li>Unlimited diff history & saved diffs</li>
+        <li>Export to Markdown, PDF, JSON, SQL</li>
+        <li>Shareable diff links with custom names</li>
+        <li>Access to all 80+ micro-tools</li>
+        <li>Priority email support</li>
+        <li>No exit-intent popups</li>
+      </ul>
       <input type="text" id="licenseInput" placeholder="SL-XXXX-XXXX-XXXX-XXXX">
       <div class="modal-actions">
         <button class="btn btn-secondary" onclick="closeLicenseModal()">Cancel</button>
@@ -1964,7 +1973,7 @@ CREATE TABLE users (
   <div class="modal-overlay" id="proPreviewModal">
     <div class="modal" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
       <h3>👀 Pro Preview</h3>
-      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Here's exactly what Pro unlocks — a complete migration with safety warnings, rollback scripts, and one-click exports.</p>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database.</p>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
           <span style="background:rgba(239,68,68,0.12);color:#ef4444;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;">⚠️ Risk Score: 72/100</span>
@@ -4593,38 +4602,32 @@ function renderVisualDiff(diff, breakingChanges) {
     tableBreaking.get(b.table).push(b);
   }
 
-  // Pro Migration Preview banner — shows Pro value BEFORE free diff tables
-  const paywallVariant = window.SchemaLensPaywallVariant || 'banner';
-  if (paywallVariant === 'banner' && !isProUnlocked() && lastMigrationSQL) {
+  // CI/CD Integration banner — promotes automation after free diff
+  if (!isProUnlocked() && lastMigrationSQL) {
     const totalChanges = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
-    const sqlLines = lastMigrationSQL.split('\n').filter(l => l.trim());
-    const teaserLines = sqlLines.slice(0, 3);
-    const hasMore = sqlLines.length > 3;
-    const trialAvailable = !isTrialClaimed();
     html += `
-      <div class="pro-migration-preview">
+      <div class="pro-migration-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.08));border-color:rgba(16,185,129,0.3);">
         <div class="pro-migration-preview-header">
-          <span style="font-size:1.2rem;">🔓</span>
-          <span>Your migration script is ready — <strong>${totalChanges} change${totalChanges > 1 ? 's' : ''}</strong> detected</span>
+          <span style="font-size:1.2rem;">✅</span>
+          <span>Migration ready — <strong>${totalChanges} change${totalChanges > 1 ? 's' : ''}</strong> detected. Full script is free below.</span>
         </div>
-        <div class="pro-migration-preview-code">
-          ${teaserLines.map(l => esc(l)).join('<br>')}
-          ${hasMore ? '<br><span style="color:var(--text-muted);">-- ... ' + (sqlLines.length - 3) + ' more lines</span>' : ''}
-          <div class="blur-fade"></div>
+        <div style="font-size:0.9rem;color:var(--text);margin:8px 0;">
+          <strong>Never do this manually again.</strong> Add SchemaLens to your CI/CD pipeline and catch breaking schema changes in every PR — automatically.
         </div>
         <div class="pro-migration-preview-features">
-          <span>🔁 Rollback plan</span>
-          <span>📄 Markdown & PDF export</span>
-          <span>🔗 Shareable diff links</span>
-          <span>⚡ CI/CD integration</span>
+          <span>🔍 Auto-diff on every PR</span>
+          <span>🚨 Breaking change alerts</span>
+          <span>📋 PR comments with migration preview</span>
+          <span>⚡ 2-minute setup</span>
         </div>
         <div class="pro-migration-preview-cta">
-          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39</a>
-          ${trialAvailable ? `<button class="btn btn-secondary" onclick="tryProTrial()">🚀 Try Pro Free — 24h</button>` : ''}
-          <button class="btn btn-secondary" onclick="openProPreviewModal()">👀 See Full Preview</button>
+          <a href="github-action.html" class="btn btn-primary" style="text-align:center;">🚀 Add to GitHub Action</a>
+          <a href="gitlab-schema-diff.html" class="btn btn-secondary" style="text-align:center;">GitLab CI</a>
+          <a href="jenkins-schema-diff.html" class="btn btn-secondary" style="text-align:center;">Jenkins</a>
+          <a href="circleci-schema-diff.html" class="btn btn-secondary" style="text-align:center;">CircleCI</a>
         </div>
         <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">
-          ⏰ <strong>Price increases to $79 on July 1</strong> — <span class="july1-countdown-inline"></span> left
+          Free for open source · Works with any CI platform · No backend required
         </div>
       </div>
     `;
@@ -5224,8 +5227,9 @@ function renderMigration(sql, rollbackSql, diff) {
   } else {
     if (warningsHTML) html += warningsHTML;
     if (!localStorage.getItem('schemalens_license')) {
-      html += `<div style="margin-bottom:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(239,68,68,0.1),rgba(99,102,241,0.06));border:1px solid rgba(239,68,68,0.25);border-radius:8px;font-size:0.85rem;color:var(--text);">
-        ⏰ <strong>Price increases to $79 on July 1 — <span class="july1-countdown-inline"></span> left</strong> — Lock in Lifetime Pro at $39 before it goes up. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Buy now →</a>
+      html += `<div style="margin-bottom:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(59,130,246,0.06));border:1px solid rgba(16,185,129,0.25);border-radius:8px;font-size:0.85rem;color:var(--text);">
+        🚀 <strong>Never write migrations by hand again.</strong> Add SchemaLens to your CI/CD pipeline and catch breaking changes in every PR. <a href="github-action.html" style="color:var(--success);font-weight:600;text-decoration:underline;">Set up in 2 minutes →</a>
+        <span style="display:block;font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Pro tip: The web diff is free forever. Pro ($39) adds exports, diff history, and priority support.</span>
       </div>`;
     }
     // Tabs

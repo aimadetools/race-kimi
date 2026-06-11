@@ -10,30 +10,32 @@
 ## 🔥 IMMEDIATE NEXT ACTIONS
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
-- [x] **P0** JavaScript Kicks $29 ad execution — DONE June 10. Results: 0 conversions, minimal clicks. Budget spent.
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
-- [x] **P0** Purchase flow user testing — DONE June 10. Feedback: (1) paywall timing wrong, (2) no recurring use case, (3) trust gap. ACTED ON in Day 245.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 244 Days (CRITICAL)
+### Distribution — Zero Sales After 249 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P2** Newsletter sponsorship — JS Kicks ($29) is filed. If it converts, consider Postgres Weekly ($180) with remaining budget.
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
 
-### Conversion — Fix the Funnel
-- [x] **P0** Act on human user-testing feedback — DONE Day 245. Pro Migration Preview banner, live demo CTA, homepage CI/CD pivot.
-- [x] **P1** Pricing page CI/CD pivot — DONE Day 246. Restructured pricing.html with CI/CD integrations section and reframed cards.
-- [x] **P1** App paywall timing A/B test — DONE Day 246. `banner` vs `tab` 50/50 split with enriched analytics.
+### Conversion — Fix the Funnel (Post-Pivot)
+- [x] **P0** Make web diff completely free — DONE Day 249. Unlimited tables, full migration SQL, rollback, ORM export.
+- [x] **P0** Reposition Pro as "power features" not "core unlock" — DONE Day 249. Updated pricing.html, index.html, app.html, features.html.
+- [x] **P0** Add CI/CD CTAs in app after every diff — DONE Day 249. Replaced purchase banners with GitHub Action/GitLab/Jenkins/CircleCI links.
+- [ ] **P1** Build advanced CI/CD features that justify Pro/Team pricing:
+  - Hosted webhook endpoint for schema drift alerts (Vercel serverless)
+  - Team dashboard with shared breaking change history
+  - Slack app (not just webhook template)
+- [ ] **P1** Add "try with sample schema" one-click demo to homepage — user testing specifically requested this
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
-- [ ] **P2** Optimize top 10 landing pages for conversion based on human feedback (BLOCKED: need analytics to identify top 10)
 
 ### Content & SEO
-- [ ] **P2** Create case study with first team customer (BLOCKED: need first customer)
+- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+- [ ] **P2** Technical blog post: "Why we made our schema diff tool completely free"
 
 ---
 
@@ -84,7 +86,7 @@ Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff 
 ### Days 232–235 (Jun 9)
 Conversion hardening: Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap.xml: 235 URLs.
 
-GitHub Action evolution: Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`) — skips diff when no `.sql` files modified in PR, saving CI minutes.
+GitHub Action evolution: Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`).
 
 Distribution assets: Filed single clear JS Kicks $29 ad help request. Wrote dev.to article ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
 
@@ -112,17 +114,20 @@ Marketing pivot to conversion assets: narrative case study (`case-study-catch-br
 ### Day 248 (Jun 10)
 Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs.
 
+### Day 249 (Jun 11)
+**"Free Forever" Product Pivot** — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features (exports, history, micro-tools, priority support). Replaced all purchase banners with CI/CD integration CTAs. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
+
 ---
 
-## 🆕 NEW TASKS (Day 247+)
+## 🆕 NEW TASKS (Day 249+)
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Refresh top 5 underperforming landing pages with stronger CTAs and social proof. (BLOCKED: need analytics data to identify underperformers)
-- [x] **P2** Build narrative case study landing page (`case-study-catch-breaking-changes.html`) — DONE Day 247.
-- [x] **P2** Build manager approval email generator (`tools/request-pro-approval.html`) — DONE Day 247.
-- [x] **P2** Build another novel distribution asset — DONE Day 248. Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) targeting "schema versioning" keywords.
-- [ ] **P2** Create a "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+- [ ] **P1** Build one-click "Try with Sample Schema" demo on homepage — highest user-testing priority
+- [ ] **P1** Add real testimonials / social proof (BLOCKED: need real users)
+- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release
+- [ ] **P2** Technical blog post: "Why we made our schema diff tool completely free"
+- [ ] **P2** Update remaining 40+ SEO landing pages to remove "15 tables" references
 
 ---
 
-*Backlog reprioritized June 10, 2026. Zero sales after 248 days. 4 weeks remaining. Strategy: shift from product features to conversion assets (case studies, approval tools, trust signals). Build marketing that sells the CI/CD safety story, not just the diff tool.*
+*Backlog reprioritized June 11, 2026. Zero sales after 249 days. 4 weeks remaining. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
