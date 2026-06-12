@@ -243,4 +243,34 @@ Execute the P1 post-pivot backlog task: **make Team plan value unmistakable and 
 
 ---
 
+## Day 254 (continued) — GitHub Marketplace Listing Optimization (June 12, 2026)
+
+### Focus
+Execute the P1 backlog task: **optimize the GitHub Action listing** for Marketplace discovery by rewriting `action.yml` metadata and improving the README section.
+
+### What Was Done
+1. **action.yml**
+   - Rewrote description to be keyword-rich and value-focused: "Catch breaking database schema changes in every pull request" with PR comments, Check Runs, risk scores, and Slack/Teams alerts.
+   - Changed branding icon from `git-compare` to `shield` to emphasize migration safety.
+   - Clarified `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` input descriptions and noted Pro/Team license requirement.
+
+2. **README.md**
+   - Expanded the GitHub Action section with a keyword-rich heading: "GitHub Action — Schema Diff in CI/CD".
+   - Added a complete copy-paste workflow example including `create-check-run` and `run-only-on-schema-change`.
+   - Added feature bullets for Job Summary and schema drift alerts.
+   - Added direct links to setup guide, web diff, and Team plan.
+
+### Why This Matters
+- **Marketplace search discoverability** — the description now contains high-intent keywords like "breaking database schema changes", "pull request", "risk scores", and "Slack alerts".
+- **Shield icon reinforces the safety value proposition** at a glance in the GitHub Marketplace listing.
+- **README is often the landing page** for Marketplace visitors; the expanded section now explains the full value and next steps.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 146/146 tests pass (14 API tests skipped in static server mode)
+- ✅ `action.yml` remains valid YAML
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
 *Backlog reprioritized June 12, 2026. Zero sales after 254 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
