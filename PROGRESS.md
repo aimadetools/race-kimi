@@ -65,53 +65,7 @@
 | 248 | Jun 10 | Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs. |
 | 249 | Jun 11 | "Free Forever" product pivot — web diff made completely free (unlimited tables, full migration SQL, rollback, ORM export); Pro repositioned as power features; purchase banners replaced with CI/CD CTAs across app/pricing/index/features. |
 | 250 | Jun 12 | One-click "Try with Sample Schema" demo — `?example=` URL param on app.html, 6-card sample section on homepage, e2e coverage. |
-
----
-
-## Day 251 — Schema Drift Alerts & Team Dashboard (June 12, 2026)
-
-### Focus
-Execute the P1 CI/CD feature work from the post-pivot backlog: **build advanced CI/CD features that justify Pro/Team pricing.** Shipped a hosted schema drift webhook endpoint, shareable alert pages, and a client-side team dashboard — all without storing schema data server-side.
-
-### What Was Done
-1. **Hosted schema drift webhook endpoint (`api/schema-drift-webhook.js`)**
-   - Accepts old/new schema SQL or a pre-computed diff via POST
-   - Validates Pro license key
-   - Computes risk score, change summary, and breaking-change list
-   - Sends Slack/Teams notifications with compact alert cards
-   - Returns a shareable alert URL with a hash-encoded payload (schema data never touches disk; decoded client-side)
-
-2. **Schema drift alert page (`schema-drift-alert.html`)**
-   - Decodes the URL hash payload
-   - Renders repo/branch metadata, change summary, breaking changes, migration SQL preview
-   - Persists alert history to localStorage for the team dashboard
-
-3. **Team schema drift dashboard (`team/schema-drift-dashboard.html`)**
-   - Client-side dashboard with stats, risk trend charts, and breaking-change filters
-   - JSON/CSV export of alert history
-   - CI/CD setup snippet and links to GitHub Action/GitLab/Jenkins/CircleCI guides
-
-4. **GitHub Action integration (`action.yml`)**
-   - Added `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` inputs
-   - New "Send Schema Drift Alert" step posts diff results to the webhook from CI
-
-5. **Documentation & discovery**
-   - Added drift-alerts sections to `github-action.html`, `ci-cd-integration.html`, `features.html`, and `api-guide.html`
-   - Updated `sitemap.xml` with the new alert and dashboard URLs
-   - Added Playwright e2e tests and a standalone Node unit test (`test-schema-drift-webhook.js`)
-
-### Why This Matters
-- **CI/CD becomes a concrete Pro/Team value** — drift alerts, team history, and Slack/Teams notifications are features users can see in their workflow
-- **No server-side schema storage** — maintains the privacy-first promise while adding team functionality
-- **Cross-sells existing CI/CD templates** — dashboard links directly to GitHub Action, GitLab CI, Jenkins, and CircleCI setup guides
-- **Validates the pivot** — the free web diff is the demo; the webhook/alert pipeline is the recurring-use product
-
-### Validation
-- ✅ `test-schema-drift-webhook.js`: 8/8 webhook unit tests pass
-- ✅ Playwright e2e: alert page + team dashboard load without console errors
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ sitemap.xml valid and includes new URLs
-- ✅ Committed, pushed, deployed to Vercel
+| 251 | Jun 12 | Schema Drift Alerts & Team Dashboard — hosted webhook endpoint (`api/schema-drift-webhook.js`), shareable alert page, client-side team dashboard, Slack/Teams notifications, GitHub Action integration, docs + sitemap + tests. |
 
 ---
 

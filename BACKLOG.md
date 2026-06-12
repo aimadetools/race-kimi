@@ -22,21 +22,12 @@
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
 
 ### Conversion — Fix the Funnel (Post-Pivot)
-- [x] **P0** Make web diff completely free — DONE Day 249. Unlimited tables, full migration SQL, rollback, ORM export.
-- [x] **P0** Reposition Pro as "power features" not "core unlock" — DONE Day 249. Updated pricing.html, index.html, app.html, features.html.
-- [x] **P0** Add CI/CD CTAs in app after every diff — DONE Day 249. Replaced purchase banners with GitHub Action/GitLab/Jenkins/CircleCI links.
-- [x] **P1** Build advanced CI/CD features that justify Pro/Team pricing — PARTIALLY DONE Day 251:
-  - [x] Hosted webhook endpoint for schema drift alerts (`/api/schema-drift-webhook.js`)
-  - [x] Team dashboard with local breaking change history (`team/schema-drift-dashboard.html`)
-  - [x] Slack/Teams webhook notifications from the hosted endpoint
-  - [ ] Standalone Slack app (not just webhook template) — future sprint
-- [x] **P1** Add "try with sample schema" one-click demo to homepage — DONE Day 250
+All P0/P1 conversion work complete. Remaining:
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content & SEO
 - [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
-- [ ] **P2** Technical blog post: "Why we made our schema diff tool completely free"
 
 ---
 
@@ -127,23 +118,21 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ### Day 253 (Jun 12)
 **Pivot Narrative Blog Post** — Published `blog/why-we-made-our-schema-diff-tool-completely-free.html` explaining the free-forever pivot, user-testing insights, and CI/CD-as-product strategy. Created dev.to/Medium markdown distribution version. Updated `blog.html` and `sitemap.xml`. Autonomous distribution asset for SEO and cross-posting.
 
+### Day 254 (Jun 12)
+**CI/CD Conversion Hardening + Marketplace Optimization** — Made Team plan value unmistakable on pricing.html, github-action.html, ci-cd-integration.html, and features.html with "Add to Pipeline" CTAs and ROI copy. Added Team quote lead-capture form on pricing.html. Optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. All tests pass; deployed.
+
 ---
 
-## 🆕 NEW TASKS (Day 249+)
+## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Build advanced CI/CD features that justify Pro/Team pricing:
-  - [x] Hosted webhook endpoint for schema drift alerts (Vercel serverless) — DONE Day 251
-  - [x] Team dashboard with shared breaking change history — DONE Day 251
-  - [ ] Standalone Slack app (not just webhook template) — future sprint
-- [x] **P1** Technical blog post: "Why we made our schema diff tool completely free" — DONE Day 253. HTML + dev.to/Medium markdown published.
-- [x] **P1** CI/CD conversion hardening — make Team plan value unmistakable on `pricing.html`, `github-action.html`, `ci-cd-integration.html`, and `features.html`. Add clear "Add to your pipeline" CTAs and ROI copy. DONE Day 254.
-- [x] **P1** Team plan lead capture — add "Get a Team quote" / "Book a 10-min setup call" form or email capture for engineering teams evaluating CI/CD integration. DONE Day 254 (form on pricing.html using `/api/subscribe` with `source=team-quote`).
-- [x] **P1** GitHub Marketplace listing optimization — rewrite `action.yml` description, add branding icon/color, improve README section for Marketplace discovery. DONE Day 254.
-- [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation).
-- [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users)
-- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release
+- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+
+### Future Sprint / Blocked
+- [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation; see HELP-RESPONSES.md Issue #41).
+- [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
+- [ ] **P2/Future** Standalone Slack app (not just webhook template).
 
 ---
 
-*Backlog reprioritized June 12, 2026. Zero sales after 252 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 12, 2026. Zero sales after 254 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
