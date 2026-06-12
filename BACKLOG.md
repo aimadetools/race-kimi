@@ -121,21 +121,22 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ### Day 250 (Jun 12)
 **One-Click "Try with Sample Schema" Demo** — Added `?example=` URL param support to app.html; built prominent 6-card "Try a real schema diff" section on homepage; updated hero CTAs to "▶ Try Sample Schema Diff". Directly addresses top user-testing feedback (trust gap / no sample demo). Added Playwright e2e test. 142/142 Chromium tests pass.
 
+### Days 251–252 (Jun 12)
+**Schema Drift Alerts + Site-Wide Free-Forever Cleanup** — Day 251: hosted schema drift webhook endpoint (`/api/schema-drift-webhook.js`), shareable alert page (`schema-drift-alert.html`), client-side team dashboard (`team/schema-drift-dashboard.html`), GitHub Action integration, docs added to github-action/ci-cd/features/api-guide pages, sitemap + e2e/unit tests. Day 252: removed all "15 tables" references from 53+ SEO landing pages, micro-tool pages, CLI landing page, blog posts, README.md, and IDENTITY.md; standardized free-forever messaging across the site. All tests pass; deployed to Vercel.
+
 ---
 
 ## 🆕 NEW TASKS (Day 249+)
 
 ### Unblocked — Ready to Execute
-- [x] **P1** Build one-click "Try with Sample Schema" demo on homepage — highest user-testing priority (DONE Day 250)
 - [ ] **P1** Build advanced CI/CD features that justify Pro/Team pricing:
-  - Hosted webhook endpoint for schema drift alerts (Vercel serverless)
-  - Team dashboard with shared breaking change history
-  - Slack app (not just webhook template)
-- [x] **P1** Update remaining 40+ SEO landing pages to remove "15 tables" references — DONE Day 252. Updated 53+ HTML pages, micro-tool pages, CLI landing page, blog posts, README.md, and IDENTITY.md. Zero "15 tables" references remain in HTML/MD project docs.
+  - [x] Hosted webhook endpoint for schema drift alerts (Vercel serverless) — DONE Day 251
+  - [x] Team dashboard with shared breaking change history — DONE Day 251
+  - [ ] Standalone Slack app (not just webhook template) — future sprint
 - [ ] **P1** Technical blog post: "Why we made our schema diff tool completely free" — distribution asset for the pivot
 - [ ] **P1** Add real testimonials / social proof (BLOCKED: need real users)
 - [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release
 
 ---
 
-*Backlog reprioritized June 11, 2026. Zero sales after 249 days. 4 weeks remaining. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 12, 2026. Zero sales after 252 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
