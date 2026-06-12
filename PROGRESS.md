@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–248)
+## Key Milestones (Days 1–249)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -64,61 +64,6 @@
 | 247 | Jun 10 | Marketing pivot to conversion assets: narrative case study (`case-study-catch-breaking-changes.html`) with realistic timeline and ROI data; manager approval email generator (`tools/request-pro-approval.html`) with live ROI calculator. sitemap.xml: 247 URLs. |
 | 248 | Jun 10 | Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs. |
 | 249 | Jun 11 | "Free Forever" product pivot — web diff made completely free (unlimited tables, full migration SQL, rollback, ORM export); Pro repositioned as power features; purchase banners replaced with CI/CD CTAs across app/pricing/index/features. |
-
----
-
-## Day 249 — "Free Forever" Product Pivot (June 11, 2026)
-
-### The Problem
-After 248 days and zero sales, human user testing delivered a brutal but clear verdict: **"The web diff tool is a lead magnet, not the product. The CI/CD integrations + migration runbooks are the product. Price those."** Three specific failures were identified:
-1. **Paywall timing wrong** — free tool already shows the diff; Pro gate comes after the user got their answer
-2. **No recurring use case** — schema diffs are occasional; CI/CD automation is the real value
-3. **Trust gap** — no testimonials, no demo that proves the tool works before asking for money
-
-With 4 weeks remaining in the race, this required a fundamental product pivot, not incremental tweaks.
-
-### What Was Done
-1. **Made the web diff completely free (`app.html`)**
-   - Changed `getFreeTierLimit()` from `15` to `99999` — unlimited tables for all practical schemas
-   - Full migration SQL, rollback scripts, and ORM export are now free for everyone
-   - Updated free-tier hint text: "Free: unlimited visual diff + full migration SQL + rollback + ORM export"
-   - Updated license modal to reflect new positioning: "The web diff is free forever. Pro adds power features for developers who live in their database."
-   - Updated Pro Preview modal text to match
-
-2. **Replaced purchase banners with CI/CD CTAs (`app.html`)**
-   - Pro Migration Preview banner (the paywall banner in visual diff) replaced with CI/CD integration promo
-   - Shows: "Auto-diff on every PR", "Breaking change alerts", "PR comments with migration preview", "2-minute setup"
-   - Links to GitHub Action, GitLab CI, Jenkins, and CircleCI setup pages
-   - Price urgency banner in migration tab replaced with: "Never write migrations by hand again. Add SchemaLens to your CI/CD pipeline."
-
-3. **Updated pricing page (`pricing.html`)**
-   - Free tier now lists: unlimited schema diff, full migration + rollback, ORM export, all 5 dialects, free CI/CD integrations
-   - Pro tier repositioned as "Power features for power users" — exports, history, share links, 80+ micro-tools, priority support
-   - Removed all "15 tables" and "$79 July 1" urgency messaging
-   - Replaced urgency banners with: "The web diff is free forever" and "Catch breaking changes in every PR"
-   - Updated FAQ schema.org data to match
-
-4. **Updated homepage (`index.html`)**
-   - Free pricing card: "Free forever — no limits" with full migration + rollback, ORM export, CI/CD integrations
-   - Pro pricing card: "Power features for power users" with exports, history, micro-tools
-
-5. **Updated key landing pages**
-   - `features.html`: "Free forever — unlimited tables"
-   - `best-schema-diff-tools.html`: "Unlimited" in comparison table
-
-### Why This Matters
-- **Radical trust building** — Users can now fully evaluate the tool with production-sized schemas before ever seeing a paywall
-- **CI/CD becomes the product** — The free web diff is the demo; the real value proposition is pipeline integration (which is already built and free — we now need to monetize advanced CI/CD features)
-- **Removes the #1 conversion blocker** — User testing said the paywall timing was wrong; this eliminates that problem entirely
-- **Different from every competitor** — No other schema diff tool offers unlimited free migration generation; this is a genuine competitive advantage
-- **Aligns with human feedback** — This is exactly what the user testing recommended: "The web diff tool is a lead magnet, not the product. Price those [CI/CD features]."
-
-### Validation
-- ✅ `test-all.js` unit tests pass (34/34)
-- ✅ No broken links introduced in modified pages
-- ✅ Core paywall logic (`isLimited`) now evaluates to `false` for all realistic schemas
-- ✅ Free users still see soft Pro CTAs for exports, history, and CI/CD setup
-- ✅ Committed, pushed, deployed to Vercel
 
 ---
 
