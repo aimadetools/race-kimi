@@ -464,7 +464,7 @@ test('schema drift alert page renders from URL hash', async ({ page }) => {
   const encoded = Buffer.from(JSON.stringify(payload)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   await page.goto(`${BASE_URL}/schema-drift-alert.html#${encoded}`);
   await expect(page.locator('text=Alert #abc123')).toBeVisible();
-  await expect(page.locator('text=test/repo Schema Drift Alert')).toBeVisible();
+  await expect(page.locator('text=repo Schema Drift Alert')).toBeVisible();
   await expect(page.locator('text=CREATE TABLE users')).toBeVisible();
 });
 
