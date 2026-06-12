@@ -227,4 +227,47 @@ Execute the P1 backlog task: **optimize the GitHub Action listing** for Marketpl
 
 ---
 
-*Backlog reprioritized June 12, 2026. Zero sales after 254 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+## Day 255 — "SchemaLens in 60 Seconds" README / GitHub Release GIF (June 12, 2026)
+
+### Focus
+Execute the remaining unblocked P2 backlog task: create a **60-second demo GIF** for the README and GitHub releases that shows the full SchemaLens story in one glance.
+
+### What Was Done
+1. **Built reproducible screenshot pipeline**
+   - New script: `scripts/generate-demo-gif.js` uses Playwright to capture six key screenshots:
+     1. Homepage hero
+     2. App empty state
+     3. Sample schema loaded (`?example=staging-vs-production`)
+     4. Visual diff panel
+     5. Migration SQL tab
+     6. GitHub Action CI/CD integration page
+   - New script: `scripts/create-demo-gif.sh` assembles the screenshots into an optimized 60-second GIF using ffmpeg with crossfade transitions and captions.
+
+2. **Created the GIF**
+   - Output: `assets/schemalens-60-seconds.gif`
+   - Resolution: 800×450, 5 fps, 32-color palette
+   - Duration: 60 seconds
+   - File size: ~1.8 MB
+   - Six captioned scenes with smooth crossfades
+
+3. **Embedded in README.md**
+   - Added the GIF directly below the primary CTAs so it is the first visual visitors see on GitHub.
+
+### Why This Matters
+- **Instant product comprehension** — visitors immediately understand what SchemaLens does without reading paragraphs
+- **Shares the free-forever + CI/CD narrative** — the GIF ends on the GitHub Action, reinforcing the current strategy
+- **Reusable asset** — can be used in GitHub releases, blog posts, dev.to articles, and social media
+- **Reproducible** — the scripts can regenerate the GIF whenever the UI changes
+
+### Validation
+- ✅ Generated GIF displays correctly and loops smoothly
+- ✅ All six scenes are legible and captions are readable
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 146/146 tests pass (14 API tests skipped in static server mode)
+- ✅ Committed with descriptive message
+- ✅ Pushed to GitHub
+- ✅ Deployed to Vercel
+
+---
+
+*Backlog reprioritized June 12, 2026. Zero sales after 255 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*

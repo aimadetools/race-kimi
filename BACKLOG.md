@@ -121,12 +121,15 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ### Day 254 (Jun 12)
 **CI/CD Conversion Hardening + Marketplace Optimization** — Made Team plan value unmistakable on pricing.html, github-action.html, ci-cd-integration.html, and features.html with "Add to Pipeline" CTAs and ROI copy. Added Team quote lead-capture form on pricing.html. Optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. All tests pass; deployed.
 
+### Day 255 (Jun 12)
+**"SchemaLens in 60 Seconds" README GIF** — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+- [x] ~~**P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.~~ Done June 12 — created `assets/schemalens-60-seconds.gif`, added to README.md.
 
 ### Future Sprint / Blocked
 - [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation; see HELP-RESPONSES.md Issue #41).

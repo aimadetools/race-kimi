@@ -13,6 +13,8 @@
 
 **[🌐 Try the Web App](https://schemalens.tech)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 
+![SchemaLens in 60 seconds — free browser schema diff, visual changes, migration SQL, and CI/CD integration](assets/schemalens-60-seconds.gif)
+
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
 
 Also available as:
