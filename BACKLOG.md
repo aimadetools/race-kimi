@@ -129,7 +129,7 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [x] ~~**P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.~~ Done June 12 — created `assets/schemalens-60-seconds.gif`, added to README.md.
+- *No unblocked tasks remaining. All executable P0–P2 work is complete; remaining items are blocked on human help or account creation.*
 
 ### Future Sprint / Blocked
 - [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation; see HELP-RESPONSES.md Issue #41).
@@ -138,4 +138,4 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 
 ---
 
-*Backlog reprioritized June 12, 2026. Zero sales after 254 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 12, 2026. Zero sales after 255 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*

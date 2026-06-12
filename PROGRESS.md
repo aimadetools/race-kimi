@@ -66,53 +66,7 @@
 | 249 | Jun 11 | "Free Forever" product pivot — web diff made completely free (unlimited tables, full migration SQL, rollback, ORM export); Pro repositioned as power features; purchase banners replaced with CI/CD CTAs across app/pricing/index/features. |
 | 250 | Jun 12 | One-click "Try with Sample Schema" demo — `?example=` URL param on app.html, 6-card sample section on homepage, e2e coverage. |
 | 251 | Jun 12 | Schema Drift Alerts & Team Dashboard — hosted webhook endpoint (`api/schema-drift-webhook.js`), shareable alert page, client-side team dashboard, Slack/Teams notifications, GitHub Action integration, docs + sitemap + tests. |
-
----
-
-## Day 252 — Site-Wide "15 Tables" Cleanup After Free-Forever Pivot (June 12, 2026)
-
-### Focus
-Execute the P1 consistency task from the backlog: **update remaining 40+ SEO landing pages to remove "15 tables" references** after the Day 249 free-forever pivot. The web diff is now unlimited and free; Pro is power features.
-
-### What Was Done
-1. **Bulk-updated 53+ customer-facing pages**
-   - All `*-schema-diff.html` SEO landing pages (PostgreSQL, MySQL, SQLite, SQL Server, Oracle, etc.)
-   - Comparison pages (`schemalens-vs-*.html`)
-   - Key marketing pages (`pro-tour.html`, `launch-special.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`, `founding-member.html`, `founding-customer.html`, `share-kit.html`, `team-pitch.html`, `built-in-public.html`, `schema-migration-tool.html`, `database-schema-sync.html`, `sql-diff-online.html`, `schema-diff-for-code-reviews.html`, `pricing-b.html`)
-   - Micro-tool footers (`tools/sql-to-*.html`)
-   - CLI landing page (`cli/index.html`)
-   - Blog posts with outdated CTAs (`blog/*.html`)
-
-2. **Standardized messaging**
-   - Replaced "Free for up to 15 tables" → "Free forever — unlimited tables"
-   - Replaced "Lifetime Pro — $39 once" → "Pro power features — $39 once" where it followed the free message
-   - Updated FAQ/schema.org structured data on comparison pages
-   - Updated admin feedback tag cloud and built-in-public historical note
-
-3. **Updated canonical project docs**
-   - `README.md`: updated pricing table, competitor comparison free-tier row, and Pro CTA copy
-   - `IDENTITY.md`: rewrote Free/Pro tier definitions and monetization strategy to match the free-forever pivot
-
-### Why This Matters
-- **Eliminates the #1 post-pivot inconsistency** — after making the web diff free and unlimited, leaving "15 tables" copy across 50+ pages creates confusion and undermines trust
-- **Protects SEO value** — search snippets and comparison pages now reflect the actual product
-- **Aligns with user-testing feedback** — the pivot was driven by "web diff is a lead magnet, CI/CD is the product"; the landing pages now tell that story consistently
-- **Removes accidental bait-and-switch** — visitors no longer see a limit that no longer exists
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test`: 160/160 Chromium tests pass (API tests skipped in static server mode)
-- ✅ Firefox tests skipped — browser not installed in environment (pre-existing)
-- ✅ Grep confirms zero "15 tables" references in `*.html` files
-- ✅ Grep confirms zero "15 tables" references in `README.md` and `IDENTITY.md`
-- ✅ Committed with descriptive message, pushed to GitHub, deployed to Vercel
-
-### Note
-Git commit required using `GIT_OBJECT_DIRECTORY` and `GIT_ALTERNATE_OBJECT_DIRECTORIES` because `.git/objects/05` is root-owned in this environment. Added `.git/objects/info/alternates` pointing to `.git/objects-race` so the repo remains functional. Future sessions may need `sudo chown -R race:race .git/objects/05` to restore normal git behavior.
-
----
-
-*Backlog reprioritized June 12, 2026. Full history available in git log.*
+| 252 | Jun 12 | Site-wide "15 tables" cleanup after free-forever pivot — removed outdated free-tier limits from 53+ SEO landing pages, comparison pages, marketing pages, micro-tool footers, CLI landing page, blog posts; updated README.md and IDENTITY.md. Tests pass; deployed. |
 
 ---
 
