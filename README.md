@@ -91,7 +91,7 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 | **Migration generation** | ✅ 5 dialects | ✅ Yes | ✅ Yes | ✅ Postgres only | ✅ Yes | ✅ Yes |
 | **Breaking change detection** | ✅ Built-in | Via scripts | Via validators | ✅ Yes | ✅ Yes | ✅ Yes |
 | **CI/CD templates** | ✅ GitHub/GitLab/Bitbucket/Jenkins/CircleCI | ✅ Yes | ✅ Yes | Manual | ✅ Yes | ✅ Yes |
-| **Free tier limit** | 15 tables, unlimited diffs | Open source core | Open source core | Unlimited self-hosted | Limited free tier | Limited free tier |
+| **Free tier limit** | Unlimited tables, unlimited diffs | Open source core | Open source core | Unlimited self-hosted | Limited free tier | Limited free tier |
 
 **SchemaLens is the only tool that lets you paste two SQL dumps into a browser and get a professional diff + migration in under 10 seconds.** No database connection. No CLI setup. No account required.
 
@@ -125,13 +125,13 @@ Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens Git
 
 | Plan | Price | What's Included |
 |------|-------|-----------------|
-| **Free** | $0 | Diff up to 15 tables. Visual diff. Breaking change detection. Risk score. No account needed. |
+| **Free** | $0 | Diff unlimited tables. Visual diff. Breaking change detection. Risk score. No account needed. |
 | **Pro** | $39 lifetime | Unlimited tables. Full migration generation. Export Markdown / PDF / SQL / JSON. Prisma & Drizzle export. Save & share diffs. History. API access. All future updates included. |
 | **Team** | $29/mo or $290/yr | Everything in Pro. Shared cloud workspace. Diff versioning. Slack alerts. Org-wide billing. |
 
 **[→ Upgrade to Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 
-**Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the 15-table limit in the app.
+**Try Pro free for 24 hours** — no email, no credit card, no signup. Click "Try Pro Free" when you hit the table limit in the app.
 
 **Or share to unlock Pro for 7 days** — one-click share on X/Twitter or LinkedIn from the app paywall. No verification, instant unlock.
 

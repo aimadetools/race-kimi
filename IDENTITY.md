@@ -32,18 +32,20 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 ## Exact Pricing Tiers
 
 ### Free — Forever
-- Diff up to 15 tables per comparison
+- Diff unlimited tables per comparison
 - Visual diff (added/removed/modified highlight)
-- Basic text-only migration preview (first 3 changes)
+- Full migration script generation (all dialects)
+- Rollback script generation
+- ORM export (Prisma, Drizzle, TypeORM, Sequelize)
 - Single-user, no account required
 - Data stays in browser (privacy-first)
 
 ### Pro — $39 one-time (lifetime access)
-- Unlimited tables per comparison
-- Full migration script generation (all dialects)
-- Export diff as Markdown / PDF / SQL
+- Everything in Free
+- Export diff as Markdown / PDF / SQL / JSON
 - Save & share diff links (via localStorage export for now; cloud later)
 - History of past diffs (localStorage)
+- 80+ micro-tools and power features
 - Priority support via email
 
 ### Team — $29/month or $290/year
@@ -55,7 +57,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 - API access (coming Week 10)
 
 ## Monetization Strategy
-1. **Freemium with clear value unlock:** Free shows the problem (diff visual), Pro solves it (migration SQL). The moment a user sees a 20-table diff, they hit the paywall and understand the value.
+1. **Freemium with clear value unlock:** The web diff is completely free and solves the core problem (visual diff + migration SQL). Pro adds power features for developers who live in their database: exports, history, share links, micro-tools, and priority support.
 2. **Gumroad for payment processing:** Sell license keys. Client-side validation unlocks Pro features. No backend needed initially.
 3. **Team expansion:** Individual developers bring SchemaLens to work. Team plan has collaboration features that justify the upgrade.
 4. **Content marketing SEO:** Rank for high-intent keywords like "compare mysql schemas", "generate alter table script", "postgres schema diff online". Organic traffic converts to Pro.
@@ -127,7 +129,7 @@ SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CRE
 |------|-------|------------------|
 | 1 | **Landing Page & Validation** | index.html, about.html, pricing.html, blog.html. Waitlist signup. Social posts. |
 | 2 | **Core Parser & Diff Engine** | Integrate node-sql-parser. Build semantic diff logic for tables, columns, indexes. |
-| 3 | **UI & Free Tier** | Split-pane diff viewer. Syntax highlighting. Local storage. 10-table limit. |
+| 3 | **UI & Free Tier** | Split-pane diff viewer. Syntax highlighting. Local storage. Free forever — unlimited tables. |
 | 4 | **Pro Tier & Product Hunt** | License key gating. Migration SQL generation. Product Hunt launch. First revenue. |
 | 5 | **More Dialects & Polish** | Add SQL Server basics. Improve parser edge cases. Export Markdown/PDF. |
 | 6 | **Team Workspace (MVP)** | Supabase auth. Cloud save for diffs. Share links. Team plan launch. |
