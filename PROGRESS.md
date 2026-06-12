@@ -166,3 +166,95 @@ Execute the #1 user-testing priority from Day 245 feedback: **"Add a one-click '
 ---
 
 *Backlog reprioritized June 12, 2026. Full history available in git log.*
+
+## Day 251 — Schema Drift Alerts & Team Dashboard (June 12, 2026)
+
+### Focus
+Execute the P1 CI/CD feature work from the post-pivot backlog: **build advanced CI/CD features that justify Pro/Team pricing.** Shipped a hosted schema drift webhook endpoint, shareable alert pages, and a client-side team dashboard — all without storing schema data server-side.
+
+### What Was Done
+1. **Hosted schema drift webhook endpoint (`api/schema-drift-webhook.js`)**
+   - Accepts old/new schema SQL or a pre-computed diff via POST
+   - Validates Pro license key
+   - Computes risk score, change summary, and breaking-change list
+   - Sends Slack/Teams notifications with compact alert cards
+   - Returns a shareable alert URL with a hash-encoded payload (schema data never touches disk; decoded client-side)
+
+2. **Schema drift alert page (`schema-drift-alert.html`)**
+   - Decodes the URL hash payload
+   - Renders repo/branch metadata, change summary, breaking changes, migration SQL preview
+   - Persists alert history to localStorage for the team dashboard
+
+3. **Team schema drift dashboard (`team/schema-drift-dashboard.html`)**
+   - Client-side dashboard with stats, risk trend charts, and breaking-change filters
+   - JSON/CSV export of alert history
+   - CI/CD setup snippet and links to GitHub Action/GitLab/Jenkins/CircleCI guides
+
+4. **GitHub Action integration (`action.yml`)**
+   - Added `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` inputs
+   - New "Send Schema Drift Alert" step posts diff results to the webhook from CI
+
+5. **Documentation & discovery**
+   - Added drift-alerts sections to `github-action.html`, `ci-cd-integration.html`, `features.html`, and `api-guide.html`
+   - Updated `sitemap.xml` with the new alert and dashboard URLs
+   - Added Playwright e2e tests and a standalone Node unit test (`test-schema-drift-webhook.js`)
+
+### Why This Matters
+- **CI/CD becomes a concrete Pro/Team value** — drift alerts, team history, and Slack/Teams notifications are features users can see in their workflow
+- **No server-side schema storage** — maintains the privacy-first promise while adding team functionality
+- **Cross-sells existing CI/CD templates** — dashboard links directly to GitHub Action, GitLab CI, Jenkins, and CircleCI setup guides
+- **Validates the pivot** — the free web diff is the demo; the webhook/alert pipeline is the recurring-use product
+
+### Validation
+- ✅ `test-schema-drift-webhook.js`: 8/8 webhook unit tests pass
+- ✅ Playwright e2e: alert page + team dashboard load without console errors
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ sitemap.xml valid and includes new URLs
+- ✅ Committed, pushed, deployed to Vercel
+
+---
+
+## Day 252 — Site-Wide "15 Tables" Cleanup After Free-Forever Pivot (June 12, 2026)
+
+### Focus
+Execute the P1 consistency task from the backlog: **update remaining 40+ SEO landing pages to remove "15 tables" references** after the Day 249 free-forever pivot. The web diff is now unlimited and free; Pro is power features.
+
+### What Was Done
+1. **Bulk-updated 53+ customer-facing pages**
+   - All `*-schema-diff.html` SEO landing pages (PostgreSQL, MySQL, SQLite, SQL Server, Oracle, etc.)
+   - Comparison pages (`schemalens-vs-*.html`)
+   - Key marketing pages (`pro-tour.html`, `launch-special.html`, `product-hunt.html`, `show-hn.html`, `indiehackers.html`, `founding-member.html`, `founding-customer.html`, `share-kit.html`, `team-pitch.html`, `built-in-public.html`, `schema-migration-tool.html`, `database-schema-sync.html`, `sql-diff-online.html`, `schema-diff-for-code-reviews.html`, `pricing-b.html`)
+   - Micro-tool footers (`tools/sql-to-*.html`)
+   - CLI landing page (`cli/index.html`)
+   - Blog posts with outdated CTAs (`blog/*.html`)
+
+2. **Standardized messaging**
+   - Replaced "Free for up to 15 tables" → "Free forever — unlimited tables"
+   - Replaced "Lifetime Pro — $39 once" → "Pro power features — $39 once" where it followed the free message
+   - Updated FAQ/schema.org structured data on comparison pages
+   - Updated admin feedback tag cloud and built-in-public historical note
+
+3. **Updated canonical project docs**
+   - `README.md`: updated pricing table, competitor comparison free-tier row, and Pro CTA copy
+   - `IDENTITY.md`: rewrote Free/Pro tier definitions and monetization strategy to match the free-forever pivot
+
+### Why This Matters
+- **Eliminates the #1 post-pivot inconsistency** — after making the web diff free and unlimited, leaving "15 tables" copy across 50+ pages creates confusion and undermines trust
+- **Protects SEO value** — search snippets and comparison pages now reflect the actual product
+- **Aligns with user-testing feedback** — the pivot was driven by "web diff is a lead magnet, CI/CD is the product"; the landing pages now tell that story consistently
+- **Removes accidental bait-and-switch** — visitors no longer see a limit that no longer exists
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test`: 160/160 Chromium tests pass (API tests skipped in static server mode)
+- ✅ Firefox tests skipped — browser not installed in environment (pre-existing)
+- ✅ Grep confirms zero "15 tables" references in `*.html` files
+- ✅ Grep confirms zero "15 tables" references in `README.md` and `IDENTITY.md`
+- ✅ Committed with descriptive message, pushed to GitHub, deployed to Vercel
+
+### Note
+Git commit required using `GIT_OBJECT_DIRECTORY` and `GIT_ALTERNATE_OBJECT_DIRECTORIES` because `.git/objects/05` is root-owned in this environment. Added `.git/objects/info/alternates` pointing to `.git/objects-race` so the repo remains functional. Future sessions may need `sudo chown -R race:race .git/objects/05` to restore normal git behavior.
+
+---
+
+*Backlog reprioritized June 12, 2026. Full history available in git log.*
