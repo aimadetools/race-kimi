@@ -142,6 +142,8 @@ const pages = [
   { path: '/tools/schema-diff-speed-challenge.html', name: 'Schema Diff Speed Challenge' },
   { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
   { path: '/tools/schema-semver-calculator.html', name: 'Schema SemVer Calculator' },
+  { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
+  { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
 ];
 
 for (const { path, name } of pages) {
@@ -419,6 +421,58 @@ test('schema health check: detects issues in sample schema', async ({ page }) =>
 // ───────────────────────────────────────────────
 // API Tests (skip when running against static file server)
 // ───────────────────────────────────────────────
+
+test('api: POST /api/schema-drift-webhook returns alert URL', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  if (true) test.skip(true, 'Static server does not support POST');
+  const response = await request.post(`${BASE_URL}/api/schema-drift-webhook`, {
+    data: {
+      projectToken: 'SL-AAAA-AAAA-AAAA-AAAA',
+      oldSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+      newSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);',
+      dialect: 'postgres',
+      metadata: { repo: 'test/repo', branch: 'main' }
+    }
+  });
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body.success).toBe(true);
+  expect(body.alertId).toBeTruthy();
+  expect(body.alertUrl).toContain('/schema-drift-alert.html#');
+  expect(body.summary).toHaveProperty('tablesModified');
+  expect(body.riskScore).toHaveProperty('score');
+});
+
+test('api: POST /api/schema-drift-webhook returns 401 for invalid token', async ({ request }) => {
+  test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
+  if (true) test.skip(true, 'Static server does not support POST');
+  const response = await request.post(`${BASE_URL}/api/schema-drift-webhook`, {
+    data: { projectToken: 'invalid', oldSchema: 'CREATE TABLE t (id INT);', newSchema: 'CREATE TABLE t (id INT);' }
+  });
+  expect(response.status()).toBe(401);
+});
+
+test('schema drift alert page renders from URL hash', async ({ page }) => {
+  const payload = {
+    alertId: 'abc123',
+    summary: { tablesAdded: 1, tablesRemoved: 0, tablesModified: 0, breakingChangeCount: 0 },
+    riskScore: { score: 10, label: 'Low', icon: '🟢' },
+    breakingChanges: [],
+    migration: 'CREATE TABLE users (id INT PRIMARY KEY);',
+    metadata: { repo: 'test/repo', branch: 'main', detectedAt: new Date().toISOString() }
+  };
+  const encoded = Buffer.from(JSON.stringify(payload)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  await page.goto(`${BASE_URL}/schema-drift-alert.html#${encoded}`);
+  await expect(page.locator('text=Alert #abc123')).toBeVisible();
+  await expect(page.locator('text=test/repo Schema Drift Alert')).toBeVisible();
+  await expect(page.locator('text=CREATE TABLE users')).toBeVisible();
+});
+
+test('team schema drift dashboard loads with empty state', async ({ page }) => {
+  await page.goto(`${BASE_URL}/team/schema-drift-dashboard.html`);
+  await expect(page.locator('text=Team Schema Drift Dashboard')).toBeVisible();
+  await expect(page.locator('text=No drift alerts yet')).toBeVisible();
+});
 
 test('api: POST /api/diff returns JSON diff', async ({ request }) => {
   test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
