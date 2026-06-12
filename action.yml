@@ -1,8 +1,8 @@
 name: 'SchemaLens Schema Diff'
 branding:
-  icon: 'git-compare'
+  icon: 'shield'
   color: 'indigo'
-description: 'Free SQL schema diff for GitHub Actions. Catch breaking database changes in PRs. Supports Postgres, MySQL, SQLite, SQL Server, Oracle.'
+description: 'Catch breaking database schema changes in every pull request. Free SQL diff for GitHub Actions with PR comments, Check Runs, risk scores, and Slack/Teams alerts. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.'
 inputs:
   old-schema-path:
     description: 'Path to the old schema SQL file'
@@ -41,13 +41,13 @@ inputs:
     description: 'GitHub token for posting PR comments, creating check runs, and checking changed files'
     required: false
   schema-drift-webhook:
-    description: 'Send the diff result to the SchemaLens hosted schema drift webhook (https://schemalens.tech/api/schema-drift-webhook). Requires a SchemaLens Pro license key.'
+    description: 'Send the diff result to the SchemaLens hosted schema drift webhook (https://schemalens.tech/api/schema-drift-webhook) to generate shareable alert pages and Slack/Teams notifications. Requires a SchemaLens Pro or Team license key.'
     required: false
   schema-drift-slack:
-    description: 'Slack Incoming Webhook URL for schema drift alerts. Used when schema-drift-webhook is set.'
+    description: 'Slack Incoming Webhook URL for schema drift alerts. Requires schema-drift-webhook to be set.'
     required: false
   schema-drift-teams:
-    description: 'Microsoft Teams Webhook URL for schema drift alerts. Used when schema-drift-webhook is set.'
+    description: 'Microsoft Teams Webhook URL for schema drift alerts. Requires schema-drift-webhook to be set.'
     required: false
 runs:
   using: 'composite'

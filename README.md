@@ -53,29 +53,50 @@ All parsing happens **entirely in your browser** — your schema data never touc
 
 ---
 
-## ⚡ GitHub Action
+## ⚡ GitHub Action — Schema Diff in CI/CD
 
-Add schema diff checks to your CI/CD pipeline in 60 seconds. The [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) compares SQL schemas on every pull request and posts a diff summary as a PR comment.
+Add free database schema diff checks to your GitHub Actions CI/CD pipeline and catch breaking changes before they merge. The [SchemaLens GitHub Action](https://schemalens.tech/github-action.html) compares SQL schemas on every pull request, posts a formatted diff summary as a PR comment, and creates a real GitHub Check Run with a risk score.
+
+Perfect for teams using PostgreSQL, MySQL, SQLite, SQL Server, or Oracle who want automated schema review without connecting to a live database.
 
 ```yaml
-- uses: aimadetools/race-kimi@main
-  with:
-    old-schema-path: ./schema/base.sql
-    new-schema-path: ./schema/current.sql
-    dialect: postgres
-    post-comment: true
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    fail-on-breaking: true
+# .github/workflows/schema-diff.yml
+name: Schema Diff
+on: [pull_request]
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aimadetools/race-kimi@main
+        with:
+          old-schema-path: ./schema/base.sql
+          new-schema-path: ./schema/current.sql
+          dialect: postgres
+          post-comment: true
+          create-check-run: true
+          run-only-on-schema-change: true   # skip when no .sql files changed
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-breaking: true
 ```
 
-- **Free tier** — no license key required
+### Features
+
+- **Free tier** — works without a license key
 - **Breaking change detection** — fail the build before bad migrations reach production
 - **PR comments** — formatted diff summary posted automatically
-- **Check Run integration** — real PR status checks with risk scores
+- **GitHub Check Runs** — native PR status checks with risk scores
+- **Job Summary** — rich markdown report on every Actions run
 - **Smart skip** — only runs when `.sql` files change
-- **5 dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
+- **Schema drift alerts** — Slack/Teams notifications with shareable alert pages (Pro/Team)
+- **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
 
-**[→ View full GitHub Action setup guide](https://schemalens.tech/github-action.html)**
+### Get started
+
+- **[View full setup guide →](https://schemalens.tech/github-action.html)**
+- **[Try the web diff →](https://schemalens.tech/app.html)**
+- **[Team plan with Slack alerts →](https://schemalens.tech/pricing.html)**
 
 ---
 
