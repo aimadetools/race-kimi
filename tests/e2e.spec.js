@@ -235,6 +235,24 @@ test('app: load MySQL sample and generate diff', async ({ page }) => {
   expect(summary).toContain('tables');
 });
 
+test('app: ?example=staging-vs-production loads sample schemas and auto-runs diff', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html?example=staging-vs-production`);
+  await dismissEmailCapture(page);
+  await page.waitForTimeout(800);
+
+  // Should auto-run comparison and show results
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  // Summary should show multiple tables changed
+  const summary = await page.locator('#summaryBar').textContent();
+  expect(summary).toContain('tables');
+
+  // Migration SQL should contain ALTER TABLE or CREATE TABLE for the new order_items table
+  await page.click('button[data-tab="migration"]');
+  const migration = await page.locator('#migrationContainer').textContent();
+  expect(migration).toMatch(/ALTER TABLE|CREATE TABLE/i);
+});
+
 test('app: breaking changes detection works for dropped column', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await dismissEmailCapture(page);

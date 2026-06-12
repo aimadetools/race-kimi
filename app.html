@@ -8756,6 +8756,14 @@ document.querySelectorAll('.results-tab').forEach(tab => {
     return;
   }
 
+  // Scenario-based quick examples via ?example=add-column|add-table|rename-index|breaking|staging-vs-production
+  const example = params.get('example');
+  if (example && QUICK_EXAMPLES[example]) {
+    loadQuickExample(example);
+    if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('demo_auto_run', { type: 'example', example, variant: window.SchemaLensHeadlineVariant || 'A' });
+    return;
+  }
+
   // Public share link via ?share=publicId
   const shareParams = new URLSearchParams(location.search);
   const shareId = shareParams.get('share');

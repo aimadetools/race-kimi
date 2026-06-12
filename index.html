@@ -469,7 +469,8 @@
         <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:0.8rem;color:var(--text-muted);"><span style="color:var(--success);">✓</span> Oracle</span>
       </div>
       <div class="hero-actions">
-        <a href="app.html?demo=live" class="btn btn-primary btn-lg" id="hero-cta">▶ Try Live Demo</a>
+        <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg" id="hero-cta">▶ Try Sample Schema Diff</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Compare Your Schemas</a>
         <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action — Free</a>
       </div>
       <div style="margin-top:10px;font-size:0.85rem;">
@@ -572,11 +573,11 @@
     if (now <= raceEnd) {
       // Race to the Finish — show urgency
       if (badgeText) badgeText.textContent = '🏁 Race to the Finish — Lifetime Pro $39';
-      if (cta) cta.textContent = 'Compare Schemas Free';
+      if (cta) cta.textContent = '▶ Try Sample Schema Diff';
     } else {
       // Post-race: timeless badge
-      if (badgeText) badgeText.textContent = '70+ free developer tools — open source core';
-      if (cta) cta.textContent = 'Compare Schemas Free';
+      if (badgeText) badgeText.textContent = '🆓 Web diff is free forever — no account required';
+      if (cta) cta.textContent = '▶ Try Sample Schema Diff';
     }
   })();
   </script>
@@ -653,6 +654,112 @@
       </div>
     </div>
   </section>
+
+  <!-- Try with Sample Schema — one-click trust-building demos -->
+  <section class="section sample-schema-section" style="padding: 64px 0; background: var(--bg);">
+    <div class="container">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto 40px;">
+        <h2 class="section-title" style="margin-bottom: 12px;">Try a real schema diff — no setup required</h2>
+        <p class="section-subtitle" style="margin-bottom: 0;">Click any scenario below. We'll load sample schemas, run the diff, and show you the exact migration script. No account. No data leaves your device.</p>
+      </div>
+      <div class="sample-schema-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <a href="app.html?example=staging-vs-production" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="staging-vs-production">
+          <div class="sample-schema-icon">🚀</div>
+          <h3>Staging vs Production</h3>
+          <p>The #1 use case: catch drift between your staging and production schemas before deploy.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+        <a href="app.html?example=add-column" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="add-column">
+          <div class="sample-schema-icon">➕</div>
+          <h3>Add a column</h3>
+          <p>See how SchemaLens detects new columns and generates the exact ALTER TABLE statement.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+        <a href="app.html?example=add-table" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="add-table">
+          <div class="sample-schema-icon">📋</div>
+          <h3>New table</h3>
+          <p>A new categories table is added. We generate CREATE TABLE with indexes and foreign keys.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+        <a href="app.html?example=rename-index" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="rename-index">
+          <div class="sample-schema-icon">🏷️</div>
+          <h3>Rename + index</h3>
+          <p>Column renamed and a new index added. Watch MySQL dialect detection in action.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+        <a href="app.html?example=breaking" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="breaking">
+          <div class="sample-schema-icon">💥</div>
+          <h3>Breaking change</h3>
+          <p>A column is dropped but a view still references it. SchemaLens flags the breaking change.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+        <a href="app.html?demo=mysql" class="sample-schema-card" data-analytics="sample_schema_clicked" data-example="mysql">
+          <div class="sample-schema-icon">🐬</div>
+          <h3>MySQL demo</h3>
+          <p>Load a full MySQL sample schema with auto-increment keys, foreign keys, and indexes.</p>
+          <span class="sample-schema-cta">Run this demo →</span>
+        </a>
+      </div>
+      <div style="text-align: center; margin-top: 32px;">
+        <a href="schema-examples.html" class="btn btn-secondary">Browse 6 real-world schema examples</a>
+      </div>
+    </div>
+  </section>
+  <style>
+    .sample-schema-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .sample-schema-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+      border-color: var(--primary);
+    }
+    .sample-schema-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .sample-schema-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+    .sample-schema-card p {
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .sample-schema-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .sample-schema-card:hover .sample-schema-cta {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    (function() {
+      document.querySelectorAll('.sample-schema-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          const example = card.getAttribute('data-example');
+          if (window.SchemaLensAnalytics) {
+            window.SchemaLensAnalytics.track('sample_schema_clicked', { example, source: 'homepage' });
+          }
+        });
+      });
+    })();
+  </script>
 
   <!-- Post-Product Hunt social proof section — controlled by PH_RESULTS config above -->
   <section id="phResultsSection" class="section" style="display:none;padding: 28px 0;background: linear-gradient(90deg,rgba(255,97,84,0.08),rgba(56,189,248,0.08));border-bottom:1px solid var(--border);">

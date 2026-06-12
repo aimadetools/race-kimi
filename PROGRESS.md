@@ -63,6 +63,7 @@
 | 246 | Jun 10 | CI/CD-first pivot continued: pricing.html restructured with CI/CD integrations section and reframed pricing cards; team.html rebuilt as CI/CD-first team landing page; app paywall timing A/B test (`banner` vs `tab`) with enriched analytics; Schema Changelog Generator micro-tool built targeting "database schema changelog" keyword. sitemap.xml: 245 URLs. |
 | 247 | Jun 10 | Marketing pivot to conversion assets: narrative case study (`case-study-catch-breaking-changes.html`) with realistic timeline and ROI data; manager approval email generator (`tools/request-pro-approval.html`) with live ROI calculator. sitemap.xml: 247 URLs. |
 | 248 | Jun 10 | Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs. |
+| 249 | Jun 11 | "Free Forever" product pivot — web diff made completely free (unlimited tables, full migration SQL, rollback, ORM export); Pro repositioned as power features; purchase banners replaced with CI/CD CTAs across app/pricing/index/features. |
 
 ---
 
@@ -121,4 +122,47 @@ With 4 weeks remaining in the race, this required a fundamental product pivot, n
 
 ---
 
-*Backlog reprioritized June 11, 2026. Full history available in git log.*
+## Day 250 — One-Click "Try with Sample Schema" Demo (June 12, 2026)
+
+### Focus
+Execute the #1 user-testing priority from Day 245 feedback: **"Add a one-click 'try with sample schema' demo."** The goal is to close the trust gap for new visitors by letting them see SchemaLens work on a realistic schema before they paste their own SQL.
+
+### What Was Done
+1. **Added `?example=` URL parameter support to `app.html`**
+   - New `?example=staging-vs-production|add-column|add-table|rename-index|breaking` param auto-loads a quick example and runs the diff
+   - Reuses existing `QUICK_EXAMPLES` definitions and `loadQuickExample()` function
+   - Tracks `demo_auto_run` analytics event with `type: 'example'` and the example name
+
+2. **Built prominent "Try a real schema diff" section on `index.html`**
+   - Added directly below the hero / trust badges so visitors see it without scrolling far
+   - 6 scenario cards: Staging vs Production, Add a column, New table, Rename + index, Breaking change, MySQL demo
+   - Each card links to `app.html?example=...` (or `app.html?demo=mysql`) and loads + runs the diff in one click
+   - Added click analytics tracking for `sample_schema_clicked` events
+   - Links to `schema-examples.html` for users who want more real-world samples
+
+3. **Updated homepage hero CTAs for clarity**
+   - Primary CTA changed from "Try Live Demo" to **"▶ Try Sample Schema Diff"** linking to `app.html?example=staging-vs-production`
+   - Added secondary "Compare Your Schemas" CTA linking to `app.html`
+   - Post-race badge now reads "🆓 Web diff is free forever — no account required"
+
+4. **Added Playwright e2e coverage**
+   - New test: `app: ?example=staging-vs-production loads sample schemas and auto-runs diff`
+   - Verifies the URL param loads schemas, auto-runs comparison, and produces migration SQL
+
+### Why This Matters
+- **Directly addresses the #1 user-testing blocker** — "no testimonials, no logos, no sample demo"
+- **Reduces time-to-value to zero** — visitors see a production-like diff in one click instead of hunting for sample SQL
+- **Builds trust before the ask** — the tool proves itself before any Pro or CI/CD CTA appears
+- **Supports the free-forever pivot** — the CTA promises a sample diff, not a sales pitch
+- **Gives analytics visibility** — `sample_schema_clicked` and `demo_auto_run` events let us measure which scenarios convert
+
+### Validation
+- ✅ 142/142 Chromium e2e tests pass (12 API tests skipped in static server mode)
+- ✅ New `?example=` test passes
+- ✅ No console errors on homepage or app.html
+- ✅ All 6 sample-schema cards link to valid app URLs
+- ✅ Firefox tests fail due to missing Firefox browser in environment (pre-existing, not caused by changes)
+
+---
+
+*Backlog reprioritized June 12, 2026. Full history available in git log.*

@@ -117,16 +117,23 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ### Day 249 (Jun 11)
 **"Free Forever" Product Pivot** — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features (exports, history, micro-tools, priority support). Replaced all purchase banners with CI/CD integration CTAs. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
 
+### Day 250 (Jun 12)
+**One-Click "Try with Sample Schema" Demo** — Added `?example=` URL param support to app.html; built prominent 6-card "Try a real schema diff" section on homepage; updated hero CTAs to "▶ Try Sample Schema Diff". Directly addresses top user-testing feedback (trust gap / no sample demo). Added Playwright e2e test. 142/142 Chromium tests pass.
+
 ---
 
 ## 🆕 NEW TASKS (Day 249+)
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Build one-click "Try with Sample Schema" demo on homepage — highest user-testing priority
+- [x] **P1** Build one-click "Try with Sample Schema" demo on homepage — highest user-testing priority (DONE Day 250)
+- [ ] **P1** Build advanced CI/CD features that justify Pro/Team pricing:
+  - Hosted webhook endpoint for schema drift alerts (Vercel serverless)
+  - Team dashboard with shared breaking change history
+  - Slack app (not just webhook template)
+- [ ] **P1** Update remaining 40+ SEO landing pages to remove "15 tables" references — post-pivot consistency cleanup
+- [ ] **P1** Technical blog post: "Why we made our schema diff tool completely free" — distribution asset for the pivot
 - [ ] **P1** Add real testimonials / social proof (BLOCKED: need real users)
 - [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release
-- [ ] **P2** Technical blog post: "Why we made our schema diff tool completely free"
-- [ ] **P2** Update remaining 40+ SEO landing pages to remove "15 tables" references
 
 ---
 
