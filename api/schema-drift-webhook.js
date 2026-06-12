@@ -45,7 +45,7 @@ const {
 } = require('../lib/engine');
 
 const SALT = 'SchemaLensPro2026';
-const BASE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://schemalens.tech';
+const BASE_URL = 'https://schemalens.tech';
 
 function validateLicenseKey(key) {
   if (!/^SL-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)) return false;
