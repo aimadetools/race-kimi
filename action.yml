@@ -40,6 +40,15 @@ inputs:
   github-token:
     description: 'GitHub token for posting PR comments, creating check runs, and checking changed files'
     required: false
+  schema-drift-webhook:
+    description: 'Send the diff result to the SchemaLens hosted schema drift webhook (https://schemalens.tech/api/schema-drift-webhook). Requires a SchemaLens Pro license key.'
+    required: false
+  schema-drift-slack:
+    description: 'Slack Incoming Webhook URL for schema drift alerts. Used when schema-drift-webhook is set.'
+    required: false
+  schema-drift-teams:
+    description: 'Microsoft Teams Webhook URL for schema drift alerts. Used when schema-drift-webhook is set.'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -406,4 +415,96 @@ ${UPGRADE_NOTE}
         else
           CHECK_ID=$(cat /tmp/schemalens_check.json | jq -r '.id // "unknown"')
           echo "Check run created successfully (ID: ${CHECK_ID})."
+        fi
+
+    - name: Send Schema Drift Alert
+      if: inputs.schema-drift-webhook != ''
+      shell: bash
+      env:
+        WEBHOOK_URL: ${{ inputs.schema-drift-webhook }}
+        LICENSE_KEY: ${{ inputs.license-key }}
+        SLACK_URL: ${{ inputs.schema-drift-slack }}
+        TEAMS_URL: ${{ inputs.schema-drift-teams }}
+        RESPONSE_JSON: ${{ steps.diff.outputs.response }}
+        OLD_PATH: ${{ inputs.old-schema-path }}
+        NEW_PATH: ${{ inputs.new-schema-path }}
+        DIALECT: ${{ inputs.dialect }}
+      run: |
+        set -euo pipefail
+        RESPONSE="$RESPONSE_JSON"
+
+        if [ -z "$LICENSE_KEY" ]; then
+          echo "::warning::schema-drift-webhook requires a SchemaLens Pro license key. Set license-key to enable drift alerts."
+          exit 0
+        fi
+
+        # Build notification object only if URLs provided
+        NOTIFY_PARTS=()
+        if [ -n "$SLACK_URL" ]; then
+          NOTIFY_PARTS+=("\"slack\": \"$SLACK_URL\"")
+        fi
+        if [ -n "$TEAMS_URL" ]; then
+          NOTIFY_PARTS+=("\"teams\": \"$TEAMS_URL\"")
+        fi
+        NOTIFY_JSON="{ $(printf '%s, ' "${NOTIFY_PARTS[@]}" | sed 's/, $//') }"
+        if [ "${#NOTIFY_PARTS[@]}" -eq 0 ]; then
+          NOTIFY_JSON="{}"
+        fi
+
+        # Read schemas safely with jq
+        OLD_SCHEMA=$(jq -Rs . < "$OLD_PATH")
+        NEW_SCHEMA=$(jq -Rs . < "$NEW_PATH")
+
+        REPO="${{ github.repository }}"
+        BRANCH="${{ github.head_ref || github.ref_name }}"
+        COMMIT="${{ github.sha }}"
+        COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+        PR_URL="${{ github.event.pull_request.html_url || '' }}"
+        RUN_ID="${{ github.run_id }}"
+
+        PAYLOAD=$(jq -n \
+          --arg token "$LICENSE_KEY" \
+          --argjson oldSchema "$OLD_SCHEMA" \
+          --argjson newSchema "$NEW_SCHEMA" \
+          --arg dialect "$DIALECT" \
+          --arg repo "$REPO" \
+          --arg branch "$BRANCH" \
+          --arg commit "$COMMIT" \
+          --arg commitUrl "$COMMIT_URL" \
+          --arg prUrl "$PR_URL" \
+          --arg ciProvider "github-actions" \
+          --arg runId "$RUN_ID" \
+          --argjson notify "$NOTIFY_JSON" \
+          '{
+            projectToken: $token,
+            oldSchema: $oldSchema,
+            newSchema: $newSchema,
+            dialect: $dialect,
+            metadata: {
+              repo: $repo,
+              branch: $branch,
+              commit: $commit,
+              commitUrl: $commitUrl,
+              prUrl: $prUrl,
+              ciProvider: $ciProvider,
+              runId: $runId
+            },
+            notify: $notify
+          }')
+
+        HTTP_STATUS=$(curl -s -o /tmp/schemalens_drift.json -w "%{http_code}" -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d "$PAYLOAD" || echo "000")
+
+        if [ "$HTTP_STATUS" != "200" ]; then
+          echo "::warning::Failed to send schema drift alert (HTTP $HTTP_STATUS)."
+          if [ -r /tmp/schemalens_drift.json ]; then
+            cat /tmp/schemalens_drift.json || true
+          fi
+        else
+          ALERT_URL=$(cat /tmp/schemalens_drift.json | jq -r '.alertUrl // "unknown"')
+          ALERT_ID=$(cat /tmp/schemalens_drift.json | jq -r '.alertId // "unknown"')
+          echo "Schema drift alert sent (ID: ${ALERT_ID})."
+          echo "Alert URL: ${ALERT_URL}"
+          echo "- SchemaLens drift alert: ${ALERT_URL}" >> "$GITHUB_STEP_SUMMARY"
         fi

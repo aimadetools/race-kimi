@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Schema Drift Dashboard — SchemaLens</title>
+  <meta name="description" content="Track schema drift alerts across your team. View breaking change history, risk trends, and migration reports from SchemaLens CI/CD integrations.">
+  <meta property="og:title" content="Team Schema Drift Dashboard — SchemaLens">
+  <meta property="og:description" content="Shared schema drift history for teams. Track breaking changes, risk trends, and migration reports.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/team/schema-drift-dashboard.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .dashboard { padding: 24px 0 64px; }
+    .page-header { text-align: center; margin-bottom: 32px; }
+    .page-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+    .page-header p { color: var(--text-muted); font-size: 1rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: center; }
+    .stat-card .num { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+    .chart-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .chart-svg { width: 100%; height: 160px; }
+    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .toolbar input, .toolbar select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.9rem; }
+    .toolbar button { background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .toolbar button:hover { opacity: 0.9; }
+    .toolbar button.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .alerts-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .alerts-table th, .alerts-table td { border-bottom: 1px solid var(--border); padding: 12px; text-align: left; }
+    .alerts-table th { background: var(--surface); font-weight: 600; }
+    .alerts-table tr:hover { background: rgba(99,102,241,0.05); }
+    .alerts-table a { color: var(--primary); text-decoration: none; }
+    .alerts-table a:hover { text-decoration: underline; }
+    .risk-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .risk-dot.low { background: var(--success); }
+    .risk-dot.medium { background: var(--warning); }
+    .risk-dot.high, .risk-dot.critical { background: var(--danger); }
+    .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+    .setup-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 16px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; line-height: 1.6; }
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; }
+    .badge.breaking { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .badge.safe { background: rgba(34,197,94,0.15); color: var(--success); }
+    .badge.warning { background: rgba(251,191,36,0.15); color: var(--warning); }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container dashboard">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem; margin-bottom:12px;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../github-action.html">GitHub Action</a>
+      <a href="../schema-drift-alert.html">Latest Alert</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>Team Schema Drift Dashboard</h1>
+      <p>Aggregate schema drift alerts from your CI/CD pipelines. Data is stored locally in your browser — share alert links with teammates to populate this dashboard.</p>
+    </div>
+
+    <div class="setup-card">
+      <h2>⚡ Connect your CI/CD pipeline</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">Point your GitHub Action, GitLab CI, or Jenkins job at the SchemaLens drift webhook. Alerts are forwarded to Slack/Teams and produce shareable alert URLs.</p>
+      <div class="code-block">POST https://schemalens.tech/api/schema-drift-webhook
+Content-Type: application/json
+
+{
+  "projectToken": "SL-XXXX-XXXX-XXXX-XXXX",
+  "oldSchema": "...",
+  "newSchema": "...",
+  "dialect": "postgres",
+  "metadata": { "repo": "org/repo", "branch": "main", "commit": "abc123" },
+  "notify": {
+    "slack": "https://hooks.slack.com/services/...",
+    "teams": "https://outlook.office.com/webhook/..."
+  }
+}</div>
+      <p style="margin-top:12px;"><a href="../github-action.html" style="color:var(--primary); font-weight:600;">GitHub Action docs →</a></p>
+    </div>
+
+    <div id="empty-state" class="empty-state" style="display:none;">
+      <div class="icon">📭</div>
+      <p>No drift alerts yet. Open an alert link from your CI/CD pipeline or import a payload below.</p>
+    </div>
+
+    <div id="dashboard-content">
+      <div class="stats-grid" id="stats-grid"></div>
+
+      <div class="chart-card">
+        <h2>Risk Trend (last 30 days)</h2>
+        <svg class="chart-svg" id="risk-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="chart-card">
+        <h2>Breaking Changes Over Time</h2>
+        <svg class="chart-svg" id="breaking-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="chart-card">
+        <div class="toolbar">
+          <input type="text" id="filter-repo" placeholder="Filter by repo…">
+          <select id="filter-risk">
+            <option value="">All risk levels</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+          <select id="filter-breaking">
+            <option value="">All alerts</option>
+            <option value="yes">Breaking only</option>
+            <option value="no">Safe only</option>
+          </select>
+          <button id="btn-export-json">Export JSON</button>
+          <button id="btn-export-csv" class="secondary">Export CSV</button>
+          <button id="btn-clear" class="secondary">Clear Local Data</button>
+        </div>
+        <table class="alerts-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Repo</th>
+              <th>Branch</th>
+              <th>Changes</th>
+              <th>Risk</th>
+              <th>Status</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const STORAGE_KEY = 'schemalens_drift_alerts';
+
+    function loadAlerts() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveAlerts(alerts) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(alerts.slice(0, 100)));
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function summarizeChanges(s) {
+      const parts = [];
+      if (s.tablesAdded) parts.push(`+${s.tablesAdded}`);
+      if (s.tablesRemoved) parts.push(`-${s.tablesRemoved}`);
+      if (s.tablesModified) parts.push(`~${s.tablesModified}`);
+      return parts.length ? parts.join(' ') : 'None';
+    }
+
+    function renderStats(alerts) {
+      const total = alerts.length;
+      const breaking = alerts.filter(a => (a.summary?.breakingChangeCount || 0) > 0).length;
+      const totalChanges = alerts.reduce((sum, a) => sum + (a.summary?.tablesAdded || 0) + (a.summary?.tablesRemoved || 0) + (a.summary?.tablesModified || 0), 0);
+      const avgRisk = total ? Math.round(alerts.reduce((sum, a) => sum + (a.riskScore?.score || 0), 0) / total) : 0;
+
+      const grid = document.getElementById('stats-grid');
+      grid.innerHTML = `
+        <div class="stat-card"><div class="num">${total}</div><div class="label">Total Alerts</div></div>
+        <div class="stat-card"><div class="num">${breaking}</div><div class="label">Breaking</div></div>
+        <div class="stat-card"><div class="num">${totalChanges}</div><div class="label">Total Changes</div></div>
+        <div class="stat-card"><div class="num">${avgRisk}</div><div class="label">Avg Risk</div></div>
+      `;
+    }
+
+    function drawLineChart(svgId, alerts, valueFn, color) {
+      const svg = document.getElementById(svgId);
+      if (alerts.length < 2) {
+        svg.innerHTML = '<text x="300" y="85" text-anchor="middle" fill="var(--text-muted)" font-size="14">Need at least 2 alerts to show trend</text>';
+        return;
+      }
+      const sorted = [...alerts].sort((a, b) => new Date(a.metadata?.detectedAt || 0) - new Date(b.metadata?.detectedAt || 0));
+      const values = sorted.map(valueFn);
+      const max = Math.max(...values, 1);
+      const width = 600;
+      const height = 160;
+      const padding = 20;
+      const stepX = (width - padding * 2) / (sorted.length - 1);
+
+      let path = '';
+      const points = [];
+      for (let i = 0; i < sorted.length; i++) {
+        const x = padding + i * stepX;
+        const y = height - padding - (values[i] / max) * (height - padding * 2);
+        points.push(`${x},${y}`);
+        path += (i === 0 ? 'M' : 'L') + `${x},${y}`;
+      }
+
+      svg.innerHTML = `
+        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="var(--border)" stroke-width="1" />
+        <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="var(--border)" stroke-width="1" />
+        <path d="${path}" fill="none" stroke="${color}" stroke-width="2" />
+        ${points.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3" fill="${color}" />`).join('')}
+      `;
+    }
+
+    function encodeAlertPayload(payload) {
+      const json = JSON.stringify(payload);
+      return btoa(json).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    function alertUrl(payload) {
+      return '../schema-drift-alert.html#' + encodeAlertPayload(payload);
+    }
+
+    function renderTable(alerts) {
+      const repoFilter = document.getElementById('filter-repo').value.toLowerCase();
+      const riskFilter = document.getElementById('filter-risk').value;
+      const breakingFilter = document.getElementById('filter-breaking').value;
+
+      const filtered = alerts.filter(a => {
+        const s = a.summary || {};
+        const risk = (a.riskScore?.label || 'unknown').toLowerCase();
+        const repo = (a.metadata?.repo || '').toLowerCase();
+        if (repoFilter && !repo.includes(repoFilter)) return false;
+        if (riskFilter && risk !== riskFilter) return false;
+        if (breakingFilter === 'yes' && s.breakingChangeCount === 0) return false;
+        if (breakingFilter === 'no' && s.breakingChangeCount > 0) return false;
+        return true;
+      }).sort((a, b) => new Date(b.metadata?.detectedAt || 0) - new Date(a.metadata?.detectedAt || 0));
+
+      const tbody = document.getElementById('alerts-body');
+      tbody.innerHTML = '';
+      for (const a of filtered) {
+        const s = a.summary || {};
+        const risk = (a.riskScore?.label || 'unknown').toLowerCase();
+        const status = s.breakingChangeCount > 0
+          ? '<span class="badge breaking">Breaking</span>'
+          : (s.tablesAdded || s.tablesRemoved || s.tablesModified)
+            ? '<span class="badge warning">Drift</span>'
+            : '<span class="badge safe">Clean</span>';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${formatDate(a.metadata?.detectedAt)}</td>
+          <td>${escapeHtml(a.metadata?.repo || '—')}</td>
+          <td>${escapeHtml(a.metadata?.branch || '—')}</td>
+          <td>${summarizeChanges(s)}</td>
+          <td><span class="risk-dot ${risk}"></span>${escapeHtml(a.riskScore?.label || 'Unknown')} (${a.riskScore?.score || 0})</td>
+          <td>${status}</td>
+          <td><a href="${alertUrl(a)}" target="_blank">View →</a></td>
+        `;
+        tbody.appendChild(tr);
+      }
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No alerts match your filters.</td></tr>';
+      }
+    }
+
+    function exportJSON(alerts) {
+      const blob = new Blob([JSON.stringify(alerts, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `schemalens-drift-alerts-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCSV(alerts) {
+      const rows = [
+        ['alertId', 'detectedAt', 'repo', 'branch', 'commit', 'tablesAdded', 'tablesRemoved', 'tablesModified', 'breakingChangeCount', 'riskScore', 'riskLabel', 'alertUrl']
+      ];
+      for (const a of alerts) {
+        rows.push([
+          a.alertId,
+          a.metadata?.detectedAt || '',
+          a.metadata?.repo || '',
+          a.metadata?.branch || '',
+          a.metadata?.commit || '',
+          a.summary?.tablesAdded || 0,
+          a.summary?.tablesRemoved || 0,
+          a.summary?.tablesModified || 0,
+          a.summary?.breakingChangeCount || 0,
+          a.riskScore?.score || 0,
+          a.riskScore?.label || '',
+          'https://schemalens.tech/' + alertUrl(a)
+        ]);
+      }
+      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `schemalens-drift-alerts-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function init() {
+      let alerts = loadAlerts();
+      if (!alerts.length) {
+        document.getElementById('empty-state').style.display = 'block';
+        document.getElementById('dashboard-content').style.display = 'none';
+      } else {
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('dashboard-content').style.display = 'block';
+        renderStats(alerts);
+        drawLineChart('risk-chart', alerts, a => a.riskScore?.score || 0, '#6366f1');
+        drawLineChart('breaking-chart', alerts, a => a.summary?.breakingChangeCount || 0, '#ef4444');
+        renderTable(alerts);
+      }
+
+      ['filter-repo', 'filter-risk', 'filter-breaking'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => renderTable(alerts));
+      });
+
+      document.getElementById('btn-export-json').addEventListener('click', () => exportJSON(alerts));
+      document.getElementById('btn-export-csv').addEventListener('click', () => exportCSV(alerts));
+      document.getElementById('btn-clear').addEventListener('click', () => {
+        if (confirm('Clear all locally stored drift alerts? This cannot be undone.')) {
+          localStorage.removeItem(STORAGE_KEY);
+          alerts = [];
+          document.getElementById('empty-state').style.display = 'block';
+          document.getElementById('dashboard-content').style.display = 'none';
+        }
+      });
+    }
+
+    init();
+  })();
+  </script>
+</body>
+</html>
