@@ -100,6 +100,45 @@
     </div>
   </header>
 
+  <section class="section" style="padding-bottom: 40px;">
+    <div class="container">
+      <h2 class="section-title text-center">Add SchemaLens to your pipeline in minutes</h2>
+      <p class="section-subtitle text-center">Pick your platform, copy the template, and start catching breaking schema changes on every pull request.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 24px;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">🐙</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">GitHub Actions</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, Check Runs, smart skip</p>
+          <a href="github-action.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">🦊</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">GitLab CI</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">MR comments, breaking gate, artifacts</p>
+          <a href="gitlab-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">🔧</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">Jenkins</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Console reports, build descriptions</p>
+          <a href="jenkins-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">⭕</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">CircleCI</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, artifacts, smart skip</p>
+          <a href="circleci-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">🌐</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">Bitbucket</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Pipelines PR comments & reports</p>
+          <a href="bitbucket-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <h2 class="section-title text-center">Why run schema diffs in CI/CD?</h2>
@@ -388,11 +427,29 @@ node ci/schemalens-diff.js old_schema.sql new_schema.sql \
     </div>
   </section>
 
+  <section class="section" style="background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.03));">
+    <div class="container" style="max-width: 720px; text-align: center;">
+      <h2 class="section-title">Team plan: CI/CD safety for the whole engineering org</h2>
+      <p class="section-subtitle">The free integration catches breaking changes. The Team plan adds alerts, dashboards, and shared history so nothing slips through.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; text-align: left; margin: 28px 0;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">🔔 <strong>Slack & Teams alerts</strong> on every breaking change</div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">🔗 <strong>Shareable alert pages</strong> for Jira / on-call</div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">📊 <strong>Team dashboard</strong> with risk trends & CSV export</div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">👥 <strong>Unlimited members</strong> & admin controls</div>
+      </div>
+      <p style="font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 20px;">$29/mo or $290/yr · one prevented incident pays for a year</p>
+      <a href="book-demo.html" class="btn btn-primary btn-lg">Book a 10-Min Team Setup Call</a>
+      <a href="team-pitch.html" class="btn btn-secondary btn-lg" style="margin-left: 8px;">Get Manager Approval Email</a>
+      <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">Free forever for open source. No credit card required to start.</p>
+    </div>
+  </section>
+
   <section class="cta-section">
     <div class="container text-center">
       <h2>Add schema review to your pipeline today.</h2>
       <p>Copy the workflow template, drop in the CLI script, and start catching migration risks before they hit production. Free forever for open source and small teams.</p>
-      <a href="app.html" class="btn btn-primary btn-lg">Try SchemaLens Free</a>
+      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action →</a>
+      <a href="app.html" class="btn btn-secondary btn-lg" style="margin-left: 8px;">Try SchemaLens Free</a>
       <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. No data leaves your browser.</p>
     </div>
   </section>

@@ -182,6 +182,22 @@
   </div>
 </section>
 
+<!-- CI/CD Value Banner -->
+<section class="section" style="padding: 48px 0; background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(16,185,129,0.05));">
+  <div class="container">
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px;">
+      <div style="flex: 1; min-width: 260px;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 8px;">⚡ Schema diff in every PR</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">Add SchemaLens to GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket and catch breaking schema changes before they merge. Free tier included.</p>
+      </div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="github-action.html" class="btn btn-primary">Add GitHub Action →</a>
+        <a href="ci-cd-integration.html" class="btn btn-secondary">View All CI/CD Templates</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Live Demo -->
 <section class="section" id="demo">
   <div class="container">
@@ -296,7 +312,7 @@
         <div class="integ-logo">🐙</div>
         <h4>GitHub Action</h4>
         <p>Auto-diff schema files on every pull request with risk scores and breaking-change comments.</p>
-        <a href="github-action.html">Setup Guide →</a>
+        <a href="github-action.html">Add to Pipeline →</a>
       </div>
       <div class="integ-card">
         <div class="integ-logo">📝</div>
@@ -326,7 +342,7 @@
         <div class="integ-logo">🚨</div>
         <h4>Schema Drift Alerts</h4>
         <p>Hosted webhook sends Slack/Teams alerts and shareable alert pages. Build a team dashboard from alert links.</p>
-        <a href="team/schema-drift-dashboard.html">Dashboard →</a>
+        <a href="team/schema-drift-dashboard.html">Team Dashboard →</a>
       </div>
     </div>
   </div>
@@ -376,13 +392,15 @@
           <h3>Review schema changes as a team</h3>
           <p>Catch breaking changes during code review, not during deploy. Every PR gets an automatic schema diff with risk scoring and migration warnings.</p>
           <ul class="uc-list">
-            <li>Shareable diff links for Slack/Discord</li>
             <li>GitHub Action for automatic PR comments</li>
+            <li>Slack/Teams drift alerts on breaking changes</li>
             <li>Team workspace with shared history</li>
+            <li>Shareable alert pages for Jira / on-call</li>
             <li>PDF reports for audit trails</li>
             <li>Admin dashboard with usage analytics</li>
           </ul>
-          <a href="book-demo.html" class="btn btn-primary" style="margin-top:12px;">Book a Team Demo →</a>
+          <a href="book-demo.html" class="btn btn-primary" style="margin-top:12px;">Book a Team Setup Call →</a>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);"><a href="team-pitch.html" style="color: var(--primary);">Get a manager-ready business case →</a></p>
         </div>
         <div class="uc-visual">
           <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">🤖 SchemaLens Bot commented 2 minutes ago</div>
@@ -404,11 +422,12 @@
           <ul class="uc-list">
             <li>Zero-config GitHub Action setup</li>
             <li>Fails builds on high-risk schema changes</li>
+            <li>Smart skip — only runs when .sql files change</li>
             <li>Supports Prisma, Drizzle, TypeORM, Sequelize, raw SQL</li>
-            <li>Free diff API for open-source projects</li>
+            <li>Team alerts via Slack/Teams webhooks</li>
             <li>Self-hosted CLI for private pipelines</li>
           </ul>
-          <a href="github-action.html" class="btn btn-primary" style="margin-top:12px;">View Action Setup →</a>
+          <a href="github-action.html" class="btn btn-primary" style="margin-top:12px;">Add to Pipeline →</a>
         </div>
         <div class="uc-visual">
           <div style="font-family:var(--mono); font-size:0.78rem; color:var(--code-text); line-height:1.7;">
@@ -580,16 +599,33 @@
   </div>
 </section>
 
+<!-- Team CTA -->
+<section class="section" style="background: var(--surface);">
+  <div class="container" style="max-width: 720px; text-align: center;">
+    <h2 class="section-title">Built for teams that ship schema changes every week</h2>
+    <p class="section-subtitle">The web diff is free forever. The Team plan adds the alerts, dashboards, and admin controls engineering orgs need to move fast without breaking production.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; text-align: left; margin: 28px 0;">
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">🛡️ <strong>Prevent incidents</strong> before they reach production</div>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">⏱️ <strong>Cut review time</strong> with auto-generated diff reports</div>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">🔔 <strong>Alert Slack/Teams</strong> on every breaking change</div>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;">📊 <strong>Track risk trends</strong> across every pipeline run</div>
+    </div>
+    <a href="book-demo.html" class="btn btn-primary btn-lg">Book a Team Setup Call →</a>
+    <a href="team-pitch.html" class="btn btn-secondary btn-lg" style="margin-left: 8px;">Get Manager Approval Email</a>
+    <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">Team plan: $29/mo or $290/yr · unlimited members · one prevented incident pays for a year</p>
+  </div>
+</section>
+
 <!-- Final CTA -->
 <section class="cta-section">
   <div class="container">
     <h2>Stop diffing schemas by hand</h2>
     <p>Join thousands of developers who use SchemaLens to catch breaking changes, generate migrations, and ship schema updates with confidence.</p>
     <div class="hero-actions">
-      <a href="app.html" class="btn btn-primary btn-lg">Try It Free →</a>
-      <a href="pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action →</a>
+      <a href="app.html" class="btn btn-secondary btn-lg">Try It Free →</a>
     </div>
-    <p class="hero-note">Free forever — unlimited tables. Pro $39 — one-time payment.</p>
+    <p class="hero-note">Free forever — unlimited tables. Team plan from $29/mo.</p>
   </div>
 </section>
 
