@@ -296,6 +296,10 @@
         <h4>Nightly Drift Monitoring</h4>
         <p>Run a cron job every night that compares your committed schema against your production database. Detect undocumented changes automatically.</p>
       </div>
+      <div class="pattern-card">
+        <h4>Team Drift Alerts</h4>
+        <p>Post schema drift alerts to Slack/Teams with shareable URLs and a team dashboard. Keep everyone informed without flooding channels.</p>
+      </div>
     </div>
 
     <div class="guide-section">
@@ -445,6 +449,41 @@ func main() {
       </p>
       <p style="margin-top:10px;">
         <a href="tools/schema-diff-in-one-command.html" class="btn btn-secondary" style="font-size:0.85rem;">📄 See Dedicated curl Demo Page →</a>
+      </p>
+    </div>
+
+    <div class="guide-section" style="background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(99,102,241,0.05) 100%); border-radius: var(--radius); padding: 28px;">
+      <h2>🚨 Schema Drift Webhook — Team Alerts</h2>
+      <p>Send diff results from CI/CD to the SchemaLens hosted webhook. It computes the diff, generates a shareable alert page, and forwards rich notifications to Slack or Microsoft Teams.</p>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="url">https://schemalens.tech/api/schema-drift-webhook</span>
+      </div>
+      <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/schema-drift-webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "projectToken": "SL-XXXX-XXXX-XXXX-XXXX",
+    "oldSchema": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
+    "newSchema": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);",
+    "dialect": "postgres",
+    "metadata": {
+      "repo": "myorg/myrepo",
+      "branch": "feature/add-email",
+      "commit": "abc123",
+      "ciProvider": "github-actions",
+      "runId": "123456"
+    },
+    "notify": {
+      "slack": "https://hooks.slack.com/services/...",
+      "teams": "https://outlook.office.com/webhook/..."
+    }
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">
+        <strong>Response:</strong> <code>alertId</code>, <code>alertUrl</code>, <code>summary</code>, <code>riskScore</code>, and <code>notificationsSent</code>.<br>
+        <strong>Pro feature:</strong> requires a valid SchemaLens Pro license key. Data is encoded in the alert URL and never stored server-side.
+      </p>
+      <p style="margin-top:10px;">
+        <a href="team/schema-drift-dashboard.html" class="btn btn-secondary" style="font-size:0.85rem;">📊 Open Team Dashboard →</a>
+        <a href="schema-drift-alert.html" class="btn btn-secondary" style="font-size:0.85rem;">🔔 See Sample Alert →</a>
       </p>
     </div>
 
