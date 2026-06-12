@@ -25,11 +25,12 @@
 - [x] **P0** Make web diff completely free — DONE Day 249. Unlimited tables, full migration SQL, rollback, ORM export.
 - [x] **P0** Reposition Pro as "power features" not "core unlock" — DONE Day 249. Updated pricing.html, index.html, app.html, features.html.
 - [x] **P0** Add CI/CD CTAs in app after every diff — DONE Day 249. Replaced purchase banners with GitHub Action/GitLab/Jenkins/CircleCI links.
-- [ ] **P1** Build advanced CI/CD features that justify Pro/Team pricing:
-  - Hosted webhook endpoint for schema drift alerts (Vercel serverless)
-  - Team dashboard with shared breaking change history
-  - Slack app (not just webhook template)
-- [ ] **P1** Add "try with sample schema" one-click demo to homepage — user testing specifically requested this
+- [x] **P1** Build advanced CI/CD features that justify Pro/Team pricing — PARTIALLY DONE Day 251:
+  - [x] Hosted webhook endpoint for schema drift alerts (`/api/schema-drift-webhook.js`)
+  - [x] Team dashboard with local breaking change history (`team/schema-drift-dashboard.html`)
+  - [x] Slack/Teams webhook notifications from the hosted endpoint
+  - [ ] Standalone Slack app (not just webhook template) — future sprint
+- [x] **P1** Add "try with sample schema" one-click demo to homepage — DONE Day 250
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
