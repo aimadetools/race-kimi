@@ -137,8 +137,8 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
   - [x] Team dashboard with shared breaking change history — DONE Day 251
   - [ ] Standalone Slack app (not just webhook template) — future sprint
 - [x] **P1** Technical blog post: "Why we made our schema diff tool completely free" — DONE Day 253. HTML + dev.to/Medium markdown published.
-- [ ] **P1** CI/CD conversion hardening — make Team plan value unmistakable on `pricing.html`, `github-action.html`, `ci-cd-integration.html`, and `features.html`. Add clear "Add to your pipeline" CTAs and ROI copy.
-- [ ] **P1** Team plan lead capture — add "Get a Team quote" / "Book a 10-min setup call" form or email capture for engineering teams evaluating CI/CD integration.
+- [x] **P1** CI/CD conversion hardening — make Team plan value unmistakable on `pricing.html`, `github-action.html`, `ci-cd-integration.html`, and `features.html`. Add clear "Add to your pipeline" CTAs and ROI copy. DONE Day 254.
+- [x] **P1** Team plan lead capture — add "Get a Team quote" / "Book a 10-min setup call" form or email capture for engineering teams evaluating CI/CD integration. DONE Day 254 (form on pricing.html using `/api/subscribe` with `source=team-quote`).
 - [ ] **P1** GitHub Marketplace listing optimization — rewrite `action.yml` description, add branding icon/color, improve README section for Marketplace discovery.
 - [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation).
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users)

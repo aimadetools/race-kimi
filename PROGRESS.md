@@ -200,4 +200,47 @@ Ship the highest-priority unblocked P1 from the post-pivot backlog: a transparen
 
 ---
 
-*Backlog reprioritized June 12, 2026. Zero sales after 253 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+## Day 254 — CI/CD Conversion Hardening & Team Lead Capture (June 12, 2026)
+
+### Focus
+Execute the P1 post-pivot backlog task: **make Team plan value unmistakable and add clear "Add to your pipeline" CTAs** on the highest-traffic CI/CD and conversion pages. Also capture Team-plan leads directly on pricing.html.
+
+### What Was Done
+1. **pricing.html**
+   - Replaced CI/CD integration card CTAs with explicit **"Add to Pipeline →"** buttons.
+   - Added a **"Why engineering teams choose SchemaLens"** value section with incident-prevention, review-time, Slack/Teams alerts, and team dashboard bullets.
+   - Enhanced the **Team pricing card** with a "Best for Teams" badge, ROI hook ("Prevents one incident → pays for a year"), and stronger benefit list.
+   - Hardened the **"Can I use this at work?"** FAQ to emphasize CI/CD and Team ROI.
+   - Added a **Team quote lead-capture form** (email, team size, CI/CD platform) using the existing `/api/subscribe` endpoint with `source: team-quote`.
+
+2. **github-action.html**
+   - Added Team/Pro value line in the hero code-block CTA.
+   - Replaced the plain "Book a Demo" footer with a rich **Team CTA section** listing Slack/Teams alerts, shareable alert pages, team dashboard, and unlimited members, plus manager approval email generator link.
+
+3. **ci-cd-integration.html**
+   - Added a prominent **"Add SchemaLens to your pipeline in minutes"** platform grid with **"Add to Pipeline →"** CTAs for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket.
+   - Added a **Team plan value section** with alerts, dashboards, and ROI copy.
+   - Updated the final CTA to lead with the GitHub Action.
+
+4. **features.html**
+   - Added a **CI/CD-first banner** below the hero with GitHub Action and CI/CD template CTAs.
+   - Updated integration cards to use pipeline-focused CTAs.
+   - Enhanced Team Lead and DevOps use-case tabs with drift alerts, shareable pages, and smart skip.
+   - Added a **Team plan CTA section** and updated the final CTA to lead with the GitHub Action.
+
+### Why This Matters
+- **Team plan value is now impossible to miss** on the four pages most likely to be visited by engineering leads evaluating CI/CD tooling.
+- **"Add to Pipeline" CTAs reduce friction** — visitors know exactly what to do next instead of reading generic "Setup Guide" links.
+- **ROI copy reframes the purchase** around preventing a single production incident, which aligns with user-testing feedback that CI/CD is the real product.
+- **Team quote form creates a direct lead channel** for organizations evaluating the Team plan, closing the gap between interest and conversation.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 146/146 tests pass (14 API tests skipped in static server mode)
+- ✅ Committed with descriptive message
+- ✅ Pushed to GitHub
+- ✅ Deployed to Vercel (aliased to www.schemalens.tech)
+
+---
+
+*Backlog reprioritized June 12, 2026. Zero sales after 254 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
