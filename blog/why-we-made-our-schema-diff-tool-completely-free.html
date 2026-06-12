@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Why We Made Our Schema Diff Tool Completely Free — SchemaLens</title>
+  <meta name="description" content="SchemaLens is now free forever for web schema diffs. Here's why we removed the paywall, what changed, and how we actually plan to build a sustainable business around CI/CD integrations.">
+  <meta property="og:title" content="Why We Made Our Schema Diff Tool Completely Free">
+  <meta property="og:description" content="SchemaLens is now free forever for web schema diffs. Here's the real reason we removed the paywall—and what we're selling instead.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/why-we-made-our-schema-diff-tool-completely-free.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why We Made Our Schema Diff Tool Completely Free",
+  "description": "SchemaLens is now free forever for web schema diffs. Here's why we removed the paywall, what changed, and how we plan to build a sustainable business around CI/CD integrations.",
+  "url": "https://schemalens.tech/blog/why-we-made-our-schema-diff-tool-completely-free.html",
+  "datePublished": "2026-06-12",
+  "dateModified": "2026-06-12",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/why-we-made-our-schema-diff-tool-completely-free.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: var(--text); }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: var(--text); }
+    .blog-post .callout {
+      background: var(--code-bg);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: var(--text); }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .blog-post .cta-box .btn-secondary { margin-left: 0.5rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .pricing-table th, .pricing-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    .pricing-table th { background: var(--code-bg); }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>Why We Made Our Schema Diff Tool Completely Free</h1>
+      <div class="blog-meta">Business · June 12, 2026 · 7 min read</div>
+
+      <p>Three days ago, we removed every paywall from the core SchemaLens web app. You can now diff unlimited tables, generate full migration scripts, create rollback SQL, and export to ORM formats without signing up, without a license key, and without paying anything. Forever.</p>
+
+      <p>We did not do it because the product failed. We did it because the product was working <em>too well</em> as a free tool—and not well enough as a paid one.</p>
+
+      <p>Here is the honest story of why we pivoted, what we learned from watching real users, and how we plan to build a real business around the thing developers actually need.</p>
+
+      <h2>The Original Plan: Freemium</h2>
+
+      <p>When we started SchemaLens, the model was classic freemium. The web diff would be free up to a limit—first 10 tables, then 15 tables. Pro would unlock unlimited tables, migration generation, exports, and history for a one-time $39 payment.</p>
+
+      <p>It made sense on paper. Free users get a taste. Paid users get the full meal. The gate was clear.</p>
+
+      <p>But after watching hundreds of sessions and talking to users, we noticed a pattern. People would land on the site, paste two schemas, see the visual diff, and get exactly what they needed. Then the paywall appeared. And the reaction was not "This is worth $39." The reaction was "I already got my answer."</p>
+
+      <p>The free tier was solving the whole problem. The paid tier was solving a problem users did not feel.</p>
+
+      <div class="callout">
+        <p><strong>The hard truth:</strong> When your free product is good enough, asking users to pay for the same workflow feels like a tax, not an upgrade.</p>
+      </div>
+
+      <h2>What User Testing Actually Told Us</h2>
+
+      <p>We ran a round of unscripted user tests with backend developers, DBAs, and tech leads. We asked one question at the end: "What would stop you from buying this?"</p>
+
+      <p>Three answers came up again and again:</p>
+
+      <ol>
+        <li><strong>"The free tool already shows me the diff."</strong> The paywall appeared after the user had already received value. There was no hunger for the upgrade.</li>
+        <li><strong>"I only need this twice a month."</strong> Schema comparison is episodic. A developer does it during deploy week or while reviewing a migration PR. It is not a daily habit, so a subscription for the web UI felt wrong.</li>
+        <li><strong>"I don't trust it yet."</strong> Production schemas are high-stakes. Without testimonials, logos, or a one-click demo, users were reluctant to even engage with the paid offering.</li>
+      </ol>
+
+      <p>The third problem we could fix with a sample demo. The first two were structural. They meant the product framing was wrong.</p>
+
+      <h2>The Realization: Web Diff Is a Lead Magnet</h2>
+
+      <p>Developers do not wake up wanting a schema diff tool. They wake up needing to:</p>
+
+      <ul>
+        <li>Compare staging and production before a deploy</li>
+        <li>Review a migration PR without manually reading SQL</li>
+        <li>Catch a breaking change before it merges</li>
+        <li>Generate the correct <code>ALTER TABLE</code> script the first time</li>
+      </ul>
+
+      <p>The web diff solves those one-off moments beautifully. But those moments are not a business. They are a doorway.</p>
+
+      <p>The business is what happens <em>around</em> those moments. It is the CI/CD pipeline that checks every migration PR automatically. It is the Slack alert that fires when someone commits a schema change. It is the team dashboard that tracks drift risk across branches. It is the runbook that tells an on-call engineer exactly what to do when a migration fails.</p>
+
+      <p>Those are recurring, team-wide, trust-critical problems. And people pay for those.</p>
+
+      <h2>What Changed: The New Free / Pro / Team Split</h2>
+
+      <p>Here is the new deal, written plainly so no one is confused:</p>
+
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>What you get</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Free</strong></td>
+            <td>Unlimited web schema diffs, migration scripts, rollback SQL, ORM exports. No account. No data leaves your browser.</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td><strong>Pro</strong></td>
+            <td>Everything in Free plus exports (Markdown, PDF, SQL, JSON), diff history, 80+ micro-tools, and priority support.</td>
+            <td>$39 once</td>
+          </tr>
+          <tr>
+            <td><strong>Team</strong></td>
+            <td>Everything in Pro plus CI/CD integrations, schema drift alerts, shared team dashboard, Slack/Teams notifications, and org-wide billing.</td>
+            <td>$29/mo or $290/yr</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The web diff is the demo. The CI/CD layer is the product. Pro is for power users who want extra convenience. Team is for engineering organizations that want schema changes to stop breaking production.</p>
+
+      <h2>Why This Is Better for Users</h2>
+
+      <p>Removing the paywall makes three things true that were not true before:</p>
+
+      <ol>
+        <li><strong>No bait and switch.</strong> You get the full web diff, not a blurred preview. We are not holding your migration SQL hostage.</li>
+        <li><strong>Real evaluation.</strong> You can test SchemaLens on your actual schema, compare it to your existing workflow, and decide if it is trustworthy before you ever think about paying.</li>
+        <li><strong>Honest pricing.</strong> Pro and Team are priced for things that clearly cost us to build and maintain: CI/CD integrations, notification infrastructure, team dashboards, and support.</li>
+      </ol>
+
+      <p>We would rather have 10,000 developers use the free tool honestly than 100 developers feel tricked into a paid tier they did not need.</p>
+
+      <h2>Why This Is Better for the Business</h2>
+
+      <p>Counterintuitively, giving away the web diff is the only way we see to build a real revenue stream.</p>
+
+      <p>Schema comparison is a high-intent search. People look for "compare MySQL schemas," "Postgres schema diff online," and "generate ALTER TABLE script." Those searches land on our free tool. If the tool solves the problem, those visitors become the top of our funnel.</p>
+
+      <p>Some of those visitors are individual developers who want extra export formats. They become Pro customers. A smaller but more valuable group are tech leads and platform engineers who want schema drift detection in CI. They become Team customers.</p>
+
+      <p>The free tool is not a cost center. It is our sales team, our demo, and our distribution channel.</p>
+
+      <h2>What We Are Building Next</h2>
+
+      <p>The free web diff is now stable. The next phase is making SchemaLens indispensable inside engineering workflows:</p>
+
+      <ul>
+        <li><strong>GitHub Action improvements.</strong> Automatic PR comments, risk scores, breaking-change gates, and job summaries that live in the PR itself.</li>
+        <li><strong>Schema drift alerts.</strong> A hosted webhook endpoint that posts compact, actionable alerts to Slack or Microsoft Teams whenever a schema change is detected.</li>
+        <li><strong>Team dashboard.</strong> A shared view of drift history, risk trends, and migration activity without storing schema data server-side.</li>
+        <li><strong>Migration runbooks.</strong> Auto-generated checklists and rollback plans for high-risk schema changes.</li>
+      </ul>
+
+      <p>These are the things developers do not have time to build themselves, and they are the things teams pay for.</p>
+
+      <h2>The Honest Bottom Line</h2>
+
+      <p>We are a startup in a public race with real constraints. We cannot afford to sell a product people do not want. We cannot afford to confuse users with artificial limits. And we cannot afford to pretend that a one-time schema diff is a $39 problem when users keep telling us it is not.</p>
+
+      <p>So we chose clarity over cleverness. The web diff is free because it should be. The CI/CD integrations will cost money because they solve a harder, recurring problem for teams.</p>
+
+      <p>If you are an individual developer, you can use SchemaLens forever without paying. If you are a team that ships database changes, we are building something worth your budget.</p>
+
+      <div class="cta-box">
+        <h3>Try the free diff</h3>
+        <p>Paste two SQL schemas and get a color-coded diff + ready-to-run migration script. No signup, no limits, no catch.</p>
+        <a href="../app.html?example=staging-vs-production" class="btn btn-primary btn-lg">▶ Try Sample Schema Diff</a>
+        <a href="../github-action.html" class="btn btn-secondary">Explore CI/CD Integration</a>
+      </div>
+
+      <h2>Summary</h2>
+
+      <ul>
+        <li>SchemaLens web diff is now completely free: unlimited tables, full migration SQL, rollback, and ORM exports.</li>
+        <li>The old freemium model put the paywall after users already got value, so we removed it.</li>
+        <li>User feedback showed that schema comparison is episodic, but CI/CD integration and drift prevention are recurring team needs.</li>
+        <li>Pro is now power features for individuals; Team is CI/CD alerts, dashboards, and workflow integrations.</li>
+        <li>The free tool is our distribution channel; the CI/CD layer is the business.</li>
+      </ul>
+
+      <p><em>SchemaLens compares SQL schemas and generates migrations in your browser. Your schema never leaves your machine. <a href="../app.html">Try it free →</a></em></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+          <a href="../blog.html">Migration Guides</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

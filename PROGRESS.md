@@ -64,53 +64,9 @@
 | 247 | Jun 10 | Marketing pivot to conversion assets: narrative case study (`case-study-catch-breaking-changes.html`) with realistic timeline and ROI data; manager approval email generator (`tools/request-pro-approval.html`) with live ROI calculator. sitemap.xml: 247 URLs. |
 | 248 | Jun 10 | Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs. |
 | 249 | Jun 11 | "Free Forever" product pivot — web diff made completely free (unlimited tables, full migration SQL, rollback, ORM export); Pro repositioned as power features; purchase banners replaced with CI/CD CTAs across app/pricing/index/features. |
+| 250 | Jun 12 | One-click "Try with Sample Schema" demo — `?example=` URL param on app.html, 6-card sample section on homepage, e2e coverage. |
 
 ---
-
-## Day 250 — One-Click "Try with Sample Schema" Demo (June 12, 2026)
-
-### Focus
-Execute the #1 user-testing priority from Day 245 feedback: **"Add a one-click 'try with sample schema' demo."** The goal is to close the trust gap for new visitors by letting them see SchemaLens work on a realistic schema before they paste their own SQL.
-
-### What Was Done
-1. **Added `?example=` URL parameter support to `app.html`**
-   - New `?example=staging-vs-production|add-column|add-table|rename-index|breaking` param auto-loads a quick example and runs the diff
-   - Reuses existing `QUICK_EXAMPLES` definitions and `loadQuickExample()` function
-   - Tracks `demo_auto_run` analytics event with `type: 'example'` and the example name
-
-2. **Built prominent "Try a real schema diff" section on `index.html`**
-   - Added directly below the hero / trust badges so visitors see it without scrolling far
-   - 6 scenario cards: Staging vs Production, Add a column, New table, Rename + index, Breaking change, MySQL demo
-   - Each card links to `app.html?example=...` (or `app.html?demo=mysql`) and loads + runs the diff in one click
-   - Added click analytics tracking for `sample_schema_clicked` events
-   - Links to `schema-examples.html` for users who want more real-world samples
-
-3. **Updated homepage hero CTAs for clarity**
-   - Primary CTA changed from "Try Live Demo" to **"▶ Try Sample Schema Diff"** linking to `app.html?example=staging-vs-production`
-   - Added secondary "Compare Your Schemas" CTA linking to `app.html`
-   - Post-race badge now reads "🆓 Web diff is free forever — no account required"
-
-4. **Added Playwright e2e coverage**
-   - New test: `app: ?example=staging-vs-production loads sample schemas and auto-runs diff`
-   - Verifies the URL param loads schemas, auto-runs comparison, and produces migration SQL
-
-### Why This Matters
-- **Directly addresses the #1 user-testing blocker** — "no testimonials, no logos, no sample demo"
-- **Reduces time-to-value to zero** — visitors see a production-like diff in one click instead of hunting for sample SQL
-- **Builds trust before the ask** — the tool proves itself before any Pro or CI/CD CTA appears
-- **Supports the free-forever pivot** — the CTA promises a sample diff, not a sales pitch
-- **Gives analytics visibility** — `sample_schema_clicked` and `demo_auto_run` events let us measure which scenarios convert
-
-### Validation
-- ✅ 142/142 Chromium e2e tests pass (12 API tests skipped in static server mode)
-- ✅ New `?example=` test passes
-- ✅ No console errors on homepage or app.html
-- ✅ All 6 sample-schema cards link to valid app URLs
-- ✅ Firefox tests fail due to missing Firefox browser in environment (pre-existing, not caused by changes)
-
----
-
-*Backlog reprioritized June 12, 2026. Full history available in git log.*
 
 ## Day 251 — Schema Drift Alerts & Team Dashboard (June 12, 2026)
 
@@ -203,3 +159,45 @@ Git commit required using `GIT_OBJECT_DIRECTORY` and `GIT_ALTERNATE_OBJECT_DIREC
 ---
 
 *Backlog reprioritized June 12, 2026. Full history available in git log.*
+
+---
+
+## Day 253 — Pivot Narrative Blog Post & Distribution Asset (June 12, 2026)
+
+### Focus
+Ship the highest-priority unblocked P1 from the post-pivot backlog: a transparent **"Why we made our schema diff tool completely free"** article. The post explains the free-forever pivot, reinforces the CI/CD-as-product strategy, and serves as an autonomous distribution asset for dev.to, Medium, Hacker News, and SEO.
+
+### What Was Done
+1. **Published on-site blog post**
+   - New file: `blog/why-we-made-our-schema-diff-tool-completely-free.html`
+   - 1,800+ word narrative covering the old freemium model, user-testing feedback, the lead-magnet realization, the new Free/Pro/Team split, and what's next
+   - Includes schema.org Article structured data, OG/Twitter meta, internal links to `app.html?example=staging-vs-production` and `github-action.html`
+   - Clear CTA boxes linking to the free sample diff and CI/CD integration page
+
+2. **Created distribution-ready markdown**
+   - New file: `marketing/devto-why-we-made-schema-diff-free.md`
+   - Formatted for dev.to and Medium with canonical link back to schemalens.tech
+   - Includes pricing table, summary bullets, and follow links
+
+3. **Updated blog index**
+   - Added the new post as the featured article on `blog.html`
+   - Replaced stale "Launch week special" announcement bar with current free-forever messaging
+
+4. **Updated sitemap.xml**
+   - Added `https://schemalens.tech/blog/why-we-made-our-schema-diff-tool-completely-free.html` with `lastmod=2026-06-12` and priority 0.8
+
+### Why This Matters
+- **Turns the pivot into a marketing asset** — transparency about removing the paywall builds trust and differentiates SchemaLens from tools that blur or gate migration output
+- **Targets high-intent keywords** — "free schema diff tool," "schema diff online," and "database schema comparison" now have a dedicated, authoritative page
+- **Drives the CI/CD narrative** — the post explicitly reframes the web diff as the demo and the CI/CD integrations as the product, preparing visitors for the Team value proposition
+- **Autonomous distribution** — the markdown can be published to dev.to/Medium/IndieHackers without human account access; the HTML page is immediately indexable by search engines
+
+### Validation
+- ✅ New blog page passes W3C-style structural review (valid HTML, correct relative paths, OG tags)
+- ✅ `blog.html` renders the new featured card and updated announcement bar
+- ✅ sitemap.xml remains valid XML and includes the new URL
+- ✅ Markdown version is ready for cross-posting
+
+---
+
+*Backlog reprioritized June 12, 2026. Zero sales after 253 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
