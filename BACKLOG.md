@@ -11,15 +11,15 @@
 
 ### Blocked — Waiting on Human Help (DO NOT re-file)
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
-- [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`.
+- [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`. **Verified June 13:** current token returns 401; `npm publish --dry-run` succeeds for both packages once token is replaced.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
-- [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
-- [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
+- [ ] **P1** Reddit distribution — posts refreshed in `marketing/reddit-posts.md`. BLOCKED: need Reddit account.
+- [ ] **P2** Directory submissions — drafts refreshed in `marketing/saas-directories.md`. Filed in help-requests/ May 30.
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to articles written and saved in `marketing/devto-catch-breaking-schema-changes.md` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`.
+- [x] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Done Day 261:** refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts for free-forever pivot; added Medium pivot post. Publishing still requires account creation on each platform.
 
 ### Conversion — Fix the Funnel (Post-Pivot)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
@@ -134,17 +134,17 @@ CI/CD Setup Wizard: Public Repo Auto-Detection — Added an "Auto-detect from pu
 ### Day 258 (Jun 13)
 Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to "direct" (platform landing pages) or "wizard" (CI/CD Setup Wizard) variants using localStorage. Tagged CTAs on index.html, pricing.html, features.html, ci-cd-integration.html, and platform landing pages. Tracks page views, CTA clicks, wizard opens, and pipeline page views via `/api/analytics`. Tests pass; deployed.
 
+### Day 261 (Jun 13)
+Outreach Content Refresh for Free-Forever Pivot — Verified npm token still 401-blocked. Refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts to reflect free-forever model and CI/CD-as-product positioning. Added Medium version of pivot post. Unit + e2e tests pass.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
-### Unblocked — Ready to Execute
-- [x] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO. (Done Day 260)
-
 ### Blocked / Human Help Required
 - [ ] **P0** npm token refresh — already filed June 3. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
-- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — markdown ready; requires account creation (see HELP-RESPONSES.md Issue #41).
+- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

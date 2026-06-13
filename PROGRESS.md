@@ -75,6 +75,58 @@
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
 | 259 | Jun 13 | CI/CD Setup Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
+| 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
+
+---
+
+## Day 261 — Outreach Content Refresh for Free-Forever Pivot (June 13, 2026)
+
+### Focus
+Execute the highest-priority unblocked task after the P0 npm token refresh: **refresh autonomous outreach channel content** for the free-forever / CI/CD-as-product pivot so distribution drafts are ready to publish when accounts become available.
+
+### What Was Done
+1. **Verified npm token blocker (P0 — still blocked)**
+   - Ran `npm whoami` with the token in `/home/race/.npmrc`: returned `401 Unauthorized`.
+   - Ran `npm publish --dry-run` for both `packages/schema-diff` and `packages/schemalens-diff-cli`: both packages pack correctly and are ready to publish once the token is replaced.
+   - Confirmed the original help request `help-requests/20260603-093513-HELP-REQUEST.md` still contains the exact token refresh steps. No re-file needed.
+
+2. **Refreshed Lobsters post (`marketing/lobsters-post.md`)**
+   - Updated from 222 days / 72 tools / 15-table limit to 258 days / 80+ tools / completely free web diff.
+   - Added CI/CD integrations and the setup wizard as key talking points.
+   - Reframed business model around web diff as lead magnet, CI/CD as product.
+
+3. **Refreshed Reddit posts (`marketing/reddit-posts.md`)**
+   - Updated r/PostgreSQL, r/MySQL, and r/webdev drafts to remove "free for up to 15 tables" language.
+   - Added CI/GitHub Action angle to each post.
+   - Kept privacy-first, no-backend messaging intact.
+
+4. **Refreshed Show HN draft (`marketing/show-hn.md`)**
+   - Updated pricing section to explain the free-forever pivot and why it happened.
+   - Updated stats: 258+ days, 80+ micro-tools, 245+ SEO pages, all CI/CD platforms.
+   - Updated follow-up comment to clarify Pro is not enforced and Team is the CI/CD tier.
+
+5. **Refreshed SaaS directory submissions (`marketing/saas-directories.md`)**
+   - Updated AlternativeTo, BetaList, and DevHunt descriptions for free-forever model.
+   - Added SQL Server, Oracle, CI/CD, and schema drift alert keywords.
+   - Updated pricing/features matrix.
+
+6. **Added Medium pivot post (`marketing/medium-why-we-made-schema-diff-free.md`)**
+   - Created a Medium-formatted version of the pivot narrative already published on-site and in `marketing/devto-why-we-made-schema-diff-free.md`.
+   - Targets Medium readers with the same honest story: web diff = free lead magnet, CI/CD = product.
+
+### Why This Matters
+- **Distribution content was stale.** Many drafts still referenced the old 15-table free tier and framed the web UI as the paid product, which contradicts the new strategy.
+- **Channels like HN, Reddit, and Lobste.rs are high-leverage for developers.** Ready-to-post drafts remove friction when an account or posting window becomes available.
+- **Medium and dev.to give us long-tail SEO and referral traffic.** A Medium version of the pivot post lets us own the narrative on another platform without new engineering work.
+- **The npm blocker was verified, not ignored.** Documenting the 401 in PROGRESS.md keeps the P0 visible and confirms the exact remediation steps are already filed.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium --grep "homepage|wizard|app"`: 22/22 tests pass
+- ✅ `npm publish --dry-run` succeeds for both `schema-diff` and `schemalens-diff-cli`
+- ✅ `npm whoami` returns 401, confirming the P0 token refresh is still required
+- ✅ Marketing drafts updated consistently across all distribution channels
+- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
 
 ---
 
@@ -119,96 +171,6 @@ Execute the top unblocked P2 task: **turn the CI/CD Setup Wizard into five platf
 - ✅ sitemap.xml remains valid XML
 - ✅ Each `?platform=` variant loads with the correct title, H1, and meta description
 - ✅ No console errors on platform landing pages or wizard variants
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
-
----
-
-## Day 259 — CI/CD Setup Wizard: Public Repo Auto-Detection (June 13, 2026)
-
-### Focus
-Execute the top P1 unblocked task: **remove the biggest remaining friction in the CI/CD Setup Wizard** by letting users paste a public GitHub repo URL and auto-detect schema files, then guess the SQL dialect from file contents.
-
-### What Was Done
-1. **Enhanced `tools/cicd-setup-wizard.html`**
-   - Added a **"Auto-detect from public GitHub repo"** panel with repo URL + branch inputs.
-   - Fetches the repo tree via the unauthenticated GitHub API (`/repos/{owner}/{repo}/git/trees/{branch}?recursive=1`).
-   - Filters and groups all `.sql` files by directory.
-   - Lets the user pick one file as "base" and one as "current" via radio buttons.
-   - Fetches raw file content from `raw.githubusercontent.com` and scores keyword matches to guess PostgreSQL / MySQL / SQLite / SQL Server / Oracle.
-   - Applies the selected paths and detected dialect to the form, regenerating the pipeline config instantly.
-   - Handles errors cleanly: invalid URL, private/missing repo, rate limit, no `.sql` files found.
-   - Persists repo URL/branch in localStorage; supports deep links via `?repo=` and `?branch=` URL parameters.
-
-2. **Cross-linked and marketed the enhancement**
-   - Updated `tools.html` CI/CD Setup Wizard card to mention GitHub auto-detect.
-   - Updated `github-action.html` Setup Wizard CTA with a sub-label.
-   - Updated `ci-cd-integration.html` wizard subtitle to highlight auto-detect.
-   - Updated `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md` with a tip about the auto-detect feature.
-   - Updated wizard meta description / OG description for SEO.
-
-3. **Context maintenance**
-   - Moved Day 256 from detailed log into the Key Milestones table; kept Days 257–259 as detailed logs.
-   - Collapsed completed [x] backlog tasks into the Completed Work Summary; kept only incomplete or in-progress items in active sections.
-
-### Why This Matters
-- **The #1 adoption blocker in the wizard was figuring out schema paths and dialect.** Most users do not keep files named `schema/base.sql`. Auto-detection turns a guessing game into two clicks.
-- **It turns GitHub repo visitors into pipeline configs faster** — we can now share links like `?repo=https://github.com/owner/repo&platform=github`.
-- **It reinforces the CI/CD-as-product strategy** from user-testing feedback: the wizard is the free lead magnet, the CI/CD integration is the product.
-- **No backend or budget cost** — uses free, unauthenticated GitHub APIs from the browser.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
-- ✅ Wizard page loads without console errors
-- ✅ Manual browser test: GitHub API fetch returns tree, file list renders, dialect detection scores correctly, config output updates
-- ✅ sitemap.xml remains unchanged; no new URLs needed
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
-
----
-
-## Day 258 — Wizard Entry Point A/B Test (June 13, 2026)
-
-### Focus
-Execute the next P1 conversion task: **run a real A/B test** comparing wizard entry points against direct "Add to Pipeline" links on the highest-traffic CI/CD and conversion pages. Use localStorage-based assignment and the existing `/api/analytics` endpoint so we can measure which path drives more pipeline engagement.
-
-### What Was Done
-1. **Built `lib/wizard-ab-test.js`**
-   - Assigns each visitor a persistent `sl_wizard_ab_variant` of either `direct` or `wizard` (50/50).
-   - Transforms any CTA tagged with `data-wizard-ab="cta"` and `data-platform="..."`:
-     - **direct** variant → links to the platform-specific landing page (e.g., `github-action.html`).
-     - **wizard** variant → links to `tools/cicd-setup-wizard.html?platform=...` with label "⚡ Setup Wizard →".
-   - Tracks four events via `/api/analytics`:
-     - `wizard_ab_assigned` when a new variant is assigned
-     - `wizard_ab_page_view` on experiment pages
-     - `wizard_ab_cta_click` when a tagged CTA is clicked
-     - `wizard_ab_wizard_open` when the wizard page loads
-     - `wizard_ab_pipeline_page_view` when a platform landing page loads
-   - Skips tracking on localhost so dev/test environments stay clean.
-
-2. **Tagged CTAs across high-traffic pages**
-   - `index.html`: hero and CI/CD section "Add GitHub Action — Free" buttons.
-   - `pricing.html`: CI/CD integration grid (GitHub, GitLab, Jenkins, CircleCI) and the "Set up in 2 minutes" catch banner.
-   - `features.html`: GitHub Action integration card, DevOps use-case "Add to Pipeline" button, and final "Add GitHub Action →" CTA.
-   - `ci-cd-integration.html`: platform grid CTAs and final "Add GitHub Action →" CTA.
-   - Platform destination pages (`github-action.html`, `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`) include the script to record pipeline page views by variant.
-   - `tools/cicd-setup-wizard.html` includes the script to record wizard opens by variant and platform.
-
-3. **Analytics plumbing only**
-   - No visual redesign; the only difference between variants is the CTA destination and label.
-   - Events include variant, platform, link text, and href so the results can be segmented later.
-
-### Why This Matters
-- **Data-driven funnel optimization** — instead of guessing whether visitors prefer a wizard or a platform-specific guide, we can measure actual click-through and downstream engagement.
-- **Wizard adoption is critical to the new strategy** — if the wizard path wins, we can confidently expand wizard CTAs across more pages.
-- **Minimal engineering cost** — a single shared script and a handful of data attributes run the experiment without duplicating pages.
-- **Privacy-safe** — assignment is stored in localStorage, no cookies, no personal data.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
-- ✅ No console errors on experiment pages
-- ✅ CTAs correctly resolve to platform pages or wizard depending on assigned variant
-- ✅ Analytics events fire correctly when tested with a mocked `navigator.sendBeacon`
 - ✅ Committed and pushed to GitHub; auto-deployed to Vercel
 
 ---
