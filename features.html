@@ -192,7 +192,7 @@
       </div>
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <a href="tools/cicd-setup-wizard.html" class="btn btn-primary">⚡ CI/CD Setup Wizard</a>
-        <a href="github-action.html" class="btn btn-secondary">Add GitHub Action →</a>
+        <a href="github-action.html" class="btn btn-secondary" data-wizard-ab="cta" data-platform="github">Add GitHub Action →</a>
         <a href="ci-cd-integration.html" class="btn btn-secondary">View All CI/CD Templates</a>
       </div>
     </div>
@@ -313,7 +313,7 @@
         <div class="integ-logo">🐙</div>
         <h4>GitHub Action</h4>
         <p>Auto-diff schema files on every pull request with risk scores and breaking-change comments.</p>
-        <a href="github-action.html">Add to Pipeline →</a>
+        <a href="github-action.html" data-wizard-ab="cta" data-platform="github">Add to Pipeline →</a>
       </div>
       <div class="integ-card">
         <div class="integ-logo">📝</div>
@@ -428,7 +428,7 @@
             <li>Team alerts via Slack/Teams webhooks</li>
             <li>Self-hosted CLI for private pipelines</li>
           </ul>
-          <a href="github-action.html" class="btn btn-primary" style="margin-top:12px;">Add to Pipeline →</a>
+          <a href="github-action.html" class="btn btn-primary" style="margin-top:12px;" data-wizard-ab="cta" data-platform="github">Add to Pipeline →</a>
         </div>
         <div class="uc-visual">
           <div style="font-family:var(--mono); font-size:0.78rem; color:var(--code-text); line-height:1.7;">
@@ -623,7 +623,7 @@
     <h2>Stop diffing schemas by hand</h2>
     <p>Join thousands of developers who use SchemaLens to catch breaking changes, generate migrations, and ship schema updates with confidence.</p>
     <div class="hero-actions">
-      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action →</a>
+      <a href="github-action.html" class="btn btn-primary btn-lg" data-wizard-ab="cta" data-platform="github">Add GitHub Action →</a>
       <a href="app.html" class="btn btn-secondary btn-lg">Try It Free →</a>
     </div>
     <p class="hero-note">Free forever — unlimited tables. Team plan from $29/mo.</p>
@@ -741,6 +741,7 @@ function toggleFaq(el) {
   if (!wasOpen) item.classList.add('open');
 }
 </script>
+<script src="lib/wizard-ab-test.js"></script>
 
 </body>
 </html>

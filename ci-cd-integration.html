@@ -113,31 +113,31 @@
           <div style="font-size: 1.8rem; margin-bottom: 8px;">🐙</div>
           <h4 style="margin: 0 0 6px; font-size: 1rem;">GitHub Actions</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, Check Runs, smart skip</p>
-          <a href="github-action.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+          <a href="github-action.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="github">Add to Pipeline →</a>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">🦊</div>
           <h4 style="margin: 0 0 6px; font-size: 1rem;">GitLab CI</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">MR comments, breaking gate, artifacts</p>
-          <a href="gitlab-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+          <a href="gitlab-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="gitlab">Add to Pipeline →</a>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">🔧</div>
           <h4 style="margin: 0 0 6px; font-size: 1rem;">Jenkins</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Console reports, build descriptions</p>
-          <a href="jenkins-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+          <a href="jenkins-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="jenkins">Add to Pipeline →</a>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">⭕</div>
           <h4 style="margin: 0 0 6px; font-size: 1rem;">CircleCI</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, artifacts, smart skip</p>
-          <a href="circleci-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+          <a href="circleci-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="circleci">Add to Pipeline →</a>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">🌐</div>
           <h4 style="margin: 0 0 6px; font-size: 1rem;">Bitbucket</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Pipelines PR comments & reports</p>
-          <a href="bitbucket-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;">Add to Pipeline →</a>
+          <a href="bitbucket-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="bitbucket">Add to Pipeline →</a>
         </div>
       </div>
     </div>
@@ -452,7 +452,7 @@ node ci/schemalens-diff.js old_schema.sql new_schema.sql \
     <div class="container text-center">
       <h2>Add schema review to your pipeline today.</h2>
       <p>Copy the workflow template, drop in the CLI script, and start catching migration risks before they hit production. Free forever for open source and small teams.</p>
-      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action →</a>
+      <a href="github-action.html" class="btn btn-primary btn-lg" data-wizard-ab="cta" data-platform="github">Add GitHub Action →</a>
       <a href="app.html" class="btn btn-secondary btn-lg" style="margin-left: 8px;">Try SchemaLens Free</a>
       <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.9rem;">No signup required. No data leaves your browser.</p>
     </div>
@@ -570,5 +570,6 @@ function trackCIDownload(item) {
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script src="lib/wizard-ab-test.js"></script>
 </body>
 </html>

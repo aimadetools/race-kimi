@@ -22,7 +22,7 @@
 - [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`.
 
 ### Conversion — Fix the Funnel (Post-Pivot)
-- [ ] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events.
+- [x] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events. (Done Day 258)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
@@ -131,12 +131,14 @@ CI/CD Setup Wizard — Built `tools/cicd-setup-wizard.html`, an interactive mult
 ### Day 257 (Jun 13)
 Wizard Adoption Push — Added CI/CD Setup Wizard CTA to README.md GitHub Action section, updated GitHub Release v1.0.0 notes with quick-setup wizard links, published `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, added dev.to/Medium distribution version in `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`, updated blog.html and sitemap.xml, and added e2e coverage. Fixed git object ownership blocker so commits/deploys work again. Tests pass; deployed.
 
+### Day 258 (Jun 13)
+Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to "direct" (platform landing pages) or "wizard" (CI/CD Setup Wizard) variants using localStorage. Tagged CTAs on index.html, pricing.html, features.html, ci-cd-integration.html, and platform landing pages. Tracks page views, CTA clicks, wizard opens, and pipeline page views via `/api/analytics`. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events.
 - [ ] **P2** Enhance the wizard with public repo auto-detection (fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths).
 - [ ] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO.
 

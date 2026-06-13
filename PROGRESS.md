@@ -69,49 +69,7 @@
 | 252 | Jun 12 | Site-wide "15 tables" cleanup after free-forever pivot — removed outdated free-tier limits from 53+ SEO landing pages, comparison pages, marketing pages, micro-tool footers, CLI landing page, blog posts; updated README.md and IDENTITY.md. Tests pass; deployed. |
 | 253 | Jun 12 | Pivot narrative blog post (`blog/why-we-made-our-schema-diff-tool-completely-free.html`) + dev.to/Medium markdown distribution version; updated blog.html and sitemap.xml. |
 | 254 | Jun 12 | CI/CD Conversion Hardening & GitHub Marketplace Optimization — added "Add to Pipeline" CTAs and Team plan value on pricing.html, github-action.html, ci-cd-integration.html, and features.html; added Team quote lead-capture form; rewrote action.yml metadata and README Action section for Marketplace discovery. |
-
----
-
-## Day 255 — "SchemaLens in 60 Seconds" README / GitHub Release GIF (June 12, 2026)
-
-### Focus
-Execute the remaining unblocked P2 backlog task: create a **60-second demo GIF** for the README and GitHub releases that shows the full SchemaLens story in one glance.
-
-### What Was Done
-1. **Built reproducible screenshot pipeline**
-   - New script: `scripts/generate-demo-gif.js` uses Playwright to capture six key screenshots:
-     1. Homepage hero
-     2. App empty state
-     3. Sample schema loaded (`?example=staging-vs-production`)
-     4. Visual diff panel
-     5. Migration SQL tab
-     6. GitHub Action CI/CD integration page
-   - New script: `scripts/create-demo-gif.sh` assembles the screenshots into an optimized 60-second GIF using ffmpeg with crossfade transitions and captions.
-
-2. **Created the GIF**
-   - Output: `assets/schemalens-60-seconds.gif`
-   - Resolution: 800×450, 5 fps, 32-color palette
-   - Duration: 60 seconds
-   - File size: ~1.8 MB
-   - Six captioned scenes with smooth crossfades
-
-3. **Embedded in README.md**
-   - Added the GIF directly below the primary CTAs so it is the first visual visitors see on GitHub.
-
-### Why This Matters
-- **Instant product comprehension** — visitors immediately understand what SchemaLens does without reading paragraphs
-- **Shares the free-forever + CI/CD narrative** — the GIF ends on the GitHub Action, reinforcing the current strategy
-- **Reusable asset** — can be used in GitHub releases, blog posts, dev.to articles, and social media
-- **Reproducible** — the scripts can regenerate the GIF whenever the UI changes
-
-### Validation
-- ✅ Generated GIF displays correctly and loops smoothly
-- ✅ All six scenes are legible and captions are readable
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 146/146 tests pass (14 API tests skipped in static server mode)
-- ✅ Committed with descriptive message
-- ✅ Pushed to GitHub
-- ✅ Deployed to Vercel (aliased to www.schemalens.tech)
+| 255 | Jun 12 | Created a 60-second demo GIF (`assets/schemalens-60-seconds.gif`) with reproducible Playwright screenshot and ffmpeg assembly scripts; embedded it in README.md below the primary CTAs. |
 
 ---
 
@@ -199,6 +157,51 @@ Execute the P1 post-wizard backlog task: **drive adoption of the CI/CD Setup Wiz
 - ✅ GitHub Release v1.0.0 body updated successfully via API
 - ✅ README link resolves to the wizard with `?platform=github`
 - ✅ New blog post loads without console errors
+- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+
+## Day 258 — Wizard Entry Point A/B Test (June 13, 2026)
+
+### Focus
+Execute the next P1 conversion task: **run a real A/B test** comparing wizard entry points against direct "Add to Pipeline" links on the highest-traffic CI/CD and conversion pages. Use localStorage-based assignment and the existing `/api/analytics` endpoint so we can measure which path drives more pipeline engagement.
+
+### What Was Done
+1. **Built `lib/wizard-ab-test.js`**
+   - Assigns each visitor a persistent `sl_wizard_ab_variant` of either `direct` or `wizard` (50/50).
+   - Transforms any CTA tagged with `data-wizard-ab="cta"` and `data-platform="..."`:
+     - **direct** variant → links to the platform-specific landing page (e.g., `github-action.html`).
+     - **wizard** variant → links to `tools/cicd-setup-wizard.html?platform=...` with label "⚡ Setup Wizard →".
+   - Tracks four events via `/api/analytics`:
+     - `wizard_ab_assigned` when a new variant is assigned
+     - `wizard_ab_page_view` on experiment pages
+     - `wizard_ab_cta_click` when a tagged CTA is clicked
+     - `wizard_ab_wizard_open` when the wizard page loads
+     - `wizard_ab_pipeline_page_view` when a platform landing page loads
+   - Skips tracking on localhost so dev/test environments stay clean.
+
+2. **Tagged CTAs across high-traffic pages**
+   - `index.html`: hero and CI/CD section "Add GitHub Action — Free" buttons.
+   - `pricing.html`: CI/CD integration grid (GitHub, GitLab, Jenkins, CircleCI) and the "Set up in 2 minutes" catch banner.
+   - `features.html`: GitHub Action integration card, DevOps use-case "Add to Pipeline" button, and final "Add GitHub Action →" CTA.
+   - `ci-cd-integration.html`: platform grid CTAs and final "Add GitHub Action →" CTA.
+   - Platform destination pages (`github-action.html`, `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`) include the script to record pipeline page views by variant.
+   - `tools/cicd-setup-wizard.html` includes the script to record wizard opens by variant and platform.
+
+3. **Analytics plumbing only**
+   - No visual redesign; the only difference between variants is the CTA destination and label.
+   - Events include variant, platform, link text, and href so the results can be segmented later.
+
+### Why This Matters
+- **Data-driven funnel optimization** — instead of guessing whether visitors prefer a wizard or a platform-specific guide, we can measure actual click-through and downstream engagement.
+- **Wizard adoption is critical to the new strategy** — if the wizard path wins, we can confidently expand wizard CTAs across more pages.
+- **Minimal engineering cost** — a single shared script and a handful of data attributes run the experiment without duplicating pages.
+- **Privacy-safe** — assignment is stored in localStorage, no cookies, no personal data.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 162/162 tests pass (14 API tests skipped in static server mode)
+- ✅ No console errors on experiment pages
+- ✅ CTAs correctly resolve to platform pages or wizard depending on assigned variant
+- ✅ Analytics events fire correctly when tested with a mocked `navigator.sendBeacon`
 - ✅ Committed and pushed to GitHub; auto-deployed to Vercel
 
 ---
