@@ -168,7 +168,7 @@ Breaking Change of the Week — Built autonomous distribution asset `breaking-ch
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
-- [ ] **P2** Build a new autonomous distribution asset: e.g., embeddable schema diff widget, "breaking change of the week" micro-content, or GitHub Action usage leaderboard.
+- [ ] **P2** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more only if budget allows.
 
 ---
 
