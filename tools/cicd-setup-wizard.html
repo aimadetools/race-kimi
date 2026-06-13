@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI/CD Setup Wizard — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use schema diff CI/CD config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds.">
+  <meta property="og:title" content="CI/CD Setup Wizard — SchemaLens">
+  <meta property="og:description" content="Generate a ready-to-use schema diff CI/CD config for your pipeline. Free.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/cicd-setup-wizard.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 620px; margin: 0 auto; }
+    .wizard { display: grid; grid-template-columns: 360px 1fr; gap: 28px; align-items: start; }
+    @media (max-width: 920px) { .wizard { grid-template-columns: 1fr; } }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .panel h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.95rem; }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--primary); }
+    .field small { display: block; color: var(--text-muted); font-size: 0.78rem; margin-top: 4px; }
+    .platform-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 4px; }
+    .platform-option { position: relative; }
+    .platform-option input { position: absolute; opacity: 0; }
+    .platform-option label { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+    .platform-option label:hover { border-color: var(--primary); }
+    .platform-option input:checked + label { border-color: var(--primary); background: rgba(99,102,241,0.08); }
+    .checkbox { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; cursor: pointer; }
+    .checkbox input { margin-top: 3px; }
+    .checkbox span { font-size: 0.9rem; }
+    .checkbox .sub { display: block; color: var(--text-muted); font-size: 0.78rem; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .code-header span { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .btn-copy { background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-copy:hover { opacity: 0.9; }
+    .btn-copy.copied { background: var(--success); }
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .team-upsell { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08)); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px; }
+    .team-upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .team-upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .team-upsell li { margin-bottom: 6px; }
+    .team-upsell .btn { display: inline-block; background: var(--primary); color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .step-indicator { display: flex; gap: 8px; margin-bottom: 20px; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); }
+    .step-dot.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .step-dot.done { background: var(--success); color: #fff; border-color: var(--success); }
+    .hidden { display: none; }
+    .file-pattern-demo { color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../github-action.html">GitHub Action</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>CI/CD Setup Wizard</h1>
+      <p>Generate a ready-to-commit schema diff pipeline config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines. Paste it into your repo and start catching breaking schema changes on every PR.</p>
+    </div>
+
+    <div class="wizard">
+      <div class="panel">
+        <h2>1. Pipeline settings</h2>
+
+        <div class="field">
+          <label>Platform</label>
+          <div class="platform-grid" id="platform-grid">
+            <div class="platform-option"><input type="radio" name="platform" id="platform-github" value="github" checked><label for="platform-github">🐙 GitHub Actions</label></div>
+            <div class="platform-option"><input type="radio" name="platform" id="platform-gitlab" value="gitlab"><label for="platform-gitlab">🦊 GitLab CI</label></div>
+            <div class="platform-option"><input type="radio" name="platform" id="platform-jenkins" value="jenkins"><label for="platform-jenkins">🔧 Jenkins</label></div>
+            <div class="platform-option"><input type="radio" name="platform" id="platform-circleci" value="circleci"><label for="platform-circleci">⭕ CircleCI</label></div>
+            <div class="platform-option"><input type="radio" name="platform" id="platform-bitbucket" value="bitbucket"><label for="platform-bitbucket">📦 Bitbucket</label></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="dialect">SQL dialect</label>
+          <select id="dialect">
+            <option value="postgres">PostgreSQL</option>
+            <option value="mysql">MySQL</option>
+            <option value="sqlite">SQLite</option>
+            <option value="mssql">SQL Server</option>
+            <option value="oracle">Oracle</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="oldPath">Old / base schema path <span class="hint">(main branch)</span></label>
+          <input type="text" id="oldPath" value="schema/base.sql" placeholder="e.g. schema/base.sql">
+          <small>The schema file checked into your default branch.</small>
+        </div>
+
+        <div class="field">
+          <label for="newPath">New / current schema path <span class="hint">(PR branch)</span></label>
+          <input type="text" id="newPath" value="schema/current.sql" placeholder="e.g. schema/current.sql">
+          <small>The schema file in the branch being tested.</small>
+        </div>
+
+        <h2 style="margin-top: 24px;">2. Pipeline behavior</h2>
+
+        <label class="checkbox">
+          <input type="checkbox" id="postComment" checked>
+          <span>Post diff as PR comment / MR note <span class="sub">Makes the diff visible to reviewers.</span></span>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" id="createCheckRun">
+          <span>Create a GitHub Check Run <span class="sub">Shows status directly in the PR checks area. GitHub Actions only.</span></span>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" id="smartSkip" checked>
+          <span>Skip when no <code>.sql</code> files changed <span class="sub">Saves CI minutes on unrelated PRs.</span></span>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" id="failBreaking">
+          <span>Fail pipeline on breaking changes <span class="sub">Blocks merges that drop columns or tables.</span></span>
+        </label>
+
+        <h2 style="margin-top: 24px;">3. Drift alerts <span class="hint">(Team plan)</span></h2>
+
+        <div class="field">
+          <label for="licenseKey">SchemaLens Pro/Team license key</label>
+          <input type="text" id="licenseKey" placeholder="SL-XXXX-XXXX-XXXX-XXXX">
+          <small>Required for Slack/Teams alerts and shareable alert pages.</small>
+        </div>
+
+        <div class="field">
+          <label for="slackUrl">Slack webhook URL</label>
+          <input type="text" id="slackUrl" placeholder="https://hooks.slack.com/services/...">
+        </div>
+
+        <div class="field">
+          <label for="teamsUrl">Microsoft Teams webhook URL</label>
+          <input type="text" id="teamsUrl" placeholder="https://outlook.office.com/webhook/...">
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="code-header">
+          <span id="filename">.github/workflows/schema-diff.yml</span>
+          <button class="btn-copy" id="btn-copy">Copy config</button>
+        </div>
+        <pre class="code-block" id="output"></pre>
+
+        <div class="preview-tabs">
+          <button class="active" data-preview="config">Config</button>
+          <button data-preview="slack">Slack alert preview</button>
+          <button data-preview="teams">Teams alert preview</button>
+        </div>
+
+        <div class="team-upsell">
+          <h3>Need shared dashboards & unlimited members?</h3>
+          <ul>
+            <li>Team schema drift dashboard with risk trends</li>
+            <li>Slack / Microsoft Teams notifications</li>
+            <li>Unlimited team members and org-wide billing</li>
+            <li>Priority support and migration review</li>
+          </ul>
+          <a href="../pricing.html" class="btn">View Team plan →</a>
+          <a href="../team/schema-drift-dashboard.html" style="margin-left: 12px; color: var(--text-muted); font-size: 0.85rem;">Preview dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const state = {
+      platform: 'github',
+      dialect: 'postgres',
+      oldPath: 'schema/base.sql',
+      newPath: 'schema/current.sql',
+      postComment: true,
+      createCheckRun: false,
+      smartSkip: true,
+      failBreaking: false,
+      licenseKey: '',
+      slackUrl: '',
+      teamsUrl: '',
+      preview: 'config'
+    };
+
+    const els = {
+      platform: document.getElementById('platform-grid'),
+      dialect: document.getElementById('dialect'),
+      oldPath: document.getElementById('oldPath'),
+      newPath: document.getElementById('newPath'),
+      postComment: document.getElementById('postComment'),
+      createCheckRun: document.getElementById('createCheckRun'),
+      smartSkip: document.getElementById('smartSkip'),
+      failBreaking: document.getElementById('failBreaking'),
+      licenseKey: document.getElementById('licenseKey'),
+      slackUrl: document.getElementById('slackUrl'),
+      teamsUrl: document.getElementById('teamsUrl'),
+      output: document.getElementById('output'),
+      filename: document.getElementById('filename'),
+      copyBtn: document.getElementById('btn-copy'),
+      previewTabs: document.querySelectorAll('.preview-tabs button')
+    };
+
+    function loadFromUrl() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const platform = params.get('platform');
+        if (platform && ['github', 'gitlab', 'jenkins', 'circleci', 'bitbucket'].includes(platform)) {
+          state.platform = platform;
+          const radio = document.querySelector(`input[name="platform"][value="${platform}"]`);
+          if (radio) radio.checked = true;
+        }
+      } catch (e) {}
+    }
+
+    function loadFromStorage() {
+      try {
+        const saved = localStorage.getItem('schemalens_cicd_wizard');
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        Object.assign(state, data);
+        if (state.platform) {
+          const radio = document.querySelector(`input[name="platform"][value="${state.platform}"]`);
+          if (radio) radio.checked = true;
+        }
+        els.dialect.value = state.dialect || 'postgres';
+        els.oldPath.value = state.oldPath || '';
+        els.newPath.value = state.newPath || '';
+        els.postComment.checked = !!state.postComment;
+        els.createCheckRun.checked = !!state.createCheckRun;
+        els.smartSkip.checked = state.smartSkip !== false;
+        els.failBreaking.checked = !!state.failBreaking;
+        els.licenseKey.value = state.licenseKey || '';
+        els.slackUrl.value = state.slackUrl || '';
+        els.teamsUrl.value = state.teamsUrl || '';
+      } catch (e) {}
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('schemalens_cicd_wizard', JSON.stringify(state));
+    }
+
+    function indent(str, spaces) {
+      const pad = ' '.repeat(spaces);
+      return str.split('\n').map(l => l ? pad + l : l).join('\n');
+    }
+
+    function generateGitHub() {
+      const name = 'Schema Diff';
+      const steps = [];
+      steps.push(`- uses: actions/checkout@v4`);
+      steps.push(`- name: SchemaLens Schema Diff
+  uses: aimadetools/race-kimi@v1.0.0
+  with:
+    old-schema-path: ${state.oldPath}
+    new-schema-path: ${state.newPath}
+    dialect: ${state.dialect}${state.licenseKey ? '\n    license-key: ${{ secrets.SCHEMALENS_LICENSE_KEY }}' : ''}
+    post-comment: ${state.postComment ? 'true' : 'false'}
+    create-check-run: ${state.createCheckRun ? 'true' : 'false'}
+    run-only-on-schema-change: ${state.smartSkip ? 'true' : 'false'}
+    fail-on-breaking: ${state.failBreaking ? 'true' : 'false'}
+    github-token: \${{ secrets.GITHUB_TOKEN }}${state.licenseKey && (state.slackUrl || state.teamsUrl) ? '\n    schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook' : ''}${state.licenseKey && state.slackUrl ? '\n    schema-drift-slack: \${{ secrets.SCHEMALENS_SLACK_WEBHOOK }}' : ''}${state.licenseKey && state.teamsUrl ? '\n    schema-drift-teams: \${{ secrets.SCHEMALENS_TEAMS_WEBHOOK }}' : ''}`);
+
+      return `name: ${name}
+on:
+  pull_request:
+    paths:
+      - '**/*.sql'
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+${indent(steps.join('\n'), 6)}`;
+    }
+
+    function generateGitLab() {
+      const alertBlock = state.licenseKey && (state.slackUrl || state.teamsUrl) ? `\n    # Send schema drift alert (requires Team/Pro license key)\n    - curl -X POST https://schemalens.tech/api/schema-drift-webhook \\\n        -H "Content-Type: application/json" \\\n        -d '{\n          "projectToken": "$SCHEMALENS_LICENSE_KEY",\n          "oldSchema": "$(cat ${state.oldPath})",\n          "newSchema": "$(cat ${state.newPath})",\n          "dialect": "${state.dialect}",\n          "metadata": {"repo":"$CI_PROJECT_PATH","branch":"$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME","commit":"$CI_COMMIT_SHA","prUrl":"$CI_MERGE_REQUEST_URL","ciProvider":"gitlab-ci","runId":"$CI_PIPELINE_ID"},\n          "notify": {${state.slackUrl ? '\"slack\": \"$SCHEMALENS_SLACK_WEBHOOK\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\"teams\": \"$SCHEMALENS_TEAMS_WEBHOOK\"' : ''}}\n        }'` : '';
+
+      return `schema-diff:
+  stage: test
+  image: alpine:latest
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "**/*.sql"
+  variables:
+    SCHEMALENS_LICENSE_KEY: "$SCHEMALENS_LICENSE_KEY"
+  script:
+    - apk add --no-cache curl jq
+    - |
+      RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+        -H "Content-Type: application/json" \\
+        -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
+      echo "$RESPONSE" | jq .
+      BREAKING=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // 0)')
+      echo "Breaking changes: $BREAKING"
+${state.failBreaking ? '      if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '      # Set fail-on-breaking above to block merges with breaking changes'}
+${alertBlock ? indent(alertBlock, 4) : ''}`;
+    }
+
+    function generateJenkins() {
+      return `pipeline {
+  agent any
+  environment {
+    SCHEMALENS_LICENSE_KEY = credentials('schemalens-license-key')
+  }
+  stages {
+    stage('Schema Diff') {
+      when {
+        changeset "**/*.sql"
+      }
+      steps {
+        script {
+          def oldSchema = readFile('${state.oldPath}').trim()
+          def newSchema = readFile('${state.newPath}').trim()
+          def response = httpRequest(
+            url: 'https://schemalens.tech/api/free-diff',
+            httpMode: 'POST',
+            contentType: 'APPLICATION_JSON',
+            requestBody: """{"schemaA": \${oldSchema}, "schemaB": \${newSchema}, "dialect": "${state.dialect}"}"""
+          )
+          def result = readJSON text: response.content
+          echo "Tables added: \${result.summary.tablesAdded}"
+          echo "Tables removed: \${result.summary.tablesRemoved}"
+          echo "Tables modified: \${result.summary.tablesModified}"
+          echo "Breaking changes: \${result.summary.breakingChangeCount}"
+${state.failBreaking ? '          if (result.summary.breakingChangeCount > 0) { error("Breaking schema changes detected") }' : '          // Set fail-on-breaking above to block builds with breaking changes'}
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'SchemaLens diff complete'
+    }
+  }
+}`;
+    }
+
+    function generateCircleCI() {
+      return `version: 2.1
+
+jobs:
+  schema-diff:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Schema Diff
+          command: |
+            RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+              -H "Content-Type: application/json" \\
+              -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
+            echo "$RESPONSE" | jq .
+            BREAKING=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // 0)')
+            echo "Breaking changes: $BREAKING"
+${state.failBreaking ? '            if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '            # Set fail-on-breaking above to block merges with breaking changes'}
+
+workflows:
+  schema-diff:
+    jobs:
+      - schema-diff:
+          filters:
+            branches:
+              ignore:
+                - main`;
+    }
+
+    function generateBitbucket() {
+      return `image: node:20
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Schema Diff
+          condition:
+            changesets:
+              includePaths:
+                - "**/*.sql"
+          script:
+            - apt-get update && apt-get install -y jq
+            - |
+              RESPONSE=$(curl -s -X POST https://schemalens.tech/api/free-diff \\
+                -H "Content-Type: application/json" \\
+                -d "{\\"schemaA\\": \\"$(cat ${state.oldPath})\\", \\"schemaB\\": \\"$(cat ${state.newPath})\\", \\"dialect\\": \\"${state.dialect}\\"}")
+              echo "$RESPONSE" | jq .
+              BREAKING=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // 0)')
+              echo "Breaking changes: $BREAKING"
+${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '              # Set fail-on-breaking above to block merges with breaking changes'}`;
+    }
+
+    function generateConfig() {
+      switch (state.platform) {
+        case 'github': return generateGitHub();
+        case 'gitlab': return generateGitLab();
+        case 'jenkins': return generateJenkins();
+        case 'circleci': return generateCircleCI();
+        case 'bitbucket': return generateBitbucket();
+        default: return generateGitHub();
+      }
+    }
+
+    function generateSlackPreview() {
+      return `{
+  "text": "Schema drift: 1 added, 0 removed, 2 modified, 1 breaking",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "🔴 org/repo • feature/user-profiles" } },
+    { "type": "section", "fields": [
+      { "type": "mrkdwn", "text": "*Tables:*\\n1 added · 0 removed · 2 modified" },
+      { "type": "mrkdwn", "text": "*Risk:*\\n72/100 (High)" },
+      { "type": "mrkdwn", "text": "*Breaking:*\\n1 issue" },
+      { "type": "mrkdwn", "text": "*Run:*\\nGitHub Actions #4821" }
+    ]},
+    { "type": "section", "text": { "type": "mrkdwn", "text": "*Breaking Changes:*\\n⚠️ Dropped column \\"users.phone\\"" } },
+    { "type": "actions", "elements": [
+      { "type": "button", "text": { "type": "plain_text", "text": "View Alert" }, "url": "https://schemalens.tech/schema-drift-alert.html#...", "style": "primary" },
+      { "type": "button", "text": { "type": "plain_text", "text": "Team Dashboard" }, "url": "https://schemalens.tech/team/schema-drift-dashboard.html" }
+    ]}
+  ]
+}`;
+    }
+
+    function generateTeamsPreview() {
+      return `{
+  "@type": "MessageCard",
+  "title": "SchemaLens Schema Drift Alert — org/repo",
+  "themeColor": "ff4d4f",
+  "text": "**Schema drift detected** in org/repo — **1 breaking change(s)**",
+  "sections": [
+    { "facts": [
+      { "name": "Repository", "value": "org/repo" },
+      { "name": "Tables Added", "value": "1" },
+      { "name": "Tables Modified", "value": "2" },
+      { "name": "Risk Score", "value": "72/100 (High)" },
+      { "name": "Breaking Changes", "value": "1" }
+    ]},
+    { "text": "**Breaking Changes**\\n- Dropped column \\"users.phone\\"" }
+  ],
+  "potentialAction": [
+    { "@type": "OpenUri", "name": "View Alert", "targets": [{ "os": "default", "uri": "https://schemalens.tech/schema-drift-alert.html#..." }] },
+    { "@type": "OpenUri", "name": "Team Dashboard", "targets": [{ "os": "default", "uri": "https://schemalens.tech/team/schema-drift-dashboard.html" }] }
+  ]
+}`;
+    }
+
+    function update() {
+      state.platform = document.querySelector('input[name="platform"]:checked').value;
+      state.dialect = els.dialect.value;
+      state.oldPath = els.oldPath.value || 'schema/base.sql';
+      state.newPath = els.newPath.value || 'schema/current.sql';
+      state.postComment = els.postComment.checked;
+      state.createCheckRun = els.createCheckRun.checked;
+      state.smartSkip = els.smartSkip.checked;
+      state.failBreaking = els.failBreaking.checked;
+      state.licenseKey = els.licenseKey.value;
+      state.slackUrl = els.slackUrl.value;
+      state.teamsUrl = els.teamsUrl.value;
+
+      const filenames = {
+        github: '.github/workflows/schema-diff.yml',
+        gitlab: '.gitlab-ci.yml',
+        jenkins: 'Jenkinsfile',
+        circleci: '.circleci/config.yml',
+        bitbucket: 'bitbucket-pipelines.yml'
+      };
+      els.filename.textContent = filenames[state.platform];
+
+      let content = '';
+      if (state.preview === 'config') {
+        content = generateConfig();
+        els.copyBtn.textContent = 'Copy config';
+      } else if (state.preview === 'slack') {
+        content = generateSlackPreview();
+        els.copyBtn.textContent = 'Copy Slack payload';
+      } else if (state.preview === 'teams') {
+        content = generateTeamsPreview();
+        els.copyBtn.textContent = 'Copy Teams payload';
+      }
+      els.output.textContent = content;
+
+      saveToStorage();
+    }
+
+    function bind() {
+      document.querySelectorAll('input[name="platform"]').forEach(el => el.addEventListener('change', update));
+      ['dialect', 'oldPath', 'newPath'].forEach(id => {
+        els[id].addEventListener('input', update);
+      });
+      ['postComment', 'createCheckRun', 'smartSkip', 'failBreaking'].forEach(id => {
+        els[id].addEventListener('change', update);
+      });
+      ['licenseKey', 'slackUrl', 'teamsUrl'].forEach(id => {
+        els[id].addEventListener('input', update);
+      });
+
+      els.previewTabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          els.previewTabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.preview = btn.dataset.preview;
+          update();
+        });
+      });
+
+      els.copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(els.output.textContent);
+          const original = els.copyBtn.textContent;
+          els.copyBtn.textContent = 'Copied!';
+          els.copyBtn.classList.add('copied');
+          setTimeout(() => {
+            els.copyBtn.textContent = original;
+            els.copyBtn.classList.remove('copied');
+          }, 2000);
+        } catch (e) {
+          alert('Copy failed. Select the text manually.');
+        }
+      });
+    }
+
+    loadFromUrl();
+    loadFromStorage();
+    bind();
+    update();
+  })();
+  </script>
+</body>
+</html>

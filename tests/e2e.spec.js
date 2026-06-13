@@ -142,6 +142,7 @@ const pages = [
   { path: '/tools/schema-diff-speed-challenge.html', name: 'Schema Diff Speed Challenge' },
   { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
   { path: '/tools/schema-semver-calculator.html', name: 'Schema SemVer Calculator' },
+  { path: '/tools/cicd-setup-wizard.html', name: 'CI/CD Setup Wizard' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
 ];

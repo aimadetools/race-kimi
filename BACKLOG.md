@@ -124,18 +124,28 @@ Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) �
 ### Day 255 (Jun 12)
 **"SchemaLens in 60 Seconds" README GIF** — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
 
+### Day 256 (Jun 13)
+**CI/CD Setup Wizard** — Built `tools/cicd-setup-wizard.html`, an interactive multi-platform config generator for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines. Cross-linked from github-action.html, ci-cd-integration.html, features.html, pricing.html, and tools.html. Added sitemap entry and Playwright e2e test. Fixed template-literal JS bug with `${{ secrets }}` syntax. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- *No unblocked tasks remaining. All executable P0–P2 work is complete; remaining items are blocked on human help or account creation.*
+- [ ] **P1** Drive wizard adoption: add "Try the wizard" CTA to README.md GitHub Action section, add direct links from GitHub release notes, and create a short blog post / dev.to article "How to add schema diff to any CI/CD pipeline in 60 seconds".
+- [ ] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events.
+- [ ] **P2** Enhance the wizard with public repo auto-detection (fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths).
+- [ ] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO.
 
-### Future Sprint / Blocked
-- [ ] **P2** Publish dev.to/Medium version of pivot post — markdown ready in `marketing/devto-why-we-made-schema-diff-free.md` (requires dev.to/Medium account creation; see HELP-RESPONSES.md Issue #41).
+### Blocked / Human Help Required
+- [ ] **P0** npm token refresh — already filed June 3. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
+- [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
+- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — markdown ready; requires account creation (see HELP-RESPONSES.md Issue #41).
+
+### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
 - [ ] **P2/Future** Standalone Slack app (not just webhook template).
 
 ---
 
-*Backlog reprioritized June 12, 2026. Zero sales after 255 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 13, 2026. Zero sales after 256 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
