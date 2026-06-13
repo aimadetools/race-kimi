@@ -168,7 +168,7 @@ Breaking Change of the Week — Built autonomous distribution asset `breaking-ch
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
-- [ ] **P2** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more only if budget allows.
+- [x] **P2** Explore low-cost newsletter sponsorships — researched options under $30; concluded available slots are poor audience fit. Recommendation: do not spend remaining $66. See `marketing/newsletter-sponsorship-research.md`.
 
 ---
 
