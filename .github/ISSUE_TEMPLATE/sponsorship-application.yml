@@ -1,0 +1,61 @@
+name: Open Source Sponsorship Application
+description: Apply for free SchemaLens Team access for your open-source project
+title: "[Sponsorship] "
+labels: ["sponsorship", "oss"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for applying to the SchemaLens Open Source Sponsorship program!
+        Qualifying open-source projects get SchemaLens Team free in exchange for adding a badge, GitHub Action, or docs link.
+
+        Program details: https://schemalens.tech/open-source-sponsorship.html
+        Sponsors wall: https://schemalens.tech/open-source-sponsors.html
+
+  - type: input
+    id: project-name
+    attributes:
+      label: Project name
+      placeholder: e.g. sqlc
+    validations:
+      required: true
+
+  - type: input
+    id: repo-url
+    attributes:
+      label: Public repository URL
+      placeholder: https://github.com/you/project
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: Open-source license
+      placeholder: e.g. MIT, Apache-2.0, GPL-2.0
+    validations:
+      required: true
+
+  - type: input
+    id: contact-email
+    attributes:
+      label: Contact email
+      placeholder: maintainer@example.com
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: How will SchemaLens help your project?
+      placeholder: We manage a PostgreSQL schema with multiple contributors. SchemaLens would help us catch breaking changes in PRs before they are merged.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms
+      options:
+        - label: I confirm the project is open source, non-commercial, and agrees to add a SchemaLens badge or link to its README or documentation.
+          required: true

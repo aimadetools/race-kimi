@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Source Sponsors — SchemaLens</title>
+  <meta name="description" content="Open-source projects sponsored by SchemaLens. Get free Team access for your database project when you add SchemaLens to your CI/CD pipeline.">
+  <link rel="canonical" href="https://schemalens.tech/open-source-sponsors.html">
+  <meta property="og:title" content="Open Source Sponsors — SchemaLens">
+  <meta property="og:description" content="Open-source projects using SchemaLens Team for free. Join the program and catch breaking schema changes in every PR.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/open-source-sponsors.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Open Source Sponsors",
+    "description": "Public wall of open-source projects sponsored by SchemaLens Team.",
+    "url": "https://schemalens.tech/open-source-sponsors.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+    .section-sponsors { padding: 72px 0; }
+    .section-sponsors h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 16px; text-align: center; }
+    .section-sponsors .section-lead { color: var(--text-muted); text-align: center; max-width: 640px; margin: 0 auto 48px; font-size: 1.05rem; }
+    .sponsors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .sponsor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: transform 0.2s, border-color 0.2s; }
+    .sponsor-card:hover { transform: translateY(-3px); border-color: var(--hover-border); }
+    .sponsor-card .repo-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; word-break: break-word; }
+    .sponsor-card .repo-name a { color: var(--text); text-decoration: none; }
+    .sponsor-card .repo-name a:hover { color: var(--primary); }
+    .sponsor-card .repo-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; }
+    .sponsor-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
+    .sponsor-card .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sponsor-card .mini-badge { font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(99,102,241,0.12); color: var(--primary); }
+    .empty-state { text-align: center; padding: 64px 24px; background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); }
+    .empty-state h3 { margin-bottom: 12px; }
+    .empty-state p { color: var(--text-muted); margin-bottom: 24px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; counter-reset: step; margin-top: 48px; }
+    .step-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .step-card::before { counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 24px; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step-card h3 { margin-top: 8px; margin-bottom: 8px; font-size: 1.05rem; }
+    .step-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .targets-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .targets-list li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; }
+    .targets-list li a { font-weight: 600; color: var(--text); text-decoration: none; }
+    .targets-list li a:hover { color: var(--primary); }
+    .targets-list li span { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">S</span> SchemaLens</a>
+      <div class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Try Free →</a>
+      </div>
+      <button class="mobile-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Sponsored open-source projects</div>
+      <h1>SchemaLens <span>Open Source</span> Sponsors</h1>
+      <p>Qualifying open-source projects use SchemaLens Team free. See who's building safer schema changes with us.</p>
+      <div class="hero-actions">
+        <a href="open-source-sponsorship.html" class="btn btn-primary btn-lg">Apply for Free Team Access</a>
+        <a href="github-action.html" class="btn btn-secondary btn-lg">See GitHub Action</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-sponsors">
+    <div class="container">
+      <h2 class="reveal">Approved sponsors</h2>
+      <p class="section-lead reveal">Projects that added SchemaLens to their workflow and received free Team access.</p>
+      <div id="sponsorsGrid" class="sponsors-grid">
+        <div class="empty-state reveal" style="grid-column: 1 / -1;">
+          <h3>Be the first sponsor</h3>
+          <p>We're reviewing the first applications now. If your open-source project uses SQL schemas, apply today — the first 3 qualifying projects are auto-approved.</p>
+          <a href="open-source-sponsorship.html" class="btn btn-primary">Apply Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sponsors" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="reveal">How to join</h2>
+      <p class="section-lead reveal">Three steps to free Team access for your open-source project.</p>
+      <div class="steps">
+        <div class="step-card reveal">
+          <h3>Add SchemaLens to your repo</h3>
+          <p>Install the <a href="github-action.html">GitHub Action</a>, add a README badge, or link to SchemaLens in your migration docs.</p>
+        </div>
+        <div class="step-card reveal">
+          <h3>Apply for sponsorship</h3>
+          <p>Tell us about your project on the <a href="open-source-sponsorship.html">application page</a>. First 3 qualifying projects are approved automatically.</p>
+        </div>
+        <div class="step-card reveal">
+          <h3>Get free Team access</h3>
+          <p>Approved projects receive lifetime free Team seats for maintainers and a spot on this wall.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sponsors">
+    <div class="container">
+      <h2 class="reveal">Projects we're reaching out to</h2>
+      <p class="section-lead reveal">These are active open-source database projects that fit our criteria. Want to suggest one? <a href="open-source-sponsorship.html">Apply or reach out</a>.</p>
+      <ul class="targets-list reveal">
+        <li><a href="https://github.com/sqlc-dev/sqlc" target="_blank" rel="noopener">sqlc</a><span>Generate type-safe Go from SQL · MIT</span></li>
+        <li><a href="https://github.com/amacneil/dbmate" target="_blank" rel="noopener">dbmate</a><span>Lightweight database migration tool · MIT</span></li>
+        <li><a href="https://github.com/golang-migrate/migrate" target="_blank" rel="noopener">golang-migrate</a><span>Popular Go migration library · MIT</span></li>
+        <li><a href="https://github.com/pressly/goose" target="_blank" rel="noopener">goose</a><span>Go migration tool with SQL dialect support · MIT/Apache-2.0</span></li>
+        <li><a href="https://github.com/kysely-org/kysely" target="_blank" rel="noopener">Kysely</a><span>Type-safe SQL query builder for TypeScript · MIT</span></li>
+        <li><a href="https://github.com/PostgREST/postgrest" target="_blank" rel="noopener">PostgREST</a><span>REST API for PostgreSQL · MIT</span></li>
+        <li><a href="https://github.com/theory/pgtap" target="_blank" rel="noopener">pgTAP</a><span>PostgreSQL unit testing framework · PostgreSQL License</span></li>
+        <li><a href="https://github.com/dolthub/dolt" target="_blank" rel="noopener">Dolt</a><span>Git for data · Apache-2.0</span></li>
+        <li><a href="https://github.com/simonw/datasette" target="_blank" rel="noopener">Datasette</a><span>Tool for exploring and publishing SQLite databases · Apache-2.0</span></li>
+        <li><a href="https://github.com/pgRouting/pgrouting" target="_blank" rel="noopener">pgRouting</a><span>PostgreSQL routing extension · GPL-2.0</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer" style="border-top: 1px solid var(--border); padding: 48px 0; margin-top: 0;">
+    <div class="container" style="text-align: center; color: var(--text-muted);">
+      <p style="margin-bottom: 16px;">Built in public for the $100 AI Startup Race.</p>
+      <p style="font-size: 0.9rem;">
+        <a href="index.html">Home</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="slack-app.html">Slack App</a> ·
+        <a href="open-source-sponsorship.html">Open Source</a> ·
+        <a href="open-source-sponsors.html">Sponsors</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function extractRepoName(url) {
+      try {
+        const u = new URL(url);
+        const parts = u.pathname.split('/').filter(Boolean);
+        if (parts.length >= 2) return `${parts[0]}/${parts[1]}`;
+        return parts[0] || url;
+      } catch {
+        return url;
+      }
+    }
+
+    async function loadSponsors() {
+      const grid = document.getElementById('sponsorsGrid');
+      const isStaticServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+      try {
+        if (isStaticServer) throw new Error('static-server');
+        const res = await fetch('/api/oss-sponsors');
+        const { sponsors = [] } = await res.json().catch(() => ({ sponsors: [] }));
+
+        if (!sponsors.length) {
+          grid.innerHTML = `
+            <div class="empty-state reveal" style="grid-column: 1 / -1;">
+              <h3>Be the first sponsor</h3>
+              <p>We're reviewing the first applications now. If your open-source project uses SQL schemas, apply today — the first 3 qualifying projects are auto-approved.</p>
+              <a href="open-source-sponsorship.html" class="btn btn-primary">Apply Now</a>
+            </div>`;
+          document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+          return;
+        }
+
+        grid.innerHTML = sponsors.map(s => `
+          <div class="sponsor-card reveal">
+            <div class="repo-name"><a href="${s.repoUrl}" target="_blank" rel="noopener">${extractRepoName(s.repoUrl)}</a></div>
+            <div class="repo-meta">Approved ${formatDate(s.approvedAt)}</div>
+            <p>${s.description || 'Using SchemaLens to review schema changes in CI/CD.'}</p>
+            <div class="badge-row">
+              ${s.usesAction ? '<span class="mini-badge">GitHub Action</span>' : ''}
+              <span class="mini-badge">Team Plan</span>
+            </div>
+          </div>
+        `).join('');
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      } catch (e) {
+        grid.innerHTML = `
+          <div class="empty-state reveal" style="grid-column: 1 / -1;">
+            <h3>Be the first sponsor</h3>
+            <p>We're reviewing the first applications now. If your open-source project uses SQL schemas, apply today.</p>
+            <a href="open-source-sponsorship.html" class="btn btn-primary">Apply Now</a>
+          </div>`;
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      }
+    }
+
+    loadSponsors();
+  })();
+  </script>
+</body>
+</html>

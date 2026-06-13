@@ -418,6 +418,14 @@
           <div class="value" id="statLocalFeedback">—</div>
           <div class="label">Local Feedback</div>
         </div>
+        <div class="admin-stat">
+          <div class="value" id="statOssApplications">—</div>
+          <div class="label">OSS Applications</div>
+        </div>
+        <div class="admin-stat">
+          <div class="value" id="statOssApproved">—</div>
+          <div class="label">OSS Approved</div>
+        </div>
       </div>
 
       <div class="admin-section">
@@ -656,6 +664,22 @@
         <div class="admin-actions-bar">
           <button onclick="refreshAffiliates()">Refresh</button>
           <button class="primary" onclick="exportAffiliates()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h3>🌱 Open Source Sponsorship Applications</h3>
+          <span class="admin-badge" id="badgeOssPending">0</span>
+        </div>
+        <div class="admin-section-body" id="ossSponsorshipBody">
+          <div class="admin-empty">Loading OSS sponsorship applications…</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshOssSponsorship()">Refresh</button>
+          <button class="primary" onclick="exportOssSponsorship()">Export CSV</button>
+          <button onclick="window.open('open-source-sponsors.html','_blank')">View Public Wall</button>
+          <button onclick="window.open('marketing/oss-outreach-targets.md','_blank')">Outreach Targets</button>
         </div>
       </div>
 
@@ -1969,6 +1993,89 @@
       if (navigator.clipboard) navigator.clipboard.writeText(text);
     }
 
+    async function refreshOssSponsorship() {
+      const body = document.getElementById('ossSponsorshipBody');
+      body.innerHTML = '<div class="admin-empty">Loading…</div>';
+      try {
+        const data = await adminFetch('oss-sponsorship-applications');
+        const pending = data.filter(a => a.status === 'pending').length;
+        const approved = data.filter(a => a.status === 'approved').length;
+        document.getElementById('statOssApplications').textContent = data.length;
+        document.getElementById('statOssApproved').textContent = approved;
+        document.getElementById('badgeOssPending').textContent = pending;
+        document.getElementById('badgeOssPending').className = `admin-badge ${pending > 0 ? 'warning' : 'success'}`;
+
+        if (!data.length) {
+          body.innerHTML = '<div class="admin-empty">No OSS sponsorship applications yet. Outreach targets are in <code>marketing/oss-outreach-targets.md</code>.</div>';
+          return;
+        }
+
+        const rows = data.map(a => `
+          <tr data-id="${escapeHtml(a.id)}">
+            <td>${formatDate(a.created_at)}</td>
+            <td><strong>${escapeHtml(a.project_name)}</strong></td>
+            <td>${escapeHtml(a.name)}<br><small style="color:var(--text-muted)">${escapeHtml(a.email)}</small></td>
+            <td><a href="${escapeHtml(a.repo_url)}" target="_blank" rel="noopener" style="color:var(--primary);font-size:0.8rem;">${escapeHtml(a.repo_url.replace(/^https:\/\/github\.com\//, ''))}</a></td>
+            <td><pre>${escapeHtml(a.description || '')}</pre></td>
+            <td>${a.uses_action ? '<span class="admin-badge success">Action</span>' : '<span class="admin-badge">—</span>'}</td>
+            <td><span class="admin-badge ${a.status === 'approved' ? 'success' : a.status === 'rejected' ? 'danger' : 'warning'}">${a.status || 'pending'}</span></td>
+            <td>
+              ${a.status !== 'approved' ? `<button onclick="approveOss('${escapeHtml(a.id)}')" style="padding:4px 8px;font-size:0.75rem;border-radius:4px;border:1px solid var(--border);background:var(--success);color:#fff;cursor:pointer;margin-right:4px;">Approve</button>` : ''}
+              ${a.status !== 'rejected' ? `<button onclick="rejectOss('${escapeHtml(a.id)}')" style="padding:4px 8px;font-size:0.75rem;border-radius:4px;border:1px solid var(--border);background:var(--danger);color:#fff;cursor:pointer;">Reject</button>` : ''}
+            </td>
+          </tr>
+        `).join('');
+
+        body.innerHTML = `
+          <table class="admin-table" id="ossSponsorshipTable">
+            <thead><tr><th>Date</th><th>Project</th><th>Applicant</th><th>Repo</th><th>Description</th><th>Action</th><th>Status</th><th></th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      } catch (e) {
+        body.innerHTML = `<div class="admin-empty">Unable to load OSS applications.<br><small>${escapeHtml(e.message)}</small><br><small>Ensure SUPABASE_SERVICE_ROLE_KEY is set in Vercel environment variables and the <code>oss_sponsorship_applications</code> table exists.</small></div>`;
+      }
+    }
+
+    async function approveOss(id) {
+      if (!id) return;
+      if (!confirm('Approve this OSS sponsorship application?')) return;
+      try {
+        await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'approve-oss-sponsorship', password: ADMIN_PASSWORD_HASH, id })
+        });
+        refreshOssSponsorship();
+      } catch (e) {
+        alert('Error approving: ' + e.message);
+      }
+    }
+
+    async function rejectOss(id) {
+      if (!id) return;
+      if (!confirm('Reject this OSS sponsorship application?')) return;
+      try {
+        await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'reject-oss-sponsorship', password: ADMIN_PASSWORD_HASH, id })
+        });
+        refreshOssSponsorship();
+      } catch (e) {
+        alert('Error rejecting: ' + e.message);
+      }
+    }
+
+    function exportOssSponsorship() {
+      const table = document.querySelector('#ossSponsorshipTable');
+      if (!table) return;
+      const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+      const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).slice(0, -1).map(td => td.textContent)
+      );
+      downloadCsv('schemalens-oss-sponsorship-applications.csv', headers.slice(0, -1), rows);
+    }
+
     function refreshAll() {
       refreshFeedback();
       refreshLocalFeedback();
@@ -1980,6 +2087,7 @@
       refreshAnalytics();
       refreshLeads();
       refreshAffiliates();
+      refreshOssSponsorship();
       refreshDemos();
       refreshFounding();
       refreshSales();

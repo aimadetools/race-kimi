@@ -3,7 +3,7 @@
  * POST /api/admin
  *
  * Body:
- *   action     string  required  One of: feedback, subscribers, testimonials, analytics, comments
+ *   action     string  required  One of: feedback, subscribers, testimonials, analytics, comments, oss-sponsorship-applications
  *   password   string  required  Admin password
  *   limit      number  optional  Max rows to return (default 100, max 500)
  *
@@ -48,15 +48,19 @@ function getClientIp(req) {
 }
 
 async function fetchSupabase(table, queryParams) {
+  return fetchSupabaseWithMethod(table, queryParams, 'GET');
+}
+
+async function fetchSupabaseWithMethod(table, queryParams, method, body) {
   if (!SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured');
   }
-  const url = `${SUPABASE_URL}/rest/v1/${table}?${queryParams}`;
+  const url = `${SUPABASE_URL}/rest/v1/${table}${queryParams ? '?' + queryParams : ''}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 
-  const res = await fetch(url, {
-    method: 'GET',
+  const options = {
+    method,
     signal: controller.signal,
     headers: {
       'apikey': SUPABASE_SERVICE_ROLE_KEY,
@@ -64,13 +68,19 @@ async function fetchSupabase(table, queryParams) {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     }
-  });
+  };
+  if (body && method !== 'GET') {
+    options.body = JSON.stringify(body);
+  }
+
+  const res = await fetch(url, options);
   clearTimeout(timeout);
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`Supabase ${res.status}: ${text.slice(0, 200)}`);
   }
+  if (res.status === 204) return {};
   return res.json();
 }
 
@@ -149,6 +159,31 @@ module.exports = async (req, res) => {
       case 'founding-members':
         data = await fetchSupabase('founding_members', `select=*&order=claimed_at.desc&limit=${maxLimit}`);
         break;
+      case 'oss-sponsorship-applications':
+        data = await fetchSupabase('oss_sponsorship_applications', `select=*&order=created_at.desc&limit=${maxLimit}`);
+        break;
+      case 'approve-oss-sponsorship': {
+        const id = body.id;
+        if (!id) return res.status(400).json({ error: 'Missing id' });
+        const updated = await fetchSupabaseWithMethod(
+          'oss_sponsorship_applications',
+          `id=eq.${encodeURIComponent(id)}`,
+          'PATCH',
+          { status: 'approved', reviewed_at: new Date().toISOString() }
+        );
+        return res.status(200).json({ data: updated });
+      }
+      case 'reject-oss-sponsorship': {
+        const id = body.id;
+        if (!id) return res.status(400).json({ error: 'Missing id' });
+        const updated = await fetchSupabaseWithMethod(
+          'oss_sponsorship_applications',
+          `id=eq.${encodeURIComponent(id)}`,
+          'PATCH',
+          { status: 'rejected', reviewed_at: new Date().toISOString() }
+        );
+        return res.status(200).json({ data: updated });
+      }
       case 'gumroad-sales': {
         const gumroadUrl = `${proto}://${host}/api/gumroad-sales`;
         const gumroadHeaders = { 'x-admin-password': ADMIN_PASSWORD };
