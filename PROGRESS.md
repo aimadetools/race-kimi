@@ -78,6 +78,56 @@
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
 | 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js` tests headline, pricing framing (yearly default), and ROI placement; fixed ROI calculator TDZ bug; added e2e coverage. |
+| 264 | Jun 13 | Standalone Slack app — app manifest, landing page (`slack-app.html`), OAuth/slash-command/events/interactions API endpoints, cross-links from CI/CD and feature pages, sitemap + e2e coverage. Filed credentials help request. |
+
+---
+
+## Day 264 — Standalone Slack App (June 13, 2026)
+
+### Focus
+Build and deploy the first real SchemaLens Slack app (not just an Incoming Webhook template) so teams can diff schemas with `/schemalens` and receive CI/CD breaking-change alerts in Slack.
+
+### What Was Done
+1. **Created `slack-app-manifest.json`**
+   - App name, description, bot user, `/schemalens` slash command, OAuth scopes, Events API, and interactivity endpoints.
+   - Ready to paste into https://api.slack.com/apps to create the app.
+
+2. **Built `slack-app.html` landing page**
+   - SEO-optimized title/meta/OG/schema.org SoftwareApplication structured data.
+   - Install CTA, Slack alert preview, how-it-works steps, permissions table, and feature grid.
+   - Falls back to Slack API console link if `clientId` is not configured.
+
+3. **Built API endpoints under `api/slack/`**
+   - `oauth.js` — OAuth 2.0 callback; exchanges code for workspace token and shows a success page.
+   - `command.js` — `/schemalens` slash command handler; parses args, fetches schema URLs, runs the diff engine, and returns a rich Block Kit report.
+   - `interactions.js` — Block actions / shortcuts endpoint with Slack signature verification.
+   - `events.js` — Events API endpoint handling `url_verification` and `app_home_opened`; publishes a Home tab view.
+   - Existing `api/slack.js` remains the Incoming Webhook forwarder for users who prefer webhook URLs.
+
+4. **Created shared helper `lib/slack.js`**
+   - Slack request signature verification (HMAC-SHA256 with timing-safe comparison).
+   - Diff-to-Block Kit formatting reusing `lib/engine`.
+   - OAuth token exchange and `chat.postMessage` helper.
+
+5. **Cross-linked the Slack app**
+   - Added cards/links on `tools.html`, `features.html`, `ci-cd-integration.html`, `github-action.html`, and `team.html`.
+
+6. **SEO & tests**
+   - Added `slack-app.html` to `sitemap.xml` (priority 0.8, 246 URLs total).
+   - Added `/slack-app.html` to Playwright page-load tests.
+   - Filed `help-requests/20260613-152646-slack-app-credentials.md` with steps to create the Slack app and add Vercel env vars (`SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN`).
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 157 passed, 14 API tests skipped in static server mode
+- ✅ `slack-app.html` loads without console errors
+- ✅ All updated pages (tools.html, features.html, ci-cd-integration.html, github-action.html, team.html) load without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- Slack is where engineering teams already discuss production incidents. A native Slack app puts SchemaLens alerts in the right context.
+- The slash command is a free, viral entry point that drives awareness of the web diff and CI/CD integrations.
+- It supports the CI/CD-as-product strategy: web diff is the lead magnet, Slack alerts + CI/CD are the Team plan value.
 
 ---
 
@@ -167,54 +217,7 @@ Fix the biggest remaining conversion blocker: **the Team plan had no way to buy 
 
 ---
 
-## Day 261 — Outreach Content Refresh for Free-Forever Pivot (June 13, 2026)
-
-### Focus
-Execute the highest-priority unblocked task after the P0 npm token refresh: **refresh autonomous outreach channel content** for the free-forever / CI/CD-as-product pivot so distribution drafts are ready to publish when accounts become available.
-
-### What Was Done
-1. **Verified npm token blocker (P0 — still blocked)**
-   - Ran `npm whoami` with the token in `/home/race/.npmrc`: returned `401 Unauthorized`.
-   - Ran `npm publish --dry-run` for both `packages/schema-diff` and `packages/schemalens-diff-cli`: both packages pack correctly and are ready to publish once the token is replaced.
-   - Confirmed the original help request `help-requests/20260603-093513-HELP-REQUEST.md` still contains the exact token refresh steps. No re-file needed.
-
-2. **Refreshed Lobsters post (`marketing/lobsters-post.md`)**
-   - Updated from 222 days / 72 tools / 15-table limit to 258 days / 80+ tools / completely free web diff.
-   - Added CI/CD integrations and the setup wizard as key talking points.
-   - Reframed business model around web diff as lead magnet, CI/CD as product.
-
-3. **Refreshed Reddit posts (`marketing/reddit-posts.md`)**
-   - Updated r/PostgreSQL, r/MySQL, and r/webdev drafts to remove "free for up to 15 tables" language.
-   - Added CI/GitHub Action angle to each post.
-   - Kept privacy-first, no-backend messaging intact.
-
-4. **Refreshed Show HN draft (`marketing/show-hn.md`)**
-   - Updated pricing section to explain the free-forever pivot and why it happened.
-   - Updated stats: 258+ days, 80+ micro-tools, 245+ SEO pages, all CI/CD platforms.
-   - Updated follow-up comment to clarify Pro is not enforced and Team is the CI/CD tier.
-
-5. **Refreshed SaaS directory submissions (`marketing/saas-directories.md`)**
-   - Updated AlternativeTo, BetaList, and DevHunt descriptions for free-forever model.
-   - Added SQL Server, Oracle, CI/CD, and schema drift alert keywords.
-   - Updated pricing/features matrix.
-
-6. **Added Medium pivot post (`marketing/medium-why-we-made-schema-diff-free.md`)**
-   - Created a Medium-formatted version of the pivot narrative already published on-site and in `marketing/devto-why-we-made-schema-diff-free.md`.
-   - Targets Medium readers with the same honest story: web diff = free lead magnet, CI/CD = product.
-
-### Why This Matters
-- **Distribution content was stale.** Many drafts still referenced the old 15-table free tier and framed the web UI as the paid product, which contradicts the new strategy.
-- **Channels like HN, Reddit, and Lobste.rs are high-leverage for developers.** Ready-to-post drafts remove friction when an account or posting window becomes available.
-- **Medium and dev.to give us long-tail SEO and referral traffic.** A Medium version of the pivot post lets us own the narrative on another platform without new engineering work.
-- **The npm blocker was verified, not ignored.** Documenting the 401 in PROGRESS.md keeps the P0 visible and confirms the exact remediation steps are already filed.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium --grep "homepage|wizard|app"`: 22/22 tests pass
-- ✅ `npm publish --dry-run` succeeds for both `schema-diff` and `schemalens-diff-cli`
-- ✅ `npm whoami` returns 401, confirming the P0 token refresh is still required
-- ✅ Marketing drafts updated consistently across all distribution channels
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+**Day 261 (Jun 13)** — Outreach content refresh for free-forever pivot: verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass.
 
 ---
 

@@ -143,18 +143,23 @@ Team Plan Self-Serve Checkout Funnel — Built `team-buy.html` with monthly/year
 ### Day 263 (Jun 13)
 Team Checkout A/B Test — Built `lib/team-buy-ab-test.js` to test headline, pricing framing (yearly default), and ROI calculator placement on `team-buy.html`. Fixed latent ROI calculator TDZ initialization bug. Added Playwright e2e coverage for both variants. Tests pass; deployed.
 
+### Day 264 (Jun 13)
+Standalone Slack App — Built `slack-app-manifest.json`, `slack-app.html`, and API endpoints for OAuth, slash command (`/schemalens`), interactions, and Events API under `api/slack/`. Shared helper `lib/slack.js` handles signature verification and Block Kit formatting. Cross-linked from tools.html, features.html, ci-cd-integration.html, github-action.html, and team.html. Added to sitemap.xml and e2e tests. Filed help request for Slack app credentials / Vercel env vars. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Blocked / Human Help Required
 - [ ] **P0** npm token refresh — already filed June 3. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
+- [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
+- [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
-- [ ] **P2/Future** Standalone Slack app (not just webhook template).
+- [ ] **P2** Build a new autonomous distribution asset: e.g., embeddable schema diff widget, "breaking change of the week" micro-content, or GitHub Action usage leaderboard.
 
 ---
 
