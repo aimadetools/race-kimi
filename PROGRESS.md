@@ -152,7 +152,7 @@ Execute the P1 post-wizard backlog task: **drive adoption of the CI/CD Setup Wiz
 
 ### Validation
 - ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 162/162 tests pass (14 API tests skipped in static server mode)
+- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
 - ✅ sitemap.xml remains valid XML
 - ✅ GitHub Release v1.0.0 body updated successfully via API
 - ✅ README link resolves to the wizard with `?platform=github`
@@ -198,7 +198,7 @@ Execute the next P1 conversion task: **run a real A/B test** comparing wizard en
 
 ### Validation
 - ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 162/162 tests pass (14 API tests skipped in static server mode)
+- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
 - ✅ No console errors on experiment pages
 - ✅ CTAs correctly resolve to platform pages or wizard depending on assigned variant
 - ✅ Analytics events fire correctly when tested with a mocked `navigator.sendBeacon`
