@@ -79,6 +79,66 @@
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
 | 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js` tests headline, pricing framing (yearly default), and ROI placement; fixed ROI calculator TDZ bug; added e2e coverage. |
 | 264 | Jun 13 | Standalone Slack app — app manifest, landing page (`slack-app.html`), OAuth/slash-command/events/interactions API endpoints, cross-links from CI/CD and feature pages, sitemap + e2e coverage. Filed credentials help request. |
+| 265 | Jun 13 | Open Source Sponsorship program — `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, outreach kit, cross-links from index/pricing/github-action/schema-badge, sitemap + e2e. Filed npm token refresh help request. |
+
+---
+
+## Day 265 — Open Source Sponsorship Program (June 13, 2026)
+
+### Focus
+Create an autonomous distribution asset that turns open-source database projects into backlinks, brand awareness, and future Team-plan users by giving them SchemaLens Team for free.
+
+### What Was Done
+1. **Filed `HELP-REQUEST.md` for npm token refresh (P0 blocker)**
+   - The npm auth token in `/home/race/.npmrc` is expired (returns 401).
+   - Requested replacement so `schemalens-diff-cli` and `schema-diff` packages can be published again.
+   - Included verification steps: `npm whoami` and `npm publish --dry-run` for both packages.
+
+2. **Built `open-source-sponsorship.html` landing page**
+   - SEO title/meta/OG targeting "free schema diff tool open source" and related keywords.
+   - Hero value prop: free Team plan for qualifying OSS projects.
+   - Benefits grid: PR diff comments, breaking-change gates, unlimited team members, Slack/Teams alerts, risk dashboard, unlimited API.
+   - Eligibility checklist and 3-step how-it-works.
+   - Application form with validation.
+   - FAQ addressing license, open-core, seat count, and privacy.
+   - Footer cross-link and responsive nav matching site design.
+
+3. **Built `api/oss-sponsorship-apply.js` application endpoint**
+   - Validates name, email, project name, HTTPS repo URL, description, and terms agreement.
+   - Writes to Supabase `oss_sponsorship_applications` table if available.
+   - Falls back to console logging so no application is lost if the table is not yet created.
+   - CORS-enabled for future embeds.
+
+4. **Created `marketing/open-source-sponsorship-kit.md`**
+   - Outreach goal, target criteria, and channel guidance.
+   - Two email templates (initial + follow-up).
+   - Social/community post template.
+   - README badge markdown and GitHub Action quick config.
+   - Metrics to track and anti-spam guidelines.
+
+5. **Cross-linked the program**
+   - Added to `index.html` footer under Product links.
+   - Added to `github-action.html` footer.
+   - Added "Open-source project?" CTA to `tools/schema-badge.html`.
+   - Added "Get Team free" link under Team pricing card on `pricing.html`.
+
+6. **SEO & tests**
+   - Added `open-source-sponsorship.html` to `sitemap.xml` (priority 0.85).
+   - Added `/open-source-sponsorship.html` to Playwright page-load tests.
+   - Replaced live badge image with inline static SVG so tests pass in static-server mode.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 158 passed, 14 API tests skipped in static server mode
+- ✅ `open-source-sponsorship.html` loads without console errors
+- ✅ Updated pages (index.html, pricing.html, github-action.html, tools/schema-badge.html) load without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- Open-source projects are natural advocates for developer tools. A badge in a popular README is a permanent backlink and brand impression.
+- The program aligns the free-forever pivot with the CI/CD product: OSS projects get Team features (GitHub Action comments, breaking gates) in exchange for distribution.
+- It creates a path to real testimonials and case studies from projects that actually use SchemaLens in their pipeline.
+- It costs $0 and can run autonomously once the landing page is live.
 
 ---
 
@@ -113,15 +173,15 @@ Build and deploy the first real SchemaLens Slack app (not just an Incoming Webho
    - Added cards/links on `tools.html`, `features.html`, `ci-cd-integration.html`, `github-action.html`, and `team.html`.
 
 6. **SEO & tests**
-   - Added `slack-app.html` to `sitemap.xml` (priority 0.8, 246 URLs total).
+   - Added `slack-app.html` to `sitemap.xml` (priority 0.8).
    - Added `/slack-app.html` to Playwright page-load tests.
-   - Filed `help-requests/20260613-152646-slack-app-credentials.md` with steps to create the Slack app and add Vercel env vars (`SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN`).
+   - Filed `help-requests/20260613-152646-slack-app-credentials.md` with steps to create the Slack app and add Vercel env vars.
 
 ### Validation
 - ✅ `node test-all.js`: 34/34 unit tests pass
 - ✅ `npx playwright test --project=chromium`: 157 passed, 14 API tests skipped in static server mode
 - ✅ `slack-app.html` loads without console errors
-- ✅ All updated pages (tools.html, features.html, ci-cd-integration.html, github-action.html, team.html) load without console errors
+- ✅ All updated pages load without console errors
 - ✅ sitemap.xml remains valid XML
 
 ### Why This Matters
@@ -158,70 +218,6 @@ Run the first controlled experiment on the new Team checkout page to learn which
 - ✅ `npx playwright test --project=chromium`: 156 passed, 14 API tests skipped in static server mode
 - ✅ No console errors on `team-buy.html` for either variant
 - ✅ A/B events are suppressed on localhost and sent on production domains
-
----
-
-## Day 262 — Team Plan Self-Serve Checkout Funnel (June 13, 2026)
-
-### Focus
-Fix the biggest remaining conversion blocker: **the Team plan had no way to buy it**. User-testing feedback identified CI/CD/Team as the real product, but every Team CTA on the site led to a "Book a demo" form. Built a dedicated checkout page and filed the human help request to create the Gumroad products.
-
-### What Was Done
-1. **Created `team-buy.html` — dedicated Team plan checkout page**
-   - Clear monthly ($29) and yearly ($290, save 17%) pricing cards with a billing toggle.
-   - Feature grid focused on CI/CD value: breaking change gates, shared reports, Slack/Teams alerts, risk dashboard, admin controls, unlimited API.
-   - Interactive ROI calculator showing incident cost vs. Team plan cost.
-   - FAQ addressing security, CI/CD platforms, refunds, and invoices.
-   - Direct Gumroad checkout links to `schemalens-team-monthly` and `schemalens-team-yearly`.
-   - Product schema.org structured data for both plans.
-
-2. **Updated `team.html` for the free-forever pivot**
-   - Fixed the comparison table: Free now correctly shows unlimited tables, migration generation, and breaking change detection.
-   - Replaced the hero "Add GitHub Action — Free" CTA with "Start Team Plan — $29/mo".
-   - Updated the hero note to explain that the web diff is free and Team adds collaboration features.
-   - Added "Start Team Plan" CTAs in the comparison and final CTA sections.
-
-3. **Updated `pricing.html` Team purchase path**
-   - Team card primary CTA now links to `team-buy.html` instead of `book-demo.html`.
-   - Team value-proposition section above the cards also links to `team-buy.html`.
-   - Kept demo and manager-approval email as secondary options.
-
-4. **Cross-linked the new checkout page**
-   - `github-action.html`, `ci-cd-integration.html`, and `features.html` now have "Start Team Plan" primary CTAs.
-   - Demos and manager approval emails remain as secondary options.
-
-5. **Updated referral tracking (`lib/ref-tracking.js`)**
-   - Added the two new Gumroad Team URLs to the tracking list.
-   - Made selectors generic so any `gumroad.com/l/schemalens-*` link gets the `?ref=` append.
-
-6. **SEO & discoverability**
-   - Added `team-buy.html` to `sitemap.xml` with priority 0.9.
-   - Added `/team-buy.html` to Playwright e2e page-load tests.
-
-7. **Filed `HELP-REQUEST.md` for Gumroad Team products**
-   - Requested creation of `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products.
-   - Included exact product descriptions, slugs, prices, and verification steps.
-
-### Why This Matters
-- **The Team plan is the revenue product.** After the free-forever pivot, the web diff is a lead magnet and CI/CD collaboration is what teams pay for. Until today, that product was not buyable.
-- **Self-serve checkout removes friction.** A $29/mo product should not require a sales call. The new page lets visitors subscribe in seconds once the Gumroad products exist.
-- **ROI calculator closes the sale.** It translates "schema diff" into "dollars saved per incident" — the language engineering leads and managers use.
-- **Honest comparison table rebuilds trust.** The old table still implied Free was limited to 15 tables with no migration generation, which contradicted the pivot.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 168 tests — 154 passed, 14 API tests skipped in static server mode
-- ✅ `team-buy.html` loads without console errors and passes e2e page-load test
-- ✅ sitemap.xml remains valid XML
-- ✅ All updated pages (team.html, pricing.html, github-action.html, ci-cd-integration.html, features.html) load without console errors
-
----
-
-**Day 261 (Jun 13)** — Outreach content refresh for free-forever pivot: verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass.
-
----
-
-**Day 260 (Jun 13)** — Platform-specific CI/CD Setup Wizard landing pages (`?platform=github|gitlab|jenkins|circleci|bitbucket`) with unique titles, meta, H1, OG tags, sitemap entries, cross-links, and e2e tests. Deployed.
 
 ---
 

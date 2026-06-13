@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free SchemaLens Team for Open Source Projects</title>
+  <meta name="description" content="Open-source projects get SchemaLens Team free. Add schema diff to your CI/CD pipeline, catch breaking database changes in PRs, and protect your contributors.">
+  <link rel="canonical" href="https://schemalens.tech/open-source-sponsorship.html">
+  <meta property="og:title" content="Free SchemaLens Team for Open Source Projects">
+  <meta property="og:description" content="Open-source projects get SchemaLens Team free. Add schema diff to your CI/CD pipeline and catch breaking database changes in every PR.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/open-source-sponsorship.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Open Source Sponsorship",
+    "description": "Free Team plan for qualifying open-source projects that add SchemaLens to their CI/CD pipeline or documentation.",
+    "url": "https://schemalens.tech/open-source-sponsorship.html",
+    "mainEntity": {
+      "@type": "Offer",
+      "name": "SchemaLens Team for Open Source",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "url": "https://schemalens.tech/open-source-sponsorship.html"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+    .section-oss { padding: 72px 0; }
+    .section-oss h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 16px; text-align: center; }
+    .section-oss .section-lead { color: var(--text-muted); text-align: center; max-width: 640px; margin: 0 auto 48px; font-size: 1.05rem; }
+    .benefit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .benefit-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: transform 0.2s, border-color 0.2s; }
+    .benefit-card:hover { transform: translateY(-3px); border-color: var(--hover-border); }
+    .benefit-card .icon { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), #8b5cf6); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 16px; }
+    .benefit-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .benefit-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; counter-reset: step; }
+    .step-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .step-card::before { counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 24px; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step-card h3 { margin-top: 8px; margin-bottom: 8px; font-size: 1.05rem; }
+    .step-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .eligibility { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+    .eligibility ul { list-style: none; padding: 0; margin: 0; }
+    .eligibility li { padding: 10px 0 10px 32px; position: relative; color: var(--text-muted); }
+    .eligibility li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+    .form-card { max-width: 640px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.95rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .form-group small { color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px; }
+    .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+    .checkbox-row input { width: auto; margin-top: 4px; }
+    .checkbox-row label { margin: 0; font-weight: 400; color: var(--text-muted); font-size: 0.95rem; }
+    .form-status { margin-top: 16px; padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.95rem; }
+    .form-status.success { background: rgba(52, 211, 153, 0.1); color: var(--success); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .form-status.error { background: rgba(248, 113, 113, 0.1); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+    .badge-preview { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; margin: 16px 0; }
+    .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: var(--mono); font-size: 0.85rem; overflow-x: auto; color: var(--code-text); }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-item h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .faq-item p { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">S</span> SchemaLens</a>
+      <div class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Try Free →</a>
+      </div>
+      <button class="mobile-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Free for qualifying open-source projects</div>
+      <h1>SchemaLens Team, free for <span>open source</span></h1>
+      <p>Add schema diff to your CI/CD pipeline, catch breaking database changes in every PR, and get unlimited Team access at no cost.</p>
+      <div class="hero-actions">
+        <a href="#apply" class="btn btn-primary btn-lg">Apply for Free Team Access</a>
+        <a href="github-action.html" class="btn btn-secondary btn-lg">See GitHub Action</a>
+      </div>
+      <p class="hero-note">No credit card required. We review applications within 2 business days.</p>
+    </div>
+  </header>
+
+  <section class="section-oss">
+    <div class="container">
+      <h2 class="reveal">What your project gets</h2>
+      <p class="section-lead reveal">Everything in SchemaLens Team — normally $29/month — at no cost.</p>
+      <div class="benefit-grid">
+        <div class="benefit-card reveal">
+          <div class="icon">🔍</div>
+          <h3>PR Schema Diff Comments</h3>
+          <p>Our GitHub Action comments a human-readable schema diff on every pull request that changes your SQL files.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="icon">🛡️</div>
+          <h3>Breaking Change Gate</h3>
+          <p>Block merges that drop columns, rename tables, or change types without explicit review.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="icon">👥</div>
+          <h3>Unlimited Team Members</h3>
+          <p>All maintainers and core contributors get Team access with shared workspaces and admin controls.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="icon">🔔</div>
+          <h3>Slack / Teams Alerts</h3>
+          <p>Get notified in Slack or Microsoft Teams when schema drift or breaking changes are detected.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="icon">📊</div>
+          <h3>Risk Dashboard</h3>
+          <p>A shareable dashboard showing migration risk scores, drift history, and team activity.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="icon">⚡</div>
+          <h3>Unlimited API Access</h3>
+          <p>Use the SchemaLens REST API without rate limits for programmatic diffs in your tooling.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-oss" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="reveal">How it works</h2>
+      <p class="section-lead reveal">Three steps to free Team access for your open-source project.</p>
+      <div class="steps">
+        <div class="step-card reveal">
+          <h3>Add SchemaLens to your repo</h3>
+          <p>Install the <a href="github-action.html">GitHub Action</a>, add a README badge, or link to SchemaLens in your migration docs.</p>
+        </div>
+        <div class="step-card reveal">
+          <h3>Tell us about your project</h3>
+          <p>Fill out the form below with your repo URL, license, and how SchemaLens helps your contributors.</p>
+        </div>
+        <div class="step-card reveal">
+          <h3>Get free Team access</h3>
+          <p>We review within 2 business days. Approved projects receive lifetime free Team seats for maintainers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-oss">
+    <div class="container">
+      <div class="eligibility">
+        <h2 style="text-align:left; margin-bottom: 16px;">Eligibility</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">We approve projects that meet these criteria:</p>
+        <ul>
+          <li>Open-source license (OSI-approved: MIT, Apache-2.0, GPL, BSD, etc.)</li>
+          <li>Publicly visible Git repository with active maintenance in the last 6 months</li>
+          <li>Project uses SQL schemas (PostgreSQL, MySQL, SQLite, SQL Server, etc.)</li>
+          <li>Willing to add a SchemaLens badge, GitHub Action, or docs link back to SchemaLens</li>
+          <li>Not a commercial product, agency, or primarily promotional repository</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-oss" style="background: var(--surface);" id="apply">
+    <div class="container">
+      <h2 class="reveal">Apply now</h2>
+      <p class="section-lead reveal">Tell us about your project and we'll get back to you within 2 business days.</p>
+      <div class="form-card reveal">
+        <form id="ossForm">
+          <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" required placeholder="Ada Lovelace">
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label for="projectName">Project name</label>
+            <input type="text" id="projectName" name="projectName" required placeholder="MyOpenSourceProject">
+          </div>
+          <div class="form-group">
+            <label for="repoUrl">Repository URL</label>
+            <input type="url" id="repoUrl" name="repoUrl" required placeholder="https://github.com/you/project">
+            <small>Must be a public HTTPS repository URL.</small>
+          </div>
+          <div class="form-group">
+            <label for="description">How will SchemaLens help your project?</label>
+            <textarea id="description" name="description" rows="4" required placeholder="We manage a PostgreSQL schema with multiple contributors. SchemaLens would help us catch breaking changes in PRs before they are merged."></textarea>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="usesAction" name="usesAction">
+            <label for="usesAction">We already installed (or plan to install) the SchemaLens GitHub Action.</label>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="agreesToTerms" name="agreesToTerms" required>
+            <label for="agreesToTerms">I confirm the project is open source, non-commercial, and agrees to add a SchemaLens badge or link to its README or documentation.</label>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+          <div id="formStatus" class="form-status" style="display: none;"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-oss">
+    <div class="container">
+      <h2 class="reveal">Ways to link back</h2>
+      <p class="section-lead reveal">Choose the option that fits your project best.</p>
+      <div class="benefit-grid">
+        <div class="benefit-card reveal">
+          <h3>1. GitHub Action</h3>
+          <p>Add the <a href="github-action.html">SchemaLens GitHub Action</a> to your workflow. It comments schema diffs directly on PRs.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <h3>2. Schema Health Badge</h3>
+          <p>Add a dynamic <a href="tools/schema-badge.html">schema health badge</a> to your README. It updates automatically as your schema changes.</p>
+          <div class="badge-preview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="180" height="20" role="img" aria-label="schema: 12 tables · A (92)">
+              <title>schema: 12 tables · A (92)</title>
+              <g shape-rendering="geometricPrecision">
+                <rect width="60" height="20" fill="#1e293b" rx="3"/>
+                <rect x="59" width="121" height="20" fill="#22c55e" rx="3"/>
+                <text x="30" y="11" font-family="system-ui,sans-serif" font-size="11" fill="#fff" text-anchor="middle" dominant-baseline="central">schema</text>
+                <text x="119" y="11" font-family="system-ui,sans-serif" font-size="11" fill="#fff" text-anchor="middle" dominant-baseline="central">12 tables · A (92)</text>
+              </g>
+            </svg>
+          </div>
+          <div class="code-block">[![Schema Health](https://schemalens.tech/api/schema-badge?url=YOUR_RAW_SCHEMA_URL)](https://schemalens.tech)</div>
+        </div>
+        <div class="benefit-card reveal">
+          <h3>3. Docs Link</h3>
+          <p>Mention SchemaLens in your migration or contribution docs. For example: "Review schema changes with <a href="app.html">SchemaLens</a> before opening a PR."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-oss" style="background: var(--surface);">
+    <div class="container" style="max-width: 760px;">
+      <h2 class="reveal">Frequently asked questions</h2>
+      <div class="faq-item reveal">
+        <h3>Is this really free forever?</h3>
+        <p>Yes. Approved open-source projects receive free SchemaLens Team access for as long as they remain eligible and keep the badge or link in place.</p>
+      </div>
+      <div class="faq-item reveal">
+        <h3>Can commercial open-core projects apply?</h3>
+        <p>Projects with a credible open-source core and OSI-approved license are welcome. Purely commercial products or marketing repositories are not eligible.</p>
+      </div>
+      <div class="faq-item reveal">
+        <h3>What if we stop using the badge or Action?</h3>
+        <p>We may ask you to re-add the link. If the project is no longer maintained or the link is removed permanently, the free Team access may be paused.</p>
+      </div>
+      <div class="faq-item reveal">
+        <h3>How many seats do we get?</h3>
+        <p>Unlimited maintainers and core contributors for the approved project. We trust you to use seats for project contributors only.</p>
+      </div>
+      <div class="faq-item reveal">
+        <h3>Do you need access to our code?</h3>
+        <p>No. The GitHub Action only reads SQL files in your public repository during CI runs. The web diff is entirely client-side.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="border-top: 1px solid var(--border); padding: 48px 0; margin-top: 0;">
+    <div class="container" style="text-align: center; color: var(--text-muted);">
+      <p style="margin-bottom: 16px;">Built in public for the $100 AI Startup Race.</p>
+      <p style="font-size: 0.9rem;">
+        <a href="index.html">Home</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="slack-app.html">Slack App</a> ·
+        <a href="open-source-sponsorship.html">Open Source</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const form = document.getElementById('ossForm');
+    const status = document.getElementById('formStatus');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      status.style.display = 'none';
+      status.className = 'form-status';
+
+      const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        projectName: form.projectName.value.trim(),
+        repoUrl: form.repoUrl.value.trim(),
+        description: form.description.value.trim(),
+        usesAction: form.usesAction.checked,
+        agreesToTerms: form.agreesToTerms.checked,
+      };
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch('/api/oss-sponsorship-apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json().catch(() => ({ error: 'Unexpected response from server.' }));
+
+        if (res.ok && result.success) {
+          status.textContent = result.message;
+          status.classList.add('success');
+          status.style.display = 'block';
+          form.reset();
+          if (window.SchemaLensAnalytics) {
+            window.SchemaLensAnalytics.track('oss_sponsorship_apply');
+          }
+        } else {
+          status.textContent = result.error || 'Something went wrong. Please try again.';
+          status.classList.add('error');
+          status.style.display = 'block';
+        }
+      } catch (err) {
+        status.textContent = 'Network error. Please check your connection and try again.';
+        status.classList.add('error');
+        status.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

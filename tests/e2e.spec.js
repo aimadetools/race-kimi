@@ -73,6 +73,7 @@ const pages = [
   { path: '/founding-member.html', name: 'Founding Member Landing' },
   { path: '/launch-special.html', name: 'Launch Special Landing' },
   { path: '/open-source.html', name: 'Open Source Landing' },
+  { path: '/open-source-sponsorship.html', name: 'Open Source Sponsorship' },
   { path: '/vscode-extension.html', name: 'VS Code Extension Landing' },
   { path: '/schema-examples.html', name: 'Schema Examples' },
   { path: '/schema-templates.html', name: 'Schema Templates' },

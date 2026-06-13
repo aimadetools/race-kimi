@@ -23,8 +23,8 @@
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P1** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more.
-- [ ] **P2** Build a new autonomous distribution asset: e.g., embeddable schema diff widget, "breaking change of the week" micro-content, or GitHub Action usage leaderboard.
+- [ ] **P1** Execute Open Source Sponsorship outreach — find 10 qualifying open-source database projects, send personalized emails (or make the program discoverable), and approve the first 3 projects.
+- [ ] **P2** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more only if budget allows.
 
 ### Content & SEO
 - (no active incomplete P1/P2 items — see Completed Work Summary below)
@@ -147,12 +147,15 @@ Team Checkout A/B Test — Built `lib/team-buy-ab-test.js` to test headline, pri
 ### Day 264 (Jun 13)
 Standalone Slack App — Built `slack-app-manifest.json`, `slack-app.html`, and API endpoints for OAuth, slash command (`/schemalens`), interactions, and Events API under `api/slack/`. Shared helper `lib/slack.js` handles signature verification and Block Kit formatting. Cross-linked from tools.html, features.html, ci-cd-integration.html, github-action.html, and team.html. Added to sitemap.xml and e2e tests. Filed help request for Slack app credentials / Vercel env vars. Tests pass; deployed.
 
+### Day 265 (Jun 13)
+Open Source Sponsorship Program — Built `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, and `marketing/open-source-sponsorship-kit.md` outreach kit. Cross-linked from index.html, pricing.html, github-action.html, and tools/schema-badge.html. Added to sitemap.xml and Playwright e2e tests. Re-filed npm token refresh help request. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Blocked / Human Help Required
-- [ ] **P0** npm token refresh — already filed June 3. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
+- [ ] **P0** npm token refresh — re-filed June 13 via `HELP-REQUEST.md`. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
 - [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
