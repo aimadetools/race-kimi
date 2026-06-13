@@ -19,7 +19,6 @@
 ### Conversion — Fix the Funnel (Post-Pivot)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
-- [ ] **P2** A/B test Team checkout page: headline, pricing framing, ROI calculator visibility.
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
@@ -137,6 +136,12 @@ Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to
 
 ### Day 261 (Jun 13)
 Outreach Content Refresh for Free-Forever Pivot — Verified npm token still 401-blocked. Refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts to reflect free-forever model and CI/CD-as-product positioning. Added Medium version of pivot post. Unit + e2e tests pass.
+
+### Day 262 (Jun 13)
+Team Plan Self-Serve Checkout Funnel — Built `team-buy.html` with monthly/yearly pricing cards, ROI calculator, FAQ, and Gumroad checkout links; updated `team.html`, `pricing.html`, and CI/CD landing page CTAs; filed Gumroad Team product help request. Tests pass; deployed.
+
+### Day 263 (Jun 13)
+Team Checkout A/B Test — Built `lib/team-buy-ab-test.js` to test headline, pricing framing (yearly default), and ROI calculator placement on `team-buy.html`. Fixed latent ROI calculator TDZ initialization bug. Added Playwright e2e coverage for both variants. Tests pass; deployed.
 
 ---
 
