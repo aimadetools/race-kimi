@@ -346,7 +346,7 @@
     </div>
   </header>
 
-  <section class="section" style="padding-top: 0;">
+  <section class="section" id="pricingSection" style="padding-top: 0;">
     <div class="container">
       <div class="pricing-grid-buy">
         <div class="pricing-card-buy" id="cardMonthly">
@@ -431,7 +431,7 @@
     </div>
   </section>
 
-  <section class="section reveal">
+  <section class="section reveal" id="roiSection">
     <div class="container">
       <h2 class="section-title text-center">What does one incident cost you?</h2>
       <p class="section-subtitle text-center">SchemaLens Team pays for itself if it prevents a single production rollback.</p>
@@ -582,6 +582,42 @@
 
   <script>
   (function() {
+    // ROI calculator (define first so setPeriod can call it safely)
+    const engineersInput = document.getElementById('roiEngineers');
+    const rateInput = document.getElementById('roiRate');
+    const hoursInput = document.getElementById('roiHours');
+    const incidentsInput = document.getElementById('roiIncidents');
+    const labels = {
+      engineers: document.getElementById('roiEngineersVal'),
+      rate: document.getElementById('roiRateVal'),
+      hours: document.getElementById('roiHoursVal'),
+      incidents: document.getElementById('roiIncidentsVal'),
+    };
+
+    function updateRoi() {
+      const engineers = +engineersInput.value;
+      const rate = +rateInput.value;
+      const hours = +hoursInput.value;
+      const incidents = +incidentsInput.value;
+      labels.engineers.textContent = engineers;
+      labels.rate.textContent = '$' + rate;
+      labels.hours.textContent = hours;
+      labels.incidents.textContent = incidents;
+
+      // Incident cost: 3 people pulled in for debugging + rollback
+      const incidentCost = hours * rate * 3 * incidents;
+      const annualPlanCost = state.period === 'yearly' ? 290 : 29 * 12;
+      const multiple = annualPlanCost > 0 ? Math.round(incidentCost / annualPlanCost) : 0;
+
+      document.getElementById('roiSavings').textContent = '$' + incidentCost.toLocaleString();
+      document.getElementById('roiPlanCost').textContent = '$' + annualPlanCost;
+      document.getElementById('roiMultiple').textContent = multiple + '×';
+    }
+
+    [engineersInput, rateInput, hoursInput, incidentsInput].forEach(input => {
+      input.addEventListener('input', updateRoi);
+    });
+
     // Billing toggle
     const toggles = document.querySelectorAll('.billing-toggle button');
     const monthlyCard = document.getElementById('cardMonthly');
@@ -622,43 +658,7 @@
 
     const savedPeriod = localStorage.getItem('schemalens_team_billing');
     if (savedPeriod === 'yearly') setPeriod('yearly');
-
-    // ROI calculator
-    const engineersInput = document.getElementById('roiEngineers');
-    const rateInput = document.getElementById('roiRate');
-    const hoursInput = document.getElementById('roiHours');
-    const incidentsInput = document.getElementById('roiIncidents');
-    const labels = {
-      engineers: document.getElementById('roiEngineersVal'),
-      rate: document.getElementById('roiRateVal'),
-      hours: document.getElementById('roiHoursVal'),
-      incidents: document.getElementById('roiIncidentsVal'),
-    };
-
-    function updateRoi() {
-      const engineers = +engineersInput.value;
-      const rate = +rateInput.value;
-      const hours = +hoursInput.value;
-      const incidents = +incidentsInput.value;
-      labels.engineers.textContent = engineers;
-      labels.rate.textContent = '$' + rate;
-      labels.hours.textContent = hours;
-      labels.incidents.textContent = incidents;
-
-      // Incident cost: 3 people pulled in for debugging + rollback
-      const incidentCost = hours * rate * 3 * incidents;
-      const annualPlanCost = state.period === 'yearly' ? 290 : 29 * 12;
-      const multiple = annualPlanCost > 0 ? Math.round(incidentCost / annualPlanCost) : 0;
-
-      document.getElementById('roiSavings').textContent = '$' + incidentCost.toLocaleString();
-      document.getElementById('roiPlanCost').textContent = '$' + annualPlanCost;
-      document.getElementById('roiMultiple').textContent = multiple + '×';
-    }
-
-    [engineersInput, rateInput, hoursInput, incidentsInput].forEach(input => {
-      input.addEventListener('input', updateRoi);
-    });
-    updateRoi();
+    else updateRoi();
 
     // Reveal animations
     const observer = new IntersectionObserver((entries) => {
@@ -692,6 +692,7 @@
     localStorage.setItem(key, JSON.stringify(data));
   })();
   </script>
+  <script src="lib/team-buy-ab-test.js"></script>
   <script src="lib/ref-tracking.js"></script>
   <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 </body>

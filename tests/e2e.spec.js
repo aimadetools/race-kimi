@@ -183,6 +183,33 @@ for (const { platform, h1, title } of wizardPlatforms) {
 }
 
 // ───────────────────────────────────────────────
+// Team Checkout A/B Test
+// ───────────────────────────────────────────────
+
+test('team-buy control variant renders default headline', async ({ page }) => {
+  await page.goto(`${BASE_URL}/team-buy.html`);
+  await page.evaluate(() => localStorage.setItem('sl_team_buy_ab_variant', 'control'));
+  await page.reload();
+  await expect(page.locator('body')).toBeVisible();
+  await expect(page.locator('header.hero-buy h1')).toContainText('Catch schema drift before it breaks production.');
+  await expect(page.locator('#pricingSection')).toBeVisible();
+  await expect(page.locator('#roiSection')).toBeVisible();
+});
+
+test('team-buy v1 variant renders urgency headline and promoted ROI', async ({ page }) => {
+  await page.goto(`${BASE_URL}/team-buy.html`);
+  await page.evaluate(() => localStorage.setItem('sl_team_buy_ab_variant', 'v1'));
+  await page.reload();
+  await expect(page.locator('body')).toBeVisible();
+  await expect(page.locator('header.hero-buy h1')).toContainText('Stop schema incidents before they hit production.');
+  const roiBox = await page.locator('#roiSection').boundingBox();
+  const pricingBox = await page.locator('#pricingSection').boundingBox();
+  expect(roiBox && pricingBox ? roiBox.y < pricingBox.y : true).toBe(true);
+  const yearlyClass = await page.locator('.billing-toggle button[data-period="yearly"]').getAttribute('class');
+  expect(yearlyClass).toContain('active');
+});
+
+// ───────────────────────────────────────────────
 // Theme Toggle Tests
 // ───────────────────────────────────────────────
 
