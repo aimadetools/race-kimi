@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breaking Change of the Week — Database Schema Mistakes</title>
+  <meta name="description" content="A weekly curation of database schema changes that break production. Learn to catch dropped columns, type changes, missing defaults, and more before they ship.">
+  <link rel="canonical" href="https://schemalens.tech/breaking-change-of-the-week.html">
+  <meta property="og:title" content="Breaking Change of the Week — Database Schema Mistakes">
+  <meta property="og:description" content="A weekly curation of database schema changes that break production. Catch them in PRs with SchemaLens.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/breaking-change-of-the-week.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Breaking Change of the Week",
+    "description": "Weekly database schema changes that break production, with before/after SQL and prevention tips.",
+    "url": "https://schemalens.tech/breaking-change-of-the-week.html",
+    "isPartOf": { "@type": "WebSite", "name": "SchemaLens", "url": "https://schemalens.tech" }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+    .section-bc { padding: 72px 0; }
+    .section-bc h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 16px; text-align: center; }
+    .section-bc .section-lead { color: var(--text-muted); text-align: center; max-width: 640px; margin: 0 auto 48px; font-size: 1.05rem; }
+    .current-card { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06)); border: 1px solid var(--primary); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; }
+    .current-card .week-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 12px; border-radius: 999px; background: var(--primary); color: #fff; margin-bottom: 16px; }
+    .current-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+    .current-card p { color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+    .code-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+    .code-box { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .code-box .label { font-size: 0.75rem; font-weight: 600; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .code-box pre { margin: 0; padding: 14px; font-family: var(--mono); font-size: 0.85rem; overflow-x: auto; color: var(--code-text); }
+    .archive-grid { display: grid; gap: 24px; }
+    .archive-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: transform 0.2s, border-color 0.2s; }
+    .archive-card:hover { transform: translateY(-3px); border-color: var(--hover-border); }
+    .archive-card .week-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 8px; }
+    .archive-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+    .archive-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
+    .archive-card .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .archive-card .tag { font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(99,102,241,0.12); color: var(--primary); }
+    .archive-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .archive-card button, .archive-card a.btn-small { padding: 6px 12px; font-size: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; text-decoration: none; }
+    .archive-card button:hover, .archive-card a.btn-small:hover { background: var(--surface-hover); }
+    .subscribe-card { max-width: 540px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; }
+    .subscribe-card h3 { margin-bottom: 10px; }
+    .subscribe-card p { color: var(--text-muted); margin-bottom: 20px; }
+    .subscribe-form { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .subscribe-form input { flex: 1; min-width: 220px; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; }
+    .subscribe-form button { padding: 12px 20px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+    .form-status { margin-top: 14px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.9rem; }
+    .form-status.success { background: rgba(52, 211, 153, 0.1); color: var(--success); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .form-status.error { background: rgba(248, 113, 113, 0.1); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+    @media (max-width: 640px) {
+      .code-pair { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><span class="logo-mark">S</span> SchemaLens</a>
+      <div class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="github-action.html">GitHub Action</a>
+        <a href="tools.html">Tools</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
+        <a href="app.html" class="nav-cta">Try Free →</a>
+      </div>
+      <button class="mobile-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Weekly series</div>
+      <h1>Breaking Change <span>of the Week</span></h1>
+      <p>Real database schema changes that break production — and how to catch them in your next PR.</p>
+      <div class="hero-actions">
+        <a href="#current" class="btn btn-primary btn-lg">Read This Week's Change</a>
+        <a href="app.html" class="btn btn-secondary btn-lg">Diff Your Schema</a>
+      </div>
+      <p class="hero-note">New breaking change every Monday. <a href="#subscribe">Get it by email →</a></p>
+    </div>
+  </header>
+
+  <section class="section-bc" id="current">
+    <div class="container">
+      <h2 class="reveal">This week's breaking change</h2>
+      <p class="section-lead reveal">A common schema diff that looks safe in isolation but breaks something downstream.</p>
+
+      <div class="current-card reveal">
+        <div class="week-badge">Week of June 8, 2026</div>
+        <h3>Dropping a column that a view still references</h3>
+        <p>You rename or drop <code>users.phone</code> because the mobile app no longer uses it. But a Postgres view named <code>user_profiles</code> still selects <code>phone</code>. The migration succeeds, and then every query against the view fails.</p>
+
+        <div class="code-pair">
+          <div class="code-box">
+            <div class="label">Before</div>
+            <pre>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20)
+);
+
+CREATE VIEW user_profiles AS
+SELECT id, email, phone FROM users;</pre>
+          </div>
+          <div class="code-box">
+            <div class="label">After</div>
+            <pre>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL
+);
+
+-- View is now broken:
+CREATE VIEW user_profiles AS
+SELECT id, email, phone FROM users;</pre>
+          </div>
+        </div>
+
+        <p><strong>Why it breaks:</strong> Postgres allows dropping the underlying column even when a view depends on it. The failure happens at query time, not migration time, so your CI may be green while production is red.</p>
+        <p><strong>How SchemaLens catches it:</strong> The diff flags the dropped column, and our view-dependency check warns that <code>user_profiles</code> references it. Add the SchemaLens GitHub Action to see the warning directly in your PR.</p>
+        <div class="archive-card actions" style="background:transparent;border:none;padding:0;margin-top:16px;">
+          <a class="btn-small" href="app.html?example=view-dependency" target="_blank" rel="noopener">Try this diff in SchemaLens</a>
+          <button onclick="shareCurrent()">Share this change</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-bc" style="background: var(--surface);">
+    <div class="container">
+      <h2 class="reveal">Archive</h2>
+      <p class="section-lead reveal">Previous breaking changes. Bookmark this page — the archive grows every week.</p>
+
+      <div class="archive-grid">
+        <article class="archive-card reveal">
+          <div class="week-label">Week of June 1, 2026</div>
+          <h3>Adding NOT NULL without a default value</h3>
+          <p>You mark <code>orders.status</code> as <code>NOT NULL</code> to enforce data quality. On an empty dev database it works fine. In production, existing rows have NULL values and the migration fails — or worse, the deploy blocks and rolls back.</p>
+          <div class="tags"><span class="tag">Migration failure</span><span class="tag">Data loss risk</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Adding NOT NULL without a default value')">Share</button>
+          </div>
+        </article>
+
+        <article class="archive-card reveal">
+          <div class="week-label">Week of May 25, 2026</div>
+          <h3>Shrinking a VARCHAR column</h3>
+          <p>Changing <code>VARCHAR(255)</code> to <code>VARCHAR(50)</code> to match validation rules silently truncates or rejects existing data that exceeds the new limit. The diff looks like a minor cleanup; the impact is a data-integrity incident.</p>
+          <div class="tags"><span class="tag">Data truncation</span><span class="tag">Silent bug</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Shrinking a VARCHAR column')">Share</button>
+          </div>
+        </article>
+
+        <article class="archive-card reveal">
+          <div class="week-label">Week of May 18, 2026</div>
+          <h3>Renaming a table without updating foreign keys</h3>
+          <p><code>user_accounts</code> becomes <code>accounts</code>. The migration renames the table but leaves foreign keys in <code>posts</code>, <code>comments</code>, and <code>payments</code> pointing at the old name. Queries fail and reports break.</p>
+          <div class="tags"><span class="tag">FK breakage</span><span class="tag">Query failure</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Renaming a table without updating foreign keys')">Share</button>
+          </div>
+        </article>
+
+        <article class="archive-card reveal">
+          <div class="week-label">Week of May 11, 2026</div>
+          <h3>Changing INTEGER to SMALLINT</h3>
+          <p>You switch <code>INTEGER</code> to <code>SMALLINT</code> to save space. It works until a customer ID exceeds 32,767 and the insert overflows. The migration succeeds because the database doesn't validate all existing rows against the new type.</p>
+          <div class="tags"><span class="tag">Overflow</span><span class="tag">Type change</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Changing INTEGER to SMALLINT')">Share</button>
+          </div>
+        </article>
+
+        <article class="archive-card reveal">
+          <div class="week-label">Week of May 4, 2026</div>
+          <h3>Dropping an index a query planner relies on</h3>
+          <p><code>idx_orders_created_at</code> looks unused in slow-query logs, so you drop it. The next day a reporting query that filtered by <code>created_at</code> scans a 100M-row table and times out.</p>
+          <div class="tags"><span class="tag">Performance</span><span class="tag">Index drop</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Dropping an index a query planner relies on')">Share</button>
+          </div>
+        </article>
+
+        <article class="archive-card reveal">
+          <div class="week-label">Week of April 27, 2026</div>
+          <h3>Removing a default value from a required column</h3>
+          <p>You remove the default on <code>invoices.currency</code> because the app now sets it explicitly. Legacy integrations that insert rows without specifying <code>currency</code> start failing with NOT NULL violations.</p>
+          <div class="tags"><span class="tag">Integration break</span><span class="tag">Default removal</span></div>
+          <div class="actions">
+            <button onclick="shareArchive('Removing a default value from a required column')">Share</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-bc" id="subscribe">
+    <div class="container">
+      <div class="subscribe-card reveal">
+        <h3>Get Breaking Change of the Week by email</h3>
+        <p>One schema mistake, one prevention tip, every Monday. No spam — unsubscribe anytime.</p>
+        <form class="subscribe-form" id="bcSubscribeForm">
+          <input type="email" id="bcEmail" placeholder="you@example.com" required>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div id="bcFormStatus" class="form-status" style="display: none;"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-bc" style="background: var(--surface);">
+    <div class="container" style="text-align: center;">
+      <h2 class="reveal">Catch the next one before it ships</h2>
+      <p class="section-lead reveal">Add SchemaLens to your CI/CD pipeline and see breaking changes highlighted in every pull request.</p>
+      <div class="hero-actions reveal" style="justify-content: center;">
+        <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action</a>
+        <a href="tools/cicd-setup-wizard.html" class="btn btn-secondary btn-lg">Setup Wizard</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="border-top: 1px solid var(--border); padding: 48px 0; margin-top: 0;">
+    <div class="container" style="text-align: center; color: var(--text-muted);">
+      <p style="margin-bottom: 16px;">Built in public for the $100 AI Startup Race.</p>
+      <p style="font-size: 0.9rem;">
+        <a href="index.html">Home</a> ·
+        <a href="blog.html">Blog</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="open-source-sponsorship.html">Open Source</a> ·
+        <a href="breaking-change-of-the-week.html">Breaking Change</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    window.shareCurrent = function() {
+      const text = 'Breaking Change of the Week: Dropping a column that a view still references — via SchemaLens';
+      const url = 'https://schemalens.tech/breaking-change-of-the-week.html';
+      const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+      window.open(shareUrl, '_blank', 'width=550,height=420');
+    };
+
+    window.shareArchive = function(title) {
+      const text = 'Breaking Change of the Week: ' + title + ' — via SchemaLens';
+      const url = 'https://schemalens.tech/breaking-change-of-the-week.html';
+      const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+      window.open(shareUrl, '_blank', 'width=550,height=420');
+    };
+
+    const form = document.getElementById('bcSubscribeForm');
+    const status = document.getElementById('bcFormStatus');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      status.style.display = 'none';
+      status.className = 'form-status';
+      const email = document.getElementById('bcEmail').value.trim();
+      const btn = form.querySelector('button');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Subscribing...';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source_page: 'breaking-change-of-the-week' })
+        });
+        const result = await res.json().catch(() => ({ error: 'Unexpected response.' }));
+        if (res.ok && result.success) {
+          status.textContent = 'You\'re subscribed! Check your inbox for the next breaking change.';
+          status.classList.add('success');
+          form.reset();
+        } else {
+          status.textContent = result.error || 'Something went wrong. Please try again.';
+          status.classList.add('error');
+        }
+      } catch (err) {
+        status.textContent = 'Network error. Please try again.';
+        status.classList.add('error');
+      } finally {
+        status.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

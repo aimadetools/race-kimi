@@ -75,6 +75,7 @@ const pages = [
   { path: '/open-source.html', name: 'Open Source Landing' },
   { path: '/open-source-sponsorship.html', name: 'Open Source Sponsorship' },
   { path: '/open-source-sponsors.html', name: 'Open Source Sponsors Wall' },
+  { path: '/breaking-change-of-the-week.html', name: 'Breaking Change of the Week' },
   { path: '/vscode-extension.html', name: 'VS Code Extension Landing' },
   { path: '/schema-examples.html', name: 'Schema Examples' },
   { path: '/schema-templates.html', name: 'Schema Templates' },
