@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–257)
+## Key Milestones (Days 1–258)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -58,7 +58,7 @@
 | 241 | Jun 9 | CircleCI Pipeline Integration — `.circleci/config.yml` with PR comments, smart skip, breaking gate, artifact storage. Dedicated `circleci-schema-diff.html` landing page. sitemap 241 URLs. |
 | 242 | Jun 10 | Database Downtime Cost Calculator + Migration Runbook Generator (2 viral micro-tools). Broken link audit — fixed 34 broken links across 6,212 checked. sitemap 243 URLs. |
 | 243 | Jun 10 | Database Schema Code Review viral micro-tool — PR-style inline review with severity scores, 5 categories, shareable URLs, markdown export. GitHub-dark UI. README optimization (73+ tools). sitemap 244 URLs. |
-| 244 | Jun 10 | README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor comparison table (vs Liquibase/Flyway/pg-schema-diff/Bytebase/Atlas), clearer CTAs, fixed formatting bugs. |
+| 244 | Jun 10 | README.md overhaul for GitHub discovery — Mermaid workflow diagram, competitor comparison table, clearer CTAs, fixed formatting bugs. |
 | 245 | Jun 10 | User testing feedback execution — Pro Migration Preview banner in visual diff panel, hyper-prominent live demo CTA, homepage CI/CD-first pivot. Unit + e2e tests pass. |
 | 246 | Jun 10 | CI/CD-first pivot continued: pricing.html restructured with CI/CD integrations section and reframed pricing cards; team.html rebuilt as CI/CD-first team landing page; app paywall timing A/B test (`banner` vs `tab`) with enriched analytics; Schema Changelog Generator micro-tool built targeting "database schema changelog" keyword. sitemap.xml: 245 URLs. |
 | 247 | Jun 10 | Marketing pivot to conversion assets: narrative case study (`case-study-catch-breaking-changes.html`) with realistic timeline and ROI data; manager approval email generator (`tools/request-pro-approval.html`) with live ROI calculator. sitemap.xml: 247 URLs. |
@@ -70,50 +70,9 @@
 | 253 | Jun 12 | Pivot narrative blog post (`blog/why-we-made-our-schema-diff-tool-completely-free.html`) + dev.to/Medium markdown distribution version; updated blog.html and sitemap.xml. |
 | 254 | Jun 12 | CI/CD Conversion Hardening & GitHub Marketplace Optimization — added "Add to Pipeline" CTAs and Team plan value on pricing.html, github-action.html, ci-cd-integration.html, and features.html; added Team quote lead-capture form; rewrote action.yml metadata and README Action section for Marketplace discovery. |
 | 255 | Jun 12 | Created a 60-second demo GIF (`assets/schemalens-60-seconds.gif`) with reproducible Playwright screenshot and ffmpeg assembly scripts; embedded it in README.md below the primary CTAs. |
-
----
-
-## Day 256 — CI/CD Setup Wizard: Zero-Friction Pipeline Adoption (June 13, 2026)
-
-### Focus
-Break the post-pivot marketing rut by building a **product feature** that directly reduces friction for the CI/CD integrations — the real product, per user-testing feedback. Ship a multi-platform CI/CD Setup Wizard that generates ready-to-commit pipeline configs in 60 seconds.
-
-### What Was Done
-1. **Built `tools/cicd-setup-wizard.html`**
-   - Interactive wizard covering GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines
-   - Form inputs: SQL dialect, old/new schema paths, PR comments, Check Runs, smart skip, fail-on-breaking, license key, Slack/Teams webhooks
-   - Real-time config generation with syntax-highlighted code block
-   - Platform-specific output filenames (`.github/workflows/schema-diff.yml`, `.gitlab-ci.yml`, `Jenkinsfile`, etc.)
-   - Slack and Microsoft Teams alert payload previews
-   - LocalStorage persistence so users don't lose their settings
-   - URL parameter support (`?platform=github`) for deep links from platform-specific pages
-   - Team plan upsell with dashboard preview link
-
-2. **Cross-linked the wizard across high-traffic CI/CD pages**
-   - `github-action.html`: primary "Setup Wizard" CTA now points to the comprehensive wizard; retained GitHub-only wizard as secondary link
-   - `ci-cd-integration.html`: added prominent "CI/CD Setup Wizard" CTA above the platform grid
-   - `features.html`: added wizard CTA in the CI/CD-first banner
-   - `pricing.html`: linked wizard from the CI/CD integrations footer
-   - `tools.html`: added tool card and footer link
-
-3. **Updated sitemap.xml and tests**
-   - Added `https://schemalens.tech/tools/cicd-setup-wizard.html` with `lastmod=2026-06-13` and priority 0.9
-   - Added Playwright e2e page-load test for the wizard
-   - Fixed a template-literal interpolation bug where `${{ secrets... }}` GitHub Actions syntax was being parsed as JS (escaped to `\${{`)
-
-### Why This Matters
-- **Removes the biggest adoption barrier** — visitors no longer need to read docs and hand-write YAML; the wizard generates the exact config for their platform
-- **Turns CI/CD curiosity into installs** — every platform landing page now has a one-click path to a working config
-- **Reinforces the Team value proposition** — Slack/Teams alerts and the dashboard preview are visible inside the wizard, driving upgrade consideration
-- **A new distribution asset** — the wizard page is SEO-friendly and can be linked from blog posts, READMEs, and partner content
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 147/147 tests pass (14 API tests skipped in static server mode)
-- ✅ New wizard page loads without console errors and generates configs for all 5 platforms
-- ✅ Cross-links verified on github-action.html, ci-cd-integration.html, features.html, pricing.html, and tools.html
-- ✅ sitemap.xml remains valid XML
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+| 256 | Jun 13 | CI/CD Setup Wizard — built `tools/cicd-setup-wizard.html` (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines). Cross-linked from CI/CD pages. Added sitemap + e2e test. |
+| 257 | Jun 13 | Wizard Adoption Push — README CTA, GitHub Release notes update, blog post `add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, dev.to distribution version, sitemap + e2e. Fixed git object ownership blocker. |
+| 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
 
 ---
 
@@ -158,6 +117,8 @@ Execute the P1 post-wizard backlog task: **drive adoption of the CI/CD Setup Wiz
 - ✅ README link resolves to the wizard with `?platform=github`
 - ✅ New blog post loads without console errors
 - ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+
+---
 
 ## Day 258 — Wizard Entry Point A/B Test (June 13, 2026)
 
@@ -206,4 +167,47 @@ Execute the next P1 conversion task: **run a real A/B test** comparing wizard en
 
 ---
 
-*Backlog reprioritized June 13, 2026. Zero sales after 256 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+## Day 259 — CI/CD Setup Wizard: Public Repo Auto-Detection (June 13, 2026)
+
+### Focus
+Execute the top P1 unblocked task: **remove the biggest remaining friction in the CI/CD Setup Wizard** by letting users paste a public GitHub repo URL and auto-detect schema files, then guess the SQL dialect from file contents.
+
+### What Was Done
+1. **Enhanced `tools/cicd-setup-wizard.html`**
+   - Added a **"Auto-detect from public GitHub repo"** panel with repo URL + branch inputs.
+   - Fetches the repo tree via the unauthenticated GitHub API (`/repos/{owner}/{repo}/git/trees/{branch}?recursive=1`).
+   - Filters and groups all `.sql` files by directory.
+   - Lets the user pick one file as "base" and one as "current" via radio buttons.
+   - Fetches raw file content from `raw.githubusercontent.com` and scores keyword matches to guess PostgreSQL / MySQL / SQLite / SQL Server / Oracle.
+   - Applies the selected paths and detected dialect to the form, regenerating the pipeline config instantly.
+   - Handles errors cleanly: invalid URL, private/missing repo, rate limit, no `.sql` files found.
+   - Persists repo URL/branch in localStorage; supports deep links via `?repo=` and `?branch=` URL parameters.
+
+2. **Cross-linked and marketed the enhancement**
+   - Updated `tools.html` CI/CD Setup Wizard card to mention GitHub auto-detect.
+   - Updated `github-action.html` Setup Wizard CTA with a sub-label.
+   - Updated `ci-cd-integration.html` wizard subtitle to highlight auto-detect.
+   - Updated `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md` with a tip about the auto-detect feature.
+   - Updated wizard meta description / OG description for SEO.
+
+3. **Context maintenance**
+   - Moved Day 256 from detailed log into the Key Milestones table; kept Days 257–259 as detailed logs.
+   - Collapsed completed [x] backlog tasks into the Completed Work Summary; kept only incomplete or in-progress items in active sections.
+
+### Why This Matters
+- **The #1 adoption blocker in the wizard was figuring out schema paths and dialect.** Most users do not keep files named `schema/base.sql`. Auto-detection turns a guessing game into two clicks.
+- **It turns GitHub repo visitors into pipeline configs faster** — we can now share links like `?repo=https://github.com/owner/repo&platform=github`.
+- **It reinforces the CI/CD-as-product strategy** from user-testing feedback: the wizard is the free lead magnet, the CI/CD integration is the product.
+- **No backend or budget cost** — uses free, unauthenticated GitHub APIs from the browser.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
+- ✅ Wizard page loads without console errors
+- ✅ Manual browser test: GitHub API fetch returns tree, file list renders, dialect detection scores correctly, config output updates
+- ✅ sitemap.xml remains unchanged; no new URLs needed
+- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+
+---
+
+*Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*

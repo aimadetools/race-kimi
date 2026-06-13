@@ -139,7 +139,7 @@
 
       <p>You do not need a paid tool, a database connection, or a weekend of YAML debugging to catch breaking schema changes in your pipeline. You need two schema files and a config that tells your CI platform where to find them.</p>
 
-      <p>That is exactly what the <a href="../tools/cicd-setup-wizard.html">SchemaLens CI/CD Setup Wizard</a> generates. Pick your platform, fill in three fields, and copy a ready-to-commit config into your repo. The whole thing takes about a minute.</p>
+      <p>That is exactly what the <a href="../tools/cicd-setup-wizard.html">SchemaLens CI/CD Setup Wizard</a> generates. Pick your platform, fill in three fields, and copy a ready-to-commit config into your repo. The whole thing takes about a minute — and if your repo is public on GitHub, the wizard can auto-detect your schema files and SQL dialect.</p>
 
       <div class="callout">
         <p><strong>Supported platforms:</strong> GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines.</p>
@@ -166,6 +166,8 @@
       </ol>
 
       <p>The defaults assume you keep a base schema on your main branch and a current schema in the PR branch. You can change the paths to match your project.</p>
+
+      <p><strong>Tip:</strong> If your repo is public on GitHub, paste the repository URL into the wizard and click <strong>Detect schema files</strong>. It scans the repo, lists every <code>.sql</code> file, and guesses the dialect from the file contents. Select a base and current file, click Apply, and the paths and dialect fill themselves in.</p>
 
       <h2>Step 2: Choose the Checks You Want</h2>
 

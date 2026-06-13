@@ -17,18 +17,16 @@
 - [ ] **P1** Reddit distribution — posts ready in `marketing/reddit-posts/`. BLOCKED: need Reddit account.
 - [ ] **P2** Directory submissions — AlternativeTo, SaaSHub, DevHunt, LibHunt. Filed in help-requests/ May 30.
 
-### Distribution — Zero Sales After 249 Days (CRITICAL)
+### Distribution — Zero Sales After 258 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`.
+- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to articles written and saved in `marketing/devto-catch-breaking-schema-changes.md` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`.
 
 ### Conversion — Fix the Funnel (Post-Pivot)
-- [x] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events. (Done Day 258)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content & SEO
-- [x] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release. (Done Day 255)
-- [x] **P1** Drive wizard adoption: add "Try the wizard" CTA to README.md GitHub Action section, add direct links from GitHub release notes, and create a short blog post / dev.to article "How to add schema diff to any CI/CD pipeline in 60 seconds". (Done Day 257)
+- (no active incomplete P1/P2 items — see Completed Work Summary below)
 
 ---
 
@@ -77,11 +75,7 @@ SQL Schema Roast, SQL Dialect Translator, MySQL → PostgreSQL Migration Guide, 
 Git Branch Schema Diff tool, CI/CD-first homepage marketing pivot, "Schema Diff in 1 Click" landing page (`diff.html`), critical $9 bait-and-switch removal site-wide, Pro Feature Tour page (`pro-tour.html`), 2 Git-integrated blog posts, Migration Checklist PDF lead magnet, GitLab/Bitbucket CORS proxy fix. sitemap.xml: 234 URLs.
 
 ### Days 232–235 (Jun 9)
-Conversion hardening: Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). sitemap.xml: 235 URLs.
-
-GitHub Action evolution: Check Run integration (real PR status checks with risk scores, migration previews, Pro CTAs). Job Summary output (`GITHUB_STEP_SUMMARY`) with rich markdown tables. Smart Skip (`run-only-on-schema-change`).
-
-Distribution assets: Filed single clear JS Kicks $29 ad help request. Wrote dev.to article ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers.
+Conversion hardening: Paywall simplification (removed 4 competing CTAs) + July 1 scarcity countdown. Proactive funnel audit — removed stale dates, fake spot counters, dead countdowns across 6 pages. `database-schema-review-checklist.html` (42 checks, 7 categories). GitHub Action evolution: Check Run integration, Job Summary output, Smart Skip. Distribution assets: JS Kicks $29 ad help request, dev.to article, "Star on GitHub" CTAs. sitemap.xml: 235 URLs.
 
 ### Days 236–241 (Jun 9)
 CI/CD platform parity sprint: GitLab CI MR comments + smart skip + breaking gate (`gitlab-schema-diff.html`). Bitbucket Pipelines PR comments + artifact reporting (`bitbucket-schema-diff.html`). Schema Export Command Generator (`tools/schema-export-command-generator.html`). Live Database Schema Fetch (`api/live-schema.js` — PostgreSQL/MySQL via connection string). Jenkins Pipeline Integration (`Jenkinsfile` + `jenkins-schema-diff.html`). CircleCI Pipeline Integration (`.circleci/config.yml` + `circleci-schema-diff.html`). sitemap.xml: 241 URLs.
@@ -108,7 +102,7 @@ Marketing pivot to conversion assets: narrative case study (`case-study-catch-br
 Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs.
 
 ### Day 249 (Jun 11)
-"Free Forever" Product Pivot — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features. Replaced all purchase banners with CI/CD integration CTAs. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
+"Free Forever" Product Pivot — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features. Replaced all purchase banners with CI/CD CTAs across app/pricing/index/features. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
 
 ### Day 250 (Jun 12)
 One-Click "Try with Sample Schema" Demo — Added `?example=` URL param support to app.html; built prominent 6-card "Try a real schema diff" section on homepage; updated hero CTAs to "▶ Try Sample Schema Diff". Added Playwright e2e test. 142/142 Chromium tests pass.
@@ -117,7 +111,7 @@ One-Click "Try with Sample Schema" Demo — Added `?example=` URL param support 
 Schema Drift Alerts + Site-Wide Free-Forever Cleanup — Day 251: hosted schema drift webhook endpoint (`/api/schema-drift-webhook.js`), shareable alert page (`schema-drift-alert.html`), client-side team dashboard (`team/schema-drift-dashboard.html`), GitHub Action integration, docs added to github-action/ci-cd/features/api-guide pages, sitemap + e2e/unit tests. Day 252: removed all "15 tables" references from 53+ SEO landing pages, micro-tool pages, CLI landing page, blog posts, README.md, and IDENTITY.md; standardized free-forever messaging across the site. All tests pass; deployed to Vercel.
 
 ### Day 253 (Jun 12)
-Pivot Narrative Blog Post — Published `blog/why-we-made-our-schema-diff-tool-completely-free.html` explaining the free-forever pivot, user-testing insights, and CI/CD-as-product strategy. Created dev.to/Medium markdown distribution version. Updated `blog.html` and `sitemap.xml`. Autonomous distribution asset for SEO and cross-posting.
+Pivot Narrative Blog Post — Published `blog/why-we-made-our-schema-diff-tool-completely-free.html` explaining the free-forever pivot, user-testing insights, and CI/CD-as-product strategy. Created dev.to/Medium markdown distribution version. Updated `blog.html` and `sitemap.xml`.
 
 ### Day 254 (Jun 12)
 CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value unmistakable on pricing.html, github-action.html, ci-cd-integration.html, and features.html with "Add to Pipeline" CTAs and ROI copy. Added Team quote lead-capture form on pricing.html. Optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. All tests pass; deployed.
@@ -139,7 +133,7 @@ Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [ ] **P2** Enhance the wizard with public repo auto-detection (fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths).
+- [x] **P1** Enhance the CI/CD Setup Wizard with public repo auto-detection: fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths. (Done Day 259)
 - [ ] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO.
 
 ### Blocked / Human Help Required
@@ -153,4 +147,4 @@ Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to
 
 ---
 
-*Backlog reprioritized June 13, 2026. Zero sales after 256 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*

@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CI/CD Setup Wizard — SchemaLens</title>
-  <meta name="description" content="Generate a ready-to-use schema diff CI/CD config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds.">
+  <meta name="description" content="Generate a ready-to-use schema diff CI/CD config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds. Auto-detect schema files from any public GitHub repo.">
   <meta property="og:title" content="CI/CD Setup Wizard — SchemaLens">
-  <meta property="og:description" content="Generate a ready-to-use schema diff CI/CD config for your pipeline. Free.">
+  <meta property="og:description" content="Generate a ready-to-use schema diff CI/CD config for your pipeline. Auto-detects schema files from public GitHub repos. Free.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/tools/cicd-setup-wizard.html">
@@ -57,6 +57,34 @@
     .step-dot.done { background: var(--success); color: #fff; border-color: var(--success); }
     .hidden { display: none; }
     .file-pattern-demo { color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; }
+    .repo-detect { background: rgba(99,102,241,0.05); border: 1px dashed var(--border); border-radius: var(--radius); padding: 16px; margin-top: 6px; }
+    .repo-detect h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .repo-detect .field { margin-bottom: 10px; }
+    .repo-detect .field:last-child { margin-bottom: 0; }
+    .repo-detect .row { display: flex; gap: 10px; }
+    .repo-detect .row input { flex: 1; }
+    .repo-detect .row button { white-space: nowrap; }
+    .btn-detect { background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-detect:hover { opacity: 0.9; }
+    .btn-detect:disabled { opacity: 0.6; cursor: not-allowed; }
+    .detect-status { font-size: 0.85rem; margin-top: 10px; color: var(--text-muted); }
+    .detect-status.error { color: #ef4444; }
+    .detect-status.success { color: var(--success); }
+    .file-list { margin-top: 12px; max-height: 220px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); }
+    .file-group { border-bottom: 1px solid var(--border); }
+    .file-group:last-child { border-bottom: none; }
+    .file-group-header { padding: 8px 12px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); background: rgba(99,102,241,0.04); }
+    .file-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 0.85rem; border-bottom: 1px solid var(--border-sm); }
+    .file-item:last-child { border-bottom: none; }
+    .file-item input { margin: 0; }
+    .file-item label { flex: 1; cursor: pointer; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .file-item .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 999px; background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+    .file-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .btn-apply { background: var(--success); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-apply:hover { opacity: 0.9; }
+    .btn-apply:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-text { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; cursor: pointer; }
+    .btn-text:hover { border-color: var(--primary); color: var(--text); }
   </style>
 <script>
 (function() {
@@ -112,6 +140,25 @@
             <option value="mssql">SQL Server</option>
             <option value="oracle">Oracle</option>
           </select>
+        </div>
+
+        <div class="repo-detect">
+          <h3>🔗 Auto-detect from public GitHub repo</h3>
+          <div class="field">
+            <label for="repoUrl">Repository URL</label>
+            <div class="row">
+              <input type="text" id="repoUrl" placeholder="https://github.com/owner/repo">
+              <input type="text" id="repoBranch" value="main" style="max-width: 110px;">
+            </div>
+            <small>Paste a public GitHub repo and we'll find your .sql schema files.</small>
+          </div>
+          <button class="btn-detect" id="btn-detect">Detect schema files</button>
+          <div class="detect-status" id="detect-status"></div>
+          <div class="file-list hidden" id="file-list"></div>
+          <div class="file-actions hidden" id="file-actions">
+            <button class="btn-apply" id="btn-apply">Apply selections</button>
+            <button class="btn-text" id="btn-detect-reset">Clear</button>
+          </div>
         </div>
 
         <div class="field">
@@ -209,7 +256,10 @@
       licenseKey: '',
       slackUrl: '',
       teamsUrl: '',
-      preview: 'config'
+      preview: 'config',
+      repoUrl: '',
+      repoBranch: 'main',
+      detectedFiles: []
     };
 
     const els = {
@@ -227,7 +277,15 @@
       output: document.getElementById('output'),
       filename: document.getElementById('filename'),
       copyBtn: document.getElementById('btn-copy'),
-      previewTabs: document.querySelectorAll('.preview-tabs button')
+      previewTabs: document.querySelectorAll('.preview-tabs button'),
+      repoUrl: document.getElementById('repoUrl'),
+      repoBranch: document.getElementById('repoBranch'),
+      btnDetect: document.getElementById('btn-detect'),
+      detectStatus: document.getElementById('detect-status'),
+      fileList: document.getElementById('file-list'),
+      fileActions: document.getElementById('file-actions'),
+      btnApply: document.getElementById('btn-apply'),
+      btnDetectReset: document.getElementById('btn-detect-reset')
     };
 
     function loadFromUrl() {
@@ -238,6 +296,16 @@
           state.platform = platform;
           const radio = document.querySelector(`input[name="platform"][value="${platform}"]`);
           if (radio) radio.checked = true;
+        }
+        const repo = params.get('repo');
+        const branch = params.get('branch');
+        if (repo) {
+          state.repoUrl = repo;
+          els.repoUrl.value = repo;
+        }
+        if (branch) {
+          state.repoBranch = branch;
+          els.repoBranch.value = branch;
         }
       } catch (e) {}
     }
@@ -262,11 +330,173 @@
         els.licenseKey.value = state.licenseKey || '';
         els.slackUrl.value = state.slackUrl || '';
         els.teamsUrl.value = state.teamsUrl || '';
+        els.repoUrl.value = state.repoUrl || '';
+        els.repoBranch.value = state.repoBranch || 'main';
       } catch (e) {}
     }
 
     function saveToStorage() {
       localStorage.setItem('schemalens_cicd_wizard', JSON.stringify(state));
+    }
+
+    function parseRepoUrl(url) {
+      try {
+        const m = url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+        if (!m) return null;
+        return { owner: m[1], repo: m[2].replace(/\.git$/, '') };
+      } catch (e) { return null; }
+    }
+
+    async function detectSchemaFiles() {
+      const url = els.repoUrl.value.trim();
+      const branch = els.repoBranch.value.trim() || 'main';
+      const parsed = parseRepoUrl(url);
+      if (!parsed) {
+        setDetectStatus('Paste a valid GitHub repo URL like https://github.com/owner/repo', 'error');
+        return;
+      }
+      state.repoUrl = url;
+      state.repoBranch = branch;
+
+      els.btnDetect.disabled = true;
+      setDetectStatus(`Scanning ${parsed.owner}/${parsed.repo}@${branch}…`);
+      els.fileList.classList.add('hidden');
+      els.fileActions.classList.add('hidden');
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+        if (res.status === 404) throw new Error('Repo or branch not found. Is it public?');
+        if (res.status === 403) throw new Error('GitHub API rate limit hit. Try again in a minute, or enter paths manually.');
+        if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
+        const data = await res.json();
+        const files = (data.tree || [])
+          .filter(item => item.type === 'blob' && item.path.endsWith('.sql'))
+          .sort((a, b) => a.path.localeCompare(b.path));
+        if (files.length === 0) throw new Error('No .sql files found in this repo.');
+        state.detectedFiles = files;
+        renderFileList(files);
+        setDetectStatus(`Found ${files.length} .sql file${files.length === 1 ? '' : 's'}. Pick a base and current schema, then click Apply.`, 'success');
+        els.fileList.classList.remove('hidden');
+        els.fileActions.classList.remove('hidden');
+      } catch (err) {
+        setDetectStatus(err.message, 'error');
+        state.detectedFiles = [];
+      } finally {
+        els.btnDetect.disabled = false;
+      }
+    }
+
+    function setDetectStatus(msg, type) {
+      els.detectStatus.textContent = msg;
+      els.detectStatus.className = 'detect-status' + (type ? ' ' + type : '');
+    }
+
+    function renderFileList(files) {
+      const groups = {};
+      files.forEach(f => {
+        const dir = f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : '(root)';
+        (groups[dir] = groups[dir] || []).push(f);
+      });
+
+      let html = '';
+      Object.keys(groups).sort().forEach(dir => {
+        html += `<div class="file-group"><div class="file-group-header">${escapeHtml(dir)}</div>`;
+        groups[dir].forEach(f => {
+          html += `<div class="file-item">
+            <input type="radio" name="detectedOld" value="${escapeHtml(f.path)}" id="old-${escapeHtml(f.path)}">
+            <input type="radio" name="detectedNew" value="${escapeHtml(f.path)}" id="new-${escapeHtml(f.path)}">
+            <label for="old-${escapeHtml(f.path)}" style="margin-right:6px;" title="Use as base schema">base</label>
+            <label for="new-${escapeHtml(f.path)}" style="margin-right:6px;" title="Use as current schema">current</label>
+            <label style="flex:1;" for="new-${escapeHtml(f.path)}">${escapeHtml(f.path)}</label>
+            <span class="badge">${formatBytes(f.size)}</span>
+          </div>`;
+        });
+        html += '</div>';
+      });
+      els.fileList.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function formatBytes(n) {
+      if (!n) return '0 B';
+      const units = ['B','KB','MB'];
+      let i = 0, size = n;
+      while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
+      return size.toFixed(i === 0 ? 0 : 1) + ' ' + units[i];
+    }
+
+    async function detectDialect(path) {
+      const parsed = parseRepoUrl(state.repoUrl);
+      if (!parsed) return null;
+      try {
+        const raw = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${encodeURIComponent(state.repoBranch)}/${path}`;
+        const res = await fetch(raw);
+        if (!res.ok) return null;
+        const text = (await res.text()).slice(0, 4000).toLowerCase();
+        const scores = {
+          postgres: countKeywords(text, ['serial','bigserial','uuid','timestamptz','jsonb','varchar','public.','plpgsql','pg_','nextval','now()','boolean']),
+          mysql: countKeywords(text, ['auto_increment','int(','bigint(','engine=','innodb','varchar','utf8','charset','datetime','tinyint']),
+          sqlite: countKeywords(text, ['integer primary key','autoincrement','text','real','blob','without rowid']),
+          mssql: countKeywords(text, ['identity(','nvarchar(','varchar(max)','datetime2','bit','nchar','ntext']),
+          oracle: countKeywords(text, ['number(','varchar2(','clob','blob','sysdate','dual','rownum'])
+        };
+        // Path-based hints
+        const p = path.toLowerCase();
+        if (p.includes('postgres') || p.includes('pg/')) scores.postgres += 2;
+        if (p.includes('mysql') || p.includes('maria')) scores.mysql += 2;
+        if (p.includes('sqlite')) scores.sqlite += 2;
+        if (p.includes('mssql') || p.includes('sqlserver')) scores.mssql += 2;
+        if (p.includes('oracle') || p.includes('ora')) scores.oracle += 2;
+        const winner = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+        return scores[winner] > 0 ? winner : null;
+      } catch (e) { return null; }
+    }
+
+    function countKeywords(text, words) {
+      return words.reduce((sum, word) => sum + (text.split(word).length - 1), 0);
+    }
+
+    async function applyDetectedFiles() {
+      const oldPath = document.querySelector('input[name="detectedOld"]:checked')?.value;
+      const newPath = document.querySelector('input[name="detectedNew"]:checked')?.value;
+      if (!oldPath || !newPath) {
+        setDetectStatus('Select both a base and current schema file.', 'error');
+        return;
+      }
+      if (oldPath === newPath) {
+        setDetectStatus('Base and current schema must be different files.', 'error');
+        return;
+      }
+      els.oldPath.value = oldPath;
+      els.newPath.value = newPath;
+      state.oldPath = oldPath;
+      state.newPath = newPath;
+
+      setDetectStatus('Detecting SQL dialect from file content…');
+      const dialect = await detectDialect(newPath);
+      if (dialect) {
+        els.dialect.value = dialect;
+        state.dialect = dialect;
+      }
+      setDetectStatus(`Applied ${oldPath} → ${newPath}${dialect ? ' (' + dialect + ')' : ''}.`, 'success');
+      update();
+      saveToStorage();
+    }
+
+    function resetRepoDetect() {
+      state.detectedFiles = [];
+      state.repoUrl = '';
+      state.repoBranch = 'main';
+      els.repoUrl.value = '';
+      els.repoBranch.value = 'main';
+      els.fileList.innerHTML = '';
+      els.fileList.classList.add('hidden');
+      els.fileActions.classList.add('hidden');
+      setDetectStatus('');
+      saveToStorage();
     }
 
     function indent(str, spaces) {
@@ -528,6 +758,11 @@ ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Brea
       ['licenseKey', 'slackUrl', 'teamsUrl'].forEach(id => {
         els[id].addEventListener('input', update);
       });
+      els.repoUrl.addEventListener('input', () => { state.repoUrl = els.repoUrl.value; saveToStorage(); });
+      els.repoBranch.addEventListener('input', () => { state.repoBranch = els.repoBranch.value; saveToStorage(); });
+      els.btnDetect.addEventListener('click', detectSchemaFiles);
+      els.btnApply.addEventListener('click', applyDetectedFiles);
+      els.btnDetectReset.addEventListener('click', resetRepoDetect);
 
       els.previewTabs.forEach(btn => {
         btn.addEventListener('click', () => {
