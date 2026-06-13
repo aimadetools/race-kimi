@@ -1,13 +1,13 @@
-# Reddit Post Drafts
+# Reddit Post Drafts (Updated June 13, 2026)
 
 ## r/PostgreSQL
 
-**Title:** I built a browser-based schema diff tool for PostgreSQL (and MySQL/SQLite). No signup, no upload, no backend.
+**Title:** I built a browser-based schema diff tool for PostgreSQL (and MySQL/SQLite/Oracle/SQL Server). No signup, no upload, no backend. Completely free.
 
 **Body:**
 Hey r/PostgreSQL,
 
-I got tired of comparing schema dumps by hand when reviewing migration PRs. Text diffs of SQL dumps are noisy and miss semantic meaning—like whether a column was renamed vs dropped and re-added.
+I got tired of comparing schema dumps by hand when reviewing migration PRs. Text diffs of SQL dumps are noisy and miss semantic meaning — like whether a column was renamed vs dropped and re-added.
 
 So I built SchemaLens: a client-side schema diff tool that parses CREATE TABLE statements, shows you exactly what changed (tables, columns, types, defaults, constraints), and generates the correct ALTER TABLE script for your dialect.
 
@@ -18,20 +18,24 @@ So I built SchemaLens: a client-side schema diff tool that parses CREATE TABLE s
 
 **Privacy-first:** Everything parses in your browser. Your schema never touches a server.
 
+**Completely free:** Unlimited tables, full migration SQL, rollback scripts, and ORM exports. No account required.
+
 **Live demo:** https://schemalens.tech
 
-It's free for up to 15 tables. Would love feedback from real PostgreSQL users—especially on edge cases like composite PKs, enums, arrays, or exotic types.
+For teams, we also have a GitHub Action that posts schema diffs, risk scores, and breaking-change gates directly in PRs: https://schemalens.tech/github-action.html
+
+Would love feedback from real PostgreSQL users — especially on edge cases like composite PKs, enums, arrays, or exotic types.
 
 ---
 
 ## r/MySQL
 
-**Title:** Compare MySQL schemas in your browser and generate ALTER TABLE scripts instantly
+**Title:** Compare MySQL schemas in your browser and generate ALTER TABLE scripts instantly — free, no signup
 
 **Body:**
 Hey r/MySQL,
 
-I built a tool that compares two MySQL schemas and generates the correct migration SQL—no install, no signup, no data upload.
+I built a tool that compares two MySQL schemas and generates the correct migration SQL — no install, no signup, no data upload.
 
 SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified columns, type changes, nullability flips, and default value changes, then outputs MySQL-specific ALTER TABLE syntax (MODIFY COLUMN, ADD COLUMN, DROP COLUMN, etc.).
 
@@ -40,40 +44,44 @@ SchemaLens parses your CREATE TABLE dumps, detects added/removed/modified column
 - Detects when a column change requires MODIFY COLUMN vs simpler ALTER
 - Shows visual diff before you run anything
 - 100% client-side — paste your schema, it never leaves your browser
+- Completely free: unlimited tables, full migrations, rollback SQL
 
 **Try it:** https://schemalens.tech
 
-Free for schemas up to 15 tables. If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.
+**CI/CD:** We also have a GitHub Action for MySQL schema diffs in PRs: https://schemalens.tech/github-action.html
+
+If you hit edge cases with MySQL-specific syntax (generated columns, spatial types, etc.), I'd love to know.
 
 ---
 
 ## r/webdev
 
-**Title:** Showoff Saturday: I built a zero-backend schema diff tool that runs entirely in the browser
+**Title:** Showoff Saturday: I built a zero-backend schema diff tool that runs entirely in the browser — and made it completely free
 
 **Body:**
 Hey r/webdev,
 
-For my side project over the past 6 months I built SchemaLens—a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
+For my side project over the past 9 months I built SchemaLens — a SQL schema diff tool with zero backend. No server, no database, no API. Just vanilla JS parsing CREATE TABLE statements and generating migration scripts.
 
 **Tech stack:**
 - Vanilla HTML/CSS/JS (no frameworks)
 - Custom SQL tokenizer + parser (~600 lines)
 - Semantic diff engine
-- Dialect-aware migration generator (PostgreSQL, MySQL, SQLite)
+- Dialect-aware migration generator (PostgreSQL, MySQL, SQLite, SQL Server, Oracle)
 
 **What it does:**
 - Paste two schema dumps
 - See tables added/removed/modified with color coding
 - Get per-column change details (type, nullability, default, PK, unique)
 - Download migration SQL or export as Markdown for PRs
+- Completely free: unlimited tables, no account
 
 **Why no backend?**
 Your schema structure reveals a lot about your data model. I wanted a tool where privacy is the default, not a feature.
 
 **Live:** https://schemalens.tech
 
-Free tier covers 15 tables. Lifetime Pro is $39 one-time for unlimited access.
+**CI/CD integration:** https://schemalens.tech/github-action.html
 
 Happy to answer questions about the parser, the diff algorithm, or the $100 startup challenge I'm running this in.
 

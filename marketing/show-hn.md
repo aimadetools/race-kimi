@@ -1,13 +1,13 @@
-# Show HN Post Draft — SchemaLens (Updated May 6, 2026)
+# Show HN Post Draft — SchemaLens (Updated June 13, 2026)
 
 ## Primary Draft
 
-**Title:** Show HN: SchemaLens – Compare SQL schemas in your browser, generate migrations
+**Title:** Show HN: SchemaLens – Compare SQL schemas in your browser, generate migrations, now completely free
 
 **Body:**
 Hi HN,
 
-I built SchemaLens because I was tired of reviewing database migrations by eyeballing two SQL dumps. Text diffs of schema files are noisy and miss semantic meaning—is that column renamed or dropped and re-added? Is the type change safe? Did someone drop an index that a query depends on?
+I built SchemaLens because I was tired of reviewing database migrations by eyeballing two SQL dumps. Text diffs of schema files are noisy and miss semantic meaning — is that column renamed or dropped and re-added? Is the type change safe? Did someone drop an index that a query depends on?
 
 SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps, get an instant visual semantic diff, and generate dialect-correct ALTER TABLE scripts.
 
@@ -30,11 +30,11 @@ SchemaLens is a browser-based SQL schema diff tool. Paste two CREATE TABLE dumps
 
 **Tech:** Vanilla JS. Custom recursive-descent tokenizer + parser (~600 lines). No frameworks, no build step, no dependencies. 34 automated tests. MIT licensed. Deployed on Vercel.
 
-**Pricing:** Free for up to 15 tables. Lifetime Pro is $39 one-time for unlimited tables, full migration generation, all exports, and all future updates.
+**Pricing pivot:** After 258 days and zero sales, I made the web diff completely free — unlimited tables, full migration generation, rollback scripts, and ORM exports. Pro ($39 lifetime) adds exports, diff history, and 80+ micro-tools. Team ($29/mo) adds CI/CD integrations, schema drift alerts, and Slack/Teams notifications. The pivot came from user-testing feedback: the web diff is a lead magnet, CI/CD is the product.
 
-I'm building this as part of a 12-week $100 startup challenge, so I'm documenting everything in public. 147 days, 50+ micro-tools, 51+ SEO pages, a VS Code extension, a Chrome extension, and an open-source engine.
+I'm building this as part of a $100 startup challenge, documenting everything in public. 258+ days, 80+ micro-tools, 245+ SEO pages, a VS Code extension, a Chrome extension, GitHub/GitLab/Jenkins/CircleCI/Bitbucket integrations, and an open-source engine.
 
-Happy to answer questions about the parser, the diff algorithm, the business model, or the build process.
+Happy to answer questions about the parser, the diff algorithm, the business model, or the pivot.
 
 ---
 
@@ -43,19 +43,19 @@ Happy to answer questions about the parser, the diff algorithm, the business mod
 Thanks for the interest! A few answers to common questions:
 
 **Why not use existing tools like migra/apgdiff/Liquibase?**
-They're great, but they require installation, a database connection, or Python. SchemaLens is for the "I need to check this right now" moment—paste, compare, done. If you need managed migration lifecycles, Liquibase is the better fit. SchemaLens complements it for quick ad-hoc diffs.
+They're great, but they require installation, a database connection, or Python. SchemaLens is for the "I need to check this right now" moment — paste, compare, done. If you need managed migration lifecycles, Liquibase is the better fit. SchemaLens complements it for quick ad-hoc diffs.
 
 **What about more complex objects?**
 We parse CREATE TABLE, CREATE INDEX, views, functions, and triggers. The parser is modular and adding new statement types is straightforward.
 
 **Is the Pro tier actually enforced?**
-On the free tier, if your schema has more than 15 tables, we show the visual diff but gate the full migration SQL behind an upgrade banner. No paywall on the diff itself.
+No. The web diff is completely free. Pro adds convenience features like exports, diff history, and micro-tools. Team is for CI/CD and team workflows.
 
 **Can I self-host?**
-Yes. Clone the repo, open app.html. Or run `npx schemalens-cli` locally. The engine is also on npm as `schemalens-engine`.
+Yes. Clone the repo, open app.html. Or run `npx schemalens-cli` locally. The engine is also on npm as `schemalens-engine` and `schema-diff`.
 
 **How does the parser handle dialect quirks?**
-Each dialect has its own keyword set, type mapping, and quoting rules. The tokenizer is shared; the parser branches on dialect-specific syntax. It's not perfect—edge cases in Oracle PL/SQL and SQL Server T-SQL are the hairiest—but it handles 95%+ of real-world schemas.
+Each dialect has its own keyword set, type mapping, and quoting rules. The tokenizer is shared; the parser branches on dialect-specific syntax. It's not perfect — edge cases in Oracle PL/SQL and SQL Server T-SQL are the hairiest — but it handles 95%+ of real-world schemas.
 
 ---
 

@@ -1,4 +1,4 @@
-# SaaS Directory Submissions
+# SaaS Directory Submissions (Updated June 13, 2026)
 
 ## AlternativeTo
 
@@ -9,41 +9,42 @@
 - **URL:** https://schemalens.tech
 - **Short description:** Compare SQL schemas and generate migration scripts in your browser. No data leaves your device.
 - **Description:**
-SchemaLens is a browser-based SQL schema diff tool for PostgreSQL, MySQL, and SQLite. Paste two CREATE TABLE dumps, get an instant visual semantic diff, and generate ready-to-run ALTER TABLE migration scripts.
+SchemaLens is a browser-based SQL schema diff tool for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Paste two CREATE TABLE dumps, get an instant visual semantic diff, and generate ready-to-run ALTER TABLE migration scripts.
 
-Unlike text diffs of SQL dumps, SchemaLens understands your schema structure. It detects added tables, dropped columns, type changes, nullability flips, default value changes, and constraint modifications—then generates the correct migration syntax for your target database dialect.
+Unlike text diffs of SQL dumps, SchemaLens understands your schema structure. It detects added tables, dropped columns, type changes, nullability flips, default value changes, and constraint modifications — then generates the correct migration syntax for your target database dialect.
 
 All parsing happens client-side. Your schema never leaves your browser.
 
-- **License:** Free with paid Pro tier
+- **License:** Free / MIT
 - **Platform:** Web / Browser
 - **Category:** Developer Tools
 
 ### Tags
-sql, database, schema, migration, diff, postgresql, mysql, sqlite, developer-tools, devops
+sql, database, schema, migration, diff, postgresql, mysql, sqlite, mssql, oracle, developer-tools, devops, ci-cd, github-actions
 
 ### Features
 - Semantic schema diff (not just text diff)
-- PostgreSQL, MySQL/MariaDB, and SQLite support
+- PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, and Oracle support
 - Visual diff with color-coded changes
-- Automatic migration SQL generation
-- Markdown export for PRs and documentation
-- Raw SQL download
+- Automatic migration SQL generation with rollback scripts
+- Markdown, PDF, JSON, SQL, Prisma, and Drizzle exports
 - 100% client-side — schema data never leaves the browser
-- Free tier: up to 15 tables
-- Pro tier: unlimited tables, full migrations
+- Completely free web diff: unlimited tables, full migrations
+- Pro tier: exports, diff history, 80+ micro-tools ($39 lifetime)
+- Team tier: CI/CD integrations, schema drift alerts, Slack/Teams notifications ($29/mo)
 
 ### Alternatives To Position Against
 - apgdiff (CLI only, PostgreSQL only)
 - migra (requires Python install)
 - dbdiff (PHP, complex setup)
-- SchemaLens advantage: zero install, runs in browser, instant demo
+- SchemaLens advantage: zero install, runs in browser, instant demo, completely free
 
 ### Screenshot Notes
 Capture these screens for the submission:
 1. Two-pane editor with sample PostgreSQL schemas loaded
 2. Visual Diff tab showing added/removed/modified tables
 3. Migration SQL tab with highlighted ALTER TABLE statements
+4. GitHub Action PR comment with risk score
 
 ---
 
@@ -66,7 +67,7 @@ Built for teams who review database migrations before deploying. No signup. No u
 ### Maker Info
 - **Name:** SchemaLens Team
 - **Twitter:** (create @schemalens if decided)
-- **Email:** (set up hello@schemalens.dev if domain purchased)
+- **Email:** hello@schemalens.tech
 
 ### Launch Details
 - **Launch type:** New product
@@ -84,14 +85,14 @@ Built for teams who review database migrations before deploying. No signup. No u
 - **Title:** SchemaLens — SQL Schema Diff in Your Browser
 - **Tagline:** Paste two CREATE TABLE dumps. Get a visual diff + migration script. Zero backend.
 - **Description:**
-SchemaLens compares PostgreSQL, MySQL, and SQLite schemas client-side. It parses CREATE TABLE and CREATE INDEX statements, shows semantic differences (not just text diffs), and generates correct ALTER TABLE migrations for your dialect.
+SchemaLens compares PostgreSQL, MySQL, SQLite, SQL Server, and Oracle schemas client-side. It parses CREATE TABLE and CREATE INDEX statements, shows semantic differences (not just text diffs), and generates correct ALTER TABLE migrations for your dialect.
 
 Perfect for:
 - Reviewing migration PRs
 - Comparing staging vs production schemas
 - Generating migration scripts without installing CLI tools
 
-Free for up to 15 tables. Pro unlocks unlimited schemas.
+Completely free for unlimited web diffs. Pro adds exports and 80+ micro-tools. Team adds CI/CD integrations and schema drift alerts.
 
 - **URL:** https://schemalens.tech
 - **Category:** Developer Tools
