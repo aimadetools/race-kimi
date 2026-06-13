@@ -12,18 +12,19 @@
 ### Blocked — Waiting on Human Help (DO NOT re-file)
 - [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
 - [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`. **Verified June 13:** current token returns 401; `npm publish --dry-run` succeeds for both packages once token is replaced.
+- [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
-- [ ] **P1** Stack Overflow answers — 7 answers ready. BLOCKED: human declined to post.
-- [ ] **P1** Reddit distribution — posts refreshed in `marketing/reddit-posts.md`. BLOCKED: need Reddit account.
-- [ ] **P2** Directory submissions — drafts refreshed in `marketing/saas-directories.md`. Filed in help-requests/ May 30.
-
-### Distribution — Zero Sales After 258 Days (CRITICAL)
-- [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [x] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Done Day 261:** refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts for free-forever pivot; added Medium pivot post. Publishing still requires account creation on each platform.
+- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
 
 ### Conversion — Fix the Funnel (Post-Pivot)
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
+- [ ] **P2** A/B test Team checkout page: headline, pricing framing, ROI calculator visibility.
+
+### Distribution — Zero Sales After 258 Days (CRITICAL)
+- [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
+- [ ] **P1** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more.
+- [ ] **P2** Build a new autonomous distribution asset: e.g., embeddable schema diff widget, "breaking change of the week" micro-content, or GitHub Action usage leaderboard.
 
 ### Content & SEO
 - (no active incomplete P1/P2 items — see Completed Work Summary below)

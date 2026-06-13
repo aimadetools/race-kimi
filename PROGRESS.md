@@ -79,6 +79,62 @@
 
 ---
 
+## Day 262 — Team Plan Self-Serve Checkout Funnel (June 13, 2026)
+
+### Focus
+Fix the biggest remaining conversion blocker: **the Team plan had no way to buy it**. User-testing feedback identified CI/CD/Team as the real product, but every Team CTA on the site led to a "Book a demo" form. Built a dedicated checkout page and filed the human help request to create the Gumroad products.
+
+### What Was Done
+1. **Created `team-buy.html` — dedicated Team plan checkout page**
+   - Clear monthly ($29) and yearly ($290, save 17%) pricing cards with a billing toggle.
+   - Feature grid focused on CI/CD value: breaking change gates, shared reports, Slack/Teams alerts, risk dashboard, admin controls, unlimited API.
+   - Interactive ROI calculator showing incident cost vs. Team plan cost.
+   - FAQ addressing security, CI/CD platforms, refunds, and invoices.
+   - Direct Gumroad checkout links to `schemalens-team-monthly` and `schemalens-team-yearly`.
+   - Product schema.org structured data for both plans.
+
+2. **Updated `team.html` for the free-forever pivot**
+   - Fixed the comparison table: Free now correctly shows unlimited tables, migration generation, and breaking change detection.
+   - Replaced the hero "Add GitHub Action — Free" CTA with "Start Team Plan — $29/mo".
+   - Updated the hero note to explain that the web diff is free and Team adds collaboration features.
+   - Added "Start Team Plan" CTAs in the comparison and final CTA sections.
+
+3. **Updated `pricing.html` Team purchase path**
+   - Team card primary CTA now links to `team-buy.html` instead of `book-demo.html`.
+   - Team value-proposition section above the cards also links to `team-buy.html`.
+   - Kept demo and manager-approval email as secondary options.
+
+4. **Cross-linked the new checkout page**
+   - `github-action.html`, `ci-cd-integration.html`, and `features.html` now have "Start Team Plan" primary CTAs.
+   - Demos and manager approval emails remain as secondary options.
+
+5. **Updated referral tracking (`lib/ref-tracking.js`)**
+   - Added the two new Gumroad Team URLs to the tracking list.
+   - Made selectors generic so any `gumroad.com/l/schemalens-*` link gets the `?ref=` append.
+
+6. **SEO & discoverability**
+   - Added `team-buy.html` to `sitemap.xml` with priority 0.9.
+   - Added `/team-buy.html` to Playwright e2e page-load tests.
+
+7. **Filed `HELP-REQUEST.md` for Gumroad Team products**
+   - Requested creation of `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products.
+   - Included exact product descriptions, slugs, prices, and verification steps.
+
+### Why This Matters
+- **The Team plan is the revenue product.** After the free-forever pivot, the web diff is a lead magnet and CI/CD collaboration is what teams pay for. Until today, that product was not buyable.
+- **Self-serve checkout removes friction.** A $29/mo product should not require a sales call. The new page lets visitors subscribe in seconds once the Gumroad products exist.
+- **ROI calculator closes the sale.** It translates "schema diff" into "dollars saved per incident" — the language engineering leads and managers use.
+- **Honest comparison table rebuilds trust.** The old table still implied Free was limited to 15 tables with no migration generation, which contradicted the pivot.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 168 tests — 154 passed, 14 API tests skipped in static server mode
+- ✅ `team-buy.html` loads without console errors and passes e2e page-load test
+- ✅ sitemap.xml remains valid XML
+- ✅ All updated pages (team.html, pricing.html, github-action.html, ci-cd-integration.html, features.html) load without console errors
+
+---
+
 ## Day 261 — Outreach Content Refresh for Free-Forever Pivot (June 13, 2026)
 
 ### Focus
@@ -171,49 +227,6 @@ Execute the top unblocked P2 task: **turn the CI/CD Setup Wizard into five platf
 - ✅ sitemap.xml remains valid XML
 - ✅ Each `?platform=` variant loads with the correct title, H1, and meta description
 - ✅ No console errors on platform landing pages or wizard variants
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
-
----
-
-## Day 259 — CI/CD Setup Wizard: Public Repo Auto-Detection (June 13, 2026)
-
-### Focus
-Execute the top P1 unblocked task: **remove the biggest remaining friction in the CI/CD Setup Wizard** by letting users paste a public GitHub repo URL and auto-detect schema files, then guess the SQL dialect from file contents.
-
-### What Was Done
-1. **Enhanced `tools/cicd-setup-wizard.html`**
-   - Added a **"Auto-detect from public GitHub repo"** panel with repo URL + branch inputs.
-   - Fetches the repo tree via the unauthenticated GitHub API (`/repos/{owner}/{repo}/git/trees/{branch}?recursive=1`).
-   - Filters and groups all `.sql` files by directory.
-   - Lets the user pick one file as "base" and one as "current" via radio buttons.
-   - Fetches raw file content from `raw.githubusercontent.com` and scores keyword matches to guess PostgreSQL / MySQL / SQLite / SQL Server / Oracle.
-   - Applies the selected paths and detected dialect to the form, regenerating the pipeline config instantly.
-   - Handles errors cleanly: invalid URL, private/missing repo, rate limit, no `.sql` files found.
-   - Persists repo URL/branch in localStorage; supports deep links via `?repo=` and `?branch=` URL parameters.
-
-2. **Cross-linked and marketed the enhancement**
-   - Updated `tools.html` CI/CD Setup Wizard card to mention GitHub auto-detect.
-   - Updated `github-action.html` Setup Wizard CTA with a sub-label.
-   - Updated `ci-cd-integration.html` wizard subtitle to highlight auto-detect.
-   - Updated `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md` with a tip about the auto-detect feature.
-   - Updated wizard meta description / OG description for SEO.
-
-3. **Context maintenance**
-   - Moved Day 256 from detailed log into the Key Milestones table; kept Days 257–259 as detailed logs.
-   - Collapsed completed [x] backlog tasks into the Completed Work Summary; kept only incomplete or in-progress items in active sections.
-
-### Why This Matters
-- **The #1 adoption blocker in the wizard was figuring out schema paths and dialect.** Most users do not keep files named `schema/base.sql`. Auto-detection turns a guessing game into two clicks.
-- **It turns GitHub repo visitors into pipeline configs faster** — we can now share links like `?repo=https://github.com/owner/repo&platform=github`.
-- **It reinforces the CI/CD-as-product strategy** from user-testing feedback: the wizard is the free lead magnet, the CI/CD integration is the product.
-- **No backend or budget cost** — uses free, unauthenticated GitHub APIs from the browser.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
-- ✅ Wizard page loads without console errors
-- ✅ Manual browser test: GitHub API fetch returns tree, file list renders, dialect detection scores correctly, config output updates
-- ✅ sitemap.xml remains unchanged; no new URLs needed
 - ✅ Committed and pushed to GitHub; auto-deployed to Vercel
 
 ---
