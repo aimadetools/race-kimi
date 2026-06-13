@@ -77,9 +77,73 @@
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
-| 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js` tests headline, pricing framing (yearly default), and ROI placement; fixed ROI calculator TDZ bug; added e2e coverage. |
+| 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js`, fixed ROI calculator TDZ bug, added e2e coverage. |
 | 264 | Jun 13 | Standalone Slack app — app manifest, landing page (`slack-app.html`), OAuth/slash-command/events/interactions API endpoints, cross-links from CI/CD and feature pages, sitemap + e2e coverage. Filed credentials help request. |
-| 265 | Jun 13 | Open Source Sponsorship program — `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, outreach kit, cross-links from index/pricing/github-action/schema-badge, sitemap + e2e. Filed npm token refresh help request. |
+| 265 | Jun 13 | Open Source Sponsorship program — `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, outreach kit, cross-links, sitemap + e2e. Filed npm token refresh help request. |
+| 266 | Jun 13 | Executed Open Source Sponsorship outreach — researched 10 qualifying OSS database projects, built outreach targets kit, public sponsors wall, admin approval workflow, GitHub issue template, and auto-approval for the first 3 qualifying applications. sitemap: 249 URLs. |
+
+---
+
+## Day 266 — Open Source Sponsorship Outreach Execution (June 13, 2026)
+
+### Focus
+Turn the Open Source Sponsorship program from a landing page into an active distribution channel: identify targets, make applying effortless, and approve the first qualifying projects automatically.
+
+### What Was Done
+1. **Researched 10 qualifying open-source database projects**
+   - Documented in `marketing/oss-outreach-targets.md`.
+   - Projects: sqlc, dbmate, golang-migrate, goose, Kysely, PostgREST, pgTAP, Dolt, Datasette, pgRouting.
+   - Each entry includes repo URL, license, fit rationale, maintainer contact approach, and a personalized outreach angle.
+
+2. **Created outreach kit content**
+   - Direct maintainer email template with project-specific merge fields.
+   - Follow-up email template.
+   - Social/community post template.
+   - README badge markdown and GitHub Action quick config.
+   - Anti-spam rules and CRM tracking guidance.
+
+3. **Built admin approval workflow**
+   - Added `oss-sponsorship-applications`, `approve-oss-sponsorship`, and `reject-oss-sponsorship` actions to `api/admin.js`.
+   - Added a new "Open Source Sponsorship Applications" section to `admin.html` with:
+     - Pending/approved counts in the stats grid.
+     - Table view with applicant, project, repo, description, GitHub Action intent, and status.
+     - One-click Approve / Reject buttons.
+     - CSV export and links to the public sponsors wall + outreach targets.
+
+4. **Built public sponsors wall**
+   - Created `open-source-sponsors.html` and `api/oss-sponsors.js`.
+   - Public endpoint returns approved sponsors from Supabase (server-side service role, cached 5 minutes).
+   - Wall shows approved projects with repo links, approval date, description, and badges.
+   - Empty state invites the first project to apply.
+   - Lists the 10 outreach targets as "projects we're reaching out to" (clearly labeled, not sponsors).
+
+5. **Implemented first-3 auto-approval**
+   - Updated `api/oss-sponsorship-apply.js` to count existing approved sponsors and automatically approve the next qualifying application until 3 are approved.
+   - Returns a distinct success message when auto-approved.
+
+6. **Made applying effortless**
+   - Added GitHub issue template `.github/ISSUE_TEMPLATE/sponsorship-application.yml`.
+   - Added "Apply via GitHub" button to `open-source-sponsorship.html`.
+   - Added link to the sponsors wall in the hero note and how-it-works step.
+
+7. **SEO & tests**
+   - Added `open-source-sponsors.html` to `sitemap.xml` (priority 0.8). sitemap: 249 URLs.
+   - Added `/open-source-sponsors.html` to Playwright page-load tests.
+   - Static-server-safe: sponsors wall skips API fetch on localhost to avoid 404 console errors.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 159 passed, 14 API tests skipped in static server mode
+- ✅ `open-source-sponsors.html` loads without console errors
+- ✅ `open-source-sponsorship.html` still loads without console errors
+- ✅ sitemap.xml remains valid XML
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- Outreach targets turn the sponsorship program from passive to active. Even one approved project creates a real backlink and a credible case study.
+- The public sponsors wall provides social proof and a discoverable destination for maintainers evaluating the program.
+- Auto-approval removes friction for the first three projects, giving the program momentum while we manually review later applications.
+- The GitHub issue template lets maintainers apply from their own repo workflow, increasing conversion.
 
 ---
 
@@ -188,37 +252,5 @@ Build and deploy the first real SchemaLens Slack app (not just an Incoming Webho
 - Slack is where engineering teams already discuss production incidents. A native Slack app puts SchemaLens alerts in the right context.
 - The slash command is a free, viral entry point that drives awareness of the web diff and CI/CD integrations.
 - It supports the CI/CD-as-product strategy: web diff is the lead magnet, Slack alerts + CI/CD are the Team plan value.
-
----
-
-## Day 263 — Team Checkout A/B Test (June 13, 2026)
-
-### Focus
-Run the first controlled experiment on the new Team checkout page to learn which headline, pricing framing, and ROI placement drive more intent to buy.
-
-### What Was Done
-1. **Built `lib/team-buy-ab-test.js`**
-   - 50/50 assignment to `control` or `v1`, persisted in `localStorage`.
-   - Tracks variant assignment, page views, billing-toggle interactions, and Gumroad CTA clicks via `/api/analytics`.
-
-2. **Defined variants on `team-buy.html`**
-   - `control`: existing headline/subtitle, monthly billing default, ROI calculator after the feature grid.
-   - `v1`: urgency headline ("Stop schema incidents before they hit production."), lead focused on PR-level prevention, yearly billing default, and ROI calculator promoted above pricing cards with stronger copy.
-
-3. **Fixed a latent initialization bug**
-   - The billing-toggle `setPeriod()` called `updateRoi()` before the ROI input constants were declared, causing a TDZ error when a saved yearly preference or the A/B variant triggered `setPeriod()` early.
-   - Moved ROI calculator definitions to the top of the checkout-page IIFE so `updateRoi()` runs safely from any code path.
-
-4. **Added e2e coverage**
-   - Two Playwright tests force each variant via `localStorage` and verify the correct headline, DOM order, and default billing toggle.
-   - All page-load tests still pass with zero console errors.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 156 passed, 14 API tests skipped in static server mode
-- ✅ No console errors on `team-buy.html` for either variant
-- ✅ A/B events are suppressed on localhost and sent on production domains
-
----
 
 *Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
