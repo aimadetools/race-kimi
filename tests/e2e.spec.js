@@ -157,6 +157,31 @@ for (const { path, name } of pages) {
 }
 
 // ───────────────────────────────────────────────
+// CI/CD Setup Wizard Platform Landing Pages
+// ───────────────────────────────────────────────
+
+const wizardPlatforms = [
+  { platform: 'github', h1: 'GitHub Actions Schema Diff Wizard', title: 'GitHub Actions Schema Diff Setup Wizard — SchemaLens' },
+  { platform: 'gitlab', h1: 'GitLab CI Schema Diff Wizard', title: 'GitLab CI Schema Diff Setup Wizard — SchemaLens' },
+  { platform: 'jenkins', h1: 'Jenkins Schema Diff Wizard', title: 'Jenkins Schema Diff Pipeline Setup Wizard — SchemaLens' },
+  { platform: 'circleci', h1: 'CircleCI Schema Diff Wizard', title: 'CircleCI Schema Diff Setup Wizard — SchemaLens' },
+  { platform: 'bitbucket', h1: 'Bitbucket Pipelines Schema Diff Wizard', title: 'Bitbucket Pipelines Schema Diff Setup Wizard — SchemaLens' },
+];
+
+for (const { platform, h1, title } of wizardPlatforms) {
+  test(`CI/CD Setup Wizard ?platform=${platform} loads with platform-specific SEO`, async ({ page }) => {
+    const response = await page.goto(`${BASE_URL}/tools/cicd-setup-wizard.html?platform=${platform}`);
+    expect(response.status()).toBe(200);
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('h1')).toContainText(h1);
+    const pageTitle = await page.title();
+    expect(pageTitle).toBe(title);
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    expect(description.toLowerCase()).toContain(platform === 'bitbucket' ? 'bitbucket' : platform);
+  });
+}
+
+// ───────────────────────────────────────────────
 // Theme Toggle Tests
 // ───────────────────────────────────────────────
 

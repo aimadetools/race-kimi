@@ -11,6 +11,67 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/tools/cicd-setup-wizard.html">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/cicd-setup-wizard.html">
+  <script>
+  // Platform-specific SEO landing pages: tools/cicd-setup-wizard.html?platform={github|gitlab|jenkins|circleci|bitbucket}
+  (function() {
+    const platforms = {
+      github: {
+        title: 'GitHub Actions Schema Diff Setup Wizard — SchemaLens',
+        description: 'Generate a ready-to-use GitHub Actions workflow that diffs your database schema on every pull request. Auto-detects SQL files, posts PR comments, creates check runs, and blocks breaking changes.',
+        og: 'Generate a GitHub Actions schema diff workflow in 60 seconds. Auto-detects SQL files and posts PR comments.',
+        h1: 'GitHub Actions Schema Diff Wizard',
+        subtitle: 'Generate a ready-to-commit GitHub Actions workflow that catches breaking schema changes on every pull request.'
+      },
+      gitlab: {
+        title: 'GitLab CI Schema Diff Setup Wizard — SchemaLens',
+        description: 'Generate a GitLab CI pipeline that diffs your database schema on every merge request. Includes MR comments, smart skip, and a breaking-change gate.',
+        og: 'Generate a GitLab CI schema diff pipeline in 60 seconds. Catches breaking changes in every merge request.',
+        h1: 'GitLab CI Schema Diff Wizard',
+        subtitle: 'Generate a GitLab CI/CD pipeline config that catches breaking schema changes on every merge request.'
+      },
+      jenkins: {
+        title: 'Jenkins Schema Diff Pipeline Setup Wizard — SchemaLens',
+        description: 'Generate a Jenkinsfile that diffs your database schema on every build. Detects added, removed, and modified tables and fails builds on breaking changes.',
+        og: 'Generate a Jenkins schema diff pipeline in 60 seconds. Fails builds when breaking schema changes are detected.',
+        h1: 'Jenkins Schema Diff Wizard',
+        subtitle: 'Generate a Jenkinsfile that diffs your database schema on every build and blocks breaking changes.'
+      },
+      circleci: {
+        title: 'CircleCI Schema Diff Setup Wizard — SchemaLens',
+        description: 'Generate a CircleCI config that diffs your database schema on every branch push. Posts results, skips unrelated builds, and gates merges on breaking changes.',
+        og: 'Generate a CircleCI schema diff config in 60 seconds. Catches breaking changes before they reach production.',
+        h1: 'CircleCI Schema Diff Wizard',
+        subtitle: 'Generate a CircleCI config that diffs your database schema on every push and blocks breaking changes.'
+      },
+      bitbucket: {
+        title: 'Bitbucket Pipelines Schema Diff Setup Wizard — SchemaLens',
+        description: 'Generate a bitbucket-pipelines.yml that diffs your database schema on every pull request. Adds PR comments, skips non-SQL changes, and blocks breaking schema changes.',
+        og: 'Generate a Bitbucket Pipelines schema diff config in 60 seconds. Catches breaking schema changes in every PR.',
+        h1: 'Bitbucket Pipelines Schema Diff Wizard',
+        subtitle: 'Generate a Bitbucket Pipelines config that diffs your database schema on every pull request.'
+      }
+    };
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const platform = params.get('platform');
+      const data = platforms[platform];
+      if (!data) return;
+      window.__wizardPlatform = platform;
+      document.title = data.title;
+      const setMeta = (selector, attr, value) => {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute(attr, value);
+      };
+      setMeta('meta[name="description"]', 'content', data.description);
+      setMeta('meta[property="og:title"]', 'content', data.title);
+      setMeta('meta[property="og:description"]', 'content', data.og);
+      setMeta('meta[property="og:url"]', 'content', 'https://schemalens.tech/tools/cicd-setup-wizard.html?platform=' + platform);
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute('href', 'https://schemalens.tech/tools/cicd-setup-wizard.html?platform=' + platform);
+    } catch (e) {}
+  })();
+  </script>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <style>
@@ -112,8 +173,8 @@
     </nav>
 
     <div class="page-header">
-      <h1>CI/CD Setup Wizard</h1>
-      <p>Generate a ready-to-commit schema diff pipeline config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines. Paste it into your repo and start catching breaking schema changes on every PR.</p>
+      <h1 id="wizard-title">CI/CD Setup Wizard</h1>
+      <p id="wizard-subtitle">Generate a ready-to-commit schema diff pipeline config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines. Paste it into your repo and start catching breaking schema changes on every PR.</p>
     </div>
 
     <div class="wizard">
@@ -288,6 +349,23 @@
       btnDetectReset: document.getElementById('btn-detect-reset')
     };
 
+    const platformCopy = {
+      github: { h1: 'GitHub Actions Schema Diff Wizard', subtitle: 'Generate a ready-to-commit GitHub Actions workflow that catches breaking schema changes on every pull request.' },
+      gitlab: { h1: 'GitLab CI Schema Diff Wizard', subtitle: 'Generate a GitLab CI/CD pipeline config that catches breaking schema changes on every merge request.' },
+      jenkins: { h1: 'Jenkins Schema Diff Wizard', subtitle: 'Generate a Jenkinsfile that diffs your database schema on every build and blocks breaking changes.' },
+      circleci: { h1: 'CircleCI Schema Diff Wizard', subtitle: 'Generate a CircleCI config that diffs your database schema on every push and blocks breaking changes.' },
+      bitbucket: { h1: 'Bitbucket Pipelines Schema Diff Wizard', subtitle: 'Generate a Bitbucket Pipelines config that diffs your database schema on every pull request.' }
+    };
+
+    function updateHeaderCopy(platform) {
+      const data = platformCopy[platform];
+      if (!data) return;
+      const h1 = document.getElementById('wizard-title');
+      const sub = document.getElementById('wizard-subtitle');
+      if (h1) h1.textContent = data.h1;
+      if (sub) sub.textContent = data.subtitle;
+    }
+
     function loadFromUrl() {
       try {
         const params = new URLSearchParams(window.location.search);
@@ -296,6 +374,7 @@
           state.platform = platform;
           const radio = document.querySelector(`input[name="platform"][value="${platform}"]`);
           if (radio) radio.checked = true;
+          updateHeaderCopy(platform);
         }
         const repo = params.get('repo');
         const branch = params.get('branch');
