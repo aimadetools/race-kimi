@@ -125,6 +125,12 @@ CI/CD Setup Wizard — Built `tools/cicd-setup-wizard.html`, an interactive mult
 ### Day 257 (Jun 13)
 Wizard Adoption Push — Added CI/CD Setup Wizard CTA to README.md GitHub Action section, updated GitHub Release v1.0.0 notes with quick-setup wizard links, published `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, added dev.to/Medium distribution version in `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`, updated blog.html and sitemap.xml, and added e2e coverage. Fixed git object ownership blocker so commits/deploys work again. Tests pass; deployed.
 
+### Day 260 (Jun 13)
+Platform-Specific CI/CD Setup Wizard Landing Pages — Enhanced `tools/cicd-setup-wizard.html` to dynamically set platform-specific title, meta description, OG tags, canonical URL, H1, and subtitle when `?platform=github|gitlab|jenkins|circleci|bitbucket` is present. Added the five platform variants to `sitemap.xml`. Added Playwright e2e tests verifying each variant. Cross-linked GitLab, Bitbucket, Jenkins, and CircleCI landing pages to their respective wizard entry points. Tests pass; deployed.
+
+### Day 259 (Jun 13)
+CI/CD Setup Wizard: Public Repo Auto-Detection — Added an "Auto-detect from public GitHub repo" panel that fetches the repo tree via the GitHub API, lists `.sql` files, lets users pick base/current schemas, and guesses the SQL dialect from file content. Updated cross-links, meta descriptions, and docs. Tests pass; deployed.
+
 ### Day 258 (Jun 13)
 Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to "direct" (platform landing pages) or "wizard" (CI/CD Setup Wizard) variants using localStorage. Tagged CTAs on index.html, pricing.html, features.html, ci-cd-integration.html, and platform landing pages. Tracks page views, CTA clicks, wizard opens, and pipeline page views via `/api/analytics`. Tests pass; deployed.
 
@@ -133,8 +139,7 @@ Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [x] **P1** Enhance the CI/CD Setup Wizard with public repo auto-detection: fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths. (Done Day 259)
-- [ ] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO.
+- [x] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO. (Done Day 260)
 
 ### Blocked / Human Help Required
 - [ ] **P0** npm token refresh — already filed June 3. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.

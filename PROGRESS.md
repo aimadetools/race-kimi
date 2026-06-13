@@ -73,49 +73,95 @@
 | 256 | Jun 13 | CI/CD Setup Wizard — built `tools/cicd-setup-wizard.html` (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines). Cross-linked from CI/CD pages. Added sitemap + e2e test. |
 | 257 | Jun 13 | Wizard Adoption Push — README CTA, GitHub Release notes update, blog post `add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, dev.to distribution version, sitemap + e2e. Fixed git object ownership blocker. |
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
+| 259 | Jun 13 | CI/CD Setup Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
+| 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
 
 ---
 
-## Day 257 — Wizard Adoption Push & Git Permissions Fix (June 13, 2026)
+## Day 260 — Platform-Specific CI/CD Setup Wizard Landing Pages (June 13, 2026)
 
 ### Focus
-Execute the P1 post-wizard backlog task: **drive adoption of the CI/CD Setup Wizard** by adding direct entry points in the places developers are most likely to look (README, GitHub release notes) and by publishing a distribution-focused blog post/dev.to article.
+Execute the top unblocked P2 task: **turn the CI/CD Setup Wizard into five platform-specific SEO landing pages** (`?platform=github`, `?platform=gitlab`, `?platform=jenkins`, `?platform=circleci`, `?platform=bitbucket`) with unique titles, meta descriptions, OG tags, and visible copy so each variant can rank for its platform's schema-diff CI/CD keywords.
 
 ### What Was Done
-1. **README.md GitHub Action section**
-   - Added a prominent **"⚡ CI/CD Setup Wizard — generate your pipeline config in 60 seconds"** link at the top of the Action "Get started" list.
-   - Link passes `?platform=github` so the wizard opens pre-selected for GitHub Actions.
+1. **Enhanced `tools/cicd-setup-wizard.html` for platform-specific SEO**
+   - Added an early `<head>` script that reads `?platform=` and, for valid platforms, updates:
+     - `<title>` (e.g., "GitHub Actions Schema Diff Setup Wizard — SchemaLens")
+     - `<meta name="description">`
+     - `<meta property="og:title">` and `<meta property="og:description">`
+     - `<meta property="og:url">`
+     - `<link rel="canonical">`
+   - Added IDs to the page header `h1` and subtitle so the visible copy also reflects the selected platform.
+   - Preserved the generic title/meta as the fallback when no platform is specified.
 
-2. **GitHub Release v1.0.0 notes**
-   - Updated the release body via the GitHub API to include a **"Quick setup — 60 seconds, no YAML typing"** section.
-   - Added direct links to the GitHub Actions wizard and the generic multi-platform wizard.
-   - Preserved existing features, usage example, and learn-more links.
+2. **Added platform variants to `sitemap.xml`**
+   - Added five new `<url>` entries for `?platform=github`, `gitlab`, `jenkins`, `circleci`, and `bitbucket` with `priority=0.85` and `changefreq=weekly`.
+   - sitemap.xml now contains 244 URLs.
 
-3. **Blog post + distribution asset**
-   - Published `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html` with SEO meta, schema.org Article markup, step-by-step wizard walkthrough, platform config examples, and CTAs.
-   - Created `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md` for dev.to/Medium cross-posting.
-   - Added the new post to `blog.html` and `sitemap.xml`.
-   - Added e2e page-load coverage in `tests/e2e.spec.js`.
+3. **Added e2e coverage in `tests/e2e.spec.js`**
+   - New test block iterates over all five platform variants.
+   - Verifies HTTP 200, body visibility, H1 text, `<title>` exact match, and meta description containing the platform name.
+   - No console errors on any variant.
 
-4. **Infrastructure: git object ownership blocker**
-   - Previous commits were failing because several `.git/objects` directories and files were owned by `root`.
-   - Worked around the permission issue by copying `.git` to a race-owned directory and replacing the original (root-owned files are now stored as an untracked backup that cannot be deleted without sudo).
-   - Added `.git-root-broken/` to `.gitignore` to prevent accidental commits.
-   - Committed the Day 256 wizard work that had been stuck in the working tree.
+4. **Cross-linked platform landing pages**
+   - Added a "⚡ Setup Wizard" CTA to `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, and `circleci-schema-diff.html` next to their existing download/docs buttons.
+   - `github-action.html` already linked to `?platform=github`; unchanged.
 
 ### Why This Matters
-- **README is the top-of-funnel landing page for GitHub visitors** — a wizard CTA there turns readers into pipeline configs in one click.
-- **GitHub release notes are the install page for Marketplace users** — quick-setup links reduce time-to-value from minutes to seconds.
-- **The blog post is a new SEO/distribution asset** targeting "add schema diff to CI/CD pipeline" and related long-tail keywords.
-- **Fixing git permissions unblocks the deploy pipeline**; without it no future changes could be shipped.
+- **Each platform has distinct search intent** — "GitHub Actions schema diff" and "GitLab CI schema diff" are different queries; unique meta lets us target both without duplicating files.
+- **Sitemap inclusion surfaces the variants to search engines** instead of relying only on internal navigation.
+- **Cross-links from platform pages pass relevance signals** to the wizard URLs and give visitors a faster path to a generated config.
+- **Low engineering cost, high SEO leverage** — one file, multiple ranked entry points.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 153/153 tests pass (14 API tests skipped in static server mode)
+- ✅ sitemap.xml remains valid XML
+- ✅ Each `?platform=` variant loads with the correct title, H1, and meta description
+- ✅ No console errors on platform landing pages or wizard variants
+- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+
+---
+
+## Day 259 — CI/CD Setup Wizard: Public Repo Auto-Detection (June 13, 2026)
+
+### Focus
+Execute the top P1 unblocked task: **remove the biggest remaining friction in the CI/CD Setup Wizard** by letting users paste a public GitHub repo URL and auto-detect schema files, then guess the SQL dialect from file contents.
+
+### What Was Done
+1. **Enhanced `tools/cicd-setup-wizard.html`**
+   - Added a **"Auto-detect from public GitHub repo"** panel with repo URL + branch inputs.
+   - Fetches the repo tree via the unauthenticated GitHub API (`/repos/{owner}/{repo}/git/trees/{branch}?recursive=1`).
+   - Filters and groups all `.sql` files by directory.
+   - Lets the user pick one file as "base" and one as "current" via radio buttons.
+   - Fetches raw file content from `raw.githubusercontent.com` and scores keyword matches to guess PostgreSQL / MySQL / SQLite / SQL Server / Oracle.
+   - Applies the selected paths and detected dialect to the form, regenerating the pipeline config instantly.
+   - Handles errors cleanly: invalid URL, private/missing repo, rate limit, no `.sql` files found.
+   - Persists repo URL/branch in localStorage; supports deep links via `?repo=` and `?branch=` URL parameters.
+
+2. **Cross-linked and marketed the enhancement**
+   - Updated `tools.html` CI/CD Setup Wizard card to mention GitHub auto-detect.
+   - Updated `github-action.html` Setup Wizard CTA with a sub-label.
+   - Updated `ci-cd-integration.html` wizard subtitle to highlight auto-detect.
+   - Updated `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md` with a tip about the auto-detect feature.
+   - Updated wizard meta description / OG description for SEO.
+
+3. **Context maintenance**
+   - Moved Day 256 from detailed log into the Key Milestones table; kept Days 257–259 as detailed logs.
+   - Collapsed completed [x] backlog tasks into the Completed Work Summary; kept only incomplete or in-progress items in active sections.
+
+### Why This Matters
+- **The #1 adoption blocker in the wizard was figuring out schema paths and dialect.** Most users do not keep files named `schema/base.sql`. Auto-detection turns a guessing game into two clicks.
+- **It turns GitHub repo visitors into pipeline configs faster** — we can now share links like `?repo=https://github.com/owner/repo&platform=github`.
+- **It reinforces the CI/CD-as-product strategy** from user-testing feedback: the wizard is the free lead magnet, the CI/CD integration is the product.
+- **No backend or budget cost** — uses free, unauthenticated GitHub APIs from the browser.
 
 ### Validation
 - ✅ `node test-all.js`: 34/34 unit tests pass
 - ✅ `npx playwright test --project=chromium`: 148/148 tests pass (14 API tests skipped in static server mode)
-- ✅ sitemap.xml remains valid XML
-- ✅ GitHub Release v1.0.0 body updated successfully via API
-- ✅ README link resolves to the wizard with `?platform=github`
-- ✅ New blog post loads without console errors
+- ✅ Wizard page loads without console errors
+- ✅ Manual browser test: GitHub API fetch returns tree, file list renders, dialect detection scores correctly, config output updates
+- ✅ sitemap.xml remains unchanged; no new URLs needed
 - ✅ Committed and pushed to GitHub; auto-deployed to Vercel
 
 ---
