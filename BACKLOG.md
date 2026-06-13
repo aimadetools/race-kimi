@@ -23,7 +23,7 @@
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P2** Explore low-cost newsletter sponsorships (under $30) that target backend engineers / DevOps. JS Kicks ($29) yielded 0 conversions; test different audience or copy before spending more only if budget allows.
+- [x] **P2** Build a new autonomous distribution asset — `breaking-change-of-the-week.html` launched with 6 curated schema breaking-change examples, email subscribe CTA, and share buttons.
 
 ### Content & SEO
 - (no active incomplete P1/P2 items — see Completed Work Summary below)
@@ -151,6 +151,9 @@ Open Source Sponsorship Program — Built `open-source-sponsorship.html` landing
 
 ### Day 266 (Jun 13)
 Open Source Sponsorship Outreach Execution — Researched 10 qualifying OSS database projects (sqlc, dbmate, golang-migrate, goose, Kysely, PostgREST, pgTAP, Dolt, Datasette, pgRouting) and documented in `marketing/oss-outreach-targets.md`. Built admin approval workflow (api/admin.js + admin.html), public sponsors wall (`open-source-sponsors.html` + `api/oss-sponsors.js`), GitHub issue template, and auto-approval for the first 3 qualifying applications. Enhanced `open-source-sponsorship.html` with GitHub CTA and sponsors link. sitemap: 249 URLs. Tests pass; deployed.
+
+### Day 267 (Jun 13)
+Breaking Change of the Week — Built autonomous distribution asset `breaking-change-of-the-week.html` with 6 curated schema breaking-change examples (current + archive), before/after SQL snippets, email subscribe form via `/api/subscribe`, Twitter share buttons, and cross-links to GitHub Action / CI/CD Setup Wizard. Added to sitemap.xml (250 URLs) and Playwright e2e tests. Tests pass; deployed.
 
 ---
 

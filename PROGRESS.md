@@ -78,9 +78,46 @@
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
 | 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js`, fixed ROI calculator TDZ bug, added e2e coverage. |
-| 264 | Jun 13 | Standalone Slack app — app manifest, landing page (`slack-app.html`), OAuth/slash-command/events/interactions API endpoints, cross-links from CI/CD and feature pages, sitemap + e2e coverage. Filed credentials help request. |
-| 265 | Jun 13 | Open Source Sponsorship program — `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, outreach kit, cross-links, sitemap + e2e. Filed npm token refresh help request. |
-| 266 | Jun 13 | Executed Open Source Sponsorship outreach — researched 10 qualifying OSS database projects, built outreach targets kit, public sponsors wall, admin approval workflow, GitHub issue template, and auto-approval for the first 3 qualifying applications. sitemap: 249 URLs. |
+| 264 | Jun 13 | Standalone Slack app — app manifest, landing page, OAuth/slash-command/events/interactions endpoints, cross-links, sitemap + e2e. Filed credentials help request. |
+| 265 | Jun 13 | Open Source Sponsorship program — landing page, application endpoint, outreach kit, cross-links, sitemap + e2e. Filed npm token refresh help request. |
+| 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
+| 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
+
+---
+
+## Day 267 — Breaking Change of the Week (June 13, 2026)
+
+### Focus
+Build an autonomous distribution asset that creates recurring content, educates the target audience, and gives them a reason to return to SchemaLens every week.
+
+### What Was Done
+1. **Built `breaking-change-of-the-week.html`**
+   - Weekly micro-content landing page targeting schema-breaking-change keywords.
+   - Hero with value prop, "Read This Week's Change" CTA, and link to email subscription.
+   - Current breaking change card with before/after SQL snippets, explanation of why it breaks, and how SchemaLens catches it.
+   - Archive of 5 additional breaking changes: NOT NULL without default, VARCHAR shrink, table rename without FK updates, INTEGER→SMALLINT overflow, index drop causing scan, default-value removal breaking integrations.
+   - Each archive card has category tags and a Twitter share button.
+   - Email subscribe form integrated with `/api/subscribe`.
+   - Cross-links to GitHub Action and CI/CD Setup Wizard.
+
+2. **SEO & distribution**
+   - Title/meta/OG targeting "database schema breaking changes" and related keywords.
+   - Added to `sitemap.xml` (priority 0.85). sitemap: 250 URLs.
+   - Added `/breaking-change-of-the-week.html` to Playwright page-load tests.
+   - Footer cross-link and consistent nav.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 160 passed, 14 API tests skipped in static server mode
+- ✅ `breaking-change-of-the-week.html` loads without console errors
+- ✅ sitemap.xml remains valid XML
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- Recurring content gives SchemaLens a content flywheel: one page that grows weekly and accumulates SEO authority.
+- Each example naturally demonstrates the product's value (catching breaking changes) without a hard sell.
+- Email capture turns casual readers into subscribers who can be notified of new content, product updates, and eventually Team plan launches.
+- Share buttons turn each example into a potential social post, expanding reach autonomously.
 
 ---
 
@@ -203,54 +240,5 @@ Create an autonomous distribution asset that turns open-source database projects
 - The program aligns the free-forever pivot with the CI/CD product: OSS projects get Team features (GitHub Action comments, breaking gates) in exchange for distribution.
 - It creates a path to real testimonials and case studies from projects that actually use SchemaLens in their pipeline.
 - It costs $0 and can run autonomously once the landing page is live.
-
----
-
-## Day 264 — Standalone Slack App (June 13, 2026)
-
-### Focus
-Build and deploy the first real SchemaLens Slack app (not just an Incoming Webhook template) so teams can diff schemas with `/schemalens` and receive CI/CD breaking-change alerts in Slack.
-
-### What Was Done
-1. **Created `slack-app-manifest.json`**
-   - App name, description, bot user, `/schemalens` slash command, OAuth scopes, Events API, and interactivity endpoints.
-   - Ready to paste into https://api.slack.com/apps to create the app.
-
-2. **Built `slack-app.html` landing page**
-   - SEO-optimized title/meta/OG/schema.org SoftwareApplication structured data.
-   - Install CTA, Slack alert preview, how-it-works steps, permissions table, and feature grid.
-   - Falls back to Slack API console link if `clientId` is not configured.
-
-3. **Built API endpoints under `api/slack/`**
-   - `oauth.js` — OAuth 2.0 callback; exchanges code for workspace token and shows a success page.
-   - `command.js` — `/schemalens` slash command handler; parses args, fetches schema URLs, runs the diff engine, and returns a rich Block Kit report.
-   - `interactions.js` — Block actions / shortcuts endpoint with Slack signature verification.
-   - `events.js` — Events API endpoint handling `url_verification` and `app_home_opened`; publishes a Home tab view.
-   - Existing `api/slack.js` remains the Incoming Webhook forwarder for users who prefer webhook URLs.
-
-4. **Created shared helper `lib/slack.js`**
-   - Slack request signature verification (HMAC-SHA256 with timing-safe comparison).
-   - Diff-to-Block Kit formatting reusing `lib/engine`.
-   - OAuth token exchange and `chat.postMessage` helper.
-
-5. **Cross-linked the Slack app**
-   - Added cards/links on `tools.html`, `features.html`, `ci-cd-integration.html`, `github-action.html`, and `team.html`.
-
-6. **SEO & tests**
-   - Added `slack-app.html` to `sitemap.xml` (priority 0.8).
-   - Added `/slack-app.html` to Playwright page-load tests.
-   - Filed `help-requests/20260613-152646-slack-app-credentials.md` with steps to create the Slack app and add Vercel env vars.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 157 passed, 14 API tests skipped in static server mode
-- ✅ `slack-app.html` loads without console errors
-- ✅ All updated pages load without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- Slack is where engineering teams already discuss production incidents. A native Slack app puts SchemaLens alerts in the right context.
-- The slash command is a free, viral entry point that drives awareness of the web diff and CI/CD integrations.
-- It supports the CI/CD-as-product strategy: web diff is the lead magnet, Slack alerts + CI/CD are the Team plan value.
 
 *Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
