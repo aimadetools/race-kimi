@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Slack App — Schema Diff & Alerts in Slack</title>
+  <meta name="description" content="Install the SchemaLens Slack app to diff SQL schemas and receive breaking-change alerts directly in your workspace. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
+  <meta property="og:title" content="SchemaLens Slack App — Schema Diff & Alerts in Slack">
+  <meta property="og:description" content="Diff SQL schemas with /schemalens and get CI/CD breaking-change alerts in Slack. Free install.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/slack-app.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Slack App",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Slack slash command for SQL schema diff, CI/CD breaking change alerts, migration SQL sharing, PostgreSQL MySQL SQLite SQL Server Oracle support",
+    "url": "https://schemalens.tech/slack-app.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 620px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .step { display: flex; gap: 16px; margin: 24px 0; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step-body { flex: 1; }
+    .step-body h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .step-body p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 32px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .slack-preview { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0; }
+    .slack-preview h3 { font-size: 1rem; margin-bottom: 14px; }
+    .slack-message { background: #1a1d21; border-radius: 8px; padding: 14px; font-size: 0.9rem; color: #e2e8f0; }
+    .slack-message .header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .slack-message .avatar { width: 34px; height: 34px; border-radius: 6px; background: #6366f1; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+    .slack-message .name { font-weight: 700; }
+    .slack-message .time { color: #94a3b8; font-size: 0.75rem; }
+    .slack-message .field { margin: 8px 0; }
+    .slack-message .label { color: #94a3b8; font-size: 0.8rem; }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table td { color: var(--text-muted); }
+    .comparison-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    @media (prefers-color-scheme: dark) {
+      .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem; flex-wrap:wrap;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api-guide.html">API</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+      <a href="features.html">Features</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>SchemaLens for Slack <span class="badge-free">Free</span></h1>
+      <p>Diff SQL schemas and catch breaking changes without leaving Slack. Add <code>/schemalens</code> to any channel, or wire CI/CD alerts to your team workspace.</p>
+    </div>
+
+    <div class="cta-bar">
+      <h2>⚡ Add SchemaLens to Slack</h2>
+      <p>Installs in one click. No credit card required. Works with the free web diff and free CI/CD integrations.</p>
+      <a id="slack-install" href="#install" class="btn btn-primary" style="font-size:1rem; padding:12px 24px;">Add to Slack</a>
+      <p style="font-size:0.8rem; margin-top:12px; color:var(--text-muted);">You will be redirected to Slack to authorize the app. Requires <code>chat:write</code> and <code>commands</code> scopes.</p>
+    </div>
+
+    <div class="slack-preview">
+      <h3>📬 What alerts look like in Slack</h3>
+      <div class="slack-message">
+        <div class="header">
+          <div class="avatar">SL</div>
+          <div>
+            <div class="name">SchemaLens</div>
+            <div class="time">Today at 10:42 AM</div>
+          </div>
+        </div>
+        <div style="margin-bottom:10px;">🔴 <strong>Schema diff detected breaking changes</strong> in <code>aimadetools/race-kimi</code> on <code>main</code></div>
+        <div class="field"><span class="label">Changes:</span> 1 table added, 2 tables modified, 1 column removed</div>
+        <div class="field"><span class="label">Breaking:</span> 1 issue — removed <code>users.phone</code> column</div>
+        <div class="field"><span class="label">Migration:</span> <code>-- Generated by SchemaLens
+ALTER TABLE users DROP COLUMN phone;</code></div>
+        <div style="margin-top:10px;">
+          <a href="app.html" style="color:#7dd3fc;">View full report</a> · <a href="schema-drift-alert.html" style="color:#7dd3fc;">Open alert page</a>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:40px;">How it works</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Install the app</h3>
+        <p>Click <strong>Add to Slack</strong> and choose a workspace. SchemaLens only requests the permissions it needs to post messages and respond to slash commands.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Use <code>/schemalens</code> on demand</h3>
+        <p>Paste two schema URLs or raw SQL snippets. The app returns a rich diff report with migration SQL and breaking-change warnings.</p>
+        <div class="code-block">
+/schemalens https://example.com/schema/base.sql https://example.com/schema/head.sql --dialect postgres
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Wire CI/CD alerts</h3>
+        <p>Add the Slack channel ID to your SchemaLens GitHub Action, GitLab CI, or Jenkins config. Alerts arrive automatically on every schema change.</p>
+        <div class="code-block">
+<span class="comment"># .github/workflows/schema-diff.yml</span>
+<span class="key">- uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+  <span class="key">with</span>:
+    <span class="key">slack-webhook-url</span>: <span class="str">${{ secrets.SLACK_WEBHOOK_URL }}</span>
+    <span class="key">notify-on-breaking</span>: <span class="str">true</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:40px;">Features</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🚀 Slash command</h3>
+        <p>Run <code>/schemalens</code> in any channel to diff schemas, generate migrations, and share reports with your team.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🚨 Breaking change alerts</h3>
+        <p>Get notified the moment a CI/CD pipeline detects a breaking schema change, with severity and suggested fixes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📎 Shareable reports</h3>
+        <p>Every alert links back to a public SchemaLens alert page with full diff, migration SQL, and metadata.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 Privacy first</h3>
+        <p>Schemas are processed in memory and never stored on our servers. License-key validation only.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:40px;">Permissions</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Scope</th><th>Why we need it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>chat:write</code></td><td>Post diff reports and alerts to channels you authorize.</td></tr>
+        <tr><td><code>chat:write.public</code></td><td>Post alerts to public channels without joining each one.</td></tr>
+        <tr><td><code>commands</code></td><td>Register and respond to the <code>/schemalens</code> slash command.</td></tr>
+        <tr><td><code>team:read</code></td><td>Display your workspace name on the success page after install.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cta-bar" style="margin-top:40px;">
+      <h2>Ready to add schema diff to Slack?</h2>
+      <p>Free for all workspaces. Upgrade to SchemaLens Team for advanced routing, admin controls, and unlimited alerts.</p>
+      <a href="#install" class="btn btn-primary slack-install">Add to Slack</a>
+      <a href="team-buy.html" class="btn btn-secondary">Start Team Plan — $29/mo</a>
+    </div>
+  </div>
+
+  <footer style="border-top:1px solid var(--border); margin-top:60px; padding:32px 0; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+    <p>&copy; 2026 SchemaLens. <a href="index.html" style="color:var(--text-muted);">Home</a> · <a href="privacy-policy.html" style="color:var(--text-muted);">Privacy</a> · <a href="api-guide.html" style="color:var(--text-muted);">API</a></p>
+  </footer>
+
+  <script>
+  (function() {
+    const clientId = '';
+    const scopes = 'chat:write,chat:write.public,commands,team:read';
+    const redirectUri = encodeURIComponent('https://schemalens.tech/api/slack/oauth');
+    const state = Math.random().toString(36).slice(2);
+    const slackUrl = clientId
+      ? `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}&state=${state}`
+      : 'https://api.slack.com/apps';
+    document.querySelectorAll('.slack-install, #slack-install').forEach(el => {
+      el.href = slackUrl;
+      if (!clientId) {
+        el.title = 'Slack app credentials not configured yet. Open Slack API to create the app.';
+      }
+    });
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</body>
+</html>

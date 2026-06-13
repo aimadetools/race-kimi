@@ -1,6 +1,9 @@
 /**
- * SchemaLens Slack Webhook API
+ * SchemaLens Slack Incoming Webhook API
  * POST /api/slack
+ *
+ * For the full Slack app (slash command, OAuth, Events API), see api/slack/*.js
+ * and the landing page at slack-app.html.
  *
  * Body:
  *   webhookUrl      string  required  Slack Incoming Webhook URL
