@@ -106,6 +106,12 @@ Build an autonomous distribution asset that creates recurring content, educates 
    - Added `/breaking-change-of-the-week.html` to Playwright page-load tests.
    - Footer cross-link and consistent nav.
 
+3. **Newsletter sponsorship research**
+   - Researched low-cost backend/DevOps newsletter sponsorships under $30.
+   - Documented findings in `marketing/newsletter-sponsorship-research.md`.
+   - Concluded available cheap options are poor audience fits; JS Kicks already yielded 0 conversions.
+   - Recommended reallocating effort to zero-cost channels (Open Source Sponsorship, Breaking Change of the Week) rather than spending the remaining $66 budget.
+
 ### Validation
 - ✅ `node test-all.js`: 34/34 unit tests pass
 - ✅ `npx playwright test --project=chromium`: 160 passed, 14 API tests skipped in static server mode
