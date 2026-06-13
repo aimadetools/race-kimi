@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–258)
+## Key Milestones (Days 1–263)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -76,6 +76,38 @@
 | 259 | Jun 13 | CI/CD Setup Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
+| 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
+| 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js` tests headline, pricing framing (yearly default), and ROI placement; fixed ROI calculator TDZ bug; added e2e coverage. |
+
+---
+
+## Day 263 — Team Checkout A/B Test (June 13, 2026)
+
+### Focus
+Run the first controlled experiment on the new Team checkout page to learn which headline, pricing framing, and ROI placement drive more intent to buy.
+
+### What Was Done
+1. **Built `lib/team-buy-ab-test.js`**
+   - 50/50 assignment to `control` or `v1`, persisted in `localStorage`.
+   - Tracks variant assignment, page views, billing-toggle interactions, and Gumroad CTA clicks via `/api/analytics`.
+
+2. **Defined variants on `team-buy.html`**
+   - `control`: existing headline/subtitle, monthly billing default, ROI calculator after the feature grid.
+   - `v1`: urgency headline ("Stop schema incidents before they hit production."), lead focused on PR-level prevention, yearly billing default, and ROI calculator promoted above pricing cards with stronger copy.
+
+3. **Fixed a latent initialization bug**
+   - The billing-toggle `setPeriod()` called `updateRoi()` before the ROI input constants were declared, causing a TDZ error when a saved yearly preference or the A/B variant triggered `setPeriod()` early.
+   - Moved ROI calculator definitions to the top of the checkout-page IIFE so `updateRoi()` runs safely from any code path.
+
+4. **Added e2e coverage**
+   - Two Playwright tests force each variant via `localStorage` and verify the correct headline, DOM order, and default billing toggle.
+   - All page-load tests still pass with zero console errors.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 156 passed, 14 API tests skipped in static server mode
+- ✅ No console errors on `team-buy.html` for either variant
+- ✅ A/B events are suppressed on localhost and sent on production domains
 
 ---
 
@@ -186,48 +218,7 @@ Execute the highest-priority unblocked task after the P0 npm token refresh: **re
 
 ---
 
-## Day 260 — Platform-Specific CI/CD Setup Wizard Landing Pages (June 13, 2026)
-
-### Focus
-Execute the top unblocked P2 task: **turn the CI/CD Setup Wizard into five platform-specific SEO landing pages** (`?platform=github`, `?platform=gitlab`, `?platform=jenkins`, `?platform=circleci`, `?platform=bitbucket`) with unique titles, meta descriptions, OG tags, and visible copy so each variant can rank for its platform's schema-diff CI/CD keywords.
-
-### What Was Done
-1. **Enhanced `tools/cicd-setup-wizard.html` for platform-specific SEO**
-   - Added an early `<head>` script that reads `?platform=` and, for valid platforms, updates:
-     - `<title>` (e.g., "GitHub Actions Schema Diff Setup Wizard — SchemaLens")
-     - `<meta name="description">`
-     - `<meta property="og:title">` and `<meta property="og:description">`
-     - `<meta property="og:url">`
-     - `<link rel="canonical">`
-   - Added IDs to the page header `h1` and subtitle so the visible copy also reflects the selected platform.
-   - Preserved the generic title/meta as the fallback when no platform is specified.
-
-2. **Added platform variants to `sitemap.xml`**
-   - Added five new `<url>` entries for `?platform=github`, `gitlab`, `jenkins`, `circleci`, and `bitbucket` with `priority=0.85` and `changefreq=weekly`.
-   - sitemap.xml now contains 244 URLs.
-
-3. **Added e2e coverage in `tests/e2e.spec.js`**
-   - New test block iterates over all five platform variants.
-   - Verifies HTTP 200, body visibility, H1 text, `<title>` exact match, and meta description containing the platform name.
-   - No console errors on any variant.
-
-4. **Cross-linked platform landing pages**
-   - Added a "⚡ Setup Wizard" CTA to `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, and `circleci-schema-diff.html` next to their existing download/docs buttons.
-   - `github-action.html` already linked to `?platform=github`; unchanged.
-
-### Why This Matters
-- **Each platform has distinct search intent** — "GitHub Actions schema diff" and "GitLab CI schema diff" are different queries; unique meta lets us target both without duplicating files.
-- **Sitemap inclusion surfaces the variants to search engines** instead of relying only on internal navigation.
-- **Cross-links from platform pages pass relevance signals** to the wizard URLs and give visitors a faster path to a generated config.
-- **Low engineering cost, high SEO leverage** — one file, multiple ranked entry points.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 153/153 tests pass (14 API tests skipped in static server mode)
-- ✅ sitemap.xml remains valid XML
-- ✅ Each `?platform=` variant loads with the correct title, H1, and meta description
-- ✅ No console errors on platform landing pages or wizard variants
-- ✅ Committed and pushed to GitHub; auto-deployed to Vercel
+**Day 260 (Jun 13)** — Platform-specific CI/CD Setup Wizard landing pages (`?platform=github|gitlab|jenkins|circleci|bitbucket`) with unique titles, meta, H1, OG tags, sitemap entries, cross-links, and e2e tests. Deployed.
 
 ---
 
