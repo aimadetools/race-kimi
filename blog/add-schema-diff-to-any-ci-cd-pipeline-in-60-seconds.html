@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>How to Add Schema Diff to Any CI/CD Pipeline in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-commit schema diff config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds with the SchemaLens CI/CD Setup Wizard.">
+  <meta property="og:title" content="How to Add Schema Diff to Any CI/CD Pipeline in 60 Seconds">
+  <meta property="og:description" content="Generate a ready-to-commit schema diff config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Add Schema Diff to Any CI/CD Pipeline in 60 Seconds",
+  "description": "Generate a ready-to-commit schema diff config for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines in 60 seconds with the SchemaLens CI/CD Setup Wizard.",
+  "url": "https://schemalens.tech/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html",
+  "datePublished": "2026-06-13",
+  "dateModified": "2026-06-13",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: var(--text); }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: var(--text); }
+    .blog-post .callout {
+      background: var(--code-bg);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: var(--text); }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>How to Add Schema Diff to Any CI/CD Pipeline in 60 Seconds</h1>
+      <div class="blog-meta">DevOps · June 13, 2026 · 5 min read</div>
+
+      <p>You do not need a paid tool, a database connection, or a weekend of YAML debugging to catch breaking schema changes in your pipeline. You need two schema files and a config that tells your CI platform where to find them.</p>
+
+      <p>That is exactly what the <a href="../tools/cicd-setup-wizard.html">SchemaLens CI/CD Setup Wizard</a> generates. Pick your platform, fill in three fields, and copy a ready-to-commit config into your repo. The whole thing takes about a minute.</p>
+
+      <div class="callout">
+        <p><strong>Supported platforms:</strong> GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines.</p>
+      </div>
+
+      <h2>The Problem: Schema Changes Are Invisible in Code Review</h2>
+
+      <p>Most teams review migration files the same way they review application code: they read the diff, hope they catch the dangerous line, and merge. But a single risky <code>ALTER TABLE</code> is easy to miss when it is buried in a 200-line migration.</p>
+
+      <p>The result is predictable. A column drops. A foreign key changes. A <code>NOT NULL</code> constraint lands without a default. The migration passes in staging because the data is small, then fails — or worse, silently breaks — in production.</p>
+
+      <p>The fix is to compare the schema before and after every pull request automatically. Not by hand. Not by squinting at SQL. By a diff engine that flags breaking changes, scores risk, and posts the result where the team already works.</p>
+
+      <h2>Step 1: Open the CI/CD Setup Wizard</h2>
+
+      <p>Go to <a href="../tools/cicd-setup-wizard.html">schemalens.tech/tools/cicd-setup-wizard.html</a>.</p>
+
+      <p>You will see a form with three sections:</p>
+
+      <ol>
+        <li><strong>Platform</strong> — GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines.</li>
+        <li><strong>SQL dialect</strong> — PostgreSQL, MySQL, SQLite, SQL Server, or Oracle.</li>
+        <li><strong>Schema paths</strong> — where your old/base schema file and new/current schema file live in the repo.</li>
+      </ol>
+
+      <p>The defaults assume you keep a base schema on your main branch and a current schema in the PR branch. You can change the paths to match your project.</p>
+
+      <h2>Step 2: Choose the Checks You Want</h2>
+
+      <p>The wizard can enable several CI features with checkboxes:</p>
+
+      <ul>
+        <li><strong>PR comments</strong> — a formatted diff summary posted to the pull request or merge request.</li>
+        <li><strong>Check Runs / status checks</strong> — a native CI check with a risk score, just like your tests.</li>
+        <li><strong>Smart skip</strong> — only run the diff when <code>.sql</code> files actually changed.</li>
+        <li><strong>Fail on breaking changes</strong> — block the build if the diff detects a breaking change.</li>
+        <li><strong>Slack / Teams alerts</strong> — notify a channel when drift is detected (Pro/Team feature).</li>
+      </ul>
+
+      <p>Everything except the alert webhooks works on the free tier. No license key is required to start catching breaking schema changes.</p>
+
+      <h2>Step 3: Copy the Generated Config</h2>
+
+      <p>As you change the form, the wizard updates a syntax-highlighted config in real time. For GitHub Actions it looks like this:</p>
+
+      <pre><code># .github/workflows/schema-diff.yml
+name: Schema Diff
+on: [pull_request]
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aimadetools/race-kimi@main
+        with:
+          old-schema-path: ./schema/base.sql
+          new-schema-path: ./schema/current.sql
+          dialect: postgres
+          post-comment: true
+          create-check-run: true
+          run-only-on-schema-change: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-breaking: true</code></pre>
+
+      <p>For GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines the wizard outputs the equivalent syntax for that platform. Same options, different file name.</p>
+
+      <h2>Step 4: Commit and Open a Test PR</h2>
+
+      <p>Copy the config into the right file in your repo:</p>
+
+      <ul>
+        <li>GitHub Actions → <code>.github/workflows/schema-diff.yml</code></li>
+        <li>GitLab CI → <code>.gitlab-ci.yml</code></li>
+        <li>Jenkins → <code>Jenkinsfile</code></li>
+        <li>CircleCI → <code>.circleci/config.yml</code></li>
+        <li>Bitbucket Pipelines → <code>bitbucket-pipelines.yml</code></li>
+      </ul>
+
+      <p>Commit, push, and open a pull request that touches a <code>.sql</code> file. The pipeline runs automatically, compares the two schemas, and posts the result.</p>
+
+      <h2>What the Result Looks Like</h2>
+
+      <p>When a developer opens a PR, they see a Check Run or status check like this:</p>
+
+      <div class="callout">
+        <p><strong>SchemaLens Schema Diff</strong> — Risk: Medium (42/100) · Breaking: 1</p>
+        <p style="margin-top:0.5rem;">1 added, 0 removed, 2 modified tables. 1 breaking change found.</p>
+      </div>
+
+      <p>If PR comments are enabled, the same summary appears as a comment. If the build is configured to fail on breaking changes, the PR is blocked until a human reviews it. No one has to remember to run the check. It runs because it is part of the pipeline.</p>
+
+      <h2>Why This Works for Any Platform</h2>
+
+      <p>SchemaLens is a file-based diff engine. It does not need to connect to a live database. It reads two SQL files, parses them in the same way regardless of platform, and outputs a report. That means the same core logic works in GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket Pipelines with only the wrapper syntax changing.</p>
+
+      <p>The wizard knows those wrappers, so you do not have to. You answer questions about your project; it answers the YAML plumbing.</p>
+
+      <h2>When to Add Schema Diff to Your Pipeline</h2>
+
+      <p>The best time is now, before the next breaking change slips through. But if you need a concrete trigger, add it when:</p>
+
+      <ul>
+        <li>You review migration PRs manually today.</li>
+        <li>You have more than one environment where schema drift can happen.</li>
+        <li>You have ever had a migration pass in staging and fail in production.</li>
+        <li>Your team uses Slack or Teams and wants proactive alerts.</li>
+      </ul>
+
+      <p>The setup cost is one minute. The potential savings are a weekend outage and a post-mortem.</p>
+
+      <div class="cta-box">
+        <h3>Generate your pipeline config in 60 seconds</h3>
+        <p>No signup, no database connection, no credit card. Pick your platform and paste the generated config into your repo.</p>
+        <a href="../tools/cicd-setup-wizard.html" class="btn btn-primary btn-lg">⚡ Open CI/CD Setup Wizard</a>
+        <a href="../github-action.html" class="btn btn-secondary">GitHub Action Guide</a>
+      </div>
+
+      <h2>Summary</h2>
+
+      <ul>
+        <li>SchemaLens CI/CD Setup Wizard generates ready-to-commit pipeline configs for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines.</li>
+        <li>You only need two SQL files and three fields to configure it.</li>
+        <li>The diff runs on every PR, posts a summary, creates a status check, and can block breaking changes.</li>
+        <li>No database connection is required because the diff is file-based.</li>
+        <li>The free tier covers PR comments, Check Runs, smart skip, and breaking-change gates.</li>
+      </ul>
+
+      <p><em>SchemaLens compares SQL schemas and generates migrations in your browser. Your schema never leaves your machine. <a href="../app.html">Try the free web diff →</a></em></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/cicd-setup-wizard.html">CI/CD Setup Wizard</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>

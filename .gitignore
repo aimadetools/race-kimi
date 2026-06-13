@@ -16,3 +16,4 @@ marketing/screenshots/
 marketing/demo-assets/
 .vercel
 cron.log.old
+.git-root-broken/

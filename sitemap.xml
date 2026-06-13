@@ -1492,6 +1492,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/tools/cicd-setup-wizard.html</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>weekly</changefreq>

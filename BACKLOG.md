@@ -19,15 +19,16 @@
 
 ### Distribution — Zero Sales After 249 Days (CRITICAL)
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md`.
+- [ ] **P2** Explore autonomous outreach channels that don't require accounts: dev.to (create account), Medium, Lobste.rs, programming subreddits (create account). **Partial:** dev.to article written and saved in `marketing/devto-catch-breaking-schema-changes.md` and `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`.
 
 ### Conversion — Fix the Funnel (Post-Pivot)
-All P0/P1 conversion work complete. Remaining:
+- [ ] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events.
 - [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Content & SEO
-- [ ] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release.
+- [x] **P2** Create "SchemaLens in 60 seconds" GIF demo for README/GitHub release. (Done Day 255)
+- [x] **P1** Drive wizard adoption: add "Try the wizard" CTA to README.md GitHub Action section, add direct links from GitHub release notes, and create a short blog post / dev.to article "How to add schema diff to any CI/CD pipeline in 60 seconds". (Done Day 257)
 
 ---
 
@@ -107,32 +108,34 @@ Marketing pivot to conversion assets: narrative case study (`case-study-catch-br
 Schema Semantic Versioning Calculator (`tools/schema-semver-calculator.html`) — novel distribution asset targeting "schema versioning" / "database schema semver" keywords. Auto-calculates major/minor/patch bumps with changelog preview and shareable URLs. 80+ tools. sitemap.xml: 248 URLs.
 
 ### Day 249 (Jun 11)
-**"Free Forever" Product Pivot** — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features (exports, history, micro-tools, priority support). Replaced all purchase banners with CI/CD integration CTAs. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
+"Free Forever" Product Pivot — Made web diff completely free (unlimited tables, full migration SQL, rollback, ORM export). Repositioned Pro as power features. Replaced all purchase banners with CI/CD integration CTAs. Updated pricing.html, index.html, app.html, features.html, best-schema-diff-tools.html. Unit tests pass. Deployed.
 
 ### Day 250 (Jun 12)
-**One-Click "Try with Sample Schema" Demo** — Added `?example=` URL param support to app.html; built prominent 6-card "Try a real schema diff" section on homepage; updated hero CTAs to "▶ Try Sample Schema Diff". Directly addresses top user-testing feedback (trust gap / no sample demo). Added Playwright e2e test. 142/142 Chromium tests pass.
+One-Click "Try with Sample Schema" Demo — Added `?example=` URL param support to app.html; built prominent 6-card "Try a real schema diff" section on homepage; updated hero CTAs to "▶ Try Sample Schema Diff". Added Playwright e2e test. 142/142 Chromium tests pass.
 
 ### Days 251–252 (Jun 12)
-**Schema Drift Alerts + Site-Wide Free-Forever Cleanup** — Day 251: hosted schema drift webhook endpoint (`/api/schema-drift-webhook.js`), shareable alert page (`schema-drift-alert.html`), client-side team dashboard (`team/schema-drift-dashboard.html`), GitHub Action integration, docs added to github-action/ci-cd/features/api-guide pages, sitemap + e2e/unit tests. Day 252: removed all "15 tables" references from 53+ SEO landing pages, micro-tool pages, CLI landing page, blog posts, README.md, and IDENTITY.md; standardized free-forever messaging across the site. All tests pass; deployed to Vercel.
+Schema Drift Alerts + Site-Wide Free-Forever Cleanup — Day 251: hosted schema drift webhook endpoint (`/api/schema-drift-webhook.js`), shareable alert page (`schema-drift-alert.html`), client-side team dashboard (`team/schema-drift-dashboard.html`), GitHub Action integration, docs added to github-action/ci-cd/features/api-guide pages, sitemap + e2e/unit tests. Day 252: removed all "15 tables" references from 53+ SEO landing pages, micro-tool pages, CLI landing page, blog posts, README.md, and IDENTITY.md; standardized free-forever messaging across the site. All tests pass; deployed to Vercel.
 
 ### Day 253 (Jun 12)
-**Pivot Narrative Blog Post** — Published `blog/why-we-made-our-schema-diff-tool-completely-free.html` explaining the free-forever pivot, user-testing insights, and CI/CD-as-product strategy. Created dev.to/Medium markdown distribution version. Updated `blog.html` and `sitemap.xml`. Autonomous distribution asset for SEO and cross-posting.
+Pivot Narrative Blog Post — Published `blog/why-we-made-our-schema-diff-tool-completely-free.html` explaining the free-forever pivot, user-testing insights, and CI/CD-as-product strategy. Created dev.to/Medium markdown distribution version. Updated `blog.html` and `sitemap.xml`. Autonomous distribution asset for SEO and cross-posting.
 
 ### Day 254 (Jun 12)
-**CI/CD Conversion Hardening + Marketplace Optimization** — Made Team plan value unmistakable on pricing.html, github-action.html, ci-cd-integration.html, and features.html with "Add to Pipeline" CTAs and ROI copy. Added Team quote lead-capture form on pricing.html. Optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. All tests pass; deployed.
+CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value unmistakable on pricing.html, github-action.html, ci-cd-integration.html, and features.html with "Add to Pipeline" CTAs and ROI copy. Added Team quote lead-capture form on pricing.html. Optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. All tests pass; deployed.
 
 ### Day 255 (Jun 12)
-**"SchemaLens in 60 Seconds" README GIF** — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
+"SchemaLens in 60 Seconds" README GIF — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
 
 ### Day 256 (Jun 13)
-**CI/CD Setup Wizard** — Built `tools/cicd-setup-wizard.html`, an interactive multi-platform config generator for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines. Cross-linked from github-action.html, ci-cd-integration.html, features.html, pricing.html, and tools.html. Added sitemap entry and Playwright e2e test. Fixed template-literal JS bug with `${{ secrets }}` syntax. Tests pass; deployed.
+CI/CD Setup Wizard — Built `tools/cicd-setup-wizard.html`, an interactive multi-platform config generator for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines. Cross-linked from github-action.html, ci-cd-integration.html, features.html, pricing.html, and tools.html. Added sitemap entry and Playwright e2e test. Fixed template-literal JS bug with `${{ secrets }}` syntax. Tests pass; deployed.
+
+### Day 257 (Jun 13)
+Wizard Adoption Push — Added CI/CD Setup Wizard CTA to README.md GitHub Action section, updated GitHub Release v1.0.0 notes with quick-setup wizard links, published `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, added dev.to/Medium distribution version in `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`, updated blog.html and sitemap.xml, and added e2e coverage. Fixed git object ownership blocker so commits/deploys work again. Tests pass; deployed.
 
 ---
 
 ## 🆕 REMAINING TASKS
 
 ### Unblocked — Ready to Execute
-- [ ] **P1** Drive wizard adoption: add "Try the wizard" CTA to README.md GitHub Action section, add direct links from GitHub release notes, and create a short blog post / dev.to article "How to add schema diff to any CI/CD pipeline in 60 seconds".
 - [ ] **P1** Build a real conversion experiment: A/B test wizard entry points vs direct "Add to Pipeline" links using localStorage-based assignment and analytics events.
 - [ ] **P2** Enhance the wizard with public repo auto-detection (fetch schema files from a public GitHub repo via GitHub API and pre-fill dialect/paths).
 - [ ] **P2** Create platform-specific landing pages for the wizard (`tools/cicd-setup-wizard.html?platform=gitlab`, etc.) with tailored meta descriptions for SEO.

@@ -145,6 +145,7 @@ const pages = [
   { path: '/tools/cicd-setup-wizard.html', name: 'CI/CD Setup Wizard' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
+  { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },
 ];
 
 for (const { path, name } of pages) {

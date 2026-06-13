@@ -96,6 +96,7 @@ jobs:
 
 ### Get started
 
+- **[⚡ CI/CD Setup Wizard — generate your pipeline config in 60 seconds →](https://schemalens.tech/tools/cicd-setup-wizard.html?platform=github)**
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[Team plan with Slack alerts →](https://schemalens.tech/pricing.html)**
