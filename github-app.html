@@ -58,8 +58,43 @@
     .permissions-table td { color: var(--text-muted); }
     .permissions-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
     .notice { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius); padding: 16px; color: #3730a3; }
+    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 24px 0; }
+    .section-card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .section-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; }
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .preview-tab { padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text-muted); cursor: pointer; font-size: 0.9rem; }
+    .preview-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .pr-comment-preview { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .pr-comment-header { background: #161b22; border-bottom: 1px solid #30363d; padding: 12px 16px; display: flex; align-items: center; gap: 10px; color: #c9d1d9; font-size: 0.9rem; }
+    .pr-comment-header img { width: 32px; height: 32px; border-radius: 50%; }
+    .pr-comment-body { padding: 16px; color: #c9d1d9; font-size: 0.95rem; line-height: 1.6; }
+    .pr-comment-body h2 { color: #e6edf3; font-size: 1.1rem; margin-bottom: 10px; border-bottom: none; }
+    .pr-comment-body table { border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; }
+    .pr-comment-body th, .pr-comment-body td { border: 1px solid #30363d; padding: 8px 12px; text-align: left; }
+    .pr-comment-body th { background: #161b22; }
+    .pr-comment-body code { background: #161b22; padding: 2px 5px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; }
+    .pr-comment-body pre { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px; overflow-x: auto; }
+    .pr-comment-body pre code { background: transparent; padding: 0; }
+    .pr-comment-body ul { margin: 10px 0; padding-left: 20px; }
+    .pr-comment-body li { margin: 4px 0; }
+    .pr-comment-body hr { border: 0; border-top: 1px solid #30363d; margin: 16px 0; }
+    .risk-low { color: #3fb950; font-weight: 600; }
+    .risk-medium { color: #d29922; font-weight: 600; }
+    .risk-high { color: #f85149; font-weight: 600; }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 12px; text-align: left; vertical-align: top; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table td { color: var(--text-muted); }
+    .comparison-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    .comparison-table .check { color: #22c55e; font-weight: 700; }
+    .comparison-table .dash { color: var(--text-muted); }
+    .faq-item { margin: 16px 0; }
+    .faq-item h4 { font-size: 1rem; margin-bottom: 6px; }
+    .faq-item p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
+    .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
     @media (prefers-color-scheme: dark) {
       .permissions-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+      .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
       .notice { background: #1e1b4b; border-color: #4338ca; color: #c7d2fe; }
     }
   </style>
@@ -87,15 +122,17 @@
     </div>
 
     <div class="cta-bar">
-      <h2>🚀 Get schema diff comments without touching CI config</h2>
-      <p>The GitHub App is in beta. Enter your email to request early access, or start using the GitHub Action today.</p>
+      <h2>🚀 Get schema diff comments on every PR — no YAML required</h2>
+      <p>The GitHub App is in early access. Request an invite, or start automating schema diff checks in your pipeline today.</p>
       <form id="earlyAccessForm" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; max-width:480px; margin:0 auto 16px;">
         <input type="email" name="email" placeholder="you@company.com" required style="flex:1; min-width:220px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg); color:var(--text);">
-        <button type="submit" class="btn btn-primary">Request Early Access</button>
+        <button type="submit" class="btn btn-primary" data-event="github_app_early_access_submit">Request Early Access</button>
       </form>
       <div id="earlyAccessMessage" style="display:none; font-size:0.9rem; color:var(--success); margin-bottom:12px;"></div>
-      <a href="github-action.html" class="btn btn-secondary">Use the GitHub Action today</a>
-      <a href="tools/cicd-setup-wizard.html?platform=github" class="btn btn-secondary">⚡ CI/CD Setup Wizard</a>
+      <div class="cta-row">
+        <a href="github-action.html" class="btn btn-secondary" data-event="github_app_action_cta">Use the GitHub Action today</a>
+        <a href="tools/cicd-setup-wizard.html?platform=github" class="btn btn-secondary" data-event="github_app_wizard_cta">⚡ CI/CD Setup Wizard</a>
+      </div>
     </div>
 
     <div class="feature-grid">
