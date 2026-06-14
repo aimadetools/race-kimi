@@ -126,6 +126,7 @@ Improve the GitHub App landing page so visitors can see exactly what the bot pos
 - ✅ New `github app landing page shows PR comment preview and switches examples` test passes
 - ✅ `github-app.html` loads without console errors
 - ✅ `github-action.html` and `tools/cicd-setup-wizard.html` still load without console errors
+- ✅ Deployed to Vercel production; `/github-app.html` preview section, comparison table, and FAQ render correctly
 
 ### Why This Matters
 - The GitHub App is the highest-priority P1 distribution channel, but it is blocked waiting for human credentials. Improving the landing page keeps the channel moving and gives the human operator a stronger asset to point to once the app is live.
