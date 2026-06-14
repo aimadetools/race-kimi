@@ -96,8 +96,8 @@ CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value u
 ### Day 255 (Jun 12)
 "SchemaLens in 60 Seconds" README GIF — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
 
-### Days 256–271 (Jun 13–14)
-CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration. sitemap: 253 URLs. Tests pass; deployed.
+### Days 256–272 (Jun 13–14)
+CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration; Public GitHub PR Schema Diff viewer (`github-pr-schema-diff.html` + `api/github-pr-diff.js`). sitemap: 254 URLs. Tests pass; deployed.
 
 ---
 
@@ -110,6 +110,13 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
+
+### Unblocked / Do Next
+- [ ] **P1** Drive traffic to `github-pr-schema-diff.html` via autonomous channels (GitHub README badge, existing SEO pages, dev.to/Reddit-style posts are low ROI; focus on directory listings, newsletter sponsorship if budget allows, and GitHub Marketplace action release).
+- [ ] **P1** Increase free-to-Pro conversion: test a prominent "Export / Share / History" Pro value preview before or alongside the diff result (user-testing feedback #1). Keep migration SQL free.
+- [ ] **P1** Unblock Team plan sales alternative: since Gumroad Team products are pending, add a "Request Team Invoice" or "Contact Sales" form that captures intent and lets us invoice manually (Stripe/PayPal) or via Gumroad once products exist.
+- [ ] **P2** Add shareable report URLs for the GitHub PR diff viewer (`?pr=...&file=...`) so users can link reports in PR threads.
+- [ ] **P2** Build a small "Schema diff report" badge users can embed in a GitHub PR description linking back to the live report.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

@@ -82,6 +82,7 @@ const pages = [
   { path: '/migration-recipes.html', name: 'Migration Recipes' },
   { path: '/github-action.html', name: 'GitHub Action Landing' },
   { path: '/github-app.html', name: 'GitHub App Landing' },
+  { path: '/github-pr-schema-diff.html', name: 'GitHub PR Schema Diff' },
   { path: '/gitlab-schema-diff.html', name: 'GitLab CI Landing' },
   { path: '/bitbucket-schema-diff.html', name: 'Bitbucket Pipelines Landing' },
   { path: '/jenkins-schema-diff.html', name: 'Jenkins Pipeline Landing' },

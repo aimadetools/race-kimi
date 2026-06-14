@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff for GitHub PR — Free Online Schema Diff Viewer</title>
+  <meta name="description" content="Paste any public GitHub PR URL and see the schema diff instantly. SchemaLens reads changed .sql files, detects breaking changes, scores risk, and generates migration SQL — no install required.">
+  <meta property="og:title" content="Schema Diff for GitHub PR — Free Online Schema Diff Viewer">
+  <meta property="og:description" content="Paste a public GitHub PR URL and get an instant schema diff report with breaking changes, risk score, and migration SQL.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/github-pr-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: var(--success); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 24px 0; }
+    .section-card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .section-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; }
+    .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .input-row input { flex: 1; min-width: 260px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 1rem; }
+    .input-row button { flex-shrink: 0; }
+    .file-picker { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .file-chip { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); cursor: pointer; font-size: 0.85rem; }
+    .file-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .error-box { background: rgba(248, 113, 113, 0.1); border: 1px solid var(--danger); color: var(--danger); border-radius: var(--radius); padding: 14px; margin: 16px 0; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .summary-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+    .summary-card .num { font-size: 1.6rem; font-weight: 700; color: var(--text); }
+    .summary-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .risk-low { color: var(--success); }
+    .risk-medium { color: var(--warning); }
+    .risk-high { color: var(--danger); }
+    .pr-comment-preview { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .pr-comment-header { background: #161b22; border-bottom: 1px solid #30363d; padding: 12px 16px; display: flex; align-items: center; gap: 10px; color: #c9d1d9; font-size: 0.9rem; }
+    .pr-comment-body { padding: 16px; color: #c9d1d9; font-size: 0.95rem; line-height: 1.6; }
+    .pr-comment-body h2 { color: #e6edf3; font-size: 1.1rem; margin-bottom: 10px; border-bottom: none; }
+    .pr-comment-body h3 { color: #e6edf3; font-size: 1rem; margin: 16px 0 8px; }
+    .pr-comment-body p { margin: 8px 0; }
+    .pr-comment-body table { border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; }
+    .pr-comment-body th, .pr-comment-body td { border: 1px solid #30363d; padding: 8px 12px; text-align: left; }
+    .pr-comment-body th { background: #161b22; }
+    .pr-comment-body code { background: #161b22; padding: 2px 5px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; }
+    .pr-comment-body pre { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px; overflow-x: auto; }
+    .pr-comment-body pre code { background: transparent; padding: 0; }
+    .pr-comment-body ul { margin: 10px 0; padding-left: 20px; }
+    .pr-comment-body li { margin: 4px 0; }
+    .pr-comment-body hr { border: 0; border-top: 1px solid #30363d; margin: 16px 0; }
+    .pr-comment-body a { color: #58a6ff; }
+    .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .migration-box { background: #0f172a; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; color: var(--code-text); white-space: pre; }
+    .muted { color: var(--text-muted); }
+    .privacy-note { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius); padding: 14px; color: #3730a3; font-size: 0.9rem; margin: 16px 0; }
+    @media (prefers-color-scheme: dark) {
+      .privacy-note { background: #1e1b4b; border-color: #4338ca; color: #c7d2fe; }
+    }
+    footer { border-top:1px solid var(--border); padding:32px 0; margin-top:32px; text-align:center; color:var(--text-muted); font-size:0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem; flex-wrap:wrap;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="github-app.html">GitHub App</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>Schema Diff for GitHub PR <span class="badge-free">Free</span></h1>
+      <p>Paste any <strong>public</strong> GitHub pull request URL and see the schema diff instantly. Breaking changes, risk score, and migration SQL — no install, no token, no signup.</p>
+    </div>
+
+    <div class="section-card">
+      <div class="input-row">
+        <input type="url" id="prUrl" placeholder="https://github.com/owner/repo/pull/123" aria-label="GitHub PR URL">
+        <button class="btn btn-primary" id="diffBtn" data-event="github_pr_diff_submit">Generate Schema Diff</button>
+      </div>
+      <p class="muted" style="font-size:0.85rem;margin-top:10px;margin-bottom:0;">Works for public repos only. The SQL file is read from GitHub, diffed in memory, and never stored.</p>
+    </div>
+
+    <div id="loading" class="section-card" style="display:none;text-align:center;">
+      <p>🔍 Reading PR files from GitHub and running the schema diff…</p>
+    </div>
+
+    <div id="errorBox" class="error-box" style="display:none;"></div>
+
+    <div id="filePicker" class="section-card" style="display:none;">
+      <h3>🗂️ Multiple SQL files changed</h3>
+      <p>Pick the schema file you want to diff:</p>
+      <div class="file-picker" id="filePickerList"></div>
+    </div>
+
+    <div id="results" style="display:none;">
+      <div class="section-card">
+        <h3>📊 Diff Summary</h3>
+        <p id="resultMeta" class="muted"></p>
+        <div class="summary-grid" id="summaryGrid"></div>
+        <div class="cta-row">
+          <a href="github-app.html" class="btn btn-primary" data-event="github_pr_diff_install_app">Get this comment on every PR →</a>
+          <a href="github-action.html" class="btn btn-secondary" data-event="github_pr_diff_add_action">Add GitHub Action →</a>
+          <a href="app.html" class="btn btn-secondary" data-event="github_pr_diff_open_app">Open in SchemaLens app →</a>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>💬 PR Comment Preview</h3>
+        <p>This is exactly what the <a href="github-app.html">SchemaLens GitHub App</a> posts inside the pull request.</p>
+        <div class="pr-comment-preview">
+          <div class="pr-comment-header">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">SL</div>
+            <div>
+              <strong>SchemaLens Bot</strong> commented
+              <div style="color:#8b949e;font-size:0.8rem;" id="commentFile">on schema.sql</div>
+            </div>
+          </div>
+          <div class="pr-comment-body" id="commentBody"></div>
+        </div>
+      </div>
+
+      <div class="section-card" id="migrationSection">
+        <h3>🛠️ Generated Migration SQL</h3>
+        <pre class="migration-box" id="migrationBox"></pre>
+      </div>
+
+      <div class="privacy-note">
+        <strong>Privacy note:</strong> SchemaLens reads the SQL file directly from GitHub's raw content CDN, computes the diff in memory, and returns the result. No schema data is logged or persisted on SchemaLens servers.
+      </div>
+    </div>
+
+    <div class="section-card" style="margin-top:32px;">
+      <h3>How to automate this on every PR</h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-top:12px;">
+        <div>
+          <h4 style="margin-bottom:6px;">GitHub App</h4>
+          <p class="muted" style="font-size:0.9rem;">Zero-config install. SchemaLens comments the diff automatically on every PR.</p>
+          <a href="github-app.html" class="btn btn-secondary" style="font-size:0.9rem;" data-event="github_pr_diff_how_app">Learn more →</a>
+        </div>
+        <div>
+          <h4 style="margin-bottom:6px;">GitHub Action</h4>
+          <p class="muted" style="font-size:0.9rem;">Add a workflow file to your repo for full control over checks and gates.</p>
+          <a href="github-action.html" class="btn btn-secondary" style="font-size:0.9rem;" data-event="github_pr_diff_how_action">View Action →</a>
+        </div>
+        <div>
+          <h4 style="margin-bottom:6px;">CI/CD Setup Wizard</h4>
+          <p class="muted" style="font-size:0.9rem;">Generate a ready-to-paste workflow for GitHub Actions, GitLab CI, Jenkins, CircleCI, or Bitbucket.</p>
+          <a href="tools/cicd-setup-wizard.html?platform=github" class="btn btn-secondary" style="font-size:0.9rem;" data-event="github_pr_diff_how_wizard">Open Wizard →</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p style="margin-bottom:12px;">
+        <a href="index.html">Home</a> ·
+        <a href="app.html">App</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="github-app.html">GitHub App</a> ·
+        <a href="features.html">Features</a>
+      </p>
+      <p>&copy; 2026 SchemaLens. Built for developers who ship database changes.</p>
+    </footer>
+  </div>
+
+  <script src="lib/analytics-client.js"></script>
+  <script>
+    function track(event, metadata) {
+      if (window.SchemaLensAnalytics && typeof window.SchemaLensAnalytics.track === 'function') {
+        window.SchemaLensAnalytics.track(event, metadata);
+      }
+    }
+
+    function esc(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // Lightweight markdown renderer for the PR comment preview.
+    function renderMarkdown(md) {
+      const lines = md.split('\n');
+      let html = '';
+      let inCode = false;
+      let codeLang = '';
+      let codeBuf = [];
+      let inList = false;
+      let listBuf = [];
+      let pendingTable = null;
+
+      function flushCode() {
+        if (!inCode) return;
+        html += '<pre><code>' + esc(codeBuf.join('\n')) + '</code></pre>\n';
+        inCode = false;
+        codeBuf = [];
+      }
+
+      function flushList() {
+        if (!inList) return;
+        html += '<ul>' + listBuf.map(li => '<li>' + inlineRender(li.replace(/^- +/, '')) + '</li>').join('') + '</ul>\n';
+        inList = false;
+        listBuf = [];
+      }
+
+      function flushTable() {
+        if (!pendingTable) return;
+        const rows = pendingTable.rows;
+        if (rows.length === 0) { pendingTable = null; return; }
+        let tableHtml = '<table><thead><tr>';
+        rows[0].forEach(cell => tableHtml += '<th>' + inlineRender(cell.trim()) + '</th>');
+        tableHtml += '</tr></thead><tbody>';
+        for (let i = 1; i < rows.length; i++) {
+          tableHtml += '<tr>' + rows[i].map(cell => '<td>' + inlineRender(cell.trim()) + '</td>').join('') + '</tr>';
+        }
+        tableHtml += '</tbody></table>\n';
+        html += tableHtml;
+        pendingTable = null;
+      }
+
+      function inlineRender(text) {
+        return esc(text)
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/`(.+?)`/g, '<code>$1</code>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (line.startsWith('```')) {
+          if (inCode) {
+            flushCode();
+          } else {
+            flushList();
+            flushTable();
+            inCode = true;
+            codeLang = line.slice(3).trim();
+          }
+          continue;
+        }
+        if (inCode) { codeBuf.push(line); continue; }
+
+        if (/^\|(.+)\|$/.test(line)) {
+          const cells = line.slice(1, -1).split('|');
+          if (!pendingTable) pendingTable = { rows: [] };
+          // Skip separator rows like |---|---|
+          if (!cells.every(c => /^\s*-+\s*$/.test(c))) {
+            pendingTable.rows.push(cells);
+          }
+          continue;
+        } else {
+          flushTable();
+        }
+
+        if (line.startsWith('- ')) {
+          inList = true;
+          listBuf.push(line);
+          continue;
+        } else {
+          flushList();
+        }
+
+        if (line.startsWith('### ')) { html += '<h3>' + inlineRender(line.slice(4)) + '</h3>\n'; continue; }
+        if (line.startsWith('## ')) { html += '<h2>' + inlineRender(line.slice(3)) + '</h2>\n'; continue; }
+        if (line.startsWith('# ')) { html += '<h1>' + inlineRender(line.slice(2)) + '</h1>\n'; continue; }
+        if (/^---+\s*$/.test(line)) { html += '<hr>\n'; continue; }
+        if (line.trim() === '') { html += '<br>\n'; continue; }
+        html += '<p>' + inlineRender(line) + '</p>\n';
+      }
+
+      flushCode();
+      flushList();
+      flushTable();
+      return html;
+    }
+
+    const prUrlInput = document.getElementById('prUrl');
+    const diffBtn = document.getElementById('diffBtn');
+    const loading = document.getElementById('loading');
+    const errorBox = document.getElementById('errorBox');
+    const filePicker = document.getElementById('filePicker');
+    const filePickerList = document.getElementById('filePickerList');
+    const results = document.getElementById('results');
+    const summaryGrid = document.getElementById('summaryGrid');
+    const resultMeta = document.getElementById('resultMeta');
+    const commentFile = document.getElementById('commentFile');
+    const commentBody = document.getElementById('commentBody');
+    const migrationBox = document.getElementById('migrationBox');
+
+    let currentParams = null;
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      loading.style.display = 'none';
+      results.style.display = 'none';
+      filePicker.style.display = 'none';
+    }
+
+    function hideError() {
+      errorBox.style.display = 'none';
+    }
+
+    function renderSummary(data) {
+      const s = data.summary;
+      const riskClass = s.riskScore >= 70 ? 'risk-high' : s.riskScore >= 40 ? 'risk-medium' : 'risk-low';
+      summaryGrid.innerHTML = `
+        <div class="summary-card"><div class="num">${s.tablesAdded}</div><div class="label">Tables Added</div></div>
+        <div class="summary-card"><div class="num">${s.tablesRemoved}</div><div class="label">Tables Removed</div></div>
+        <div class="summary-card"><div class="num">${s.tablesModified}</div><div class="label">Tables Modified</div></div>
+        <div class="summary-card"><div class="num">${s.breakingChanges}</div><div class="label">Breaking Changes</div></div>
+        <div class="summary-card"><div class="num ${riskClass}">${s.riskScore}</div><div class="label">Risk Score</div></div>
+      `;
+      resultMeta.innerHTML = `<strong>${esc(data.owner)}/${esc(data.repo)}</strong> · PR #${esc(data.pull)} · <code>${esc(data.file)}</code> · Dialect: <code>${esc(data.dialect)}</code>`;
+      commentFile.textContent = `on ${data.file}`;
+      commentBody.innerHTML = renderMarkdown(data.markdown);
+      migrationBox.textContent = data.migration || '-- No migration SQL generated --';
+      results.style.display = 'block';
+      loading.style.display = 'none';
+    }
+
+    function renderFilePicker(data) {
+      filePicker.style.display = 'block';
+      filePickerList.innerHTML = '';
+      data.sqlFiles.forEach(f => {
+        const chip = document.createElement('button');
+        chip.className = 'file-chip';
+        chip.textContent = f.filename;
+        chip.addEventListener('click', () => {
+          track('github_pr_diff_file_selected', { file: f.filename });
+          loadDiff({ ...currentParams, file: f.filename });
+        });
+        filePickerList.appendChild(chip);
+      });
+    }
+
+    async function loadDiff(params) {
+      hideError();
+      currentParams = params;
+      loading.style.display = 'block';
+      results.style.display = 'none';
+      filePicker.style.display = 'none';
+
+      const qs = new URLSearchParams({ owner: params.owner, repo: params.repo, pull: params.pull });
+      if (params.file) qs.set('file', params.file);
+
+      try {
+        const res = await fetch('/api/github-pr-diff?' + qs.toString());
+        const data = await res.json().catch(() => ({ error: 'Invalid JSON response' }));
+        if (!res.ok || data.error) {
+          throw new Error(data.error || `Request failed (${res.status})`);
+        }
+        if (data.multi && !params.file) {
+          track('github_pr_diff_multi_files', { count: data.sqlFiles.length });
+          renderFilePicker(data);
+          loading.style.display = 'none';
+          return;
+        }
+        if (data.sqlFiles && data.sqlFiles.length === 0 && data.message) {
+          showError(data.message);
+          return;
+        }
+        track('github_pr_diff_success', {
+          owner: data.owner,
+          repo: data.repo,
+          file: data.file,
+          riskScore: data.summary?.riskScore,
+          breakingChanges: data.summary?.breakingChanges
+        });
+        renderSummary(data);
+      } catch (err) {
+        track('github_pr_diff_error', { message: err.message });
+        showError(err.message || 'Could not load PR diff. Make sure the repo and PR are public and try again.');
+      }
+    }
+
+    async function handleSubmit() {
+      const raw = prUrlInput.value.trim();
+      if (!raw) return;
+      track('github_pr_diff_submit', { url: raw });
+
+      const match = raw.match(/(?:https?:\/\/)?github\.com\/([^\/\s]+)\/([^\/\s]+)\/pull\/(\d+)/i);
+      if (!match) {
+        showError('Please paste a valid GitHub pull request URL like https://github.com/owner/repo/pull/123');
+        return;
+      }
+      await loadDiff({ owner: match[1], repo: match[2], pull: match[3] });
+    }
+
+    diffBtn.addEventListener('click', handleSubmit);
+    prUrlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSubmit(); });
+
+    // Auto-run if ?pr= URL is provided.
+    const urlParams = new URLSearchParams(location.search);
+    const initialPr = urlParams.get('pr');
+    if (initialPr) {
+      prUrlInput.value = initialPr;
+      handleSubmit();
+    }
+
+    // Analytics on all data-event CTAs
+    document.querySelectorAll('[data-event]').forEach(el => {
+      if (el.id === 'diffBtn') return;
+      el.addEventListener('click', () => {
+        track(el.dataset.event, { href: el.getAttribute('href') || '' });
+      });
+    });
+  </script>
+</body>
+</html>

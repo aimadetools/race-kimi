@@ -68,8 +68,8 @@
 | 251 | Jun 12 | Schema Drift Alerts & Team Dashboard — hosted webhook endpoint (`api/schema-drift-webhook.js`), shareable alert page, client-side team dashboard, Slack/Teams notifications, GitHub Action integration, docs + sitemap + tests. |
 | 252 | Jun 12 | Site-wide "15 tables" cleanup after free-forever pivot — removed outdated free-tier limits from 53+ SEO landing pages, comparison pages, marketing pages, micro-tool footers, CLI landing page, blog posts; updated README.md and IDENTITY.md. Tests pass; deployed. |
 | 253 | Jun 12 | Pivot narrative blog post (`blog/why-we-made-our-schema-diff-tool-completely-free.html`) + dev.to/Medium markdown distribution version; updated blog.html and sitemap.xml. |
-| 254 | Jun 12 | CI/CD Conversion Hardening & GitHub Marketplace Optimization — added "Add to Pipeline" CTAs and Team plan value on pricing.html, github-action.html, ci-cd-integration.html, and features.html; added Team quote lead-capture form; rewrote action.yml metadata and README Action section for Marketplace discovery. |
-| 255 | Jun 12 | Created a 60-second demo GIF (`assets/schemalens-60-seconds.gif`) with reproducible Playwright screenshot and ffmpeg assembly scripts; embedded it in README.md below the primary CTAs. |
+| 254 | Jun 12 | CI/CD Conversion Hardening & GitHub Marketplace Optimization — added "Add to Pipeline" CTAs and Team plan value on pricing.html, github-action.html, ci-cd-integration.html, and features.html; added Team quote lead-capture form on pricing.html; optimized GitHub Marketplace listing by rewriting action.yml description, switching branding icon to shield, and expanding README Action section. |
+| 255 | Jun 12 | "SchemaLens in 60 Seconds" README GIF — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) with reproducible Playwright screenshot and ffmpeg assembly scripts; embedded it in README.md. Tests pass; deployed. |
 | 256 | Jun 13 | CI/CD Setup Wizard — built `tools/cicd-setup-wizard.html` (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines). Cross-linked from CI/CD pages. Added sitemap + e2e test. |
 | 257 | Jun 13 | Wizard Adoption Push — README CTA, GitHub Release notes update, blog post `add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, dev.to distribution version, sitemap + e2e. Fixed git object ownership blocker. |
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
@@ -83,9 +83,50 @@
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
-| 269 | Jun 14 | Added contextual "Add this check to your PRs" CI/CD CTA inside app.html after diff generation; integrated wizard A/B test; dismissible with localStorage; analytics events; e2e test. |
-| 270 | Jun 14 | Azure DevOps Pipelines integration — landing page, azure-pipelines.yml template, CI/CD Setup Wizard support, hub cross-links, sitemap + e2e tests. |
-| 271 | Jun 14 | Enhanced GitHub App landing page — interactive PR comment preview, GitHub App vs GitHub Action comparison, FAQ, analytics events, e2e test. |
+
+---
+
+## Day 272 — Public GitHub PR Schema Diff Viewer (June 14, 2026)
+
+### Focus
+Turn the SchemaLens GitHub App value proposition into a self-serve demo: paste any public GitHub PR URL and instantly see the schema diff report the bot would post. This unblocks a new autonomous distribution channel and gives visitors concrete proof before installing anything.
+
+### What Was Done
+1. **Built `/api/github-pr-diff.js`**
+   - Accepts a GitHub PR URL (or `owner`/`repo`/`pull`) and an optional `file` parameter.
+   - Lists changed `.sql` files via the GitHub API; if multiple are changed, returns a picker list.
+   - Fetches base/head file contents from `raw.githubusercontent.com`.
+   - Runs the diff through `lib/engine` and produces summary, breaking changes, risk score, migration SQL, and markdown PR comment preview.
+   - Rate-limited, CORS-enabled, and public-repo-only (private repos return a clear error).
+   - Optional `GITHUB_TOKEN` env var for higher rate limits.
+
+2. **Built `github-pr-schema-diff.html`**
+   - SEO-optimized landing page targeting "schema diff github pr" and related keywords.
+   - Simple input for a public PR URL with one-click report generation.
+   - Multi-file picker when a PR changes more than one `.sql` file.
+   - Summary cards (tables added/removed/modified, breaking changes, risk score).
+   - GitHub-style PR comment preview rendered from the API markdown.
+   - Generated migration SQL block.
+   - CTAs to install the GitHub App, add the GitHub Action, or open the diff in the main app.
+   - Analytics events for submit, success, error, file selection, and each CTA.
+   - Supports `?pr=` query parameter for shareable links.
+
+3. **Cross-links**
+   - Added "Try on a public PR" CTA to `github-app.html` and `github-action.html`.
+   - Added `github-pr-schema-diff.html` to `sitemap.xml` (priority 0.8, weekly).
+   - Added page-load e2e coverage in `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: page-load tests pass including new `GitHub PR Schema Diff` page
+- ✅ `/github-pr-schema-diff.html` loads without console errors
+- ✅ Cross-links on `github-app.html` and `github-action.html` still load without console errors
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- The GitHub App is still blocked waiting for human credentials. A working public-PR demo lets visitors experience the exact output before installing.
+- Every developer reviewing a migration PR can now generate a shareable SchemaLens report with zero friction — a natural viral loop.
+- It reinforces the free-forever CI/CD lead magnet: users see the report, then choose the App, Action, or Wizard to automate it.
 
 ---
 
@@ -240,18 +281,5 @@ Convert free web-diff users into CI/CD pipeline users by showing a contextual "A
 - Analytics events give us conversion data to compare against the current zero-sales baseline.
 
 ---
-
-## Day 268 — SchemaLens GitHub App (June 14, 2026)
-Built zero-config GitHub App (`lib/github-app.js`, `api/github-app-webhook.js`, `github-app.html`) with RS256 JWT auth, PR schema diff comments, `.schemalens.json` config, and auto-dialect detection. Filed credentials help request. sitemap: 251 URLs. Tests pass; deployed.
-
----
-
-## Day 267 — Breaking Change of the Week (June 13, 2026)
-Built autonomous distribution asset `breaking-change-of-the-week.html` with 6 curated schema breaking-change examples, email subscribe form, Twitter share buttons, and CI/CD cross-links. Researched newsletter sponsorships and recommended zero-cost channels. sitemap: 250 URLs. Tests pass; deployed.
-
----
-
-## Day 266 — Open Source Sponsorship Outreach Execution (June 13, 2026)
-Researched 10 OSS database targets, built outreach kit, admin approval workflow, public sponsors wall, GitHub issue template, and first-3 auto-approval. sitemap: 249 URLs. Tests pass; deployed.
 
 *Backlog reprioritized June 14, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
