@@ -88,6 +88,44 @@
 | 271 | Jun 14 | GitHub App Landing Page Conversion Upgrade — PR comment preview, App vs Action comparison, FAQ, analytics. |
 | 272 | Jun 14 | Public GitHub PR Schema Diff Viewer — paste any public PR URL, get schema diff report with risk score and migration SQL. sitemap: 254 URLs. |
 | 273 | Jun 14 | Shareable PR reports + traffic cross-links + Team Invoice request form; unblocked team sales alternative. sitemap: 255 URLs. |
+| 274 | Jun 14 | Pro value preview banner in app.html — shows Export / Share / History Pro value before free diff result, with analytics and e2e coverage. |
+
+---
+
+## Day 274 — Pro Value Preview Banner in App (June 14, 2026)
+
+### Focus
+Increase free-to-Pro conversion by showing Pro value (Export / Share / History) before the free diff result, per user-testing feedback #1. Keep migration SQL free.
+
+### What Was Done
+1. **Built `renderProValueBanner()` in `app.html`**
+   - Prominent banner rendered at the top of results when a diff is generated, only for non-Pro users who haven't dismissed it.
+   - Headline: "Get more from this diff" with feature chips for Markdown/PDF/JSON export, shareable diff links, and diff history.
+   - Visual mock previews of a shareable URL and a recent diff entry to demonstrate value.
+   - CTAs: "Unlock Pro — $39 lifetime" (Gumroad), "I have a key" (license modal), "Share & unlock 7 days".
+   - Tracks `pro_value_banner_impression`, `pro_value_banner_click`, and `pro_value_banner_dismissed` analytics events.
+
+2. **Added `.pro-value-banner` CSS**
+   - Gradient background, feature list, mock preview cards, responsive action buttons, and embed-mode hiding.
+
+3. **Wired the banner into the diff and unlock flows**
+   - Rendered after every diff generation.
+   - Automatically hidden after license activation, Pro trial, or share-to-unlock.
+
+4. **Added Playwright e2e coverage**
+   - New test: `app: pro value banner appears after diff for non-Pro users`.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 169 passed, 14 API tests skipped in static server mode
+- ✅ New pro value banner e2e test passes
+- ✅ `app.html` loads without console errors and banner renders correctly
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- Addresses user-testing feedback that the Pro gate came too late (after the free answer). Now users see the Pro value preview before scrolling to the free result.
+- Keeps migration SQL free forever, reinforcing the free-forever pivot while clearly differentiating Pro power features.
+- Provides measurable conversion data via analytics to iterate on the offer.
 
 ---
 
@@ -170,52 +208,6 @@ Turn the SchemaLens GitHub App value proposition into a self-serve demo: paste a
 - The GitHub App is still blocked waiting for human credentials. A working public-PR demo lets visitors experience the exact output before installing.
 - Every developer reviewing a migration PR can now generate a shareable SchemaLens report with zero friction — a natural viral loop.
 - It reinforces the free-forever CI/CD lead magnet: users see the report, then choose the App, Action, or Wizard to automate it.
-
----
-
-## Day 271 — GitHub App Landing Page Conversion Upgrade (June 14, 2026)
-
-### Focus
-Improve the GitHub App landing page so visitors can see exactly what the bot posts in a PR, understand how it compares to the GitHub Action, and get their questions answered — all while capturing analytics for the highest-priority blocked distribution channel.
-
-### What Was Done
-1. **Interactive PR comment preview**
-   - Added a "See the comment your team will get" section to `github-app.html`.
-   - Two example tabs: "✅ Safe migration" and "🚨 Breaking change".
-   - Preview bodies match the exact markdown format produced by `lib/github-app.js#buildPRComment`.
-   - Shows dialect, table counts, breaking change counts, risk score, generated migration SQL, and footer CTA.
-
-2. **GitHub App vs GitHub Action comparison table**
-   - Side-by-side feature comparison covering zero-config setup, auto-detection, PR comments, breaking gates, job summaries, and Slack/Teams alerts.
-   - Helps visitors choose the right integration and routes them to the GitHub Action or CI/CD Setup Wizard.
-
-3. **FAQ section**
-   - Five questions: no CI pipeline changes, supported dialects, data privacy, private repos, and multi-file PR behavior.
-   - Reinforces the zero-config, secure, read-only value proposition.
-
-4. **Analytics instrumentation**
-   - Loaded `lib/analytics-client.js` and wired `data-event` attributes to CTAs and preview tabs.
-   - Events: `github_app_early_access_submit/success/error`, `github_app_preview_safe/breaking`, `github_app_action_cta`, `github_app_wizard_cta`, `github_app_compare_action`, `github_app_compare_wizard`.
-
-5. **Copy and CTA improvements**
-   - Tightened the hero CTA bar to "Get schema diff comments on every PR — no YAML required".
-   - Added secondary CTAs to the GitHub Action and CI/CD Setup Wizard.
-
-6. **Tests**
-   - Added Playwright e2e test verifying the preview renders, switches between safe/breaking examples, and that the comparison table + FAQ are present.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 165 passed, 14 API tests skipped in static server mode
-- ✅ New `github app landing page shows PR comment preview and switches examples` test passes
-- ✅ `github-app.html` loads without console errors
-- ✅ `github-action.html` and `tools/cicd-setup-wizard.html` still load without console errors
-- ✅ Deployed to Vercel production; `/github-app.html` preview section, comparison table, and FAQ render correctly
-
-### Why This Matters
-- The GitHub App is the highest-priority P1 distribution channel, but it is blocked waiting for human credentials. Improving the landing page keeps the channel moving and gives the human operator a stronger asset to point to once the app is live.
-- The PR comment preview directly addresses the user-testing trust gap by showing concrete output before installation.
-- Analytics events let us measure whether visitors prefer the App, Action, or Wizard once traffic reaches the page.
 
 ---
 

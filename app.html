@@ -860,6 +860,110 @@
     }
     body.embed-mode .cicd-cta-banner { display: none !important; }
 
+    .pro-value-banner {
+      position: relative;
+      background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(139,92,246,0.06));
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .pro-value-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .pro-value-close:hover { color: var(--text); }
+    .pro-value-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      padding-right: 24px;
+    }
+    .pro-value-body {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .pro-value-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .pro-value-features span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pro-value-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .pro-value-mock {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      opacity: 0.8;
+    }
+    .pro-value-mock .mock-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .pro-value-mock .mock-input {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(99,102,241,0.08);
+      border: 1px dashed rgba(99,102,241,0.35);
+      border-radius: 6px;
+      padding: 8px 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pro-value-mock .mock-row {
+      font-size: 0.85rem;
+      color: var(--text);
+      background: rgba(99,102,241,0.08);
+      border: 1px dashed rgba(99,102,241,0.35);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .pro-value-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pro-value-actions .btn {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
+    .pro-value-footer {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    body.embed-mode .pro-value-banner { display: none !important; }
+
     .welcome-hint {
       text-align: center;
       padding: 40px 20px;
@@ -1939,6 +2043,7 @@ CREATE TABLE users (
     </div>
 
     <div class="results" id="results">
+      <div id="proValueBanner"></div>
       <div class="results-tabs">
         <button class="results-tab active" data-tab="visual">Visual Diff</button>
         <button class="results-tab" data-tab="migration">Migration SQL</button>
@@ -4730,6 +4835,75 @@ function trackCICDCtaClick(position, variant, platform) {
   }
 }
 
+const PRO_VALUE_BANNER_KEY = 'sl_pro_value_banner_dismissed_v1';
+
+function renderProValueBanner() {
+  const container = document.getElementById('proValueBanner');
+  if (!container) return;
+
+  if (isProUnlocked() || localStorage.getItem(PRO_VALUE_BANNER_KEY)) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const paywallVariant = window.SchemaLensPaywallVariant || 'banner';
+
+  container.innerHTML = `
+    <div class="pro-value-banner" id="proValueBannerInner" data-rendered="1">
+      <button class="pro-value-close" onclick="dismissProValueBanner()" aria-label="Dismiss Pro value preview">×</button>
+      <div class="pro-value-title">✨ Get more from this diff</div>
+      <div class="pro-value-body">The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run.</div>
+      <div class="pro-value-features">
+        <span>📄 Export Markdown / PDF / JSON</span>
+        <span>🔗 Copy a shareable diff link</span>
+        <span>🕐 Revisit past diffs anytime</span>
+      </div>
+      <div class="pro-value-preview">
+        <div class="pro-value-mock">
+          <div class="mock-label">Shareable link</div>
+          <div class="mock-input">https://schemalens.tech/app.html?share=abc123…</div>
+        </div>
+        <div class="pro-value-mock">
+          <div class="mock-label">Recent diff</div>
+          <div class="mock-row">Staging → Production (12 changes)</div>
+        </div>
+      </div>
+      <div class="pro-value-actions">
+        <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="text-align:center;" target="_blank" rel="noopener" onclick="trackProValueBannerClick('buy')">⚡ Unlock Pro — $39 lifetime</a>
+        <button class="btn btn-secondary" onclick="openLicenseModal(); trackProValueBannerClick('license')">🔑 I have a key</button>
+        <button class="btn btn-secondary" onclick="unlockProViaShare('twitter'); trackProValueBannerClick('share_twitter')">🐦 Share & unlock 7 days</button>
+      </div>
+      <div class="pro-value-footer">One-time payment · 30-day money-back guarantee · No subscription</div>
+    </div>
+  `;
+
+  setTimeout(function () {
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('pro_value_banner_impression', {
+        paywall_variant: paywallVariant,
+        test: 'pro_value_banner_june2026'
+      });
+    }
+  }, 0);
+}
+
+function dismissProValueBanner() {
+  localStorage.setItem(PRO_VALUE_BANNER_KEY, '1');
+  const container = document.getElementById('proValueBanner');
+  if (container) container.innerHTML = '';
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_value_banner_dismissed');
+}
+
+function trackProValueBannerClick(action) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('pro_value_banner_click', {
+      action,
+      paywall_variant: window.SchemaLensPaywallVariant || 'banner',
+      test: 'pro_value_banner_june2026'
+    });
+  }
+}
+
 function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
@@ -7184,6 +7358,7 @@ function unlockProViaShare(platform) {
     renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff);
     if (typeof renderORM === 'function') renderORM();
     renderExplanation();
+    renderProValueBanner();
   }
   showError('✓ Pro unlocked for 7 days! Thanks for sharing SchemaLens.');
 }
@@ -7238,6 +7413,7 @@ function tryProTrial() {
     renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff);
     renderORM();
     renderExplanation();
+    renderProValueBanner();
   }
   showError('✓ Pro trial activated! Copy, download, and export are unlocked for 24 hours.');
 }
@@ -7301,14 +7477,14 @@ function applyLicense() {
     checkLicense();
     closeLicenseModal();
     // Re-render migration if results are showing
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); renderProValueBanner(); }
     return;
   }
   if (validateLicenseKey(key)) {
     localStorage.setItem('schemalens_license', key);
     checkLicense();
     closeLicenseModal();
-    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); }
+    if (lastDiff) { renderMigration(lastMigrationSQL, lastRollbackSQL, lastDiff); renderORM(); renderExplanation(); renderProValueBanner(); }
     if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('license_activate');
   } else {
     input.style.borderColor = 'var(--danger)';
@@ -8673,6 +8849,7 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderPDF();
   renderORM();
   renderExplanation(diff, breakingChanges);
+  renderProValueBanner();
 
   // Show share CTA or powered-by badge based on context
   if (isViewingSharedDiff()) {

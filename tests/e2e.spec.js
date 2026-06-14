@@ -366,6 +366,26 @@ test('app: breaking changes detection works for dropped column', async ({ page }
   expect(pageText).toMatch(/breaking|DROP COLUMN/i);
 });
 
+test('app: pro value banner appears after diff for non-Pro users', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await dismissEmailCapture(page);
+
+  const schemaA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, phone TEXT);`;
+  const schemaB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);`;
+
+  await page.fill('#schemaA', schemaA);
+  await page.fill('#schemaB', schemaB);
+  await page.waitForTimeout(200);
+
+  await page.click('#compareBtn');
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  const banner = page.locator('#proValueBanner .pro-value-banner');
+  await expect(banner).toBeVisible();
+  const bannerText = await banner.textContent();
+  expect(bannerText).toMatch(/Export Markdown|shareable diff link|Revisit past diffs/i);
+});
+
 test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await dismissEmailCapture(page);

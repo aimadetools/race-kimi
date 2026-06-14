@@ -97,7 +97,7 @@ CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value u
 "SchemaLens in 60 Seconds" README GIF — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
 
 ### Days 256–273 (Jun 13–14)
-CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration; Public GitHub PR Schema Diff viewer (`github-pr-schema-diff.html` + `api/github-pr-diff.js`); shareable report URLs + PR badge markdown; autonomous traffic cross-links (README, code-reviews page, migration-review blog); Team Invoice / Contact Sales form (`tools/request-team-invoice.html` + `/api/team-invoice.js`). sitemap: 255 URLs. Tests pass; deployed.
+CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration; Public GitHub PR Schema Diff viewer (`github-pr-schema-diff.html` + `api/github-pr-diff.js`); shareable report URLs + PR badge markdown; autonomous traffic cross-links (README, code-reviews page, migration-review blog); Team Invoice / Contact Sales form (`tools/request-team-invoice.html` + `/api/team-invoice.js`); Pro value preview banner in `app.html` to increase free-to-Pro conversion. sitemap: 255 URLs. Tests pass; deployed.
 
 ---
 
@@ -112,7 +112,9 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 - [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [ ] **P1** Increase free-to-Pro conversion: test a prominent "Export / Share / History" Pro value preview before or alongside the diff result (user-testing feedback #1). Keep migration SQL free.
+- [ ] **P1** Iterate on Pro conversion: A/B test the Pro value banner headline / CTA ("Export & Share" vs "Save & Revisit") and placement (above tabs vs inside visual panel) using the existing analytics events.
+- [ ] **P1** Reduce purchase friction: embed a Gumroad "Buy Now" overlay/button directly in the Pro value banner and license modal so users can pay without leaving the app.
+- [ ] **P1** Drive high-intent traffic to the public PR viewer — build 2–3 SEO landing pages around "schema diff GitHub PR", "database migration review tool", and "catch breaking schema changes in PRs" that end with the public PR viewer CTA.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
@@ -121,4 +123,4 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 
 ---
 
-*Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 14, 2026. Zero sales after 274 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
