@@ -231,9 +231,16 @@
       if (res.ok) {
         msg.textContent = '✓ ' + (json.message || 'Request sent. We\'ll reply within one business day.');
         msg.style.color = 'var(--success)';
+        // Local backup so the admin dashboard can surface requests even if the server-side store is down.
+        try {
+          const key = 'schemalens_team_invoices';
+          const existing = JSON.parse(localStorage.getItem(key) || '[]');
+          existing.unshift({ ...data, requestedAt: new Date().toISOString(), persisted: json.persisted });
+          localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
+        } catch (e) {}
         form.reset();
         if (window.SchemaLensAnalytics) {
-          window.SchemaLensAnalytics.track('team_invoice_request_success', { plan: data.plan, company: data.company });
+          window.SchemaLensAnalytics.track('team_invoice_request_success', { plan: data.plan, company: data.company, persisted: json.persisted });
         }
       } else {
         msg.textContent = json.error || 'Something went wrong. Please try again.';

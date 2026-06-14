@@ -755,6 +755,21 @@
 
       <div class="admin-section">
         <div class="admin-section-header">
+          <h3>🧾 Team Invoice Requests (localStorage Backup)</h3>
+          <span class="admin-badge" id="badgeLocalInvoices">0</span>
+        </div>
+        <div class="admin-section-body" id="localInvoicesBody">
+          <div class="admin-empty">No local team invoice requests captured yet.</div>
+        </div>
+        <div class="admin-actions-bar">
+          <button onclick="refreshLocalInvoices()">Refresh</button>
+          <button class="primary" onclick="exportLocalInvoices()">Export CSV</button>
+          <button onclick="clearLocalInvoices()">Clear All</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
           <h3>💬 Local Feedback & Survey Responses (localStorage Backup)</h3>
           <span class="admin-badge" id="badgeLocalFeedback">0</span>
         </div>
@@ -2078,6 +2093,7 @@
 
     function refreshAll() {
       refreshFeedback();
+      refreshLocalInvoices();
       refreshLocalFeedback();
       refreshSubscribers();
       refreshTestimonials();
@@ -2299,6 +2315,51 @@
       }
       html += '</tbody></table>';
       container.innerHTML = html;
+    }
+
+    function refreshLocalInvoices() {
+      const list = JSON.parse(localStorage.getItem('schemalens_team_invoices') || '[]');
+      document.getElementById('badgeLocalInvoices').textContent = String(list.length);
+      const container = document.getElementById('localInvoicesBody');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="admin-empty">No local team invoice requests captured yet.</div>';
+        return;
+      }
+      list.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
+      let html = '<table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85rem;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Date</th><th style="text-align:left;padding:8px;">Name</th><th style="text-align:left;padding:8px;">Company</th><th style="text-align:left;padding:8px;">Email</th><th style="text-align:left;padding:8px;">Plan</th><th style="text-align:left;padding:8px;">Details</th></tr></thead><tbody>';
+      for (const item of list) {
+        const date = item.requestedAt ? new Date(item.requestedAt).toLocaleString() : 'Unknown';
+        const details = (item.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+        html += `<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;color:var(--text-muted);white-space:nowrap;">${date}</td><td style="padding:8px;">${(item.name || '').replace(/</g,'&lt;')}</td><td style="padding:8px;">${(item.company || '').replace(/</g,'&lt;')}</td><td style="padding:8px;font-size:0.75rem;">${(item.email || '').replace(/</g,'&lt;')}</td><td style="padding:8px;"><span class="admin-badge">${item.plan || '—'}</span></td><td style="padding:8px;max-width:300px;word-break:break-word;">${details}</td></tr>`;
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function exportLocalInvoices() {
+      const list = JSON.parse(localStorage.getItem('schemalens_team_invoices') || '[]');
+      if (list.length === 0) { alert('No invoice requests to export.'); return; }
+      const csv = ['requestedAt,name,email,company,teamSize,plan,billingEmail,billingAddress,taxId,message,persisted'].concat(list.map(i => {
+        const cells = [
+          i.requestedAt || '', i.name || '', i.email || '', i.company || '', i.teamSize || '',
+          i.plan || '', i.billingEmail || '', (i.billingAddress || '').replace(/"/g, '""'),
+          i.taxId || '', (i.message || '').replace(/"/g, '""'), String(i.persisted !== false)
+        ];
+        return cells.map(c => `"${c}"`).join(',');
+      })).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `schemalens-team-invoices-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearLocalInvoices() {
+      if (!confirm('Delete all locally stored team invoice requests? This cannot be undone.')) return;
+      localStorage.removeItem('schemalens_team_invoices');
+      refreshLocalInvoices();
     }
 
     function exportLocalFeedback() {

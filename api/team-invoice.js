@@ -222,16 +222,19 @@ export default async function handler(req, res) {
     ok = await writeToSupabaseMinimal(record);
   }
 
-  if (!ok) {
-    return res.status(500).json({ error: "Unable to save request. Please try again later." });
-  }
-
+  // Even if persistence fails, we log the full request and attempt email notifications
+  // so the team can follow up from Vercel logs or the configured admin inbox.
   const adminResult = await notifyAdmin(emailRecord);
   const confirmResult = await notifyRequester(emailRecord);
+
+  if (!ok) {
+    console.log(`TEAM_INVOICE_PERSIST_FAILED: ${JSON.stringify(record)}`);
+  }
 
   return res.status(200).json({
     success: true,
     message: "Invoice request received. We'll reply within one business day with a manual invoice.",
+    persisted: ok,
     notified: adminResult.sent,
     confirmed: confirmResult.sent,
   });
