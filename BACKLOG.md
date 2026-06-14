@@ -22,8 +22,9 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
+- [ ] **P1** Activate SchemaLens GitHub App — backend, landing page (`github-app.html`), webhook (`/api/github-app-webhook.js`), sitemap, and e2e tests built. Waiting on human help to create the GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel.
+- [ ] **P1** Convert free web diff users to CI/CD — add a contextual "Add this check to your PRs" CTA inside `app.html` after a diff is generated.
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-- [x] **P2** Build a new autonomous distribution asset — `breaking-change-of-the-week.html` launched with 6 curated schema breaking-change examples, email subscribe CTA, and share buttons.
 
 ### Content & SEO
 - (no active incomplete P1/P2 items — see Completed Work Summary below)
@@ -168,7 +169,6 @@ Breaking Change of the Week — Built autonomous distribution asset `breaking-ch
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
-- [x] **P2** Explore low-cost newsletter sponsorships — researched options under $30; concluded available slots are poor audience fit. Recommendation: do not spend remaining $66. See `marketing/newsletter-sponsorship-research.md`.
 
 ---
 

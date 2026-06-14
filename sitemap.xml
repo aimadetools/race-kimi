@@ -337,6 +337,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/github-app.html</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/slack-app.html</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>

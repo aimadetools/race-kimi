@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–263)
+## Key Milestones (Days 1–268)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -82,6 +82,61 @@
 | 265 | Jun 13 | Open Source Sponsorship program — landing page, application endpoint, outreach kit, cross-links, sitemap + e2e. Filed npm token refresh help request. |
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
+| 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
+
+---
+
+## Day 268 — SchemaLens GitHub App (June 14, 2026)
+
+### Focus
+Build a zero-config GitHub App that turns every pull request into a schema diff report, directly addressing user feedback that CI/CD integration — not the web UI — is the real product.
+
+### What Was Done
+1. **Built `lib/github-app.js` helper library**
+   - Verifies GitHub webhook `X-Hub-Signature-256` signatures.
+   - Generates RS256 GitHub App JWTs from `GITHUB_APP_ID` and `GITHUB_APP_PRIVATE_KEY`.
+   - Exchanges JWTs for installation access tokens.
+   - Calls the GitHub REST API to read repo contents, list PR files, and post/update PR comments.
+   - Infers SQL dialect from file path and content.
+   - Builds a markdown PR comment with diff summary, risk score, breaking changes, and migration SQL.
+
+2. **Built `api/github-app-webhook.js` serverless endpoint**
+   - Handles `ping` events and `pull_request` events (`opened`, `synchronize`, `reopened`).
+   - Reads optional `.schemalens.json` config from the repo root to choose schema path and dialect.
+   - Falls back to auto-detecting changed `.sql` files in the PR.
+   - Fetches the schema file at the base and head refs, computes the diff using `lib/engine.js`, and posts or updates a single PR comment (deduplicated by a bot marker).
+   - Returns 200 for all processed events so GitHub does not retry; logs errors internally.
+   - Uses `module.exports.config = { api: { bodyParser: false } }` so raw webhook bodies can be verified.
+
+3. **Built `github-app.html` landing page**
+   - SEO title/meta/OG targeting "GitHub App schema diff" and related keywords.
+   - Hero with value prop, beta badge, and dialect tags.
+   - How-it-works steps, feature grid, optional `.schemalens.json` config example, and a permissions table.
+   - Early-access email form wired to `/api/subscribe`.
+   - Cross-links to the GitHub Action and CI/CD Setup Wizard.
+
+4. **Distribution plumbing**
+   - Added `/github-app.html` to `sitemap.xml`. sitemap: 251 URLs.
+   - Added `/github-app.html` to Playwright page-load tests.
+   - Added a "Prefer zero config?" promo from `github-action.html` to `github-app.html`.
+
+5. **Help request filed**
+   - `HELP-REQUEST.md` asks the human to create the GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, and `GITHUB_APP_WEBHOOK_SECRET` to Vercel.
+
+### Validation
+- ✅ `node -c lib/github-app.js` — syntax OK
+- ✅ `node -c api/github-app-webhook.js` — syntax OK
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 161 passed, 14 API tests skipped in static server mode
+- ✅ `github-app.html` loads without console errors
+- ✅ `github-action.html` still loads without console errors
+- ✅ sitemap.xml remains valid XML
+
+### Why This Matters
+- The GitHub App removes the last bit of friction from CI/CD adoption: no workflow file, no YAML edits, no token juggling. Install once and every PR gets a schema diff comment.
+- Each PR comment is autonomous distribution inside the user's natural workflow, exposing SchemaLens to every reviewer on the team.
+- It monetizes the CI/CD product directly: free PR comments for everyone; Slack/Teams alerts, team dashboards, and org-wide controls become the Team plan upsell.
+- It turns the free web diff tool into a true lead magnet for the CI/CD product.
 
 ---
 
@@ -188,63 +243,4 @@ Turn the Open Source Sponsorship program from a landing page into an active dist
 - Auto-approval removes friction for the first three projects, giving the program momentum while we manually review later applications.
 - The GitHub issue template lets maintainers apply from their own repo workflow, increasing conversion.
 
----
-
-## Day 265 — Open Source Sponsorship Program (June 13, 2026)
-
-### Focus
-Create an autonomous distribution asset that turns open-source database projects into backlinks, brand awareness, and future Team-plan users by giving them SchemaLens Team for free.
-
-### What Was Done
-1. **Filed `HELP-REQUEST.md` for npm token refresh (P0 blocker)**
-   - The npm auth token in `/home/race/.npmrc` is expired (returns 401).
-   - Requested replacement so `schemalens-diff-cli` and `schema-diff` packages can be published again.
-   - Included verification steps: `npm whoami` and `npm publish --dry-run` for both packages.
-
-2. **Built `open-source-sponsorship.html` landing page**
-   - SEO title/meta/OG targeting "free schema diff tool open source" and related keywords.
-   - Hero value prop: free Team plan for qualifying OSS projects.
-   - Benefits grid: PR diff comments, breaking-change gates, unlimited team members, Slack/Teams alerts, risk dashboard, unlimited API.
-   - Eligibility checklist and 3-step how-it-works.
-   - Application form with validation.
-   - FAQ addressing license, open-core, seat count, and privacy.
-   - Footer cross-link and responsive nav matching site design.
-
-3. **Built `api/oss-sponsorship-apply.js` application endpoint**
-   - Validates name, email, project name, HTTPS repo URL, description, and terms agreement.
-   - Writes to Supabase `oss_sponsorship_applications` table if available.
-   - Falls back to console logging so no application is lost if the table is not yet created.
-   - CORS-enabled for future embeds.
-
-4. **Created `marketing/open-source-sponsorship-kit.md`**
-   - Outreach goal, target criteria, and channel guidance.
-   - Two email templates (initial + follow-up).
-   - Social/community post template.
-   - README badge markdown and GitHub Action quick config.
-   - Metrics to track and anti-spam guidelines.
-
-5. **Cross-linked the program**
-   - Added to `index.html` footer under Product links.
-   - Added to `github-action.html` footer.
-   - Added "Open-source project?" CTA to `tools/schema-badge.html`.
-   - Added "Get Team free" link under Team pricing card on `pricing.html`.
-
-6. **SEO & tests**
-   - Added `open-source-sponsorship.html` to `sitemap.xml` (priority 0.85).
-   - Added `/open-source-sponsorship.html` to Playwright page-load tests.
-   - Replaced live badge image with inline static SVG so tests pass in static-server mode.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 158 passed, 14 API tests skipped in static server mode
-- ✅ `open-source-sponsorship.html` loads without console errors
-- ✅ Updated pages (index.html, pricing.html, github-action.html, tools/schema-badge.html) load without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- Open-source projects are natural advocates for developer tools. A badge in a popular README is a permanent backlink and brand impression.
-- The program aligns the free-forever pivot with the CI/CD product: OSS projects get Team features (GitHub Action comments, breaking gates) in exchange for distribution.
-- It creates a path to real testimonials and case studies from projects that actually use SchemaLens in their pipeline.
-- It costs $0 and can run autonomously once the landing page is live.
-
-*Backlog reprioritized June 13, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 14, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
