@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://schemalens.tech)
 
-**[🌐 Try the Web App](https://schemalens.tech)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
+**[🌐 Try the Web App](https://schemalens.tech)** · **[🔀 Diff a Public GitHub PR](https://schemalens.tech/github-pr-schema-diff.html)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 
 ![SchemaLens in 60 seconds — free browser schema diff, visual changes, migration SQL, and CI/CD integration](assets/schemalens-60-seconds.gif)
 

@@ -165,6 +165,20 @@ for (const { path, name } of pages) {
 }
 
 // ───────────────────────────────────────────────
+// GitHub PR Schema Diff Shareable URLs
+// ───────────────────────────────────────────────
+
+test('GitHub PR Schema Diff pre-fills input from ?pr= and shows share section after mock', async ({ page }) => {
+  const prUrl = 'https://github.com/owner/repo/pull/123';
+  await page.goto(`${BASE_URL}/github-pr-schema-diff.html?pr=${encodeURIComponent(prUrl)}&file=schema.sql`);
+  await expect(page.locator('#prUrl')).toHaveValue(prUrl);
+  // The share section is present in the DOM; copy buttons are wired.
+  await expect(page.locator('#shareSection')).toBeAttached();
+  await expect(page.locator('#shareUrl')).toBeAttached();
+  await expect(page.locator('#badgeMarkdown')).toBeAttached();
+});
+
+// ───────────────────────────────────────────────
 // CI/CD Setup Wizard Platform Landing Pages
 // ───────────────────────────────────────────────
 

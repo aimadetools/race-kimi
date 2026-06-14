@@ -130,6 +130,21 @@
         <pre class="migration-box" id="migrationBox"></pre>
       </div>
 
+      <div class="section-card" id="shareSection" style="display:none;">
+        <h3>🔗 Share this report</h3>
+        <p class="muted" style="margin-bottom:12px;">Anyone with the link can view this schema diff report — no login required.</p>
+        <div class="input-row" style="margin-bottom:12px;">
+          <input type="text" id="shareUrl" readonly aria-label="Shareable report URL">
+          <button class="btn btn-secondary" id="copyUrlBtn">Copy Link</button>
+        </div>
+        <p class="muted" style="margin-bottom:8px; font-size:0.85rem;">Embed a badge in your PR description:</p>
+        <div class="input-row" style="margin-bottom:8px;">
+          <input type="text" id="badgeMarkdown" readonly aria-label="Markdown badge for PR description">
+          <button class="btn btn-secondary" id="copyBadgeBtn">Copy Badge</button>
+        </div>
+        <p id="shareMsg" class="muted" style="font-size:0.85rem;min-height:20px;"></p>
+      </div>
+
       <div class="privacy-note">
         <strong>Privacy note:</strong> SchemaLens reads the SQL file directly from GitHub's raw content CDN, computes the diff in memory, and returns the result. No schema data is logged or persisted on SchemaLens servers.
       </div>
@@ -306,6 +321,7 @@
     }
 
     function renderSummary(data) {
+      populateShare(data);
       const s = data.summary;
       const riskClass = s.riskScore >= 70 ? 'risk-high' : s.riskScore >= 40 ? 'risk-medium' : 'risk-low';
       summaryGrid.innerHTML = `
@@ -332,11 +348,63 @@
         chip.textContent = f.filename;
         chip.addEventListener('click', () => {
           track('github_pr_diff_file_selected', { file: f.filename });
+          const prUrl = `https://github.com/${data.owner}/${data.repo}/pull/${data.pull}`;
+          updateReportUrl(prUrl, f.filename);
           loadDiff({ ...currentParams, file: f.filename });
         });
         filePickerList.appendChild(chip);
       });
     }
+
+    function updateReportUrl(prUrl, file) {
+      const reportUrl = new URL(location.href);
+      reportUrl.searchParams.set('pr', prUrl);
+      if (file) reportUrl.searchParams.set('file', file);
+      else reportUrl.searchParams.delete('file');
+      history.replaceState({}, '', reportUrl.toString());
+      return reportUrl.toString();
+    }
+
+    function populateShare(data) {
+      const shareSection = document.getElementById('shareSection');
+      const shareUrlInput = document.getElementById('shareUrl');
+      const badgeInput = document.getElementById('badgeMarkdown');
+      if (!shareSection || !shareUrlInput || !badgeInput) return;
+
+      const prUrl = `https://github.com/${data.owner}/${data.repo}/pull/${data.pull}`;
+      const reportUrl = `https://schemalens.tech/github-pr-schema-diff.html?pr=${encodeURIComponent(prUrl)}${data.file ? '&file=' + encodeURIComponent(data.file) : ''}`;
+      const score = data.summary?.riskScore ?? 0;
+      const color = score >= 70 ? 'red' : score >= 40 ? 'orange' : 'green';
+      const badgeMd = `[![Schema Diff](https://img.shields.io/badge/schema%20diff-risk%20${score}%2F100-${color}?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTguMDY3LjY2N0ExIDEgMCAwIDAgOCAwaC0uMDA0YTEgMSAwIDAgMC0uMDA2IDF2NmwtMS43MzIgMS43MzJhMSAxIDAgMCAwIDEuNDE0IDEuNDE0bDIuMTItMi4xMkExIDEgMCAwIDAgOS44NjYgNy4yVjFhMSAxIDAgMCAwLS44LS4zMzN6Ii8+PC9zdmc+)](${reportUrl})`;
+
+      shareUrlInput.value = reportUrl;
+      badgeInput.value = badgeMd;
+      shareSection.style.display = 'block';
+    }
+
+    async function copyToClipboard(btn, input, msgEl, successText) {
+      try {
+        await navigator.clipboard.writeText(input.value);
+        msgEl.textContent = successText;
+        msgEl.style.color = 'var(--success)';
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = original; msgEl.textContent = ''; }, 2000);
+      } catch (e) {
+        input.select();
+        msgEl.textContent = 'Please copy manually.';
+        msgEl.style.color = 'var(--warning)';
+      }
+    }
+
+    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+      copyToClipboard(this, document.getElementById('shareUrl'), document.getElementById('shareMsg'), '✓ Report link copied');
+      track('github_pr_diff_copy_link', currentParams);
+    });
+    document.getElementById('copyBadgeBtn').addEventListener('click', function() {
+      copyToClipboard(this, document.getElementById('badgeMarkdown'), document.getElementById('shareMsg'), '✓ Badge markdown copied');
+      track('github_pr_diff_copy_badge', currentParams);
+    });
 
     async function loadDiff(params) {
       hideError();
@@ -371,6 +439,8 @@
           riskScore: data.summary?.riskScore,
           breakingChanges: data.summary?.breakingChanges
         });
+        const prUrl = `https://github.com/${data.owner}/${data.repo}/pull/${data.pull}`;
+        updateReportUrl(prUrl, data.file);
         renderSummary(data);
       } catch (err) {
         track('github_pr_diff_error', { message: err.message });
@@ -388,6 +458,7 @@
         showError('Please paste a valid GitHub pull request URL like https://github.com/owner/repo/pull/123');
         return;
       }
+      updateReportUrl(raw, null);
       await loadDiff({ owner: match[1], repo: match[2], pull: match[3] });
     }
 
@@ -397,9 +468,13 @@
     // Auto-run if ?pr= URL is provided.
     const urlParams = new URLSearchParams(location.search);
     const initialPr = urlParams.get('pr');
+    const initialFile = urlParams.get('file');
     if (initialPr) {
       prUrlInput.value = initialPr;
-      handleSubmit();
+      const match = initialPr.match(/(?:https?:\/\/)?github\.com\/([^\/\s]+)\/([^\/\s]+)\/pull\/(\d+)/i);
+      if (match) {
+        await loadDiff({ owner: match[1], repo: match[2], pull: match[3], file: initialFile || null });
+      }
     }
 
     // Analytics on all data-event CTAs
