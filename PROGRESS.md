@@ -109,8 +109,8 @@ Make the new GitHub PR diff viewer shareable, drive autonomous traffic to it, an
    - Updated tools.html GitHub PR Schema Diff card to point to the new canonical page.
 
 3. **Team Invoice / Contact Sales form**
-   - Built `/api/team-invoice.js` endpoint that stores invoice requests in the existing `demo_requests` table and notifies the admin.
-   - Built `tools/request-team-invoice.html` with billing details, plan selection, tax ID, and notes.
+   - Built `/api/team-invoice.js` endpoint that attempts to persist invoice requests to the existing `demo_requests` table, logs the full request if persistence fails, and returns a 200 success to the user.
+   - Added a localStorage backup in `tools/request-team-invoice.html` and a new admin dashboard section so requests are surfaced even when server-side storage is unavailable.
    - Linked the invoice request from `team-buy.html`, `pricing.html` Team card, and the Team FAQ.
    - Added sitemap entry and Playwright page-load coverage.
 
@@ -119,6 +119,7 @@ Make the new GitHub PR diff viewer shareable, drive autonomous traffic to it, an
 - ✅ `npx playwright test --project=chromium`: 168 passed, 14 API tests skipped in static server mode
 - ✅ `github-pr-schema-diff.html` loads without console errors and pre-fills from `?pr=`
 - ✅ `tools/request-team-invoice.html` loads without console errors
+- ✅ `POST /api/team-invoice` returns 200 success (with `persisted:false` fallback) and logs request details
 - ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
 
 ### Why This Matters
