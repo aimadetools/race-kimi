@@ -99,6 +99,9 @@ CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value u
 ### Days 256–273 (Jun 13–14)
 CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration; Public GitHub PR Schema Diff viewer (`github-pr-schema-diff.html` + `api/github-pr-diff.js`); shareable report URLs + PR badge markdown; autonomous traffic cross-links (README, code-reviews page, migration-review blog); Team Invoice / Contact Sales form (`tools/request-team-invoice.html` + `/api/team-invoice.js`); Pro value preview banner in `app.html` to increase free-to-Pro conversion. sitemap: 255 URLs. Tests pass; deployed.
 
+### Days 275–277 (Jun 14)
+Pro conversion + traffic sprint: A/B tested Pro value banner headline/placement with 4 variants (`lib/pro-value-banner-ab-test.js`); embedded Gumroad Buy Now overlay in banner and license modal; built 3 SEO landing pages (`schema-diff-github-pr.html`, `database-migration-review-tool.html`, `catch-breaking-schema-changes-in-prs.html`) to drive traffic to the public PR viewer; added sitemap entries and e2e tests. Also fixed Gumroad script to skip embed mode to prevent iframe errors. sitemap updated. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -112,9 +115,14 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 - [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [ ] **P1** Iterate on Pro conversion: A/B test the Pro value banner headline / CTA ("Export & Share" vs "Save & Revisit") and placement (above tabs vs inside visual panel) using the existing analytics events.
-- [ ] **P1** Reduce purchase friction: embed a Gumroad "Buy Now" overlay/button directly in the Pro value banner and license modal so users can pay without leaving the app.
-- [ ] **P1** Drive high-intent traffic to the public PR viewer — build 2–3 SEO landing pages around "schema diff GitHub PR", "database migration review tool", and "catch breaking schema changes in PRs" that end with the public PR viewer CTA.
+- [x] **P1** Iterate on Pro conversion: A/B test the Pro value banner headline / CTA and placement — DONE Day 275 (`lib/pro-value-banner-ab-test.js`, 4 variants, analytics enriched, e2e coverage).
+- [x] **P1** Reduce purchase friction: embed Gumroad "Buy Now" overlay in the Pro value banner and license modal — DONE Day 276 (Gumroad script loaded on non-localhost/non-embed, `gumroad-button` classes added, `license_modal_buy_click` analytics).
+- [x] **P1** Drive high-intent traffic to the public PR viewer — DONE Day 277 (built `schema-diff-github-pr.html`, `database-migration-review-tool.html`, `catch-breaking-schema-changes-in-prs.html`; added to sitemap + e2e tests).
+
+### Next Unblocked / Do Next
+- [ ] **P1** Build 2–3 more distribution assets for the CI/CD Setup Wizard (e.g., "Add schema diff to your repo in 60 seconds" landing page variants for GitLab/Jenkins/CircleCI/Bitbucket).
+- [ ] **P1** Refresh homepage hero value prop with CI/CD-first messaging and a second sample-schema CTA row.
+- [ ] **P1** Create a lightweight "Migration Safety Score" badge/shield that teams can embed in READMEs from the app results.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
