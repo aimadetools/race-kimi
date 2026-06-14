@@ -487,7 +487,7 @@ test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) =>
   expect(drizzleOutput).toContain('export const');
 });
 
-test('app: license modal opens and closes', async ({ page }) => {
+test('app: license modal opens and shows Gumroad buy button', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await dismissEmailCapture(page);
   
@@ -496,6 +496,12 @@ test('app: license modal opens and closes', async ({ page }) => {
     await unlockBtn.click();
     const modal = page.locator('#licenseModal').first();
     await expect(modal).toBeVisible();
+
+    // Gumroad buy button should be present and open the overlay
+    const buyBtn = modal.locator('#licenseModalBuyBtn').first();
+    await expect(buyBtn).toBeVisible();
+    await expect(buyBtn).toHaveAttribute('href', /gumroad\.com\/l\/schemalens-lifetime/);
+    await expect(buyBtn).toHaveClass(/gumroad-button/);
     
     // Close via cancel button
     const cancelBtn = modal.locator('button:has-text("Cancel")').first();
@@ -506,6 +512,30 @@ test('app: license modal opens and closes', async ({ page }) => {
     }
     await expect(modal).toBeHidden();
   }
+});
+
+test('app: pro value banner primary CTA is a Gumroad button', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('sl_pro_value_banner_ab_variant', 'control');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+  await page.reload();
+  await dismissEmailCapture(page);
+
+  const schemaA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, phone TEXT);`;
+  const schemaB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);`;
+  await page.fill('#schemaA', schemaA);
+  await page.fill('#schemaB', schemaB);
+  await page.waitForTimeout(200);
+  await page.click('#compareBtn');
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  const buyBtn = page.locator('#proValueBanner .pro-value-banner .pro-value-actions a.gumroad-button').first();
+  await expect(buyBtn).toBeVisible();
+  await expect(buyBtn).toHaveAttribute('href', /gumroad\.com\/l\/schemalens-lifetime/);
 });
 
 test('app: share button shows copied feedback', async ({ page }) => {
