@@ -1558,6 +1558,18 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/tools/cicd-setup-wizard.html?platform=azure</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/azure-devops-schema-diff.html</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/open-source-sponsors.html</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>weekly</changefreq>

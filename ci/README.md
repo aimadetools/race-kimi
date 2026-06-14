@@ -96,6 +96,23 @@ The pipeline will:
 2. Run the diff and output a markdown report
 3. Store the report as a pipeline artifact
 
+## Azure DevOps Pipelines
+
+Add `azure-pipelines.yml` to your repository (see the example in this repo).
+
+The pipeline will:
+1. Trigger on pull requests that modify `.sql` files
+2. Compare the target branch schema against the PR schema
+3. Output a markdown diff report to the pipeline logs
+4. Publish the report as a pipeline artifact
+5. Optionally post a PR comment using `$(System.AccessToken)`
+
+### Setup
+
+1. Copy `azure-pipelines.yml` to your repository root
+2. Adjust `db/schema.sql` to match your schema file path
+3. Ensure the build service has **Contribute to pull requests** permission, or set `POST_PR_COMMENT: 'false'`
+
 ## Bitbucket Pipelines
 
 Add `bitbucket-pipelines.yml` to your repository (see `bitbucket-pipelines.yml` in this repo for the template).
@@ -169,6 +186,7 @@ echo "✅ No breaking changes detected"
 - MySQL / MariaDB
 - SQLite
 - SQL Server
+- Oracle
 
 ## Requirements
 

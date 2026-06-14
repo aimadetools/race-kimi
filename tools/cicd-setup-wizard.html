@@ -50,6 +50,13 @@
         og: 'Generate a Bitbucket Pipelines schema diff config in 60 seconds. Catches breaking schema changes in every PR.',
         h1: 'Bitbucket Pipelines Schema Diff Wizard',
         subtitle: 'Generate a Bitbucket Pipelines config that diffs your database schema on every pull request.'
+      },
+      azure: {
+        title: 'Azure DevOps Schema Diff Setup Wizard — SchemaLens',
+        description: 'Generate an azure-pipelines.yml that diffs your database schema on every Azure DevOps pull request. Adds PR comments, path filters, artifact reports, and blocks breaking schema changes.',
+        og: 'Generate an Azure DevOps schema diff pipeline in 60 seconds. Catches breaking schema changes in every pull request.',
+        h1: 'Azure DevOps Schema Diff Wizard',
+        subtitle: 'Generate an Azure DevOps pipeline config that diffs your database schema on every pull request.'
       }
     };
     try {
@@ -189,6 +196,7 @@
             <div class="platform-option"><input type="radio" name="platform" id="platform-jenkins" value="jenkins"><label for="platform-jenkins">🔧 Jenkins</label></div>
             <div class="platform-option"><input type="radio" name="platform" id="platform-circleci" value="circleci"><label for="platform-circleci">⭕ CircleCI</label></div>
             <div class="platform-option"><input type="radio" name="platform" id="platform-bitbucket" value="bitbucket"><label for="platform-bitbucket">📦 Bitbucket</label></div>
+            <div class="platform-option"><input type="radio" name="platform" id="platform-azure" value="azure"><label for="platform-azure">🔷 Azure DevOps</label></div>
           </div>
         </div>
 
@@ -354,7 +362,8 @@
       gitlab: { h1: 'GitLab CI Schema Diff Wizard', subtitle: 'Generate a GitLab CI/CD pipeline config that catches breaking schema changes on every merge request.' },
       jenkins: { h1: 'Jenkins Schema Diff Wizard', subtitle: 'Generate a Jenkinsfile that diffs your database schema on every build and blocks breaking changes.' },
       circleci: { h1: 'CircleCI Schema Diff Wizard', subtitle: 'Generate a CircleCI config that diffs your database schema on every push and blocks breaking changes.' },
-      bitbucket: { h1: 'Bitbucket Pipelines Schema Diff Wizard', subtitle: 'Generate a Bitbucket Pipelines config that diffs your database schema on every pull request.' }
+      bitbucket: { h1: 'Bitbucket Pipelines Schema Diff Wizard', subtitle: 'Generate a Bitbucket Pipelines config that diffs your database schema on every pull request.' },
+      azure: { h1: 'Azure DevOps Schema Diff Wizard', subtitle: 'Generate an Azure DevOps pipeline config that diffs your database schema on every pull request.' }
     };
 
     function updateHeaderCopy(platform) {
@@ -370,7 +379,7 @@
       try {
         const params = new URLSearchParams(window.location.search);
         const platform = params.get('platform');
-        if (platform && ['github', 'gitlab', 'jenkins', 'circleci', 'bitbucket'].includes(platform)) {
+        if (platform && ['github', 'gitlab', 'jenkins', 'circleci', 'bitbucket', 'azure'].includes(platform)) {
           state.platform = platform;
           const radio = document.querySelector(`input[name="platform"][value="${platform}"]`);
           if (radio) radio.checked = true;
@@ -734,6 +743,82 @@ pipelines:
 ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '              # Set fail-on-breaking above to block merges with breaking changes'}`;
     }
 
+    function generateAzure() {
+      const commentBlock = state.postComment ? `
+  # Optional: post the report as a PR comment (requires contribute-to-PR permission)
+  - script: |
+      REPORT=$(cat /tmp/schema_diff_report.md)
+      curl -s -X POST \\
+        "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_apis/git/repositories/$(Build.Repository.Name)/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=7.0" \\
+        -H "Authorization: Bearer $(System.AccessToken)" \\
+        -H "Content-Type: application/json" \\
+        -d "{\\"comments\\":[{\\"commentType\\":1,\\"content\\":\\"## SchemaLens Schema Diff Report\\\\n\\\\n$REPORT\\"}],\\"status\\":1}"
+    displayName: 'Post PR comment'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))` : '';
+
+      const alertBlock = state.licenseKey && (state.slackUrl || state.teamsUrl) ? `
+  # Send schema drift alert (requires Team/Pro license key)
+  - script: |
+      curl -X POST https://schemalens.tech/api/schema-drift-webhook \\
+        -H "Content-Type: application/json" \\
+        -d '{
+          "projectToken": "$(SCHEMALENS_LICENSE_KEY)",
+          "oldSchema": "$(cat /tmp/schema_base.sql)",
+          "newSchema": "$(cat ${state.newPath})",
+          "dialect": "${state.dialect}",
+          "metadata": {"repo":"$(Build.Repository.Name)","branch":"$(Build.SourceBranchName)","commit":"$(Build.SourceVersion)","prUrl":"$(System.PullRequest.PullRequestId)","ciProvider":"azure-devops","runId":"$(Build.BuildId)"},
+          "notify": {${state.slackUrl ? '\\"slack\\": \\"$(SCHEMALENS_SLACK_WEBHOOK)\\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\\"teams\\": \\"$(SCHEMALENS_TEAMS_WEBHOOK)\\"' : ''}}
+        }'
+    displayName: 'Send schema drift alert'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))` : '';
+
+      return `trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  paths:
+    include:
+      - "**/*.sql"
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  SCHEMA_OLD_PATH: '${state.oldPath}'
+  SCHEMA_NEW_PATH: '${state.newPath}'
+  DIALECT: '${state.dialect}'
+  FAIL_ON_BREAKING: '${state.failBreaking ? 'true' : 'false'}'
+  POST_PR_COMMENT: '${state.postComment ? 'true' : 'false'}'
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: 'Install Node.js'
+
+  - script: |
+      git fetch origin $(System.PullRequest.TargetBranch)
+      git show origin/$(System.PullRequest.TargetBranch):$(SCHEMA_OLD_PATH) > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+      node ci/schemalens-diff.js /tmp/schema_base.sql $(SCHEMA_NEW_PATH) --dialect=$(DIALECT) --format=markdown --output=/tmp/schema_diff_report.md
+      cat /tmp/schema_diff_report.md
+    displayName: 'SchemaLens Schema Diff'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathToPublish: '/tmp/schema_diff_report.md'
+      ArtifactName: 'schema-diff-report'
+    displayName: 'Publish diff report'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+${commentBlock}
+${alertBlock}`;
+    }
+
     function generateConfig() {
       switch (state.platform) {
         case 'github': return generateGitHub();
@@ -741,6 +826,7 @@ ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Brea
         case 'jenkins': return generateJenkins();
         case 'circleci': return generateCircleCI();
         case 'bitbucket': return generateBitbucket();
+        case 'azure': return generateAzure();
         default: return generateGitHub();
       }
     }
@@ -806,7 +892,8 @@ ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Brea
         gitlab: '.gitlab-ci.yml',
         jenkins: 'Jenkinsfile',
         circleci: '.circleci/config.yml',
-        bitbucket: 'bitbucket-pipelines.yml'
+        bitbucket: 'bitbucket-pipelines.yml',
+        azure: 'azure-pipelines.yml'
       };
       els.filename.textContent = filenames[state.platform];
 

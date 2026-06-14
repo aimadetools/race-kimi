@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://cdn.vercel-insights.com">
   <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
-  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins & CircleCI</title>
-  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, and CircleCI.">
-  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins & CircleCI">
-  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, Bitbucket, Jenkins, and CircleCI.">
+  <title>Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins, CircleCI & Azure DevOps</title>
+  <meta name="description" content="Automate database schema review in your CI/CD pipeline. Catch breaking schema changes before they merge with SchemaLens for GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps.">
+  <meta property="og:title" content="Database Schema Diff for CI/CD — GitHub Actions, GitLab, Bitbucket, Jenkins, CircleCI & Azure DevOps">
+  <meta property="og:description" content="Run schema diffs in your CI/CD pipeline. Catch migration risks before they hit production. Free CLI + workflow templates for GitHub, GitLab, Bitbucket, Jenkins, CircleCI, and Azure DevOps.">
   <meta property="og:image" content="https://schemalens.tech/og-image.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://schemalens.tech/ci-cd-integration.html">
@@ -50,6 +50,7 @@
       "GitLab CI pipeline integration",
       "Bitbucket Pipelines support",
       "Jenkins pipeline integration",
+      "Azure DevOps pipeline integration",
       "Breaking change detection in CI",
       "Markdown diff reports as PR comments",
       "Zero dependencies — standalone Node.js script",
@@ -138,6 +139,12 @@
           <h4 style="margin: 0 0 6px; font-size: 1rem;">Bitbucket</h4>
           <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">Pipelines PR comments & reports</p>
           <a href="bitbucket-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="bitbucket">Add to Pipeline →</a>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 8px;">🔷</div>
+          <h4 style="margin: 0 0 6px; font-size: 1rem;">Azure DevOps</h4>
+          <p style="margin: 0 0 12px; font-size: 0.85rem; color: var(--text-muted);">PR comments, artifacts, path filters</p>
+          <a href="azure-devops-schema-diff.html" class="btn btn-primary" style="width:100%; font-size: 0.85rem;" data-wizard-ab="cta" data-platform="azure">Add to Pipeline →</a>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center;">
           <div style="font-size: 1.8rem; margin-bottom: 8px;">💬</div>
@@ -378,6 +385,52 @@ jobs:
     </div>
   </section>
 
+  <section class="section" style="background: var(--surface);" id="azure-devops">
+    <div class="container">
+      <h2 class="section-title text-center">Azure DevOps Pipelines</h2>
+      <p class="section-subtitle text-center">Add this job to <code>azure-pipelines.yml</code> to diff schemas on every SQL-related pull request.</p>
+      <div style="text-align:center; margin: 16px 0;">
+        <a href="azure-devops-schema-diff.html" class="btn btn-primary">🚀 View Full Azure DevOps Guide with PR Comments</a>
+      </div>
+      <div class="code-block-wrapper" style="max-width: 800px; margin: 24px auto 0;">
+        <pre class="code-block" style="position:relative;"><code id="azure-devops-workflow">trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  paths:
+    include:
+      - '**/*.sql'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+
+  - script: |
+      git fetch origin $(System.PullRequest.TargetBranch)
+      git show origin/$(System.PullRequest.TargetBranch):db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql
+      node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=/tmp/report.md
+      cat /tmp/report.md
+    displayName: 'SchemaLens Schema Diff'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathToPublish: '/tmp/report.md'
+      ArtifactName: 'schema-diff-report'
+    displayName: 'Publish diff report'</code><button class="copy-btn" onclick="copyWorkflow(this,'azure-devops')">Copy</button></pre>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="cli">
     <div class="container">
       <h2 class="section-title text-center">Standalone CLI</h2>
@@ -546,6 +599,7 @@ function copyWorkflow(btn, platform) {
     github: 'github-workflow',
     gitlab: 'gitlab-workflow',
     bitbucket: 'bitbucket-workflow',
+    'azure-devops': 'azure-devops-workflow',
     cli: 'cli-snippet'
   };
   const code = document.getElementById(map[platform]).textContent;

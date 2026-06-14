@@ -86,6 +86,7 @@ const pages = [
   { path: '/bitbucket-schema-diff.html', name: 'Bitbucket Pipelines Landing' },
   { path: '/jenkins-schema-diff.html', name: 'Jenkins Pipeline Landing' },
   { path: '/circleci-schema-diff.html', name: 'CircleCI Pipeline Landing' },
+  { path: '/azure-devops-schema-diff.html', name: 'Azure DevOps Pipeline Landing' },
   { path: '/book-demo.html', name: 'Book Demo' },
   { path: '/team.html', name: 'Team' },
   { path: '/team-buy.html', name: 'Team Buy' },
@@ -172,6 +173,7 @@ const wizardPlatforms = [
   { platform: 'jenkins', h1: 'Jenkins Schema Diff Wizard', title: 'Jenkins Schema Diff Pipeline Setup Wizard — SchemaLens' },
   { platform: 'circleci', h1: 'CircleCI Schema Diff Wizard', title: 'CircleCI Schema Diff Setup Wizard — SchemaLens' },
   { platform: 'bitbucket', h1: 'Bitbucket Pipelines Schema Diff Wizard', title: 'Bitbucket Pipelines Schema Diff Setup Wizard — SchemaLens' },
+  { platform: 'azure', h1: 'Azure DevOps Schema Diff Wizard', title: 'Azure DevOps Schema Diff Setup Wizard — SchemaLens' },
 ];
 
 for (const { platform, h1, title } of wizardPlatforms) {
