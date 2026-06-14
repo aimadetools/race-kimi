@@ -366,10 +366,7 @@ test('app: breaking changes detection works for dropped column', async ({ page }
   expect(pageText).toMatch(/breaking|DROP COLUMN/i);
 });
 
-test('app: pro value banner appears after diff for non-Pro users', async ({ page }) => {
-  await page.goto(`${BASE_URL}/app.html`);
-  await dismissEmailCapture(page);
-
+async function runDiffForBanner(page) {
   const schemaA = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, phone TEXT);`;
   const schemaB = `CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);`;
 
@@ -379,11 +376,88 @@ test('app: pro value banner appears after diff for non-Pro users', async ({ page
 
   await page.click('#compareBtn');
   await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+}
+
+test('app: pro value banner control variant renders above tabs', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('sl_pro_value_banner_ab_variant', 'control');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+  await page.reload();
+
+  await runDiffForBanner(page);
 
   const banner = page.locator('#proValueBanner .pro-value-banner');
   await expect(banner).toBeVisible();
-  const bannerText = await banner.textContent();
-  expect(bannerText).toMatch(/Export Markdown|shareable diff link|Revisit past diffs/i);
+  await expect(banner).toHaveAttribute('data-variant', 'control');
+  await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
+  await expect(banner.locator('.pro-value-title')).toContainText('Get more from this diff');
+});
+
+test('app: pro value banner v1 variant renders save-revisit framing above tabs', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v1');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+  await page.reload();
+
+  await runDiffForBanner(page);
+
+  const banner = page.locator('#proValueBanner .pro-value-banner');
+  await expect(banner).toBeVisible();
+  await expect(banner).toHaveAttribute('data-variant', 'v1');
+  await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
+  await expect(banner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
+});
+
+test('app: pro value banner v2 variant renders inside visual panel', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v2');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+  await page.reload();
+
+  await runDiffForBanner(page);
+
+  const topBanner = page.locator('#proValueBanner .pro-value-banner');
+  await expect(topBanner).toHaveCount(0);
+
+  const visualBanner = page.locator('#visualDiff > .pro-value-banner.inside-visual');
+  await expect(visualBanner).toBeVisible();
+  await expect(visualBanner).toHaveAttribute('data-variant', 'v2');
+  await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
+  await expect(visualBanner.locator('.pro-value-title')).toContainText('Get more from this diff');
+});
+
+test('app: pro value banner v3 variant renders save-revisit framing inside visual panel', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('sl_pro_value_banner_ab_variant', 'v3');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+  await page.reload();
+
+  await runDiffForBanner(page);
+
+  const topBanner = page.locator('#proValueBanner .pro-value-banner');
+  await expect(topBanner).toHaveCount(0);
+
+  const visualBanner = page.locator('#visualDiff > .pro-value-banner.inside-visual');
+  await expect(visualBanner).toBeVisible();
+  await expect(visualBanner).toHaveAttribute('data-variant', 'v3');
+  await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
+  await expect(visualBanner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
 });
 
 test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) => {

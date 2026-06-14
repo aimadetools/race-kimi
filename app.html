@@ -963,6 +963,18 @@
       color: var(--text-muted);
     }
     body.embed-mode .pro-value-banner { display: none !important; }
+    .pro-value-banner.inside-visual {
+      margin: -16px -16px 16px -16px;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+    @media (max-width: 640px) {
+      .pro-value-banner.inside-visual {
+        margin: -12px -12px 12px -12px;
+      }
+    }
 
     .welcome-hint {
       text-align: center;
@@ -4837,26 +4849,34 @@ function trackCICDCtaClick(position, variant, platform) {
 
 const PRO_VALUE_BANNER_KEY = 'sl_pro_value_banner_dismissed_v1';
 
-function renderProValueBanner() {
-  const container = document.getElementById('proValueBanner');
-  if (!container) return;
-
-  if (isProUnlocked() || localStorage.getItem(PRO_VALUE_BANNER_KEY)) {
-    container.innerHTML = '';
-    return;
+function getProValueBannerVariant() {
+  if (window.ProValueBannerAB && window.ProValueBannerAB.getVariant) {
+    return window.ProValueBannerAB.getVariant();
   }
+  return 'control';
+}
 
-  const paywallVariant = window.SchemaLensPaywallVariant || 'banner';
+function buildProValueBannerHTML(variant, placement) {
+  const copy = (window.ProValueBannerAB && window.ProValueBannerAB.getCopy)
+    ? window.ProValueBannerAB.getCopy(variant)
+    : {
+        headline: '✨ Get more from this diff',
+        body: 'The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run.',
+        features: ['📄 Export Markdown / PDF / JSON', '🔗 Copy a shareable diff link', '🕐 Revisit past diffs anytime'],
+        ctaPrimary: '⚡ Unlock Pro — $39 lifetime',
+        framing: 'export_share',
+      };
 
-  container.innerHTML = `
-    <div class="pro-value-banner" id="proValueBannerInner" data-rendered="1">
+  const featuresHtml = copy.features.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('');
+  const placementClass = placement === 'inside_visual' ? ' inside-visual' : '';
+
+  return `
+    <div class="pro-value-banner${placementClass}" id="proValueBannerInner" data-rendered="1" data-variant="${esc(variant)}" data-placement="${esc(placement)}">
       <button class="pro-value-close" onclick="dismissProValueBanner()" aria-label="Dismiss Pro value preview">×</button>
-      <div class="pro-value-title">✨ Get more from this diff</div>
-      <div class="pro-value-body">The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run.</div>
+      <div class="pro-value-title">${esc(copy.headline)}</div>
+      <div class="pro-value-body">${esc(copy.body)}</div>
       <div class="pro-value-features">
-        <span>📄 Export Markdown / PDF / JSON</span>
-        <span>🔗 Copy a shareable diff link</span>
-        <span>🕐 Revisit past diffs anytime</span>
+        ${featuresHtml}
       </div>
       <div class="pro-value-preview">
         <div class="pro-value-mock">
@@ -4869,19 +4889,54 @@ function renderProValueBanner() {
         </div>
       </div>
       <div class="pro-value-actions">
-        <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="text-align:center;" target="_blank" rel="noopener" onclick="trackProValueBannerClick('buy')">⚡ Unlock Pro — $39 lifetime</a>
+        <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" class="btn btn-primary" style="text-align:center;" target="_blank" rel="noopener" onclick="trackProValueBannerClick('buy')">${esc(copy.ctaPrimary)}</a>
         <button class="btn btn-secondary" onclick="openLicenseModal(); trackProValueBannerClick('license')">🔑 I have a key</button>
         <button class="btn btn-secondary" onclick="unlockProViaShare('twitter'); trackProValueBannerClick('share_twitter')">🐦 Share & unlock 7 days</button>
       </div>
       <div class="pro-value-footer">One-time payment · 30-day money-back guarantee · No subscription</div>
     </div>
   `;
+}
+
+function removeProValueBannerFromVisual() {
+  const existing = document.getElementById('proValueBannerInner');
+  if (existing) existing.remove();
+}
+
+function renderProValueBanner() {
+  const topContainer = document.getElementById('proValueBanner');
+  if (!topContainer) return;
+
+  if (isProUnlocked() || localStorage.getItem(PRO_VALUE_BANNER_KEY)) {
+    topContainer.innerHTML = '';
+    removeProValueBannerFromVisual();
+    return;
+  }
+
+  const variant = getProValueBannerVariant();
+  const insideVisual = variant === 'v2' || variant === 'v3';
+  const placement = insideVisual ? 'inside_visual' : 'above_tabs';
+
+  if (insideVisual) {
+    topContainer.innerHTML = '';
+    removeProValueBannerFromVisual();
+    const visualContainer = document.getElementById('visualDiff');
+    if (visualContainer) {
+      visualContainer.insertAdjacentHTML('afterbegin', buildProValueBannerHTML(variant, placement));
+    }
+  } else {
+    removeProValueBannerFromVisual();
+    topContainer.innerHTML = buildProValueBannerHTML(variant, placement);
+  }
 
   setTimeout(function () {
     if (window.SchemaLensAnalytics) {
       window.SchemaLensAnalytics.track('pro_value_banner_impression', {
-        paywall_variant: paywallVariant,
-        test: 'pro_value_banner_june2026'
+        variant: variant,
+        placement: placement,
+        framing: (window.ProValueBannerAB && window.ProValueBannerAB.getCopy) ? window.ProValueBannerAB.getCopy(variant).framing : 'export_share',
+        paywall_variant: window.SchemaLensPaywallVariant || 'banner',
+        test: 'pro_value_banner_june2026_v2'
       });
     }
   }, 0);
@@ -4889,17 +4944,28 @@ function renderProValueBanner() {
 
 function dismissProValueBanner() {
   localStorage.setItem(PRO_VALUE_BANNER_KEY, '1');
-  const container = document.getElementById('proValueBanner');
-  if (container) container.innerHTML = '';
-  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('pro_value_banner_dismissed');
+  const topContainer = document.getElementById('proValueBanner');
+  if (topContainer) topContainer.innerHTML = '';
+  removeProValueBannerFromVisual();
+  const variant = getProValueBannerVariant();
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('pro_value_banner_dismissed', {
+      variant: variant,
+      placement: variant === 'v2' || variant === 'v3' ? 'inside_visual' : 'above_tabs'
+    });
+  }
 }
 
 function trackProValueBannerClick(action) {
+  const variant = getProValueBannerVariant();
   if (window.SchemaLensAnalytics) {
     window.SchemaLensAnalytics.track('pro_value_banner_click', {
       action,
+      variant: variant,
+      placement: variant === 'v2' || variant === 'v3' ? 'inside_visual' : 'above_tabs',
+      framing: (window.ProValueBannerAB && window.ProValueBannerAB.getCopy) ? window.ProValueBannerAB.getCopy(variant).framing : 'export_share',
       paywall_variant: window.SchemaLensPaywallVariant || 'banner',
-      test: 'pro_value_banner_june2026'
+      test: 'pro_value_banner_june2026_v2'
     });
   }
 }
@@ -10342,6 +10408,7 @@ renderDiffHistory();
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
 <script src="lib/wizard-ab-test.js"></script>
+<script src="lib/pro-value-banner-ab-test.js"></script>
 
 </body>
 </html>
