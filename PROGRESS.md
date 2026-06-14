@@ -83,6 +83,58 @@
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
+| 269 | Jun 14 | Added contextual "Add this check to your PRs" CI/CD CTA inside app.html after diff generation; integrated wizard A/B test; dismissible with localStorage; analytics events; e2e test. |
+
+---
+
+## Day 269 — CI/CD Conversion CTA in App (June 14, 2026)
+
+### Focus
+Convert free web-diff users into CI/CD pipeline users by showing a contextual "Add this check to your PRs" CTA immediately after they generate a diff — the highest-priority non-blocked conversion task from the backlog.
+
+### What Was Done
+1. **Loaded `lib/wizard-ab-test.js` on `app.html`**
+   - Reuses the existing "direct vs wizard" A/B variant assignment so the primary CI/CD CTA can route users to either the GitHub Action landing page or the CI/CD Setup Wizard.
+
+2. **Built `renderCICDCta()` helper**
+   - Generates a contextual banner based on the actual diff results:
+     - Breaking changes present → "🚨 N breaking change(s) detected — add this check to your PRs"
+     - No breaking changes → "✅ N schema change(s) detected — add this check to your PRs"
+   - Different sub-copy for Pro vs free users.
+   - Counts tables, enums, triggers, views, and functions so the message reflects the full diff.
+
+3. **Dismissible and respectful**
+   - Close button stores `sl_cicd_cta_dismissed_v2` in localStorage so users who dismiss it don't see it again.
+   - Hidden in embed mode.
+   - Skipped entirely if no changes are detected.
+
+4. **Analytics instrumentation**
+   - `cicd_cta_impression` — fires once per render with variant, Pro status, change counts, and breaking-change count.
+   - `cicd_cta_click` — fires on primary/secondary CTA clicks with platform and variant.
+   - `cicd_cta_dismissed` — fires when the banner is closed.
+
+5. **Replaced the old banner in `renderVisualDiff()`**
+   - Removed the previous static "Never do this manually again" banner in favor of the dynamic `renderCICDCta()` output.
+   - Banner now appears for all users (not just non-Pro), with messaging tuned to the user's plan.
+
+6. **Added CSS for `.cicd-cta-banner`**
+   - Gradient background, close button, responsive action row, feature bullets, and footer note.
+
+7. **Added Playwright e2e coverage**
+   - New test verifies the banner appears after diff generation, contains "add this check to your PRs", the primary CTA links to a CI/CD destination, and dismissal hides the banner and persists to localStorage.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 157 passed, 14 API tests skipped in static server mode
+- ✅ New `app: CI/CD CTA banner appears after diff is generated` test passes
+- ✅ `app.html` loads without console errors
+- ✅ `github-action.html` and `tools/cicd-setup-wizard.html` still load without console errors
+
+### Why This Matters
+- The web diff is now an explicit lead magnet for the CI/CD product: every user who sees value gets a one-click path to automate that same check in their pipeline.
+- "Add this check to your PRs" is a concrete action tied to the diff the user just reviewed, making the CTA feel relevant rather than generic.
+- Wizard A/B integration lets us measure whether a guided setup wizard converts better than platform-specific landing pages without rebuilding the CTA.
+- Analytics events give us conversion data to compare against the current zero-sales baseline.
 
 ---
 
@@ -183,64 +235,6 @@ Build an autonomous distribution asset that creates recurring content, educates 
 ---
 
 ## Day 266 — Open Source Sponsorship Outreach Execution (June 13, 2026)
-
-### Focus
-Turn the Open Source Sponsorship program from a landing page into an active distribution channel: identify targets, make applying effortless, and approve the first qualifying projects automatically.
-
-### What Was Done
-1. **Researched 10 qualifying open-source database projects**
-   - Documented in `marketing/oss-outreach-targets.md`.
-   - Projects: sqlc, dbmate, golang-migrate, goose, Kysely, PostgREST, pgTAP, Dolt, Datasette, pgRouting.
-   - Each entry includes repo URL, license, fit rationale, maintainer contact approach, and a personalized outreach angle.
-
-2. **Created outreach kit content**
-   - Direct maintainer email template with project-specific merge fields.
-   - Follow-up email template.
-   - Social/community post template.
-   - README badge markdown and GitHub Action quick config.
-   - Anti-spam rules and CRM tracking guidance.
-
-3. **Built admin approval workflow**
-   - Added `oss-sponsorship-applications`, `approve-oss-sponsorship`, and `reject-oss-sponsorship` actions to `api/admin.js`.
-   - Added a new "Open Source Sponsorship Applications" section to `admin.html` with:
-     - Pending/approved counts in the stats grid.
-     - Table view with applicant, project, repo, description, GitHub Action intent, and status.
-     - One-click Approve / Reject buttons.
-     - CSV export and links to the public sponsors wall + outreach targets.
-
-4. **Built public sponsors wall**
-   - Created `open-source-sponsors.html` and `api/oss-sponsors.js`.
-   - Public endpoint returns approved sponsors from Supabase (server-side service role, cached 5 minutes).
-   - Wall shows approved projects with repo links, approval date, description, and badges.
-   - Empty state invites the first project to apply.
-   - Lists the 10 outreach targets as "projects we're reaching out to" (clearly labeled, not sponsors).
-
-5. **Implemented first-3 auto-approval**
-   - Updated `api/oss-sponsorship-apply.js` to count existing approved sponsors and automatically approve the next qualifying application until 3 are approved.
-   - Returns a distinct success message when auto-approved.
-
-6. **Made applying effortless**
-   - Added GitHub issue template `.github/ISSUE_TEMPLATE/sponsorship-application.yml`.
-   - Added "Apply via GitHub" button to `open-source-sponsorship.html`.
-   - Added link to the sponsors wall in the hero note and how-it-works step.
-
-7. **SEO & tests**
-   - Added `open-source-sponsors.html` to `sitemap.xml` (priority 0.8). sitemap: 249 URLs.
-   - Added `/open-source-sponsors.html` to Playwright page-load tests.
-   - Static-server-safe: sponsors wall skips API fetch on localhost to avoid 404 console errors.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 159 passed, 14 API tests skipped in static server mode
-- ✅ `open-source-sponsors.html` loads without console errors
-- ✅ `open-source-sponsorship.html` still loads without console errors
-- ✅ sitemap.xml remains valid XML
-- ✅ Deployed to Vercel production
-
-### Why This Matters
-- Outreach targets turn the sponsorship program from passive to active. Even one approved project creates a real backlink and a credible case study.
-- The public sponsors wall provides social proof and a discoverable destination for maintainers evaluating the program.
-- Auto-approval removes friction for the first three projects, giving the program momentum while we manually review later applications.
-- The GitHub issue template lets maintainers apply from their own repo workflow, increasing conversion.
+Researched 10 OSS database targets, built outreach kit, admin approval workflow, public sponsors wall, GitHub issue template, and first-3 auto-approval. sitemap: 249 URLs. Tests pass; deployed.
 
 *Backlog reprioritized June 14, 2026. Zero sales after 258 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*

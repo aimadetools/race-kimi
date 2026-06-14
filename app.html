@@ -795,6 +795,71 @@
       align-items: center;
       gap: 4px;
     }
+
+    .cicd-cta-banner {
+      position: relative;
+      background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.08));
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+    .cicd-cta-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .cicd-cta-close:hover { color: var(--text); }
+    .cicd-cta-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      padding-right: 24px;
+    }
+    .cicd-cta-body {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .cicd-cta-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .cicd-cta-features span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cicd-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .cicd-cta-actions .btn {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
+    .cicd-cta-footer {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    body.embed-mode .cicd-cta-banner { display: none !important; }
+
     .welcome-hint {
       text-align: center;
       padding: 40px 20px;
@@ -4586,6 +4651,85 @@ function renderSummary(diff, confidenceA, confidenceB, breakingChanges, riskScor
   warnContainer.innerHTML = warnHTML;
 }
 
+function renderCICDCta(diff, breakingChanges) {
+  const CTA_KEY = 'sl_cicd_cta_dismissed_v2';
+  if (localStorage.getItem(CTA_KEY)) return '';
+
+  const totalChanges = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length +
+    diff.enumsAdded.length + diff.enumsRemoved.length +
+    diff.triggersAdded.length + diff.triggersRemoved.length + diff.triggersModified.length +
+    diff.viewsAdded.length + diff.viewsRemoved.length + diff.viewsModified.length +
+    diff.functionsAdded.length + diff.functionsRemoved.length + diff.functionsModified.length;
+
+  if (totalChanges === 0) return '';
+
+  const breakingCount = breakingChanges.length;
+  const pro = isProUnlocked();
+  const variant = (window.WizardAB && window.WizardAB.getVariant) ? window.WizardAB.getVariant() : 'direct';
+
+  const headline = breakingCount > 0
+    ? `🚨 ${breakingCount} breaking change${breakingCount > 1 ? 's' : ''} detected — add this check to your PRs`
+    : `✅ ${totalChanges} schema change${totalChanges > 1 ? 's' : ''} detected — add this check to your PRs`;
+
+  const subhead = pro
+    ? 'Your team can run this same diff automatically on every pull request. No manual pasting, no missed changes.'
+    : 'Stop pasting schemas by hand. SchemaLens diffs every PR automatically and posts the result as a comment.';
+
+  const platform = 'github';
+  const primaryHref = variant === 'wizard'
+    ? 'tools/cicd-setup-wizard.html?platform=' + encodeURIComponent(platform)
+    : 'github-action.html';
+  const primaryText = variant === 'wizard' ? '⚡ Setup Wizard' : '🚀 Add to GitHub Action';
+
+  // Track impression once per render
+  setTimeout(function () {
+    if (window.SchemaLensAnalytics) {
+      window.SchemaLensAnalytics.track('cicd_cta_impression', {
+        variant: variant,
+        pro: pro,
+        total_changes: totalChanges,
+        breaking_changes: breakingCount
+      });
+    }
+  }, 0);
+
+  return `
+    <div class="cicd-cta-banner" id="cicdCtaBanner" data-rendered="1">
+      <button class="cicd-cta-close" onclick="dismissCICDCta()" aria-label="Dismiss CI/CD CTA">×</button>
+      <div class="cicd-cta-title">${headline}</div>
+      <div class="cicd-cta-body">${subhead}</div>
+      <div class="cicd-cta-features">
+        <span>🔍 Auto-diff on every PR</span>
+        <span>🚨 Breaking change alerts</span>
+        <span>📋 PR comments with migration preview</span>
+        <span>⚡ 2-minute setup</span>
+      </div>
+      <div class="cicd-cta-actions">
+        <a href="${primaryHref}" class="btn btn-primary" style="text-align:center;" onclick="trackCICDCtaClick('primary','${variant}','${platform}')">${primaryText}</a>
+        <a href="gitlab-schema-diff.html" class="btn btn-secondary" style="text-align:center;" onclick="trackCICDCtaClick('secondary','direct','gitlab')">GitLab CI</a>
+        <a href="jenkins-schema-diff.html" class="btn btn-secondary" style="text-align:center;" onclick="trackCICDCtaClick('secondary','direct','jenkins')">Jenkins</a>
+        <a href="circleci-schema-diff.html" class="btn btn-secondary" style="text-align:center;" onclick="trackCICDCtaClick('secondary','direct','circleci')">CircleCI</a>
+      </div>
+      <div class="cicd-cta-footer">
+        Free for open source · Works with any CI platform · No backend required
+      </div>
+    </div>
+  `;
+}
+
+function dismissCICDCta() {
+  localStorage.setItem('sl_cicd_cta_dismissed_v2', '1');
+  const banner = document.getElementById('cicdCtaBanner');
+  if (banner) banner.remove();
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('cicd_cta_dismissed');
+}
+
+function trackCICDCtaClick(position, variant, platform) {
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('cicd_cta_click', { position: position, variant: variant, platform: platform });
+  }
+}
+
 function renderVisualDiff(diff, breakingChanges) {
   const container = document.getElementById('visualDiff');
   let html = '';
@@ -4603,35 +4747,7 @@ function renderVisualDiff(diff, breakingChanges) {
   }
 
   // CI/CD Integration banner — promotes automation after free diff
-  if (!isProUnlocked() && lastMigrationSQL) {
-    const totalChanges = diff.tablesAdded.length + diff.tablesRemoved.length + diff.tablesRenamed.length + diff.tablesModified.length;
-    html += `
-      <div class="pro-migration-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.08));border-color:rgba(16,185,129,0.3);">
-        <div class="pro-migration-preview-header">
-          <span style="font-size:1.2rem;">✅</span>
-          <span>Migration ready — <strong>${totalChanges} change${totalChanges > 1 ? 's' : ''}</strong> detected. Full script is free below.</span>
-        </div>
-        <div style="font-size:0.9rem;color:var(--text);margin:8px 0;">
-          <strong>Never do this manually again.</strong> Add SchemaLens to your CI/CD pipeline and catch breaking schema changes in every PR — automatically.
-        </div>
-        <div class="pro-migration-preview-features">
-          <span>🔍 Auto-diff on every PR</span>
-          <span>🚨 Breaking change alerts</span>
-          <span>📋 PR comments with migration preview</span>
-          <span>⚡ 2-minute setup</span>
-        </div>
-        <div class="pro-migration-preview-cta">
-          <a href="github-action.html" class="btn btn-primary" style="text-align:center;">🚀 Add to GitHub Action</a>
-          <a href="gitlab-schema-diff.html" class="btn btn-secondary" style="text-align:center;">GitLab CI</a>
-          <a href="jenkins-schema-diff.html" class="btn btn-secondary" style="text-align:center;">Jenkins</a>
-          <a href="circleci-schema-diff.html" class="btn btn-secondary" style="text-align:center;">CircleCI</a>
-        </div>
-        <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">
-          Free for open source · Works with any CI platform · No backend required
-        </div>
-      </div>
-    `;
-  }
+  html += renderCICDCta(diff, breakingChanges);
 
   for (const table of diff.tablesAdded) {
     html += renderTableDiff(table.name, 'added', table.columns, [], [], [], [], [], tableBreaking.get(table.name) || []);
@@ -10048,6 +10164,7 @@ renderDiffHistory();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
 <script src="lib/ref-tracking.js"></script>
+<script src="lib/wizard-ab-test.js"></script>
 
 </body>
 </html>

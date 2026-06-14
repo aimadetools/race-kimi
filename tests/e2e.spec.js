@@ -415,6 +415,41 @@ test('app: clear button resets editors', async ({ page }) => {
   }
 });
 
+test('app: CI/CD CTA banner appears after diff is generated', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+
+  // Load schemas and run diff
+  await page.click('text=Load sample (PostgreSQL)');
+  await page.waitForTimeout(300);
+  await page.evaluate(() => { if (typeof loadSampleB === 'function') loadSampleB(); });
+  await page.waitForTimeout(300);
+  await page.click('#compareBtn');
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  // CI/CD CTA should be visible in the visual diff panel
+  const cta = page.locator('#cicdCtaBanner');
+  await expect(cta).toBeVisible();
+
+  const ctaText = await cta.textContent();
+  expect(ctaText).toMatch(/add this check to your PRs/i);
+
+  // Primary CTA should link to GitHub Action or setup wizard
+  const primaryLink = cta.locator('a.btn-primary');
+  const href = await primaryLink.getAttribute('href');
+  expect(href).toMatch(/github-action\.html|tools\/cicd-setup-wizard\.html/);
+
+  // Dismiss button should hide banner and persist
+  await cta.locator('.cicd-cta-close').click();
+  await expect(cta).toBeHidden();
+  const dismissed = await page.evaluate(() => localStorage.getItem('sl_cicd_cta_dismissed_v2'));
+  expect(dismissed).toBe('1');
+});
+
 // ───────────────────────────────────────────────
 // Tools Tests
 // ───────────────────────────────────────────────
