@@ -186,6 +186,7 @@
 
   <script src="lib/analytics-client.js"></script>
   <script>
+  (async function() {
     function track(event, metadata) {
       if (window.SchemaLensAnalytics && typeof window.SchemaLensAnalytics.track === 'function') {
         window.SchemaLensAnalytics.track(event, metadata);
@@ -484,6 +485,7 @@
         track(el.dataset.event, { href: el.getAttribute('href') || '' });
       });
     });
+  })();
   </script>
 </body>
 </html>

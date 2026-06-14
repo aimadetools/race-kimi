@@ -151,6 +151,7 @@ const pages = [
   { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
   { path: '/tools/schema-semver-calculator.html', name: 'Schema SemVer Calculator' },
   { path: '/tools/cicd-setup-wizard.html', name: 'CI/CD Setup Wizard' },
+  { path: '/tools/request-team-invoice.html', name: 'Request Team Invoice' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
   { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },
@@ -170,12 +171,26 @@ for (const { path, name } of pages) {
 
 test('GitHub PR Schema Diff pre-fills input from ?pr= and shows share section after mock', async ({ page }) => {
   const prUrl = 'https://github.com/owner/repo/pull/123';
+  const mock = {
+    ok: true,
+    owner: 'owner',
+    repo: 'repo',
+    pull: 123,
+    file: 'schema.sql',
+    dialect: 'postgres',
+    summary: { tablesAdded: 1, tablesRemoved: 0, tablesModified: 0, breakingChanges: 0, riskScore: 12, riskLabel: 'low' },
+    migration: 'CREATE TABLE users (id SERIAL PRIMARY KEY);',
+    markdown: '## Schema Diff Summary\n\nNo breaking changes.',
+    sqlFiles: [{ filename: 'schema.sql', status: 'modified', additions: 1, deletions: 0 }]
+  };
+  await page.route('**/api/github-pr-diff*', route => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mock) });
+  });
   await page.goto(`${BASE_URL}/github-pr-schema-diff.html?pr=${encodeURIComponent(prUrl)}&file=schema.sql`);
   await expect(page.locator('#prUrl')).toHaveValue(prUrl);
-  // The share section is present in the DOM; copy buttons are wired.
-  await expect(page.locator('#shareSection')).toBeAttached();
-  await expect(page.locator('#shareUrl')).toBeAttached();
-  await expect(page.locator('#badgeMarkdown')).toBeAttached();
+  await expect(page.locator('#shareSection')).toBeVisible();
+  await expect(page.locator('#shareUrl')).toHaveValue(/github-pr-schema-diff\.html\?pr=/);
+  await expect(page.locator('#badgeMarkdown')).toHaveValue(/img\.shields\.io/);
 });
 
 // ───────────────────────────────────────────────
