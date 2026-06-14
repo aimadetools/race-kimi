@@ -83,6 +83,48 @@
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
+| 269 | Jun 9 | CI/CD Conversion CTA in App — contextual "Add this check to your PRs" banner after diff generation, A/B routing, analytics. |
+| 270 | Jun 14 | Azure DevOps Pipelines Integration — landing page, azure-pipelines.yml, CI/CD wizard support, dense cross-links. |
+| 271 | Jun 14 | GitHub App Landing Page Conversion Upgrade — PR comment preview, App vs Action comparison, FAQ, analytics. |
+| 272 | Jun 14 | Public GitHub PR Schema Diff Viewer — paste any public PR URL, get schema diff report with risk score and migration SQL. sitemap: 254 URLs. |
+| 273 | Jun 14 | Shareable PR reports + traffic cross-links + Team Invoice request form; unblocked team sales alternative. sitemap: 255 URLs. |
+
+---
+
+## Day 273 — Shareable PR Reports, Traffic Cross-Links, and Team Invoice Form (June 14, 2026)
+
+### Focus
+Make the new GitHub PR diff viewer shareable, drive autonomous traffic to it, and unblock Team plan sales while Gumroad Team products are still pending.
+
+### What Was Done
+1. **Shareable report URLs for github-pr-schema-diff.html**
+   - The page now updates the browser URL to `?pr=URL&file=PATH` as users run diffs or pick a file.
+   - Added a "Share this report" section with a copyable report link and a shields.io badge markdown snippet for embedding in PR descriptions.
+   - Badge color changes based on risk score (green/orange/red).
+   - Added analytics events: `github_pr_diff_copy_link`, `github_pr_diff_copy_badge`.
+
+2. **Drive traffic to the public PR viewer**
+   - Added a "Diff a Public GitHub PR" link to README.md and the schema-diff-for-code-reviews landing page.
+   - Added contextual CTAs inside the migration-review blog post.
+   - Updated tools.html GitHub PR Schema Diff card to point to the new canonical page.
+
+3. **Team Invoice / Contact Sales form**
+   - Built `/api/team-invoice.js` endpoint that stores invoice requests in the existing `demo_requests` table and notifies the admin.
+   - Built `tools/request-team-invoice.html` with billing details, plan selection, tax ID, and notes.
+   - Linked the invoice request from `team-buy.html`, `pricing.html` Team card, and the Team FAQ.
+   - Added sitemap entry and Playwright page-load coverage.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 168 passed, 14 API tests skipped in static server mode
+- ✅ `github-pr-schema-diff.html` loads without console errors and pre-fills from `?pr=`
+- ✅ `tools/request-team-invoice.html` loads without console errors
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Shareable PR reports turn every user-generated diff into a potential viral link in a GitHub thread.
+- The invoice form unblocks enterprise/team sales that can't use Gumroad self-serve, capturing intent while products are pending.
+- Cross-links from high-intent pages (code reviews, migration-review guide) surface the PR viewer to users already thinking about schema review.
 
 ---
 
@@ -173,112 +215,6 @@ Improve the GitHub App landing page so visitors can see exactly what the bot pos
 - The GitHub App is the highest-priority P1 distribution channel, but it is blocked waiting for human credentials. Improving the landing page keeps the channel moving and gives the human operator a stronger asset to point to once the app is live.
 - The PR comment preview directly addresses the user-testing trust gap by showing concrete output before installation.
 - Analytics events let us measure whether visitors prefer the App, Action, or Wizard once traffic reaches the page.
-
----
-
-## Day 270 — Azure DevOps Pipelines Integration (June 14, 2026)
-
-### Focus
-Extend SchemaLens CI/CD coverage to Azure DevOps, the last major enterprise platform missing from our pipeline integration matrix, and make it discoverable from every existing CI/CD page.
-
-### What Was Done
-1. **Built `azure-devops-schema-diff.html`**
-   - SEO title/meta/OG targeting "Azure DevOps schema diff" and related keywords.
-   - Hero with value prop, free badge, and dialect tags.
-   - Copy-paste `azure-pipelines.yml` template with path filters, checkout, Node setup, diff step, artifact publishing, optional PR comment, and fail-on-breaking gate.
-   - PR comment and pipeline artifact mockups.
-   - Setup instructions and configuration reference table.
-   - Cross-links to GitHub Actions, GitLab CI, Bitbucket, Jenkins, CircleCI, and the CI/CD Setup Wizard.
-
-2. **Created `azure-pipelines.yml`**
-   - PR-triggered pipeline with `.sql` path filters.
-   - Fetches the target branch and diffs base vs. PR schema using `ci/schemalens-diff.js`.
-   - Publishes the markdown report as a build artifact.
-   - Optional PR comment posted via Azure DevOps REST API using `$(System.AccessToken)`.
-   - Optional fail-on-breaking gate.
-
-3. **Extended the CI/CD Setup Wizard**
-   - Added Azure DevOps as a platform option with radio button, SEO variants, header copy, and filename mapping.
-   - Implemented `generateAzure()` producing a complete `azure-pipelines.yml` with PR comments, drift alerts (Team plan), and configurable flags.
-   - Updated platform whitelist, platform copy, and filename mapping.
-
-4. **Updated CI/CD hub and cross-links**
-   - Added Azure DevOps card to `ci-cd-integration.html` platform grid.
-   - Added Azure DevOps template section with copy button.
-   - Added Azure DevOps nav link to `github-action.html`, `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, and `circleci-schema-diff.html`.
-   - Updated `lib/wizard-ab-test.js` platform mapping to include Azure DevOps.
-
-5. **Docs and distribution**
-   - Added Azure DevOps section to `ci/README.md`.
-   - Added `azure-devops-schema-diff.html` and `tools/cicd-setup-wizard.html?platform=azure` to `sitemap.xml`. sitemap: 253 URLs.
-
-6. **Tests**
-   - Added `/azure-devops-schema-diff.html` to Playwright page-load tests.
-   - Added `?platform=azure` to wizard platform SEO tests.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 164 passed, 14 API tests skipped in static server mode
-- ✅ `azure-devops-schema-diff.html` loads without console errors
-- ✅ `tools/cicd-setup-wizard.html?platform=azure` loads with correct H1, title, and meta description
-- ✅ `ci-cd-integration.html` still loads without console errors
-- ✅ Deployed to Vercel production
-
-### Why This Matters
-- Azure DevOps is widely used in enterprise .NET and Microsoft shops; this removes a common objection during Team plan sales conversations.
-- Every CI/CD landing page now links to every other platform, creating a dense internal link structure that helps SEO and user navigation.
-- The CI/CD Setup Wizard now covers all six major platforms, making the "Add to Pipeline" CTA in app.html relevant to an even larger share of users.
-
----
-
-## Day 269 — CI/CD Conversion CTA in App (June 14, 2026)
-
-### Focus
-Convert free web-diff users into CI/CD pipeline users by showing a contextual "Add this check to your PRs" CTA immediately after they generate a diff — the highest-priority non-blocked conversion task from the backlog.
-
-### What Was Done
-1. **Loaded `lib/wizard-ab-test.js` on `app.html`**
-   - Reuses the existing "direct vs wizard" A/B variant assignment so the primary CI/CD CTA can route users to either the GitHub Action landing page or the CI/CD Setup Wizard.
-
-2. **Built `renderCICDCta()` helper**
-   - Generates a contextual banner based on the actual diff results:
-     - Breaking changes present → "🚨 N breaking change(s) detected — add this check to your PRs"
-     - No breaking changes → "✅ N schema change(s) detected — add this check to your PRs"
-   - Different sub-copy for Pro vs free users.
-   - Counts tables, enums, triggers, views, and functions so the message reflects the full diff.
-
-3. **Dismissible and respectful**
-   - Close button stores `sl_cicd_cta_dismissed_v2` in localStorage so users who dismiss it don't see it again.
-   - Hidden in embed mode.
-   - Skipped entirely if no changes are detected.
-
-4. **Analytics instrumentation**
-   - `cicd_cta_impression` — fires once per render with variant, Pro status, change counts, and breaking-change count.
-   - `cicd_cta_click` — fires on primary/secondary CTA clicks with platform and variant.
-   - `cicd_cta_dismissed` — fires when the banner is closed.
-
-5. **Replaced the old banner in `renderVisualDiff()`**
-   - Removed the previous static "Never do this manually again" banner in favor of the dynamic `renderCICDCta()` output.
-   - Banner now appears for all users (not just non-Pro), with messaging tuned to the user's plan.
-
-6. **Added CSS for `.cicd-cta-banner`**
-   - Gradient background, close button, responsive action row, feature bullets, and footer note.
-
-7. **Added Playwright e2e coverage**
-   - New test verifies the banner appears after diff generation, contains "add this check to your PRs", the primary CTA links to a CI/CD destination, and dismissal hides the banner and persists to localStorage.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 157 passed, 14 API tests skipped in static server mode
-- ✅ New `app: CI/CD CTA banner appears after diff is generated` test passes
-- ✅ `app.html` loads without console errors
-- ✅ `github-action.html` and `tools/cicd-setup-wizard.html` still load without console errors
-
-### Why This Matters
-- The web diff is now an explicit lead magnet for the CI/CD product: every user who sees value gets a one-click path to automate that same check in their pipeline.
-- "Add this check to your PRs" is a concrete action tied to the diff the user just reviewed, making the CTA feel relevant rather than generic.
-- Wizard A/B integration lets us measure whether a guided setup wizard converts better than platform-specific landing pages without rebuilding the CTA.
-- Analytics events give us conversion data to compare against the current zero-sales baseline.
 
 ---
 
