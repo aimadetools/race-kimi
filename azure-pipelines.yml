@@ -1,0 +1,77 @@
+# SchemaLens Azure DevOps Pipeline
+# Compare database schemas on every pull request and post the diff as a PR comment.
+# Docs: https://schemalens.tech/azure-devops-schema-diff.html
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  paths:
+    include:
+      - 'db/schema.sql'
+      - 'migrations/*.sql'
+      - '**/*.sql'
+
+variables:
+  SCHEMA_OLD_PATH: 'db/schema.sql'
+  SCHEMA_NEW_PATH: 'db/schema.sql'
+  DIALECT: 'postgres'
+  FAIL_ON_BREAKING: 'false'
+  POST_PR_COMMENT: 'true'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+    displayName: 'Checkout PR branch'
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      set -e
+      echo "Running SchemaLens schema diff..."
+      git fetch origin $(System.PullRequest.TargetBranch)
+      git show origin/$(System.PullRequest.TargetBranch):$(SCHEMA_OLD_PATH) > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema found" > /tmp/schema_base.sql
+      node ci/schemalens-diff.js /tmp/schema_base.sql $(SCHEMA_NEW_PATH) --dialect=$(DIALECT) --format=markdown --output=/tmp/schema_diff_report.md
+      cat /tmp/schema_diff_report.md
+    displayName: 'SchemaLens Schema Diff'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathToPublish: '/tmp/schema_diff_report.md'
+      ArtifactName: 'schema-diff-report'
+    displayName: 'Publish diff report'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  # Optional: post the report as a PR comment using the Azure DevOps REST API.
+  # Requires "Contribute to pull requests" permission for the build service.
+  - script: |
+      set -e
+      REPORT=$(cat /tmp/schema_diff_report.md)
+      BODY="## SchemaLens Schema Diff Report\n\n$REPORT"
+      curl -s -X POST \
+        "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_apis/git/repositories/$(Build.Repository.Name)/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=7.0" \
+        -H "Authorization: Bearer $(System.AccessToken)" \
+        -H "Content-Type: application/json" \
+        -d "{\"comments\":[{\"commentType\":1,\"content\":\"$BODY\"}],\"status\":1}"
+    displayName: 'Post PR comment'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['POST_PR_COMMENT'], 'true'))
+
+  - script: |
+      set -e
+      BREAKING=$(node ci/schemalens-diff.js /tmp/schema_base.sql $(SCHEMA_NEW_PATH) --dialect=$(DIALECT) --format=json | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);process.stdout.write(String((j.riskScore&&j.riskScore.breaking?j.riskScore.breaking.length:0)||(j.breakingChanges?j.breakingChanges.length:0)));}"))
+      echo "Breaking changes: $BREAKING"
+      if [ "$BREAKING" != "0" ]; then
+        echo "##vso[task.logissue type=error]Breaking schema changes detected"
+        exit 1
+      fi
+    displayName: 'Fail on breaking changes'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), eq(variables['FAIL_ON_BREAKING'], 'true'))

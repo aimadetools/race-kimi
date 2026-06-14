@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Azure DevOps — Free Schema Diff in Pull Requests</title>
+  <meta name="description" content="Add schema diff checks to your Azure DevOps pipeline for free. Catch breaking database changes in every pull request. Supports PostgreSQL, MySQL, SQLite, SQL Server, Oracle.">
+  <meta property="og:title" content="SchemaLens Azure DevOps — Free Schema Diff in Pull Requests">
+  <meta property="og:description" content="Catch breaking database changes in every Azure DevOps pull request. Free CI template with PR comments, artifact reports, and breaking-change gates.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/azure-devops-schema-diff.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Azure DevOps Integration",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Free SQL schema diff in Azure DevOps, pull request comments, artifact reports, breaking change detection, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/azure-devops-schema-diff.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fca5a5; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .step { display: flex; gap: 16px; margin: 24px 0; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step-body { flex: 1; }
+    .step-body h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .step-body p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 8px; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .dialect-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .dialect-tags span { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 0.8rem; color: var(--text-muted); }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+    .comparison-table th, .comparison-table td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+    .comparison-table th { background: var(--surface); font-weight: 600; }
+    .comparison-table td { color: var(--text-muted); }
+    .comparison-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+    @media (prefers-color-scheme: dark) {
+      .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    }
+    .azure-accent { color: #0078d4; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api-guide.html">API</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="gitlab-schema-diff.html">GitLab CI</a>
+      <a href="bitbucket-schema-diff.html">Bitbucket</a>
+      <a href="jenkins-schema-diff.html">Jenkins</a>
+      <a href="circleci-schema-diff.html">CircleCI</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>SchemaLens <span class="azure-accent">Azure DevOps</span> <span class="badge-free">Free</span></h1>
+      <p>Catch breaking database changes in every Azure DevOps pull request. Zero config, zero cost — add schema diff checks to your pipeline in 60 seconds.</p>
+      <div class="dialect-tags">
+        <span>PostgreSQL</span><span>MySQL</span><span>SQLite</span><span>SQL Server</span><span>Oracle</span>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 Add to your pipeline — copy, paste, done</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">Free for open source and small teams. Upgrade to Team for Slack alerts, shared dashboards, and unlimited members.</p>
+      <div class="code-block">
+<span class="comment"># azure-pipelines.yml</span>
+<span class="key">trigger</span>:
+  <span class="key">branches</span>:
+    <span class="key">include</span>:
+      - <span class="str">main</span>
+
+<span class="key">pr</span>:
+  <span class="key">paths</span>:
+    <span class="key">include</span>:
+      - <span class="str">db/schema.sql</span>
+      - <span class="str">migrations/*.sql</span>
+      - <span class="str">**/*.sql</span>
+
+<span class="key">pool</span>:
+  <span class="key">vmImage</span>: <span class="str">ubuntu-latest</span>
+
+<span class="key">steps</span>:
+  - <span class="key">checkout</span>: <span class="str">self</span>
+    <span class="key">fetchDepth</span>: <span class="num">0</span>
+
+  - <span class="key">task</span>: <span class="str">NodeTool@0</span>
+    <span class="key">inputs</span>:
+      <span class="key">versionSpec</span>: <span class="str">"20.x"</span>
+    <span class="key">displayName</span>: <span class="str">"Install Node.js"</span>
+
+  - <span class="key">script</span>: <span class="str">|</span>
+      <span class="str">git fetch origin $(System.PullRequest.TargetBranch)</span>
+      <span class="str">git show origin/$(System.PullRequest.TargetBranch):db/schema.sql > /tmp/schema_base.sql 2>/dev/null || echo "-- No base schema" > /tmp/schema_base.sql</span>
+      <span class="str">node ci/schemalens-diff.js /tmp/schema_base.sql db/schema.sql --dialect=postgres --format=markdown --output=/tmp/report.md</span>
+      <span class="str">cat /tmp/report.md</span>
+    <span class="key">displayName</span>: <span class="str">"SchemaLens Schema Diff"</span>
+
+  - <span class="key">task</span>: <span class="str">PublishBuildArtifacts@1</span>
+    <span class="key">inputs</span>:
+      <span class="key">PathToPublish</span>: <span class="str">"/tmp/report.md"</span>
+      <span class="key">ArtifactName</span>: <span class="str">"schema-diff-report"</span>
+    <span class="key">displayName</span>: <span class="str">"Publish diff report"</span>
+      </div>
+      <a href="azure-pipelines.yml" class="btn btn-primary" download>Download azure-pipelines.yml</a>
+      <a href="tools/cicd-setup-wizard.html?platform=azure" class="btn btn-secondary">⚡ Setup Wizard <small style="display:block;font-weight:400;opacity:.8;font-size:.7rem;">auto-detects schema files</small></a>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">💬 What the PR comment looks like</h3>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: #0078d4; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 700;">SL</div>
+          <div>
+            <strong>SchemaLens Bot</strong>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">commented 2 minutes ago</div>
+          </div>
+        </div>
+        <div style="line-height: 1.6;">
+          <p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin: 8px 0;">
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+            <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+          </table>
+          <p style="font-size: 0.9rem; margin: 10px 0 6px;"><strong>Generated Migration</strong></p>
+          <pre style="background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Generated by <a href="azure-devops-schema-diff.html" style="color: var(--primary);">SchemaLens Azure DevOps</a></em></p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">📦 What the pipeline artifact looks like</h3>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #0078d4;"><path d="M8.5 1.5a.5.5 0 0 0-1 0v1.793L5.354 4.146a.5.5 0 1 0 .707.707L8 3.207l2.939 1.646a.5.5 0 1 0 .707-.707L8.5 3.293V1.5z"/><path d="M12.5 9a.5.5 0 0 1-.5.5H8.5v2.5a.5.5 0 0 1-1 0V9.5H4a.5.5 0 0 1 0-1h3.5V6a.5.5 0 0 1 1 0v2.5H12a.5.5 0 0 1 .5.5z"/></svg>
+          <strong>schema-diff-report/schema_diff_report.md</strong>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">2.4 KB</span>
+        </div>
+        <div style="line-height: 1.6; padding-left: 24px;">
+          <p>Team members can download the full markdown report from the <strong>Build &gt; Artifacts</strong> section of any Azure DevOps pipeline run. The report includes:</p>
+          <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-muted);">
+            <li>Complete diff summary with table counts</li>
+            <li>Breaking change list with severity levels</li>
+            <li>Generated migration SQL (full script with Pro)</li>
+            <li>Risk score and recommendation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2>Why add schema diff to Azure DevOps?</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Prevent production incidents</h3>
+        <p>Breaking changes like dropped columns, removed indexes, or altered constraints get flagged before merge — not after deploy.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 PR comments, automatically</h3>
+        <p>Every pull request gets a clear schema diff summary posted as a comment. Reviewers see exactly what changed without leaving Azure DevOps.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📦 Downloadable artifacts</h3>
+        <p>The full markdown report is attached to every pipeline as an artifact. Download it for compliance docs, audits, or offline review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Smart skip</h3>
+        <p>Path filters let the pipeline skip entirely when no <code>.sql</code> files were modified — saving build minutes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⚡ Zero setup required</h3>
+        <p>No database connections, no CLI installation, no license key. Just point the job at two SQL files.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🚦 Fail the pipeline on breaking changes</h3>
+        <p>Set <code>FAIL_ON_BREAKING: "true"</code> and the pipeline fails if any dangerous schema changes are detected.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📊 Risk score at a glance</h3>
+        <p>Every diff report includes a 0–100 risk score and a label like Low, Medium, High, or Critical.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 Uses System.AccessToken</h3>
+        <p>Post PR comments using Azure DevOps' built-in <code>$(System.AccessToken)</code> — no extra service connection required.</p>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 14px;">📋 Setup instructions</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Copy the template</h3>
+          <p>Download <code>azure-pipelines.yml</code> above or use the CI/CD Setup Wizard to customize it for your repo.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Add the SchemaLens diff script</h3>
+          <p>Copy <code>ci/schemalens-diff.js</code> into your repository. It has zero npm dependencies and works in any Azure DevOps agent.</p>
+          <p><a href="ci/schemalens-diff.js" download>Download schemalens-diff.js</a></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Grant PR comment permission</h3>
+          <p>To post comments back to the pull request, enable the <strong>Contribute to pull requests</strong> permission for the <strong>Project Collection Build Service</strong> account, or use an Azure DevOps PAT stored as a secret variable.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Open a pull request</h3>
+          <p>Modify any <code>.sql</code> file and open a PR. The pipeline runs, generates the diff report, and posts it as a PR comment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 14px;">🔧 Configuration reference</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>SCHEMA_OLD_PATH</code></td><td><code>db/schema.sql</code></td><td>Path to the base schema file in the target branch.</td></tr>
+          <tr><td><code>SCHEMA_NEW_PATH</code></td><td><code>db/schema.sql</code></td><td>Path to the current schema file in the PR branch.</td></tr>
+          <tr><td><code>DIALECT</code></td><td><code>postgres</code></td><td>SQL dialect: <code>postgres</code>, <code>mysql</code>, <code>sqlite</code>, <code>mssql</code>, <code>oracle</code>.</td></tr>
+          <tr><td><code>FAIL_ON_BREAKING</code></td><td><code>false</code></td><td>Set to <code>true</code> to fail the build when breaking changes are detected.</td></tr>
+          <tr><td><code>POST_PR_COMMENT</code></td><td><code>true</code></td><td>Set to <code>false</code> to skip posting the PR comment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0; text-align: center;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Need schema diff in a different CI platform?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">SchemaLens works wherever Node.js runs. Pick your platform for a ready-to-use template.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <a href="github-action.html" class="btn btn-secondary">GitHub Actions</a>
+        <a href="gitlab-schema-diff.html" class="btn btn-secondary">GitLab CI</a>
+        <a href="bitbucket-schema-diff.html" class="btn btn-secondary">Bitbucket</a>
+        <a href="jenkins-schema-diff.html" class="btn btn-secondary">Jenkins</a>
+        <a href="circleci-schema-diff.html" class="btn btn-secondary">CircleCI</a>
+      </div>
+    </div>
+
+    <div style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(16,185,129,0.1) 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 32px 0; text-align: center;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 10px;">Try SchemaLens free</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">Paste two schemas and see the diff instantly. No signup required.</p>
+      <a href="app.html" class="btn btn-primary btn-lg">Open SchemaLens App</a>
+      <a href="tools/cicd-setup-wizard.html?platform=azure" class="btn btn-secondary btn-lg" style="margin-left: 8px;">⚡ Azure DevOps Wizard</a>
+    </div>
+  </div>
+
+  <footer style="border-top: 1px solid var(--border); margin-top: 48px; padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+    <div class="container">
+      <p>© 2026 SchemaLens. Built in the $100 AI Startup Race.</p>
+      <p style="margin-top: 8px;">
+        <a href="index.html">Home</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="about.html">About</a> ·
+        <a href="blog.html">Blog</a> ·
+        <a href="privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  try {
+    let d = JSON.parse(localStorage.getItem(key) || '{}');
+    d.pv = (d.pv || 0) + 1;
+    d.s = d.s || Date.now();
+    localStorage.setItem(key, JSON.stringify(d));
+  } catch(e){}
+})();
+</script>
+<script src="lib/wizard-ab-test.js"></script>
+</body>
+</html>
