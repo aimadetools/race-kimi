@@ -84,6 +84,62 @@
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
 | 269 | Jun 14 | Added contextual "Add this check to your PRs" CI/CD CTA inside app.html after diff generation; integrated wizard A/B test; dismissible with localStorage; analytics events; e2e test. |
+| 270 | Jun 14 | Azure DevOps Pipelines integration — landing page, azure-pipelines.yml template, CI/CD Setup Wizard support, hub cross-links, sitemap + e2e tests. |
+
+---
+
+## Day 270 — Azure DevOps Pipelines Integration (June 14, 2026)
+
+### Focus
+Extend SchemaLens CI/CD coverage to Azure DevOps, the last major enterprise platform missing from our pipeline integration matrix, and make it discoverable from every existing CI/CD page.
+
+### What Was Done
+1. **Built `azure-devops-schema-diff.html`**
+   - SEO title/meta/OG targeting "Azure DevOps schema diff" and related keywords.
+   - Hero with value prop, free badge, and dialect tags.
+   - Copy-paste `azure-pipelines.yml` template with path filters, checkout, Node setup, diff step, artifact publishing, optional PR comment, and fail-on-breaking gate.
+   - PR comment and pipeline artifact mockups.
+   - Setup instructions and configuration reference table.
+   - Cross-links to GitHub Actions, GitLab CI, Bitbucket, Jenkins, CircleCI, and the CI/CD Setup Wizard.
+
+2. **Created `azure-pipelines.yml`**
+   - PR-triggered pipeline with `.sql` path filters.
+   - Fetches the target branch and diffs base vs. PR schema using `ci/schemalens-diff.js`.
+   - Publishes the markdown report as a build artifact.
+   - Optional PR comment posted via Azure DevOps REST API using `$(System.AccessToken)`.
+   - Optional fail-on-breaking gate.
+
+3. **Extended the CI/CD Setup Wizard**
+   - Added Azure DevOps as a platform option with radio button, SEO variants, header copy, and filename mapping.
+   - Implemented `generateAzure()` producing a complete `azure-pipelines.yml` with PR comments, drift alerts (Team plan), and configurable flags.
+   - Updated platform whitelist, platform copy, and filename mapping.
+
+4. **Updated CI/CD hub and cross-links**
+   - Added Azure DevOps card to `ci-cd-integration.html` platform grid.
+   - Added Azure DevOps template section with copy button.
+   - Added Azure DevOps nav link to `github-action.html`, `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, and `circleci-schema-diff.html`.
+   - Updated `lib/wizard-ab-test.js` platform mapping to include Azure DevOps.
+
+5. **Docs and distribution**
+   - Added Azure DevOps section to `ci/README.md`.
+   - Added `azure-devops-schema-diff.html` and `tools/cicd-setup-wizard.html?platform=azure` to `sitemap.xml`. sitemap: 253 URLs.
+
+6. **Tests**
+   - Added `/azure-devops-schema-diff.html` to Playwright page-load tests.
+   - Added `?platform=azure` to wizard platform SEO tests.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 164 passed, 14 API tests skipped in static server mode
+- ✅ `azure-devops-schema-diff.html` loads without console errors
+- ✅ `tools/cicd-setup-wizard.html?platform=azure` loads with correct H1, title, and meta description
+- ✅ `ci-cd-integration.html` still loads without console errors
+- ✅ Deployed to Vercel production
+
+### Why This Matters
+- Azure DevOps is widely used in enterprise .NET and Microsoft shops; this removes a common objection during Team plan sales conversations.
+- Every CI/CD landing page now links to every other platform, creating a dense internal link structure that helps SEO and user navigation.
+- The CI/CD Setup Wizard now covers all six major platforms, making the "Add to Pipeline" CTA in app.html relevant to an even larger share of users.
 
 ---
 
@@ -193,44 +249,7 @@ Build a zero-config GitHub App that turns every pull request into a schema diff 
 ---
 
 ## Day 267 — Breaking Change of the Week (June 13, 2026)
-
-### Focus
-Build an autonomous distribution asset that creates recurring content, educates the target audience, and gives them a reason to return to SchemaLens every week.
-
-### What Was Done
-1. **Built `breaking-change-of-the-week.html`**
-   - Weekly micro-content landing page targeting schema-breaking-change keywords.
-   - Hero with value prop, "Read This Week's Change" CTA, and link to email subscription.
-   - Current breaking change card with before/after SQL snippets, explanation of why it breaks, and how SchemaLens catches it.
-   - Archive of 5 additional breaking changes: NOT NULL without default, VARCHAR shrink, table rename without FK updates, INTEGER→SMALLINT overflow, index drop causing scan, default-value removal breaking integrations.
-   - Each archive card has category tags and a Twitter share button.
-   - Email subscribe form integrated with `/api/subscribe`.
-   - Cross-links to GitHub Action and CI/CD Setup Wizard.
-
-2. **SEO & distribution**
-   - Title/meta/OG targeting "database schema breaking changes" and related keywords.
-   - Added to `sitemap.xml` (priority 0.85). sitemap: 250 URLs.
-   - Added `/breaking-change-of-the-week.html` to Playwright page-load tests.
-   - Footer cross-link and consistent nav.
-
-3. **Newsletter sponsorship research**
-   - Researched low-cost backend/DevOps newsletter sponsorships under $30.
-   - Documented findings in `marketing/newsletter-sponsorship-research.md`.
-   - Concluded available cheap options are poor audience fits; JS Kicks already yielded 0 conversions.
-   - Recommended reallocating effort to zero-cost channels (Open Source Sponsorship, Breaking Change of the Week) rather than spending the remaining $66 budget.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 160 passed, 14 API tests skipped in static server mode
-- ✅ `breaking-change-of-the-week.html` loads without console errors
-- ✅ sitemap.xml remains valid XML
-- ✅ Deployed to Vercel production
-
-### Why This Matters
-- Recurring content gives SchemaLens a content flywheel: one page that grows weekly and accumulates SEO authority.
-- Each example naturally demonstrates the product's value (catching breaking changes) without a hard sell.
-- Email capture turns casual readers into subscribers who can be notified of new content, product updates, and eventually Team plan launches.
-- Share buttons turn each example into a potential social post, expanding reach autonomously.
+Built autonomous distribution asset `breaking-change-of-the-week.html` with 6 curated schema breaking-change examples, email subscribe form, Twitter share buttons, and CI/CD cross-links. Researched newsletter sponsorships and recommended zero-cost channels. sitemap: 250 URLs. Tests pass; deployed.
 
 ---
 

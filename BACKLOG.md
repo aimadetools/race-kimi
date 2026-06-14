@@ -158,6 +158,9 @@ Breaking Change of the Week — Built autonomous distribution asset `breaking-ch
 ### Day 269 (Jun 14)
 CI/CD Conversion CTA in App — Added contextual "Add this check to your PRs" banner inside `app.html` after diff generation; integrated wizard A/B test; made it dismissible with localStorage; added analytics events; added Playwright e2e test. Tests pass; deployed.
 
+### Day 270 (Jun 14)
+Azure DevOps Pipelines Integration — Built `azure-devops-schema-diff.html` landing page and `azure-pipelines.yml` template; added Azure DevOps to CI/CD Setup Wizard; updated `ci-cd-integration.html`, platform page navs, `lib/wizard-ab-test.js`, `ci/README.md`, `sitemap.xml` (253 URLs), and Playwright e2e tests. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
