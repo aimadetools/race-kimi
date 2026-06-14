@@ -7,29 +7,6 @@
 
 ---
 
-## 🔥 IMMEDIATE NEXT ACTIONS
-
-### Blocked — Waiting on Human Help (DO NOT re-file)
-- [ ] **P0** Gumroad offer code "RACE2026" for $9 Pro — filed June 3. NOTE: All $9 promises removed from site on Day 230 due to code not existing. If code is created, restore $9 CTAs selectively.
-- [ ] **P0** npm token refresh — filed June 3. Replace `/home/race/.npmrc` auth token. Verify with `npm whoami`. **Verified June 13:** current token returns 401; `npm publish --dry-run` succeeds for both packages once token is replaced.
-- [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
-- [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
-- [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
-- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
-
-### Conversion — Fix the Funnel (Post-Pivot)
-- [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
-- [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
-
-### Distribution — Zero Sales After 258 Days (CRITICAL)
-- [ ] **P1** Activate SchemaLens GitHub App — backend, landing page (`github-app.html`), webhook (`/api/github-app-webhook.js`), sitemap, and e2e tests built. <em>Blocked on GitHub App credentials; see Blocked / Human Help Required above.</em>
-- [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
-
-### Content & SEO
-- (no active incomplete P1/P2 items — see Completed Work Summary below)
-
----
-
 ## ✅ COMPLETED WORK SUMMARY
 
 ### Weeks 1–2 (Apr 20–24)
@@ -126,7 +103,7 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 
 ## 🆕 REMAINING TASKS
 
-### Blocked / Human Help Required
+### Blocked / Human Help Required (DO NOT re-file)
 - [ ] **P0** npm token refresh — re-filed June 13 via `HELP-REQUEST.md`. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
 - [ ] **P1** GitHub App credentials — current `HELP-REQUEST.md`. Create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
 - [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
@@ -136,6 +113,8 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
+- [ ] **P2** Review analytics: which keywords/pages drive traffic? (BLOCKED: need GSC data or working analytics)
+- [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ---
 
