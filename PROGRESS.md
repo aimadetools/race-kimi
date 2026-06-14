@@ -90,6 +90,88 @@
 | 273 | Jun 14 | Shareable PR reports + traffic cross-links + Team Invoice request form; unblocked team sales alternative. sitemap: 255 URLs. |
 | 274 | Jun 14 | Pro value preview banner in app.html — shows Export / Share / History Pro value before free diff result, with analytics and e2e coverage. |
 | 275 | Jun 14 | A/B test Pro value banner: 4 variants testing "Export & Share" vs "Save & Revisit" framing and above-tabs vs inside-visual placement. |
+| 276 | Jun 14 | Embedded Gumroad Buy Now overlay in Pro value banner and license modal so users can pay without leaving the app. |
+| 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
+
+---
+
+## Day 277 — SEO Landing Pages for Public PR Viewer (June 14, 2026)
+
+### Focus
+Drive high-intent organic traffic to the new public GitHub PR schema diff viewer by building SEO landing pages around the exact search phrases developers use.
+
+### What Was Done
+1. **Built `schema-diff-github-pr.html`**
+   - Targets "schema diff github pr" and related keywords.
+   - Hero emphasizes pasting any public PR URL for instant schema diff.
+   - CTAs to the public PR viewer, GitHub App, and GitHub Action.
+   - Includes how-it-works steps, benefit cards, and workflow comparison.
+
+2. **Built `database-migration-review-tool.html`**
+   - Targets "database migration review tool" and related keywords.
+   - Positions SchemaLens as a migration review tool with side-by-side diff, breaking-change detection, risk score, and migration SQL.
+   - Includes a 5-point migration review checklist and links to the full 42-point checklist.
+   - CTAs to the staging-vs-production example and public PR viewer.
+
+3. **Built `catch-breaking-schema-changes-in-prs.html`**
+   - Targets "catch breaking schema changes in PRs" and related keywords.
+   - Educational page on what counts as a breaking schema change with danger/warning/safe cards.
+   - Example PR comment preview and workflow options.
+   - Primary CTA to the GitHub Action, secondary to the public PR viewer.
+
+4. **Cross-linked and indexed**
+   - Added all 3 pages to `sitemap.xml` with weekly changefreq and 0.85 priority.
+   - Added page-load e2e tests for each new landing page.
+   - Fixed a Gumroad script embed-mode issue: the overlay script now skips loading when `?embed=1`, preventing 400 errors inside the embed generator iframe.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 176 passed, 14 API tests skipped in static server mode
+- ✅ All 3 new landing pages load without console errors
+- ✅ Embed Generator test passes after the embed-mode Gumroad fix
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Creates targeted entry points for developers searching for PR-based schema diff and migration review solutions.
+- Every page ends with a clear CTA to the public PR viewer or GitHub Action, turning organic traffic into product usage.
+- Reinforces the CI/CD-first positioning: the web diff is the lead magnet, the GitHub Action/App is the product.
+
+---
+
+## Day 276 — Gumroad Buy Now Overlay in App (June 14, 2026)
+
+### Focus
+Reduce purchase friction by letting users buy Lifetime Pro directly inside the app via the Gumroad overlay, instead of opening a new tab.
+
+### What Was Done
+1. **Added Gumroad overlay script to `app.html`**
+   - Loaded `https://gumroad.com/js/gumroad.js` dynamically on non-localhost domains to avoid headless-test 403 errors.
+
+2. **Upgraded Pro value banner primary CTA**
+   - Added `gumroad-button` class to the existing "⚡ Unlock Pro — $39 lifetime" link so the overlay opens in place.
+   - Kept existing analytics tracking for `pro_value_banner_click`.
+
+3. **Added prominent buy button to license modal**
+   - Full-width "⚡ Get Lifetime Pro — $39 once" Gumroad button appears above the license-key input.
+   - Added "Already have a key? Enter it below" helper text.
+   - Removed the old text-only Gumroad link.
+   - Tracks `license_modal_buy_click` analytics event.
+
+4. **Added Playwright e2e coverage**
+   - Updated license-modal test to assert the Gumroad buy button is visible and has the correct class/href.
+   - Added new test asserting the Pro value banner primary CTA is a `gumroad-button` link.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 173 passed, 14 API tests skipped in static server mode
+- ✅ Gumroad buttons render correctly in banner and license modal
+- ✅ No console errors on localhost after conditionally loading Gumroad script
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Removes the extra tab/window friction of the old Gumroad checkout flow.
+- Keeps users in the app context while they purchase, increasing likelihood of conversion.
+- Provides two high-intent purchase entry points (banner + license modal) with the same low-friction experience.
 
 ---
 
