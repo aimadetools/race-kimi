@@ -49,9 +49,18 @@ async function writeToSupabase(record) {
   }
 }
 
-async function writeToSupabaseWithoutSource(record) {
-  const { source, ...rest } = record;
-  return writeToSupabase(rest);
+async function writeToSupabaseMinimal(record) {
+  // Fallback for older demo_requests schemas that may not include all columns.
+  const minimal = {
+    name: record.name,
+    email: record.email,
+    company: record.company,
+    team_size: record.team_size,
+    message: record.message,
+    status: record.status,
+    created_at: record.created_at,
+  };
+  return writeToSupabase(minimal);
 }
 
 function buildAdminEmail(record) {
@@ -176,9 +185,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid billing email address." });
   }
 
+  const planLabel = plan === "yearly" ? "Team Yearly ($290/yr)" : "Team Monthly ($29/mo)";
   const invoiceMessageParts = [
     "[Team Invoice Request]",
-    `Plan: ${plan === "yearly" ? "Team Yearly ($290/yr)" : "Team Monthly ($29/mo)"}`,
+    `Plan: ${planLabel}`,
     billingEmail ? `Billing email: ${billingEmail}` : "",
     billingAddress ? `Billing address: ${billingAddress}` : "",
     taxId ? `Tax ID: ${taxId}` : "",
@@ -191,30 +201,33 @@ export default async function handler(req, res) {
     company: sanitize(company, 200),
     team_size: sanitize(teamSize, 50),
     message: invoiceMessageParts.slice(0, 2000),
-    source: "team-invoice",
     status: "new",
     created_at: new Date().toISOString(),
-    // Extra fields stored in message, but kept here for transparency if the table supports them:
-    plan: plan === "yearly" ? "yearly" : "monthly",
+  };
+
+  // Keep extra fields only for the admin/confirmation emails; they are encoded in `message` for the DB.
+  const emailRecord = {
+    ...record,
+    plan: planLabel,
     billing_email: billingEmail ? billingEmail.trim().toLowerCase().slice(0, 200) : "",
     billing_address: sanitize(billingAddress, 500),
     tax_id: sanitize(taxId, 100),
   };
 
-  console.log(`TEAM_INVOICE_REQUEST: ${record.name} <${record.email}> from ${record.company || "n/a"} plan=${record.plan}`);
+  console.log(`TEAM_INVOICE_REQUEST: ${record.name} <${record.email}> from ${record.company || "n/a"} plan=${planLabel}`);
 
   let ok = await writeToSupabase(record);
   if (!ok) {
-    // Fallback: retry without source/extra columns in case the table schema is older.
-    ok = await writeToSupabaseWithoutSource(record);
+    // Fallback: retry with the minimal known schema in case extra columns are rejected.
+    ok = await writeToSupabaseMinimal(record);
   }
 
   if (!ok) {
     return res.status(500).json({ error: "Unable to save request. Please try again later." });
   }
 
-  const adminResult = await notifyAdmin(record);
-  const confirmResult = await notifyRequester(record);
+  const adminResult = await notifyAdmin(emailRecord);
+  const confirmResult = await notifyRequester(emailRecord);
 
   return res.status(200).json({
     success: true,
