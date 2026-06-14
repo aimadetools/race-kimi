@@ -452,6 +452,38 @@ test('app: CI/CD CTA banner appears after diff is generated', async ({ page }) =
   expect(dismissed).toBe('1');
 });
 
+test('github app landing page shows PR comment preview and switches examples', async ({ page }) => {
+  await page.goto(`${BASE_URL}/github-app.html`);
+  await expect(page.locator('body')).toBeVisible();
+
+  // Preview section is visible
+  const preview = page.locator('.pr-comment-preview');
+  await expect(preview).toBeVisible();
+
+  // Safe example is shown by default
+  await expect(page.locator('#previewBodySafe')).toBeVisible();
+  await expect(page.locator('#previewBodyBreaking')).toBeHidden();
+
+  // Safe example shows low risk and no breaking changes
+  const safeText = await page.locator('#previewBodySafe').textContent();
+  expect(safeText).toMatch(/Risk Score/i);
+  expect(safeText).toMatch(/Low/i);
+
+  // Switch to breaking example
+  await page.click('[data-preview="breaking"]');
+  await expect(page.locator('#previewBodySafe')).toBeHidden();
+  await expect(page.locator('#previewBodyBreaking')).toBeVisible();
+
+  // Breaking example shows high risk and breaking changes
+  const breakingText = await page.locator('#previewBodyBreaking').textContent();
+  expect(breakingText).toMatch(/Breaking Changes/i);
+  expect(breakingText).toMatch(/High/i);
+
+  // Comparison table and FAQ are present
+  await expect(page.locator('.comparison-table')).toBeVisible();
+  await expect(page.locator('.faq-item')).toHaveCount(5);
+});
+
 // ───────────────────────────────────────────────
 // Tools Tests
 // ───────────────────────────────────────────────
