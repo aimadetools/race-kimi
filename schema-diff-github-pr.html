@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema Diff for GitHub PR — Free Online Schema Diff Viewer</title>
+  <meta name="description" content="Paste any public GitHub PR URL and see the schema diff instantly. SchemaLens detects breaking changes, scores risk, and generates migration SQL — no install required.">
+  <link rel="canonical" href="https://schemalens.tech/schema-diff-github-pr.html">
+  <meta property="og:title" content="Schema Diff for GitHub PR — Free Online Schema Diff Viewer">
+  <meta property="og:description" content="Paste a public GitHub PR URL and see the schema diff instantly. Breaking changes, risk score, and migration SQL.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-diff-github-pr.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Schema Diff for GitHub PR",
+    "description": "Paste any public GitHub PR URL and see the schema diff instantly. Detect breaking changes, score risk, and generate migration SQL.",
+    "url": "https://schemalens.tech/schema-diff-github-pr.html",
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "SchemaLens",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": [
+        { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Pro", "price": "39", "priceCurrency": "USD" }
+      ],
+      "featureList": "GitHub PR schema diff, Breaking change detection, Risk scoring, Migration SQL generation, Public PR viewer"
+    }
+  }
+  </script>
+  <style>
+    .gh-hero { text-align:center; padding:80px 24px 48px; max-width:800px; margin:0 auto; }
+    .gh-hero h1 { font-size:2.4rem; line-height:1.15; margin-bottom:16px; }
+    .gh-hero p { font-size:1.15rem; color:var(--text-muted); margin-bottom:32px; }
+    .gh-section { max-width:960px; margin:0 auto; padding:48px 24px; }
+    .gh-section h2 { font-size:1.6rem; margin-bottom:24px; }
+    .gh-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; }
+    .gh-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+    .gh-card h3 { font-size:1.1rem; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+    .gh-card p { font-size:0.95rem; color:var(--text-muted); line-height:1.55; }
+    .gh-demo { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; text-align:center; }
+    .gh-demo code { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-family:var(--mono); font-size:0.9rem; display:inline-block; margin:8px 0; }
+    .gh-cta-bar { max-width:800px; margin:48px auto; padding:40px 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center; }
+    .gh-cta-bar h2 { font-size:1.5rem; margin-bottom:12px; }
+    .gh-cta-bar p { color:var(--text-muted); margin-bottom:24px; }
+    .gh-badge { display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.75rem; color:var(--text-muted); margin-bottom:16px; }
+    @media (max-width:640px) { .gh-hero h1 { font-size:1.7rem; } }
+  </style>
+</head>
+<body>
+  <nav style="padding:16px 24px; display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
+    <a href="index.html" style="font-weight:700; font-size:1.1rem; color:var(--text); text-decoration:none;">SchemaLens</a>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <a href="app.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Open App</a>
+      <a href="github-action.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">GitHub Action</a>
+      <a href="pricing.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Pricing</a>
+      <a href="github-pr-schema-diff.html" class="btn btn-primary" style="font-size:0.85rem; padding:8px 16px;">Diff a PR</a>
+    </div>
+  </nav>
+
+  <header class="gh-hero">
+    <div class="gh-badge">🔀 Works with Public GitHub PRs</div>
+    <h1>See the schema diff inside <br><span style="color:var(--primary);">any GitHub PR — instantly.</span></h1>
+    <p>Paste a public pull request URL and SchemaLens reads the changed <code>.sql</code> files, detects breaking changes, scores the risk, and generates the migration SQL — no install, no token, no signup.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="github-pr-schema-diff.html" class="btn btn-primary btn-lg">🔀 Diff a Public PR</a>
+      <a href="github-app.html" class="btn btn-secondary btn-lg">Install GitHub App</a>
+      <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action</a>
+    </div>
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--text-muted);">Free forever for public PRs. Private repos require the GitHub App or Action.</p>
+  </header>
+
+  <section class="gh-section">
+    <h2>How the public PR viewer works</h2>
+    <div class="gh-grid">
+      <div class="gh-card">
+        <h3>1️⃣ Paste the PR URL</h3>
+        <p>Copy any public GitHub pull request URL like <code>github.com/owner/repo/pull/123</code> and paste it into SchemaLens.</p>
+      </div>
+      <div class="gh-card">
+        <h3>2️⃣ Pick the SQL file</h3>
+        <p>If the PR changes multiple <code>.sql</code> files, SchemaLens lists them. Pick the schema file you want to review.</p>
+      </div>
+      <div class="gh-card">
+        <h3>3️⃣ Review the diff</h3>
+        <p>Get a visual diff summary, breaking-change warnings, risk score, and generated migration SQL — exactly like the GitHub App would post.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gh-section">
+    <div class="gh-demo">
+      <h3>Try it on a real PR URL</h3>
+      <code>https://github.com/aimadetools/race-kimi/pull/42</code>
+      <p style="color:var(--text-muted); margin:12px 0 20px; font-size:0.95rem;">Paste the URL above (or any public PR) into the viewer to see a live schema diff report.</p>
+      <a href="github-pr-schema-diff.html" class="btn btn-primary">Open the PR Diff Viewer →</a>
+    </div>
+  </section>
+
+  <section class="gh-section">
+    <h2>Why review schema changes in PRs?</h2>
+    <div class="gh-grid">
+      <div class="gh-card">
+        <h3>💥 Catch breaking changes early</h3>
+        <p>Dropped columns, removed tables, and type changes are flagged before the code reaches production. Review them where code is already being reviewed.</p>
+      </div>
+      <div class="gh-card">
+        <h3>📊 Understand the migration at a glance</h3>
+        <p>Raw SQL diffs are hard to read. SchemaLens shows a color-coded visual diff plus a generated ALTER TABLE script.</p>
+      </div>
+      <div class="gh-card">
+        <h3>🔗 Share the report</h3>
+        <p>Every diff report has a shareable URL. Paste it in Slack, the PR description, or a review thread so the whole team sees the same analysis.</p>
+      </div>
+      <div class="gh-card">
+        <h3>🤖 Automate the review</h3>
+        <p>The public PR viewer is a demo of what the SchemaLens GitHub App posts automatically on every PR. Install it once, review every schema change forever.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gh-section">
+    <h2>Three ways to add schema diff to your PRs</h2>
+    <div class="gh-grid">
+      <div class="gh-card">
+        <h3>🔀 Public PR Viewer</h3>
+        <p>Best for one-off reviews of open-source PRs or quick demos. No setup.</p>
+        <a href="github-pr-schema-diff.html" class="btn btn-secondary" style="margin-top:10px;">Try Free →</a>
+      </div>
+      <div class="gh-card">
+        <h3>⚙️ GitHub Action</h3>
+        <p>Best for teams that want full control over workflow files, gates, and custom rules.</p>
+        <a href="github-action.html" class="btn btn-secondary" style="margin-top:10px;">View Action →</a>
+      </div>
+      <div class="gh-card">
+        <h3>🤖 GitHub App</h3>
+        <p>Best for zero-config automation. SchemaLens comments on every PR that touches schema files.</p>
+        <a href="github-app.html" class="btn btn-secondary" style="margin-top:10px;">Install App →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="gh-cta-bar">
+    <h2>Start diffing GitHub PR schemas for free</h2>
+    <p>Paste any public PR URL and get a shareable schema diff report in seconds.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="github-pr-schema-diff.html" class="btn btn-primary btn-lg">Diff a Public PR</a>
+      <a href="schema-diff-for-code-reviews.html" class="btn btn-secondary btn-lg">Code Review Workflow</a>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:32px 24px; color:var(--text-muted); font-size:0.85rem; border-top:1px solid var(--border);">
+    <p>
+      <a href="index.html">Home</a> ·
+      <a href="app.html">App</a> ·
+      <a href="tools.html">Tools</a> ·
+      <a href="pricing.html">Pricing</a> ·
+      <a href="github-action.html">GitHub Action</a> ·
+      <a href="github-app.html">GitHub App</a>
+    </p>
+    <p style="margin-top:8px;">© 2026 SchemaLens. Built for engineers.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch Breaking Schema Changes in PRs — SchemaLens</title>
+  <meta name="description" content="Stop breaking database changes from reaching production. Add schema diff to your PR workflow with SchemaLens GitHub Action, GitHub App, or the free public PR viewer.">
+  <link rel="canonical" href="https://schemalens.tech/catch-breaking-schema-changes-in-prs.html">
+  <meta property="og:title" content="Catch Breaking Schema Changes in PRs — SchemaLens">
+  <meta property="og:description" content="Detect breaking schema changes in every pull request. Risk scoring, migration SQL, and PR comments — automatically.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/catch-breaking-schema-changes-in-prs.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Catch Breaking Schema Changes in PRs",
+    "description": "Stop breaking database changes from reaching production. Add schema diff to your PR workflow with SchemaLens.",
+    "url": "https://schemalens.tech/catch-breaking-schema-changes-in-prs.html",
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "SchemaLens",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": [
+        { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Pro", "price": "39", "priceCurrency": "USD" }
+      ],
+      "featureList": "Breaking schema change detection, PR comments, Risk scoring, Migration SQL generation, GitHub Action, GitHub App"
+    }
+  }
+  </script>
+  <style>
+    .bc-hero { text-align:center; padding:80px 24px 48px; max-width:800px; margin:0 auto; }
+    .bc-hero h1 { font-size:2.4rem; line-height:1.15; margin-bottom:16px; }
+    .bc-hero p { font-size:1.15rem; color:var(--text-muted); margin-bottom:32px; }
+    .bc-section { max-width:960px; margin:0 auto; padding:48px 24px; }
+    .bc-section h2 { font-size:1.6rem; margin-bottom:24px; }
+    .bc-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; }
+    .bc-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+    .bc-card h3 { font-size:1.1rem; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+    .bc-card p { font-size:0.95rem; color:var(--text-muted); line-height:1.55; }
+    .bc-card.danger { border-left:4px solid var(--danger); }
+    .bc-card.warning { border-left:4px solid var(--warning); }
+    .bc-card.success { border-left:4px solid var(--success); }
+    .bc-code { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px; font-family:var(--mono); font-size:0.85rem; overflow-x:auto; color:var(--text); line-height:1.6; }
+    .bc-cta-bar { max-width:800px; margin:48px auto; padding:40px 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center; }
+    .bc-cta-bar h2 { font-size:1.5rem; margin-bottom:12px; }
+    .bc-cta-bar p { color:var(--text-muted); margin-bottom:24px; }
+    .bc-badge { display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.75rem; color:var(--text-muted); margin-bottom:16px; }
+    @media (max-width:640px) { .bc-hero h1 { font-size:1.7rem; } }
+  </style>
+</head>
+<body>
+  <nav style="padding:16px 24px; display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
+    <a href="index.html" style="font-weight:700; font-size:1.1rem; color:var(--text); text-decoration:none;">SchemaLens</a>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <a href="app.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Open App</a>
+      <a href="github-action.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">GitHub Action</a>
+      <a href="pricing.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Pricing</a>
+      <a href="github-action.html" class="btn btn-primary" style="font-size:0.85rem; padding:8px 16px;">Add to PRs</a>
+    </div>
+  </nav>
+
+  <header class="bc-hero">
+    <div class="bc-badge">🚨 Breaking Change Detection</div>
+    <h1>Catch breaking schema changes <br><span style="color:var(--primary);">before they hit production.</span></h1>
+    <p>SchemaLens diffs your database schema on every pull request, flags breaking changes with a risk score, and posts the result as a PR comment — so dangerous migrations never slip through.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action</a>
+      <a href="github-pr-schema-diff.html" class="btn btn-secondary btn-lg">🔀 Try Public PR Diff</a>
+      <a href="github-app.html" class="btn btn-secondary btn-lg">Install GitHub App</a>
+    </div>
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--text-muted);">Free forever for public repos and open-source projects.</p>
+  </header>
+
+  <section class="bc-section">
+    <h2>What counts as a breaking schema change?</h2>
+    <div class="bc-grid">
+      <div class="bc-card danger">
+        <h3>🔴 Dropped tables or columns</h3>
+        <p>Removing a table or column that production code still references causes immediate errors.</p>
+      </div>
+      <div class="bc-card danger">
+        <h3>🔴 Type narrowing</h3>
+        <p>Changing VARCHAR(255) → VARCHAR(50) or INT → SMALLINT can truncate or overflow existing data.</p>
+      </div>
+      <div class="bc-card warning">
+        <h3>🟡 Unsafe NOT NULL</h3>
+        <p>Adding NOT NULL without a default value breaks every row that has a NULL in that column.</p>
+      </div>
+      <div class="bc-card warning">
+        <h3>🟡 Dropped indexes or constraints</h3>
+        <p>Removing unique constraints or indexes can cause duplicate data and sudden query slowdowns.</p>
+      </div>
+      <div class="bc-card success">
+        <h3>🟢 Safe changes</h3>
+        <p>New tables, new nullable columns, and new indexes are usually safe and green-lit by SchemaLens.</p>
+      </div>
+      <div class="bc-card success">
+        <h3>🟢 Backward-compatible expansions</h3>
+        <p>Widening a VARCHAR or adding a default value is safe and does not require a deploy order dance.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bc-section">
+    <h2>How it works in your PR workflow</h2>
+    <div class="bc-grid">
+      <div class="bc-card">
+        <h3>1️⃣ A PR touches a .sql file</h3>
+        <p>SchemaLens GitHub Action or App detects the schema change and starts a diff.</p>
+      </div>
+      <div class="bc-card">
+        <h3>2️⃣ Base vs head are compared</h3>
+        <p>The schema from the PR branch is compared against the target branch to find every table, column, index, and constraint change.</p>
+      </div>
+      <div class="bc-card">
+        <h3>3️⃣ Risk score + comment</h3>
+        <p>A PR comment shows the diff summary, breaking changes, risk score, and migration SQL — exactly where reviewers already look.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bc-section">
+    <h2>Example PR comment</h2>
+    <p style="color:var(--text-muted); margin-bottom:16px;">This is what SchemaLens posts automatically when a breaking change is detected:</p>
+    <div class="bc-code">
+⚠️ SchemaLens detected 1 breaking change (Risk: 72/100)
+
+## Summary
+- 1 table modified
+- 1 column removed
+- 1 index added
+
+## Breaking Changes
+| Table | Change | Severity |
+|-------|--------|----------|
+| users | DROP COLUMN phone | CRITICAL |
+
+## Migration SQL
+```sql
+ALTER TABLE users DROP COLUMN phone;
+CREATE INDEX idx_users_email ON users(email);
+```
+
+👉 <a href="#" style="color:var(--primary);">Open full diff in SchemaLens</a>
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <a href="github-pr-schema-diff.html" class="btn btn-primary">Generate a Real PR Comment →</a>
+    </div>
+  </section>
+
+  <section class="bc-section">
+    <h2>Pick your workflow</h2>
+    <div class="bc-grid">
+      <div class="bc-card">
+        <h3>⚙️ GitHub Action</h3>
+        <p>Add a workflow file to your repo. Full control over gates, annotations, and breaking-change policies.</p>
+        <a href="github-action.html" class="btn btn-secondary" style="margin-top:10px;">View Action →</a>
+      </div>
+      <div class="bc-card">
+        <h3>🤖 GitHub App</h3>
+        <p>Zero-config install. SchemaLens comments on every PR that touches a schema file.</p>
+        <a href="github-app.html" class="btn btn-secondary" style="margin-top:10px;">Install App →</a>
+      </div>
+      <div class="bc-card">
+        <h3>🔀 Public PR Viewer</h3>
+        <p>Manually review any public GitHub PR's schema changes. Great for open-source contributions and demos.</p>
+        <a href="github-pr-schema-diff.html" class="btn btn-secondary" style="margin-top:10px;">Try Free →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="bc-cta-bar">
+    <h2>Never let a breaking schema change slip through again</h2>
+    <p>Add SchemaLens to your PR workflow and get automatic schema diff comments on every migration.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="github-action.html" class="btn btn-primary btn-lg">Add GitHub Action</a>
+      <a href="github-pr-schema-diff.html" class="btn btn-secondary btn-lg">Diff a Public PR</a>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:32px 24px; color:var(--text-muted); font-size:0.85rem; border-top:1px solid var(--border);">
+    <p>
+      <a href="index.html">Home</a> ·
+      <a href="app.html">App</a> ·
+      <a href="tools.html">Tools</a> ·
+      <a href="pricing.html">Pricing</a> ·
+      <a href="github-action.html">GitHub Action</a> ·
+      <a href="schema-diff-for-code-reviews.html">Code Reviews</a>
+    </p>
+    <p style="margin-top:8px;">© 2026 SchemaLens. Built for engineers.</p>
+  </footer>
+</body>
+</html>

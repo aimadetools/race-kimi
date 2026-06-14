@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Migration Review Tool — Free Online Schema Diff</title>
+  <meta name="description" content="Review database migrations before deploy. Compare old and new schemas, catch breaking changes, and generate safe migration SQL with SchemaLens — free in your browser.">
+  <link rel="canonical" href="https://schemalens.tech/database-migration-review-tool.html">
+  <meta property="og:title" content="Database Migration Review Tool — Free Online Schema Diff">
+  <meta property="og:description" content="Review database migrations like code. Compare schemas, detect breaking changes, and generate safe ALTER TABLE scripts.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/database-migration-review-tool.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Database Migration Review Tool",
+    "description": "Review database migrations before deploy. Compare schemas, catch breaking changes, and generate safe migration SQL.",
+    "url": "https://schemalens.tech/database-migration-review-tool.html",
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "SchemaLens",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": [
+        { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Pro", "price": "39", "priceCurrency": "USD" }
+      ],
+      "featureList": "Schema diff, Migration review, Breaking change detection, Risk scoring, Migration SQL generation"
+    }
+  }
+  </script>
+  <style>
+    .mr-hero { text-align:center; padding:80px 24px 48px; max-width:800px; margin:0 auto; }
+    .mr-hero h1 { font-size:2.4rem; line-height:1.15; margin-bottom:16px; }
+    .mr-hero p { font-size:1.15rem; color:var(--text-muted); margin-bottom:32px; }
+    .mr-section { max-width:960px; margin:0 auto; padding:48px 24px; }
+    .mr-section h2 { font-size:1.6rem; margin-bottom:24px; }
+    .mr-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; }
+    .mr-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+    .mr-card h3 { font-size:1.1rem; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+    .mr-card p { font-size:0.95rem; color:var(--text-muted); line-height:1.55; }
+    .mr-checklist { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+    .mr-checklist li { margin-bottom:12px; color:var(--text-muted); line-height:1.5; }
+    .mr-cta-bar { max-width:800px; margin:48px auto; padding:40px 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center; }
+    .mr-cta-bar h2 { font-size:1.5rem; margin-bottom:12px; }
+    .mr-cta-bar p { color:var(--text-muted); margin-bottom:24px; }
+    .mr-badge { display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.75rem; color:var(--text-muted); margin-bottom:16px; }
+    @media (max-width:640px) { .mr-hero h1 { font-size:1.7rem; } }
+  </style>
+</head>
+<body>
+  <nav style="padding:16px 24px; display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
+    <a href="index.html" style="font-weight:700; font-size:1.1rem; color:var(--text); text-decoration:none;">SchemaLens</a>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <a href="app.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Open App</a>
+      <a href="github-action.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">GitHub Action</a>
+      <a href="pricing.html" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem;">Pricing</a>
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary" style="font-size:0.85rem; padding:8px 16px;">Try Example</a>
+    </div>
+  </nav>
+
+  <header class="mr-hero">
+    <div class="mr-badge">🛡️ For Teams That Ship Migrations</div>
+    <h1>Review every database migration <br><span style="color:var(--primary);">like you review code.</span></h1>
+    <p>SchemaLens is a free database migration review tool. Paste your old and new schema, spot breaking changes, score the risk, and export the exact ALTER TABLE script — all in your browser.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg">Try Free Migration Review</a>
+      <a href="github-pr-schema-diff.html" class="btn btn-secondary btn-lg">🔀 Diff a Public PR</a>
+    </div>
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--text-muted);">Free forever — unlimited tables, full migration SQL, rollback scripts, and ORM export.</p>
+  </header>
+
+  <section class="mr-section">
+    <h2>What makes a good migration review?</h2>
+    <div class="mr-grid">
+      <div class="mr-card">
+        <h3>🔍 Side-by-side schema diff</h3>
+        <p>See exactly what changed between two CREATE TABLE dumps. Added tables, dropped columns, type changes, and constraint diffs are color-coded.</p>
+      </div>
+      <div class="mr-card">
+        <h3>⚠️ Breaking-change detection</h3>
+        <p>SchemaLens flags column drops, table drops, NOT NULL additions without defaults, type narrowing, and other changes that can break production.</p>
+      </div>
+      <div class="mr-card">
+        <h3>📊 Risk score</h3>
+        <p>Every diff gets a numeric risk score so reviewers know whether a migration is safe, cautionary, or dangerous at a glance.</p>
+      </div>
+      <div class="mr-card">
+        <h3>🛠️ Migration SQL</h3>
+        <p>Generate forward and rollback scripts for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. Copy, review, deploy.</p>
+      </div>
+      <div class="mr-card">
+        <h3>🔗 Shareable report</h3>
+        <p>Generate a shareable link to the diff and post it in your PR, Slack, or ticket. Everyone reviews the same analysis.</p>
+      </div>
+      <div class="mr-card">
+        <h3>🔒 Private by default</h3>
+        <p>All parsing runs in your browser. Your schema dumps never touch SchemaLens servers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mr-section">
+    <h2>Migration review checklist</h2>
+    <div class="mr-checklist">
+      <ul style="margin:0; padding-left:20px;">
+        <li><strong>Did any columns or tables get dropped?</strong> Dropped objects are the #1 cause of production errors during deploys.</li>
+        <li><strong>Are NOT NULL constraints safe?</strong> Adding NOT NULL without a default breaks existing rows.</li>
+        <li><strong>Are type changes narrowing?</strong> Shrinking VARCHAR or changing TEXT → VARCHAR can truncate data.</li>
+        <li><strong>Did indexes disappear?</strong> Dropped indexes can cause sudden query performance regressions.</li>
+        <li><strong>Is there a rollback plan?</strong> SchemaLens generates a rollback migration so you can revert quickly.</li>
+      </ul>
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <a href="database-schema-review-checklist.html" class="btn btn-secondary">See the Full 42-Point Checklist →</a>
+    </div>
+  </section>
+
+  <section class="mr-section">
+    <h2>Automate migration review in CI/CD</h2>
+    <p style="color:var(--text-muted); margin-bottom:24px; max-width:700px;">Manual review is great. Automatic review on every PR is better. Add SchemaLens to your pipeline so no migration reaches production unreviewed.</p>
+    <div class="mr-grid" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="mr-card">
+        <h3>🔀 Public PR Viewer</h3>
+        <p>Review any public GitHub PR's schema changes instantly.</p>
+        <a href="github-pr-schema-diff.html" class="btn btn-secondary" style="margin-top:10px;">Try Free →</a>
+      </div>
+      <div class="mr-card">
+        <h3>⚙️ GitHub Action</h3>
+        <p>Posts a schema diff comment on every PR with risk score and migration SQL.</p>
+        <a href="github-action.html" class="btn btn-secondary" style="margin-top:10px;">Set Up →</a>
+      </div>
+      <div class="mr-card">
+        <h3>🧙 CI/CD Wizard</h3>
+        <p>Generate a workflow for GitHub Actions, GitLab, Jenkins, CircleCI, or Bitbucket.</p>
+        <a href="tools/cicd-setup-wizard.html" class="btn btn-secondary" style="margin-top:10px;">Open Wizard →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="mr-cta-bar">
+    <h2>Review your next migration with SchemaLens</h2>
+    <p>Paste two schema dumps and get a shareable, risk-scored migration review in seconds.</p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg">Try the Example</a>
+      <a href="github-pr-schema-diff.html" class="btn btn-secondary btn-lg">Diff a Public PR</a>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:32px 24px; color:var(--text-muted); font-size:0.85rem; border-top:1px solid var(--border);">
+    <p>
+      <a href="index.html">Home</a> ·
+      <a href="app.html">App</a> ·
+      <a href="tools.html">Tools</a> ·
+      <a href="pricing.html">Pricing</a> ·
+      <a href="github-action.html">GitHub Action</a> ·
+      <a href="staging-vs-production-schema-diff.html">Staging vs Production</a>
+    </p>
+    <p style="margin-top:8px;">© 2026 SchemaLens. Built for engineers.</p>
+  </footer>
+</body>
+</html>
