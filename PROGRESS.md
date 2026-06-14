@@ -89,6 +89,48 @@
 | 272 | Jun 14 | Public GitHub PR Schema Diff Viewer — paste any public PR URL, get schema diff report with risk score and migration SQL. sitemap: 254 URLs. |
 | 273 | Jun 14 | Shareable PR reports + traffic cross-links + Team Invoice request form; unblocked team sales alternative. sitemap: 255 URLs. |
 | 274 | Jun 14 | Pro value preview banner in app.html — shows Export / Share / History Pro value before free diff result, with analytics and e2e coverage. |
+| 275 | Jun 14 | A/B test Pro value banner: 4 variants testing "Export & Share" vs "Save & Revisit" framing and above-tabs vs inside-visual placement. |
+
+---
+
+## Day 275 — Pro Value Banner A/B Test (June 14, 2026)
+
+### Focus
+Iterate on the new Pro value preview banner by testing which headline framing and placement converts best. Test "Export & Share" vs "Save & Revisit" messaging and banner-above-tabs vs banner-inside-visual-panel placement.
+
+### What Was Done
+1. **Created `lib/pro-value-banner-ab-test.js`**
+   - Assigns users to one of four persistent variants:
+     - `control`: Export & Share framing, banner above results tabs.
+     - `v1`: Save & Revisit framing, banner above results tabs.
+     - `v2`: Export & Share framing, banner inside the Visual Diff tab.
+     - `v3`: Save & Revisit framing, banner inside the Visual Diff tab.
+   - Sends `pro_value_banner_ab_assigned` and `pro_value_banner_ab_page_view` analytics events.
+   - Exposes `getVariant`, `getCopy`, `isInsidePanel`, and `resetVariant` helpers.
+
+2. **Refactored `renderProValueBanner()` in `app.html`**
+   - Reads the A/B variant and renders the banner in the correct placement.
+   - For inside-panel variants, inserts the banner at the top of `#visualDiff`; for above-tabs variants, renders in `#proValueBanner`.
+   - Added `buildProValueBannerHTML()` and `removeProValueBannerFromVisual()` helpers for clean re-rendering and dismissal.
+   - Added `.pro-value-banner.inside-visual` CSS to remove border radius and margins when nested in the tab panel.
+
+3. **Enriched analytics events**
+   - `pro_value_banner_impression`, `pro_value_banner_click`, and `pro_value_banner_dismissed` now include `variant`, `placement`, `framing`, `paywall_variant`, and an updated `test` name.
+
+4. **Added Playwright e2e coverage**
+   - Replaced the single banner test with four variant-specific tests asserting correct headline, placement, and data attributes for control, v1, v2, and v3.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 172 passed, 14 API tests skipped in static server mode
+- ✅ All 4 Pro value banner variant e2e tests pass
+- ✅ `app.html` loads without console errors for every variant
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Provides measurable data on which Pro value message and placement resonates with free users.
+- Keeps the banner implementation clean and extensible for future variants.
+- Maintains the free-forever value proposition while optimizing conversion to Pro power features.
 
 ---
 
