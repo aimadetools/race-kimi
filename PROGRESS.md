@@ -85,6 +85,52 @@
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
 | 269 | Jun 14 | Added contextual "Add this check to your PRs" CI/CD CTA inside app.html after diff generation; integrated wizard A/B test; dismissible with localStorage; analytics events; e2e test. |
 | 270 | Jun 14 | Azure DevOps Pipelines integration — landing page, azure-pipelines.yml template, CI/CD Setup Wizard support, hub cross-links, sitemap + e2e tests. |
+| 271 | Jun 14 | Enhanced GitHub App landing page — interactive PR comment preview, GitHub App vs GitHub Action comparison, FAQ, analytics events, e2e test. |
+
+---
+
+## Day 271 — GitHub App Landing Page Conversion Upgrade (June 14, 2026)
+
+### Focus
+Improve the GitHub App landing page so visitors can see exactly what the bot posts in a PR, understand how it compares to the GitHub Action, and get their questions answered — all while capturing analytics for the highest-priority blocked distribution channel.
+
+### What Was Done
+1. **Interactive PR comment preview**
+   - Added a "See the comment your team will get" section to `github-app.html`.
+   - Two example tabs: "✅ Safe migration" and "🚨 Breaking change".
+   - Preview bodies match the exact markdown format produced by `lib/github-app.js#buildPRComment`.
+   - Shows dialect, table counts, breaking change counts, risk score, generated migration SQL, and footer CTA.
+
+2. **GitHub App vs GitHub Action comparison table**
+   - Side-by-side feature comparison covering zero-config setup, auto-detection, PR comments, breaking gates, job summaries, and Slack/Teams alerts.
+   - Helps visitors choose the right integration and routes them to the GitHub Action or CI/CD Setup Wizard.
+
+3. **FAQ section**
+   - Five questions: no CI pipeline changes, supported dialects, data privacy, private repos, and multi-file PR behavior.
+   - Reinforces the zero-config, secure, read-only value proposition.
+
+4. **Analytics instrumentation**
+   - Loaded `lib/analytics-client.js` and wired `data-event` attributes to CTAs and preview tabs.
+   - Events: `github_app_early_access_submit/success/error`, `github_app_preview_safe/breaking`, `github_app_action_cta`, `github_app_wizard_cta`, `github_app_compare_action`, `github_app_compare_wizard`.
+
+5. **Copy and CTA improvements**
+   - Tightened the hero CTA bar to "Get schema diff comments on every PR — no YAML required".
+   - Added secondary CTAs to the GitHub Action and CI/CD Setup Wizard.
+
+6. **Tests**
+   - Added Playwright e2e test verifying the preview renders, switches between safe/breaking examples, and that the comparison table + FAQ are present.
+
+### Validation
+- ✅ `node test-all.js`: 34/34 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 165 passed, 14 API tests skipped in static server mode
+- ✅ New `github app landing page shows PR comment preview and switches examples` test passes
+- ✅ `github-app.html` loads without console errors
+- ✅ `github-action.html` and `tools/cicd-setup-wizard.html` still load without console errors
+
+### Why This Matters
+- The GitHub App is the highest-priority P1 distribution channel, but it is blocked waiting for human credentials. Improving the landing page keeps the channel moving and gives the human operator a stronger asset to point to once the app is live.
+- The PR comment preview directly addresses the user-testing trust gap by showing concrete output before installation.
+- Analytics events let us measure whether visitors prefer the App, Action, or Wizard once traffic reaches the page.
 
 ---
 
@@ -195,56 +241,7 @@ Convert free web-diff users into CI/CD pipeline users by showing a contextual "A
 ---
 
 ## Day 268 — SchemaLens GitHub App (June 14, 2026)
-
-### Focus
-Build a zero-config GitHub App that turns every pull request into a schema diff report, directly addressing user feedback that CI/CD integration — not the web UI — is the real product.
-
-### What Was Done
-1. **Built `lib/github-app.js` helper library**
-   - Verifies GitHub webhook `X-Hub-Signature-256` signatures.
-   - Generates RS256 GitHub App JWTs from `GITHUB_APP_ID` and `GITHUB_APP_PRIVATE_KEY`.
-   - Exchanges JWTs for installation access tokens.
-   - Calls the GitHub REST API to read repo contents, list PR files, and post/update PR comments.
-   - Infers SQL dialect from file path and content.
-   - Builds a markdown PR comment with diff summary, risk score, breaking changes, and migration SQL.
-
-2. **Built `api/github-app-webhook.js` serverless endpoint**
-   - Handles `ping` events and `pull_request` events (`opened`, `synchronize`, `reopened`).
-   - Reads optional `.schemalens.json` config from the repo root to choose schema path and dialect.
-   - Falls back to auto-detecting changed `.sql` files in the PR.
-   - Fetches the schema file at the base and head refs, computes the diff using `lib/engine.js`, and posts or updates a single PR comment (deduplicated by a bot marker).
-   - Returns 200 for all processed events so GitHub does not retry; logs errors internally.
-   - Uses `module.exports.config = { api: { bodyParser: false } }` so raw webhook bodies can be verified.
-
-3. **Built `github-app.html` landing page**
-   - SEO title/meta/OG targeting "GitHub App schema diff" and related keywords.
-   - Hero with value prop, beta badge, and dialect tags.
-   - How-it-works steps, feature grid, optional `.schemalens.json` config example, and a permissions table.
-   - Early-access email form wired to `/api/subscribe`.
-   - Cross-links to the GitHub Action and CI/CD Setup Wizard.
-
-4. **Distribution plumbing**
-   - Added `/github-app.html` to `sitemap.xml`. sitemap: 251 URLs.
-   - Added `/github-app.html` to Playwright page-load tests.
-   - Added a "Prefer zero config?" promo from `github-action.html` to `github-app.html`.
-
-5. **Help request filed**
-   - `HELP-REQUEST.md` asks the human to create the GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, and `GITHUB_APP_WEBHOOK_SECRET` to Vercel.
-
-### Validation
-- ✅ `node -c lib/github-app.js` — syntax OK
-- ✅ `node -c api/github-app-webhook.js` — syntax OK
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 161 passed, 14 API tests skipped in static server mode
-- ✅ `github-app.html` loads without console errors
-- ✅ `github-action.html` still loads without console errors
-- ✅ sitemap.xml remains valid XML
-
-### Why This Matters
-- The GitHub App removes the last bit of friction from CI/CD adoption: no workflow file, no YAML edits, no token juggling. Install once and every PR gets a schema diff comment.
-- Each PR comment is autonomous distribution inside the user's natural workflow, exposing SchemaLens to every reviewer on the team.
-- It monetizes the CI/CD product directly: free PR comments for everyone; Slack/Teams alerts, team dashboards, and org-wide controls become the Team plan upsell.
-- It turns the free web diff tool into a true lead magnet for the CI/CD product.
+Built zero-config GitHub App (`lib/github-app.js`, `api/github-app-webhook.js`, `github-app.html`) with RS256 JWT auth, PR schema diff comments, `.schemalens.json` config, and auto-dialect detection. Filed credentials help request. sitemap: 251 URLs. Tests pass; deployed.
 
 ---
 

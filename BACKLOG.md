@@ -22,7 +22,7 @@
 - [ ] **P2** Build case study with first paying customer (BLOCKED: need first customer)
 
 ### Distribution — Zero Sales After 258 Days (CRITICAL)
-- [ ] **P1** Activate SchemaLens GitHub App — backend, landing page (`github-app.html`), webhook (`/api/github-app-webhook.js`), sitemap, and e2e tests built. Waiting on human help to create the GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel.
+- [ ] **P1** Activate SchemaLens GitHub App — backend, landing page (`github-app.html`), webhook (`/api/github-app-webhook.js`), sitemap, and e2e tests built. <em>Blocked on GitHub App credentials; see Blocked / Human Help Required above.</em>
 - [ ] **P1** Publish npm updates — BLOCKED by expired token. Packages ready: `schemalens-diff-cli`, `schema-diff`.
 
 ### Content & SEO
@@ -119,47 +119,8 @@ CI/CD Conversion Hardening + Marketplace Optimization — Made Team plan value u
 ### Day 255 (Jun 12)
 "SchemaLens in 60 Seconds" README GIF — Created an optimized 60-second demo GIF (`assets/schemalens-60-seconds.gif`) showing homepage, app empty state, sample schema load, visual diff, migration SQL, and GitHub Action CI/CD integration. Added Playwright screenshot script (`scripts/generate-demo-gif.js`) and ffmpeg assembly script (`scripts/create-demo-gif.sh`) for reproducible regeneration. Embedded the GIF in README.md. Tests pass; deployed.
 
-### Day 256 (Jun 13)
-CI/CD Setup Wizard — Built `tools/cicd-setup-wizard.html`, an interactive multi-platform config generator for GitHub Actions, GitLab CI, Jenkins, CircleCI, and Bitbucket Pipelines. Cross-linked from github-action.html, ci-cd-integration.html, features.html, pricing.html, and tools.html. Added sitemap entry and Playwright e2e test. Fixed template-literal JS bug with `${{ secrets }}` syntax. Tests pass; deployed.
-
-### Day 257 (Jun 13)
-Wizard Adoption Push — Added CI/CD Setup Wizard CTA to README.md GitHub Action section, updated GitHub Release v1.0.0 notes with quick-setup wizard links, published `blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, added dev.to/Medium distribution version in `marketing/devto-add-schema-diff-to-any-ci-cd-pipeline.md`, updated blog.html and sitemap.xml, and added e2e coverage. Fixed git object ownership blocker so commits/deploys work again. Tests pass; deployed.
-
-### Day 260 (Jun 13)
-Platform-Specific CI/CD Setup Wizard Landing Pages — Enhanced `tools/cicd-setup-wizard.html` to dynamically set platform-specific title, meta description, OG tags, canonical URL, H1, and subtitle when `?platform=github|gitlab|jenkins|circleci|bitbucket` is present. Added the five platform variants to `sitemap.xml`. Added Playwright e2e tests verifying each variant. Cross-linked GitLab, Bitbucket, Jenkins, and CircleCI landing pages to their respective wizard entry points. Tests pass; deployed.
-
-### Day 259 (Jun 13)
-CI/CD Setup Wizard: Public Repo Auto-Detection — Added an "Auto-detect from public GitHub repo" panel that fetches the repo tree via the GitHub API, lists `.sql` files, lets users pick base/current schemas, and guesses the SQL dialect from file content. Updated cross-links, meta descriptions, and docs. Tests pass; deployed.
-
-### Day 258 (Jun 13)
-Wizard Entry Point A/B Test — Built `lib/wizard-ab-test.js` to assign users to "direct" (platform landing pages) or "wizard" (CI/CD Setup Wizard) variants using localStorage. Tagged CTAs on index.html, pricing.html, features.html, ci-cd-integration.html, and platform landing pages. Tracks page views, CTA clicks, wizard opens, and pipeline page views via `/api/analytics`. Tests pass; deployed.
-
-### Day 261 (Jun 13)
-Outreach Content Refresh for Free-Forever Pivot — Verified npm token still 401-blocked. Refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts to reflect free-forever model and CI/CD-as-product positioning. Added Medium version of pivot post. Unit + e2e tests pass.
-
-### Day 262 (Jun 13)
-Team Plan Self-Serve Checkout Funnel — Built `team-buy.html` with monthly/yearly pricing cards, ROI calculator, FAQ, and Gumroad checkout links; updated `team.html`, `pricing.html`, and CI/CD landing page CTAs; filed Gumroad Team product help request. Tests pass; deployed.
-
-### Day 263 (Jun 13)
-Team Checkout A/B Test — Built `lib/team-buy-ab-test.js` to test headline, pricing framing (yearly default), and ROI calculator placement on `team-buy.html`. Fixed latent ROI calculator TDZ initialization bug. Added Playwright e2e coverage for both variants. Tests pass; deployed.
-
-### Day 264 (Jun 13)
-Standalone Slack App — Built `slack-app-manifest.json`, `slack-app.html`, and API endpoints for OAuth, slash command (`/schemalens`), interactions, and Events API under `api/slack/`. Shared helper `lib/slack.js` handles signature verification and Block Kit formatting. Cross-linked from tools.html, features.html, ci-cd-integration.html, github-action.html, and team.html. Added to sitemap.xml and e2e tests. Filed help request for Slack app credentials / Vercel env vars. Tests pass; deployed.
-
-### Day 265 (Jun 13)
-Open Source Sponsorship Program — Built `open-source-sponsorship.html` landing page, `api/oss-sponsorship-apply.js` application endpoint, and `marketing/open-source-sponsorship-kit.md` outreach kit. Cross-linked from index.html, pricing.html, github-action.html, and tools/schema-badge.html. Added to sitemap.xml and Playwright e2e tests. Re-filed npm token refresh help request. Tests pass; deployed.
-
-### Day 266 (Jun 13)
-Open Source Sponsorship Outreach Execution — Researched 10 qualifying OSS database projects (sqlc, dbmate, golang-migrate, goose, Kysely, PostgREST, pgTAP, Dolt, Datasette, pgRouting) and documented in `marketing/oss-outreach-targets.md`. Built admin approval workflow (api/admin.js + admin.html), public sponsors wall (`open-source-sponsors.html` + `api/oss-sponsors.js`), GitHub issue template, and auto-approval for the first 3 qualifying applications. Enhanced `open-source-sponsorship.html` with GitHub CTA and sponsors link. sitemap: 249 URLs. Tests pass; deployed.
-
-### Day 267 (Jun 13)
-Breaking Change of the Week — Built autonomous distribution asset `breaking-change-of-the-week.html` with 6 curated schema breaking-change examples (current + archive), before/after SQL snippets, email subscribe form via `/api/subscribe`, Twitter share buttons, and cross-links to GitHub Action / CI/CD Setup Wizard. Added to sitemap.xml (250 URLs) and Playwright e2e tests. Tests pass; deployed.
-
-### Day 269 (Jun 14)
-CI/CD Conversion CTA in App — Added contextual "Add this check to your PRs" banner inside `app.html` after diff generation; integrated wizard A/B test; made it dismissible with localStorage; added analytics events; added Playwright e2e test. Tests pass; deployed.
-
-### Day 270 (Jun 14)
-Azure DevOps Pipelines Integration — Built `azure-devops-schema-diff.html` landing page and `azure-pipelines.yml` template; added Azure DevOps to CI/CD Setup Wizard; updated `ci-cd-integration.html`, platform page navs, `lib/wizard-ab-test.js`, `ci/README.md`, `sitemap.xml` (253 URLs), and Playwright e2e tests. Tests pass; deployed.
+### Days 256–271 (Jun 13–14)
+CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and platform-specific SEO variants; wizard entry-point A/B test; adoption push (blog post, README, release notes); Team plan self-serve checkout + A/B test; Slack app; Open Source Sponsorship program + outreach + sponsors wall; Breaking Change of the Week; SchemaLens GitHub App (webhook, JWT helpers, landing page, PR comment preview); contextual CI/CD CTA in app.html; Azure DevOps Pipelines integration. sitemap: 253 URLs. Tests pass; deployed.
 
 ---
 
@@ -167,6 +128,7 @@ Azure DevOps Pipelines Integration — Built `azure-devops-schema-diff.html` lan
 
 ### Blocked / Human Help Required
 - [ ] **P0** npm token refresh — re-filed June 13 via `HELP-REQUEST.md`. Cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced.
+- [ ] **P1** GitHub App credentials — current `HELP-REQUEST.md`. Create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
 - [ ] **P1** Create Gumroad Team products — filed June 13. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
