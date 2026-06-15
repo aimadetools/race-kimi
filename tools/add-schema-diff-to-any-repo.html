@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Schema Diff to Any Repo in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use schema diff CI/CD config for GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, or Azure DevOps in 60 seconds. No signup.">
+  <meta property="og:title" content="Add Schema Diff to Any Repo in 60 Seconds — SchemaLens">
+  <meta property="og:description" content="Generate a ready-to-use schema diff CI/CD config for your repo in 60 seconds. Catches breaking database changes on every PR.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/add-schema-diff-to-any-repo.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/add-schema-diff-to-any-repo.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens CI/CD Setup Wizard",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate schema diff CI/CD configs for GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines, Azure DevOps. Auto-detect SQL files from public GitHub repos. Breaking change detection. PR comments. Risk scoring.",
+    "url": "https://schemalens.tech/tools/add-schema-diff-to-any-repo.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .page-header h1 span { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 640px; margin: 0 auto; }
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; }
+    .timer-badge strong { color: var(--text); }
+    .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 32px 0; }
+    .platform-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-decoration: none; color: inherit; transition: all 0.2s; display: flex; flex-direction: column; }
+    .platform-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 30px rgba(0,0,0,0.18); }
+    .platform-card .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .platform-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .platform-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; flex: 1; margin-bottom: 16px; }
+    .platform-card .cta { color: var(--primary); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 36px 0; }
+    .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .step-num { width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin-bottom: 14px; }
+    .step h3 { font-size: 1rem; margin-bottom: 8px; }
+    .step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .social-proof { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 36px 0; }
+    .social-proof h2 { font-size: 1.25rem; margin-bottom: 10px; }
+    .social-proof p { color: var(--text-muted); font-size: 0.95rem; max-width: 560px; margin: 0 auto 18px; }
+    .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; text-align: left; max-width: 720px; margin: 0 auto; }
+    .feature-list li { color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: flex-start; gap: 10px; }
+    .feature-list li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; margin: 36px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 10px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 18px; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../github-action.html">GitHub Action</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <div class="timer-badge">⏱️ <strong>60 seconds</strong> — no signup required</div>
+      <h1>Add schema diff to <span>any repo</span> in one commit</h1>
+      <p>Pick your CI/CD platform. Paste the generated config. Start catching breaking database changes on every pull request — before they reach production.</p>
+    </div>
+
+    <div class="platform-grid">
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=github" data-analytics="add_repo_github_click">
+        <div class="icon">🐙</div>
+        <h3>GitHub Actions</h3>
+        <p>Workflow with PR comments, check runs, and a breaking-change gate. Auto-detects SQL files from your repo.</p>
+        <span class="cta">Generate workflow →</span>
+      </a>
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=gitlab" data-analytics="add_repo_gitlab_click">
+        <div class="icon">🦊</div>
+        <h3>GitLab CI</h3>
+        <p>Merge request pipeline with MR comments, artifacts, and smart skip when no SQL files changed.</p>
+        <span class="cta">Generate .gitlab-ci.yml →</span>
+      </a>
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=jenkins" data-analytics="add_repo_jenkins_click">
+        <div class="icon">🔧</div>
+        <h3>Jenkins</h3>
+        <p>Jenkinsfile with console reports, build descriptions, artifact archiving, and breaking-change fail.</p>
+        <span class="cta">Generate Jenkinsfile →</span>
+      </a>
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=circleci" data-analytics="add_repo_circleci_click">
+        <div class="icon">⭕</div>
+        <h3>CircleCI</h3>
+        <p>Config with PR comments, artifact storage, and path-filtered runs on every branch push.</p>
+        <span class="cta">Generate config.yml →</span>
+      </a>
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=bitbucket" data-analytics="add_repo_bitbucket_click">
+        <div class="icon">📦</div>
+        <h3>Bitbucket Pipelines</h3>
+        <p>Pull-request pipeline with PR comments, artifact reports, and a breaking-change gate.</p>
+        <span class="cta">Generate bitbucket-pipelines.yml →</span>
+      </a>
+      <a class="platform-card" href="cicd-setup-wizard.html?platform=azure" data-analytics="add_repo_azure_click">
+        <div class="icon">🔷</div>
+        <h3>Azure DevOps</h3>
+        <p>Pipeline with PR comments, path filters, artifact reports, and a breaking-change gate.</p>
+        <span class="cta">Generate azure-pipelines.yml →</span>
+      </a>
+    </div>
+
+    <h2 style="text-align:center; margin: 44px 0 8px; font-size: 1.4rem;">How it works</h2>
+    <p style="text-align:center; color: var(--text-muted); max-width: 520px; margin: 0 auto 24px;">Three steps between your current repo and a schema diff check on every PR.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Paste your repo</h3>
+        <p>Enter any public GitHub repository. The wizard auto-detects your SQL schema files and guesses the dialect.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Pick your platform</h3>
+        <p>Choose GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, or Azure DevOps. Toggle options like PR comments and breaking gates.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Copy & commit</h3>
+        <p>Copy the generated config, paste it into your repo, and open your next pull request. SchemaLens diffs the base branch against the PR branch automatically.</p>
+      </div>
+    </div>
+
+    <div class="social-proof">
+      <h2>What the check catches</h2>
+      <p>SchemaLens understands your schema structure, not just text diff. Every run reports:</p>
+      <ul class="feature-list">
+        <li>Added, removed, and modified tables</li>
+        <li>Dropped columns and removed indexes</li>
+        <li>Type changes, nullability flips, and default changes</li>
+        <li>Breaking vs safe changes with severity</li>
+        <li>A 0-100 risk score for every diff</li>
+        <li>Ready-to-run migration SQL</li>
+      </ul>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Not sure where to start?</h2>
+      <p>Try the full CI/CD Setup Wizard — it walks you through repo detection, platform choice, and config generation.</p>
+      <a href="cicd-setup-wizard.html" class="btn btn-primary btn-lg" data-analytics="add_repo_open_wizard_click">⚡ Open the Setup Wizard</a>
+      <a href="../app.html" class="btn btn-secondary" style="margin-left: 10px;" data-analytics="add_repo_try_app_click">Try the web diff first</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 48px; text-align:center; color: var(--text-muted); font-size:0.85rem;">
+      <p><a href="../index.html">SchemaLens</a> — free schema diff for developers. <a href="../github-action.html">GitHub Action</a> · <a href="../ci-cd-integration.html">CI/CD Integrations</a> · <a href="../pricing.html">Pricing</a></p>
+    </footer>
+  </div>
+</body>
+</html>

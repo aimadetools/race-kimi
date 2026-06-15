@@ -154,6 +154,8 @@ const pages = [
   { path: '/tools/schema-code-review.html', name: 'Schema Code Review' },
   { path: '/tools/schema-semver-calculator.html', name: 'Schema SemVer Calculator' },
   { path: '/tools/cicd-setup-wizard.html', name: 'CI/CD Setup Wizard' },
+  { path: '/tools/add-schema-diff-to-any-repo.html', name: 'Add Schema Diff to Any Repo' },
+  { path: '/tools/gitlab-schema-diff-in-60-seconds.html', name: 'GitLab Schema Diff in 60 Seconds' },
   { path: '/tools/request-team-invoice.html', name: 'Request Team Invoice' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
@@ -233,6 +235,28 @@ for (const { platform, h1, title } of wizardPlatforms) {
     expect(description.toLowerCase()).toContain(platform === 'bitbucket' ? 'bitbucket' : platform);
   });
 }
+
+// ───────────────────────────────────────────────
+// CI/CD Distribution Landing Pages
+// ───────────────────────────────────────────────
+
+test('Add schema diff to any repo page shows 6 platform cards', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/add-schema-diff-to-any-repo.html`);
+  await expect(page.locator('h1')).toContainText('Add schema diff');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=github"]')).toContainText('GitHub Actions');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=gitlab"]')).toContainText('GitLab CI');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=jenkins"]')).toContainText('Jenkins');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=circleci"]')).toContainText('CircleCI');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=bitbucket"]')).toContainText('Bitbucket');
+  await expect(page.locator('a.platform-card[href="cicd-setup-wizard.html?platform=azure"]')).toContainText('Azure DevOps');
+});
+
+test('GitLab 60-second page shows config and wizard CTA', async ({ page }) => {
+  await page.goto(`${BASE_URL}/tools/gitlab-schema-diff-in-60-seconds.html`);
+  await expect(page.locator('h1')).toContainText('GitLab repo');
+  await expect(page.locator('a[href="cicd-setup-wizard.html?platform=gitlab"]').first()).toContainText('Generate');
+  await expect(page.locator('.code-block')).toContainText('.gitlab-ci.yml');
+});
 
 // ───────────────────────────────────────────────
 // Team Checkout A/B Test

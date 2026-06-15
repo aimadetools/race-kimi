@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Schema Diff to GitLab CI in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use GitLab CI pipeline that diffs your database schema on every merge request. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:title" content="Add Schema Diff to GitLab CI in 60 Seconds — SchemaLens">
+  <meta property="og:description" content="Generate a GitLab CI schema diff pipeline in 60 seconds. MR comments, artifact reports, and breaking-change gates included.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/gitlab-schema-diff-in-60-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/gitlab-schema-diff-in-60-seconds.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens GitLab CI Setup",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate GitLab CI schema diff pipeline in 60 seconds, merge request comments, artifact reports, breaking change detection, smart skip, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/tools/gitlab-schema-diff-in-60-seconds.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .gitlab-accent { color: #fc6d26; }
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; }
+    .timer-badge strong { color: var(--text); }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 620px; margin: 0 auto; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 28px 0; }
+    .cta-bar h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 28px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step h3 { font-size: 1rem; margin-bottom: 4px; }
+    .step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 28px 0; }
+    .preview-box h3 { font-size: 1rem; margin-bottom: 14px; }
+    .mr-comment { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../gitlab-schema-diff.html">GitLab CI</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <div class="timer-badge">⏱️ <strong>60 seconds</strong> — no signup required</div>
+      <h1>Add schema diff to your <span class="gitlab-accent">GitLab repo</span></h1>
+      <p>Generate a <code>.gitlab-ci.yml</code> that compares your database schema on every merge request. Catches breaking changes before they become production incidents.</p>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 One config, zero friction</h2>
+      <p>Copy this into your repo as <code>.gitlab-ci.yml</code> or let the wizard auto-detect your schema files.</p>
+      <pre class="code-block"><code><span class="comment"># .gitlab-ci.yml</span>
+<span class="key">stages</span>:
+  - <span class="str">validate</span>
+
+<span class="key">schema-diff</span>:
+  <span class="key">stage</span>: <span class="str">validate</span>
+  <span class="key">image</span>: <span class="str">node:20-alpine</span>
+  <span class="key">variables</span>:
+    <span class="key">SCHEMA_PATH</span>: <span class="str">"db/schema.sql"</span>
+    <span class="key">DIALECT</span>: <span class="str">"postgres"</span>
+    <span class="key">POST_MR_COMMENT</span>: <span class="str">"true"</span>
+    <span class="key">FAIL_ON_BREAKING</span>: <span class="str">"true"</span>
+  <span class="key">before_script</span>:
+    - <span class="str">apk add --no-cache git curl jq</span>
+  <span class="key">script</span>:
+    - <span class="str">git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME</span>
+    - <span class="str">git show origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:$SCHEMA_PATH > /tmp/schema_base.sql</span>
+    - <span class="str">node ci/schemalens-diff.js /tmp/schema_base.sql $SCHEMA_PATH --dialect=$DIALECT --format=markdown --output=/tmp/report.md</span>
+    - <span class="str">cat /tmp/report.md</span>
+  <span class="key">rules</span>:
+    - <span class="key">if</span>: <span class="str">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
+      <span class="key">changes</span>:
+        - <span class="str">"**/*.sql"</span>
+  <span class="key">artifacts</span>:
+    <span class="key">paths</span>:
+      - <span class="str">/tmp/report.md</span>
+    <span class="key">expire_in</span>: <span class="str">1 week</span></code></pre>
+      <a href="cicd-setup-wizard.html?platform=gitlab" class="btn btn-primary btn-lg" data-analytics="gitlab_60s_open_wizard_click">⚡ Generate my GitLab CI config</a>
+      <a href="../.gitlab-ci.yml" class="btn btn-secondary" download data-analytics="gitlab_60s_download_click">Download .gitlab-ci.yml</a>
+    </div>
+
+    <div class="preview-box">
+      <h3>💬 What your team sees in every merge request</h3>
+      <div class="mr-comment">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <div style="width:28px; height:28px; border-radius:50%; background:#fc6d26; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.7rem; font-weight:700;">SL</div>
+          <div>
+            <strong>SchemaLens Bot</strong>
+            <div style="font-size:0.78rem; color:var(--text-muted);">commented 2 minutes ago</div>
+          </div>
+        </div>
+        <p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin:8px 0;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+        </table>
+        <pre style="background:#0f172a; padding:10px; border-radius:6px; overflow-x:auto; font-size:0.8rem; margin:8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why GitLab teams use SchemaLens</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Block breaking changes before merge</h3>
+        <p>Dropped columns, removed indexes, and altered constraints fail the pipeline before they reach production.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 Native MR comments</h3>
+        <p>Reviewers see the diff summary directly in the merge request — no external dashboards needed.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📦 Artifact reports</h3>
+        <p>Every pipeline attaches a full markdown report for compliance docs, audits, or offline review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Smart skip saves CI minutes</h3>
+        <p>The job only runs when <code>.sql</code> files change, so unrelated merges don't waste runner time.</p>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Get it running in 3 steps</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Open the GitLab CI wizard</h3>
+          <p>The wizard auto-detects SQL files from your public GitHub or GitLab repo and selects the right dialect.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Copy the generated config</h3>
+          <p>Paste it into <code>.gitlab-ci.yml</code> at the root of your repo. Adjust <code>SCHEMA_PATH</code> if your schema lives elsewhere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Open your next merge request</h3>
+          <p>SchemaLens compares the target branch schema against your branch and posts the result as an MR comment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Ready to add schema diff to your GitLab repo?</h2>
+      <p>It takes 60 seconds and works with PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+      <a href="cicd-setup-wizard.html?platform=gitlab" class="btn btn-primary btn-lg" data-analytics="gitlab_60s_bottom_cta_click">⚡ Generate GitLab CI config</a>
+      <a href="add-schema-diff-to-any-repo.html" class="btn btn-secondary" style="margin-left: 10px;" data-analytics="gitlab_60s_other_platforms_click">Other platforms</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 48px; text-align:center; color: var(--text-muted); font-size:0.85rem;">
+      <p><a href="../index.html">SchemaLens</a> — free schema diff for developers. <a href="../gitlab-schema-diff.html">Full GitLab CI guide</a> · <a href="../ci-cd-integration.html">All CI/CD integrations</a></p>
+    </footer>
+  </div>
+</body>
+</html>
