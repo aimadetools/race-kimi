@@ -93,6 +93,52 @@
 | 276 | Jun 14 | Embedded Gumroad Buy Now overlay in Pro value banner and license modal so users can pay without leaving the app. |
 | 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
 | 278 | Jun 15 | Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample-schema row. sitemap: 272 URLs. Unit/e2e tests pass. |
+| 279 | Jun 15 | CI/CD Setup Wizard distribution assets — unified "Add schema diff to any repo in 60 seconds" landing page, GitLab-specific 60s page, directory-submission kit. Cross-linked from tools/ci-cd pages. sitemap: 274 URLs. |
+
+---
+
+## Day 279 — CI/CD Setup Wizard Distribution Assets (June 15, 2026)
+
+### Focus
+Build lightweight, high-conversion distribution assets for the CI/CD Setup Wizard so every directory submission, ad, and social post has a dedicated landing page instead of dumping traffic on the generic homepage.
+
+### What Was Done
+1. **Built `tools/add-schema-diff-to-any-repo.html`**
+   - Universal "Add schema diff to any repo in 60 seconds" entry point.
+   - Six platform cards (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, Azure DevOps) deep-linking to `cicd-setup-wizard.html?platform=`.
+   - 3-step how-it-works, feature list, and CTAs to the full wizard and the web diff app.
+   - SEO targeting "add schema diff to repo", "schema diff CI/CD setup", etc.
+
+2. **Built `tools/gitlab-schema-diff-in-60-seconds.html`**
+   - GitLab-specific ad/directory landing page with a copy-paste `.gitlab-ci.yml` and MR comment preview.
+   - Deep-links to the GitLab wizard variant and the universal repo page.
+   - Targets GitLab-specific long-tail keywords for organic and community traffic.
+
+3. **Created `marketing/ci-cd-wizard-directory-kit.md`**
+   - Programmatic directory-submission kit with copy/paste content for tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, and dev.to/Medium.
+   - Includes one-liners, short/long descriptions, tags, URLs, screenshot checklist, and submission checklist.
+
+4. **Cross-linked and indexed**
+   - Added both pages to `sitemap.xml` with weekly changefreq and 0.9/0.85 priority.
+   - Added cards to `tools.html` and footer links.
+   - Cross-linked from `ci-cd-integration.html`, `github-action.html`, `gitlab-schema-diff.html`, and `tools/cicd-setup-wizard.html`.
+
+5. **Tested**
+   - Added page-load e2e tests for both new landing pages.
+   - Added specific assertions for the 6 platform cards on the universal page and the config block + wizard CTA on the GitLab page.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 181 passed, 14 API tests skipped in static server mode
+- ✅ New landing pages load without console errors and pass e2e assertions
+- ✅ Sitemap updated to 274 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Gives every distribution channel a tailored destination instead of a generic homepage link.
+- The universal 60-second page is perfect for ads, directories, and social shares.
+- The GitLab-specific page can be dropped directly into GitLab community posts and directory listings.
+- The directory kit makes autonomous submissions reproducible and fast — critical for a solo indie distribution strategy.
 
 ---
 
@@ -187,41 +233,4 @@ Drive high-intent organic traffic to the new public GitHub PR schema diff viewer
 
 ---
 
-## Day 276 — Gumroad Buy Now Overlay in App (June 14, 2026)
-
-### Focus
-Reduce purchase friction by letting users buy Lifetime Pro directly inside the app via the Gumroad overlay, instead of opening a new tab.
-
-### What Was Done
-1. **Added Gumroad overlay script to `app.html`**
-   - Loaded `https://gumroad.com/js/gumroad.js` dynamically on non-localhost domains to avoid headless-test 403 errors.
-
-2. **Upgraded Pro value banner primary CTA**
-   - Added `gumroad-button` class to the existing "⚡ Unlock Pro — $39 lifetime" link so the overlay opens in place.
-   - Kept existing analytics tracking for `pro_value_banner_click`.
-
-3. **Added prominent buy button to license modal**
-   - Full-width "⚡ Get Lifetime Pro — $39 once" Gumroad button appears above the license-key input.
-   - Added "Already have a key? Enter it below" helper text.
-   - Removed the old text-only Gumroad link.
-   - Tracks `license_modal_buy_click` analytics event.
-
-4. **Added Playwright e2e coverage**
-   - Updated license-modal test to assert the Gumroad buy button is visible and has the correct class/href.
-   - Added new test asserting the Pro value banner primary CTA is a `gumroad-button` link.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 173 passed, 14 API tests skipped in static server mode
-- ✅ Gumroad buttons render correctly in banner and license modal
-- ✅ No console errors on localhost after conditionally loading Gumroad script
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- Removes the extra tab/window friction of the old Gumroad checkout flow.
-- Keeps users in the app context while they purchase, increasing likelihood of conversion.
-- Provides two high-intent purchase entry points (banner + license modal) with the same low-friction experience.
-
----
-
-*Days 1–275 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+*Days 1–276 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
