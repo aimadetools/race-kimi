@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Schema Diff to CircleCI in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use CircleCI config that diffs your database schema on every pull request. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:title" content="Add Schema Diff to CircleCI in 60 Seconds — SchemaLens">
+  <meta property="og:description" content="Generate a ready-to-use CircleCI config that diffs your database schema on every pull request. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/circleci-schema-diff-in-60-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/circleci-schema-diff-in-60-seconds.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens CircleCI Setup",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate CircleCI schema diff pipeline in 60 seconds, PR comments, artifact reports, breaking change detection, smart skip, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/tools/circleci-schema-diff-in-60-seconds.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .platform-accent { color: #002f6c; }
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; }
+    .timer-badge strong { color: var(--text); }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 620px; margin: 0 auto; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 28px 0; }
+    .cta-bar h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 28px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step h3 { font-size: 1rem; margin-bottom: 4px; }
+    .step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 28px 0; }
+    .preview-box h3 { font-size: 1rem; margin-bottom: 14px; }
+    .pr-comment { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../circleci-schema-diff.html">CircleCI</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <div class="timer-badge">⏱️ <strong>60 seconds</strong> — no signup required</div>
+      <h1>Add schema diff to your <span class="platform-accent">CircleCI pipeline</span></h1>
+      <p>Generate a .circleci/config.yml that compares your database schema on every branch push. Catches breaking changes before they become production incidents.</p>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 One config, zero friction</h2>
+      <p>Copy this into your repo as <code>.circleci/config.yml</code> or let the wizard auto-detect your schema files.</p>
+      <pre class="code-block"><code><span class="comment"># .circleci/config.yml</span>
+<span class="comment"># SchemaLens Schema Diff for CircleCI</span>
+<span class="comment"># Place this file at .circleci/config.yml in your repository.</span>
+<span class="comment"># Catches breaking database schema changes in every PR build.</span>
+
+<span class="key">version</span>: 2.1
+
+<span class="key">executors</span>:
+  <span class="key">node-executor</span>:
+    <span class="key">docker</span>:
+      - image: cimg/node:20.0
+
+<span class="key">jobs</span>:
+  <span class="key">schema-diff</span>:
+    <span class="key">executor</span>: node-executor
+    <span class="key">environment</span>:
+      <span class="key">SCHEMA_PATH</span>: db/schema.sql
+      <span class="key">DIALECT</span>: postgres
+      <span class="key">FAIL_ON_BREAKING</span>: &quot;false&quot;
+      <span class="key">SKIP_NO_SQL_CHANGE</span>: &quot;false&quot;
+      <span class="key">POST_PR_COMMENT</span>: &quot;false&quot;
+      <span class="key">FORMAT</span>: markdown
+    <span class="key">steps</span>:
+      - checkout
+
+      - run:
+          <span class="key">name</span>: Check for SQL changes (smart skip)
+          <span class="key">command</span>: |
+            if [ &quot;$SKIP_NO_SQL_CHANGE&quot; = &quot;true&quot; ]; then
+              CHANGED=$(git diff --name-only origin/${CIRCLE_BRANCH}..HEAD 2&gt;/dev/null || git diff --name-only HEAD~1..HEAD || echo &quot;&quot;)
+              if ! echo &quot;$CHANGED&quot; | grep -q &#39;\.sql$&#39;; then
+                echo &quot;No .sql files changed — skipping schema diff.&quot;
+                circleci-agent step halt
+              fi
+            fi
+
+      - run:
+          <span class="key">name</span>: Fetch base schema
+          <span class="key">command</span>: |
+            BASE_BRANCH=$(echo &quot;${CIRCLE_PULL_REQUEST:-}&quot; | sed &#39;s/.*\///&#39; || echo &quot;main&quot;)
+            if [ -n &quot;$CIRCLE_PULL_REQUEST&quot; ]; then
+              PR_NUM=$(echo &quot;$CIRCLE_PULL_REQUEST&quot; | sed &#39;s/.*\///&#39;)
+             <span class="comment"> # Try to determine target branch from GitHub API</span>
+              TARGET=$(curl -s &quot;https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${PR_NUM}&quot; | jq -r &#39;.base.ref // &quot;main&quot;&#39;)
+            else
+              TARGET=&quot;main&quot;
+            fi
+            git fetch origin &quot;$TARGET&quot; 2&gt;/dev/null || true
+            git show &quot;origin/${TARGET}:$SCHEMA_PATH&quot; &gt; /tmp/schema_base.sql 2&gt;/dev/null || echo &quot;-- No base schema&quot; &gt; /tmp/schema_base.sql
+
+      - run:
+          <span class="key">name</span>: Run SchemaLens diff
+          <span class="key">command</span>: |
+            set -euo pipefail
+
+            ENDPOINT=&quot;https://schemalens.tech/api/free-diff&quot;
+            LICENSE_HEADER=&quot;&quot;
+            if [ -n &quot;${SL_LICENSE_KEY:-}&quot; ]; then
+              ENDPOINT=&quot;https://schemalens.tech/api/diff&quot;
+              LICENSE_HEADER=&quot;-H \&quot;X-License-Key: $SL_LICENSE_KEY\&quot;&quot;
+              echo &quot;[SchemaLens] Using Pro endpoint.&quot;
+            fi
+
+            BODY=$(jq -n \
+              --arg schemaA &quot;$(cat /tmp/schema_base.sql)&quot; \
+              --arg schemaB &quot;$(cat &quot;$SCHEMA_PATH&quot;)&quot; \
+              --arg dialect &quot;$DIALECT&quot; \
+              --arg format &quot;$FORMAT&quot; \
+              &#39;{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}&#39;)
+
+            HTTP_STATUS=0
+            for attempt in 1 2 3; do
+              HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w &quot;%{http_code}&quot; -X POST &quot;$ENDPOINT&quot; \
+                -H &quot;Content-Type: application/json&quot; \
+                ${LICENSE_HEADER} \
+                -d &quot;$BODY&quot; || echo &quot;000&quot;)
+              if [ &quot;$HTTP_STATUS&quot; = &quot;200&quot; ]; then break; fi
+              echo &quot;[SchemaLens] Attempt $attempt failed (HTTP $HTTP_STATUS). Retrying...&quot;
+              sleep $((attempt * 2))
+            done
+
+            if [ &quot;$HTTP_STATUS&quot; != &quot;200&quot; ]; then
+              echo &quot;[SchemaLens] API failed after 3 attempts (status: $HTTP_STATUS)&quot;
+              cat /tmp/schemalens_response.json 2&gt;/dev/null || true
+              exit 1
+            fi
+
+            jq -r &#39;.markdown // .migrationTeaser // &quot;No output.&quot;&#39; /tmp/schemalens_response.json &gt; /tmp/schema_diff_report.md
+            cat /tmp/schema_diff_report.md
+
+      - run:
+          <span class="key">name</span>: Extract metrics
+          <span class="key">command</span>: |
+            BCOUNT=$(jq -r &#39;(.summary.breakingChangeCount // (.breakingChanges | length) // 0)&#39; /tmp/schemalens_response.json)
+            SCORE=$(jq -r &#39;.riskScore.score // 0&#39; /tmp/schemalens_response.json)
+            LABEL=$(jq -r &#39;.riskScore.label // &quot;Unknown&quot;&#39; /tmp/schemalens_response.json)
+            TA=$(jq -r &#39;.summary.tablesAdded // 0&#39; /tmp/schemalens_response.json)
+            TR=$(jq -r &#39;.summary.tablesRemoved // 0&#39; /tmp/schemalens_response.json)
+            TM=$(jq -r &#39;.summary.tablesModified // 0&#39; /tmp/schemalens_response.json)
+            echo &quot;export SCHEMALENS_BC=$BCOUNT&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;export SCHEMALENS_SCORE=$SCORE&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;export SCHEMALENS_LABEL=$LABEL&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;export SCHEMALENS_TA=$TA&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;export SCHEMALENS_TR=$TR&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;export SCHEMALENS_TM=$TM&quot; &gt;&gt; &quot;$BASH_ENV&quot;
+            echo &quot;[SchemaLens] Risk: $LABEL ($SCORE/100) | +$TA -$TR ~$TM | $BCOUNT breaking&quot;
+
+      - run:
+          <span class="key">name</span>: Post PR comment
+          <span class="key">command</span>: |
+            if [ &quot;$POST_PR_COMMENT&quot; = &quot;true&quot; ] &amp;&amp; [ -n &quot;${GITHUB_TOKEN:-}&quot; ] &amp;&amp; [ -n &quot;${CIRCLE_PULL_REQUEST:-}&quot; ]; then
+              PR_NUM=$(echo &quot;$CIRCLE_PULL_REQUEST&quot; | sed &#39;s/.*\///&#39;)
+              REPORT=$(cat /tmp/schema_diff_report.md | sed &#39;s/&quot;/\\&quot;/g&#39; | sed &#39;:a;N;$!ba;s/\n/\\n/g&#39;)
+              curl -s -X POST \
+                -H &quot;Authorization: token $GITHUB_TOKEN&quot; \
+                -H &quot;Accept: application/vnd.github.v3+json&quot; \
+                &quot;https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/issues/${PR_NUM}/comments&quot; \
+                -d &quot;{\&quot;body\&quot;: \&quot;## SchemaLens Schema Diff Report\\n\\n${REPORT}\&quot;}&quot; || echo &quot;Warning: failed to post PR comment.&quot;
+            fi
+          <span class="key">when</span>: always
+
+      - run:
+          <span class="key">name</span>: Fail on breaking changes
+          <span class="key">command</span>: |
+            if [ &quot;$FAIL_ON_BREAKING&quot; = &quot;true&quot; ] &amp;&amp; [ &quot;$SCHEMALENS_BC&quot; != &quot;0&quot; ]; then
+              echo &quot;[SchemaLens] $SCHEMALENS_BC breaking change(s) detected. Failing build.&quot;
+              exit 1
+            fi
+
+      - store_artifacts:
+          <span class="key">path</span>: /tmp/schema_diff_report.md
+          <span class="key">destination</span>: schema_diff_report.md
+
+<span class="key">workflows</span>:
+  <span class="key">schema-diff-workflow</span>:
+    <span class="key">jobs</span>:
+      - schema-diff:
+          <span class="key">filters</span>:
+            <span class="key">branches</span>:
+              <span class="key">ignore</span>:
+                - main
+                - master
+</code></pre>
+      <a href="cicd-setup-wizard.html?platform=circleci" class="btn btn-primary btn-lg" data-analytics="circleci_60s_open_wizard_click">⚡ Generate my CircleCI config</a>
+      <a href="../.circleci/config.yml" class="btn btn-secondary" download data-analytics="circleci_60s_download_click">Download config.yml</a>
+    </div>
+
+    <div class="preview-box">
+      <h3>💬 What your team sees in every pull request</h3>
+      <div class="pr-comment">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <div style="width:28px; height:28px; border-radius:50%; background:#002f6c; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.7rem; font-weight:700;">SL</div>
+          <div>
+            <strong>SchemaLens Bot</strong>
+            <div style="font-size:0.78rem; color:var(--text-muted);">commented 2 minutes ago</div>
+          </div>
+        </div>
+        <p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin:8px 0;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+        </table>
+        <pre style="background:#0f172a; padding:10px; border-radius:6px; overflow-x:auto; font-size:0.8rem; margin:8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why CircleCI teams use SchemaLens</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Block breaking changes before merge</h3>
+        <p>Dropped columns, removed indexes, and altered constraints fail the job before they reach production.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 Native PR comments</h3>
+        <p>Reviewers see the diff summary directly in the GitHub pull request — no external dashboards needed.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📦 Artifact reports</h3>
+        <p>Every pipeline stores a markdown report for compliance docs, audits, or offline review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Path-filtered runs</h3>
+        <p>The job only runs when .sql files change, so unrelated pushes don't waste build minutes.</p>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Get it running in 3 steps</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Open the CircleCI wizard</h3>
+          <p>The wizard auto-detects SQL files from your public GitHub repo and selects the right dialect for your CircleCI pipeline.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Copy the generated config</h3>
+          <p>Paste it into <code>.circleci/config.yml</code> at the root of your repo. Adjust <code>SCHEMA_PATH</code> if your schema lives elsewhere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Open your next pull request</h3>
+          <p>SchemaLens compares the target branch schema against your branch and posts the result as a PR comment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Ready to add schema diff to your CircleCI repo?</h2>
+      <p>It takes 60 seconds and works with PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+      <a href="cicd-setup-wizard.html?platform=circleci" class="btn btn-primary btn-lg" data-analytics="circleci_60s_bottom_cta_click">⚡ Generate CircleCI config</a>
+      <a href="add-schema-diff-to-any-repo.html" class="btn btn-secondary" style="margin-left: 10px;" data-analytics="circleci_60s_other_platforms_click">Other platforms</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 48px; text-align:center; color: var(--text-muted); font-size:0.85rem;">
+      <p><a href="../index.html">SchemaLens</a> — free schema diff for developers. <a href="../circleci-schema-diff.html">Full CircleCI guide</a> · <a href="../ci-cd-integration.html">All CI/CD integrations</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -6,6 +6,11 @@ Primary URLs to promote:
 - **Universal entry point:** https://schemalens.tech/tools/add-schema-diff-to-any-repo.html
 - **Full wizard:** https://schemalens.tech/tools/cicd-setup-wizard.html
 - **GitLab-specific page:** https://schemalens.tech/tools/gitlab-schema-diff-in-60-seconds.html
+- **GitHub Actions 60s page:** https://schemalens.tech/tools/github-schema-diff-in-60-seconds.html
+- **Jenkins 60s page:** https://schemalens.tech/tools/jenkins-schema-diff-in-60-seconds.html
+- **CircleCI 60s page:** https://schemalens.tech/tools/circleci-schema-diff-in-60-seconds.html
+- **Bitbucket 60s page:** https://schemalens.tech/tools/bitbucket-schema-diff-in-60-seconds.html
+- **Azure DevOps 60s page:** https://schemalens.tech/tools/azure-schema-diff-in-60-seconds.html
 - **GitHub Action landing:** https://schemalens.tech/github-action.html
 - **CI/CD integrations hub:** https://schemalens.tech/ci-cd-integration.html
 

@@ -1594,6 +1594,36 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://schemalens.tech/tools/github-schema-diff-in-60-seconds.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/jenkins-schema-diff-in-60-seconds.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/circleci-schema-diff-in-60-seconds.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/bitbucket-schema-diff-in-60-seconds.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://schemalens.tech/tools/azure-schema-diff-in-60-seconds.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://schemalens.tech/azure-devops-schema-diff.html</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>

@@ -11,7 +11,11 @@ test.beforeEach(({ page }, testInfo) => {
   });
   page.on('console', (msg) => {
     if (msg.type() === 'error') {
-      page.errors.push(msg.text());
+      const text = msg.text();
+      // Ignore flaky external-analytics 403s (e.g. Vercel Insights) in local test runs.
+      if (/Failed to load resource.*\b403\b/.test(text)) return;
+      if (/vercel-insights/i.test(text)) return;
+      page.errors.push(text);
     }
   });
 });
@@ -156,6 +160,11 @@ const pages = [
   { path: '/tools/cicd-setup-wizard.html', name: 'CI/CD Setup Wizard' },
   { path: '/tools/add-schema-diff-to-any-repo.html', name: 'Add Schema Diff to Any Repo' },
   { path: '/tools/gitlab-schema-diff-in-60-seconds.html', name: 'GitLab Schema Diff in 60 Seconds' },
+  { path: '/tools/github-schema-diff-in-60-seconds.html', name: 'GitHub Actions Schema Diff in 60 Seconds' },
+  { path: '/tools/jenkins-schema-diff-in-60-seconds.html', name: 'Jenkins Schema Diff in 60 Seconds' },
+  { path: '/tools/circleci-schema-diff-in-60-seconds.html', name: 'CircleCI Schema Diff in 60 Seconds' },
+  { path: '/tools/bitbucket-schema-diff-in-60-seconds.html', name: 'Bitbucket Schema Diff in 60 Seconds' },
+  { path: '/tools/azure-schema-diff-in-60-seconds.html', name: 'Azure DevOps Schema Diff in 60 Seconds' },
   { path: '/tools/request-team-invoice.html', name: 'Request Team Invoice' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
@@ -270,6 +279,23 @@ test('GitLab 60-second page shows config and wizard CTA', async ({ page }) => {
   await expect(page.locator('a[href="cicd-setup-wizard.html?platform=gitlab"]').first()).toContainText('Generate');
   await expect(page.locator('.code-block')).toContainText('.gitlab-ci.yml');
 });
+
+const platform60sPages = [
+  { key: 'github', name: 'GitHub Actions', configText: '.github/workflows/schema-diff.yml', h1Text: 'GitHub repo' },
+  { key: 'jenkins', name: 'Jenkins', configText: 'Jenkinsfile', h1Text: 'Jenkins pipeline' },
+  { key: 'circleci', name: 'CircleCI', configText: '.circleci/config.yml', h1Text: 'CircleCI pipeline' },
+  { key: 'bitbucket', name: 'Bitbucket', configText: 'bitbucket-pipelines.yml', h1Text: 'Bitbucket repo' },
+  { key: 'azure', name: 'Azure DevOps', configText: 'azure-pipelines.yml', h1Text: 'Azure DevOps repo' },
+];
+
+for (const { key, name, configText, h1Text } of platform60sPages) {
+  test(`${name} 60-second page shows config and wizard CTA`, async ({ page }) => {
+    await page.goto(`${BASE_URL}/tools/${key}-schema-diff-in-60-seconds.html`);
+    await expect(page.locator('h1')).toContainText(h1Text);
+    await expect(page.locator(`a[href="cicd-setup-wizard.html?platform=${key}"]`).first()).toContainText('Generate');
+    await expect(page.locator('.code-block')).toContainText(configText);
+  });
+}
 
 // ───────────────────────────────────────────────
 // Team Checkout A/B Test

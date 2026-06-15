@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Schema Diff to Jenkins in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use Jenkinsfile that diffs your database schema on every PR. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:title" content="Add Schema Diff to Jenkins in 60 Seconds — SchemaLens">
+  <meta property="og:description" content="Generate a ready-to-use Jenkinsfile that diffs your database schema on every PR. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/jenkins-schema-diff-in-60-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/jenkins-schema-diff-in-60-seconds.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Jenkins Setup",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate Jenkins schema diff pipeline in 60 seconds, console reports, build descriptions, artifact archiving, breaking change detection, smart skip, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/tools/jenkins-schema-diff-in-60-seconds.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .platform-accent { color: #f0d04b; }
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; }
+    .timer-badge strong { color: var(--text); }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 620px; margin: 0 auto; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 28px 0; }
+    .cta-bar h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 28px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step h3 { font-size: 1rem; margin-bottom: 4px; }
+    .step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 28px 0; }
+    .preview-box h3 { font-size: 1rem; margin-bottom: 14px; }
+    .pr-comment { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../jenkins-schema-diff.html">Jenkins</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <div class="timer-badge">⏱️ <strong>60 seconds</strong> — no signup required</div>
+      <h1>Add schema diff to your <span class="platform-accent">Jenkins pipeline</span></h1>
+      <p>Generate a Jenkinsfile that compares your database schema on every branch build. Catches breaking changes before they become production incidents.</p>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 One config, zero friction</h2>
+      <p>Copy this into your repo as <code>Jenkinsfile</code> or let the wizard auto-detect your schema files.</p>
+      <pre class="code-block"><code>// Jenkinsfile
+// SchemaLens Schema Diff for Jenkins
+// Place this file as Jenkinsfile in your repository root.
+// Works with multibranch pipelines and PR-aware Jenkins setups.
+
+pipeline {
+    agent any
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: &#39;10&#39;))
+    }
+
+    environment {
+        SCHEMA_PATH        = &#39;db/schema.sql&#39;
+        DIALECT            = &#39;postgres&#39;
+        FAIL_ON_BREAKING   = &#39;false&#39;
+        SKIP_NO_SQL_CHANGE = &#39;false&#39;
+        POST_BUILD_COMMENT = &#39;false&#39;
+        FORMAT             = &#39;markdown&#39;
+    }
+
+    stages {
+        stage(&#39;Schema Diff&#39;) {
+            steps {
+                script {
+                    // Smart skip: check if any .sql files were modified
+                    if (env.SKIP_NO_SQL_CHANGE == &#39;true&#39;) {
+                        def target = env.CHANGE_TARGET ?: &#39;main&#39;
+                        def changed = sh(
+                            <span class="key">script</span>: &#39;git diff --name-only origin/&#39; + target + &#39;..HEAD 2&gt;/dev/null || true&#39;,
+                            <span class="key">returnStdout</span>: true
+                        ).trim()
+                        if (!changed.contains(&#39;.sql&#39;)) {
+                            echo &#39;[SchemaLens] No .sql files changed — skipping.&#39;
+                            currentBuild.description = &#39;Skipped — no SQL changes&#39;
+                            return
+                        }
+                    }
+
+                    // Ensure tools are available
+                    sh &#39;which jq &gt;/dev/null 2&gt;&amp;1 || (apt-get update -qq &amp;&amp; apt-get install -y -qq jq curl) || (apk add --no-cache jq curl) || true&#39;
+
+                    // Fetch base schema
+                    def target = env.CHANGE_TARGET ?: &#39;main&#39;
+                    sh &#39;&#39;&#39;
+                        git fetch origin &quot;&#39;&#39;&#39; + target + &#39;&#39;&#39;&quot; 2&gt;/dev/null || true
+                        git show &quot;origin/&#39;&#39;&#39; + target + &#39;&#39;&#39;:$SCHEMA_PATH&quot; &gt; /tmp/schema_base.sql 2&gt;/dev/null || echo &quot;-- No base schema&quot; &gt; /tmp/schema_base.sql
+                    &#39;&#39;&#39;
+
+                    // Call SchemaLens API with retries
+                    sh &#39;&#39;&#39;
+                        set -euo pipefail
+
+                        ENDPOINT=&quot;https://schemalens.tech/api/free-diff&quot;
+                        LICENSE_HEADER=&quot;&quot;
+                        if [ -n &quot;${SL_LICENSE_KEY:-}&quot; ]; then
+                            ENDPOINT=&quot;https://schemalens.tech/api/diff&quot;
+                            LICENSE_HEADER=&quot;-H \&quot;X-License-Key: $SL_LICENSE_KEY\&quot;&quot;
+                            echo &quot;[SchemaLens] Using Pro endpoint.&quot;
+                        fi
+
+                        BODY=$(jq -n \
+                            --arg schemaA &quot;$(cat /tmp/schema_base.sql)&quot; \
+                            --arg schemaB &quot;$(cat &quot;$SCHEMA_PATH&quot;)&quot; \
+                            --arg dialect &quot;$DIALECT&quot; \
+                            --arg format &quot;$FORMAT&quot; \
+                            &#39;{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}&#39;)
+
+                        HTTP_STATUS=0
+                        for attempt in 1 2 3; do
+                            HTTP_STATUS=$(curl -s -o /tmp/schemalens_response.json -w &quot;%{http_code}&quot; -X POST &quot;$ENDPOINT&quot; \
+                                -H &quot;Content-Type: application/json&quot; \
+                                ${LICENSE_HEADER} \
+                                -d &quot;$BODY&quot; || echo &quot;000&quot;)
+                            if [ &quot;$HTTP_STATUS&quot; = &quot;200&quot; ]; then break; fi
+                            echo &quot;[SchemaLens] Attempt $attempt failed (HTTP $HTTP_STATUS). Retrying...&quot;
+                            sleep $((attempt * 2))
+                        done
+
+                        if [ &quot;$HTTP_STATUS&quot; != &quot;200&quot; ]; then
+                            echo &quot;[SchemaLens] API failed after 3 attempts (status: $HTTP_STATUS)&quot;
+                            cat /tmp/schemalens_response.json 2&gt;/dev/null || true
+                            exit 1
+                        fi
+
+                        jq -r \&#39;.markdown // .migrationTeaser // &quot;No output.&quot;\&#39; /tmp/schemalens_response.json &gt; schema_diff_report.md
+                    &#39;&#39;&#39;
+
+                    // Print report to console
+                    sh &#39;cat schema_diff_report.md&#39;
+
+                    // Extract metrics for build description
+                    def bcount = sh(script: &#39;jq -r \&#39;(.summary.breakingChangeCount // (.breakingChanges | length) // 0)\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+                    def score  = sh(script: &#39;jq -r \&#39;.riskScore.score // 0\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+                    def label  = sh(script: &#39;jq -r \&#39;.riskScore.label // &quot;Unknown&quot;\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+                    def ta     = sh(script: &#39;jq -r \&#39;.summary.tablesAdded // 0\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+                    def tr     = sh(script: &#39;jq -r \&#39;.summary.tablesRemoved // 0\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+                    def tm     = sh(script: &#39;jq -r \&#39;.summary.tablesModified // 0\&#39; /tmp/schemalens_response.json&#39;, returnStdout: true).trim()
+
+                    currentBuild.description = &quot;Risk: ${label} (${score}/100) | +${ta} -${tr} ~${tm} | ${bcount} breaking&quot;
+
+                    // Post SCM comment if enabled
+                    if (env.POST_BUILD_COMMENT == &#39;true&#39;) {
+                        postScmComment()
+                    }
+
+                    // Fail on breaking changes
+                    if (env.FAIL_ON_BREAKING == &#39;true&#39; &amp;&amp; bcount != &#39;0&#39;) {
+                        error(&quot;[SchemaLens] ${bcount} breaking change(s) detected.&quot;)
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: &#39;schema_diff_report.md&#39;, allowEmptyArchive: true
+        }
+    }
+}
+
+// Post comment to GitHub PR or GitLab MR when tokens are available
+def postScmComment() {
+    def report = readFile(&#39;schema_diff_report.md&#39;).trim()
+    def body   = &quot;## SchemaLens Schema Diff Report\\n\\n&quot; + report.replace(&#39;&quot;&#39;, &#39;\\&quot;&#39;).replace(&#39;\n&#39;, &#39;\\n&#39;)
+    def json   = &#39;{&quot;body&quot;: &quot;&#39; + body + &#39;&quot;}&#39;
+
+    if (env.GITHUB_TOKEN &amp;&amp; env.CHANGE_ID) {
+        def repo = env.GIT_URL.replaceFirst(/^.*github\.com[/:]([^/]+\/[^/]+)\.git$/, &#39;$1&#39;)
+        sh &#39;&#39;&#39;
+            curl -s -X POST \
+                -H &quot;Authorization: token &#39;&#39;&#39; + env.GITHUB_TOKEN + &#39;&#39;&#39;&quot; \
+                -H &quot;Accept: application/vnd.github.v3+json&quot; \
+                &quot;https://api.github.com/repos/&#39;&#39;&#39; + repo + &#39;&#39;&#39;/issues/&#39;&#39;&#39; + env.CHANGE_ID + &#39;&#39;&#39;/comments&quot; \
+                -d \&#39;&#39;&#39;&#39; + json + &#39;&#39;&#39;\&#39; || echo &quot;[SchemaLens] Warning: failed to post GitHub comment.&quot;
+        &#39;&#39;&#39;
+    }
+
+    if (env.GITLAB_TOKEN &amp;&amp; env.CHANGE_ID) {
+        sh &#39;&#39;&#39;
+            curl -s -X POST \
+                -H &quot;PRIVATE-TOKEN: &#39;&#39;&#39; + env.GITLAB_TOKEN + &#39;&#39;&#39;&quot; \
+                -H &quot;Content-Type: application/json&quot; \
+                &quot;&#39;&#39;&#39; + env.CI_API_V4_URL + &#39;&#39;&#39;/projects/&#39;&#39;&#39; + env.CI_PROJECT_ID + &#39;&#39;&#39;/merge_requests/&#39;&#39;&#39; + env.CHANGE_ID + &#39;&#39;&#39;/notes&quot; \
+                -d \&#39;&#39;&#39;&#39; + json + &#39;&#39;&#39;\&#39; || echo &quot;[SchemaLens] Warning: failed to post GitLab comment.&quot;
+        &#39;&#39;&#39;
+    }
+}
+</code></pre>
+      <a href="cicd-setup-wizard.html?platform=jenkins" class="btn btn-primary btn-lg" data-analytics="jenkins_60s_open_wizard_click">⚡ Generate my Jenkins config</a>
+      <a href="../Jenkinsfile" class="btn btn-secondary" download data-analytics="jenkins_60s_download_click">Download Jenkinsfile</a>
+    </div>
+
+    <div class="preview-box">
+      <h3>📋 What your team sees in the build log</h3>
+      <div class="pr-comment">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <div style="width:28px; height:28px; border-radius:50%; background:#f0d04b; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.7rem; font-weight:700;">SL</div>
+          <div>
+            <strong>SchemaLens Bot</strong>
+            <div style="font-size:0.78rem; color:var(--text-muted);">commented 2 minutes ago</div>
+          </div>
+        </div>
+        <p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin:8px 0;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+        </table>
+        <pre style="background:#0f172a; padding:10px; border-radius:6px; overflow-x:auto; font-size:0.8rem; margin:8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why Jenkins teams use SchemaLens</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Block breaking changes before merge</h3>
+        <p>Dropped columns, removed indexes, and altered constraints fail the build before they reach production.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📋 Console reports</h3>
+        <p>Developers see the diff summary, risk score, and migration SQL in the Jenkins console output.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📦 Artifact archiving</h3>
+        <p>Every build archives a markdown report for compliance docs, audits, or offline review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Smart skip saves CI minutes</h3>
+        <p>The stage only runs when .sql files change, so unrelated builds don't waste executor time.</p>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Get it running in 3 steps</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Open the Jenkins wizard</h3>
+          <p>The wizard auto-detects SQL files from your public GitHub repo and selects the right dialect for your Jenkins pipeline.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Copy the generated config</h3>
+          <p>Paste it into <code>Jenkinsfile</code> at the root of your repo. Adjust <code>SCHEMA_PATH</code> if your schema lives elsewhere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Open your next pull request</h3>
+          <p>SchemaLens compares the target branch schema against your branch and posts the result as a build report.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Ready to add schema diff to your Jenkins repo?</h2>
+      <p>It takes 60 seconds and works with PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+      <a href="cicd-setup-wizard.html?platform=jenkins" class="btn btn-primary btn-lg" data-analytics="jenkins_60s_bottom_cta_click">⚡ Generate Jenkins config</a>
+      <a href="add-schema-diff-to-any-repo.html" class="btn btn-secondary" style="margin-left: 10px;" data-analytics="jenkins_60s_other_platforms_click">Other platforms</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 48px; text-align:center; color: var(--text-muted); font-size:0.85rem;">
+      <p><a href="../index.html">SchemaLens</a> — free schema diff for developers. <a href="../jenkins-schema-diff.html">Full Jenkins guide</a> · <a href="../ci-cd-integration.html">All CI/CD integrations</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Schema Diff to Bitbucket Pipelines in 60 Seconds — SchemaLens</title>
+  <meta name="description" content="Generate a ready-to-use bitbucket-pipelines.yml that diffs your database schema on every pull request. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:title" content="Add Schema Diff to Bitbucket Pipelines in 60 Seconds — SchemaLens">
+  <meta property="og:description" content="Generate a ready-to-use bitbucket-pipelines.yml that diffs your database schema on every pull request. Catches breaking changes in 60 seconds. No signup.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/tools/bitbucket-schema-diff-in-60-seconds.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://schemalens.tech/tools/bitbucket-schema-diff-in-60-seconds.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Bitbucket Pipelines Setup",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generate Bitbucket Pipelines schema diff pipeline in 60 seconds, PR comments, artifact reports, breaking change detection, smart skip, support for PostgreSQL MySQL SQLite SQL Server Oracle",
+    "url": "https://schemalens.tech/tools/bitbucket-schema-diff-in-60-seconds.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .platform-accent { color: #2684ff; }
+    .page-header { padding: 56px 0 16px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; }
+    .timer-badge strong { color: var(--text); }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 620px; margin: 0 auto; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; margin: 28px 0; }
+    .cta-bar h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 28px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .step h3 { font-size: 1rem; margin-bottom: 4px; }
+    .step p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 28px 0; }
+    .preview-box h3 { font-size: 1rem; margin-bottom: 14px; }
+    .pr-comment { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../bitbucket-schema-diff.html">Bitbucket Pipelines</a>
+      <a href="../ci-cd-integration.html">CI/CD</a>
+      <a href="../pricing.html">Pricing</a>
+    </nav>
+
+    <div class="page-header">
+      <div class="timer-badge">⏱️ <strong>60 seconds</strong> — no signup required</div>
+      <h1>Add schema diff to your <span class="platform-accent">Bitbucket repo</span></h1>
+      <p>Generate a bitbucket-pipelines.yml that compares your database schema on every pull request. Catches breaking changes before they become production incidents.</p>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 One config, zero friction</h2>
+      <p>Copy this into your repo as <code>bitbucket-pipelines.yml</code> or let the wizard auto-detect your schema files.</p>
+      <pre class="code-block"><code><span class="comment"># bitbucket-pipelines.yml</span>
+<span class="key">image</span>: node:20
+
+<span class="key">pipelines</span>:
+  <span class="key">pull-requests</span>:
+    &#39;**&#39;:
+      - step:
+          <span class="key">name</span>: Schema Diff
+          <span class="key">image</span>: node:20
+          <span class="key">variables</span>:
+            <span class="key">SCHEMA_PATH</span>: &quot;db/schema.sql&quot;
+            <span class="key">DIALECT</span>: &quot;postgres&quot;
+            <span class="key">POST_PR_COMMENT</span>: &quot;false&quot;
+            <span class="key">FAIL_ON_BREAKING</span>: &quot;false&quot;
+            <span class="key">SKIP_NO_SQL_CHANGE</span>: &quot;false&quot;
+          <span class="key">script</span>:
+            - apt-get update &amp;&amp; apt-get install -y jq curl
+            - |
+              if [ ! -f &quot;$SCHEMA_PATH&quot; ]; then
+                echo &quot;Schema file not found: $SCHEMA_PATH&quot;
+                exit 1
+              fi
+            - |
+              if [ &quot;$SKIP_NO_SQL_CHANGE&quot; = &quot;true&quot; ]; then
+                git fetch origin &quot;$BITBUCKET_PR_DESTINATION_BRANCH&quot;
+                if git diff --name-only &quot;origin/$BITBUCKET_PR_DESTINATION_BRANCH..$BITBUCKET_COMMIT&quot; | grep -q &#39;\.sql$&#39;; then
+                  echo &quot;Schema files changed in this PR — running diff.&quot;
+                else
+                  echo &quot;No .sql files changed in this PR — skipping schema diff to save CI minutes.&quot;
+                  exit 0
+                fi
+              fi
+            - |
+              git fetch origin &quot;$BITBUCKET_PR_DESTINATION_BRANCH&quot;
+              git show &quot;origin/$BITBUCKET_PR_DESTINATION_BRANCH:$SCHEMA_PATH&quot; &gt; /tmp/schema_base.sql 2&gt;/dev/null || echo &quot;-- No base schema&quot; &gt; /tmp/schema_base.sql
+            - |
+              ENDPOINT=&quot;https://schemalens.tech/api/free-diff&quot;
+              if [ -n &quot;$SL_LICENSE_KEY&quot; ]; then
+                ENDPOINT=&quot;https://schemalens.tech/api/diff&quot;
+                echo &quot;Using SchemaLens Pro endpoint.&quot;
+              else
+                echo &quot;Using SchemaLens free endpoint.&quot;
+              fi
+
+              BODY=$(jq -n \
+                --arg schemaA &quot;$(cat /tmp/schema_base.sql)&quot; \
+                --arg schemaB &quot;$(cat &quot;$SCHEMA_PATH&quot;)&quot; \
+                --arg dialect &quot;$DIALECT&quot; \
+                --arg format &quot;markdown&quot; \
+                &#39;{schemaA: $schemaA, schemaB: $schemaB, dialect: $dialect, format: $format}&#39;)
+
+              HTTP_STATUS=000
+              for attempt in 1 2 3; do
+                HTTP_STATUS=$(curl -s -o /tmp/response.json -w &quot;%{http_code}&quot; -X POST &quot;$ENDPOINT&quot; \
+                  -H &quot;Content-Type: application/json&quot; \
+                  ${SL_LICENSE_KEY:+-H &quot;X-License-Key: $SL_LICENSE_KEY&quot;} \
+                  -d &quot;$BODY&quot; || echo &quot;000&quot;)
+                if [ &quot;$HTTP_STATUS&quot; = &quot;200&quot; ]; then
+                  break
+                fi
+                echo &quot;SchemaLens API attempt $attempt failed (HTTP $HTTP_STATUS). Retrying...&quot;
+                sleep &quot;$((attempt * 2))&quot;
+              done
+
+              if [ &quot;$HTTP_STATUS&quot; != &quot;200&quot; ]; then
+                echo &quot;SchemaLens API failed after 3 attempts (last HTTP status: $HTTP_STATUS)&quot;
+                cat /tmp/response.json || true
+                exit 1
+              fi
+            - |
+              jq -r &#39;.markdown // .migrationTeaser // &quot;No report generated.&quot;&#39; /tmp/response.json &gt; schema_diff_report.md
+              cat schema_diff_report.md
+            - |
+              if [ &quot;$POST_PR_COMMENT&quot; = &quot;true&quot; ] &amp;&amp; [ -n &quot;$BITBUCKET_ACCESS_TOKEN&quot; ]; then
+                REPORT=$(cat schema_diff_report.md | sed &#39;s/&quot;/\\&quot;/g&#39; | sed &#39;:a;N;$!ba;s/\n/\\n/g&#39;)
+                curl -s -X POST \
+                  -H &quot;Authorization: Bearer $BITBUCKET_ACCESS_TOKEN&quot; \
+                  -H &quot;Content-Type: application/json&quot; \
+                  &quot;https://api.bitbucket.org/2.0/repositories/$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG/pullrequests/$BITBUCKET_PR_ID/comments&quot; \
+                  -d &quot;{\&quot;content\&quot;: {\&quot;raw\&quot;: \&quot;$REPORT\&quot;}}&quot; || echo &quot;Warning: failed to post PR comment.&quot;
+              elif [ &quot;$POST_PR_COMMENT&quot; = &quot;true&quot; ]; then
+                echo &quot;Warning: POST_PR_COMMENT is true but BITBUCKET_ACCESS_TOKEN is not set. Skipping PR comment.&quot;
+              fi
+            - |
+              BCOUNT=$(jq -r &#39;(.summary.breakingChangeCount // (.breakingChanges | length) // 0)&#39; /tmp/response.json)
+              if [ &quot;$FAIL_ON_BREAKING&quot; = &quot;true&quot; ] &amp;&amp; [ &quot;$BCOUNT&quot; != &quot;0&quot; ]; then
+                echo &quot;Breaking changes detected: $BCOUNT&quot;
+                exit 1
+              fi
+          <span class="key">artifacts</span>:
+            - schema_diff_report.md
+</code></pre>
+      <a href="cicd-setup-wizard.html?platform=bitbucket" class="btn btn-primary btn-lg" data-analytics="bitbucket_60s_open_wizard_click">⚡ Generate my Bitbucket Pipelines config</a>
+      <a href="../bitbucket-pipelines.yml" class="btn btn-secondary" download data-analytics="bitbucket_60s_download_click">Download bitbucket-pipelines.yml</a>
+    </div>
+
+    <div class="preview-box">
+      <h3>💬 What your team sees in every pull request</h3>
+      <div class="pr-comment">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <div style="width:28px; height:28px; border-radius:50%; background:#2684ff; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.7rem; font-weight:700;">SL</div>
+          <div>
+            <strong>SchemaLens Bot</strong>
+            <div style="font-size:0.78rem; color:var(--text-muted);">commented 2 minutes ago</div>
+          </div>
+        </div>
+        <p>🔍 <strong>SchemaLens Schema Diff Report</strong></p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin:8px 0;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟢 Tables Added</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🔴 Tables Removed</td><td style="padding:4px 0; text-align:right;">0</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">🟡 Tables Modified</td><td style="padding:4px 0; text-align:right;">2</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:4px 0;">⚠️ Breaking Changes</td><td style="padding:4px 0; text-align:right;">1</td></tr>
+          <tr><td style="padding:4px 0;">📊 Risk Score</td><td style="padding:4px 0; text-align:right;">42/100 (Medium)</td></tr>
+        </table>
+        <pre style="background:#0f172a; padding:10px; border-radius:6px; overflow-x:auto; font-size:0.8rem; margin:8px 0;"><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why Bitbucket Pipelines teams use SchemaLens</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ Block breaking changes before merge</h3>
+        <p>Dropped columns, removed indexes, and altered constraints fail the pipeline before they reach production.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 Native PR comments</h3>
+        <p>Reviewers see the diff summary directly in the Bitbucket pull request — no external dashboards needed.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📦 Artifact reports</h3>
+        <p>Every pipeline attaches a markdown report for compliance docs, audits, or offline review.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⏭️ Smart skip saves CI minutes</h3>
+        <p>The step only runs when .sql files change, so unrelated PRs don't waste pipeline minutes.</p>
+      </div>
+    </div>
+
+    <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Get it running in 3 steps</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Open the Bitbucket Pipelines wizard</h3>
+          <p>The wizard auto-detects SQL files from your public GitHub repo and selects the right dialect for your Bitbucket Pipelines pipeline.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Copy the generated config</h3>
+          <p>Paste it into <code>bitbucket-pipelines.yml</code> at the root of your repo. Adjust <code>SCHEMA_PATH</code> if your schema lives elsewhere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Open your next pull request</h3>
+          <p>SchemaLens compares the target branch schema against your branch and posts the result as a PR comment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <h2>Ready to add schema diff to your Bitbucket Pipelines repo?</h2>
+      <p>It takes 60 seconds and works with PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+      <a href="cicd-setup-wizard.html?platform=bitbucket" class="btn btn-primary btn-lg" data-analytics="bitbucket_60s_bottom_cta_click">⚡ Generate Bitbucket Pipelines config</a>
+      <a href="add-schema-diff-to-any-repo.html" class="btn btn-secondary" style="margin-left: 10px;" data-analytics="bitbucket_60s_other_platforms_click">Other platforms</a>
+    </div>
+
+    <footer style="border-top:1px solid var(--border); padding: 32px 0; margin-top: 48px; text-align:center; color: var(--text-muted); font-size:0.85rem;">
+      <p><a href="../index.html">SchemaLens</a> — free schema diff for developers. <a href="../bitbucket-schema-diff.html">Full Bitbucket Pipelines guide</a> · <a href="../ci-cd-integration.html">All CI/CD integrations</a></p>
+    </footer>
+  </div>
+</body>
+</html>
