@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Center — SchemaLens Security, Privacy & Open Source</title>
+  <meta name="description" content="SchemaLens is a privacy-first schema diff tool. Your SQL never leaves your browser. Learn about our security practices, open-source core, and verified marketplace presence.">
+  <link rel="canonical" href="https://schemalens.tech/trust.html">
+  <meta property="og:title" content="Trust Center — SchemaLens Security, Privacy & Open Source">
+  <meta property="og:description" content="Your SQL never leaves your browser. Verified open-source core, marketplace listings, and privacy-first architecture.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/trust.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Trust Center",
+    "description": "Security, privacy, and open-source information for SchemaLens, a browser-based SQL schema diff tool.",
+    "url": "https://schemalens.tech/trust.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "SchemaLens",
+      "url": "https://schemalens.tech",
+      "sameAs": [
+        "https://github.com/aimadetools/race-kimi",
+        "https://www.producthunt.com/posts/schemalens",
+        "https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde"
+      ]
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <script src="lib/github-stars.js" defer></script>
+  <style>
+    .trust-hero { text-align: center; padding: 80px 0 48px; }
+    .trust-hero h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin-bottom: 16px; }
+    .trust-hero p { color: var(--text-muted); max-width: 640px; margin: 0 auto; font-size: 1.1rem; }
+    .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 32px; }
+    .trust-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .trust-card h3 { font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .trust-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .trust-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(99,102,241,0.12); color: var(--primary); font-size: 1rem; }
+    .marketplace-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+    .marketplace-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; text-align: center; transition: border-color 0.2s, transform 0.2s; }
+    .marketplace-card:hover { border-color: var(--hover-border); transform: translateY(-2px); }
+    .marketplace-card svg { width: 32px; height: 32px; margin: 0 auto 12px; color: var(--primary); }
+    .marketplace-card h4 { font-size: 1rem; margin-bottom: 6px; }
+    .marketplace-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; }
+    .marketplace-card a { font-size: 0.85rem; font-weight: 600; }
+    .github-stars-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.85rem; color: var(--text); }
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+    .comparison-table th, .comparison-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .comparison-table th { color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    .comparison-table td { font-size: 0.95rem; }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .check { color: var(--success); font-weight: 700; }
+    .cross { color: var(--danger); font-weight: 700; }
+    .cta-section { text-align: center; padding: 64px 0; }
+    .cta-section h2 { margin-bottom: 16px; }
+    .cta-section p { color: var(--text-muted); max-width: 560px; margin: 0 auto 24px; }
+    .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">SL</span>
+      SchemaLens
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="tools.html">Tools</a>
+      <a href="open.html">Open Startup</a>
+      <a href="trust.html">Trust</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+      <a href="app.html" class="nav-cta">Open App</a>
+    </div>
+  </div>
+</nav>
+
+<header class="trust-hero">
+  <div class="container">
+    <div style="display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">🛡️ Trust Center</div>
+    <h1>Your schema data stays private.<br><span style="color:var(--primary);">Period.</span></h1>
+    <p>SchemaLens is built for engineering teams who review production schemas. We treat your SQL like the sensitive asset it is: parsed in your browser, never uploaded to our servers, and never logged.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:1rem;">Privacy by architecture, not by policy</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:720px;margin:0 auto 32px;">Most schema diff tools ask you to upload DDL, connect a database, or run a cloud service. SchemaLens does the opposite: the entire diff engine runs in your browser.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <h3><span class="trust-icon">🔒</span> No SQL upload</h3>
+        <p>Your <code>CREATE TABLE</code> statements are parsed by our open-source JavaScript engine inside your browser tab. They are never sent to SchemaLens servers.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🚫</span> No database connection</h3>
+        <p>We do not ask for database credentials or network access to your Postgres, MySQL, or SQL Server instances. Paste dumps, run diffs, done.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">💾</span> Optional local storage</h3>
+        <p>Saved diffs and history live in your browser's localStorage. Clear it anytime from your browser settings. No cloud account required for the free tier.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🧾</span> No telemetry by default</h3>
+        <p>We do not use third-party analytics cookies. Optional, privacy-friendly analytics events are sent only for product improvement and are not tied to personal identity.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🔍</span> Open-source core</h3>
+        <p>The diff engine and many micro-tools are released under the MIT license. Inspect the code, fork it, or self-host if your organization requires it.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🛡️</span> HTTPS only</h3>
+        <p>Every page and API endpoint is served over TLS. We use Vercel's edge network for static hosting and serverless functions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:1rem;">Verified marketplace presence</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:640px;margin:0 auto 32px;">SchemaLens is published on the platforms developers already trust. Click any badge to verify our listing.</p>
+    <div class="marketplace-grid">
+      <div class="marketplace-card">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+        <h4>GitHub</h4>
+        <p>Open-source core + GitHub Action</p>
+        <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener" class="github-stars-badge" data-github-stars>Star on GitHub</a>
+      </div>
+      <div class="marketplace-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <h4>Chrome Web Store</h4>
+        <p>Diff SQL files on GitHub.com</p>
+        <a href="https://chromewebstore.google.com/detail/jbigkphlkggibnnbfdlkhcjpedjchgde" target="_blank" rel="noopener">Install extension →</a>
+      </div>
+      <div class="marketplace-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.583 4.206c.865-.226 1.49-.324 2.198.109.653.398.99 1.089.927 1.841-.075.88-.7 1.553-1.502 1.88-.56.23-1.14.35-1.735.35-.36 0-.73-.043-1.09-.13-1.13-.27-2.02-1.02-2.39-2.09-.31-.91-.1-1.88.55-2.57.42-.45.99-.37 1.42-.34.18.01.45.05.62.01zm-8.72 8.96c.47-.45 1.08-.69 1.74-.69.66 0 1.28.24 1.75.69.47.46.73 1.07.73 1.73 0 .65-.26 1.27-.73 1.72-.47.46-1.09.69-1.75.69-.66 0-1.27-.23-1.74-.69-.47-.45-.73-1.07-.73-1.72 0-.66.26-1.27.73-1.73zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        <h4>VS Code Marketplace</h4>
+        <p>Diff schemas inside your editor</p>
+        <a href="https://marketplace.visualstudio.com/items?itemName=SchemaLens.schemalens" target="_blank" rel="noopener">Get extension →</a>
+      </div>
+      <div class="marketplace-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <h4>npm</h4>
+        <p>CLI + programmatic diff library</p>
+        <a href="https://www.npmjs.com/package/schemalens-diff-cli" target="_blank" rel="noopener">View package →</a>
+      </div>
+      <div class="marketplace-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <h4>GitHub Marketplace</h4>
+        <p>Official GitHub Action</p>
+        <a href="https://github.com/marketplace/actions/schemalens-schema-diff" target="_blank" rel="noopener">Add to workflow →</a>
+      </div>
+      <div class="marketplace-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21.5c-2.5 0-4.5-2-4.5-4.5V7c0-2.5 2-4.5 4.5-4.5h9c2.5 0 4.5 2 4.5 4.5v10c0 2.5-2 4.5-4.5 4.5h-9zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/></svg>
+        <h4>Product Hunt</h4>
+        <p>Launched May 2026</p>
+        <a href="https://www.producthunt.com/posts/schemalens" target="_blank" rel="noopener">View launch →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:1rem;">How we compare on privacy</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:640px;margin:0 auto 32px;">SchemaLens is designed for teams who cannot upload production DDL to third-party servers.</p>
+    <div style="overflow-x:auto;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>SchemaLens</th>
+            <th>Cloud schema diff tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Browser-side SQL parsing</td>
+            <td class="check">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>No account required for free tier</td>
+            <td class="check">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>No database credentials collected</td>
+            <td class="check">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Open-source core</td>
+            <td class="check">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>CI/CD integrations</td>
+            <td class="check">✓</td>
+            <td class="check">Sometimes</td>
+          </tr>
+          <tr>
+            <td>Team workspace & alerts</td>
+            <td class="check">Team plan</td>
+            <td class="check">Enterprise plans</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:1rem;">Open source & licenses</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:640px;margin:0 auto 32px;">We believe schema diff tooling should be inspectable. Our engine is MIT-licensed and available on GitHub.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <h3><span class="trust-icon">📜</span> MIT License</h3>
+        <p>The core diff engine and many utilities are released under the MIT License. You can use, modify, and distribute them freely.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🎓</span> Free programs</h3>
+        <p>We offer free Pro access for open-source maintainers and students. See <a href="open-source-license.html">Open Source Sponsorship</a> and <a href="student-license.html">Student License</a>.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🧾</span> 30-day refund</h3>
+        <p>Not satisfied with Pro or Team? Contact us within 30 days for a full refund, no questions asked.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🏗️</span> Built in public</h3>
+        <p>See our real metrics, progress, and setbacks on the <a href="open.html">Open Startup</a> page.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:1rem;">Security practices</h2>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <h3><span class="trust-icon">🔐</span> No server-side SQL processing</h3>
+        <p>Our free web diff and many micro-tools run entirely in your browser. The server only serves static HTML, CSS, and JS.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🌐</span> Serverless API endpoints</h3>
+        <p>Features that require a server (GitHub PR diff viewer, CI/CD webhooks, badge API) run as stateless Vercel serverless functions. They do not persist your schema data.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">📝</span> Transparent changelog</h3>
+        <p>Every significant change is tracked in our <a href="changelog.html">changelog</a>. We publish security-relevant fixes promptly.</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="trust-icon">🐛</span> Responsible disclosure</h3>
+        <p>Found a security issue? Email us at security@schemalens.tech or open a private GitHub security advisory.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" style="background:var(--surface);">
+  <div class="container">
+    <h2>Ready to diff without the trust trade-off?</h2>
+    <p>Try the free web diff, add SchemaLens to your CI/CD pipeline, or request a Team invoice for your organization.</p>
+    <div class="cta-row">
+      <a href="app.html?example=staging-vs-production" class="btn btn-primary btn-lg">▶ Try Sample Schema Diff</a>
+      <a href="github-action.html" class="btn btn-secondary btn-lg">Add GitHub Action — Free</a>
+      <a href="tools/request-team-invoice.html" class="btn btn-secondary btn-lg">Request Team Invoice</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" style="border-top:1px solid var(--border);padding:48px 0 24px;">
+  <div class="container">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;margin-bottom:32px;">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-mark">SL</span>SchemaLens</a>
+        <p style="color:var(--text-muted);font-size:0.9rem;max-width:280px;margin-top:8px;">Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:40px;">
+        <div>
+          <h4 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px;">Product</h4>
+          <ul style="list-style:none;font-size:0.9rem;color:var(--text-muted);display:grid;gap:8px;">
+            <li><a href="app.html">Web Diff</a></li>
+            <li><a href="github-action.html">GitHub Action</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="tools.html">Tools</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px;">Company</h4>
+          <ul style="list-style:none;font-size:0.9rem;color:var(--text-muted);display:grid;gap:8px;">
+            <li><a href="about.html">About</a></li>
+            <li><a href="open.html">Open Startup</a></li>
+            <li><a href="trust.html">Trust Center</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">© 2026 SchemaLens. Open-source core under MIT.</p>
+  </div>
+</footer>
+
+</body>
+</html>

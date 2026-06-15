@@ -92,8 +92,56 @@
 | 275 | Jun 14 | A/B test Pro value banner: 4 variants testing "Export & Share" vs "Save & Revisit" framing and above-tabs vs inside-visual placement. |
 | 276 | Jun 14 | Embedded Gumroad Buy Now overlay in Pro value banner and license modal so users can pay without leaving the app. |
 | 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
+| 277 | Jun 14 | 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
 | 278 | Jun 15 | Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample-schema row. sitemap: 272 URLs. Unit/e2e tests pass. |
 | 279 | Jun 15 | CI/CD Setup Wizard distribution assets — unified "Add schema diff to any repo in 60 seconds" landing page, GitLab-specific 60s page, directory-submission kit. Cross-linked from tools/ci-cd pages. sitemap: 274 URLs. |
+
+---
+
+## Day 280 — Trust & Conversion Hardening (June 15, 2026)
+
+### Focus
+Address the #3 reason from user-testing feedback (HELP-RESPONSES.md Issue #61): the trust gap. Remove unsupported social-proof claims, add verifiable marketplace badges, and build a dedicated Trust Center landing page.
+
+### What Was Done
+1. **Audited and removed fake/unsupported social proof**
+   - Replaced "Join 2,000+ developers" newsletter copy with honest value proposition.
+   - Replaced "thousands of developers" welcome-modal copy with privacy-first messaging.
+   - Scanned `index.html`, `app.html`, `pricing.html`, and other key pages for unsupported audience-size claims.
+
+2. **Built `trust.html` — SchemaLens Trust Center**
+   - Privacy-first, client-side-only architecture explanation.
+   - Security practices: no database connections, no SQL uploads to servers, localStorage opt-in.
+   - Verifiable marketplace badges: GitHub (live star count), Chrome Web Store, VS Code Marketplace, npm, Product Hunt, GitHub Marketplace.
+   - Open-source credentials and license links.
+   - CTAs to the free web diff, GitHub Action, and Team invoice form.
+
+3. **Added dynamic GitHub stars badge**
+   - `lib/github-stars.js` fetches the live star count from `api.github.com` and renders a badge.
+   - Embedded in `index.html` hero, `pricing.html`, and `github-action.html`.
+   - Gracefully degrades to a static "Star on GitHub" link if the API is rate-limited.
+
+4. **Updated `open.html` public metrics**
+   - Refreshed product/business numbers (tools count, blog count, days since launch, budget, MRR).
+   - Added link to the new Trust Center.
+
+5. **Indexed and tested**
+   - Added `trust.html` to `sitemap.xml`.
+   - Added page-load e2e test for the Trust Center.
+   - Verified no console errors on the new page.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 183 passed, 14 API tests skipped in static server mode
+- ✅ Trust Center loads without console errors
+- ✅ Fake social-proof claims removed from key pages
+- ✅ Sitemap updated
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- User testing identified trust as a top-3 blocker to purchase. Exaggerated claims destroy trust for a tool that handles production schemas.
+- Verifiable badges (GitHub stars, marketplace listings) prove the product is real and actively maintained.
+- A dedicated Trust Center gives security-conscious teams a page to share with their legal/infosec reviewers — a common enterprise sales friction point.
 
 ---
 

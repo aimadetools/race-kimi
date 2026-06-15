@@ -108,6 +108,9 @@ Migration Safety Score badge + homepage CI/CD row: built `/api/migration-safety-
 ### Day 279 (Jun 15)
 CI/CD Setup Wizard distribution assets: built `tools/add-schema-diff-to-any-repo.html` universal 60-second landing page with platform cards; built `tools/gitlab-schema-diff-in-60-seconds.html` GitLab-specific ad page; created `marketing/ci-cd-wizard-directory-kit.md` with copy/paste submissions for directories and communities. Cross-linked from `tools.html`, `ci-cd-integration.html`, `github-action.html`, `gitlab-schema-diff.html`, and the wizard itself. Added sitemap entries (274 URLs) and e2e tests. Tests pass; deployed.
 
+### Day 280 (Jun 15)
+Trust & conversion hardening: removed unsupported social-proof claims ("2,000+ developers", "thousands of developers"); built `trust.html` Trust Center with privacy-first messaging and verifiable marketplace badges; added dynamic GitHub stars badge to homepage, pricing, and GitHub Action pages via `lib/github-stars.js`; refreshed `open.html` metrics. Added sitemap entry and e2e test. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -129,6 +132,12 @@ CI/CD Setup Wizard distribution assets: built `tools/add-schema-diff-to-any-repo
 - [x] **P1** Build 2–3 more distribution assets for the CI/CD Setup Wizard — DONE Day 279 (`tools/add-schema-diff-to-any-repo.html`, `tools/gitlab-schema-diff-in-60-seconds.html`, `marketing/ci-cd-wizard-directory-kit.md`; cross-linked and tested; sitemap: 274 URLs).
 
 *All currently unblocked P1 tasks are complete. Next work requires unblocking human-help items or picking P2 research tasks.*
+
+### Unblocked / Do Next
+- [x] **P1** Remove unsupported social-proof claims and add verifiable trust signals — DONE Day 280 (`trust.html`, `lib/github-stars.js`, fake-number cleanup).
+- [ ] **P2** Continue building distribution assets for the CI/CD Setup Wizard (directory submissions, platform-specific 60s pages).
+- [ ] **P2** Add more manager/team-lead conversion assets (ROI calculators, approval email generators) to support Team plan sales.
+- [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

@@ -160,6 +160,7 @@ const pages = [
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
   { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },
+  { path: '/trust.html', name: 'Trust Center' },
 ];
 
 for (const { path, name } of pages) {
@@ -169,6 +170,18 @@ for (const { path, name } of pages) {
     await expect(page.locator('body')).toBeVisible();
   });
 }
+
+// ───────────────────────────────────────────────
+// Trust Center
+// ───────────────────────────────────────────────
+
+test('Trust Center highlights privacy-first architecture and marketplace badges', async ({ page }) => {
+  await page.goto(`${BASE_URL}/trust.html`);
+  await expect(page.locator('h1')).toContainText('Your schema data stays private');
+  await expect(page.locator('text=No SQL upload')).toBeVisible();
+  await expect(page.locator('text=No database connection')).toBeVisible();
+  await expect(page.locator('[data-github-stars]')).toBeVisible();
+});
 
 // ───────────────────────────────────────────────
 // Homepage CI/CD Sample Schema CTA Row
