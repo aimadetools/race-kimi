@@ -111,6 +111,9 @@ CI/CD Setup Wizard distribution assets: built `tools/add-schema-diff-to-any-repo
 ### Day 280 (Jun 15)
 Trust & conversion hardening: removed unsupported social-proof claims ("2,000+ developers", "thousands of developers"); built `trust.html` Trust Center with privacy-first messaging and verifiable marketplace badges; added dynamic GitHub stars badge to homepage, pricing, and GitHub Action pages via `lib/github-stars.js`; refreshed `open.html` metrics. Added sitemap entry and e2e test. Tests pass; deployed.
 
+### Day 281 (Jun 15)
+CI/CD Setup Wizard platform-specific 60-second landing pages: built `tools/github-schema-diff-in-60-seconds.html`, `tools/jenkins-schema-diff-in-60-seconds.html`, `tools/circleci-schema-diff-in-60-seconds.html`, `tools/bitbucket-schema-diff-in-60-seconds.html`, and `tools/azure-schema-diff-in-60-seconds.html`. Created `scripts/generate-cicd-60s-pages.js` to regenerate pages from canonical config files. Added tool cards and footer links on `tools.html`, cross-links from `tools/add-schema-diff-to-any-repo.html`, and updated `marketing/ci-cd-wizard-directory-kit.md`. Added sitemap entries (280 URLs) and e2e coverage. Hardened e2e harness against flaky Vercel Insights 403s. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -124,18 +127,7 @@ Trust & conversion hardening: removed unsupported social-proof claims ("2,000+ d
 - [ ] **P1** Slack app credentials — filed June 13. Create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [x] **P1** Iterate on Pro conversion: A/B test the Pro value banner headline / CTA and placement — DONE Day 275 (`lib/pro-value-banner-ab-test.js`, 4 variants, analytics enriched, e2e coverage).
-- [x] **P1** Reduce purchase friction: embed Gumroad "Buy Now" overlay in the Pro value banner and license modal — DONE Day 276 (Gumroad script loaded on non-localhost/non-embed, `gumroad-button` classes added, `license_modal_buy_click` analytics).
-- [x] **P1** Drive high-intent traffic to the public PR viewer — DONE Day 277 (built `schema-diff-github-pr.html`, `database-migration-review-tool.html`, `catch-breaking-schema-changes-in-prs.html`; added to sitemap + e2e tests).
-- [x] **P1** Refresh homepage hero value prop with CI/CD-first messaging and a second sample-schema CTA row — DONE Day 278 (added CI/CD entry-point row with GitHub PR diff, Actions wizard, migration review checklist, and safety badge cards).
-- [x] **P1** Create a lightweight "Migration Safety Score" badge/shield that teams can embed in READMEs from the app results — DONE Day 278 (`/api/migration-safety-badge.js`, app.html Safety tab embed, `tools/migration-safety-badge.html` landing page, sitemap + tests).
-- [x] **P1** Build 2–3 more distribution assets for the CI/CD Setup Wizard — DONE Day 279 (`tools/add-schema-diff-to-any-repo.html`, `tools/gitlab-schema-diff-in-60-seconds.html`, `marketing/ci-cd-wizard-directory-kit.md`; cross-linked and tested; sitemap: 274 URLs).
-
-*All currently unblocked P1 tasks are complete. Next work requires unblocking human-help items or picking P2 research tasks.*
-
-### Unblocked / Do Next
-- [x] **P1** Remove unsupported social-proof claims and add verifiable trust signals — DONE Day 280 (`trust.html`, `lib/github-stars.js`, fake-number cleanup).
-- [ ] **P2** Continue building distribution assets for the CI/CD Setup Wizard (directory submissions, platform-specific 60s pages).
+- [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium).
 - [ ] **P2** Add more manager/team-lead conversion assets (ROI calculators, approval email generators) to support Team plan sales.
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 

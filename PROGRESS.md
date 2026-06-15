@@ -92,9 +92,51 @@
 | 275 | Jun 14 | A/B test Pro value banner: 4 variants testing "Export & Share" vs "Save & Revisit" framing and above-tabs vs inside-visual placement. |
 | 276 | Jun 14 | Embedded Gumroad Buy Now overlay in Pro value banner and license modal so users can pay without leaving the app. |
 | 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
-| 277 | Jun 14 | 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
 | 278 | Jun 15 | Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample-schema row. sitemap: 272 URLs. Unit/e2e tests pass. |
 | 279 | Jun 15 | CI/CD Setup Wizard distribution assets — unified "Add schema diff to any repo in 60 seconds" landing page, GitLab-specific 60s page, directory-submission kit. Cross-linked from tools/ci-cd pages. sitemap: 274 URLs. |
+| 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
+
+---
+
+## Day 281 — Platform-Specific CI/CD 60-Second Landing Pages (June 15, 2026)
+
+### Focus
+Continue building distribution assets for the CI/CD Setup Wizard by giving every major platform its own "Add schema diff in 60 seconds" landing page. Make directory submissions and community posts more targeted than the universal entry point alone.
+
+### What Was Done
+1. **Built 5 platform-specific 60-second landing pages**
+   - `tools/github-schema-diff-in-60-seconds.html` — copy-paste GitHub Actions workflow using `aimadetools/race-kimi@v1`, PR comment preview, Check Run highlight.
+   - `tools/jenkins-schema-diff-in-60-seconds.html` — copy-paste Jenkinsfile with console reports, artifact archiving, and breaking-change gate.
+   - `tools/circleci-schema-diff-in-60-seconds.html` — copy-paste `.circleci/config.yml` with path filters, PR comments, and artifact storage.
+   - `tools/bitbucket-schema-diff-in-60-seconds.html` — copy-paste `bitbucket-pipelines.yml` with PR comments, smart skip, and breaking gate.
+   - `tools/azure-schema-diff-in-60-seconds.html` — copy-paste `azure-pipelines.yml` with PR thread comments, published artifacts, and path filters.
+
+2. **Created a reusable generator script**
+   - `scripts/generate-cicd-60s-pages.js` reads the canonical config files from the repo root and emits SEO-ready HTML with syntax-highlighted YAML, schema.org metadata, analytics tags, and platform-specific CTAs. Regenerating the pages when configs change is now one command.
+
+3. **Cross-linked the new assets**
+   - Added per-platform "60s guide" links to `tools/add-schema-diff-to-any-repo.html`.
+   - Added dedicated tool cards on `tools.html` for each platform page.
+   - Updated footer links on `tools.html`.
+   - Updated `marketing/ci-cd-wizard-directory-kit.md` with the new primary URLs.
+
+4. **Indexed and tested**
+   - Added all 5 pages to `sitemap.xml` (priority 0.85, weekly changefreq). sitemap: 280 URLs.
+   - Added page-load tests for each new page to `tests/e2e.spec.js`.
+   - Added parameterized assertions verifying each page shows the correct config filename and a wizard CTA.
+   - Hardened the e2e test harness to ignore flaky external-analytics 403s from Vercel Insights in local test runs.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 193 passed, 14 API tests skipped in static server mode
+- ✅ All 5 new platform 60-second pages load without console errors and pass config/wizard assertions
+- ✅ Sitemap updated to 280 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Platform-specific landing pages convert better in directories and community posts because the visitor immediately sees their own CI/CD tool.
+- Each page is a standalone distribution asset: GitHub Actions pages can be dropped into r/github, Jenkins pages into r/jenkinsci, CircleCI into dev.to comments, etc.
+- The generator script keeps the landing pages in sync with the canonical pipeline configs as they evolve.
 
 ---
 
