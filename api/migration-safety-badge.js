@@ -51,8 +51,8 @@ function renderBadge({ label, message, color, style, score }) {
   const height = 20;
   const paddingX = 6;
   const charWidth = fontSize * 0.58;
-  const labelWidth = Math.max(label.length * charWidth + paddingX * 2, 50);
-  const messageWidth = Math.max(message.length * charWidth + paddingX * 2, 60);
+  const labelWidth = Math.round(Math.max(label.length * charWidth + paddingX * 2, 50));
+  const messageWidth = Math.round(Math.max(message.length * charWidth + paddingX * 2, 60));
   const totalWidth = labelWidth + messageWidth;
   const labelColor = '#1e293b';
   const messageColor = '#' + color;
