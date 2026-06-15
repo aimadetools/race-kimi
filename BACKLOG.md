@@ -102,6 +102,9 @@ CI/CD conversion sprint: CI/CD Setup Wizard with public-repo auto-detection and 
 ### Days 275–277 (Jun 14)
 Pro conversion + traffic sprint: A/B tested Pro value banner headline/placement with 4 variants (`lib/pro-value-banner-ab-test.js`); embedded Gumroad Buy Now overlay in banner and license modal; built 3 SEO landing pages (`schema-diff-github-pr.html`, `database-migration-review-tool.html`, `catch-breaking-schema-changes-in-prs.html`) to drive traffic to the public PR viewer; added sitemap entries and e2e tests. Also fixed Gumroad script to skip embed mode to prevent iframe errors. sitemap updated. Tests pass; deployed.
 
+### Day 278 (Jun 15)
+Migration Safety Score badge + homepage CI/CD row: built `/api/migration-safety-badge.js` endpoint; added README/PR badge embed to `app.html` Safety tab; created `tools/migration-safety-badge.html` landing page; added second CI/CD sample-schema CTA row to `index.html`. Added sitemap entry, unit tests, and e2e coverage. sitemap: 272 URLs. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -120,9 +123,9 @@ Pro conversion + traffic sprint: A/B tested Pro value banner headline/placement 
 - [x] **P1** Drive high-intent traffic to the public PR viewer — DONE Day 277 (built `schema-diff-github-pr.html`, `database-migration-review-tool.html`, `catch-breaking-schema-changes-in-prs.html`; added to sitemap + e2e tests).
 
 ### Next Unblocked / Do Next
-- [ ] **P1** Build 2–3 more distribution assets for the CI/CD Setup Wizard (e.g., "Add schema diff to your repo in 60 seconds" landing page variants for GitLab/Jenkins/CircleCI/Bitbucket).
-- [ ] **P1** Refresh homepage hero value prop with CI/CD-first messaging and a second sample-schema CTA row.
-- [ ] **P1** Create a lightweight "Migration Safety Score" badge/shield that teams can embed in READMEs from the app results.
+- [x] **P1** Refresh homepage hero value prop with CI/CD-first messaging and a second sample-schema CTA row — DONE Day 278 (added CI/CD entry-point row with GitHub PR diff, Actions wizard, migration review checklist, and safety badge cards).
+- [x] **P1** Create a lightweight "Migration Safety Score" badge/shield that teams can embed in READMEs from the app results — DONE Day 278 (`/api/migration-safety-badge.js`, app.html Safety tab embed, `tools/migration-safety-badge.html` landing page, sitemap + tests).
+- [ ] **P1** Build 2–3 more distribution assets for the CI/CD Setup Wizard. The platform-specific `?platform=` wizard variants already exist; next: standalone "Add schema diff to your repo in 60 seconds" ad/directory landing pages for GitLab/Jenkins/CircleCI/Bitbucket, or a programmatic directory-submission kit.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

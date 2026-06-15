@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Safety Score Badge — Embed in READMEs & PRs</title>
+  <meta name="description" content="Generate a dynamic SVG badge that shows your database migration safety score. Embed it in GitHub READMEs, pull requests, and migration runbooks.">
+  <link rel="canonical" href="https://schemalens.tech/tools/migration-safety-badge.html">
+  <meta property="og:title" content="Migration Safety Score Badge — Embed in READMEs & PRs">
+  <meta property="og:description" content="Generate a dynamic SVG badge that shows your database migration safety score. Embed it in GitHub READMEs, pull requests, and migration runbooks.">
+  <meta property="og:url" content="https://schemalens.tech/tools/migration-safety-badge.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <style>
+    .badge-demo { background: var(--bg); border: 1px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; margin: 1.5rem 0; }
+    .badge-demo img { max-width: 100%; height: auto; }
+    .badge-input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; margin-bottom: 1rem; }
+    .badge-code { background: #0f172a; border-radius: 8px; padding: 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; overflow-x: auto; color: #e2e8f0; white-space: pre; }
+    .copy-btn { background: var(--primary); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    .copy-btn:hover { opacity: 0.9; }
+    .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
+    .example-card h4 { margin: 0 0 0.75rem; font-size: 0.95rem; color: var(--text-muted); }
+    .example-card img { margin-bottom: 0.5rem; }
+    .score-slider { width: 100%; margin: 0.5rem 0 1rem; }
+    .score-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); }
+    .score-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+  </style>
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+  <nav style="padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border);">
+    <a href="../index.html" style="font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none;">SchemaLens</a>
+    <div>
+      <a href="../tools.html" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Tools</a>
+      <a href="../app.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Try the App →</a>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width: 800px; margin: 0 auto; padding: 3rem 1rem;">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Migration Safety Score Badge</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+      Embed a live shield in your README or PR that tells everyone how safe your database migration is — at a glance.
+    </p>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">1. Set your score</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+        Use the slider or paste a SchemaLens diff URL. The badge color updates automatically.
+      </p>
+      <div class="score-label">
+        <span>0 — Risky</span>
+        <span class="score-value" id="scoreValue">85</span>
+        <span>100 — Safe</span>
+      </div>
+      <input type="range" id="scoreInput" class="score-slider" min="0" max="100" value="85" oninput="updateBadge()">
+      <input type="url" id="diffUrl" class="badge-input" placeholder="https://schemalens.tech/app.html#diff=... (optional — auto-extracts score)" oninput="extractScoreFromUrl()">
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">2. Preview</h2>
+      <div class="badge-demo" id="badgePreview">
+        <img id="badgeImg" src="../api/migration-safety-badge?score=85" alt="Migration Safety Score badge">
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">3. Copy to README</h2>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Markdown</label>
+        <div style="position: relative;">
+          <pre class="badge-code" id="badgeMarkdown">[![Migration Safety Score](https://schemalens.tech/api/migration-safety-badge?score=85)](https://schemalens.tech)</pre>
+          <button class="copy-btn" onclick="copyCode('badgeMarkdown')" style="position: absolute; top: 0.5rem; right: 0.5rem;">Copy</button>
+        </div>
+      </div>
+      <div>
+        <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">HTML</label>
+        <div style="position: relative;">
+          <pre class="badge-code" id="badgeHtml">&lt;a href="https://schemalens.tech"&gt;&lt;img src="https://schemalens.tech/api/migration-safety-badge?score=85" alt="Migration Safety Score"&gt;&lt;/a&gt;</pre>
+          <button class="copy-btn" onclick="copyCode('badgeHtml')" style="position: absolute; top: 0.5rem; right: 0.5rem;">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Example Badges</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>Safe migration</h4>
+          <img src="../api/migration-safety-badge?score=94" alt="Safe migration badge">
+          <code style="font-size: 0.8rem; color: var(--text-muted);">?score=94</code>
+        </div>
+        <div class="example-card">
+          <h4>Caution</h4>
+          <img src="../api/migration-safety-badge?score=72" alt="Caution migration badge">
+          <code style="font-size: 0.8rem; color: var(--text-muted);">?score=72</code>
+        </div>
+        <div class="example-card">
+          <h4>Risky</h4>
+          <img src="../api/migration-safety-badge?score=38" alt="Risky migration badge">
+          <code style="font-size: 0.8rem; color: var(--text-muted);">?score=38</code>
+        </div>
+        <div class="example-card">
+          <h4>Flat-square style</h4>
+          <img src="../api/migration-safety-badge?score=85&style=flat-square" alt="Flat square migration badge">
+          <code style="font-size: 0.8rem; color: var(--text-muted);">?score=85&style=flat-square</code>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">How It Works</h2>
+      <ul style="color: var(--text-muted); line-height: 1.8;">
+        <li>Run a schema diff in <a href="../app.html" style="color: var(--primary);">SchemaLens</a></li>
+        <li>We analyze breaking changes, warnings, and migration risk</li>
+        <li>Copy the badge from the "Safety" tab in the share modal</li>
+        <li>Paste the Markdown into your PR description or README</li>
+        <li>The badge updates when you change the <code>?score=</code> parameter</li>
+      </ul>
+    </section>
+
+    <section style="background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(34,211,238,0.08)); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Want automatic safety scores in every PR?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Add the SchemaLens GitHub Action to catch breaking schema changes and post the safety score as a PR comment.</p>
+      <a href="../github-action.html" style="display: inline-block; background: var(--primary); color: #fff; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-right: 10px;">GitHub Action →</a>
+      <a href="../tools/cicd-setup-wizard.html" style="display: inline-block; background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">CI/CD Setup Wizard →</a>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border);">
+    <p>Built by <a href="../index.html" style="color: var(--primary);">SchemaLens</a> — 80+ free developer tools for database migrations</p>
+  </footer>
+
+  <script>
+    function updateBadge() {
+      const score = document.getElementById('scoreInput').value;
+      document.getElementById('scoreValue').textContent = score;
+
+      const badgeUrl = 'https://schemalens.tech/api/migration-safety-badge?score=' + score;
+      const linkUrl = 'https://schemalens.tech/app.html?safety_score=' + score + '&ref=migration-safety-badge';
+
+      document.getElementById('badgeImg').src = badgeUrl;
+      document.getElementById('badgeMarkdown').textContent = '[![Migration Safety Score](' + badgeUrl + ')](' + linkUrl + ')';
+      document.getElementById('badgeHtml').textContent = '<a href="' + linkUrl + '"><img src="' + badgeUrl + '" alt="Migration Safety Score"></a>';
+    }
+
+    function extractScoreFromUrl() {
+      const url = document.getElementById('diffUrl').value.trim();
+      if (!url) return;
+      try {
+        const match = url.match(/[?&]safety_score=(\d+)/);
+        if (match) {
+          const score = Math.min(100, Math.max(0, parseInt(match[1], 10)));
+          document.getElementById('scoreInput').value = score;
+          updateBadge();
+        }
+      } catch (e) {}
+    }
+
+    function copyCode(id) {
+      const code = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = original, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

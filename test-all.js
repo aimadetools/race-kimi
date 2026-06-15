@@ -461,5 +461,59 @@ if (testWarning('warn-sqlite-limitation',
   w => w.some(x => x.title.includes('SQLite has limited') && x.severity === 'warning')
 )) ok++;
 
-console.log('\n' + ok + '/34 tests passed');
-process.exit(ok === 34 ? 0 : 1);
+// ───────────────────────────────────────────────
+// Migration Safety Score Badge API
+// ───────────────────────────────────────────────
+
+function testBadgeEndpoint() {
+  const badgeHandler = require('./api/migration-safety-badge.js');
+  let statusCode, headers, body;
+
+  const res = {
+    setHeader: (k, v) => { headers = headers || {}; headers[k] = v; },
+    status: (c) => { statusCode = c; return { send: (b) => { body = b; } }; },
+    send: (b) => { body = b; }
+  };
+
+  // Valid safe score
+  badgeHandler({ query: { score: '85' } }, res);
+  if (statusCode !== 200 || !body || !body.includes('85/100')) {
+    console.log('badge safe score: FAIL');
+    return false;
+  }
+  console.log('badge safe score: OK');
+
+  // Valid risky score
+  statusCode = null; body = null;
+  badgeHandler({ query: { score: '35' } }, res);
+  if (statusCode !== 200 || !body || !body.includes('35/100 risky')) {
+    console.log('badge risky score: FAIL');
+    return false;
+  }
+  console.log('badge risky score: OK');
+
+  // Invalid score falls back to error badge
+  statusCode = null; body = null;
+  badgeHandler({ query: { score: 'abc' } }, res);
+  if (statusCode !== 200 || !body || !body.includes('error')) {
+    console.log('badge invalid score: FAIL');
+    return false;
+  }
+  console.log('badge invalid score: OK');
+
+  // Flat-square style
+  statusCode = null; body = null;
+  badgeHandler({ query: { score: '92', style: 'flat-square' } }, res);
+  if (statusCode !== 200 || !body || !body.includes('shape-rendering="crispEdges"')) {
+    console.log('badge flat-square style: FAIL');
+    return false;
+  }
+  console.log('badge flat-square style: OK');
+
+  return true;
+}
+
+if (testBadgeEndpoint()) ok += 4;
+
+console.log('\n' + ok + '/38 tests passed');
+process.exit(ok === 38 ? 0 : 1);

@@ -2470,6 +2470,27 @@ DROP TABLE audit_logs;</code></pre>
             <span style="font-size:1.2rem;">🤖</span> Share Safety Score on Reddit
           </a>
         </div>
+        <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:14px;">
+          <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Embed a live Migration Safety Score badge in your README or PR description.</p>
+          <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;border:1px dashed var(--border);margin-bottom:12px;">
+            <img id="safetyBadgePreview" src="" alt="Migration Safety Score badge" style="max-width:100%;">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">Markdown</label>
+            <div style="position:relative;">
+              <pre id="safetyBadgeMd" style="margin:4px 0 0;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;font-size:0.8rem;color:#e2e8f0;overflow-x:auto;white-space:pre-wrap;word-break:break-all;"></pre>
+              <button onclick="copySafetyBadgeMd()" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.1);color:#e2e8f0;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Copy</button>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">HTML</label>
+            <div style="position:relative;">
+              <pre id="safetyBadgeHtml" style="margin:4px 0 0;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:10px;font-size:0.8rem;color:#e2e8f0;overflow-x:auto;white-space:pre-wrap;word-break:break-all;"></pre>
+              <button onclick="copySafetyBadgeHtml()" style="position:absolute;top:4px;right:4px;background:rgba(255,255,255,0.1);color:#e2e8f0;border:none;border-radius:4px;padding:3px 8px;font-size:0.7rem;cursor:pointer;">Copy</button>
+            </div>
+          </div>
+          <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Want a standalone badge generator? <a href="tools/migration-safety-badge.html" target="_blank">Open Migration Safety Badge tool →</a></p>
+        </div>
       </div>
       <div id="shareTabImage" class="share-tab-panel" style="display:none;">
         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Download a shareable image of your diff summary. Perfect for Twitter, LinkedIn, or Slack.</p>
@@ -8009,6 +8030,15 @@ function switchShareTab(tab) {
   document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
   document.getElementById('shareTabSafety').style.display = tab === 'safety' ? 'block' : 'none';
   document.getElementById('shareTabImage').style.display = tab === 'image' ? 'block' : 'none';
+
+  // Lazy-load the safety badge image only when the tab is opened to avoid
+  // unnecessary network requests and 404s in static test environments.
+  if (tab === 'safety' && window.lastSafetyBadgeUrl) {
+    const badgePreview = document.getElementById('safetyBadgePreview');
+    if (badgePreview && badgePreview.src !== window.lastSafetyBadgeUrl) {
+      badgePreview.src = window.lastSafetyBadgeUrl;
+    }
+  }
 }
 
 function copyShareLinkFromModal() {
@@ -8282,6 +8312,15 @@ function populateSafetyScoreTab(safetyScore, warningCounts, url) {
   document.getElementById('shareSafetyTwitter').href = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
   document.getElementById('shareSafetyLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
   document.getElementById('shareSafetyReddit').href = `https://www.reddit.com/submit?title=${encodedText}&url=${encodedUrl}`;
+
+  // Populate README badge embed
+  const badgeUrl = `https://schemalens.tech/api/migration-safety-badge?score=${safetyScore.score}&ref=migration-safety-badge`;
+  const badgeLinkUrl = encodedUrl || 'https://schemalens.tech';
+  window.lastSafetyBadgeUrl = badgeUrl;
+  const badgeMd = document.getElementById('safetyBadgeMd');
+  const badgeHtml = document.getElementById('safetyBadgeHtml');
+  if (badgeMd) badgeMd.textContent = `[![Migration Safety Score](${badgeUrl})](${badgeLinkUrl})`;
+  if (badgeHtml) badgeHtml.textContent = `<a href="${badgeLinkUrl}"><img src="${badgeUrl}" alt="Migration Safety Score"></a>`;
 }
 
 function generateSafetyScoreCard(safetyScore, warningCounts) {
@@ -8421,6 +8460,28 @@ function copyBadgeHtml() {
     setTimeout(() => btn.textContent = old, 2000);
   });
   if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('share_badge_html_copied');
+}
+
+function copySafetyBadgeMd() {
+  const text = document.getElementById('safetyBadgeMd').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('safety_badge_md_copied');
+}
+
+function copySafetyBadgeHtml() {
+  const text = document.getElementById('safetyBadgeHtml').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = old, 2000);
+  });
+  if (window.SchemaLensAnalytics) window.SchemaLensAnalytics.track('safety_badge_html_copied');
 }
 
 function copyTableLink(tableName) {

@@ -92,6 +92,55 @@
 | 275 | Jun 14 | A/B test Pro value banner: 4 variants testing "Export & Share" vs "Save & Revisit" framing and above-tabs vs inside-visual placement. |
 | 276 | Jun 14 | Embedded Gumroad Buy Now overlay in Pro value banner and license modal so users can pay without leaving the app. |
 | 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
+| 278 | Jun 15 | Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample-schema row. sitemap: 272 URLs. Unit/e2e tests pass. |
+
+---
+
+## Day 278 — Migration Safety Score Badge & Homepage CI/CD Row (June 15, 2026)
+
+### Focus
+Turn every schema diff into a shareable trust signal. Build a lightweight Migration Safety Score badge teams can embed in READMEs and PRs, and reinforce the CI/CD-first homepage with a second row of sample-schema entry points.
+
+### What Was Done
+1. **Built `/api/migration-safety-badge.js`**
+   - Returns an SVG shield badge from a `?score=0-100` parameter.
+   - Score semantics mirror `calculateSafetyScore` in `app.html`: safe / caution / review / risky.
+   - Supports `flat` (default) and `flat-square` styles.
+   - Badge links back to `app.html?safety_score=...` for traffic attribution.
+
+2. **Added badge embed to `app.html` Safety tab**
+   - New Markdown and HTML copy boxes in the share modal's Safety tab.
+   - Badge preview image lazy-loads only when the Safety tab is opened, avoiding unnecessary network requests and test-environment 404s.
+   - Tracks `safety_badge_md_copied` and `safety_badge_html_copied` analytics events.
+
+3. **Created `tools/migration-safety-badge.html` landing page**
+   - SEO targets: "migration safety score badge", "schema diff badge", "README migration badge".
+   - Interactive score slider with live badge preview and copyable Markdown/HTML.
+   - Example badges for safe, caution, risky, and flat-square styles.
+   - CTAs to GitHub Action and CI/CD Setup Wizard.
+
+4. **Refreshed `index.html` homepage**
+   - Added a second sample-schema CTA row below the existing 6-card grid.
+   - Four CI/CD entry-point cards: Diff a GitHub PR, Add to GitHub Actions, Review a Migration, Embed a Safety Badge.
+   - Each card uses existing `.sample-schema-card` styles and analytics.
+
+5. **Indexed and tested**
+   - Added `tools/migration-safety-badge.html` to `sitemap.xml` (priority 0.75).
+   - Added 4 unit tests for the badge API endpoint in `test-all.js`.
+   - Added e2e test asserting the homepage second sample-schema row renders.
+   - Fixed e2e selector ambiguity and lazy-loaded badge image to keep existing share-button test passing.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 177 passed, 14 API tests skipped in static server mode
+- ✅ New badge endpoint returns correct SVG for safe, risky, invalid, and flat-square inputs
+- ✅ Homepage second CI/CD row renders and e2e test passes
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Every diff becomes a potential backlink: teams embed the badge in READMEs, PRs, and runbooks.
+- Reinforces the CI/CD-first narrative on the homepage by surfacing GitHub PR diff, Actions workflow generation, and migration review as first-class entry points.
+- Gives users a lightweight, zero-friction way to brag about safe migrations or warn about risky ones — organic distribution without ads.
 
 ---
 
@@ -175,46 +224,4 @@ Reduce purchase friction by letting users buy Lifetime Pro directly inside the a
 
 ---
 
-## Day 275 — Pro Value Banner A/B Test (June 14, 2026)
-
-### Focus
-Iterate on the new Pro value preview banner by testing which headline framing and placement converts best. Test "Export & Share" vs "Save & Revisit" messaging and banner-above-tabs vs banner-inside-visual-panel placement.
-
-### What Was Done
-1. **Created `lib/pro-value-banner-ab-test.js`**
-   - Assigns users to one of four persistent variants:
-     - `control`: Export & Share framing, banner above results tabs.
-     - `v1`: Save & Revisit framing, banner above results tabs.
-     - `v2`: Export & Share framing, banner inside the Visual Diff tab.
-     - `v3`: Save & Revisit framing, banner inside the Visual Diff tab.
-   - Sends `pro_value_banner_ab_assigned` and `pro_value_banner_ab_page_view` analytics events.
-   - Exposes `getVariant`, `getCopy`, `isInsidePanel`, and `resetVariant` helpers.
-
-2. **Refactored `renderProValueBanner()` in `app.html`**
-   - Reads the A/B variant and renders the banner in the correct placement.
-   - For inside-panel variants, inserts the banner at the top of `#visualDiff`; for above-tabs variants, renders in `#proValueBanner`.
-   - Added `buildProValueBannerHTML()` and `removeProValueBannerFromVisual()` helpers for clean re-rendering and dismissal.
-   - Added `.pro-value-banner.inside-visual` CSS to remove border radius and margins when nested in the tab panel.
-
-3. **Enriched analytics events**
-   - `pro_value_banner_impression`, `pro_value_banner_click`, and `pro_value_banner_dismissed` now include `variant`, `placement`, `framing`, `paywall_variant`, and an updated `test` name.
-
-4. **Added Playwright e2e coverage**
-   - Replaced the single banner test with four variant-specific tests asserting correct headline, placement, and data attributes for control, v1, v2, and v3.
-
-### Validation
-- ✅ `node test-all.js`: 34/34 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 172 passed, 14 API tests skipped in static server mode
-- ✅ All 4 Pro value banner variant e2e tests pass
-- ✅ `app.html` loads without console errors for every variant
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- Provides measurable data on which Pro value message and placement resonates with free users.
-- Keeps the banner implementation clean and extensible for future variants.
-- Maintains the free-forever value proposition while optimizing conversion to Pro power features.
-
-
----
-
-*Days 1–274 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 14, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+*Days 1–275 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*

@@ -169,6 +169,18 @@ for (const { path, name } of pages) {
 }
 
 // ───────────────────────────────────────────────
+// Homepage CI/CD Sample Schema CTA Row
+// ───────────────────────────────────────────────
+
+test('Homepage shows second sample-schema row with CI/CD entry points', async ({ page }) => {
+  await page.goto(`${BASE_URL}/`);
+  await expect(page.locator('a.sample-schema-card[href="github-pr-schema-diff.html"]')).toContainText('Diff a GitHub PR');
+  await expect(page.locator('a.sample-schema-card[href="tools/cicd-setup-wizard.html?platform=github"]')).toContainText('Add to GitHub Actions');
+  await expect(page.locator('a.sample-schema-card[href="database-schema-review-checklist.html"]')).toContainText('Review a Migration');
+  await expect(page.locator('a.sample-schema-card[href="tools/migration-safety-badge.html"]')).toContainText('Embed a Safety Badge');
+});
+
+// ───────────────────────────────────────────────
 // GitHub PR Schema Diff Shareable URLs
 // ───────────────────────────────────────────────
 
