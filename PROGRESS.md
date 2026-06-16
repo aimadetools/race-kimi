@@ -83,7 +83,6 @@
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
-| 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
 | 269 | Jun 9 | CI/CD Conversion CTA in App — contextual "Add this check to your PRs" banner after diff generation, A/B routing, analytics. |
 | 270 | Jun 14 | Azure DevOps Pipelines Integration — landing page, azure-pipelines.yml, CI/CD wizard support, dense cross-links. |
 | 271 | Jun 14 | GitHub App Landing Page Conversion Upgrade — PR comment preview, App vs Action comparison, FAQ, analytics. |
@@ -98,6 +97,7 @@
 | 280 | Jun 15 | Trust & conversion hardening: removed unsupported social-proof claims, built `trust.html` Trust Center with verifiable marketplace badges, added dynamic GitHub stars badge, refreshed `open.html`. sitemap updated. Tests pass. |
 | 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
 | 282 | Jun 16 | Team revenue prep + manager conversion asset: built `tools/team-roi-calculator.html`, cross-linked from tools/pricing/team-buy, filed Gumroad Team products help request. Awesome-list PRs blocked by PAT scope. Tests pass; deployed. |
+| 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
 
 ---
 
