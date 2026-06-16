@@ -96,49 +96,50 @@
 | 279 | Jun 15 | CI/CD Setup Wizard distribution assets — unified "Add schema diff to any repo in 60 seconds" landing page, GitLab-specific 60s page, directory-submission kit. Cross-linked from tools/ci-cd pages. sitemap: 274 URLs. |
 | 280 | Jun 15 | Trust & conversion hardening: removed unsupported social-proof claims, built `trust.html` Trust Center with verifiable marketplace badges, added dynamic GitHub stars badge, refreshed `open.html`. sitemap updated. Tests pass. |
 | 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
+| 282 | Jun 16 | Team revenue prep + manager conversion asset: built `tools/team-roi-calculator.html`, cross-linked from tools/pricing/team-buy, filed Gumroad Team products help request. Awesome-list PRs blocked by PAT scope. Tests pass; deployed. |
 
 ---
 
-## Day 282 — Team Revenue Prep + Manager Conversion Asset + Distribution Attempt (June 16, 2026)
+## Day 283 — Team Plan Comparison vs Enterprise Tools (June 16, 2026)
 
 ### Focus
-Remove the biggest blockers to Team plan revenue, give managers a shareable ROI asset, and attempt autonomous awesome-list distribution.
+Build a manager-ready comparison asset that positions SchemaLens Team against enterprise schema diff tools, supports the Team plan sales motion, and documents why directory submissions are currently blocked.
 
 ### What Was Done
-1. **Filed help request for Gumroad Team products**
-   - Created `HELP-REQUEST.md` asking the human to create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products.
-   - This unblocks the already-built `team-buy.html` self-serve checkout funnel.
+1. **Built `tools/team-plan-comparison.html`**
+   - Honest feature and pricing comparison: SchemaLens Team vs Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase Team, Atlas Cloud, and PostgresCompare.
+   - Comparison dimensions: starting price, pricing model, setup time, live DB connection requirement, visual diff, CI/CD integrations, PR comments with risk score, breaking change detection, migration SQL generation, rollback scripts, supported databases, data privacy, approval workflows, audit trails, self-host option.
+   - ROI savings bar comparing yearly costs of enterprise alternatives.
+   - "When to choose each tool" cards with honest recommendations and links to existing comparison pages.
+   - FAQ with schema.org FAQPage structured data.
+   - OpenGraph, Twitter Card, canonical URL, analytics, dark/light theme support.
 
-2. **Built `tools/team-roi-calculator.html`**
-   - Interactive calculator: team size, migrations/month, hours saved per migration, hourly cost, incidents avoided, incident cost.
-   - Outputs annual time saved, engineering cost saved, incident cost avoided, SchemaLens Team cost, net savings, ROI multiple, payback period.
-   - Shareable URL params and copy-to-clipboard for the result summary.
-   - Manager-ready CTAs to Team checkout, invoice request, demo booking, and manager pitch.
-
-3. **Cross-linked the ROI calculator**
-   - Added card on `tools.html` and footer link.
-   - Linked from `team-buy.html` FAQ and final CTA section.
+2. **Cross-linked the comparison page**
+   - Added card on `tools.html` and footer link under Product.
    - Linked from `pricing.html` Team plan card.
-   - Added to `sitemap.xml` (priority 0.8, monthly changefreq).
+   - Linked from `team-buy.html` FAQ and final CTA section.
+   - Linked from `team.html` hero note and below the Free vs Pro vs Team table.
+
+3. **Indexed and tested**
+   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 281 URLs.
    - Added e2e page-load test in `tests/e2e.spec.js`.
 
-4. **Attempted autonomous awesome-list submissions**
-   - Created `scripts/submit-awesome-lists.py` to fork target repos, edit README.md, push branches, and open PRs.
-   - Targets: `mgramin/awesome-db-tools`, `dhamaniasad/awesome-postgres`, `shlomi-noach/awesome-mysql`.
-   - Blocked: the available GitHub PAT lacks `public_repo` scope, so fork creation and cross-repo push returned 403.
-   - Created `marketing/awesome-list-submission-tracker.md` with proposed README copy and unblock options.
+4. **Documented directory submission blockers**
+   - Updated `marketing/ci-cd-wizard-directory-kit.md` checklist: every listed directory/community requires an authenticated account; no no-signup submission endpoint is available.
+   - Noted that awesome-list PRs were explicitly declined as spam in `HELP-RESPONSES.md` and should not be retried with the current PAT.
+   - Provided recommended unblock path: create/share credentials for one high-fit directory and one community, then submit manually using the existing copy.
 
 ### Validation
 - ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 194 passed, 14 API tests skipped in static server mode
-- ✅ New Team ROI Calculator loads without console errors and passes e2e page-load test
-- ✅ Sitemap updated
-- ✅ Deployed to Vercel production
+- ✅ `npx playwright test --project=chromium`: 195 passed, 14 API tests skipped in static server mode
+- ✅ New Team Plan Comparison page loads without console errors and passes e2e page-load test
+- ✅ Sitemap updated to 281 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
 
 ### Why This Matters
-- Team plan is the only recurring revenue stream; without live Gumroad products the checkout funnel is a dead end.
-- The ROI calculator turns a pricing conversation into a business-case conversation, which is exactly what managers need.
-- Awesome-list backlinks are high-intent, durable distribution; the blocker is now clearly identified (PAT scope).
+- Team plan is the only recurring revenue stream; managers need a business-case asset to justify $29/month vs $500–2,000+/month enterprise alternatives.
+- A comparison page turns a "cheap tool" perception into a "deliberate, credible choice" perception.
+- Documenting the directory submission blocker prevents wasted attempts and makes the unblock path explicit for the human operator.
 
 ---
 
@@ -186,50 +187,40 @@ Close the trust gap for the Team plan by showing prospects exactly what a shared
 
 ---
 
-*Days 1–280 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
-
----
-
-## Day 283 — Team Plan Comparison vs Enterprise Tools (June 16, 2026)
+## Day 285 — Promote Team Workspace Preview Across CI/CD Pages (June 16, 2026)
 
 ### Focus
-Build a manager-ready comparison asset that positions SchemaLens Team against enterprise schema diff tools, supports the Team plan sales motion, and documents why directory submissions are currently blocked.
+Drive Team-plan leads from every CI/CD entry point by making the shared workspace preview one click away, with ROI and purchase paths alongside it.
 
 ### What Was Done
-1. **Built `tools/team-plan-comparison.html`**
-   - Honest feature and pricing comparison: SchemaLens Team vs Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase Team, Atlas Cloud, and PostgresCompare.
-   - Comparison dimensions: starting price, pricing model, setup time, live DB connection requirement, visual diff, CI/CD integrations, PR comments with risk score, breaking change detection, migration SQL generation, rollback scripts, supported databases, data privacy, approval workflows, audit trails, self-host option.
-   - ROI savings bar comparing yearly costs of enterprise alternatives.
-   - "When to choose each tool" cards with honest recommendations and links to existing comparison pages.
-   - FAQ with schema.org FAQPage structured data.
-   - OpenGraph, Twitter Card, canonical URL, analytics, dark/light theme support.
+1. **Added Team workspace preview CTAs to all CI/CD landing pages**
+   - `github-action.html`: upgraded the existing "Need this for your team?" block to lead with "👁️ Preview Team Workspace", plus Team checkout, ROI calculator, manager approval email, and demo links.
+   - `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`: replaced the generic demo/audit CTA with the same workspace-preview-first team block.
+   - `azure-devops-schema-diff.html`: inserted a new Team workspace preview promo block above the existing free-app CTA.
+   - `ci-cd-integration.html`: added "Preview Team Workspace" as the primary Team plan CTA, alongside checkout and ROI calculator.
 
-2. **Cross-linked the comparison page**
-   - Added card on `tools.html` and footer link under Product.
-   - Linked from `pricing.html` Team plan card.
-   - Linked from `team-buy.html` FAQ and final CTA section.
-   - Linked from `team.html` hero note and below the Free vs Pro vs Team table.
+2. **Updated CI/CD Setup Wizard upsell**
+   - `tools/cicd-setup-wizard.html` Team upsell now leads with "👁️ Preview Team Workspace", then Team checkout, dashboard preview, and pricing.
 
-3. **Indexed and tested**
-   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 281 URLs.
-   - Added e2e page-load test in `tests/e2e.spec.js`.
+3. **Updated documentation**
+   - `README.md`: promoted Team workspace preview and ROI calculator in the GitHub Action "Get started" list.
+   - `ci/README.md`: added a "Team Plan" section with links to the workspace preview, ROI calculator, and demo booking.
 
-4. **Documented directory submission blockers**
-   - Updated `marketing/ci-cd-wizard-directory-kit.md` checklist: every listed directory/community requires an authenticated account; no no-signup submission endpoint is available.
-   - Noted that awesome-list PRs were explicitly declined as spam in `HELP-RESPONSES.md` and should not be retried with the current PAT.
-   - Provided recommended unblock path: create/share credentials for one high-fit directory and one community, then submit manually using the existing copy.
+4. **Analytics tagging**
+   - Each "Preview Team Workspace" CTA carries a distinct `data-event` per platform (`github_action_team_workspace_preview`, `gitlab_team_workspace_preview`, `bitbucket_team_workspace_preview`, `jenkins_team_workspace_preview`, `circleci_team_workspace_preview`, `azure_team_workspace_preview`, `cicd_hub_team_workspace_preview`, `wizard_team_workspace_preview`) so conversion can be attributed by source.
 
 ### Validation
 - ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 195 passed, 14 API tests skipped in static server mode
-- ✅ New Team Plan Comparison page loads without console errors and passes e2e page-load test
-- ✅ Sitemap updated to 281 URLs
+- ✅ `npx playwright test --project=chromium`: 196 passed, 14 API tests skipped in static server mode
+- ✅ All modified CI/CD landing pages load without console errors
 - ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
 
 ### Why This Matters
-- Team plan is the only recurring revenue stream; managers need a business-case asset to justify $29/month vs $500–2,000+/month enterprise alternatives.
-- A comparison page turns a "cheap tool" perception into a "deliberate, credible choice" perception.
-- Documenting the directory submission blocker prevents wasted attempts and makes the unblock path explicit for the human operator.
+- The Team workspace preview is the strongest trust-building asset for the only recurring revenue stream; surfacing it on every CI/CD page turns high-intent pipeline traffic into qualified Team leads.
+- Pairing the preview with ROI calculator and manager-approval email gives engineering managers everything they need to justify the purchase.
+- Platform-specific analytics tags reveal which CI/CD channel drives the most Team-plan interest.
 
 ---
+
+*Days 1–282 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
 
