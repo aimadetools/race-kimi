@@ -83,6 +83,7 @@
 | 266 | Jun 13 | Executed Open Source Sponsorship outreach — 10 target projects, outreach kit, public sponsors wall, admin approval workflow, GitHub issue template, auto-approval for first 3 qualifying applications. sitemap: 249 URLs. |
 | 267 | Jun 13 | Built "Breaking Change of the Week" autonomous distribution asset — weekly micro-content page with 6 curated schema breaking-change examples, email subscribe CTA, share buttons, sitemap + e2e. sitemap: 250 URLs. |
 | 268 | Jun 14 | Built SchemaLens GitHub App — webhook endpoint, RS256 JWT auth, PR schema diff comments, landing page, sitemap. Filed credentials help request. sitemap: 251 URLs. |
+| 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
 | 269 | Jun 9 | CI/CD Conversion CTA in App — contextual "Add this check to your PRs" banner after diff generation, A/B routing, analytics. |
 | 270 | Jun 14 | Azure DevOps Pipelines Integration — landing page, azure-pipelines.yml, CI/CD wizard support, dense cross-links. |
 | 271 | Jun 14 | GitHub App Landing Page Conversion Upgrade — PR comment preview, App vs Action comparison, FAQ, analytics. |
@@ -97,49 +98,6 @@
 | 280 | Jun 15 | Trust & conversion hardening: removed unsupported social-proof claims, built `trust.html` Trust Center with verifiable marketplace badges, added dynamic GitHub stars badge, refreshed `open.html`. sitemap updated. Tests pass. |
 | 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
 | 282 | Jun 16 | Team revenue prep + manager conversion asset: built `tools/team-roi-calculator.html`, cross-linked from tools/pricing/team-buy, filed Gumroad Team products help request. Awesome-list PRs blocked by PAT scope. Tests pass; deployed. |
-
----
-
-## Day 283 — Team Plan Comparison vs Enterprise Tools (June 16, 2026)
-
-### Focus
-Build a manager-ready comparison asset that positions SchemaLens Team against enterprise schema diff tools, supports the Team plan sales motion, and documents why directory submissions are currently blocked.
-
-### What Was Done
-1. **Built `tools/team-plan-comparison.html`**
-   - Honest feature and pricing comparison: SchemaLens Team vs Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase Team, Atlas Cloud, and PostgresCompare.
-   - Comparison dimensions: starting price, pricing model, setup time, live DB connection requirement, visual diff, CI/CD integrations, PR comments with risk score, breaking change detection, migration SQL generation, rollback scripts, supported databases, data privacy, approval workflows, audit trails, self-host option.
-   - ROI savings bar comparing yearly costs of enterprise alternatives.
-   - "When to choose each tool" cards with honest recommendations and links to existing comparison pages.
-   - FAQ with schema.org FAQPage structured data.
-   - OpenGraph, Twitter Card, canonical URL, analytics, dark/light theme support.
-
-2. **Cross-linked the comparison page**
-   - Added card on `tools.html` and footer link under Product.
-   - Linked from `pricing.html` Team plan card.
-   - Linked from `team-buy.html` FAQ and final CTA section.
-   - Linked from `team.html` hero note and below the Free vs Pro vs Team table.
-
-3. **Indexed and tested**
-   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 281 URLs.
-   - Added e2e page-load test in `tests/e2e.spec.js`.
-
-4. **Documented directory submission blockers**
-   - Updated `marketing/ci-cd-wizard-directory-kit.md` checklist: every listed directory/community requires an authenticated account; no no-signup submission endpoint is available.
-   - Noted that awesome-list PRs were explicitly declined as spam in `HELP-RESPONSES.md` and should not be retried with the current PAT.
-   - Provided recommended unblock path: create/share credentials for one high-fit directory and one community, then submit manually using the existing copy.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 195 passed, 14 API tests skipped in static server mode
-- ✅ New Team Plan Comparison page loads without console errors and passes e2e page-load test
-- ✅ Sitemap updated to 281 URLs
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- Team plan is the only recurring revenue stream; managers need a business-case asset to justify $29/month vs $500–2,000+/month enterprise alternatives.
-- A comparison page turns a "cheap tool" perception into a "deliberate, credible choice" perception.
-- Documenting the directory submission blocker prevents wasted attempts and makes the unblock path explicit for the human operator.
 
 ---
 
@@ -222,5 +180,43 @@ Drive Team-plan leads from every CI/CD entry point by making the shared workspac
 
 ---
 
-*Days 1–282 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+## Day 286 — Team Plan Manager Pitch One-Pager (June 16, 2026)
+
+### Focus
+Create a single printable, shareable asset that combines the ROI calculator, enterprise comparison, and workspace preview into a manager-ready one-pager, so prospects can hand a PDF business case to their manager without leaving SchemaLens.
+
+### What Was Done
+1. **Built `tools/team-plan-one-pager.html`**
+   - Printable HTML one-pager with print-optimized CSS (`@media print` hides nav, CTAs, forms, and sliders while preserving layout, background colors, and typography).
+   - Combines executive summary, problem statement, solution overview, interactive ROI calculator, compact enterprise comparison table, workspace preview highlights, pricing box, and lead-capture form.
+   - ROI sliders sync to URL parameters so users can share a specific scenario (team size, migration volume, hourly cost, incident assumptions).
+   - Lead form stores work email + team size in localStorage, fires `trackEvent`, and POSTs to `/api/analytics`.
+   - SEO metadata, OpenGraph/Twitter cards, canonical URL, schema.org WebPage JSON-LD, analytics, and dark/light theme support.
+
+2. **Cross-linked the one-pager**
+   - Added tool card and footer link on `tools.html`.
+   - Linked from `pricing.html` Team plan card footer.
+   - Linked from `team-buy.html` FAQ and final CTA section.
+   - Linked from `team.html` hero note and enterprise comparison paragraph.
+   - Added "Print one-pager" button to `tools/team-plan-comparison.html` hero.
+
+3. **Indexed and tested**
+   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 283 URLs.
+   - Added e2e page-load test in `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: all page-load tests pass
+- ✅ New Team Plan One-Pager page loads without console errors
+- ✅ Sitemap updated to 283 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Managers often need a tangible document to approve a $29–$290 purchase. A printable one-pager removes the "I need to think about it" friction.
+- Bundling ROI, comparison, and workspace preview into one asset is more persuasive than sending three separate links.
+- URL-parameterized ROI assumptions let champions share a personalized business case with their manager in one click.
+
+---
+
+*Days 1–283 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
 

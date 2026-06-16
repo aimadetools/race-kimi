@@ -126,6 +126,9 @@ Built `team/workspace-preview.html` interactive Team workspace preview with dash
 ### Day 285 (Jun 16)
 Promoted `team/workspace-preview.html` across all CI/CD landing pages and docs. Added "👁️ Preview Team Workspace" CTAs to GitHub Action, GitLab CI, Bitbucket, Jenkins, CircleCI, Azure DevOps, and CI/CD hub pages, plus the CI/CD Setup Wizard upsell. Linked ROI calculator and manager approval email from each team block. Added Team Plan section to `ci/README.md` and promoted preview/ROI links in `README.md`. Added platform-specific analytics `data-event` tags. Tests pass; deployed.
 
+### Day 286 (Jun 16)
+Built `tools/team-plan-one-pager.html` — printable manager pitch combining ROI calculator, enterprise comparison table, and workspace preview highlights. Print-optimized CSS, URL-parameterized assumptions, lead capture form. Cross-linked from tools/pricing/team-buy/team/comparison pages. Added sitemap entry (283 URLs) and e2e test. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -141,7 +144,7 @@ Promoted `team/workspace-preview.html` across all CI/CD landing pages and docs. 
 
 ### Unblocked / Do Next
 - [x] **P1** Promote `team/workspace-preview.html` across CI/CD landing pages (`github-action.html`, `gitlab-schema-diff.html`, `ci-cd-integration.html`, etc.) and the GitHub Action README to drive Team-plan leads. — **Done Day 285.**
-- [ ] **P1** Add a printable Team Plan one-pager / manager pitch PDF generator that combines ROI calculator, comparison table, and workspace preview into a single shareable asset.
+- [x] **P1** Add a printable Team Plan one-pager / manager pitch PDF generator that combines ROI calculator, comparison table, and workspace preview into a single shareable asset. — **Done Day 286.**
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.

@@ -169,6 +169,7 @@ const pages = [
   { path: '/tools/team-roi-calculator.html', name: 'Team ROI Calculator' },
   { path: '/tools/team-plan-comparison.html', name: 'Team Plan Comparison' },
   { path: '/team/workspace-preview.html', name: 'Team Workspace Preview' },
+  { path: '/tools/team-plan-one-pager.html', name: 'Team Plan One-Pager' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
   { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },
