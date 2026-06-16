@@ -175,6 +175,7 @@ const pages = [
   { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },
   { path: '/blog/github-action-free-full-migration-sql.html', name: 'GitHub Action Free Forever Blog Post' },
   { path: '/trust.html', name: 'Trust Center' },
+  { path: '/schema-diff-newsletter.html', name: 'Newsletter Ad Landing Page' },
 ];
 
 for (const { path, name } of pages) {

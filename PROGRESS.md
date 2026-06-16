@@ -210,3 +210,41 @@ Increase free-to-Team conversion by surfacing the Team value proposition earlier
 - Users feel schema drift risk most acutely right after seeing a diff. A contextual Team CTA capitalizes on that moment.
 - Breaking-change-aware copy makes the upsell feel like a solution to the exact problem the user just saw.
 - Linking to the interactive workspace preview reduces the trust gap before asking for a purchase.
+---
+## Day 292 — Newsletter Ad Landing Page + UTM Tracking for Database/CI Audiences (June 16, 2026)
+
+### Focus
+Execute the highest-priority unblocked BACKLOG task: build a dedicated landing page and UTM tracking infrastructure for a low-cost newsletter ad test targeting database and CI/CD audiences.
+
+### What Was Done
+1. **Built `schema-diff-newsletter.html`**
+   - Dedicated ad landing page with a single message: "Stop shipping breaking schema changes."
+   - Highlights free web diff, breaking-change detection, migration SQL generation, and the free GitHub Action.
+   - Multiple CTAs to `app.html`, `github-action.html`, and the CI/CD Setup Wizard.
+   - FAQ section tailored to database teams evaluating schema diff tools.
+   - Includes Schema.org SoftwareApplication JSON-LD and OpenGraph tags.
+
+2. **Added UTM tracking infrastructure**
+   - Enhanced `lib/analytics-client.js` to detect `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, and `utm_term` from inbound URLs and emit a `utm_visit` analytics event.
+   - Added `utm_visit` to the allowed event types in `api/analytics.js`.
+   - Created reusable `lib/utm-preserve.js` that appends existing UTM params to internal links, keeping attribution as users navigate the site.
+
+3. **Indexed and tested the new page**
+   - Added `schema-diff-newsletter.html` to `sitemap.xml`.
+   - Added an e2e page-load test in `tests/e2e.spec.js`.
+
+4. **Prepared ad-buy help request**
+   - Landing page is ready to receive traffic with the URL pattern:
+     `https://schemalens.tech/schema-diff-newsletter.html?utm_source=<newsletter>&utm_medium=newsletter&utm_campaign=db_ci_sponsor_202606`
+   - Filed a human help request to purchase one low-cost ($10–$29) newsletter slot targeting database/CI audiences.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 200 passed, 14 API tests skipped in static server mode
+- ✅ New `schema-diff-newsletter.html` loads without console errors
+- ✅ UTM params are captured by analytics and preserved across internal links
+
+### Why This Matters
+- A dedicated landing page lets us message directly to newsletter readers (database/CI teams) instead of sending them to a generic homepage.
+- UTM tracking lets us measure whether newsletter traffic converts to app usage, GitHub Action installs, or Team plan interest.
+- The reusable UTM infrastructure can be reused for future directory submissions, social campaigns, and paid experiments.

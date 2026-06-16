@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Schema Diff for Database Teams — SchemaLens</title>
+  <meta name="description" content="Compare SQL schemas instantly and catch breaking changes before they ship. Free browser-based schema diff + GitHub Action for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.">
+  <meta property="og:title" content="Free Schema Diff for Database Teams — SchemaLens">
+  <meta property="og:description" content="Paste two CREATE TABLE dumps, get a visual diff, migration SQL, and a breaking-change risk score. No signup, no upload, no database connection.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/schema-diff-newsletter.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens — Free Schema Diff for Database Teams",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Visual SQL schema diff, migration generation, breaking change detection, risk score, GitHub Action integration, 100% browser-based",
+    "url": "https://schemalens.tech/schema-diff-newsletter.html"
+  }
+  </script>
+  <style>
+    .newsletter-hero { text-align: center; padding: 64px 0 40px; }
+    .newsletter-hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.1; margin-bottom: 18px; letter-spacing: -0.02em; }
+    .newsletter-hero h1 span { color: var(--primary); }
+    .newsletter-hero .subhead { color: var(--text-muted); font-size: 1.15rem; max-width: 640px; margin: 0 auto 28px; }
+    .newsletter-hero .badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .newsletter-hero .badges span { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.85rem; color: var(--text-muted); }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .hero-note { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+    .section-newsletter { padding: 56px 0; }
+    .section-newsletter.alt { background: var(--surface); }
+    .section-newsletter h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    .section-newsletter .subtitle { color: var(--text-muted); text-align: center; max-width: 640px; margin: 0 auto 36px; }
+    .feature-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .feature-card .icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; }
+    .cta-box { background: linear-gradient(135deg, var(--primary), #8b5cf6); border-radius: var(--radius); padding: 40px 32px; text-align: center; color: #fff; }
+    .cta-box h2 { font-size: 1.5rem; margin-bottom: 10px; }
+    .cta-box p { opacity: 0.92; margin-bottom: 22px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .cta-box .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-box .btn-primary-ghost { background: #fff; color: var(--primary); }
+    .cta-box .btn-ghost { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+    .trust-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 28px; color: var(--text-muted); font-size: 0.85rem; }
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .faq-item h4 { font-size: 1rem; margin-bottom: 8px; }
+    .faq-item p { color: var(--text-muted); font-size: 0.92rem; }
+    .mini-footer { text-align: center; padding: 32px 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+    .mini-footer a { color: var(--text-muted); text-decoration: underline; }
+    @media (max-width: 600px) {
+      .newsletter-hero { padding: 44px 0 28px; }
+      .hero-actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem; align-items:center;">
+      <a href="index.html" style="font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
+        <span class="logo-mark">SL</span> SchemaLens
+      </a>
+      <a href="app.html">App</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+  </div>
+
+  <header class="newsletter-hero">
+    <div class="container">
+      <div class="badges">
+        <span>✅ 100% free web diff</span>
+        <span>🔒 Schemas stay in your browser</span>
+        <span>⚡ CI/CD ready</span>
+      </div>
+      <h1>Stop shipping <span>breaking schema changes</span></h1>
+      <p class="subhead">SchemaLens compares SQL schemas instantly, generates migration scripts, and scores every change for risk — so dangerous migrations never reach production.</p>
+      <div class="hero-actions">
+        <a href="app.html?utm_content=hero_try_free" class="btn btn-primary btn-lg" data-event="newsletter_cta_try_free">Try the free schema diff →</a>
+        <a href="github-action.html?utm_content=hero_add_action" class="btn btn-secondary btn-lg" data-event="newsletter_cta_github_action">Add GitHub Action — Free</a>
+      </div>
+      <p class="hero-note">No signup. No database connection. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.</p>
+    </div>
+  </header>
+
+  <section class="section-newsletter alt">
+    <div class="container">
+      <h2>Built for database teams who review migrations in PRs</h2>
+      <p class="subtitle">The cheapest place to catch a bad migration is before it merges.</p>
+      <div class="feature-grid-3">
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(99,102,241,0.15);">🔍</div>
+          <h3>Semantic schema diff</h3>
+          <p>Not a text diff. SchemaLens understands tables, columns, indexes, constraints, and types — and tells you exactly what changed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(248,113,113,0.15);">🚨</div>
+          <h3>Breaking-change detection</h3>
+          <p>Dropped columns, NOT NULL without defaults, narrowed types, and missing FK indexes are flagged automatically with a 0–100 risk score.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(52,211,153,0.15);">🛠️</div>
+          <h3>Migration SQL generated</h3>
+          <p>Get ready-to-run ALTER TABLE scripts in your dialect. Rollback scripts included. Copy, review, commit.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(34,211,238,0.15);">🐙</div>
+          <h3>GitHub Action (free)</h3>
+          <p>Add schema diff checks to every pull request. PR comments, Check Runs, and smart skip when no .sql files changed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(251,191,36,0.15);">🔒</div>
+          <h3>Privacy-first</h3>
+          <p>The web diff runs entirely in your browser. Your schema text never touches our servers unless you explicitly use the CI API.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(168,85,247,0.15);">🦊</div>
+          <h3>All major CI platforms</h3>
+          <p>GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, and Azure DevOps — with a 60-second setup wizard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-newsletter">
+    <div class="container">
+      <h2>Add schema diff to your CI/CD pipeline in 60 seconds</h2>
+      <p class="subtitle">Paste a public GitHub repo URL and the SchemaLens CI/CD Setup Wizard auto-detects your SQL files, guesses your dialect, and generates a ready-to-commit config.</p>
+      <div style="text-align:center; margin: 28px 0;">
+        <a href="tools/cicd-setup-wizard.html?platform=github&utm_content=wizard_card" class="btn btn-primary btn-lg" data-event="newsletter_cta_wizard">⚡ Open CI/CD Setup Wizard</a>
+        <a href="tools/add-schema-diff-to-any-repo.html?utm_content=wizard_all_platforms" class="btn btn-secondary btn-lg" data-event="newsletter_cta_60s">🚀 All platforms in 60s</a>
+      </div>
+      <div class="trust-row">
+        <span>✅ No license key required</span>
+        <span>✅ No database connection</span>
+        <span>✅ No credit card</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-newsletter alt">
+    <div class="container">
+      <h2>Frequently asked questions</h2>
+      <p class="subtitle">Quick answers for database teams evaluating schema diff tools.</p>
+      <div class="faq">
+        <div class="faq-item">
+          <h4>Is the web diff really free?</h4>
+          <p>Yes. Paste any two CREATE TABLE dumps and get the full visual diff, migration SQL, and rollback script. No signup, no table limit, no credit card.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Do I need to connect a live database?</h4>
+          <p>No. SchemaLens works with SQL text — pg_dump output, migration files, or hand-written CREATE TABLE statements. Your data never leaves your device in the browser tool.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Which SQL dialects are supported?</h4>
+          <p>PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, and Oracle.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What does the GitHub Action cost?</h4>
+          <p>Nothing. The SchemaLens GitHub Action is free for every repo, including PR comments, Check Runs, breaking-change detection, and full migration SQL.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What is the Team plan for?</h4>
+          <p>Team adds shared workspaces, diff versioning, Slack/Teams drift alerts, org-wide billing, and admin controls. <a href="team.html?utm_content=faq_team">See Team features →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-newsletter">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Try it on your schema right now</h2>
+        <p>Paste two CREATE TABLE dumps and see the diff in under 10 seconds. Then add the free GitHub Action to keep every future migration safe.</p>
+        <div class="btn-group">
+          <a href="app.html?utm_content=bottom_cta" class="btn btn-primary-ghost" data-event="newsletter_bottom_try_free">Try the free schema diff →</a>
+          <a href="github-action.html?utm_content=bottom_cta" class="btn btn-ghost" data-event="newsletter_bottom_github_action">Add GitHub Action</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mini-footer">
+    <div class="container">
+      <p>Built in public as part of the <a href="https://100aistartup.com" target="_blank" rel="noopener">$100 AI Startup Race</a> · <a href="index.html">SchemaLens</a> · <a href="open.html">Open metrics</a></p>
+    </div>
+  </footer>
+
+  <script src="lib/analytics-client.js"></script>
+  <script src="lib/utm-preserve.js"></script>
+  <script>
+    // Track CTA clicks on this landing page
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest && e.target.closest('a[data-event]');
+      if (a && window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track(a.dataset.event, { page: 'schema-diff-newsletter' });
+      }
+    });
+  </script>
+</body>
+</html>
