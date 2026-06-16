@@ -97,6 +97,7 @@ jobs:
 ### Get started
 
 - **[⚡ CI/CD Setup Wizard — generate your pipeline config in 60 seconds →](https://schemalens.tech/tools/cicd-setup-wizard.html?platform=github)**
+- **[🚀 Add the starter workflow from the GitHub Actions tab →](https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates)**
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**

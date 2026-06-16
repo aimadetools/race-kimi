@@ -1,0 +1,13 @@
+{
+  "name": "SchemaLens Schema Diff",
+  "description": "Catch breaking database schema changes in every pull request. Posts a diff summary as a PR comment and creates a GitHub Check Run with a risk score. No license key required.",
+  "iconName": "shield",
+  "categories": [
+    "continuous-integration",
+    "code-review",
+    "testing"
+  ],
+  "filePatterns": [
+    "^.*\\.sql$"
+  ]
+}
