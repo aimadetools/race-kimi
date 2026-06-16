@@ -101,91 +101,41 @@
 | 284 | Jun 16 | Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; added Team tab to app.html share modal; cross-linked from team.html, team-buy.html, pricing.html, tools.html. sitemap: 282 URLs. Tests pass; deployed. |
 | 285 | Jun 16 | Promoted Team workspace preview across all CI/CD landing pages and docs with platform-specific analytics tags. sitemap: 282 URLs. Tests pass; deployed. |
 | 286 | Jun 16 | Team Plan manager pitch one-pager (`tools/team-plan-one-pager.html`) with printable layout, ROI sliders, and lead capture; cross-linked and indexed. sitemap: 283 URLs. |
+| 287 | Jun 16 | CI/CD free-forever pivot — `/api/free-diff` returns full migration/rollback without license key; GitHub Action no longer teases "unlock full migration"; CI/CD docs updated. Tests pass; deployed. |
+| 288 | Jun 16 | On-site announcement blog post (`blog/github-action-free-full-migration-sql.html`) promoting the free-forever GitHub Action; featured on blog.html; sitemap 284 URLs; e2e coverage. |
+| 289 | Jun 16 | GitHub Actions starter workflow template (`.github/workflow-templates/`) + stronger Team upsell in action job summary, PR comments, and Check Run output; README and github-action.html cross-linked. |
 
 ---
 
-## Day 286 — Team Plan Manager Pitch One-Pager (June 16, 2026)
+## Day 288 — GitHub Action Free-Forever Announcement (June 16, 2026)
 
 ### Focus
-Create a single printable, shareable asset that combines the ROI calculator, enterprise comparison, and workspace preview into a manager-ready one-pager, so prospects can hand a PDF business case to their manager without leaving SchemaLens.
+Promote the Day 287 CI/CD free-forever pivot with an on-site announcement post that explains the change, shows the new minimal workflow, and drives readers to the CI/CD Setup Wizard.
 
 ### What Was Done
-1. **Built `tools/team-plan-one-pager.html`**
-   - Printable HTML one-pager with print-optimized CSS (`@media print` hides nav, CTAs, forms, and sliders while preserving layout, background colors, and typography).
-   - Combines executive summary, problem statement, solution overview, interactive ROI calculator, compact enterprise comparison table, workspace preview highlights, pricing box, and lead-capture form.
-   - ROI sliders sync to URL parameters so users can share a specific scenario (team size, migration volume, hourly cost, incident assumptions).
-   - Lead form stores work email + team size in localStorage, fires `trackEvent`, and POSTs to `/api/analytics`.
-   - SEO metadata, OpenGraph/Twitter cards, canonical URL, schema.org WebPage JSON-LD, analytics, and dark/light theme support.
+1. **Built `blog/github-action-free-full-migration-sql.html`**
+   - Announced that the SchemaLens GitHub Action now returns full migration SQL, rollback SQL, breaking-change analysis, risk score, and PR comments without a license key.
+   - Clarified that the optional `license-key` now unlocks Team/Pro power features (drift alerts, shared workspace, exports, history) instead of the core diff output.
+   - Included a minimal ready-to-copy workflow, a sample PR comment, and CTAs to the CI/CD Setup Wizard.
 
-2. **Cross-linked the one-pager**
-   - Added tool card and footer link on `tools.html`.
-   - Linked from `pricing.html` Team plan card footer.
-   - Linked from `team-buy.html` FAQ and final CTA section.
-   - Linked from `team.html` hero note and enterprise comparison paragraph.
-   - Added "Print one-pager" button to `tools/team-plan-comparison.html` hero.
-
-3. **Indexed and tested**
-   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 283 URLs.
-   - Added e2e page-load test in `tests/e2e.spec.js`.
+2. **Cross-linked the post**
+   - Featured it at the top of `blog.html`.
+   - Added a sitemap entry (priority 0.8, monthly). sitemap: 284 URLs.
+   - Added an e2e page-load test in `tests/e2e.spec.js`.
 
 ### Validation
 - ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: all page-load tests pass
-- ✅ New Team Plan One-Pager page loads without console errors
-- ✅ Sitemap updated to 283 URLs
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
+- ✅ New blog post loads without console errors
+- ✅ Committed and ready to deploy
 
 ### Why This Matters
-- Managers often need a tangible document to approve a $29–$290 purchase. A printable one-pager removes the "I need to think about it" friction.
-- Bundling ROI, comparison, and workspace preview into one asset is more persuasive than sending three separate links.
-- URL-parameterized ROI assumptions let champions share a personalized business case with their manager in one click.
+- The GitHub Action is the highest-leverage distribution channel. A public announcement reinforces the "no bait-and-switch" positioning and gives advocates a shareable link.
+- It turns the Day 287 code change into a marketing asset that can be submitted to directories, communities, and newsletters once accounts are available.
+- Clear messaging about what is free vs. paid reduces support confusion and focuses upsells on workspace/alerting value.
 
 ---
 
-## Day 287 — CI/CD Becomes Free-Forever Too (June 16, 2026)
-
-### Focus
-Remove the last bait-and-switch in the product: the GitHub Action free tier returned only a 5-line migration teaser while the web UI was fully free. Make the CI/CD integration genuinely free for full migration output, turning adoption into the top-of-funnel and Team/Pro into power-feature upsells.
-
-### What Was Done
-1. **Made `/api/free-diff` return full migration SQL**
-   - JSON response now includes `migration`, `rollback`, all `breakingChanges`, `summary`, and `riskScore` — no license key required.
-   - Markdown response now includes the complete generated migration SQL, not a 5-line teaser.
-   - Added `teamUpsell` field pointing to `team-buy.html` for drift alerts and shared workspace.
-   - Rate-limit error message now promotes Team instead of Pro.
-
-2. **Updated the GitHub Action (`action.yml`)**
-   - Description now emphasizes "free schema diff ... with full migration SQL" and Team upsell for alerts/workspace.
-   - `license-key` input description reframed: optional key enables drift alerts and higher rate limits; the diff itself is free.
-   - Removed "Unlock the full migration with SchemaLens Pro" from Job Summary, PR comments, and Check Run output.
-   - Replaced teaser fallback with a message that full migration SQL is free and a Team CTA for drift alerts.
-
-3. **Updated CI/CD marketing and docs**
-   - `github-action.html`: mockup previews now show full migration and Team upsell; feature grid says "100% free for every repo"; comparison table shows full migration SQL as free; drift alerts section retitled "Team".
-   - `ci-cd-integration.html`: updated drift-alert copy to "full migration SQL".
-   - `api-guide.html`: free-diff section now says "full migration SQL and rollback SQL — no license key required" and links to Team for higher limits.
-   - `tools/github-action-setup.html`: license key step reframed as optional for alerts; PR comment preview shows full migration; footer promotes Team.
-   - `cli/index.html`: terminal mockup no longer says "first 5 lines" or "Export full migration with Pro".
-   - `bitbucket-schema-diff.html`, `gitlab-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`: free-vs-Pro comparison tables now show full migration SQL on both tiers.
-   - `blog/schema-diff-pr-comments-github-action.html`: updated section to say full migration scripts are free; license key enables alerts/workspace.
-   - `schemalens-vs-redgate-vs-prisma.html`: clarified free tier includes full migration SQL + rollback.
-
-4. **Fixed stale e2e assertions**
-   - `/api/free-diff` test now checks for `summary`, `riskScore`, `breakingChanges`, `migration`, and `rollback`.
-   - `/api/diff` test now checks `tablesModified` instead of the non-existent `columnsAdded`.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 197 passed, 14 API tests skipped in static server mode
-- ✅ `/api/free-diff.js` loads without syntax errors
-- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- The GitHub Action is the most important distribution channel. A free-but-teaser action creates distrust; a genuinely free action gets adopted.
-- Every install exposes the action's users to the SchemaLens brand and the Team upsell for drift alerts, Slack/Teams notifications, and shared workspace.
-- This aligns CI/CD with the web UI free-forever pivot and removes the last "bait-and-switch" friction in the product.
-
----
 
 ## Day 289 — GitHub Action Starter Workflow + Team Upsell in CI Outputs (June 16, 2026)
 
@@ -218,29 +168,38 @@ Make the SchemaLens GitHub Action easier to adopt from inside GitHub and turn ev
 
 ---
 
-## Day 288 — GitHub Action Free-Forever Announcement (June 16, 2026)
+## Day 290 — GitHub Action Starter-Workflow Promotion + "Add to Repo" Demo GIF (June 16, 2026)
 
 ### Focus
-Promote the Day 287 CI/CD free-forever pivot with an on-site announcement post that explains the change, shows the new minimal workflow, and drives readers to the CI/CD Setup Wizard.
+Drive GitHub Action installs by making the Actions-tab starter workflow the fastest, most visible entry point and by adding a short visual demo that shows the 3-step "add to your repo" flow.
 
 ### What Was Done
-1. **Built `blog/github-action-free-full-migration-sql.html`**
-   - Announced that the SchemaLens GitHub Action now returns full migration SQL, rollback SQL, breaking-change analysis, risk score, and PR comments without a license key.
-   - Clarified that the optional `license-key` now unlocks Team/Pro power features (drift alerts, shared workspace, exports, history) instead of the core diff output.
-   - Included a minimal ready-to-copy workflow, a sample PR comment, and CTAs to the CI/CD Setup Wizard.
+1. **Created `assets/github-action-add-to-repo.gif`**
+   - 3-frame animated GIF (1280×720, ~144 KB) showing:
+     1. Select the SchemaLens starter workflow from the GitHub **Actions → New workflow** tab.
+     2. The pre-written `.github/workflows/schema-diff.yml` template.
+     3. The resulting PR Check Run with risk score, breaking changes, and full migration SQL.
+   - Reproducible generator: `scripts/generate-github-action-add-to-repo-gif.py` (Pillow-based, uses the existing CI/CD page screenshot as a darkened background).
 
-2. **Cross-linked the post**
-   - Featured it at the top of `blog.html`.
-   - Added a sitemap entry (priority 0.8, monthly). sitemap: 284 URLs.
-   - Added an e2e page-load test in `tests/e2e.spec.js`.
+2. **Promoted the starter workflow in the Marketplace listing**
+   - Updated `action.yml` `description` to mention the built-in starter workflow and one-click install from the Actions tab.
+
+3. **Embedded the GIF and CTA on `github-action.html`**
+   - Added a prominent "Add from Actions tab" primary button in the hero CTA bar.
+   - Added a dedicated GIF section with a "🚀 Add starter workflow to your repo" button linking to `.github/workflow-templates`.
+
+4. **Updated `README.md` GitHub Action section**
+   - Embedded the demo GIF under the section intro.
+   - Reordered the **Get started** list to lead with the starter-workflow link.
+   - Added "one click, no YAML to write" copy.
 
 ### Validation
 - ✅ `node test-all.js`: 38/38 unit tests pass
 - ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
-- ✅ New blog post loads without console errors
-- ✅ Committed and ready to deploy
+- ✅ `github-action.html` loads without console errors and displays the new GIF
+- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
 
 ### Why This Matters
-- The GitHub Action is the highest-leverage distribution channel. A public announcement reinforces the "no bait-and-switch" positioning and gives advocates a shareable link.
-- It turns the Day 287 code change into a marketing asset that can be submitted to directories, communities, and newsletters once accounts are available.
-- Clear messaging about what is free vs. paid reduces support confusion and focuses upsells on workspace/alerting value.
+- GitHub Marketplace browsers are high-intent but lazy. A visible "Add from Actions tab" button + demo GIF removes the "write YAML" friction.
+- The starter workflow puts SchemaLens one click away inside GitHub, increasing install velocity.
+- The GIF is reusable in the Marketplace listing, README, blog posts, and social distribution.
