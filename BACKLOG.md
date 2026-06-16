@@ -68,7 +68,6 @@
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [x] **P2** Test one low-cost ($10–$29) targeted newsletter ad for database/CI audiences with a dedicated landing page and UTM tracking. **Landing page + UTM tracking done; help request filed for ad purchase. Budget: under $30 from remaining $66.**
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
