@@ -193,6 +193,14 @@ echo "✅ No breaking changes detected"
 - Node.js 18+
 - No npm dependencies — the script is self-contained
 
+## Team Plan
+
+For engineering teams, the [SchemaLens Team plan](https://schemalens.tech/pricing.html) adds shared workspaces, Slack/Teams drift alerts, a team risk dashboard, and org-wide billing.
+
+- **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
+- **[Calculate Team ROI →](https://schemalens.tech/tools/team-roi-calculator.html)**
+- **[Request a setup call →](https://schemalens.tech/book-demo.html)**
+
 ## Limitations
 
 - The CI script uses the same parser as the browser app. See parser confidence warnings for edge cases.
