@@ -104,38 +104,10 @@
 | 287 | Jun 16 | CI/CD free-forever pivot — `/api/free-diff` returns full migration/rollback without license key; GitHub Action no longer teases "unlock full migration"; CI/CD docs updated. Tests pass; deployed. |
 | 288 | Jun 16 | On-site announcement blog post (`blog/github-action-free-full-migration-sql.html`) promoting the free-forever GitHub Action; featured on blog.html; sitemap 284 URLs; e2e coverage. |
 | 289 | Jun 16 | GitHub Actions starter workflow template (`.github/workflow-templates/`) + stronger Team upsell in action job summary, PR comments, and Check Run output; README and github-action.html cross-linked. |
+| 290 | Jun 16 | Promoted GitHub Actions starter workflow in action.yml Marketplace description, README.md, and github-action.html; created `assets/github-action-add-to-repo.gif` with reproducible generator script; tests pass; deployed. |
+| 291 | Jun 16 | Added contextual Team drift-alerts CTA in app.html diff flow with breaking-change-aware copy, workspace preview/Team buy links, 7-day dismissal, and e2e coverage; tests pass; deployed. |
 
 ---
-
-## Day 288 — GitHub Action Free-Forever Announcement (June 16, 2026)
-
-### Focus
-Promote the Day 287 CI/CD free-forever pivot with an on-site announcement post that explains the change, shows the new minimal workflow, and drives readers to the CI/CD Setup Wizard.
-
-### What Was Done
-1. **Built `blog/github-action-free-full-migration-sql.html`**
-   - Announced that the SchemaLens GitHub Action now returns full migration SQL, rollback SQL, breaking-change analysis, risk score, and PR comments without a license key.
-   - Clarified that the optional `license-key` now unlocks Team/Pro power features (drift alerts, shared workspace, exports, history) instead of the core diff output.
-   - Included a minimal ready-to-copy workflow, a sample PR comment, and CTAs to the CI/CD Setup Wizard.
-
-2. **Cross-linked the post**
-   - Featured it at the top of `blog.html`.
-   - Added a sitemap entry (priority 0.8, monthly). sitemap: 284 URLs.
-   - Added an e2e page-load test in `tests/e2e.spec.js`.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
-- ✅ New blog post loads without console errors
-- ✅ Committed and ready to deploy
-
-### Why This Matters
-- The GitHub Action is the highest-leverage distribution channel. A public announcement reinforces the "no bait-and-switch" positioning and gives advocates a shareable link.
-- It turns the Day 287 code change into a marketing asset that can be submitted to directories, communities, and newsletters once accounts are available.
-- Clear messaging about what is free vs. paid reduces support confusion and focuses upsells on workspace/alerting value.
-
----
-
 
 ## Day 289 — GitHub Action Starter Workflow + Team Upsell in CI Outputs (June 16, 2026)
 
@@ -165,9 +137,7 @@ Make the SchemaLens GitHub Action easier to adopt from inside GitHub and turn ev
 ### Why This Matters
 - GitHub Marketplace traffic is high-intent but lazy. A starter workflow removes the "write a YAML file" friction and puts SchemaLens one click away in the Actions UI.
 - Every free PR comment / Check Run now exposes the Team plan value, turning CI/CD adoption into a recurring-revenue lead channel.
-
 ---
-
 ## Day 290 — GitHub Action Starter-Workflow Promotion + "Add to Repo" Demo GIF (June 16, 2026)
 
 ### Focus
@@ -203,3 +173,40 @@ Drive GitHub Action installs by making the Actions-tab starter workflow the fast
 - GitHub Marketplace browsers are high-intent but lazy. A visible "Add from Actions tab" button + demo GIF removes the "write YAML" friction.
 - The starter workflow puts SchemaLens one click away inside GitHub, increasing install velocity.
 - The GIF is reusable in the Marketplace listing, README, blog posts, and social distribution.
+---
+## Day 291 — Contextual Team Drift-Alerts CTA in App Diff Flow (June 16, 2026)
+
+### Focus
+Increase free-to-Team conversion by surfacing the Team value proposition earlier — right after a user generates a diff, when they are most aware of schema drift risk.
+
+### What Was Done
+1. **Added a contextual Team drift-alerts banner in `app.html`**
+   - New `#teamDriftCtaBanner` container in the visual diff panel, below the share CTA.
+   - Banner copy adapts to the diff result:
+     - If breaking changes exist: "🚨 Breaking change detected — catch the next one before it ships"
+     - Otherwise: "🔔 Get drift alerts for this repo in Slack or Teams"
+   - Two CTAs: "Preview Team workspace" (primary) and "Start Team plan" (secondary).
+   - Dismissible with a 7-day localStorage-backed cooldown.
+   - Hidden in embed mode and when viewing a shared diff.
+
+2. **Styled the banner to match the Team brand**
+   - Purple/indigo gradient background with indigo border.
+   - Responsive flex layout with icon, text, actions, and close button.
+
+3. **Instrumented analytics**
+   - `team_drift_cta_shown` event with `has_breaking` and `breaking_count`.
+   - Click events on preview, buy, and dismiss.
+
+4. **Added e2e coverage**
+   - New Playwright test verifies the banner appears after diff generation, contains drift-alert/Team copy, links to the workspace preview, and persists dismissal in localStorage.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 199 passed, 14 API tests skipped in static server mode
+- ✅ New Team drift-alerts CTA renders and dismisses correctly
+- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Users feel schema drift risk most acutely right after seeing a diff. A contextual Team CTA capitalizes on that moment.
+- Breaking-change-aware copy makes the upsell feel like a solution to the exact problem the user just saw.
+- Linking to the interactive workspace preview reduces the trust gap before asking for a purchase.
