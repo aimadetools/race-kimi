@@ -100,6 +100,7 @@
 | 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
 | 284 | Jun 16 | Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; added Team tab to app.html share modal; cross-linked from team.html, team-buy.html, pricing.html, tools.html. sitemap: 282 URLs. Tests pass; deployed. |
 | 285 | Jun 16 | Promoted Team workspace preview across all CI/CD landing pages and docs with platform-specific analytics tags. sitemap: 282 URLs. Tests pass; deployed. |
+| 286 | Jun 16 | Team Plan manager pitch one-pager (`tools/team-plan-one-pager.html`) with printable layout, ROI sliders, and lead capture; cross-linked and indexed. sitemap: 283 URLs. |
 
 ---
 
@@ -183,6 +184,37 @@ Remove the last bait-and-switch in the product: the GitHub Action free tier retu
 - The GitHub Action is the most important distribution channel. A free-but-teaser action creates distrust; a genuinely free action gets adopted.
 - Every install exposes the action's users to the SchemaLens brand and the Team upsell for drift alerts, Slack/Teams notifications, and shared workspace.
 - This aligns CI/CD with the web UI free-forever pivot and removes the last "bait-and-switch" friction in the product.
+
+---
+
+## Day 289 — GitHub Action Starter Workflow + Team Upsell in CI Outputs (June 16, 2026)
+
+### Focus
+Make the SchemaLens GitHub Action easier to adopt from inside GitHub and turn every free CI/CD diff result into a soft Team-plan upsell.
+
+### What Was Done
+1. **Added a GitHub starter workflow template** (`.github/workflow-templates/schemalens-schema-diff.yml` + `.properties.json`)
+   - Appears in a repo's **Actions → New workflow** tab when `.sql` files exist.
+   - Pre-configured with `post-comment: true`, `create-check-run: true`, `run-only-on-schema-change: true`, and the correct permissions.
+   - Links back to the SchemaLens action on every repo that installs it.
+
+2. **Strengthened Team upsell in `action.yml` outputs**
+   - Job Summary now ends with a Team CTA for drift alerts and shared workspace.
+   - PR comments append a consistent Team upsell footer.
+   - Check Run output always includes the Team upgrade note.
+
+3. **Promoted the starter workflow**
+   - README.md links to the template folder.
+   - `github-action.html` hero now highlights "Add from the Actions tab" with a direct link.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
+- ✅ Committed and pushed to `main`; deployed to Vercel production
+
+### Why This Matters
+- GitHub Marketplace traffic is high-intent but lazy. A starter workflow removes the "write a YAML file" friction and puts SchemaLens one click away in the Actions UI.
+- Every free PR comment / Check Run now exposes the Team plan value, turning CI/CD adoption into a recurring-revenue lead channel.
 
 ---
 

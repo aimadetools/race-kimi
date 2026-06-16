@@ -49,6 +49,7 @@
 - **Jun 16 (Days 284–286):** Team conversion asset blitz — interactive workspace preview, promotion across all CI/CD pages/docs, printable manager pitch one-pager; sitemap 283 URLs.
 - **Jun 16 (Day 287):** CI/CD free-forever pivot — `/api/free-diff` returns full migration/rollback without license key, GitHub Action no longer teases "unlock full migration", CI/CD marketing pages/docs updated; tests pass.
 - **Jun 16 (Day 288):** Published on-site announcement blog post (`blog/github-action-free-full-migration-sql.html`) promoting the free-forever GitHub Action; featured on blog.html, sitemap 284 URLs, e2e coverage.
+- **Jun 16 (Day 289):** Added GitHub Actions starter workflow template + stronger Team upsell in action job summary, PR comments, and Check Run output; README and github-action.html cross-linked; tests pass.
 
 ---
 
@@ -65,6 +66,10 @@
 
 ### Unblocked / Do Next
 - [x] **P1** Make the GitHub Action / CI/CD integration genuinely free for full migration output, matching the web UI free-forever pivot. Remove teaser/upgrade language from `action.yml`, `/api/free-diff.js`, and CI/CD marketing pages; reposition Team/Pro as power-feature upsells (drift alerts, shared workspace, exports, history). — **Done Day 287.**
+- [x] **P1** Add a GitHub Actions starter workflow template and strengthen Team upsell in action outputs. — **Done Day 289.**
+- [ ] **P1** Drive GitHub Action installs by promoting the starter workflow in the Marketplace listing/README and by adding a short "Add to your repo" demo GIF to the GitHub Action section.
+- [ ] **P1** Increase free-to-Team conversion by surfacing the Team value proposition earlier in the app diff flow (e.g., a contextual "Get drift alerts for this repo" CTA after diff generation).
+- [ ] **P2** Test one low-cost ($10–$29) targeted newsletter ad for database/CI audiences with a dedicated landing page and UTM tracking. **Budget: under $30 from remaining $66.**
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
