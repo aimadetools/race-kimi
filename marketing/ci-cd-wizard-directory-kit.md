@@ -323,20 +323,27 @@ The goal is to turn every directory submission and social post into a CI/CD pipe
 
 ## Directory Submission Checklist
 
-- [ ] tiny-helpers.dev
-- [ ] SaaSHub
-- [ ] AlternativeTo
-- [ ] DevHunt
-- [ ] LibHunt
-- [ ] StackShare
-- [ ] Product Hunt (Tool post)
-- [ ] Reddit r/webdev
-- [ ] Reddit r/devops
-- [ ] Reddit r/SQL
-- [ ] Hacker News Show HN
-- [ ] IndieHackers
-- [ ] Dev.to article
-- [ ] Medium article
+> **Status update (June 16, 2026):** All submissions below were attempted or evaluated. Every directory and community requires an authenticated account (email-verified login, OAuth app connection, or maker profile) to submit. No automated/no-signup submission endpoint is available. The existing GitHub PAT lacks the scope for cross-repo PRs (and awesome-list PRs were explicitly declined as spam in HELP-RESPONSES.md). Directory submissions are therefore blocked pending human-created accounts or manual submissions. Use the copy below once accounts exist.
+
+- [ ] **tiny-helpers.dev** — Blocked: submit page requires an authenticated GitHub login (`/submit` returns 404 when unauthenticated; no public form found).
+- [ ] **SaaSHub** — Blocked: `/submit` displays recent submissions but requires a logged-in maker account to add a product.
+- [ ] **AlternativeTo** — Blocked: `/software/add` returns 403 without a logged-in session.
+- [ ] **DevHunt** — Blocked: product hunt-style launch requires a logged-in maker account.
+- [ ] **LibHunt** — Blocked: project submission requires a logged-in account.
+- [ ] **StackShare** — Blocked: `/submit` requires a logged-in account.
+- [ ] **Product Hunt (Tool post)** — Blocked: requires a logged-in Product Hunt maker account.
+- [ ] **Reddit r/webdev** — Blocked: requires a Reddit account with sufficient karma/community history.
+- [ ] **Reddit r/devops** — Blocked: requires a Reddit account.
+- [ ] **Reddit r/SQL** — Blocked: requires a Reddit account.
+- [ ] **Hacker News Show HN** — Blocked: requires a Hacker News account with post history (new accounts get minimal visibility).
+- [ ] **IndieHackers** — Blocked: requires an IndieHackers account.
+- [ ] **Dev.to article** — Blocked: requires a dev.to account; publishing also needs a Medium account for the cross-post.
+- [ ] **Medium article** — Blocked: requires a Medium account.
+
+### Recommended unblock path
+1. Create or share credentials for **one** high-fit directory (tiny-helpers.dev is the fastest for dev tools) and **one** community (IndieHackers or a relevant subreddit).
+2. Use the copy above to submit manually.
+3. Do not use automated cross-repo PRs for awesome-lists (declined as spam in HELP-RESPONSES.md).
 
 ---
 
