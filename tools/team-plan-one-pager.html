@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Team — Manager Pitch One-Pager (Printable PDF)</title>
+  <meta name="description" content="Printable manager pitch for SchemaLens Team. Combines ROI calculator, enterprise comparison, and workspace preview into a single shareable one-pager.">
+  <link rel="canonical" href="https://schemalens.tech/tools/team-plan-one-pager.html">
+  <meta property="og:title" content="SchemaLens Team — Manager Pitch One-Pager">
+  <meta property="og:description" content="Printable manager pitch for SchemaLens Team. Combines ROI calculator, enterprise comparison, and workspace preview into a single shareable one-pager.">
+  <meta property="og:url" content="https://schemalens.tech/tools/team-plan-one-pager.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchemaLens Team — Manager Pitch One-Pager">
+  <meta name="twitter:description" content="Printable manager pitch for SchemaLens Team. Combines ROI calculator, enterprise comparison, and workspace preview into a single shareable one-pager.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "SchemaLens Team Manager Pitch One-Pager",
+    "description": "Printable manager pitch combining ROI calculator, enterprise comparison, and workspace preview for SchemaLens Team.",
+    "url": "https://schemalens.tech/tools/team-plan-one-pager.html",
+    "isPartOf": { "@type": "WebSite", "name": "SchemaLens", "url": "https://schemalens.tech" }
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .onepager-wrapper { max-width: 920px; margin: 0 auto; padding: 0 24px 64px; }
+
+    .no-print { }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; color: #111; }
+      a { color: #111; text-decoration: none; }
+      .onepager { box-shadow: none; border: none; }
+      .page-header { padding-top: 0; }
+    }
+
+    .print-actions {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 24px 0 36px;
+    }
+    .print-actions button, .print-actions a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; text-decoration: none;
+    }
+    .print-actions button.primary, .print-actions a.primary { background: var(--primary); color: #fff; }
+    .print-actions button.secondary, .print-actions a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+    .onepager {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 42px 44px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    @media (max-width: 720px) { .onepager { padding: 28px 22px; } }
+
+    .letterhead { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 2px solid var(--primary); margin-bottom: 28px; }
+    .letterhead .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.3rem; }
+    .letterhead .tagline { font-size: 0.85rem; color: var(--text-muted); }
+    .letterhead .date { font-size: 0.85rem; color: var(--text-muted); }
+
+    .exec-summary {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px;
+    }
+    .exec-summary h2 { font-size: 1.15rem; margin-bottom: 14px; }
+    .exec-summary ul { padding-left: 18px; color: var(--text-muted); }
+    .exec-summary li { margin-bottom: 8px; line-height: 1.5; }
+    .exec-summary strong { color: var(--text); }
+
+    .section { margin-bottom: 28px; }
+    .section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .section p { color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+
+    .metric-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-row .label { color: var(--text-muted); }
+    .metric-row .value { font-weight: 700; }
+    .metric-row .value.highlight { color: var(--success); }
+
+    .roi-calculator {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px;
+    }
+    .roi-calculator h2 { font-size: 1.15rem; margin-bottom: 16px; }
+    .slider-group { margin-bottom: 18px; }
+    .slider-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+    .slider-group input[type="range"] { width: 100%; accent-color: var(--primary); }
+    .slider-group .value-display { font-size: 0.8rem; color: var(--primary); font-weight: 600; }
+    .roi-result {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;
+    }
+    @media (max-width: 720px) { .roi-result { grid-template-columns: 1fr 1fr; } }
+    .roi-result .num { font-size: 1.4rem; font-weight: 700; }
+    .roi-result .lbl { font-size: 0.75rem; color: var(--text-muted); }
+
+    .comparison-compact { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 12px; }
+    .comparison-compact th, .comparison-compact td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .comparison-compact th { background: var(--bg); color: var(--text-muted); font-weight: 600; font-size: 0.8rem; }
+    .comparison-compact td strong { color: var(--text); }
+    .comparison-compact .winner { color: var(--success); font-weight: 700; }
+
+    .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 14px; }
+    .feature-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; font-size: 0.9rem; }
+    .feature-item .icon { font-size: 1.3rem; margin-bottom: 6px; }
+    .feature-item h4 { font-size: 0.95rem; margin-bottom: 4px; }
+    .feature-item p { color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.4; }
+
+    .pricing-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .pricing-box .price { font-size: 2rem; font-weight: 800; }
+    .pricing-box .price span { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); }
+    .pricing-box ul { list-style: none; padding: 0; margin: 0; color: var(--text-muted); font-size: 0.9rem; }
+    .pricing-box li { margin-bottom: 6px; }
+
+    .cta-section { text-align: center; margin: 36px 0; }
+    .cta-section p { color: var(--text-muted); margin-bottom: 16px; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .cta-row a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius-sm);
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+    }
+    .cta-row a.primary { background: var(--primary); color: #fff; }
+    .cta-row a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+    .lead-form { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; }
+    .lead-form h3 { font-size: 1.1rem; margin-bottom: 10px; }
+    .lead-form p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px; }
+    .lead-form .field { margin-bottom: 14px; }
+    .lead-form label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+    .lead-form input, .lead-form select {
+      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 0.95rem; box-sizing: border-box;
+    }
+    .lead-form button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: #fff; font-weight: 600; cursor: pointer; }
+    .lead-form .note { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; }
+
+    .footer-print { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+    @media print {
+      .onepager { padding: 0; background: #fff; }
+      .letterhead { border-bottom-color: #111; }
+      .exec-summary, .roi-calculator, .feature-item, .pricing-box, .lead-form { background: #f8fafc; border-color: #e2e8f0; }
+      .comparison-compact th, .comparison-compact td, .metric-row, .section h2 { border-color: #e2e8f0; }
+      .cta-section, .lead-form, .footer-print { display: none; }
+      .roi-calculator .slider-group { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../team-buy.html" style="color:var(--text-muted);text-decoration:none;">Team</a>
+      <button onclick="toggleTheme()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;" title="Toggle theme">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>SchemaLens Team — Manager Pitch</h1>
+    <p>A printable, shareable one-pager that combines ROI, comparison, and workspace preview. Adjust the numbers, print to PDF, and hand it to your manager.</p>
+  </div>
+
+  <div class="onepager-wrapper">
+    <div class="print-actions no-print">
+      <button class="primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <a class="secondary" href="team-roi-calculator.html">Open full ROI calculator →</a>
+      <a class="secondary" href="../team/workspace-preview.html">Preview workspace →</a>
+    </div>
+
+    <article class="onepager" id="onepager">
+      <div class="letterhead">
+        <div>
+          <div class="brand">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            SchemaLens Team
+          </div>
+          <div class="tagline">Schema diff guardrails for engineering teams</div>
+        </div>
+        <div class="date" id="printDate"></div>
+      </div>
+
+      <div class="exec-summary">
+        <h2>Executive summary</h2>
+        <ul>
+          <li><strong>Cost:</strong> SchemaLens Team is <strong>$29/month flat</strong> (or $290/year), with no per-seat pricing.</li>
+          <li><strong>Value:</strong> A typical 5-person team saves <strong id="execTimeSaved">360 hours</strong> and <strong id="execMoneySaved">$31,710/year</strong> in review time and avoided incidents.</li>
+          <li><strong>Setup:</strong> Add schema diff to GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, or Azure DevOps in <strong>60 seconds</strong> — no database credentials required.</li>
+        </ul>
+      </div>
+
+      <section class="section">
+        <h2>The problem</h2>
+        <div class="two-col">
+          <div>
+            <p>Engineering teams review database migrations manually: opening SQL files, guessing side effects, and hoping nothing breaks in production. This slows every deploy and creates expensive incident risk.</p>
+          </div>
+          <div>
+            <div class="metric-row"><span class="label">Average time lost per migration review</span><span class="value">0.5–2 hours</span></div>
+            <div class="metric-row"><span class="label">Cost of a production schema incident</span><span class="value">$5,000–$50,000+</span></div>
+            <div class="metric-row"><span class="label">Enterprise schema diff tools</span><span class="value">$500–$2,000+/mo</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>The solution</h2>
+        <p>SchemaLens Team adds an automated schema diff and review layer to your existing CI/CD pipeline. Every PR gets a visual diff, risk score, migration SQL, and rollback script — before it merges.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="icon">🤖</div>
+            <h4>CI/CD native</h4>
+            <p>GitHub, GitLab, Jenkins, CircleCI, Bitbucket, Azure DevOps.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🛡️</div>
+            <h4>Breaking-change gate</h4>
+            <p>Block risky schema changes automatically with a safety score.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">💬</div>
+            <h4>PR comments</h4>
+            <p>Human-readable reports posted directly into code reviews.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔔</div>
+            <h4>Drift alerts</h4>
+            <p>Slack / Teams alerts when staging or production drifts.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔗</div>
+            <h4>Shareable reports</h4>
+            <p>One link per diff; no more SQL pasted into chat threads.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔒</div>
+            <h4>No DB credentials</h4>
+            <p>File-based diff keeps your database credentials private.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="roi-calculator">
+        <h2>Projected annual savings</h2>
+        <div class="two-col" style="gap: 32px;">
+          <div>
+            <div class="slider-group">
+              <label for="teamSize">Team size reviewing migrations</label>
+              <input type="range" id="teamSize" min="1" max="50" value="5">
+              <div class="value-display"><span id="teamSizeVal">5</span> engineers</div>
+            </div>
+            <div class="slider-group">
+              <label for="migrationsPerMonth">Migrations reviewed per month</label>
+              <input type="range" id="migrationsPerMonth" min="1" max="100" value="8">
+              <div class="value-display"><span id="migrationsPerMonthVal">8</span> migrations</div>
+            </div>
+            <div class="slider-group">
+              <label for="hoursSaved">Hours saved per migration</label>
+              <input type="range" id="hoursSaved" min="0.1" max="4" step="0.1" value="0.75">
+              <div class="value-display"><span id="hoursSavedVal">0.75</span> hours</div>
+            </div>
+          </div>
+          <div>
+            <div class="slider-group">
+              <label for="hourlyCost">Average fully-loaded hourly cost</label>
+              <input type="range" id="hourlyCost" min="20" max="250" step="5" value="75">
+              <div class="value-display">$<span id="hourlyCostVal">75</span> / hour</div>
+            </div>
+            <div class="slider-group">
+              <label for="incidentsAvoided">Production incidents avoided per year</label>
+              <input type="range" id="incidentsAvoided" min="0" max="10" step="0.5" value="1">
+              <div class="value-display"><span id="incidentsAvoidedVal">1</span> incidents</div>
+            </div>
+            <div class="slider-group">
+              <label for="incidentCost">Average cost per incident</label>
+              <input type="range" id="incidentCost" min="0" max="50000" step="500" value="5000">
+              <div class="value-display">$<span id="incidentCostVal">5,000</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="roi-result" style="margin-top: 18px;">
+          <div><div class="num" id="timeSaved">360 h</div><div class="lbl">Time saved / year</div></div>
+          <div><div class="num" id="costSaved">$27,000</div><div class="lbl">Engineering cost saved</div></div>
+          <div><div class="num" id="incidentAvoided">$5,000</div><div class="lbl">Incident cost avoided</div></div>
+          <div><div class="num" id="roiMultiple">109x</div><div class="lbl">ROI multiple</div></div>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; margin-bottom: 0;">Adjust assumptions above. Based on yearly Team plan cost of $290. Print this page to freeze the numbers in a PDF.</p>
+      </section>
+
+      <section class="section">
+        <h2>How we compare</h2>
+        <div style="overflow-x: auto;">
+          <table class="comparison-compact">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SchemaLens Team</th>
+                <th>Liquibase Pro</th>
+                <th>Flyway Enterprise</th>
+                <th>Redgate SQL Compare</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Starting team price</strong></td>
+                <td class="winner">$29/mo flat</td>
+                <td>~$60–120/user/mo</td>
+                <td>~$500–2,000+/mo</td>
+                <td>~$700–1,500+/mo</td>
+              </tr>
+              <tr>
+                <td><strong>Setup time</strong></td>
+                <td class="winner">60 seconds</td>
+                <td>Hours to days</td>
+                <td>Hours to days</td>
+                <td>Minutes to hours</td>
+              </tr>
+              <tr>
+                <td><strong>Requires live DB</strong></td>
+                <td class="winner">No</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>CI/CD integrations</strong></td>
+                <td class="winner">6 platforms</td>
+                <td>4 platforms</td>
+                <td>Limited templates</td>
+                <td>Plugins available</td>
+              </tr>
+              <tr>
+                <td><strong>PR comments + risk score</strong></td>
+                <td class="winner">Built-in</td>
+                <td>Via extensions</td>
+                <td>Partial</td>
+                <td>Manual</td>
+              </tr>
+              <tr>
+                <td><strong>Breaking-change gate</strong></td>
+                <td class="winner">Built-in</td>
+                <td>Available</td>
+                <td>Available</td>
+                <td>Available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Full comparison at schemalens.tech/tools/team-plan-comparison.html</p>
+      </section>
+
+      <section class="section">
+        <h2>What your team workspace looks like</h2>
+        <p>SchemaLens Team gives every engineer a shared dashboard: recent diffs, PR comment previews, Slack drift alerts, migration safety scores, and pipeline status across all connected repos.</p>
+        <div class="two-col">
+          <div class="feature-item">
+            <div class="icon">📊</div>
+            <h4>Shared diff history</h4>
+            <p>Every team member sees the same reports, comments, and safety scores in one workspace.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">⚙️</div>
+            <h4>Pipeline status</h4>
+            <p>Track GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, and Azure DevOps in one view.</p>
+          </div>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Interactive preview at schemalens.tech/team/workspace-preview.html</p>
+      </section>
+
+      <section class="section">
+        <h2>Pricing</h2>
+        <div class="pricing-box">
+          <div>
+            <div class="price" id="planPrice">$29<span>/month</span></div>
+            <p style="color: var(--text-muted); margin: 4px 0 0; font-size: 0.9rem;">Unlimited workspace members · Cancel anytime</p>
+          </div>
+          <ul>
+            <li>✓ Shared team workspace</li>
+            <li>✓ CI/CD integrations for 6 platforms</li>
+            <li>✓ PR comments with risk scores</li>
+            <li>✓ Slack / email drift alerts</li>
+            <li>✓ Rollback migration generation</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="cta-section no-print">
+        <h2 style="font-size: 1.4rem; margin-bottom: 10px;">Ready to present this to your team?</h2>
+        <p>Print this page to PDF, share the link, or start a Team plan today.</p>
+        <div class="cta-row">
+          <a class="primary" href="../team-buy.html">Start Team plan →</a>
+          <a class="secondary" href="request-team-invoice.html">Request invoice</a>
+          <a class="secondary" href="../book-demo.html">Book a demo</a>
+        </div>
+      </div>
+
+      <div class="two-col no-print" style="margin-top: 32px;">
+        <div class="lead-form">
+          <h3>Get a custom pitch deck</h3>
+          <p>Leave your work email and we'll send you a branded one-pager, a custom ROI estimate, and invoice options.</p>
+          <form id="onePagerLeadForm">
+            <div class="field">
+              <label for="workEmail">Work email</label>
+              <input type="email" id="workEmail" name="email" placeholder="you@company.com" required>
+            </div>
+            <div class="field">
+              <label for="leadTeamSize">Team size</label>
+              <select id="leadTeamSize" name="teamSize" required>
+                <option value="">Select…</option>
+                <option value="1-5">1–5 engineers</option>
+                <option value="6-20">6–20 engineers</option>
+                <option value="21-100">21–100 engineers</option>
+                <option value="100+">100+ engineers</option>
+              </select>
+            </div>
+            <button type="submit">Send me the pitch deck →</button>
+            <p class="note">We won't spam you. Unsubscribe anytime.</p>
+          </form>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 16px;">
+          <div class="feature-item">
+            <div class="icon">📄</div>
+            <h4>Print-friendly</h4>
+            <p>Click "Print / Save as PDF" to generate a clean, manager-ready document.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔗</div>
+            <h4>Shareable URL</h4>
+            <p>Copy the URL after adjusting sliders to share your exact ROI scenario.</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🧮</div>
+            <h4>Detailed calculator</h4>
+            <p>For deeper analysis, use the full ROI calculator with editable number inputs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-print">
+        Generated from schemalens.tech/tools/team-plan-one-pager.html · © 2026 SchemaLens
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px 0;margin-top:40px;">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+    <p>© 2026 SchemaLens · <a href="../privacy-policy.html" style="color:var(--text-muted);">Privacy</a> · <a href="../trust.html" style="color:var(--text-muted);">Trust Center</a></p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const qs = new URLSearchParams(window.location.search);
+  const inputs = {
+    teamSize: document.getElementById('teamSize'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonth'),
+    hoursSaved: document.getElementById('hoursSaved'),
+    hourlyCost: document.getElementById('hourlyCost'),
+    incidentsAvoided: document.getElementById('incidentsAvoided'),
+    incidentCost: document.getElementById('incidentCost'),
+  };
+  const displays = {
+    teamSize: document.getElementById('teamSizeVal'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonthVal'),
+    hoursSaved: document.getElementById('hoursSavedVal'),
+    hourlyCost: document.getElementById('hourlyCostVal'),
+    incidentsAvoided: document.getElementById('incidentsAvoidedVal'),
+    incidentCost: document.getElementById('incidentCostVal'),
+  };
+  const outputs = {
+    timeSaved: document.getElementById('timeSaved'),
+    costSaved: document.getElementById('costSaved'),
+    incidentAvoided: document.getElementById('incidentAvoided'),
+    roiMultiple: document.getElementById('roiMultiple'),
+    execTimeSaved: document.getElementById('execTimeSaved'),
+    execMoneySaved: document.getElementById('execMoneySaved'),
+  };
+  const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+  function readParams() {
+    Object.keys(inputs).forEach(key => {
+      if (qs.has(key)) {
+        const val = parseFloat(qs.get(key));
+        if (!isNaN(val)) inputs[key].value = val;
+      }
+    });
+  }
+
+  function updateUrl() {
+    const params = new URLSearchParams();
+    Object.keys(inputs).forEach(key => params.set(key, inputs[key].value));
+    const newUrl = window.location.pathname + '?' + params.toString();
+    if (window.history.replaceState) {
+      window.history.replaceState({}, '', newUrl);
+    }
+  }
+
+  function formatNumber(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+    return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function calculate() {
+    const teamSize = parseFloat(inputs.teamSize.value) || 1;
+    const migrationsPerMonth = parseFloat(inputs.migrationsPerMonth.value) || 1;
+    const hoursSaved = parseFloat(inputs.hoursSaved.value) || 0;
+    const hourlyCost = parseFloat(inputs.hourlyCost.value) || 0;
+    const incidentsAvoided = parseFloat(inputs.incidentsAvoided.value) || 0;
+    const incidentCost = parseFloat(inputs.incidentCost.value) || 0;
+
+    const monthlyTimeSaved = migrationsPerMonth * hoursSaved;
+    const yearlyTimeSaved = monthlyTimeSaved * 12;
+    const costSaved = yearlyTimeSaved * hourlyCost;
+    const incidentAvoided = incidentsAvoided * incidentCost;
+    const totalBenefit = costSaved + incidentAvoided;
+    const toolCost = 290;
+    const netSavings = totalBenefit - toolCost;
+    const roiMultiple = toolCost > 0 ? totalBenefit / toolCost : 0;
+
+    outputs.timeSaved.textContent = formatNumber(yearlyTimeSaved) + ' h';
+    outputs.costSaved.textContent = currency.format(costSaved);
+    outputs.incidentAvoided.textContent = currency.format(incidentAvoided);
+    outputs.roiMultiple.textContent = roiMultiple >= 1000 ? formatNumber(roiMultiple) + 'x' : roiMultiple.toFixed(0) + 'x';
+    outputs.execTimeSaved.textContent = formatNumber(yearlyTimeSaved) + ' hours';
+    outputs.execMoneySaved.textContent = currency.format(netSavings);
+
+    displays.teamSize.textContent = teamSize;
+    displays.migrationsPerMonth.textContent = migrationsPerMonth;
+    displays.hoursSaved.textContent = hoursSaved;
+    displays.hourlyCost.textContent = hourlyCost.toLocaleString('en-US');
+    displays.incidentsAvoided.textContent = incidentsAvoided;
+    displays.incidentCost.textContent = incidentCost.toLocaleString('en-US');
+
+    updateUrl();
+  }
+
+  Object.values(inputs).forEach(input => {
+    input.addEventListener('input', calculate);
+  });
+
+  document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  readParams();
+  calculate();
+
+  const form = document.getElementById('onePagerLeadForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = form.querySelector('#workEmail').value.trim();
+    const teamSize = form.querySelector('#leadTeamSize').value;
+    const payload = { email, teamSize, source: 'team-plan-one-pager', submittedAt: new Date().toISOString() };
+    localStorage.setItem('schemalens-team-lead-onepager', JSON.stringify(payload));
+    if (typeof trackEvent === 'function') {
+      trackEvent('team_lead_capture', { email, teamSize, page: 'team-plan-one-pager' });
+    }
+    try {
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'team_lead_capture', properties: payload })
+      }).catch(() => {});
+    } catch (err) {}
+    const subject = encodeURIComponent('SchemaLens Team one-pager request');
+    const body = encodeURIComponent('Hi SchemaLens team,\n\nPlease send me the branded Team plan one-pager and a custom ROI estimate.\n\nWork email: ' + email + '\nTeam size: ' + teamSize + '\n\nThanks');
+    form.innerHTML = '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:20px;text-align:center;"><h3 style="margin:0 0 8px;">✅ Request saved</h3><p style="margin:0 0 14px;color:var(--text-muted);">We\'ll follow up within one business day. You can also email us directly:</p><a class="primary" style="display:inline-flex;background:var(--primary);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;" href="mailto:founder@schemalens.tech?subject=' + subject + '&body=' + body + '">Open email draft →</a></div>';
+  });
+
+  if (typeof trackEvent === 'function') {
+    trackEvent('page_view', { page: 'team-plan-one-pager' });
+  }
+})();
+</script>
+</body>
+</html>
