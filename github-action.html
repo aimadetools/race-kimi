@@ -324,7 +324,7 @@
   <span class="key">old-schema-path</span>: <span class="str">./schema/old.sql</span>    <span class="comment"># required</span>
   <span class="key">new-schema-path</span>: <span class="str">./schema/new.sql</span>    <span class="comment"># required</span>
   <span class="key">dialect</span>: <span class="str">postgres</span>                  <span class="comment"># optional: postgres | mysql | sqlite | mssql | oracle</span>
-  <span class="key">format</span>: <span class="str">markdown</span>                   <span class="comment"># optional: json | markdown | sql</span>
+  <span class="key">format</span>: <span class="str">markdown</span>                   <span class="comment"># optional: json | markdown</span>
   <span class="key">license-key</span>: <span class="str">${{ secrets.SCHEMALENS_KEY }}</span>  <span class="comment"># optional — enables drift alerts and higher rate limits</span>
   <span class="key">fail-on-breaking</span>: <span class="str">false</span>            <span class="comment"># optional — fail workflow if breaking changes found</span>
   <span class="key">post-comment</span>: <span class="str">false</span>                <span class="comment"># optional — post result as PR comment</span>

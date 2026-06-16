@@ -18,7 +18,7 @@ inputs:
     description: 'SchemaLens Pro or Team license key for schema drift alerts and advanced integrations. The GitHub Action diff is free and returns full migration SQL without a key.'
     required: false
   format:
-    description: 'Output format: json | markdown | sql (sql requires license key)'
+    description: 'Output format: json | markdown'
     default: 'markdown'
     required: false
   fail-on-breaking:
