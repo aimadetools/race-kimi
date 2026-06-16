@@ -689,6 +689,42 @@ test('app: CI/CD CTA banner appears after diff is generated', async ({ page }) =
   expect(dismissed).toBe('1');
 });
 
+test('app: Team drift-alerts CTA appears after diff is generated', async ({ page }) => {
+  await page.goto(`${BASE_URL}/app.html`);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
+
+  // Load schemas and run diff
+  await page.click('text=Load sample (PostgreSQL)');
+  await page.waitForTimeout(300);
+  await page.evaluate(() => { if (typeof loadSampleB === 'function') loadSampleB(); });
+  await page.waitForTimeout(300);
+  await page.click('#compareBtn');
+  await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
+
+  // Team drift CTA should be visible in the visual diff panel
+  const cta = page.locator('#teamDriftCtaBannerInner');
+  await expect(cta).toBeVisible();
+
+  const ctaText = await cta.textContent();
+  expect(ctaText).toMatch(/drift alert|breaking change|Team workspace/i);
+
+  // Primary CTA should link to Team workspace preview
+  const primaryLink = cta.locator('a.btn-primary');
+  const href = await primaryLink.getAttribute('href');
+  expect(href).toMatch(/team\/workspace-preview\.html/);
+
+  // Dismiss button should hide banner and persist timestamp
+  await cta.locator('.team-drift-close').click();
+  await expect(cta).toBeHidden();
+  const dismissedTs = await page.evaluate(() => localStorage.getItem('sl_team_drift_cta_dismissed'));
+  expect(dismissedTs).not.toBeNull();
+  expect(Number(dismissedTs)).toBeGreaterThan(0);
+});
+
 test('github app landing page shows PR comment preview and switches examples', async ({ page }) => {
   await page.goto(`${BASE_URL}/github-app.html`);
   await expect(page.locator('body')).toBeVisible();

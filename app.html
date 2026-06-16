@@ -1661,6 +1661,64 @@ function getFreeTierLimit() {
       white-space: nowrap;
     }
 
+    .team-drift-cta-banner {
+      margin-bottom: 16px;
+      padding: 14px 40px 14px 16px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(168,85,247,0.08));
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .team-drift-cta-banner .team-drift-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 220px;
+    }
+    .team-drift-cta-banner .team-drift-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .team-drift-cta-banner .team-drift-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .team-drift-cta-banner .team-drift-text strong {
+      color: var(--text);
+    }
+    .team-drift-cta-banner .team-drift-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .team-drift-cta-banner button,
+    .team-drift-cta-banner a.btn {
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      white-space: nowrap;
+    }
+    .team-drift-cta-banner .team-drift-close {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+    body.embed-mode .team-drift-cta-banner { display: none !important; }
+
     /* Embeddable widget mode */
     body.embed-mode .announcement-bar,
     body.embed-mode .nav,
@@ -2070,6 +2128,7 @@ CREATE TABLE users (
         <div class="summary-bar" id="summaryBar"></div>
         <div id="warningContainer"></div>
         <div id="shareCtaBanner"></div>
+        <div id="teamDriftCtaBanner"></div>
         <div id="visualDiff"></div>
         <div id="poweredByBadge"></div>
       </div>
@@ -8991,11 +9050,12 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   renderExplanation(diff, breakingChanges);
   renderProValueBanner();
 
-  // Show share CTA or powered-by badge based on context
+  // Show share CTA, Team drift CTA, or powered-by badge based on context
   if (isViewingSharedDiff()) {
     renderPoweredByBadge();
   } else {
     renderShareCtaBanner();
+    renderTeamDriftCtaBanner();
   }
 
   // Load comments if this diff is associated with a saved diff
@@ -9514,11 +9574,72 @@ function renderShareCtaBanner() {
     </div>`;
 }
 
+function renderTeamDriftCtaBanner() {
+  const container = document.getElementById('teamDriftCtaBanner');
+  if (!container) return;
+  if (isViewingSharedDiff()) {
+    container.innerHTML = '';
+    return;
+  }
+  // Respect user dismissal for 7 days
+  try {
+    const dismissed = localStorage.getItem('sl_team_drift_cta_dismissed');
+    if (dismissed && Date.now() - parseInt(dismissed, 10) < 7 * 24 * 60 * 60 * 1000) {
+      container.innerHTML = '';
+      return;
+    }
+  } catch (e) {}
+
+  const hasBreaking = window.lastBreakingChanges && window.lastBreakingChanges.length > 0;
+  const headline = hasBreaking
+    ? '🚨 Breaking change detected — catch the next one before it ships'
+    : '🔔 Get drift alerts for this repo in Slack or Teams';
+  const subtext = hasBreaking
+    ? 'SchemaLens Team monitors every PR and alerts your channel when a dangerous schema change is introduced.'
+    : 'SchemaLens Team watches every pull request and posts schema diff summaries + risk scores to your team channel.';
+
+  container.innerHTML = `
+    <div class="team-drift-cta-banner" id="teamDriftCtaBannerInner" data-rendered="1">
+      <button class="team-drift-close" onclick="dismissTeamDriftCtaBanner()" aria-label="Dismiss Team drift alert CTA">×</button>
+      <div class="team-drift-content">
+        <span class="team-drift-icon">${hasBreaking ? '🚨' : '🔔'}</span>
+        <div class="team-drift-text">
+          <strong>${headline}</strong><br>
+          ${subtext}
+        </div>
+      </div>
+      <div class="team-drift-actions">
+        <a href="team/workspace-preview.html?utm_source=app-team-drift-cta" class="btn btn-primary" target="_blank" rel="noopener" onclick="trackEvent('team_drift_cta_preview_click')">Preview Team workspace</a>
+        <a href="team-buy.html?utm_source=app-team-drift-cta" class="btn btn-secondary" onclick="trackEvent('team_drift_cta_buy_click')">Start Team plan</a>
+      </div>
+    </div>`;
+
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('team_drift_cta_shown', {
+      has_breaking: hasBreaking,
+      breaking_count: hasBreaking ? window.lastBreakingChanges.length : 0
+    });
+  }
+}
+
+function dismissTeamDriftCtaBanner() {
+  try {
+    localStorage.setItem('sl_team_drift_cta_dismissed', String(Date.now()));
+  } catch (e) {}
+  const container = document.getElementById('teamDriftCtaBanner');
+  if (container) container.innerHTML = '';
+  if (window.SchemaLensAnalytics) {
+    window.SchemaLensAnalytics.track('team_drift_cta_dismissed');
+  }
+}
+
 function clearShareUIs() {
   const poweredBy = document.getElementById('poweredByBadge');
   const shareCta = document.getElementById('shareCtaBanner');
+  const teamDriftCta = document.getElementById('teamDriftCtaBanner');
   if (poweredBy) poweredBy.innerHTML = '';
   if (shareCta) shareCta.innerHTML = '';
+  if (teamDriftCta) teamDriftCta.innerHTML = '';
 }
 
 function trackRefClick(source) {
