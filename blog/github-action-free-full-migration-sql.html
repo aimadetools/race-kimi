@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>SchemaLens GitHub Action Is Now 100% Free — Full Migration SQL in Every PR</title>
+  <meta name="description" content="The SchemaLens GitHub Action now returns full migration SQL, rollback SQL, and breaking-change analysis without a license key.">
+  <meta property="og:title" content="SchemaLens GitHub Action Is Now 100% Free — Full Migration SQL in Every PR">
+  <meta property="og:description" content="No license key required. Get complete migration + rollback SQL in PR comments, check runs, and job summaries.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://schemalens.tech/blog/github-action-free-full-migration-sql.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SchemaLens GitHub Action Is Now 100% Free — Full Migration SQL in Every PR",
+  "description": "The SchemaLens GitHub Action now returns full migration SQL, rollback SQL, and breaking-change analysis without a license key.",
+  "url": "https://schemalens.tech/blog/github-action-free-full-migration-sql.html",
+  "datePublished": "2026-06-16",
+  "dateModified": "2026-06-16",
+  "author": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "url": "https://schemalens.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SchemaLens",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://schemalens.tech/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://schemalens.tech/blog/github-action-free-full-migration-sql.html"
+  }
+}
+</script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-post { max-width: 720px; margin: 0 auto; }
+    .blog-post h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .blog-post .blog-meta { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .blog-post h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--text); }
+    .blog-post h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text); }
+    .blog-post p { line-height: 1.75; margin-bottom: 1.25rem; color: var(--text); }
+    .blog-post ul, .blog-post ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .blog-post li { margin-bottom: 0.5rem; line-height: 1.7; color: var(--text); }
+    .blog-post pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .blog-post code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #7ee787;
+    }
+    .blog-post pre code { background: none; padding: 0; color: var(--text); }
+    .blog-post .keyword { color: #ff7b72; }
+    .blog-post .string { color: #a5d6ff; }
+    .blog-post .comment { color: #8b949e; }
+    .blog-post .callout {
+      background: var(--code-bg);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .blog-post .callout p { margin-bottom: 0; }
+    .blog-post .cta-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .blog-post .cta-box h3 { margin-top: 0; color: var(--text); }
+    .blog-post .cta-box p { color: #aaa; margin-bottom: 1rem; }
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; }
+    .back-link:hover { color: var(--text); }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script>
+(function() {
+  const saved = localStorage.getItem('schemalens-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (saved === 'light' || (!saved && prefersLight)) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  window.toggleTheme = function() {
+    const isLight = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+    localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+  };
+})();
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        SchemaLens
+      </a>
+      <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+        <a href="../app.html" class="nav-cta">Open App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 40px;">
+    <div class="container blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+      <h1>SchemaLens GitHub Action Is Now 100% Free</h1>
+      <div class="blog-meta">DevOps · June 16, 2026 · 4 min read</div>
+
+      <p><em>Full migration SQL, rollback SQL, and breaking-change analysis in every PR — no license key required.</em></p>
+
+      <p>Last week we made the web diff tool completely free. Today we're removing the last paywall: the SchemaLens GitHub Action now returns the full migration output for every repo, public or private, with zero configuration beyond the workflow file.</p>
+
+      <div class="callout">
+        <p><strong>What changed:</strong> <code>/api/free-diff</code> and the GitHub Action now include complete <code>migration</code> and <code>rollback</code> SQL, the full <code>breakingChanges</code> list, a <code>summary</code>, and a 0-100 <code>riskScore</code>. No teaser. No "unlock full migration" upsell. No credit card.</p>
+      </div>
+
+      <h2>Why we did it</h2>
+
+      <p>A free action that teases a 5-line migration creates distrust. Developers copy the YAML, run it once, see a truncated preview, and uninstall.</p>
+
+      <p>We want the opposite: the action should be the easiest way to add schema-diff guards to any repo. If it works, teams adopt it. If they adopt it, they discover the Team plan when they need drift alerts, shared workspaces, and admin controls. The free tier is now a genuine product, not a lead-magnet trick.</p>
+
+      <h2>What's free in every PR</h2>
+
+      <ul>
+        <li>Complete migration SQL for every detected change</li>
+        <li>Rollback SQL to reverse the migration</li>
+        <li>Breaking-change analysis with severity labels</li>
+        <li>0-100 risk score and risk label</li>
+        <li>PR comments with formatted diff summaries</li>
+        <li>GitHub Check Run status with failure on breaking changes</li>
+        <li>Job Summary output for the Actions run log</li>
+        <li>Smart skip when no SQL files changed</li>
+      </ul>
+
+      <h2>What a license key now unlocks</h2>
+
+      <p>The <code>license-key</code> input is still supported, but it is now optional and only enables power features:</p>
+
+      <ul>
+        <li><strong>Team:</strong> schema drift alerts, Slack/Teams notifications, shared workspace, higher rate limits</li>
+        <li><strong>Pro:</strong> exports, diff history, rollback scripts in the web UI, 80+ micro-tools</li>
+      </ul>
+
+      <p>The diff itself — the core reason you installed the action — is free.</p>
+
+      <h2>The new minimal workflow</h2>
+
+<pre><code><span class="comment"># .github/workflows/schema-diff.yml</span>
+<span class="keyword">name</span>: Schema Diff
+<span class="keyword">on</span>:
+  <span class="keyword">pull_request</span>:
+    <span class="keyword">paths</span>:
+      - <span class="string">'schema.sql'</span>
+      - <span class="string">'migrations/**'</span>
+
+<span class="keyword">jobs</span>:
+  <span class="keyword">diff</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">fetch-depth</span>: 0
+      - <span class="keyword">name</span>: Get base branch schema
+        <span class="keyword">run</span>: |
+          git show origin/${{ github.base_ref }}:schema.sql > schema-base.sql
+      - <span class="keyword">uses</span>: aimadetools/race-kimi@main
+        <span class="keyword">with</span>:
+          <span class="keyword">old-schema-path</span>: schema-base.sql
+          <span class="keyword">new-schema-path</span>: schema.sql
+          <span class="keyword">dialect</span>: postgres
+          <span class="keyword">post-comment</span>: true
+          <span class="keyword">github-token</span>: ${{ secrets.GITHUB_TOKEN }}
+          <span class="keyword">fail-on-breaking</span>: true</code></pre>
+
+      <p>That's it. No secrets besides <code>GITHUB_TOKEN</code>, which is automatic.</p>
+
+      <h2>What the PR comment looks like now</h2>
+
+<pre><code>🔍 SchemaLens Schema Diff (Free)
+
+Risk: Medium (42/100) | Breaking changes: 0
+
+### Migration
+ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;
+
+### Rollback
+ALTER TABLE users
+  DROP COLUMN email_verified_at;
+
+### Breaking Changes
+None detected.</code></pre>
+
+      <h2>Try it in 60 seconds</h2>
+
+      <p>If you don't want to write YAML by hand, use the <a href="https://schemalens.tech/tools/cicd-setup-wizard.html?platform=github">CI/CD Setup Wizard</a>. Paste your public GitHub repo URL, pick GitHub Actions, and copy a ready-to-commit workflow that already knows your schema files and dialect.</p>
+
+      <h2>What's next</h2>
+
+      <p>We are focused on making the Team plan the obvious upgrade for engineering teams: shared drift dashboards, Slack alerts, and manager-ready ROI reports. The free action is the top of the funnel; the Team workspace is where recurring value lives.</p>
+
+      <p>If this saves your team one production incident, it's worth the five minutes to set up.</p>
+
+      <div class="cta-box">
+        <h3>Add free schema diff to your PRs</h3>
+        <p>Generate a ready-to-commit GitHub Actions workflow in 60 seconds.</p>
+        <a href="../tools/cicd-setup-wizard.html?platform=github" class="btn btn-primary btn-lg">Open CI/CD Setup Wizard</a>
+      </div>
+
+      <p><em>SchemaLens is a browser-based SQL schema diff tool with a free GitHub Action, GitLab/CircleCI/Jenkins/Bitbucket/Azure DevOps support, 80+ micro-tools, and a Team plan for shared workspaces. Built in public.</em></p>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="logo">
+            <span class="logo-mark">SL</span>
+            SchemaLens
+          </a>
+          <p>Compare SQL schemas and generate migrations in your browser. Built for developers, by developers.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="../index.html">Home</a>
+          <a href="../pricing.html">Pricing</a>
+          <a href="../about.html">About</a>
+          <a href="../blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <a href="../tools.html">All Tools</a>
+          <a href="../postgres-schema-diff.html">PostgreSQL Diff</a>
+          <a href="../mysql-schema-diff.html">MySQL Diff</a>
+          <a href="../sqlite-schema-diff.html">SQLite Diff</a>
+          <a href="../sql-server-schema-diff.html">SQL Server Diff</a>
+          <a href="../oracle-schema-diff.html">Oracle Diff</a>
+          <a href="../supabase-schema-diff.html">Supabase Diff</a>
+          <a href="../neon-schema-diff.html">Neon Diff</a>
+          <a href="../planetscale-schema-diff.html">PlanetScale Diff</a>
+          <a href="../railway-schema-diff.html">Railway Diff</a>
+          <a href="../firebase-schema-diff.html">Firebase Diff</a>
+          <a href="../tools/sql-validator.html">SQL Validator</a>
+          <a href="../tools/sql-formatter.html">SQL Formatter</a>
+          <a href="../tools/schema-doc-generator.html">Schema Docs</a>
+          <a href="../tools/csv-to-sql.html">CSV to SQL</a>
+          <a href="../tools/json-to-sql.html">JSON to SQL</a>
+          <a href="../tools/schema-health-check.html">Health Check</a>
+          <a href="../tools/sql-index-analyzer.html">Index Analyzer</a>
+          <a href="../tools/create-table-generator.html">CREATE TABLE Generator</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compare</h4>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Redgate</a>
+          <a href="../schemalens-vs-redgate-vs-prisma.html">SchemaLens vs Prisma</a>
+          <a href="../pricing.html">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="../about.html">Our Story</a>
+          <a href="../about.html">Roadmap</a>
+          <a href="../about.html">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SchemaLens. All rights reserved.</span>
+        <span>Built in the $100 AI Startup Race.</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function() {
+  const key = 'schemalens_analytics';
+  let data = JSON.parse(localStorage.getItem(key) || '{"sessions":0,"pageviews":0,"pages":{}}');
+  const now = Date.now();
+  const last = data.lastVisit || 0;
+  if (now - last > 30 * 60 * 1000) { data.sessions++; }
+  data.pageviews++;
+  data.lastVisit = now;
+  const page = location.pathname;
+  data.pages[page] = (data.pages[page] || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(data));
+})();
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{});}</script>
+</body>
+</html>
