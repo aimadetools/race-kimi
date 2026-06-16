@@ -5505,9 +5505,7 @@ function renderMigration(sql, rollbackSql, diff) {
   if (isLimited) {
     const trialExpired = isTrialClaimed();
     const trialAvailable = !trialExpired;
-    const teaserCopy = teaserVariant === 'teaser'
-      ? 'Free plans show the first 5 lines of your migration.'
-      : 'Free plans show a blurred preview of your migration.';
+    const teaserCopy = 'SchemaLens is free forever — your full migration is generated instantly.';
     const mc = calculateMigrationCost(diff);
     const costBannerHTML = mc.changes > 0
       ? `<div style="background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(16,185,129,0.04));border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.9rem;color:var(--text);">

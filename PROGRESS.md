@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–268)
+## Key Milestones (Days 1–284)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -73,7 +73,7 @@
 | 256 | Jun 13 | CI/CD Setup Wizard — built `tools/cicd-setup-wizard.html` (GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket Pipelines). Cross-linked from CI/CD pages. Added sitemap + e2e test. |
 | 257 | Jun 13 | Wizard Adoption Push — README CTA, GitHub Release notes update, blog post `add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html`, dev.to distribution version, sitemap + e2e. Fixed git object ownership blocker. |
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
-| 259 | Jun 13 | CI/CD Setup Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
+| 259 | Jun 13 | Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
 | 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
@@ -98,50 +98,7 @@
 | 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
 | 282 | Jun 16 | Team revenue prep + manager conversion asset: built `tools/team-roi-calculator.html`, cross-linked from tools/pricing/team-buy, filed Gumroad Team products help request. Awesome-list PRs blocked by PAT scope. Tests pass; deployed. |
 | 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
-
----
-
-## Day 284 — Team Workspace Preview + In-App Team CTA (June 16, 2026)
-
-### Focus
-Close the trust gap for the Team plan by showing prospects exactly what a shared schema diff workspace looks like, and make the preview discoverable from the app share modal and the Team purchase funnel.
-
-### What Was Done
-1. **Built `team/workspace-preview.html`**
-   - Interactive preview of a SchemaLens Team workspace: sidebar with team/repos/recent diffs, schema change table, PR comment preview, Slack drift alert, migration safety score ring, and pipeline status.
-   - Feature grid summarizing shareable links, CI/CD integrations, breaking-change gates, and alerts.
-   - Lead capture form (work email, team size, CI/CD platform) that stores in localStorage, fires `trackEvent`, and POSTs to `/api/analytics`.
-   - Manager-ready CTAs to Team checkout, ROI calculator, enterprise comparison, invoice request, and demo booking.
-   - SEO metadata, OpenGraph/Twitter cards, schema.org SoftwareApplication JSON-LD, canonical URL, and dark/light theme support.
-
-2. **Added in-app Team discovery**
-   - New "👥 Team" tab in the `app.html` share modal linking to the workspace preview.
-   - Analytics tagging on the preview CTA.
-
-3. **Cross-linked the preview page**
-   - Added "Preview Workspace" button on `team.html` hero and text link in hero note.
-   - Added preview link under `team-buy.html` headline.
-   - Added "Preview Workspace" button and footer link on `pricing.html` Team plan card.
-   - Added tool card and footer link on `tools.html`.
-
-4. **Indexed and tested**
-   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 282 URLs.
-   - Added page-load test in `tests/e2e.spec.js`.
-
-5. **Updated README.md**
-   - Added "Preview the Team workspace" bullet and normalized tool count references to 80+.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 196 passed, 14 API tests skipped in static server mode
-- ✅ New Team Workspace Preview page loads without console errors and passes e2e page-load test
-- ✅ Sitemap updated to 282 URLs
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- The Team plan is the only recurring revenue stream, but buyers can't visualize "shared workspace" from a feature list. The preview turns an abstract claim into a concrete dashboard.
-- The lead capture form creates a direct sales pipeline for Team accounts, even before Gumroad Team products are live.
-- Placing the preview inside the app share modal targets users at the exact moment they want to share a diff with teammates.
+| 284 | Jun 16 | Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; added Team tab to app.html share modal; cross-linked from team.html, team-buy.html, pricing.html, tools.html. sitemap: 282 URLs. Tests pass; deployed. |
 
 ---
 
@@ -218,5 +175,10 @@ Create a single printable, shareable asset that combines the ROI calculator, ent
 
 ---
 
-*Days 1–283 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+## Day 287 — CI/CD Becomes Free-Forever Too (June 16, 2026)
 
+### Focus
+Remove the last bait-and-switch in the product: the GitHub Action free tier returned only a 5-line migration teaser while the web UI was fully free. Make the CI/CD integration genuinely free for full migration output, turning adoption into the top-of-funnel and Team/Pro into power-feature upsells.
+
+### What Was Done
+*In progress…*

@@ -290,9 +290,9 @@ ALTER TABLE users
 
       <p>The score isn't just a number. It changes the color of the PR comment banner and adds a risk label that reviewers see before they open the migration SQL.</p>
 
-      <h2>Pro tier: Full migration scripts in PR comments</h2>
+      <h2>Full migration scripts in every PR comment</h2>
 
-      <p>The free tier shows the first 5 lines of the migration preview in the PR comment. For teams that want the complete script, SchemaLens Pro ($39 lifetime) returns the full migration with:</p>
+      <p>The SchemaLens GitHub Action includes the complete generated migration SQL in PR comments for free. Every PR gets:</p>
       <ul>
         <li>Complete <code>ALTER TABLE</code> statements for all changes</li>
         <li>Rollback scripts (reverse migrations)</li>
@@ -300,7 +300,7 @@ ALTER TABLE users
         <li>View dependency tracking (warns when dropped columns break dependent views)</li>
       </ul>
 
-      <p>Add your license key to the workflow:</p>
+      <p>Add a Pro or Team license key to the workflow to also enable schema drift alerts, higher rate limits, and shared workspace features:</p>
 
 <pre><code>      - <span class="keyword">uses</span>: aimadetools/race-kimi@main
         <span class="keyword">with</span>:

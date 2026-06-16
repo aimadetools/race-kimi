@@ -338,11 +338,11 @@
 <span class="warn">~</span> Tables modified: <span class="number">3</span><br><br>
 <span class="label">Risk Score:</span> <span class="warn">42 / 100</span> (Medium)<br>
 <span class="label">Breaking Changes:</span> <span class="number">1</span><br><br>
-<span class="comment"># Migration Preview (first 5 lines)</span><br>
+<span class="comment"># Generated Migration</span><br>
 <span class="keyword">ALTER TABLE</span> users <span class="keyword">DROP COLUMN</span> phone;<br>
 <span class="keyword">ALTER TABLE</span> orders <span class="keyword">ADD COLUMN</span> tracking_id <span class="string">VARCHAR</span>(64);<br>
 <span class="keyword">CREATE TABLE</span> audit_log (...);<br><br>
-<span class="comment"># Export full migration with Pro</span><br>
+<span class="comment"># Export full migration (free)</span><br>
 <span class="cmd">$</span> npx schemalens-cli diff schema-v1.sql schema-v2.sql --format sql --output migration.sql
       </div>
     </div>

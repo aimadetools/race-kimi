@@ -857,7 +857,7 @@ test('api: POST /api/diff returns JSON diff', async ({ request }) => {
   const body = await response.json();
   expect(body).toHaveProperty('diff');
   expect(body).toHaveProperty('migration');
-  expect(body.diff.columnsAdded).toBeDefined();
+  expect(body.diff.tablesModified).toBeDefined();
 });
 
 test('api: POST /api/diff returns markdown', async ({ request }) => {
@@ -1013,9 +1013,12 @@ test('api: POST /api/free-diff returns JSON diff', async ({ request }) => {
   }
   expect(response.status()).toBe(200);
   const body = await response.json();
-  expect(body).toHaveProperty('diff');
+  expect(body).toHaveProperty('summary');
+  expect(body).toHaveProperty('riskScore');
+  expect(body).toHaveProperty('breakingChanges');
   expect(body).toHaveProperty('migration');
-  expect(body).toHaveProperty('warnings');
+  expect(body).toHaveProperty('rollback');
+  expect(body.migration).toContain('ALTER TABLE');
 });
 
 // ───────────────────────────────────────────────

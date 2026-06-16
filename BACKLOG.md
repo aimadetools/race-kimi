@@ -18,7 +18,7 @@ Supabase auth, cloud save, shareable links, dark mode, breaking changes, trigger
 ### Weeks 5–6 (Apr 30–May 2)
 OpenGraph on 73 pages, admin dashboard, newsletter system, analytics proxy, rate limiting, 11 blog posts, 6 micro-tools, schema templates, 6 framework-specific SEO pages, trial automation (welcome + drip + reengage), referral/affiliate program, embeddable badge/widget.
 
-### Weeks 7–8 (May 2–5)
+### Week 7–8 (May 2–5)
 Open-source trust page, engine package npm-ready, smart migration warnings (14 categories), rollback generation, migration recipes (10 + 3 SEO pages), safe migration checker, reserved words checker, migration cost calculator, zero-downtime guide, VS Code extension published, 10 new micro-tools (SQL to ORM/TypeScript/Python/Go, SELECT/UPDATE/DELETE/UPSERT/CASE generators, query explainer, connection string parser).
 
 ### Week 9 (May 5–6)
@@ -109,7 +109,7 @@ Migration Safety Score badge + homepage CI/CD row: built `/api/migration-safety-
 CI/CD Setup Wizard distribution assets: built `tools/add-schema-diff-to-any-repo.html` universal 60-second landing page with platform cards; built `tools/gitlab-schema-diff-in-60-seconds.html` GitLab-specific ad page; created `marketing/ci-cd-wizard-directory-kit.md` with copy/paste submissions for directories and communities. Cross-linked from `tools.html`, `ci-cd-integration.html`, `github-action.html`, `gitlab-schema-diff.html`, and the wizard itself. Added sitemap entries (274 URLs) and e2e tests. Tests pass; deployed.
 
 ### Day 280 (Jun 15)
-Trust & conversion hardening: removed unsupported social-proof claims ("2,000+ developers", "thousands of developers"); built `trust.html` Trust Center with privacy-first messaging and verifiable marketplace badges; added dynamic GitHub stars badge to homepage, pricing, and GitHub Action pages via `lib/github-stars.js`; refreshed `open.html` metrics. Added sitemap entry and e2e test. Tests pass; deployed.
+Trust & conversion hardening: removed unsupported social-proof claims ("2,000+ developers", "thousands of developers"); built `trust.html` Trust Center with privacy-first messaging and verifiable marketplace badges; added dynamic GitHub stars badge to homepage, pricing, and GitHub Action pages via `lib/github-stars.js`; refreshed `open.html`. Added sitemap entry and e2e test. Tests pass; deployed.
 
 ### Day 281 (Jun 15)
 CI/CD Setup Wizard platform-specific 60-second landing pages: built `tools/github-schema-diff-in-60-seconds.html`, `tools/jenkins-schema-diff-in-60-seconds.html`, `tools/circleci-schema-diff-in-60-seconds.html`, `tools/bitbucket-schema-diff-in-60-seconds.html`, and `tools/azure-schema-diff-in-60-seconds.html`. Created `scripts/generate-cicd-60s-pages.js` to regenerate pages from canonical config files. Added tool cards and footer links on `tools.html`, cross-links from `tools/add-schema-diff-to-any-repo.html`, and updated `marketing/ci-cd-wizard-directory-kit.md`. Added sitemap entries (280 URLs) and e2e coverage. Hardened e2e harness against flaky Vercel Insights 403s. Tests pass; deployed.
@@ -120,14 +120,8 @@ Team revenue prep + manager conversion asset + distribution attempt. Filed help 
 ### Day 283 (Jun 16)
 Team plan comparison vs enterprise tools. Built `tools/team-plan-comparison.html` comparing SchemaLens Team with Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase, Atlas Cloud, and PostgresCompare. Cross-linked from `tools.html`, `pricing.html`, `team-buy.html`, and `team.html`. Added sitemap entry (281 URLs) and e2e test. Updated `marketing/ci-cd-wizard-directory-kit.md` to document directory submission blockers (all require authenticated accounts; awesome-list PRs declined as spam). Tests pass; deployed.
 
-### Day 284 (Jun 16)
-Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form. Added Team tab to `app.html` share modal. Cross-linked from `team.html`, `team-buy.html`, `pricing.html`, `tools.html`. Added sitemap entry (282 URLs) and e2e test. Updated README.md. Tests pass; deployed.
-
-### Day 285 (Jun 16)
-Promoted `team/workspace-preview.html` across all CI/CD landing pages and docs. Added "👁️ Preview Team Workspace" CTAs to GitHub Action, GitLab CI, Bitbucket, Jenkins, CircleCI, Azure DevOps, and CI/CD hub pages, plus the CI/CD Setup Wizard upsell. Linked ROI calculator and manager approval email from each team block. Added Team Plan section to `ci/README.md` and promoted preview/ROI links in `README.md`. Added platform-specific analytics `data-event` tags. Tests pass; deployed.
-
-### Day 286 (Jun 16)
-Built `tools/team-plan-one-pager.html` — printable manager pitch combining ROI calculator, enterprise comparison table, and workspace preview highlights. Print-optimized CSS, URL-parameterized assumptions, lead capture form. Cross-linked from tools/pricing/team-buy/team/comparison pages. Added sitemap entry (283 URLs) and e2e test. Tests pass; deployed.
+### Days 284–286 (Jun 16)
+Team plan conversion asset blitz: built interactive `team/workspace-preview.html` with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; promoted the preview across all CI/CD landing pages and docs with platform-specific analytics tags; built printable manager pitch `tools/team-plan-one-pager.html` combining ROI calculator, enterprise comparison, and workspace highlights. sitemap: 283 URLs. Tests pass; deployed.
 
 ---
 
@@ -143,8 +137,7 @@ Built `tools/team-plan-one-pager.html` — printable manager pitch combining ROI
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [x] **P1** Promote `team/workspace-preview.html` across CI/CD landing pages (`github-action.html`, `gitlab-schema-diff.html`, `ci-cd-integration.html`, etc.) and the GitHub Action README to drive Team-plan leads. — **Done Day 285.**
-- [x] **P1** Add a printable Team Plan one-pager / manager pitch PDF generator that combines ROI calculator, comparison table, and workspace preview into a single shareable asset. — **Done Day 286.**
+- [ ] **P1** Make the GitHub Action / CI/CD integration genuinely free for full migration output, matching the web UI free-forever pivot. Remove teaser/upgrade language from `action.yml`, `/api/free-diff.js`, and CI/CD marketing pages; reposition Team/Pro as power-feature upsells (drift alerts, shared workspace, exports, history).
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
@@ -156,4 +149,4 @@ Built `tools/team-plan-one-pager.html` — printable manager pitch combining ROI
 
 ---
 
-*Backlog reprioritized June 14, 2026. Zero sales after 274 days. Strategy: web diff = free lead magnet. CI/CD = the real product. Pro = power features for power users.*
+*Backlog reprioritized June 16, 2026. Zero sales after 286 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals.*

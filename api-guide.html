@@ -431,7 +431,7 @@ func main() {
 
     <div class="guide-section" style="background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(99,102,241,0.05) 100%); border-radius: var(--radius); padding: 28px;">
       <h2>🆓 Free Diff API — No License Key Required</h2>
-      <p>Perfect for CI/CD pipelines, open-source projects, and quick checks. Returns a summarized diff with a migration teaser.</p>
+      <p>Perfect for CI/CD pipelines, open-source projects, and quick checks. Returns the full semantic diff, generated migration SQL, and rollback SQL — no license key required.</p>
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">https://schemalens.tech/api/free-diff</span>
       </div>
@@ -444,8 +444,8 @@ func main() {
     "format": "json"
   }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
       <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">
-        <strong>Free tier limits:</strong> 15 requests/minute. Response includes summary, risk score, first 5 breaking changes, and first 5 lines of migration SQL.
-        <a href="pricing.html">Upgrade to Pro</a> for unlimited access and full migration generation.
+        <strong>Free tier limits:</strong> 15 requests/minute. Response includes summary, risk score, all breaking changes, full migration SQL, and rollback SQL.
+        <a href="team-buy.html">Upgrade to Team</a> for drift alerts, shared workspace, and 30 requests/minute.
       </p>
       <p style="margin-top:10px;">
         <a href="tools/schema-diff-in-one-command.html" class="btn btn-secondary" style="font-size:0.85rem;">📄 See Dedicated curl Demo Page →</a>
