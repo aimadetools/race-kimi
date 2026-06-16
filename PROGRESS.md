@@ -181,4 +181,39 @@ Create a single printable, shareable asset that combines the ROI calculator, ent
 Remove the last bait-and-switch in the product: the GitHub Action free tier returned only a 5-line migration teaser while the web UI was fully free. Make the CI/CD integration genuinely free for full migration output, turning adoption into the top-of-funnel and Team/Pro into power-feature upsells.
 
 ### What Was Done
-*In progress…*
+1. **Made `/api/free-diff` return full migration SQL**
+   - JSON response now includes `migration`, `rollback`, all `breakingChanges`, `summary`, and `riskScore` — no license key required.
+   - Markdown response now includes the complete generated migration SQL, not a 5-line teaser.
+   - Added `teamUpsell` field pointing to `team-buy.html` for drift alerts and shared workspace.
+   - Rate-limit error message now promotes Team instead of Pro.
+
+2. **Updated the GitHub Action (`action.yml`)**
+   - Description now emphasizes "free schema diff ... with full migration SQL" and Team upsell for alerts/workspace.
+   - `license-key` input description reframed: optional key enables drift alerts and higher rate limits; the diff itself is free.
+   - Removed "Unlock the full migration with SchemaLens Pro" from Job Summary, PR comments, and Check Run output.
+   - Replaced teaser fallback with a message that full migration SQL is free and a Team CTA for drift alerts.
+
+3. **Updated CI/CD marketing and docs**
+   - `github-action.html`: mockup previews now show full migration and Team upsell; feature grid says "100% free for every repo"; comparison table shows full migration SQL as free; drift alerts section retitled "Team".
+   - `ci-cd-integration.html`: updated drift-alert copy to "full migration SQL".
+   - `api-guide.html`: free-diff section now says "full migration SQL and rollback SQL — no license key required" and links to Team for higher limits.
+   - `tools/github-action-setup.html`: license key step reframed as optional for alerts; PR comment preview shows full migration; footer promotes Team.
+   - `cli/index.html`: terminal mockup no longer says "first 5 lines" or "Export full migration with Pro".
+   - `bitbucket-schema-diff.html`, `gitlab-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`: free-vs-Pro comparison tables now show full migration SQL on both tiers.
+   - `blog/schema-diff-pr-comments-github-action.html`: updated section to say full migration scripts are free; license key enables alerts/workspace.
+   - `schemalens-vs-redgate-vs-prisma.html`: clarified free tier includes full migration SQL + rollback.
+
+4. **Fixed stale e2e assertions**
+   - `/api/free-diff` test now checks for `summary`, `riskScore`, `breakingChanges`, `migration`, and `rollback`.
+   - `/api/diff` test now checks `tablesModified` instead of the non-existent `columnsAdded`.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 197 passed, 14 API tests skipped in static server mode
+- ✅ `/api/free-diff.js` loads without syntax errors
+- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- The GitHub Action is the most important distribution channel. A free-but-teaser action creates distrust; a genuinely free action gets adopted.
+- Every install exposes the action's users to the SchemaLens brand and the Team upsell for drift alerts, Slack/Teams notifications, and shared workspace.
+- This aligns CI/CD with the web UI free-forever pivot and removes the last "bait-and-switch" friction in the product.

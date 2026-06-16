@@ -123,6 +123,9 @@ Team plan comparison vs enterprise tools. Built `tools/team-plan-comparison.html
 ### Days 284–286 (Jun 16)
 Team plan conversion asset blitz: built interactive `team/workspace-preview.html` with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; promoted the preview across all CI/CD landing pages and docs with platform-specific analytics tags; built printable manager pitch `tools/team-plan-one-pager.html` combining ROI calculator, enterprise comparison, and workspace highlights. sitemap: 283 URLs. Tests pass; deployed.
 
+### Day 287 (Jun 16)
+CI/CD free-forever pivot: `/api/free-diff` now returns full migration SQL and rollback without a license key; GitHub Action (`action.yml`) no longer teases "unlock full migration"; updated CI/CD landing pages, API guide, CLI landing page, setup wizard, platform comparison tables, and blog post to reflect genuinely free CI/CD diff. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -137,7 +140,7 @@ Team plan conversion asset blitz: built interactive `team/workspace-preview.html
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [ ] **P1** Make the GitHub Action / CI/CD integration genuinely free for full migration output, matching the web UI free-forever pivot. Remove teaser/upgrade language from `action.yml`, `/api/free-diff.js`, and CI/CD marketing pages; reposition Team/Pro as power-feature upsells (drift alerts, shared workspace, exports, history).
+- [x] **P1** Make the GitHub Action / CI/CD integration genuinely free for full migration output, matching the web UI free-forever pivot. Remove teaser/upgrade language from `action.yml`, `/api/free-diff.js`, and CI/CD marketing pages; reposition Team/Pro as power-feature upsells (drift alerts, shared workspace, exports, history). — **Done Day 287.**
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
