@@ -2,7 +2,7 @@ name: 'SchemaLens Schema Diff'
 branding:
   icon: 'shield'
   color: 'indigo'
-description: 'Catch breaking database schema changes in every pull request. Free schema diff for GitHub Actions with full migration SQL, PR comments, Check Runs, and risk scores. Upgrade to SchemaLens Team for drift alerts and shared workspaces. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.'
+description: 'Catch breaking database schema changes in every pull request. Free schema diff for GitHub Actions with full migration SQL, PR comments, Check Runs, and risk scores. Add in one click from the Actions → New workflow tab using the built-in starter workflow. Upgrade to SchemaLens Team for drift alerts and shared workspaces. Supports PostgreSQL, MySQL, SQLite, SQL Server, and Oracle.'
 inputs:
   old-schema-path:
     description: 'Path to the old schema SQL file'

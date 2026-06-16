@@ -61,6 +61,10 @@ Add free database schema diff checks to your GitHub Actions CI/CD pipeline and c
 
 Perfect for teams using PostgreSQL, MySQL, SQLite, SQL Server, or Oracle who want automated schema review without connecting to a live database.
 
+![Add SchemaLens to your repo in 30 seconds — pick the starter workflow from the Actions tab](assets/github-action-add-to-repo.gif)
+
+**Fastest way to start:** add the SchemaLens starter workflow directly from the **Actions → New workflow** tab in any repository with `.sql` files.
+
 ```yaml
 # .github/workflows/schema-diff.yml
 name: Schema Diff
@@ -96,8 +100,8 @@ jobs:
 
 ### Get started
 
+- **[🚀 Add the starter workflow from the GitHub Actions tab →](https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates)** — one click, no YAML to write
 - **[⚡ CI/CD Setup Wizard — generate your pipeline config in 60 seconds →](https://schemalens.tech/tools/cicd-setup-wizard.html?platform=github)**
-- **[🚀 Add the starter workflow from the GitHub Actions tab →](https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates)**
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
