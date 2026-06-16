@@ -166,6 +166,7 @@ const pages = [
   { path: '/tools/bitbucket-schema-diff-in-60-seconds.html', name: 'Bitbucket Schema Diff in 60 Seconds' },
   { path: '/tools/azure-schema-diff-in-60-seconds.html', name: 'Azure DevOps Schema Diff in 60 Seconds' },
   { path: '/tools/request-team-invoice.html', name: 'Request Team Invoice' },
+  { path: '/tools/team-roi-calculator.html', name: 'Team ROI Calculator' },
   { path: '/schema-drift-alert.html', name: 'Schema Drift Alert Page' },
   { path: '/team/schema-drift-dashboard.html', name: 'Team Schema Drift Dashboard' },
   { path: '/blog/add-schema-diff-to-any-ci-cd-pipeline-in-60-seconds.html', name: 'CI/CD Pipeline 60s Blog Post' },

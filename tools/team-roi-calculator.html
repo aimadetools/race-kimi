@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Team ROI Calculator — Prove the Business Case in 60 Seconds</title>
+  <meta name="description" content="Calculate the ROI of adding SchemaLens Team to your engineering workflow. Compare time saved, incident risk avoided, and Team plan cost. Shareable results.">
+  <link rel="canonical" href="https://schemalens.tech/tools/team-roi-calculator.html">
+  <meta property="og:title" content="SchemaLens Team ROI Calculator — Prove the Business Case in 60 Seconds">
+  <meta property="og:description" content="Calculate the ROI of adding SchemaLens Team to your engineering workflow. Compare time saved, incident risk avoided, and Team plan cost.">
+  <meta property="og:url" content="https://schemalens.tech/tools/team-roi-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchemaLens Team ROI Calculator — Prove the Business Case in 60 Seconds">
+  <meta name="twitter:description" content="Calculate the ROI of adding SchemaLens Team to your engineering workflow. Compare time saved, incident risk avoided, and Team plan cost.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Team ROI Calculator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Calculates ROI of SchemaLens Team plan based on team size, migration volume, time saved, developer hourly cost, and incident risk avoided.",
+    "url": "https://schemalens.tech/tools/team-roi-calculator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+    .calc-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 28px auto; max-width: 1100px; padding: 0 24px; }
+    @media (max-width: 900px) { .calc-wrapper { grid-template-columns: 1fr; } }
+    .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .calc-card h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; color: var(--text); }
+    .input-group { margin-bottom: 22px; }
+    .input-group label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: var(--text); }
+    .input-group input[type="range"] { width: 100%; margin-bottom: 6px; accent-color: var(--primary); }
+    .input-group .value-display { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
+    .input-group input[type="number"] {
+      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.95rem; box-sizing: border-box;
+    }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .result-grid { grid-template-columns: 1fr; } }
+    .result-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
+    .result-box .label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    .result-box .value { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .result-box .value.positive { color: #22c55e; }
+    .result-box .value.negative { color: #ef4444; }
+    .result-box .sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .roi-highlight {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 20px;
+    }
+    .roi-highlight h3 { font-size: 1rem; margin-bottom: 10px; }
+    .roi-highlight p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .cta-row a {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .cta-row a.primary { background: var(--primary); color: #fff; }
+    .cta-row a.primary:hover { background: var(--primary-hover); }
+    .cta-row a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .cta-row a.secondary:hover { border-color: var(--hover-border); }
+    .share-row { margin-top: 18px; }
+    .share-row button {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 16px; font-size: 0.85rem; cursor: pointer; margin-right: 8px;
+    }
+    .share-row button:hover { border-color: var(--hover-border); }
+    .assumption-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 16px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../team-buy.html" style="color:var(--text-muted);text-decoration:none;">Team</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>Team ROI Calculator</h1>
+    <p>Show your manager exactly how much engineering time and incident risk SchemaLens Team saves. Adjust the numbers to match your workflow.</p>
+  </div>
+
+  <div class="calc-wrapper">
+    <div class="calc-card">
+      <h2>Your team</h2>
+
+      <div class="input-group">
+        <label for="teamSize">Team size (people reviewing migrations)</label>
+        <input type="range" id="teamSize" min="1" max="50" value="5">
+        <div class="value-display"><span id="teamSizeVal">5</span> engineers</div>
+      </div>
+
+      <div class="input-group">
+        <label for="migrationsPerMonth">Migrations reviewed per month</label>
+        <input type="range" id="migrationsPerMonth" min="1" max="100" value="8">
+        <div class="value-display"><span id="migrationsPerMonthVal">8</span> migrations</div>
+      </div>
+
+      <div class="input-group">
+        <label for="hoursSaved">Hours saved per migration with schema diff automation</label>
+        <input type="range" id="hoursSaved" min="0.1" max="4" step="0.1" value="0.75">
+        <div class="value-display"><span id="hoursSavedVal">0.75</span> hours</div>
+      </div>
+
+      <div class="input-group">
+        <label for="hourlyCost">Average fully-loaded hourly cost per engineer</label>
+        <input type="number" id="hourlyCost" value="75" min="10" step="5">
+      </div>
+
+      <div class="input-group">
+        <label for="incidentsAvoided">Production schema incidents avoided per year</label>
+        <input type="range" id="incidentsAvoided" min="0" max="10" step="0.5" value="1">
+        <div class="value-display"><span id="incidentsAvoidedVal">1</span> incidents</div>
+      </div>
+
+      <div class="input-group">
+        <label for="incidentCost">Average cost per schema incident</label>
+        <input type="number" id="incidentCost" value="5000" min="0" step="500">
+      </div>
+
+      <div class="input-group">
+        <label for="billing">Team plan billing</label>
+        <select id="billing" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.95rem;">
+          <option value="monthly">Monthly — $29/mo</option>
+          <option value="yearly" selected>Yearly — $290/yr (2 months free)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <h2>Annual impact</h2>
+      <div class="result-grid">
+        <div class="result-box">
+          <div class="label">Time saved / year</div>
+          <div class="value" id="timeSaved">360 h</div>
+          <div class="sub" id="timeSavedSub">30 h / month</div>
+        </div>
+        <div class="result-box">
+          <div class="label">Engineering cost saved</div>
+          <div class="value positive" id="costSaved">$27,000</div>
+          <div class="sub">from faster migration reviews</div>
+        </div>
+        <div class="result-box">
+          <div class="label">Incident cost avoided</div>
+          <div class="value positive" id="incidentAvoided">$5,000</div>
+          <div class="sub">fewer breaking changes shipped</div>
+        </div>
+        <div class="result-box">
+          <div class="label">SchemaLens Team cost</div>
+          <div class="value negative" id="toolCost">$290</div>
+          <div class="sub" id="toolCostSub">billed yearly</div>
+        </div>
+      </div>
+
+      <div class="roi-highlight">
+        <h3>Net annual savings: <span id="netSavings" style="color:#22c55e;">$31,710</span></h3>
+        <p><strong>ROI: <span id="roiMultiple">109x</span></strong> · Payback period: <span id="payback">3 days</span>. Every month without SchemaLens Team costs <span id="monthlyLeak">$2,642</span> in review time and unquantified incident risk.</p>
+      </div>
+
+      <div class="cta-row">
+        <a href="../team-buy.html" class="primary">Start Team Plan →</a>
+        <a href="request-team-invoice.html" class="secondary">Request invoice</a>
+        <a href="../team-pitch.html" class="secondary">Manager pitch</a>
+      </div>
+
+      <div class="share-row">
+        <button id="copyUrl">Copy result URL</button>
+        <button id="copySummary">Copy summary</button>
+      </div>
+
+      <p class="assumption-note">Assumptions: savings come from automated schema diff in CI/CD, visual migration review, and breaking-change alerts. Incident costs include downtime, rollback, and on-call time. Adjust values to match your team.</p>
+    </div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+  <p style="margin-bottom:12px;">
+    <a href="../index.html" style="color:var(--text-muted);">Home</a> ·
+    <a href="../app.html" style="color:var(--text-muted);">App</a> ·
+    <a href="../pricing.html" style="color:var(--text-muted);">Pricing</a> ·
+    <a href="../team-buy.html" style="color:var(--text-muted);">Team</a> ·
+    <a href="../tools.html" style="color:var(--text-muted);">Tools</a>
+  </p>
+  <p>© 2026 SchemaLens. Built in the open.</p>
+</footer>
+
+<script>
+(function() {
+  const inputs = {
+    teamSize: document.getElementById('teamSize'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonth'),
+    hoursSaved: document.getElementById('hoursSaved'),
+    hourlyCost: document.getElementById('hourlyCost'),
+    incidentsAvoided: document.getElementById('incidentsAvoided'),
+    incidentCost: document.getElementById('incidentCost'),
+    billing: document.getElementById('billing'),
+  };
+  const displays = {
+    teamSize: document.getElementById('teamSizeVal'),
+    migrationsPerMonth: document.getElementById('migrationsPerMonthVal'),
+    hoursSaved: document.getElementById('hoursSavedVal'),
+    incidentsAvoided: document.getElementById('incidentsAvoidedVal'),
+  };
+
+  function fmtMoney(n) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+  }
+  function fmtNum(n) {
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(n);
+  }
+
+  function readParams() {
+    const params = new URLSearchParams(window.location.search);
+    const set = (key, el) => { if (params.has(key)) el.value = params.get(key); };
+    set('team', inputs.teamSize);
+    set('migrations', inputs.migrationsPerMonth);
+    set('hours', inputs.hoursSaved);
+    set('rate', inputs.hourlyCost);
+    set('incidents', inputs.incidentsAvoided);
+    set('incidentCost', inputs.incidentCost);
+    if (params.has('billing')) inputs.billing.value = params.get('billing');
+  }
+
+  function update() {
+    const teamSize = +inputs.teamSize.value;
+    const migrationsPerMonth = +inputs.migrationsPerMonth.value;
+    const hoursSaved = +inputs.hoursSaved.value;
+    const hourlyCost = +inputs.hourlyCost.value;
+    const incidentsAvoided = +inputs.incidentsAvoided.value;
+    const incidentCost = +inputs.incidentCost.value;
+    const yearly = inputs.billing.value === 'yearly';
+
+    displays.teamSize.textContent = teamSize;
+    displays.migrationsPerMonth.textContent = migrationsPerMonth;
+    displays.hoursSaved.textContent = hoursSaved;
+    displays.incidentsAvoided.textContent = incidentsAvoided;
+
+    const monthlyHoursSaved = migrationsPerMonth * hoursSaved;
+    const yearlyHoursSaved = monthlyHoursSaved * 12;
+    const yearlyCostSaved = yearlyHoursSaved * hourlyCost;
+    const yearlyIncidentAvoided = incidentsAvoided * incidentCost;
+    const toolCost = yearly ? 290 : (29 * 12);
+    const net = yearlyCostSaved + yearlyIncidentAvoided - toolCost;
+    const roi = toolCost > 0 ? ((yearlyCostSaved + yearlyIncidentAvoided) / toolCost) : 0;
+    const paybackDays = (yearlyCostSaved + yearlyIncidentAvoided) > 0 ? Math.ceil(toolCost / ((yearlyCostSaved + yearlyIncidentAvoided) / 365)) : 0;
+    const monthlyLeak = (yearlyCostSaved + yearlyIncidentAvoided) / 12;
+
+    document.getElementById('timeSaved').textContent = fmtNum(yearlyHoursSaved) + ' h';
+    document.getElementById('timeSavedSub').textContent = fmtNum(monthlyHoursSaved) + ' h / month';
+    document.getElementById('costSaved').textContent = fmtMoney(yearlyCostSaved);
+    document.getElementById('incidentAvoided').textContent = fmtMoney(yearlyIncidentAvoided);
+    document.getElementById('toolCost').textContent = fmtMoney(toolCost);
+    document.getElementById('toolCostSub').textContent = yearly ? 'billed yearly' : 'billed monthly';
+    document.getElementById('netSavings').textContent = fmtMoney(net);
+    document.getElementById('roiMultiple').textContent = fmtNum(roi) + 'x';
+    document.getElementById('payback').textContent = paybackDays + ' day' + (paybackDays === 1 ? '' : 's');
+    document.getElementById('monthlyLeak').textContent = fmtMoney(monthlyLeak);
+
+    // Update URL without reload
+    const params = new URLSearchParams();
+    params.set('team', teamSize);
+    params.set('migrations', migrationsPerMonth);
+    params.set('hours', hoursSaved);
+    params.set('rate', hourlyCost);
+    params.set('incidents', incidentsAvoided);
+    params.set('incidentCost', incidentCost);
+    params.set('billing', inputs.billing.value);
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.replaceState({}, '', newUrl);
+  }
+
+  Object.values(inputs).forEach(el => {
+    el.addEventListener('input', update);
+  });
+
+  document.getElementById('copyUrl').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const btn = this;
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 1500);
+    });
+  });
+
+  document.getElementById('copySummary').addEventListener('click', function() {
+    const net = document.getElementById('netSavings').textContent;
+    const roi = document.getElementById('roiMultiple').textContent;
+    const payback = document.getElementById('payback').textContent;
+    const text = `SchemaLens Team ROI estimate: ${net} saved/year, ${roi} ROI, ${payback} payback. Try it yourself: ${window.location.href}`;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = this;
+      const old = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = old, 1500);
+    });
+  });
+
+  readParams();
+  update();
+})();
+</script>
+</body>
+</html>
