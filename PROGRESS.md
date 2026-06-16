@@ -106,38 +106,10 @@
 | 289 | Jun 16 | GitHub Actions starter workflow template (`.github/workflow-templates/`) + stronger Team upsell in action job summary, PR comments, and Check Run output; README and github-action.html cross-linked. |
 | 290 | Jun 16 | Promoted GitHub Actions starter workflow in action.yml Marketplace description, README.md, and github-action.html; created `assets/github-action-add-to-repo.gif` with reproducible generator script; tests pass; deployed. |
 | 291 | Jun 16 | Added contextual Team drift-alerts CTA in app.html diff flow with breaking-change-aware copy, workspace preview/Team buy links, 7-day dismissal, and e2e coverage; tests pass; deployed. |
+| 292 | Jun 16 | Built `schema-diff-newsletter.html` dedicated ad landing page + UTM tracking (`utm_visit` analytics + `lib/utm-preserve.js`); indexed and e2e-tested; help request filed for low-cost DB/CI newsletter ad. |
 
 ---
 
-## Day 289 — GitHub Action Starter Workflow + Team Upsell in CI Outputs (June 16, 2026)
-
-### Focus
-Make the SchemaLens GitHub Action easier to adopt from inside GitHub and turn every free CI/CD diff result into a soft Team-plan upsell.
-
-### What Was Done
-1. **Added a GitHub starter workflow template** (`.github/workflow-templates/schemalens-schema-diff.yml` + `.properties.json`)
-   - Appears in a repo's **Actions → New workflow** tab when `.sql` files exist.
-   - Pre-configured with `post-comment: true`, `create-check-run: true`, `run-only-on-schema-change: true`, and the correct permissions.
-   - Links back to the SchemaLens action on every repo that installs it.
-
-2. **Strengthened Team upsell in `action.yml` outputs**
-   - Job Summary now ends with a Team CTA for drift alerts and shared workspace.
-   - PR comments append a consistent Team upsell footer.
-   - Check Run output always includes the Team upgrade note.
-
-3. **Promoted the starter workflow**
-   - README.md links to the template folder.
-   - `github-action.html` hero now highlights "Add from the Actions tab" with a direct link.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
-- ✅ Committed and pushed to `main`; deployed to Vercel production
-
-### Why This Matters
-- GitHub Marketplace traffic is high-intent but lazy. A starter workflow removes the "write a YAML file" friction and puts SchemaLens one click away in the Actions UI.
-- Every free PR comment / Check Run now exposes the Team plan value, turning CI/CD adoption into a recurring-revenue lead channel.
----
 ## Day 290 — GitHub Action Starter-Workflow Promotion + "Add to Repo" Demo GIF (June 16, 2026)
 
 ### Focus
