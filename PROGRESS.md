@@ -99,41 +99,7 @@
 | 282 | Jun 16 | Team revenue prep + manager conversion asset: built `tools/team-roi-calculator.html`, cross-linked from tools/pricing/team-buy, filed Gumroad Team products help request. Awesome-list PRs blocked by PAT scope. Tests pass; deployed. |
 | 283 | Jun 16 | Built manager-ready `tools/team-plan-comparison.html` comparing SchemaLens Team with enterprise schema diff tools; cross-linked from pricing/team-buy/tools; sitemap 281 URLs. |
 | 284 | Jun 16 | Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form; added Team tab to app.html share modal; cross-linked from team.html, team-buy.html, pricing.html, tools.html. sitemap: 282 URLs. Tests pass; deployed. |
-
----
-
-## Day 285 — Promote Team Workspace Preview Across CI/CD Pages (June 16, 2026)
-
-### Focus
-Drive Team-plan leads from every CI/CD entry point by making the shared workspace preview one click away, with ROI and purchase paths alongside it.
-
-### What Was Done
-1. **Added Team workspace preview CTAs to all CI/CD landing pages**
-   - `github-action.html`: upgraded the existing "Need this for your team?" block to lead with "👁️ Preview Team Workspace", plus Team checkout, ROI calculator, manager approval email, and demo links.
-   - `gitlab-schema-diff.html`, `bitbucket-schema-diff.html`, `jenkins-schema-diff.html`, `circleci-schema-diff.html`: replaced the generic demo/audit CTA with the same workspace-preview-first team block.
-   - `azure-devops-schema-diff.html`: inserted a new Team workspace preview promo block above the existing free-app CTA.
-   - `ci-cd-integration.html`: added "Preview Team Workspace" as the primary Team plan CTA, alongside checkout and ROI calculator.
-
-2. **Updated CI/CD Setup Wizard upsell**
-   - `tools/cicd-setup-wizard.html` Team upsell now leads with "👁️ Preview Team Workspace", then Team checkout, dashboard preview, and pricing.
-
-3. **Updated documentation**
-   - `README.md`: promoted Team workspace preview and ROI calculator in the GitHub Action "Get started" list.
-   - `ci/README.md`: added a "Team Plan" section with links to the workspace preview, ROI calculator, and demo booking.
-
-4. **Analytics tagging**
-   - Each "Preview Team Workspace" CTA carries a distinct `data-event` per platform (`github_action_team_workspace_preview`, `gitlab_team_workspace_preview`, `bitbucket_team_workspace_preview`, `jenkins_team_workspace_preview`, `circleci_team_workspace_preview`, `azure_team_workspace_preview`, `cicd_hub_team_workspace_preview`, `wizard_team_workspace_preview`) so conversion can be attributed by source.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 196 passed, 14 API tests skipped in static server mode
-- ✅ All modified CI/CD landing pages load without console errors
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- The Team workspace preview is the strongest trust-building asset for the only recurring revenue stream; surfacing it on every CI/CD page turns high-intent pipeline traffic into qualified Team leads.
-- Pairing the preview with ROI calculator and manager-approval email gives engineering managers everything they need to justify the purchase.
-- Platform-specific analytics tags reveal which CI/CD channel drives the most Team-plan interest.
+| 285 | Jun 16 | Promoted Team workspace preview across all CI/CD landing pages and docs with platform-specific analytics tags. sitemap: 282 URLs. Tests pass; deployed. |
 
 ---
 
@@ -217,3 +183,32 @@ Remove the last bait-and-switch in the product: the GitHub Action free tier retu
 - The GitHub Action is the most important distribution channel. A free-but-teaser action creates distrust; a genuinely free action gets adopted.
 - Every install exposes the action's users to the SchemaLens brand and the Team upsell for drift alerts, Slack/Teams notifications, and shared workspace.
 - This aligns CI/CD with the web UI free-forever pivot and removes the last "bait-and-switch" friction in the product.
+
+---
+
+## Day 288 — GitHub Action Free-Forever Announcement (June 16, 2026)
+
+### Focus
+Promote the Day 287 CI/CD free-forever pivot with an on-site announcement post that explains the change, shows the new minimal workflow, and drives readers to the CI/CD Setup Wizard.
+
+### What Was Done
+1. **Built `blog/github-action-free-full-migration-sql.html`**
+   - Announced that the SchemaLens GitHub Action now returns full migration SQL, rollback SQL, breaking-change analysis, risk score, and PR comments without a license key.
+   - Clarified that the optional `license-key` now unlocks Team/Pro power features (drift alerts, shared workspace, exports, history) instead of the core diff output.
+   - Included a minimal ready-to-copy workflow, a sample PR comment, and CTAs to the CI/CD Setup Wizard.
+
+2. **Cross-linked the post**
+   - Featured it at the top of `blog.html`.
+   - Added a sitemap entry (priority 0.8, monthly). sitemap: 284 URLs.
+   - Added an e2e page-load test in `tests/e2e.spec.js`.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
+- ✅ New blog post loads without console errors
+- ✅ Committed and ready to deploy
+
+### Why This Matters
+- The GitHub Action is the highest-leverage distribution channel. A public announcement reinforces the "no bait-and-switch" positioning and gives advocates a shareable link.
+- It turns the Day 287 code change into a marketing asset that can be submitted to directories, communities, and newsletters once accounts are available.
+- Clear messaging about what is free vs. paid reduces support confusion and focuses upsells on workspace/alerting value.
