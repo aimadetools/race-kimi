@@ -100,6 +100,7 @@ jobs:
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[Team plan with Slack alerts →](https://schemalens.tech/pricing.html)**
+- **[Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
 
 ---
 
@@ -165,7 +166,7 @@ jobs:
 
 ## 🛠️ Free Developer Tools
 
-SchemaLens includes **79+ free browser-based tools** that reuse the same custom SQL parser:
+SchemaLens includes **80+ free browser-based tools** that reuse the same custom SQL parser:
 
 1. [SQL CREATE TABLE Validator](https://schemalens.tech/tools/sql-validator.html)
 2. [SQL Formatter](https://schemalens.tech/tools/sql-formatter.html)
@@ -331,7 +332,7 @@ SchemaLens includes **79+ free browser-based tools** that reuse the same custom 
 
 We track everything publicly. Follow our journey on the [Open Startup page](https://schemalens.tech/open.html):
 - **Traffic:** Organic SEO (no paid ads)
-- **Free tool uses:** Growing via 79+ micro-tools
+- **Free tool uses:** Growing via 80+ micro-tools
 - **Pro customers:** 0 (post-PH, iterating on distribution)
 - **MRR:** $0
 - **Blog posts:** 33+ published

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens Team Workspace Preview — Shared Schema Diff Dashboard</title>
+  <meta name="description" content="Preview the SchemaLens Team workspace: shared schema diffs, CI/CD pipeline reports, Slack drift alerts, migration safety scores, and team history. No database credentials required.">
+  <link rel="canonical" href="https://schemalens.tech/team/workspace-preview.html">
+  <meta property="og:title" content="SchemaLens Team Workspace Preview — Shared Schema Diff Dashboard">
+  <meta property="og:description" content="See what your team's schema diff workflow looks like with SchemaLens Team: shared diffs, PR comments, Slack alerts, and safety scores.">
+  <meta property="og:url" content="https://schemalens.tech/team/workspace-preview.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchemaLens Team Workspace Preview — Shared Schema Diff Dashboard">
+  <meta name="twitter:description" content="See what your team's schema diff workflow looks like with SchemaLens Team: shared diffs, PR comments, Slack alerts, and safety scores.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens Team Workspace Preview",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": "Shared schema diff workspace, CI/CD pipeline reports, Slack drift alerts, migration safety scores, team history, PR comment previews.",
+    "url": "https://schemalens.tech/team/workspace-preview.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 56px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.9rem, 4.5vw, 2.8rem); font-weight: 800; margin-bottom: 12px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+
+    .workspace-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 24px 48px; }
+
+    .dashboard-mock {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    .dashboard-header {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .dashboard-header .breadcrumbs { font-size: 0.85rem; color: var(--text-muted); }
+    .dashboard-header .breadcrumbs strong { color: var(--text); }
+    .dashboard-header .badges { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .badge-pill {
+      font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .badge-pill.risk-low { color: #22c55e; border-color: rgba(34,197,94,0.35); }
+    .badge-pill.risk-high { color: #ef4444; border-color: rgba(239,68,68,0.35); }
+
+    .dashboard-body { display: grid; grid-template-columns: 220px 1fr 260px; }
+    @media (max-width: 980px) { .dashboard-body { grid-template-columns: 1fr; } }
+
+    .dash-sidebar {
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      padding: 18px;
+    }
+    .dash-sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 18px 0 10px; }
+    .dash-sidebar h4:first-child { margin-top: 0; }
+    .dash-sidebar .team-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .dash-sidebar .avatar {
+      width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid; place-items: center; color: #fff; font-size: 0.75rem; font-weight: 700;
+    }
+    .dash-sidebar .team-name { font-weight: 600; font-size: 0.9rem; }
+    .dash-sidebar .team-meta { font-size: 0.75rem; color: var(--text-muted); }
+    .dash-sidebar a.link { display: block; font-size: 0.88rem; color: var(--text); text-decoration: none; padding: 6px 8px; border-radius: 6px; margin-bottom: 2px; }
+    .dash-sidebar a.link:hover { background: var(--surface-hover); }
+    .dash-sidebar a.link.active { background: rgba(99,102,241,0.12); color: var(--primary); }
+    .dash-sidebar .repo { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+
+    .dash-main { padding: 24px; }
+    .diff-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; margin-bottom: 16px;
+    }
+    .diff-card h3 { font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .diff-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .diff-table th, .diff-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .diff-table th { color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .diff-row.added { background: rgba(34,197,94,0.08); }
+    .diff-row.removed { background: rgba(239,68,68,0.08); }
+    .diff-row.changed { background: rgba(245,158,11,0.08); }
+    .diff-table .status { font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+    .status.added { color: #22c55e; background: rgba(34,197,94,0.12); }
+    .status.removed { color: #ef4444; background: rgba(239,68,68,0.12); }
+    .status.changed { color: #f59e0b; background: rgba(245,158,11,0.12); }
+
+    .pr-comment {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 14px; font-size: 0.9rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap; line-height: 1.5; color: var(--text);
+    }
+    .pr-comment .gh-header { color: var(--text-muted); margin-bottom: 8px; }
+
+    .dash-right { background: var(--bg); border-left: 1px solid var(--border); padding: 18px; }
+    .slack-alert {
+      background: #1a1d21; color: #e0e0e0; border-radius: 8px; padding: 12px; font-size: 0.85rem; margin-bottom: 18px;
+    }
+    [data-theme="light"] .slack-alert { background: #f4f4f4; color: #1f1f1f; }
+    .slack-alert .slack-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .slack-alert .slack-bot { background: #4a154b; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    .slack-alert .slack-title { font-weight: 700; }
+    .slack-alert .slack-body { line-height: 1.45; }
+    .slack-alert .slack-body code { background: rgba(255,255,255,0.12); padding: 1px 4px; border-radius: 4px; font-size: 0.8rem; }
+    [data-theme="light"] .slack-alert .slack-body code { background: rgba(0,0,0,0.08); }
+
+    .score-ring {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: conic-gradient(var(--success) 82%, var(--border) 0);
+      display: grid; place-items: center; margin: 0 auto 16px;
+    }
+    .score-ring-inner {
+      width: 86px; height: 86px; border-radius: 50%; background: var(--bg);
+      display: grid; place-items: center; text-align: center;
+    }
+    .score-ring-inner .num { font-size: 1.6rem; font-weight: 800; }
+    .score-ring-inner .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+    .lead-section {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-top: 32px;
+    }
+    .lead-section h2 { font-size: 1.4rem; margin-bottom: 10px; }
+    .lead-section p { color: var(--text-muted); margin-bottom: 20px; }
+    .lead-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 720px) { .lead-grid { grid-template-columns: 1fr; } }
+    .lead-form { display: grid; gap: 14px; }
+    .lead-form label { font-size: 0.85rem; font-weight: 500; }
+    .lead-form input, .lead-form select {
+      width: 100%; padding: 11px 13px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.95rem; box-sizing: border-box;
+    }
+    .lead-form button {
+      padding: 12px 18px; border-radius: 8px; border: none; background: var(--primary); color: #fff;
+      font-weight: 600; cursor: pointer; font-size: 0.95rem;
+    }
+    .lead-form button:hover { background: var(--primary-hover); }
+    .lead-form .note { font-size: 0.8rem; color: var(--text-muted); }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin: 28px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .feature-card .icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .cta-row a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius-sm);
+      font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.2s;
+    }
+    .cta-row a.primary { background: var(--primary); color: #fff; }
+    .cta-row a.primary:hover { background: var(--primary-hover); }
+    .cta-row a.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .cta-row a.secondary:hover { border-color: var(--hover-border); }
+
+    .preview-label {
+      display: inline-block; background: rgba(99,102,241,0.12); color: var(--primary);
+      font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<nav style="position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:1.1rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div style="display:flex;gap:18px;align-items:center;font-size:0.9rem;">
+      <a href="../app.html" style="color:var(--text-muted);text-decoration:none;">App</a>
+      <a href="../tools.html" style="color:var(--text-muted);text-decoration:none;">Tools</a>
+      <a href="../pricing.html" style="color:var(--text-muted);text-decoration:none;">Pricing</a>
+      <a href="../team-buy.html" style="color:var(--text-muted);text-decoration:none;">Team</a>
+      <button onclick="toggleTheme()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;" title="Toggle theme">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <span class="preview-label">Interactive Preview</span>
+    <h1>Your team's schema diff workflow, in one place</h1>
+    <p>SchemaLens Team gives every engineer and tech lead a shared workspace to review schema changes, catch breaking changes in CI/CD, and alert the team before bad migrations ship.</p>
+  </div>
+
+  <div class="workspace-wrapper">
+    <div class="dashboard-mock" aria-label="SchemaLens Team workspace preview">
+      <div class="dashboard-header">
+        <div class="breadcrumbs">Acme Payments / <strong>payments-db</strong> / PR #482</div>
+        <div class="badges">
+          <span class="badge-pill risk-high">⚠️ Breaking: 1</span>
+          <span class="badge-pill risk-low">✅ Safe: 3</span>
+          <span class="badge-pill">Migration Safety: 82</span>
+        </div>
+      </div>
+      <div class="dashboard-body">
+        <aside class="dash-sidebar">
+          <div class="team-row">
+            <div class="avatar">AP</div>
+            <div>
+              <div class="team-name">Acme Payments</div>
+              <div class="team-meta">Team plan · 12 seats</div>
+            </div>
+          </div>
+          <h4>Workspace</h4>
+          <a class="link active" href="#">📊 Diff Report</a>
+          <a class="link" href="#">🕒 History</a>
+          <a class="link" href="#">🔔 Alerts</a>
+          <a class="link" href="#">⚙️ Pipelines</a>
+          <h4>Connected Repos</h4>
+          <div class="repo">🐙 acme/payments-db</div>
+          <div class="repo">🦊 acme/core-api</div>
+          <div class="repo">🐙 acme/analytics</div>
+          <h4>Recent Diffs</h4>
+          <a class="link" href="#">#482 — users_v2</a>
+          <a class="link" href="#">#481 — orders index</a>
+          <a class="link" href="#">#479 — audit log</a>
+        </aside>
+
+        <section class="dash-main">
+          <div class="diff-card">
+            <h3>📝 Schema Changes <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">main → feature/users-v2</span></h3>
+            <table class="diff-table">
+              <thead>
+                <tr><th>Object</th><th>Change</th><th>Status</th><th>Risk</th></tr>
+              </thead>
+              <tbody>
+                <tr class="diff-row changed">
+                  <td><strong>users</strong>.email</td>
+                  <td>VARCHAR(120) → VARCHAR(255)</td>
+                  <td><span class="status changed">MODIFIED</span></td>
+                  <td>Low</td>
+                </tr>
+                <tr class="diff-row added">
+                  <td><strong>users</strong>.created_at</td>
+                  <td>TIMESTAMP DEFAULT now()</td>
+                  <td><span class="status added">ADDED</span></td>
+                  <td>Safe</td>
+                </tr>
+                <tr class="diff-row added">
+                  <td><strong>users</strong>.idx_email_unique</td>
+                  <td>UNIQUE index on email</td>
+                  <td><span class="status added">ADDED</span></td>
+                  <td>Medium</td>
+                </tr>
+                <tr class="diff-row removed">
+                  <td><strong>legacy_accounts</strong></td>
+                  <td>Table dropped</td>
+                  <td><span class="status removed">REMOVED</span></td>
+                  <td><strong>Breaking</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="diff-card">
+            <h3>💬 PR Comment Preview</h3>
+            <div class="pr-comment"><span class="gh-header">SchemaLens Bot commented 2 minutes ago</span>
+## Schema Diff Report — PR #482
+
+| Metric | Value |
+|---|---|
+| Tables changed | 2 |
+| Breaking changes | 1 (table drop) |
+| Migration safety | 82 / 100 |
+| Dialect | PostgreSQL |
+
+### ⚠️ Breaking change detected
+- `legacy_accounts` table is being dropped. This will fail if any app code still references it.
+
+### Generated migration
+```sql
+ALTER TABLE users ALTER COLUMN email TYPE VARCHAR(255);
+ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT now();
+CREATE UNIQUE INDEX idx_email_unique ON users(email);
+DROP TABLE legacy_accounts;
+```
+
+<a href="#">View full report in SchemaLens →</a></div>
+          </div>
+        </section>
+
+        <aside class="dash-right">
+          <div class="score-ring">
+            <div class="score-ring-inner">
+              <div>
+                <div class="num">82</div>
+                <div class="label">Safety</div>
+              </div>
+            </div>
+          </div>
+          <p style="text-align:center;font-size:0.85rem;color:var(--text-muted);margin-bottom:18px;">1 breaking change blocked by breaking-change gate.</p>
+
+          <div class="slack-alert">
+            <div class="slack-head">
+              <span class="slack-bot">SCHEMALENS</span>
+              <span class="slack-title">Schema drift alert</span>
+            </div>
+            <div class="slack-body">
+              <strong>production</strong> schema drifted from <code>main.sql</code>.<br><br>
+              1 breaking change · 2 safe changes<br>
+              View report: <code>schemalens.tech/t/acme/482</code>
+            </div>
+          </div>
+
+          <h4 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:10px;">Pipeline Status</h4>
+          <div style="font-size:0.9rem;margin-bottom:8px;">✅ GitHub Actions — passed</div>
+          <div style="font-size:0.9rem;margin-bottom:8px;">✅ GitLab CI — passed</div>
+          <div style="font-size:0.9rem;color:var(--text-muted);">⏸️ Jenkins — skipped (no schema files changed)</div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">🔗</div>
+        <h3>Shareable diff links</h3>
+        <p>Send a link to any diff instead of pasting SQL into Slack threads. Everyone sees the same report.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🤖</div>
+        <h3>CI/CD in one click</h3>
+        <p>Add schema diff to GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, or Azure DevOps.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🛡️</div>
+        <h3>Breaking-change gate</h3>
+        <p>Block risky PRs automatically. Get a safety score and a human-readable risk summary.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔔</div>
+        <h3>Slack &amp; email alerts</h3>
+        <p>Notify your team the moment staging or production drifts from the expected schema.</p>
+      </div>
+    </div>
+
+    <div class="lead-section">
+      <div class="lead-grid">
+        <div>
+          <h2>Get a live workspace for your team</h2>
+          <p>Leave your work email and we'll send you a Team plan setup link, a custom invoice option, and a 15-minute onboarding slot.</p>
+          <ul style="color:var(--text-muted);font-size:0.95rem;line-height:1.7;padding-left:18px;">
+            <li>Unlimited team members on one plan</li>
+            <li>No database credentials required</li>
+            <li>Cancel anytime · 14-day refund guarantee</li>
+          </ul>
+          <div class="cta-row">
+            <a class="primary" href="../team-buy.html">Start Team plan →</a>
+            <a class="secondary" href="../tools/team-roi-calculator.html">Calculate ROI</a>
+          </div>
+        </div>
+        <form class="lead-form" id="teamLeadForm">
+          <div>
+            <label for="workEmail">Work email</label>
+            <input type="email" id="workEmail" name="email" placeholder="you@company.com" required>
+          </div>
+          <div>
+            <label for="teamSize">Team size</label>
+            <select id="teamSize" name="teamSize" required>
+              <option value="">Select…</option>
+              <option value="1-5">1–5 engineers</option>
+              <option value="6-20">6–20 engineers</option>
+              <option value="21-100">21–100 engineers</option>
+              <option value="100+">100+ engineers</option>
+            </select>
+          </div>
+          <div>
+            <label for="ciPlatform">Primary CI/CD platform</label>
+            <select id="ciPlatform" name="ciPlatform">
+              <option value="">Select…</option>
+              <option value="github">GitHub Actions</option>
+              <option value="gitlab">GitLab CI</option>
+              <option value="jenkins">Jenkins</option>
+              <option value="circleci">CircleCI</option>
+              <option value="bitbucket">Bitbucket Pipelines</option>
+              <option value="azure">Azure DevOps</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <button type="submit">Request Team setup →</button>
+          <p class="note">We won't spam you. Unsubscribe anytime. For immediate purchase, use the Team checkout.</p>
+        </form>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;">
+      <p style="color:var(--text-muted);font-size:0.95rem;">Want to compare before buying? <a href="../tools/team-plan-comparison.html" style="color:var(--primary);">See SchemaLens Team vs enterprise tools →</a></p>
+    </div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px 0;margin-top:40px;">
+  <div style="max-width:var(--max-width);margin:0 auto;padding:0 24px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
+    <p>© 2026 SchemaLens · <a href="../privacy-policy.html" style="color:var(--text-muted);">Privacy</a> · <a href="../trust.html" style="color:var(--text-muted);">Trust Center</a></p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const form = document.getElementById('teamLeadForm');
+  const saved = localStorage.getItem('schemalens-team-lead');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.email) form.querySelector('#workEmail').value = data.email;
+      if (data.teamSize) form.querySelector('#teamSize').value = data.teamSize;
+      if (data.ciPlatform) form.querySelector('#ciPlatform').value = data.ciPlatform;
+    } catch (e) {}
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = form.querySelector('#workEmail').value.trim();
+    const teamSize = form.querySelector('#teamSize').value;
+    const ciPlatform = form.querySelector('#ciPlatform').value;
+    const payload = { email, teamSize, ciPlatform, source: 'team-workspace-preview', submittedAt: new Date().toISOString() };
+
+    localStorage.setItem('schemalens-team-lead', JSON.stringify(payload));
+
+    if (typeof trackEvent === 'function') {
+      trackEvent('team_lead_capture', { email, teamSize, ciPlatform, page: 'team-workspace-preview' });
+    }
+
+    // Fire-and-forget analytics endpoint
+    try {
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'team_lead_capture', properties: payload })
+      }).catch(() => {});
+    } catch (err) {}
+
+    // Show confirmation and mailto fallback
+    const subject = encodeURIComponent('SchemaLens Team setup request');
+    const body = encodeURIComponent('Hi SchemaLens team,\n\nI would like to set up SchemaLens Team for my organization.\n\nWork email: ' + email + '\nTeam size: ' + teamSize + '\nPrimary CI/CD: ' + (ciPlatform || 'Not specified') + '\n\nPlease send me a setup link and invoice options.\n\nThanks');
+    form.innerHTML = '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:20px;text-align:center;"><h3 style="margin:0 0 8px;">✅ Request saved</h3><p style="margin:0 0 14px;color:var(--text-muted);">We\'ll follow up within one business day. You can also email us directly:</p><a class="primary" style="display:inline-flex;" href="mailto:founder@schemalens.tech?subject=' + subject + '&body=' + body + '">Open email draft →</a></div>';
+  });
+})();
+</script>
+
+</body>
+</html>

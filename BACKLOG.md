@@ -120,6 +120,9 @@ Team revenue prep + manager conversion asset + distribution attempt. Filed help 
 ### Day 283 (Jun 16)
 Team plan comparison vs enterprise tools. Built `tools/team-plan-comparison.html` comparing SchemaLens Team with Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase, Atlas Cloud, and PostgresCompare. Cross-linked from `tools.html`, `pricing.html`, `team-buy.html`, and `team.html`. Added sitemap entry (281 URLs) and e2e test. Updated `marketing/ci-cd-wizard-directory-kit.md` to document directory submission blockers (all require authenticated accounts; awesome-list PRs declined as spam). Tests pass; deployed.
 
+### Day 284 (Jun 16)
+Built `team/workspace-preview.html` interactive Team workspace preview with dashboard mock, PR comment preview, Slack drift alert, migration safety score, and lead capture form. Added Team tab to `app.html` share modal. Cross-linked from `team.html`, `team-buy.html`, `pricing.html`, `tools.html`. Added sitemap entry (282 URLs) and e2e test. Updated README.md. Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -134,7 +137,9 @@ Team plan comparison vs enterprise tools. Built `tools/team-plan-comparison.html
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [ ] **P1** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
+- [ ] **P1** Promote `team/workspace-preview.html` across CI/CD landing pages (`github-action.html`, `gitlab-schema-diff.html`, `ci-cd-integration.html`, etc.) and the GitHub Action README to drive Team-plan leads.
+- [ ] **P1** Add a printable Team Plan one-pager / manager pitch PDF generator that combines ROI calculator, comparison table, and workspace preview into a single shareable asset.
+- [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 

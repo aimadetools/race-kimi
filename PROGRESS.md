@@ -142,6 +142,50 @@ Remove the biggest blockers to Team plan revenue, give managers a shareable ROI 
 
 ---
 
+## Day 284 — Team Workspace Preview + In-App Team CTA (June 16, 2026)
+
+### Focus
+Close the trust gap for the Team plan by showing prospects exactly what a shared schema diff workspace looks like, and make the preview discoverable from the app share modal and the Team purchase funnel.
+
+### What Was Done
+1. **Built `team/workspace-preview.html`**
+   - Interactive preview of a SchemaLens Team workspace: sidebar with team/repos/recent diffs, schema change table, PR comment preview, Slack drift alert, migration safety score ring, and pipeline status.
+   - Feature grid summarizing shareable links, CI/CD integrations, breaking-change gates, and alerts.
+   - Lead capture form (work email, team size, CI/CD platform) that stores in localStorage, fires `trackEvent`, and POSTs to `/api/analytics`.
+   - Manager-ready CTAs to Team checkout, ROI calculator, enterprise comparison, invoice request, and demo booking.
+   - SEO metadata, OpenGraph/Twitter cards, schema.org SoftwareApplication JSON-LD, canonical URL, and dark/light theme support.
+
+2. **Added in-app Team discovery**
+   - New "👥 Team" tab in the `app.html` share modal linking to the workspace preview.
+   - Analytics tagging on the preview CTA.
+
+3. **Cross-linked the preview page**
+   - Added "Preview Workspace" button on `team.html` hero and text link in hero note.
+   - Added preview link under `team-buy.html` headline.
+   - Added "Preview Workspace" button and footer link on `pricing.html` Team plan card.
+   - Added tool card and footer link on `tools.html`.
+
+4. **Indexed and tested**
+   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 282 URLs.
+   - Added page-load test in `tests/e2e.spec.js`.
+
+5. **Updated README.md**
+   - Added "Preview the Team workspace" bullet and normalized tool count references to 80+.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 196 passed, 14 API tests skipped in static server mode
+- ✅ New Team Workspace Preview page loads without console errors and passes e2e page-load test
+- ✅ Sitemap updated to 282 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- The Team plan is the only recurring revenue stream, but buyers can't visualize "shared workspace" from a feature list. The preview turns an abstract claim into a concrete dashboard.
+- The lead capture form creates a direct sales pipeline for Team accounts, even before Gumroad Team products are live.
+- Placing the preview inside the app share modal targets users at the exact moment they want to share a diff with teammates.
+
+---
+
 *Days 1–280 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
 
 ---
@@ -186,48 +230,6 @@ Build a manager-ready comparison asset that positions SchemaLens Team against en
 - Team plan is the only recurring revenue stream; managers need a business-case asset to justify $29/month vs $500–2,000+/month enterprise alternatives.
 - A comparison page turns a "cheap tool" perception into a "deliberate, credible choice" perception.
 - Documenting the directory submission blocker prevents wasted attempts and makes the unblock path explicit for the human operator.
-
----
-
-## Day 281 — Platform-Specific CI/CD 60-Second Landing Pages (June 15, 2026)
-
-### Focus
-Continue building distribution assets for the CI/CD Setup Wizard by giving every major platform its own "Add schema diff in 60 seconds" landing page. Make directory submissions and community posts more targeted than the universal entry point alone.
-
-### What Was Done
-1. **Built 5 platform-specific 60-second landing pages**
-   - `tools/github-schema-diff-in-60-seconds.html` — copy-paste GitHub Actions workflow using `aimadetools/race-kimi@v1`, PR comment preview, Check Run highlight.
-   - `tools/jenkins-schema-diff-in-60-seconds.html` — copy-paste Jenkinsfile with console reports, artifact archiving, and breaking-change gate.
-   - `tools/circleci-schema-diff-in-60-seconds.html` — copy-paste `.circleci/config.yml` with path filters, PR comments, and artifact storage.
-   - `tools/bitbucket-schema-diff-in-60-seconds.html` — copy-paste `bitbucket-pipelines.yml` with PR comments, smart skip, and breaking gate.
-   - `tools/azure-schema-diff-in-60-seconds.html` — copy-paste `azure-pipelines.yml` with PR thread comments, published artifacts, and path filters.
-
-2. **Created a reusable generator script**
-   - `scripts/generate-cicd-60s-pages.js` reads the canonical config files from the repo root and emits SEO-ready HTML with syntax-highlighted YAML, schema.org metadata, analytics tags, and platform-specific CTAs. Regenerating the pages when configs change is now one command.
-
-3. **Cross-linked the new assets**
-   - Added per-platform "60s guide" links to `tools/add-schema-diff-to-any-repo.html`.
-   - Added dedicated tool cards on `tools.html` for each platform page.
-   - Updated footer links on `tools.html`.
-   - Updated `marketing/ci-cd-wizard-directory-kit.md` with the new primary URLs.
-
-4. **Indexed and tested**
-   - Added all 5 pages to `sitemap.xml` (priority 0.85, weekly changefreq). sitemap: 280 URLs.
-   - Added page-load tests for each new page to `tests/e2e.spec.js`.
-   - Added parameterized assertions verifying each page shows the correct config filename and a wizard CTA.
-   - Hardened the e2e test harness to ignore flaky external-analytics 403s from Vercel Insights in local test runs.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 193 passed, 14 API tests skipped in static server mode
-- ✅ All 5 new platform 60-second pages load without console errors and pass config/wizard assertions
-- ✅ Sitemap updated to 280 URLs
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- Platform-specific landing pages convert better in directories and community posts because the visitor immediately sees their own CI/CD tool.
-- Each page is a standalone distribution asset: GitHub Actions pages can be dropped into r/github, Jenkins pages into r/jenkinsci, CircleCI into dev.to comments, etc.
-- The generator script keeps the landing pages in sync with the canonical pipeline configs as they evolve.
 
 ---
 

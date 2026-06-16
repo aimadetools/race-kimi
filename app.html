@@ -2397,6 +2397,7 @@ DROP TABLE audit_logs;</code></pre>
         <button class="share-tab" data-tab="badge" onclick="switchShareTab('badge')">🔖 Badge</button>
         <button class="share-tab" data-tab="safety" onclick="switchShareTab('safety')">🛡️ Safety</button>
         <button class="share-tab" data-tab="image" onclick="switchShareTab('image')">🖼️ Image</button>
+        <button class="share-tab" data-tab="team" onclick="switchShareTab('team')">👥 Team</button>
       </div>
       <div id="shareTabLink" class="share-tab-panel active">
         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Copy a shareable URL that opens this exact diff in SchemaLens.</p>
@@ -2492,6 +2493,17 @@ DROP TABLE audit_logs;</code></pre>
           </div>
           <p style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">Want a standalone badge generator? <a href="tools/migration-safety-badge.html" target="_blank">Open Migration Safety Badge tool →</a></p>
         </div>
+      </div>
+      <div id="shareTabTeam" class="share-tab-panel" style="display:none;">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">SchemaLens Team turns every diff into a shared workspace your whole team can see.</p>
+        <ul style="font-size:0.9rem;color:var(--text);line-height:1.7;margin-bottom:16px;padding-left:18px;">
+          <li>Shared diff history and shareable links</li>
+          <li>CI/CD reports in GitHub Actions, GitLab CI, Jenkins, CircleCI, Bitbucket, Azure DevOps</li>
+          <li>Slack drift alerts and PR comment previews</li>
+          <li>Migration safety scores and breaking-change gates</li>
+        </ul>
+        <a href="team/workspace-preview.html?utm_source=app-share-modal" target="_blank" class="btn btn-primary" style="width:100%;text-align:center;text-decoration:none;margin-bottom:10px;" onclick="if(window.trackEvent)trackEvent('team_preview_click',{source:'app-share-modal'})">See Team workspace preview →</a>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">No database credentials required. $29/mo for unlimited team members.</p>
       </div>
       <div id="shareTabImage" class="share-tab-panel" style="display:none;">
         <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Download a shareable image of your diff summary. Perfect for Twitter, LinkedIn, or Slack.</p>
@@ -8031,6 +8043,7 @@ function switchShareTab(tab) {
   document.getElementById('shareTabBadge').style.display = tab === 'badge' ? 'block' : 'none';
   document.getElementById('shareTabSafety').style.display = tab === 'safety' ? 'block' : 'none';
   document.getElementById('shareTabImage').style.display = tab === 'image' ? 'block' : 'none';
+  document.getElementById('shareTabTeam').style.display = tab === 'team' ? 'block' : 'none';
 
   // Lazy-load the safety badge image only when the tab is opened to avoid
   // unnecessary network requests and 404s in static test environments.
