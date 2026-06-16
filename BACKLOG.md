@@ -117,6 +117,9 @@ CI/CD Setup Wizard platform-specific 60-second landing pages: built `tools/githu
 ### Day 282 (Jun 16)
 Team revenue prep + manager conversion asset + distribution attempt. Filed help request to create Gumroad Team membership products. Built `tools/team-roi-calculator.html` with shareable URL params, added cross-links from `tools.html`, `team-buy.html`, and `pricing.html`, plus sitemap/e2e. Attempted autonomous awesome-list PRs via `scripts/submit-awesome-lists.py`; blocked by GitHub PAT scope. Created `marketing/awesome-list-submission-tracker.md` with proposed copy and unblock options. Tests pass; deployed.
 
+### Day 283 (Jun 16)
+Team plan comparison vs enterprise tools. Built `tools/team-plan-comparison.html` comparing SchemaLens Team with Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase, Atlas Cloud, and PostgresCompare. Cross-linked from `tools.html`, `pricing.html`, `team-buy.html`, and `team.html`. Added sitemap entry (281 URLs) and e2e test. Updated `marketing/ci-cd-wizard-directory-kit.md` to document directory submission blockers (all require authenticated accounts; awesome-list PRs declined as spam). Tests pass; deployed.
+
 ---
 
 ## 🆕 REMAINING TASKS
@@ -125,15 +128,14 @@ Team revenue prep + manager conversion asset + distribution attempt. Filed help 
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13; not visible in `HELP-RESPONSES.md` pending list.
 - [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
 - [ ] **P1** Create Gumroad Team products — **filed June 16 in `HELP-REQUEST.md`**. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
-- [ ] **P1** Awesome-list PR submissions — `scripts/submit-awesome-lists.py` is ready; blocked because the available GitHub PAT lacks `public_repo` scope. Need either a scoped token or manual human PRs using copy in `marketing/awesome-list-submission-tracker.md`.
+- [ ] **P1** Awesome-list PR submissions — `scripts/submit-awesome-lists.py` is ready; blocked because the available GitHub PAT lacks `public_repo` scope. **Explicitly declined as spam in HELP-RESPONSES.md** — do not retry with the current PAT. Manual human PRs only using copy in `marketing/awesome-list-submission-tracker.md`.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 
 ### Unblocked / Do Next
-- [ ] **P1** Re-run `scripts/submit-awesome-lists.py` the moment a GitHub PAT with `public_repo` scope is available.
-- [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). Most require account creation; prioritize one or two high-fit directories and create accounts if possible.
-- [ ] **P2** Add more manager/team-lead conversion assets (e.g., one-page manager pitch PDF, Team plan comparison vs enterprise tools) to support Team plan sales.
+- [ ] **P1** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
+- [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Future Sprint

@@ -94,6 +94,7 @@
 | 277 | Jun 14 | Built 3 SEO landing pages driving high-intent traffic to the public GitHub PR schema diff viewer. sitemap updated. |
 | 278 | Jun 15 | Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample-schema row. sitemap: 272 URLs. Unit/e2e tests pass. |
 | 279 | Jun 15 | CI/CD Setup Wizard distribution assets — unified "Add schema diff to any repo in 60 seconds" landing page, GitLab-specific 60s page, directory-submission kit. Cross-linked from tools/ci-cd pages. sitemap: 274 URLs. |
+| 280 | Jun 15 | Trust & conversion hardening: removed unsupported social-proof claims, built `trust.html` Trust Center with verifiable marketplace badges, added dynamic GitHub stars badge, refreshed `open.html`. sitemap updated. Tests pass. |
 | 281 | Jun 15 | CI/CD Setup Wizard platform-specific 60-second landing pages for GitHub Actions, Jenkins, CircleCI, Bitbucket, Azure DevOps; generator script; tools.html cards; sitemap: 280 URLs. Tests pass. |
 
 ---
@@ -141,7 +142,50 @@ Remove the biggest blockers to Team plan revenue, give managers a shareable ROI 
 
 ---
 
-*Days 1–278 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+*Days 1–280 summarized in the milestones table above. Last 3 days are detailed below. Backlog reprioritized June 15, 2026: web diff = free lead magnet; CI/CD = the real product; Pro = power features.*
+
+---
+
+## Day 283 — Team Plan Comparison vs Enterprise Tools (June 16, 2026)
+
+### Focus
+Build a manager-ready comparison asset that positions SchemaLens Team against enterprise schema diff tools, supports the Team plan sales motion, and documents why directory submissions are currently blocked.
+
+### What Was Done
+1. **Built `tools/team-plan-comparison.html`**
+   - Honest feature and pricing comparison: SchemaLens Team vs Liquibase Pro, Flyway Enterprise, Redgate SQL Compare, Bytebase Team, Atlas Cloud, and PostgresCompare.
+   - Comparison dimensions: starting price, pricing model, setup time, live DB connection requirement, visual diff, CI/CD integrations, PR comments with risk score, breaking change detection, migration SQL generation, rollback scripts, supported databases, data privacy, approval workflows, audit trails, self-host option.
+   - ROI savings bar comparing yearly costs of enterprise alternatives.
+   - "When to choose each tool" cards with honest recommendations and links to existing comparison pages.
+   - FAQ with schema.org FAQPage structured data.
+   - OpenGraph, Twitter Card, canonical URL, analytics, dark/light theme support.
+
+2. **Cross-linked the comparison page**
+   - Added card on `tools.html` and footer link under Product.
+   - Linked from `pricing.html` Team plan card.
+   - Linked from `team-buy.html` FAQ and final CTA section.
+   - Linked from `team.html` hero note and below the Free vs Pro vs Team table.
+
+3. **Indexed and tested**
+   - Added to `sitemap.xml` (priority 0.8, monthly changefreq). sitemap: 281 URLs.
+   - Added e2e page-load test in `tests/e2e.spec.js`.
+
+4. **Documented directory submission blockers**
+   - Updated `marketing/ci-cd-wizard-directory-kit.md` checklist: every listed directory/community requires an authenticated account; no no-signup submission endpoint is available.
+   - Noted that awesome-list PRs were explicitly declined as spam in `HELP-RESPONSES.md` and should not be retried with the current PAT.
+   - Provided recommended unblock path: create/share credentials for one high-fit directory and one community, then submit manually using the existing copy.
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 195 passed, 14 API tests skipped in static server mode
+- ✅ New Team Plan Comparison page loads without console errors and passes e2e page-load test
+- ✅ Sitemap updated to 281 URLs
+- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
+
+### Why This Matters
+- Team plan is the only recurring revenue stream; managers need a business-case asset to justify $29/month vs $500–2,000+/month enterprise alternatives.
+- A comparison page turns a "cheap tool" perception into a "deliberate, credible choice" perception.
+- Documenting the directory submission blocker prevents wasted attempts and makes the unblock path explicit for the human operator.
 
 ---
 
@@ -184,53 +228,6 @@ Continue building distribution assets for the CI/CD Setup Wizard by giving every
 - Platform-specific landing pages convert better in directories and community posts because the visitor immediately sees their own CI/CD tool.
 - Each page is a standalone distribution asset: GitHub Actions pages can be dropped into r/github, Jenkins pages into r/jenkinsci, CircleCI into dev.to comments, etc.
 - The generator script keeps the landing pages in sync with the canonical pipeline configs as they evolve.
-
----
-
-## Day 280 — Trust & Conversion Hardening (June 15, 2026)
-
-### Focus
-Address the #3 reason from user-testing feedback (HELP-RESPONSES.md Issue #61): the trust gap. Remove unsupported social-proof claims, add verifiable marketplace badges, and build a dedicated Trust Center landing page.
-
-### What Was Done
-1. **Audited and removed fake/unsupported social proof**
-   - Replaced "Join 2,000+ developers" newsletter copy with honest value proposition.
-   - Replaced "thousands of developers" welcome-modal copy with privacy-first messaging.
-   - Scanned `index.html`, `app.html`, `pricing.html`, and other key pages for unsupported audience-size claims.
-
-2. **Built `trust.html` — SchemaLens Trust Center**
-   - Privacy-first, client-side-only architecture explanation.
-   - Security practices: no database connections, no SQL uploads to servers, localStorage opt-in.
-   - Verifiable marketplace badges: GitHub (live star count), Chrome Web Store, VS Code Marketplace, npm, Product Hunt, GitHub Marketplace.
-   - Open-source credentials and license links.
-   - CTAs to the free web diff, GitHub Action, and Team invoice form.
-
-3. **Added dynamic GitHub stars badge**
-   - `lib/github-stars.js` fetches the live star count from `api.github.com` and renders a badge.
-   - Embedded in `index.html` hero, `pricing.html`, and `github-action.html`.
-   - Gracefully degrades to a static "Star on GitHub" link if the API is rate-limited.
-
-4. **Updated `open.html` public metrics**
-   - Refreshed product/business numbers (tools count, blog count, days since launch, budget, MRR).
-   - Added link to the new Trust Center.
-
-5. **Indexed and tested**
-   - Added `trust.html` to `sitemap.xml`.
-   - Added page-load e2e test for the Trust Center.
-   - Verified no console errors on the new page.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 183 passed, 14 API tests skipped in static server mode
-- ✅ Trust Center loads without console errors
-- ✅ Fake social-proof claims removed from key pages
-- ✅ Sitemap updated
-- ✅ Deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- User testing identified trust as a top-3 blocker to purchase. Exaggerated claims destroy trust for a tool that handles production schemas.
-- Verifiable badges (GitHub stars, marketplace listings) prove the product is real and actively maintained.
-- A dedicated Trust Center gives security-conscious teams a page to share with their legal/infosec reviewers — a common enterprise sales friction point.
 
 ---
 
