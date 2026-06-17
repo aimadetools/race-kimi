@@ -107,128 +107,58 @@
 | 290 | Jun 16 | Promoted GitHub Actions starter workflow in action.yml Marketplace description, README.md, and github-action.html; created `assets/github-action-add-to-repo.gif` with reproducible generator script; tests pass; deployed. |
 | 291 | Jun 16 | Added contextual Team drift-alerts CTA in app.html diff flow with breaking-change-aware copy, workspace preview/Team buy links, 7-day dismissal, and e2e coverage; tests pass; deployed. |
 | 292 | Jun 16 | Built `schema-diff-newsletter.html` dedicated ad landing page + UTM tracking (`utm_visit` analytics + `lib/utm-preserve.js`); indexed and e2e-tested; help request filed for low-cost DB/CI newsletter ad. |
-| 293 | Jun 17 | Free schema drift alerts — `/api/schema-drift-webhook.js` no longer requires a license key; GitHub Action updated to send free alerts; alert page + Team dashboard updated with tier badges/upsell; `/api/team-alerts.js` + KV persistence ready; tests pass. |
-| 294 | Jun 17 | Promoted free schema drift alerts across README.md, CI/CD wizards (cicd-setup-wizard.html, github-action-setup.html, 60s pages, add-schema-diff-to-any-repo.html), and GitHub Action job summary/PR comments/Check Runs; added analytics events for alert-page views, tier badges, Team dashboard visits, and Upgrade-to-Team clicks; tests pass. |
+| 293 | Jun 17 | Free schema drift alerts — `/api/schema-drift-webhook.js` no longer requires a license key; GitHub Action updated to send free alerts; alert page + Team dashboard updated with tier badges/upsell; `/api/team-alerts.js` + KV persistence ready; tests pass. Promoted alerts across README.md, CI/CD wizards, 60s pages, add-schema-diff-to-any-repo.html, and GitHub Action job summary/PR comments/Check Runs; added analytics events for alert-page views, tier badges, Team dashboard visits, and Upgrade-to-Team clicks. |
 
 ---
 
-## Day 294 — Promote Free Drift Alerts + Add Alert-Page Analytics (June 17, 2026)
+## Day 296 — Live GitHub Action Demo Workflow (June 17, 2026)
 
 ### Focus
-Maximize install-to-alert conversion by promoting the new free schema drift alerts across every high-traffic CI/CD surface, and instrument the alert pages so we can measure the resulting funnel.
+Create a self-contained demo workflow that dogfoods the SchemaLens GitHub Action on sample schema files, giving the Marketplace listing a live, always-green example and a real test surface for every action change.
 
 ### What Was Done
-1. **README.md promotion**
-   - Added a top-of-page "NEW — Free schema drift alerts" callout.
-   - Added a dedicated "Free Schema Drift Alerts" subsection under the GitHub Action docs with a copy-paste YAML example.
-   - Clarified that Slack/Teams alerts and shareable alert pages are free, while Team adds 90-day persisted history.
+1. **New `.github/workflows/schema-diff-demo.yml`**
+   - Runs the SchemaLens action on `demo/schema-v1.sql` → `demo/schema-v2.sql` (PostgreSQL).
+   - Triggers on push/PR that touches `demo/**.sql`, `action.yml`, the workflow itself, or the report/free-diff endpoints; also runs daily via cron and on `workflow_dispatch`.
+   - Uses the local action (`uses: ./`) so the current commit is tested; includes a comment telling users how to switch to `aimadetools/race-kimi@main` in their own repos.
+   - Enables `upload-report: true` to generate the self-contained HTML report artifact.
+   - Runs entirely on the free tier — no license key required.
 
-2. **GitHub Action job summary promotion (`action.yml`)**
-   - Job summary, PR comments, and Check Run output now lead with "Free schema drift alerts" before the Team upsell.
-   - When `schema-drift-webhook` is enabled, the job summary prints a prominent alert section including the shareable alert URL, tier badge, and persistence note.
+2. **README.md promotion**
+   - Added a GitHub Actions demo workflow badge next to the existing Marketplace badge.
+   - Added a "See the action run live on sample schemas" callout in the GitHub Action section.
+   - Added a "Live demo" link in the GitHub Action get-started list.
 
-3. **CI/CD Setup Wizard (`tools/cicd-setup-wizard.html`)**
-   - Drift alerts section relabeled from "Team plan" to "free".
-   - Added an "Enable Slack/Teams alerts" checkbox; webhook inputs no longer require a license key.
-   - Generated GitHub Actions, GitLab CI, and Azure DevOps configs now include the drift webhook for free users.
-   - Jenkins/CircleCI/Bitbucket configs include drift-alert comments pointing to the webhook endpoint.
-   - Slack/Teams preview payloads adapt their CTA button based on whether a Team key is provided.
+3. **`github-action-schema-diff-report.html` CTA**
+   - Added a prominent "View a real report from our daily demo workflow" button above the report mockup.
+   - Explains that the workflow runs on the demo schemas every day and that the artifact works offline.
 
-4. **GitHub Action Setup Wizard (`tools/github-action-setup.html`)**
-   - Added a "Free drift alerts" step with Slack/Teams webhook inputs.
-   - Generated workflow now includes `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` when enabled.
-
-5. **60-second CI/CD landing pages**
-   - Updated `scripts/generate-cicd-60s-pages.js` to add a "Free schema drift alerts" feature card on every platform page.
-   - Regenerated all six platform pages; GitHub page includes a dedicated drift-alerts CTA block with config snippet.
-
-6. **Add-schema-diff-to-any-repo hub**
-   - Added a "Free schema drift alerts" CTA section with webhook URL and links to setup docs / Team workspace preview.
-
-7. **Analytics instrumentation**
-   - `api/analytics.js`: added allowed event types `schema_drift_alert_viewed`, `schema_drift_tier_badge_shown`, `schema_drift_upgrade_clicked`, `team_dashboard_viewed`.
-   - `schema-drift-alert.html`: fires alert-view, tier-badge-impression, and Upgrade-to-Team/Open-Dashboard click events via both `gtag` and `SchemaLensAnalytics`.
-   - `team/schema-drift-dashboard.html`: fires `team_dashboard_viewed` on page load.
-
-8. **Tests**
-   - Updated e2e 60s-page test to target the first `.code-block` after the GitHub page gained a second code block.
-   - All 38 unit tests pass; 13 webhook tests pass; 200 e2e tests pass (14 API tests skipped in static server mode).
+4. **BACKLOG.md context maintenance**
+   - Collapsed completed task summaries.
+   - Moved the demo workflow task to blocked-with-help-request status.
+   - Added a new blocked item for GitHub PAT `workflow` scope.
 
 ### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `node test-schema-drift-webhook.js`: 13/13 tests pass
-- ✅ `npx playwright test --project=chromium`: 200 passed, 14 API tests skipped in static server mode
-- ✅ README.md includes free drift alerts callout and config example
-- ✅ CI/CD wizards generate webhook configs without requiring a license key
-- ✅ New analytics event types accepted by `/api/analytics`
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 201 passed, 14 API tests skipped in static server mode
+- ✅ YAML syntax of `.github/workflows/schema-diff-demo.yml` is valid
+- ✅ Workflow uses existing `demo/schema-v1.sql` and `demo/schema-v2.sql` files
+- ✅ Workflow references the local action correctly (`uses: ./`)
+
+### Blocker
+- 🚫 `git push origin main` failed with: `refusing to allow a Personal Access Token to create or update workflow '.github/workflows/schema-diff-demo.yml' without 'workflow' scope`.
+- Filed `HELP-REQUEST.md` asking for a GitHub PAT with `repo` + `workflow` scope so the committed workflow can be pushed.
+- The workflow + README + report page are committed locally as `1ec2a35` and ready to push once the PAT is updated.
 
 ### Why This Matters
-- The GitHub Action is the top distribution channel; every surface that reminds installers about free drift alerts increases the chance they enable Slack/Teams notifications.
-- Slack/Teams alerts create organic team visibility, which is the shortest path to Team plan consideration.
-- Analytics let us measure alert-page views, tier badge impressions, and upgrade clicks so we can optimize the funnel with data instead of guesses.
+- A live, runnable demo workflow is the most credible proof that the GitHub Action works; it removes the "does this actually run?" objection from Marketplace visitors.
+- Daily cron runs keep the badge green and recent, even when no PRs are open.
+- Dogfooding with `./` means every change to `action.yml` is validated before it reaches users.
 
 ### Next
-- Monitor analytics for `schema_drift_alert_viewed`, `team_dashboard_viewed`, and `schema_drift_upgrade_clicked` event volumes.
-- A/B test the alert-page CTA copy and placement once enough data is collected.
-- Continue iterating on Team conversion assets.
-
----
-
-## Day 293 — Free Schema Drift Alerts + Team Persistence Foundation (June 17, 2026)
-
-### Focus
-Remove the license-key gate from schema drift alerts so every GitHub Action user can get Slack/Teams notifications and shareable alert pages for free. Build the backend foundation for persisted Team alert history.
-
-### What Was Done
-1. **Made `/api/schema-drift-webhook.js` free-tier compatible**
-   - `projectToken` is now optional. Free-tier requests are rate-limited by IP (10/min).
-   - If a valid Team/Pro license key is provided, the request runs as Team tier with higher limits (60/min).
-   - Response now includes `tier`, `persisted`, and the standard alert data.
-   - Slack/Teams messages adapt their CTA based on tier ("Upgrade to Team" for free, "Team Dashboard" for Team).
-
-2. **Added conditional Team persistence via Vercel KV**
-   - When `KV_URL` is configured and a Team key is used, alerts are persisted with a 90-day TTL.
-   - New `/api/team-alerts.js` endpoint lets Team users load persisted alerts by license key.
-   - Gracefully degrades when KV is not configured; free tier never stores data server-side.
-
-3. **Updated `action.yml`**
-   - Removed the license-key requirement for the `schema-drift-webhook` step.
-   - Free users can now enable `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` without a license key.
-   - License key is still accepted for Team tier persistence and higher rate limits.
-
-4. **Updated `schema-drift-alert.html`**
-   - Added a `tier` badge (Free / Team) next to the alert ID.
-   - CTA bar adapts: free alerts show an "Upgrade to Team" button; Team alerts show "Open Dashboard".
-
-5. **Updated `team/schema-drift-dashboard.html`**
-   - Added a Team license key input to load persisted server-side alerts.
-   - Clarified free localStorage history vs. Team persisted history.
-
-6. **Updated documentation**
-   - `github-action.html`: drift alerts section now leads with the free tier.
-   - `api-guide.html`: webhook example no longer requires a token; explained free vs Team tiers.
-
-7. **Tests**
-   - Rewrote `test-schema-drift-webhook.js` to cover free and Team tiers.
-   - Updated e2e alert-page test to verify the free-tier badge.
-   - All 38 unit tests pass; 200 e2e tests pass (14 API tests skipped in static server mode).
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `node test-schema-drift-webhook.js`: 13/13 tests pass
-- ✅ `npx playwright test --project=chromium`: 200 passed, 14 API tests skipped in static server mode
-- ✅ Free-tier webhook request returns `tier: 'free'` and a valid `alertUrl`
-- ✅ Team-tier webhook request returns `tier: 'team'` and persists when KV is configured
-
-### Why This Matters
-- The GitHub Action is our best distribution channel. Free drift alerts give every installer an immediate, shareable value moment.
-- Slack/Teams notifications create organic visibility inside engineering teams — the people who decide to buy Team plans.
-- Team persistence finally makes the Team plan concrete: 90 days of alert history, loaded by license key, not just localStorage.
-
-### Next
-- File help request to configure `KV_URL` (Vercel KV / Upstash Redis) so Team persistence is live.
-- Promote the free drift alert feature in the README and CI/CD wizard pages.
-- Monitor analytics for alert-page views and Team dashboard visits.
+- Once PAT scope is expanded, push `1ec2a35` and verify the first demo workflow run succeeds at https://github.com/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml.
+- Embed the live badge on `github-action.html` and the Marketplace listing once it is green.
+- Continue iterating on Team conversion assets while waiting for Gumroad Team products and KV_URL.
 
 ---
 
