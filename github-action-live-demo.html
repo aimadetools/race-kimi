@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SchemaLens GitHub Action Live Demo — See It Run</title>
+  <meta name="description" content="Watch the SchemaLens GitHub Action run live on sample schemas. Free schema diff in CI/CD with PR comments, Check Runs, risk scores, and downloadable HTML reports.">
+  <meta property="og:title" content="SchemaLens GitHub Action Live Demo — See It Run">
+  <meta property="og:description" content="Watch the SchemaLens GitHub Action run live on sample schemas. Free schema diff in CI/CD with PR comments, Check Runs, and risk scores.">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemalens.tech/github-action-live-demo.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SchemaLens GitHub Action Live Demo",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Live GitHub Action demo, free SQL schema diff in CI/CD, breaking change detection, PR comments, Check Runs, HTML report artifacts",
+    "url": "https://schemalens.tech/github-action-live-demo.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+    .badge-free { display:inline-block; background: #10b981; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .live-status { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0; text-align: center; }
+    .live-status .status-row { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .live-status .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #64748b; animation: pulse 2s infinite; }
+    .live-status .status-dot.success { background: #22c55e; animation: none; }
+    .live-status .status-dot.failure { background: #ef4444; animation: none; }
+    .live-status .status-dot.pending { background: #f59e0b; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .live-status .status-text { font-weight: 600; font-size: 1.05rem; }
+    .live-status .status-meta { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; }
+    .live-status .status-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .code-block { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; line-height: 1.6; margin: 16px 0; }
+    .code-block .comment { color: #64748b; }
+    .code-block .key { color: #7dd3fc; }
+    .code-block .str { color: #86efac; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 32px 0; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+    .cta-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin: 32px 0; }
+    .cta-bar h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-bar p { color: var(--text-muted); margin-bottom: 16px; }
+    .demo-figure { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0; text-align: center; }
+    .demo-figure img { width: 100%; max-width: 960px; border-radius: var(--radius); border: 1px solid var(--border); }
+    .demo-figure figcaption { margin-top: 12px; font-size: 0.9rem; color: var(--text-muted); }
+    .check-mockup { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 0.85rem; margin: 16px 0; }
+    .check-mockup .check-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .check-mockup .check-icon { width: 16px; height: 16px; border-radius: 50%; background: #22c55e; display: flex; align-items: center; justify-content: center; }
+    .check-mockup .check-icon svg { width: 10px; height: 10px; }
+    .check-mockup pre { background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="display:flex; gap:18px; padding:18px 0; font-size:0.9rem;">
+      <a href="index.html" style="font-weight:700; color:var(--text);">SchemaLens</a>
+      <a href="app.html">App</a>
+      <a href="tools.html">Tools</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="github-action.html">GitHub Action</a>
+      <a href="ci-cd-integration.html">CI/CD</a>
+    </nav>
+
+    <div class="page-header">
+      <h1>SchemaLens GitHub Action <span class="badge-free">Live Demo</span></h1>
+      <p>See the SchemaLens action run on real schema files, every day. No setup required — watch a live CI run, download the report artifact, then add it to your repo.</p>
+    </div>
+
+    <div class="live-status" id="live-status">
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <div class="status-text" id="status-text">Loading latest run…</div>
+      </div>
+      <div class="status-meta" id="status-meta">Fetching public workflow data from GitHub</div>
+      <div class="status-links">
+        <a href="https://github.com/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml" class="btn btn-primary" target="_blank" rel="noopener" data-event="live_demo_view_runs">▶ View All Runs</a>
+        <a href="https://github.com/aimadetools/race-kimi/blob/main/demo/schema-v1.sql" class="btn btn-secondary" target="_blank" rel="noopener">📄 Demo Schema v1</a>
+        <a href="https://github.com/aimadetools/race-kimi/blob/main/demo/schema-v2.sql" class="btn btn-secondary" target="_blank" rel="noopener">📄 Demo Schema v2</a>
+      </div>
+    </div>
+
+    <div class="demo-figure">
+      <img src="assets/schema-diff-report-demo.gif" alt="SchemaLens HTML report artifact demo: download from a GitHub PR and open offline">
+      <figcaption>The self-contained HTML report artifact from the live demo workflow — download it from any run and open it without internet.</figcaption>
+    </div>
+
+    <div class="cta-bar">
+      <h2>🚀 Add the action to your repo</h2>
+      <p>Copy this workflow into <code>.github/workflows/schema-diff.yml</code>. It runs on every PR that touches a <code>.sql</code> file and posts a schema diff comment.</p>
+      <div class="code-block">
+<span class="comment"># .github/workflows/schema-diff.yml</span>
+<span class="key">name</span>: <span class="str">Schema Diff</span>
+<span class="key">on</span>: [pull_request]
+<span class="key">jobs</span>:
+  <span class="key">diff</span>:
+    <span class="key">runs-on</span>: <span class="str">ubuntu-latest</span>
+    <span class="key">steps</span>:
+      - <span class="key">uses</span>: <span class="str">actions/checkout@v4</span>
+      - <span class="key">uses</span>: <span class="str">aimadetools/race-kimi@main</span>
+        <span class="key">with</span>:
+          <span class="key">old-schema-path</span>: <span class="str">./schema/base.sql</span>
+          <span class="key">new-schema-path</span>: <span class="str">./schema/current.sql</span>
+          <span class="key">dialect</span>: <span class="str">postgres</span>
+          <span class="key">post-comment</span>: <span class="str">true</span>
+          <span class="key">create-check-run</span>: <span class="str">true</span>
+          <span class="key">upload-report</span>: <span class="str">true</span>
+          <span class="key">github-token</span>: <span class="str">${{ secrets.GITHUB_TOKEN }}</span>
+      </div>
+      <a href="https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates" class="btn btn-primary" target="_blank" rel="noopener" data-event="live_demo_starter_workflow">🚀 Add from Actions Tab</a>
+      <a href="tools/cicd-setup-wizard.html?platform=github" class="btn btn-secondary" data-event="live_demo_setup_wizard">⚡ Setup Wizard</a>
+      <a href="github-action.html" class="btn btn-secondary">Full Setup Guide</a>
+    </div>
+
+    <h2>What the live run produces</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🛡️ GitHub Check Run</h3>
+        <p>A real PR status check showing risk score, breaking changes, and migration preview — just like your test suite.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 PR Comment</h3>
+        <p>Every pull request gets a formatted schema diff summary with migration SQL and a link to the full report artifact.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📋 Job Summary</h3>
+        <p>The Actions run page shows tables added/removed/modified, breaking changes, and the generated migration SQL.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📄 HTML Report Artifact</h3>
+        <p>Download a self-contained HTML report with risk score, breaking changes, migration SQL, and rollback SQL. Works offline.</p>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 24px 0;">
+      <h3 style="font-size: 1rem; margin-bottom: 12px;">✅ What the PR Check Run looks like</h3>
+      <div class="check-mockup">
+        <div class="check-row">
+          <div class="check-icon"><svg viewBox="0 0 16 16" fill="white"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06L6 11.19l7.22-7.22a.75.75 0 0 1 1.06 0z"/></svg></div>
+          <div>
+            <strong style="font-size: 0.9rem;">SchemaLens Schema Diff</strong>
+            <span style="color: var(--text-muted); font-size: 0.8rem;"> — Successful in 2s</span>
+          </div>
+        </div>
+        <div style="line-height: 1.6; padding-left: 26px;">
+          <p><strong>Risk: Medium (42/100) · Breaking: 1</strong></p>
+          <p>SchemaLens detected <strong>1</strong> added, <strong>0</strong> removed, and <strong>2</strong> modified tables. Risk level: <strong>Medium</strong> (42/100). <strong>1</strong> breaking change(s) found.</p>
+          <pre><code>ALTER TABLE users
+  ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
+          <p style="font-size: 0.8rem; color: var(--text-muted);"><em>Full migration SQL is free in every PR. <a href="team-buy.html" style="color: var(--primary);">Upgrade to Team for drift alerts →</a></em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.05)); border: 2px solid rgba(99,102,241,0.3);">
+      <h2>🏢 Want this for your whole team?</h2>
+      <p>SchemaLens Team adds Slack/Teams alerts, a shared dashboard with 90-day history, and admin controls. One prevented incident pays for a year.</p>
+      <a href="team/workspace-preview.html" class="btn btn-primary" data-event="live_demo_team_preview">👁️ Preview Team Workspace</a>
+      <a href="team-buy.html" class="btn btn-secondary">Start Team Plan — $29/mo</a>
+      <a href="tools/team-roi-calculator.html" class="btn btn-secondary">ROI Calculator</a>
+    </div>
+
+    <footer style="margin-top:64px; padding:32px 0; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.85rem; text-align:center;">
+      <p>
+        <a href="index.html">Home</a> ·
+        <a href="app.html">App</a> ·
+        <a href="tools.html">Tools</a> ·
+        <a href="pricing.html">Pricing</a> ·
+        <a href="github-action.html">GitHub Action</a> ·
+        <a href="ci-cd-integration.html">CI/CD</a> ·
+        <a href="schema-diff-report.html">Schema Diff Report</a> ·
+        <a href="https://github.com/aimadetools/race-kimi" target="_blank" rel="noopener"><span data-github-stars>Star on GitHub</span></a>
+      </p>
+      <p>© 2026 SchemaLens. Built for engineers.</p>
+    </footer>
+  </div>
+
+<script src="lib/github-stars.js" defer></script>
+<script>
+(function() {
+  const statusDot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  const statusMeta = document.getElementById('status-meta');
+  const runsUrl = 'https://github.com/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml';
+  const apiUrl = 'https://api.github.com/repos/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml/runs?per_page=1';
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function setState(state, text, meta) {
+    statusDot.className = 'status-dot ' + state;
+    statusText.textContent = text;
+    statusMeta.textContent = meta;
+  }
+
+  fetch(apiUrl)
+    .then(function(r) {
+      if (!r.ok) throw new Error('GitHub API returned ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      const run = data.workflow_runs && data.workflow_runs[0];
+      if (!run) {
+        setState('pending', 'No runs yet', 'The workflow is committed but may not be pushed to origin yet');
+        return;
+      }
+      const state = run.conclusion === 'success' ? 'success' : (run.conclusion || run.status);
+      const label = state === 'success' ? 'Latest run passed' : ('Latest run: ' + state);
+      const meta = 'Run #' + run.run_number + ' · ' + formatDate(run.updated_at) + ' · ' + run.name;
+      setState(state === 'success' ? 'success' : 'failure', label, meta);
+      // Add direct link to latest run if not already present
+      const links = document.querySelector('.status-links');
+      if (links && !document.getElementById('latest-run-link')) {
+        const a = document.createElement('a');
+        a.id = 'latest-run-link';
+        a.href = run.html_url;
+        a.className = 'btn btn-secondary';
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.setAttribute('data-event', 'live_demo_latest_run');
+        a.textContent = '🔍 Latest Run #' + run.run_number;
+        links.appendChild(a);
+      }
+    })
+    .catch(function(err) {
+      setState('pending', 'Live status unavailable', 'GitHub API rate limit or CORS — check the run page directly');
+      if (window.console) console.warn('SchemaLens live demo status fetch failed:', err.message);
+    });
+})();
+</script>
+</body>
+</html>

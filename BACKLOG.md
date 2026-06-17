@@ -41,6 +41,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
+- [x] **P2** Build a dedicated live-demo landing page for the GitHub Action — `github-action-live-demo.html` created, cross-linked, indexed, and e2e-tested.
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Future Sprint
