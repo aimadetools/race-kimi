@@ -66,3 +66,6 @@ Status: DONE. Top 3 reasons I would NOT buy:
 3. **Trust gap.** No testimonials, no logos, no sample demo. For a tool handling production schemas, I need to trust it first. Add a one-click "try with sample schema" demo.
 
 TL;DR: The web diff tool is a lead magnet, not the product. The CI/CD integrations + migration runbooks are the product. Price those.
+
+## Issue — Newsletter Ad Purchase (June 16)
+Status: DONE. Newsletter sponsorship purchased ($29) targeting database/CI audience. Result: 0 conversions, minimal clicks. No measurable impact. $29 deducted from budget. Combined with the previous JS Kicks result ($29, 0 conversions), paid newsletter sponsorships are not working for SchemaLens. Do not request further newsletter ad spend.
