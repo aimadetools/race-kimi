@@ -299,7 +299,7 @@ for (const { key, name, configText, h1Text } of platform60sPages) {
     await page.goto(`${BASE_URL}/tools/${key}-schema-diff-in-60-seconds.html`);
     await expect(page.locator('h1')).toContainText(h1Text);
     await expect(page.locator(`a[href="cicd-setup-wizard.html?platform=${key}"]`).first()).toContainText('Generate');
-    await expect(page.locator('.code-block')).toContainText(configText);
+    await expect(page.locator('.code-block').first()).toContainText(configText);
   });
 }
 

@@ -116,7 +116,8 @@
           <span class="key">post-comment</span>: true
           <span class="key">create-check-run</span>: true
           <span class="key">fail-on-breaking</span>: false
-          <span class="key">github-token</span>: ${{ secrets.GITHUB_TOKEN }}</code></pre>
+          <span class="key">github-token</span>: ${{ secrets.GITHUB_TOKEN }}
+          <span class="key">schema-drift-webhook</span>: https://schemalens.tech/api/schema-drift-webhook</code></pre>
       <a href="cicd-setup-wizard.html?platform=github" class="btn btn-primary btn-lg" data-analytics="github_60s_open_wizard_click">⚡ Generate my GitHub Actions config</a>
       <a href="../github-action.html" class="btn btn-secondary"  data-analytics="github_60s_download_click">View full action docs</a>
     </div>
@@ -144,6 +145,16 @@
       </div>
     </div>
 
+<div class="cta-bar" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(16,185,129,0.08)); border-color: rgba(99,102,241,0.3);">
+      <h2>🔔 Free schema drift alerts</h2>
+      <p>Add the SchemaLens webhook and get Slack/Teams notifications + shareable alert pages for every diff. No license key required.</p>
+      <pre class="code-block"><code><span class="key">schema-drift-webhook</span>: <span class="str">https://schemalens.tech/api/schema-drift-webhook</span>
+<span class="key">schema-drift-slack</span>: <span class="str">${{ secrets.SLACK_WEBHOOK_URL }}</span>
+<span class="key">schema-drift-teams</span>: <span class="str">${{ secrets.TEAMS_WEBHOOK_URL }}</span></code></pre>
+      <a href="../github-action.html#-schema-drift-alerts" class="btn btn-primary">Set up free alerts →</a>
+      <a href="../team/workspace-preview.html" class="btn btn-secondary">Preview Team workspace</a>
+    </div>
+
     <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why GitHub Actions teams use SchemaLens</h2>
     <div class="feature-grid">
       <div class="feature-card">
@@ -157,6 +168,10 @@
       <div class="feature-card">
         <h3>📊 GitHub Check Run</h3>
         <p>A real status check with risk score, migration preview, and a clear pass/fail conclusion.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔔 Free schema drift alerts</h3>
+        <p>Add one webhook line and get Slack/Teams notifications + shareable alert pages on every diff. No license key.</p>
       </div>
       <div class="feature-card">
         <h3>⏭️ Smart skip saves CI minutes</h3>

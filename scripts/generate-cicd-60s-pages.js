@@ -234,6 +234,7 @@ const platforms = [
 
 function renderPage(p) {
   const pageUrl = `https://schemalens.tech/tools/${p.key}-schema-diff-in-60-seconds.html`;
+  const driftCtaHtml = p.key === 'github' ? driftAlertCta : '';
   const featureList = p.featureCards.map(f => `      <div class="feature-card">
         <h3>${f.title}</h3>
         <p>${f.body}</p>
@@ -365,6 +366,8 @@ function renderPage(p) {
   ADD COLUMN email_verified_at TIMESTAMP;</code></pre>
       </div>
     </div>
+
+${driftCtaHtml}
 
     <h2 style="text-align:center; font-size:1.3rem; margin: 36px 0 8px;">Why ${p.name === 'Azure DevOps' ? 'Azure DevOps' : p.name} teams use SchemaLens</h2>
     <div class="feature-grid">
