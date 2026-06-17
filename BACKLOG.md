@@ -36,7 +36,6 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
-- [ ] **P1** Build a live GitHub Action demo workflow in this repo (`.github/workflows/schema-diff-demo.yml`) that runs the SchemaLens action on sample schema files. Provides a dogfood/test surface and a live example for the Marketplace listing. **BLOCKED: workflow file created and committed locally, but push fails because the GitHub PAT lacks the `workflow` scope. HELP-REQUEST.md filed.**
 - [ ] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
