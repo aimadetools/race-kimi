@@ -95,7 +95,7 @@ jobs:
 - **GitHub Check Runs** — native PR status checks with risk scores
 - **Job Summary** — rich markdown report on every Actions run
 - **Smart skip** — only runs when `.sql` files change
-- **Schema drift alerts** — Slack/Teams notifications with shareable alert pages (Pro/Team)
+- **Schema drift alerts** — free Slack/Teams notifications with shareable alert pages; Team adds persisted history
 - **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
 
 ### Get started
@@ -105,7 +105,8 @@ jobs:
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
-- **[Team plan with Slack alerts →](https://schemalens.tech/pricing.html)**
+- **[Free Slack alerts setup →](https://schemalens.tech/github-action.html)**
+- **[Team plan with persisted history →](https://schemalens.tech/pricing.html)**
 - **[Calculate Team ROI →](https://schemalens.tech/tools/team-roi-calculator.html)**
 
 ---

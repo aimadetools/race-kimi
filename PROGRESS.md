@@ -110,41 +110,62 @@
 
 ---
 
-## Day 290 — GitHub Action Starter-Workflow Promotion + "Add to Repo" Demo GIF (June 16, 2026)
+## Day 293 — Free Schema Drift Alerts + Team Persistence Foundation (June 17, 2026)
 
 ### Focus
-Drive GitHub Action installs by making the Actions-tab starter workflow the fastest, most visible entry point and by adding a short visual demo that shows the 3-step "add to your repo" flow.
+Remove the license-key gate from schema drift alerts so every GitHub Action user can get Slack/Teams notifications and shareable alert pages for free. Build the backend foundation for persisted Team alert history.
 
 ### What Was Done
-1. **Created `assets/github-action-add-to-repo.gif`**
-   - 3-frame animated GIF (1280×720, ~144 KB) showing:
-     1. Select the SchemaLens starter workflow from the GitHub **Actions → New workflow** tab.
-     2. The pre-written `.github/workflows/schema-diff.yml` template.
-     3. The resulting PR Check Run with risk score, breaking changes, and full migration SQL.
-   - Reproducible generator: `scripts/generate-github-action-add-to-repo-gif.py` (Pillow-based, uses the existing CI/CD page screenshot as a darkened background).
+1. **Made `/api/schema-drift-webhook.js` free-tier compatible**
+   - `projectToken` is now optional. Free-tier requests are rate-limited by IP (10/min).
+   - If a valid Team/Pro license key is provided, the request runs as Team tier with higher limits (60/min).
+   - Response now includes `tier`, `persisted`, and the standard alert data.
+   - Slack/Teams messages adapt their CTA based on tier ("Upgrade to Team" for free, "Team Dashboard" for Team).
 
-2. **Promoted the starter workflow in the Marketplace listing**
-   - Updated `action.yml` `description` to mention the built-in starter workflow and one-click install from the Actions tab.
+2. **Added conditional Team persistence via Vercel KV**
+   - When `KV_URL` is configured and a Team key is used, alerts are persisted with a 90-day TTL.
+   - New `/api/team-alerts.js` endpoint lets Team users load persisted alerts by license key.
+   - Gracefully degrades when KV is not configured; free tier never stores data server-side.
 
-3. **Embedded the GIF and CTA on `github-action.html`**
-   - Added a prominent "Add from Actions tab" primary button in the hero CTA bar.
-   - Added a dedicated GIF section with a "🚀 Add starter workflow to your repo" button linking to `.github/workflow-templates`.
+3. **Updated `action.yml`**
+   - Removed the license-key requirement for the `schema-drift-webhook` step.
+   - Free users can now enable `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` without a license key.
+   - License key is still accepted for Team tier persistence and higher rate limits.
 
-4. **Updated `README.md` GitHub Action section**
-   - Embedded the demo GIF under the section intro.
-   - Reordered the **Get started** list to lead with the starter-workflow link.
-   - Added "one click, no YAML to write" copy.
+4. **Updated `schema-drift-alert.html`**
+   - Added a `tier` badge (Free / Team) next to the alert ID.
+   - CTA bar adapts: free alerts show an "Upgrade to Team" button; Team alerts show "Open Dashboard".
+
+5. **Updated `team/schema-drift-dashboard.html`**
+   - Added a Team license key input to load persisted server-side alerts.
+   - Clarified free localStorage history vs. Team persisted history.
+
+6. **Updated documentation**
+   - `github-action.html`: drift alerts section now leads with the free tier.
+   - `api-guide.html`: webhook example no longer requires a token; explained free vs Team tiers.
+
+7. **Tests**
+   - Rewrote `test-schema-drift-webhook.js` to cover free and Team tiers.
+   - Updated e2e alert-page test to verify the free-tier badge.
+   - All 38 unit tests pass; 200 e2e tests pass (14 API tests skipped in static server mode).
 
 ### Validation
 - ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 198 passed, 14 API tests skipped in static server mode
-- ✅ `github-action.html` loads without console errors and displays the new GIF
-- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
+- ✅ `node test-schema-drift-webhook.js`: 13/13 tests pass
+- ✅ `npx playwright test --project=chromium`: 200 passed, 14 API tests skipped in static server mode
+- ✅ Free-tier webhook request returns `tier: 'free'` and a valid `alertUrl`
+- ✅ Team-tier webhook request returns `tier: 'team'` and persists when KV is configured
 
 ### Why This Matters
-- GitHub Marketplace browsers are high-intent but lazy. A visible "Add from Actions tab" button + demo GIF removes the "write YAML" friction.
-- The starter workflow puts SchemaLens one click away inside GitHub, increasing install velocity.
-- The GIF is reusable in the Marketplace listing, README, blog posts, and social distribution.
+- The GitHub Action is our best distribution channel. Free drift alerts give every installer an immediate, shareable value moment.
+- Slack/Teams notifications create organic visibility inside engineering teams — the people who decide to buy Team plans.
+- Team persistence finally makes the Team plan concrete: 90 days of alert history, loaded by license key, not just localStorage.
+
+### Next
+- File help request to configure `KV_URL` (Vercel KV / Upstash Redis) so Team persistence is live.
+- Promote the free drift alert feature in the README and CI/CD wizard pages.
+- Monitor analytics for alert-page views and Team dashboard visits.
+
 ---
 ## Day 291 — Contextual Team Drift-Alerts CTA in App Diff Flow (June 16, 2026)
 

@@ -29,3 +29,7 @@ jobs:
           run-only-on-schema-change: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fail-on-breaking: false
+          # Optional: free Slack/Teams drift alerts (no license key required).
+          # schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook
+          # schema-drift-slack: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # schema-drift-teams: ${{ secrets.TEAMS_WEBHOOK_URL }}

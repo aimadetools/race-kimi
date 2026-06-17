@@ -81,12 +81,11 @@
 
     <div class="setup-card">
       <h2>⚡ Connect your CI/CD pipeline</h2>
-      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">Point your GitHub Action, GitLab CI, or Jenkins job at the SchemaLens drift webhook. Alerts are forwarded to Slack/Teams and produce shareable alert URLs.</p>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">Point your GitHub Action, GitLab CI, or Jenkins job at the SchemaLens drift webhook. Alerts are forwarded to Slack/Teams and produce shareable alert URLs. Free tier works without a license key; Team tier persists alerts here for 90 days.</p>
       <div class="code-block">POST https://schemalens.tech/api/schema-drift-webhook
 Content-Type: application/json
 
 {
-  "projectToken": "SL-XXXX-XXXX-XXXX-XXXX",
   "oldSchema": "...",
   "newSchema": "...",
   "dialect": "postgres",
@@ -97,6 +96,17 @@ Content-Type: application/json
   }
 }</div>
       <p style="margin-top:12px;"><a href="../github-action.html" style="color:var(--primary); font-weight:600;">GitHub Action docs →</a></p>
+    </div>
+
+    <div class="setup-card" id="team-login-card">
+      <h2>🔐 Team persistent history</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">Enter your SchemaLens Team license key to load persisted alerts from the server. Without a key, this dashboard only shows alerts you have opened locally.</p>
+      <div class="toolbar" style="margin-bottom:0;">
+        <input type="text" id="team-token" placeholder="SL-XXXX-XXXX-XXXX-XXXX" style="flex:1; min-width:240px;">
+        <button id="btn-load-team">Load Team Alerts</button>
+        <a href="../team-buy.html" style="color:var(--primary); font-weight:600; align-self:center;">Get Team →</a>
+      </div>
+      <p id="team-login-status" style="font-size:0.85rem; margin-top:10px; color:var(--text-muted);"></p>
     </div>
 
     <div id="empty-state" class="empty-state" style="display:none;">
@@ -157,6 +167,7 @@ Content-Type: application/json
   <script>
   (function() {
     const STORAGE_KEY = 'schemalens_drift_alerts';
+    let currentAlerts = [];
 
     function loadAlerts() {
       try {
@@ -335,8 +346,8 @@ Content-Type: application/json
       URL.revokeObjectURL(url);
     }
 
-    function init() {
-      let alerts = loadAlerts();
+    function renderDashboard(alerts) {
+      currentAlerts = alerts;
       if (!alerts.length) {
         document.getElementById('empty-state').style.display = 'block';
         document.getElementById('dashboard-content').style.display = 'none';
@@ -348,20 +359,64 @@ Content-Type: application/json
         drawLineChart('breaking-chart', alerts, a => a.summary?.breakingChangeCount || 0, '#ef4444');
         renderTable(alerts);
       }
+    }
+
+    async function loadTeamAlerts() {
+      const input = document.getElementById('team-token');
+      const status = document.getElementById('team-login-status');
+      const token = input.value.trim();
+      if (!token) {
+        status.textContent = 'Please enter a Team license key.';
+        status.style.color = 'var(--warning)';
+        return;
+      }
+      status.textContent = 'Loading Team alerts…';
+      status.style.color = 'var(--text-muted)';
+      try {
+        const res = await fetch(`../api/team-alerts?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
+        if (!res.ok) {
+          status.textContent = data.error || 'Failed to load Team alerts.';
+          status.style.color = 'var(--danger)';
+          return;
+        }
+        const teamAlerts = data.alerts || [];
+        if (teamAlerts.length) {
+          saveAlerts(teamAlerts);
+          status.textContent = `Loaded ${teamAlerts.length} persisted Team alert(s).`;
+          status.style.color = 'var(--success)';
+          renderDashboard(teamAlerts);
+        } else {
+          status.textContent = 'No persisted Team alerts found. Run a pipeline with your Team license key to create some.';
+          status.style.color = 'var(--text-muted)';
+        }
+      } catch (err) {
+        status.textContent = 'Network error loading Team alerts.';
+        status.style.color = 'var(--danger)';
+      }
+    }
+
+    function init() {
+      renderDashboard(loadAlerts());
 
       ['filter-repo', 'filter-risk', 'filter-breaking'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => renderTable(alerts));
+        document.getElementById(id).addEventListener('input', () => renderTable(currentAlerts));
       });
 
-      document.getElementById('btn-export-json').addEventListener('click', () => exportJSON(alerts));
-      document.getElementById('btn-export-csv').addEventListener('click', () => exportCSV(alerts));
+      document.getElementById('btn-export-json').addEventListener('click', () => exportJSON(currentAlerts));
+      document.getElementById('btn-export-csv').addEventListener('click', () => exportCSV(currentAlerts));
       document.getElementById('btn-clear').addEventListener('click', () => {
         if (confirm('Clear all locally stored drift alerts? This cannot be undone.')) {
           localStorage.removeItem(STORAGE_KEY);
-          alerts = [];
+          currentAlerts = [];
           document.getElementById('empty-state').style.display = 'block';
           document.getElementById('dashboard-content').style.display = 'none';
         }
+      });
+
+      document.getElementById('btn-load-team').addEventListener('click', loadTeamAlerts);
+      document.getElementById('team-token').addEventListener('keydown', e => {
+        if (e.key === 'Enter') loadTeamAlerts();
       });
     }
 

@@ -59,6 +59,11 @@
     .copy-btn:hover { opacity: 0.9; }
     .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-block; }
     .btn-secondary:hover { border-color: var(--primary); }
+    .btn-team { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-block; }
+    .btn-team:hover { opacity: 0.9; }
+    .tier-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-left: 10px; vertical-align: middle; }
+    .tier-badge.free { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .tier-badge.team { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
   </style>
 <script>
 (function() {
@@ -97,7 +102,7 @@
 
     <div id="alert" style="display:none;">
       <div class="alert-header">
-        <span class="alert-id" id="alert-id"></span>
+        <span class="alert-id" id="alert-id"></span><span class="tier-badge" id="tier-badge"></span>
         <h1 id="alert-title">Schema Drift Alert</h1>
         <p id="alert-subtitle">Detected by SchemaLens CI/CD integration</p>
       </div>
@@ -124,14 +129,14 @@
         <pre class="code-block"><code id="migration-code"></code></pre>
       </div>
 
-      <div class="cta-bar">
-        <div>
+      <div class="cta-bar" id="cta-bar">
+        <div id="cta-copy">
           <strong>Track this in your team dashboard</strong>
           <p style="color:var(--text-muted); font-size:0.85rem; margin:4px 0 0;">Alert links are shareable and save locally when opened.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="copy-btn" id="copy-link">Copy Alert Link</button>
-          <a href="team/schema-drift-dashboard.html" class="btn-secondary">Open Dashboard</a>
+          <a href="team/schema-drift-dashboard.html" class="btn-secondary" id="dashboard-link">Open Dashboard</a>
         </div>
       </div>
     </div>
@@ -282,6 +287,35 @@
       }
     }
 
+    function renderTierBadge(tier) {
+      const badge = document.getElementById('tier-badge');
+      if (tier === 'team') {
+        badge.className = 'tier-badge team';
+        badge.textContent = 'Team';
+        badge.title = 'Team-tier alert with persistent history';
+      } else {
+        badge.className = 'tier-badge free';
+        badge.textContent = 'Free';
+        badge.title = 'Free alert. Upgrade to Team for persistent history and shared workspace.';
+      }
+    }
+
+    function renderCta(tier) {
+      const copy = document.getElementById('cta-copy');
+      const dashboardLink = document.getElementById('dashboard-link');
+      if (tier === 'team') {
+        copy.innerHTML = '<strong>Track this in your team dashboard</strong><p style="color:var(--text-muted); font-size:0.85rem; margin:4px 0 0;">Team alerts persist in your shared workspace for 90 days.</p>';
+        dashboardLink.textContent = 'Open Dashboard';
+        dashboardLink.className = 'btn-secondary';
+        dashboardLink.href = 'team/schema-drift-dashboard.html';
+      } else {
+        copy.innerHTML = '<strong>Free alert</strong><p style="color:var(--text-muted); font-size:0.85rem; margin:4px 0 0;">Alert links are shareable and save locally when opened. Upgrade to Team for persistent history, Slack/Teams alerts, and a shared workspace.</p>';
+        dashboardLink.textContent = 'Upgrade to Team';
+        dashboardLink.className = 'btn-team';
+        dashboardLink.href = 'team-buy.html';
+      }
+    }
+
     function render(payload) {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('error').style.display = 'none';
@@ -289,8 +323,11 @@
 
       const summary = payload.summary || {};
       const metadata = payload.metadata || {};
+      const tier = payload.tier || 'free';
 
       document.getElementById('alert-id').textContent = `Alert #${payload.alertId || 'unknown'}`;
+      renderTierBadge(tier);
+      renderCta(tier);
       const repo = metadata.repo ? metadata.repo.split('/').pop() : 'Project';
       document.getElementById('alert-title').textContent = `${repo} Schema Drift Alert`;
       document.getElementById('alert-subtitle').textContent = metadata.branch ? `Branch: ${metadata.branch}` : 'Detected by SchemaLens CI/CD integration';

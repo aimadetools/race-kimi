@@ -41,7 +41,7 @@ inputs:
     description: 'GitHub token for posting PR comments, creating check runs, and checking changed files'
     required: false
   schema-drift-webhook:
-    description: 'Send the diff result to the SchemaLens hosted schema drift webhook (https://schemalens.tech/api/schema-drift-webhook) to generate shareable alert pages and Slack/Teams notifications. Requires a SchemaLens Pro or Team license key.'
+    description: 'Send the diff result to the SchemaLens hosted schema drift webhook (https://schemalens.tech/api/schema-drift-webhook) to generate shareable alert pages and Slack/Teams notifications. Free tier works without a license key; provide a SchemaLens Team license key for persistent alert history and higher rate limits.'
     required: false
   schema-drift-slack:
     description: 'Slack Incoming Webhook URL for schema drift alerts. Requires schema-drift-webhook to be set.'
@@ -414,9 +414,11 @@ ${UPGRADE_NOTE}
         set -euo pipefail
         RESPONSE="$RESPONSE_JSON"
 
+        # Free tier works without a license key. Team tier provides persistent history and higher limits.
         if [ -z "$LICENSE_KEY" ]; then
-          echo "::warning::schema-drift-webhook requires a SchemaLens Pro or Team license key. Set license-key to enable drift alerts."
-          exit 0
+          echo "Sending free-tier schema drift alert. Add a SchemaLens Team license key for persistent history and higher rate limits."
+        else
+          echo "Sending Team-tier schema drift alert."
         fi
 
         # Build notification object only if URLs provided
@@ -443,8 +445,7 @@ ${UPGRADE_NOTE}
         PR_URL="${{ github.event.pull_request.html_url || '' }}"
         RUN_ID="${{ github.run_id }}"
 
-        PAYLOAD=$(jq -n \
-          --arg token "$LICENSE_KEY" \
+        PAYLOAD_BASE=$(jq -n \
           --argjson oldSchema "$OLD_SCHEMA" \
           --argjson newSchema "$NEW_SCHEMA" \
           --arg dialect "$DIALECT" \
@@ -457,7 +458,6 @@ ${UPGRADE_NOTE}
           --arg runId "$RUN_ID" \
           --argjson notify "$NOTIFY_JSON" \
           '{
-            projectToken: $token,
             oldSchema: $oldSchema,
             newSchema: $newSchema,
             dialect: $dialect,
@@ -472,6 +472,12 @@ ${UPGRADE_NOTE}
             },
             notify: $notify
           }')
+
+        if [ -n "$LICENSE_KEY" ]; then
+          PAYLOAD=$(echo "$PAYLOAD_BASE" | jq --arg token "$LICENSE_KEY" '. + { projectToken: $token }')
+        else
+          PAYLOAD="$PAYLOAD_BASE"
+        fi
 
         HTTP_STATUS=$(curl -s -o /tmp/schemalens_drift.json -w "%{http_code}" -X POST "$WEBHOOK_URL" \
           -H "Content-Type: application/json" \

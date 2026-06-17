@@ -453,15 +453,14 @@ func main() {
     </div>
 
     <div class="guide-section" style="background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(99,102,241,0.05) 100%); border-radius: var(--radius); padding: 28px;">
-      <h2>🚨 Schema Drift Webhook — Team Alerts</h2>
-      <p>Send diff results from CI/CD to the SchemaLens hosted webhook. It computes the diff, generates a shareable alert page, and forwards rich notifications to Slack or Microsoft Teams.</p>
+      <h2>🚨 Schema Drift Webhook — Free Alerts</h2>
+      <p>Send diff results from CI/CD to the SchemaLens hosted webhook. It computes the diff, generates a shareable alert page, and forwards rich notifications to Slack or Microsoft Teams. <strong>No license key required.</strong> Add a Team license key for persisted server-side history and higher rate limits.</p>
       <div class="endpoint">
         <span class="method">POST</span> <span class="url">https://schemalens.tech/api/schema-drift-webhook</span>
       </div>
       <pre class="code-block"><code>curl -X POST https://schemalens.tech/api/schema-drift-webhook \
   -H "Content-Type: application/json" \
   -d '{
-    "projectToken": "SL-XXXX-XXXX-XXXX-XXXX",
     "oldSchema": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));",
     "newSchema": "CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);",
     "dialect": "postgres",
@@ -478,8 +477,9 @@ func main() {
     }
   }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
       <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">
-        <strong>Response:</strong> <code>alertId</code>, <code>alertUrl</code>, <code>summary</code>, <code>riskScore</code>, and <code>notificationsSent</code>.<br>
-        <strong>Pro feature:</strong> requires a valid SchemaLens Pro license key. Data is encoded in the alert URL and never stored server-side.
+        <strong>Response:</strong> <code>tier</code>, <code>alertId</code>, <code>alertUrl</code>, <code>summary</code>, <code>riskScore</code>, and <code>notificationsSent</code>.<br>
+        <strong>Free tier:</strong> no license key required. Data is encoded in the alert URL and never stored server-side.<br>
+        <strong>Team tier:</strong> add <code>projectToken</code> with a Team license key for persisted history and 60 alerts/minute.
       </p>
       <p style="margin-top:10px;">
         <a href="team/schema-drift-dashboard.html" class="btn btn-secondary" style="font-size:0.85rem;">📊 Open Team Dashboard →</a>

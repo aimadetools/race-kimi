@@ -28,9 +28,9 @@ function createRes() {
   return res;
 }
 
-function createReq(body) {
+function createReq(body, method = 'POST') {
   return {
-    method: 'POST',
+    method,
     headers: { 'x-forwarded-for': '127.0.0.1' },
     socket: { remoteAddress: '127.0.0.1' },
     body
@@ -64,12 +64,12 @@ async function runTests() {
     }
   }
 
-  // 1. Missing project token returns 401
+  // 1. Free tier: missing projectToken but missing schemas returns 400
   {
     const req = createReq({});
     const res = createRes();
     await webhook(req, res);
-    await assert('missing projectToken returns 401', res.statusCode === 401 && res.jsonBody.error);
+    await assert('free tier missing schemas returns 400', res.statusCode === 400 && res.jsonBody.error);
   }
 
   // 2. Invalid project token returns 401
@@ -80,15 +80,25 @@ async function runTests() {
     await assert('invalid projectToken returns 401', res.statusCode === 401);
   }
 
-  // 3. Valid token but missing schemas/diff returns 400
+  // 3. Free tier with schemas returns 200, tier=free, alertUrl
   {
-    const req = createReq({ projectToken: generateValidKey() });
+    const req = createReq({
+      oldSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
+      newSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);',
+      dialect: 'postgres',
+      metadata: { repo: 'test/repo', branch: 'main' }
+    });
     const res = createRes();
     await webhook(req, res);
-    await assert('missing schemas returns 400', res.statusCode === 400);
+    await assert('free tier valid request returns 200', res.statusCode === 200);
+    await assert('free tier response includes tier=free', res.jsonBody?.tier === 'free');
+    await assert('free tier response includes alertId', res.jsonBody?.alertId?.length > 0);
+    await assert('free tier response includes alertUrl', res.jsonBody?.alertUrl?.includes('/schema-drift-alert.html#'));
+    await assert('free tier summary has tablesModified', res.jsonBody?.summary?.tablesModified === 1);
+    await assert('free tier breaking count is 1', res.jsonBody?.breakingCount === 1);
   }
 
-  // 4. Valid token with schemas returns 200 and alertUrl
+  // 4. Team tier with valid token returns 200, tier=team
   {
     const req = createReq({
       projectToken: generateValidKey(),
@@ -99,11 +109,10 @@ async function runTests() {
     });
     const res = createRes();
     await webhook(req, res);
-    await assert('valid request returns 200', res.statusCode === 200);
-    await assert('response includes alertId', res.jsonBody?.alertId?.length > 0);
-    await assert('response includes alertUrl', res.jsonBody?.alertUrl?.includes('/schema-drift-alert.html#'));
-    await assert('summary has tablesModified', res.jsonBody?.summary?.tablesModified === 1);
-    await assert('breaking count is 1', res.jsonBody?.breakingCount === 1);
+    await assert('team tier valid request returns 200', res.statusCode === 200);
+    await assert('team tier response includes tier=team', res.jsonBody?.tier === 'team');
+    await assert('team tier response includes alertId', res.jsonBody?.alertId?.length > 0);
+    await assert('team tier summary has tablesModified', res.jsonBody?.summary?.tablesModified === 1);
   }
 
   // 5. OPTIONS request returns 200

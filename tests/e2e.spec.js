@@ -825,12 +825,11 @@ test('schema health check: detects issues in sample schema', async ({ page }) =>
 // API Tests (skip when running against static file server)
 // ───────────────────────────────────────────────
 
-test('api: POST /api/schema-drift-webhook returns alert URL', async ({ request }) => {
+test('api: POST /api/schema-drift-webhook returns free-tier alert URL without token', async ({ request }) => {
   test.skip(process.env.SKIP_API_TESTS === 'true', 'API tests skipped for static server');
   if (true) test.skip(true, 'Static server does not support POST');
   const response = await request.post(`${BASE_URL}/api/schema-drift-webhook`, {
     data: {
-      projectToken: 'SL-AAAA-AAAA-AAAA-AAAA',
       oldSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));',
       newSchema: 'CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) NOT NULL);',
       dialect: 'postgres',
@@ -840,6 +839,7 @@ test('api: POST /api/schema-drift-webhook returns alert URL', async ({ request }
   expect(response.status()).toBe(200);
   const body = await response.json();
   expect(body.success).toBe(true);
+  expect(body.tier).toBe('free');
   expect(body.alertId).toBeTruthy();
   expect(body.alertUrl).toContain('/schema-drift-alert.html#');
   expect(body.summary).toHaveProperty('tablesModified');
@@ -858,6 +858,7 @@ test('api: POST /api/schema-drift-webhook returns 401 for invalid token', async 
 test('schema drift alert page renders from URL hash', async ({ page }) => {
   const payload = {
     alertId: 'abc123',
+    tier: 'free',
     summary: { tablesAdded: 1, tablesRemoved: 0, tablesModified: 0, breakingChangeCount: 0 },
     riskScore: { score: 10, label: 'Low', icon: '🟢' },
     breakingChanges: [],
@@ -867,6 +868,7 @@ test('schema drift alert page renders from URL hash', async ({ page }) => {
   const encoded = Buffer.from(JSON.stringify(payload)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   await page.goto(`${BASE_URL}/schema-drift-alert.html#${encoded}`);
   await expect(page.locator('text=Alert #abc123')).toBeVisible();
+  await expect(page.locator('#tier-badge')).toHaveText('Free');
   await expect(page.locator('text=repo Schema Drift Alert')).toBeVisible();
   await expect(page.locator('text=CREATE TABLE users')).toBeVisible();
 });
