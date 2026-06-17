@@ -54,6 +54,7 @@
 - **Jun 16 (Day 291):** Added contextual Team drift-alerts CTA in app.html diff flow with breaking-change-aware copy, workspace preview / Team buy links, 7-day dismissal, and e2e coverage; tests pass; deployed.
 - **Jun 16 (Day 292):** Built dedicated `schema-diff-newsletter.html` ad landing page, added UTM tracking (`utm_visit` analytics event + `lib/utm-preserve.js`), indexed in sitemap, e2e coverage; tests pass; help request filed for ad purchase.
 - **Jun 17 (Day 293):** Free schema drift alerts — `/api/schema-drift-webhook.js` no longer requires a license key; GitHub Action updated to send free alerts; alert page + Team dashboard updated with tier badges/upsell; `/api/team-alerts.js` + KV persistence ready; tests pass.
+- **Jun 17 (Day 294):** Promoted free schema drift alerts across README.md, CI/CD wizards (cicd-setup-wizard.html, github-action-setup.html, 60s pages, add-schema-diff-to-any-repo.html), and GitHub Action job summary/PR comments/Check Runs; added analytics events for alert-page views, tier badges, Team dashboard visits, and Upgrade-to-Team clicks; tests pass.
 
 ---
 
@@ -70,8 +71,6 @@
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
-- [ ] **P1** Promote free drift alerts in README.md, CI/CD wizard pages, and GitHub Action job summary to maximize install-to-alert conversion.
-- [ ] **P1** Add analytics events for alert-page views, tier badge impressions, Team dashboard visits, and "Upgrade to Team" clicks from alert pages.
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.

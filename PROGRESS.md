@@ -110,6 +110,68 @@
 
 ---
 
+## Day 294 — Promote Free Drift Alerts + Add Alert-Page Analytics (June 17, 2026)
+
+### Focus
+Maximize install-to-alert conversion by promoting the new free schema drift alerts across every high-traffic CI/CD surface, and instrument the alert pages so we can measure the resulting funnel.
+
+### What Was Done
+1. **README.md promotion**
+   - Added a top-of-page "NEW — Free schema drift alerts" callout.
+   - Added a dedicated "Free Schema Drift Alerts" subsection under the GitHub Action docs with a copy-paste YAML example.
+   - Clarified that Slack/Teams alerts and shareable alert pages are free, while Team adds 90-day persisted history.
+
+2. **GitHub Action job summary promotion (`action.yml`)**
+   - Job summary, PR comments, and Check Run output now lead with "Free schema drift alerts" before the Team upsell.
+   - When `schema-drift-webhook` is enabled, the job summary prints a prominent alert section including the shareable alert URL, tier badge, and persistence note.
+
+3. **CI/CD Setup Wizard (`tools/cicd-setup-wizard.html`)**
+   - Drift alerts section relabeled from "Team plan" to "free".
+   - Added an "Enable Slack/Teams alerts" checkbox; webhook inputs no longer require a license key.
+   - Generated GitHub Actions, GitLab CI, and Azure DevOps configs now include the drift webhook for free users.
+   - Jenkins/CircleCI/Bitbucket configs include drift-alert comments pointing to the webhook endpoint.
+   - Slack/Teams preview payloads adapt their CTA button based on whether a Team key is provided.
+
+4. **GitHub Action Setup Wizard (`tools/github-action-setup.html`)**
+   - Added a "Free drift alerts" step with Slack/Teams webhook inputs.
+   - Generated workflow now includes `schema-drift-webhook`, `schema-drift-slack`, and `schema-drift-teams` when enabled.
+
+5. **60-second CI/CD landing pages**
+   - Updated `scripts/generate-cicd-60s-pages.js` to add a "Free schema drift alerts" feature card on every platform page.
+   - Regenerated all six platform pages; GitHub page includes a dedicated drift-alerts CTA block with config snippet.
+
+6. **Add-schema-diff-to-any-repo hub**
+   - Added a "Free schema drift alerts" CTA section with webhook URL and links to setup docs / Team workspace preview.
+
+7. **Analytics instrumentation**
+   - `api/analytics.js`: added allowed event types `schema_drift_alert_viewed`, `schema_drift_tier_badge_shown`, `schema_drift_upgrade_clicked`, `team_dashboard_viewed`.
+   - `schema-drift-alert.html`: fires alert-view, tier-badge-impression, and Upgrade-to-Team/Open-Dashboard click events via both `gtag` and `SchemaLensAnalytics`.
+   - `team/schema-drift-dashboard.html`: fires `team_dashboard_viewed` on page load.
+
+8. **Tests**
+   - Updated e2e 60s-page test to target the first `.code-block` after the GitHub page gained a second code block.
+   - All 38 unit tests pass; 13 webhook tests pass; 200 e2e tests pass (14 API tests skipped in static server mode).
+
+### Validation
+- ✅ `node test-all.js`: 38/38 unit tests pass
+- ✅ `node test-schema-drift-webhook.js`: 13/13 tests pass
+- ✅ `npx playwright test --project=chromium`: 200 passed, 14 API tests skipped in static server mode
+- ✅ README.md includes free drift alerts callout and config example
+- ✅ CI/CD wizards generate webhook configs without requiring a license key
+- ✅ New analytics event types accepted by `/api/analytics`
+
+### Why This Matters
+- The GitHub Action is the top distribution channel; every surface that reminds installers about free drift alerts increases the chance they enable Slack/Teams notifications.
+- Slack/Teams alerts create organic team visibility, which is the shortest path to Team plan consideration.
+- Analytics let us measure alert-page views, tier badge impressions, and upgrade clicks so we can optimize the funnel with data instead of guesses.
+
+### Next
+- Monitor analytics for `schema_drift_alert_viewed`, `team_dashboard_viewed`, and `schema_drift_upgrade_clicked` event volumes.
+- A/B test the alert-page CTA copy and placement once enough data is collected.
+- Continue iterating on Team conversion assets.
+
+---
+
 ## Day 293 — Free Schema Drift Alerts + Team Persistence Foundation (June 17, 2026)
 
 ### Focus
@@ -166,43 +228,6 @@ Remove the license-key gate from schema drift alerts so every GitHub Action user
 - Promote the free drift alert feature in the README and CI/CD wizard pages.
 - Monitor analytics for alert-page views and Team dashboard visits.
 
----
-## Day 291 — Contextual Team Drift-Alerts CTA in App Diff Flow (June 16, 2026)
-
-### Focus
-Increase free-to-Team conversion by surfacing the Team value proposition earlier — right after a user generates a diff, when they are most aware of schema drift risk.
-
-### What Was Done
-1. **Added a contextual Team drift-alerts banner in `app.html`**
-   - New `#teamDriftCtaBanner` container in the visual diff panel, below the share CTA.
-   - Banner copy adapts to the diff result:
-     - If breaking changes exist: "🚨 Breaking change detected — catch the next one before it ships"
-     - Otherwise: "🔔 Get drift alerts for this repo in Slack or Teams"
-   - Two CTAs: "Preview Team workspace" (primary) and "Start Team plan" (secondary).
-   - Dismissible with a 7-day localStorage-backed cooldown.
-   - Hidden in embed mode and when viewing a shared diff.
-
-2. **Styled the banner to match the Team brand**
-   - Purple/indigo gradient background with indigo border.
-   - Responsive flex layout with icon, text, actions, and close button.
-
-3. **Instrumented analytics**
-   - `team_drift_cta_shown` event with `has_breaking` and `breaking_count`.
-   - Click events on preview, buy, and dismiss.
-
-4. **Added e2e coverage**
-   - New Playwright test verifies the banner appears after diff generation, contains drift-alert/Team copy, links to the workspace preview, and persists dismissal in localStorage.
-
-### Validation
-- ✅ `node test-all.js`: 38/38 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 199 passed, 14 API tests skipped in static server mode
-- ✅ New Team drift-alerts CTA renders and dismisses correctly
-- ✅ Committed and pushed to `main`; deployed to Vercel production (aliased to www.schemalens.tech)
-
-### Why This Matters
-- Users feel schema drift risk most acutely right after seeing a diff. A contextual Team CTA capitalizes on that moment.
-- Breaking-change-aware copy makes the upsell feel like a solution to the exact problem the user just saw.
-- Linking to the interactive workspace preview reduces the trust gap before asking for a purchase.
 ---
 ## Day 292 — Newsletter Ad Landing Page + UTM Tracking for Database/CI Audiences (June 16, 2026)
 
