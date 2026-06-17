@@ -1,7 +1,7 @@
 # HELP-REQUEST.md
 
 ## What
-Push to GitHub is still blocked because the current PAT lacks the `workflow` scope. The `.github/workflows/schema-diff-demo.yml` file is already committed on `main` (commit `117a17e`) and only needs to be pushed.
+Push the committed `.github/workflows/schema-diff-demo.yml` file to GitHub. The current PAT lacks the `workflow` scope, so the push fails. The workflow is already committed locally (commit `030826b`) and `main` is ready to push.
 
 ## Steps
 1. Confirm the GitHub PAT used by this environment has the `workflow` scope (and `repo`).
