@@ -75,6 +75,7 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="lib/analytics-client.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
   <link rel="apple-touch-icon" href="/favicon.svg">
@@ -287,7 +288,7 @@
       }
     }
 
-    function renderTierBadge(tier) {
+    function renderTierBadge(tier, alertId) {
       const badge = document.getElementById('tier-badge');
       if (tier === 'team') {
         badge.className = 'tier-badge team';
@@ -298,9 +299,15 @@
         badge.textContent = 'Free';
         badge.title = 'Free alert. Upgrade to Team for persistent history and shared workspace.';
       }
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'schema_drift_tier_badge_shown', { alert_id: alertId, tier });
+      }
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('schema_drift_tier_badge_shown', { alert_id: alertId, tier });
+      }
     }
 
-    function renderCta(tier) {
+    function renderCta(tier, alertId) {
       const copy = document.getElementById('cta-copy');
       const dashboardLink = document.getElementById('dashboard-link');
       if (tier === 'team') {
@@ -314,6 +321,14 @@
         dashboardLink.className = 'btn-team';
         dashboardLink.href = 'team-buy.html';
       }
+      dashboardLink.addEventListener('click', function() {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'schema_drift_upgrade_clicked', { alert_id: alertId, tier, cta: tier === 'team' ? 'open_dashboard' : 'upgrade_to_team' });
+        }
+        if (window.SchemaLensAnalytics) {
+          window.SchemaLensAnalytics.track('schema_drift_upgrade_clicked', { alert_id: alertId, tier, cta: tier === 'team' ? 'open_dashboard' : 'upgrade_to_team' });
+        }
+      });
     }
 
     function render(payload) {
@@ -326,8 +341,8 @@
       const tier = payload.tier || 'free';
 
       document.getElementById('alert-id').textContent = `Alert #${payload.alertId || 'unknown'}`;
-      renderTierBadge(tier);
-      renderCta(tier);
+      renderTierBadge(tier, payload.alertId);
+      renderCta(tier, payload.alertId);
       const repo = metadata.repo ? metadata.repo.split('/').pop() : 'Project';
       document.getElementById('alert-title').textContent = `${repo} Schema Drift Alert`;
       document.getElementById('alert-subtitle').textContent = metadata.branch ? `Branch: ${metadata.branch}` : 'Detected by SchemaLens CI/CD integration';
@@ -360,7 +375,10 @@
       saveToLocalStorage(payload);
       render(payload);
       if (typeof gtag !== 'undefined') {
-        gtag('event', 'schema_drift_alert_viewed', { alert_id: payload.alertId });
+        gtag('event', 'schema_drift_alert_viewed', { alert_id: payload.alertId, tier: payload.tier || 'free' });
+      }
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('schema_drift_alert_viewed', { alert_id: payload.alertId, tier: payload.tier || 'free' });
       }
     }
   })();

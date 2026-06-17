@@ -128,7 +128,11 @@ module.exports = async (req, res) => {
     'share_cta_clicked',
     'demo_auto_run',
     'launch_special_cta_click',
-    'utm_visit'
+    'utm_visit',
+    'schema_drift_alert_viewed',
+    'schema_drift_tier_badge_shown',
+    'schema_drift_upgrade_clicked',
+    'team_dashboard_viewed'
   ]);
 
   if (!allowedEvents.has(event_type)) {

@@ -60,6 +60,7 @@
 })();
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="../lib/analytics-client.js"></script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f0f0f">
   <link rel="apple-touch-icon" href="/favicon.svg">
@@ -397,6 +398,12 @@ Content-Type: application/json
     }
 
     function init() {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'team_dashboard_viewed', { source: 'direct' });
+      }
+      if (window.SchemaLensAnalytics) {
+        window.SchemaLensAnalytics.track('team_dashboard_viewed', { source: 'direct' });
+      }
       renderDashboard(loadAlerts());
 
       ['filter-repo', 'filter-risk', 'filter-breaking'].forEach(id => {
