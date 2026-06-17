@@ -86,7 +86,18 @@ jobs:
           post-comment: true
           create-check-run: true
           fail-on-breaking: false
-          github-token: \${{ secrets.GITHUB_TOKEN }}`;
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook`;
+
+const driftAlertCta = `<div class="cta-bar" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(16,185,129,0.08)); border-color: rgba(99,102,241,0.3);">
+      <h2>🔔 Free schema drift alerts</h2>
+      <p>Add the SchemaLens webhook and get Slack/Teams notifications + shareable alert pages for every diff. No license key required.</p>
+      <pre class="code-block"><code><span class="key">schema-drift-webhook</span>: <span class="str">https://schemalens.tech/api/schema-drift-webhook</span>
+<span class="key">schema-drift-slack</span>: <span class="str">\${{ secrets.SLACK_WEBHOOK_URL }}</span>
+<span class="key">schema-drift-teams</span>: <span class="str">\${{ secrets.TEAMS_WEBHOOK_URL }}</span></code></pre>
+      <a href="../github-action.html#-schema-drift-alerts" class="btn btn-primary">Set up free alerts →</a>
+      <a href="../team/workspace-preview.html" class="btn btn-secondary">Preview Team workspace</a>
+    </div>`;
 
 const platforms = [
   {
@@ -110,6 +121,7 @@ const platforms = [
       { title: '🛡️ Block breaking changes before merge', body: 'Dropped columns, removed indexes, and altered constraints fail the check before they reach production.' },
       { title: '💬 Native PR comments', body: 'Reviewers see the diff summary directly in the pull request — no external dashboards needed.' },
       { title: '📊 GitHub Check Run', body: 'A real status check with risk score, migration preview, and a clear pass/fail conclusion.' },
+      { title: '🔔 Free schema drift alerts', body: 'Add one webhook line and get Slack/Teams notifications + shareable alert pages on every diff. No license key.' },
       { title: '⏭️ Smart skip saves CI minutes', body: 'The job only runs when .sql files change, so unrelated PRs don\'t waste Actions minutes.' },
     ],
     analyticsPrefix: 'github_60s',
@@ -135,6 +147,7 @@ const platforms = [
       { title: '🛡️ Block breaking changes before merge', body: 'Dropped columns, removed indexes, and altered constraints fail the build before they reach production.' },
       { title: '📋 Console reports', body: 'Developers see the diff summary, risk score, and migration SQL in the Jenkins console output.' },
       { title: '📦 Artifact archiving', body: 'Every build archives a markdown report for compliance docs, audits, or offline review.' },
+      { title: '🔔 Free schema drift alerts', body: 'POST to the SchemaLens webhook for Slack/Teams notifications + shareable alert pages. No license key.' },
       { title: '⏭️ Smart skip saves CI minutes', body: 'The stage only runs when .sql files change, so unrelated builds don\'t waste executor time.' },
     ],
     analyticsPrefix: 'jenkins_60s',
@@ -160,6 +173,7 @@ const platforms = [
       { title: '🛡️ Block breaking changes before merge', body: 'Dropped columns, removed indexes, and altered constraints fail the job before they reach production.' },
       { title: '💬 Native PR comments', body: 'Reviewers see the diff summary directly in the GitHub pull request — no external dashboards needed.' },
       { title: '📦 Artifact reports', body: 'Every pipeline stores a markdown report for compliance docs, audits, or offline review.' },
+      { title: '🔔 Free schema drift alerts', body: 'POST to the SchemaLens webhook for Slack/Teams notifications + shareable alert pages. No license key.' },
       { title: '⏭️ Path-filtered runs', body: 'The job only runs when .sql files change, so unrelated pushes don\'t waste build minutes.' },
     ],
     analyticsPrefix: 'circleci_60s',
@@ -185,6 +199,7 @@ const platforms = [
       { title: '🛡️ Block breaking changes before merge', body: 'Dropped columns, removed indexes, and altered constraints fail the pipeline before they reach production.' },
       { title: '💬 Native PR comments', body: 'Reviewers see the diff summary directly in the Bitbucket pull request — no external dashboards needed.' },
       { title: '📦 Artifact reports', body: 'Every pipeline attaches a markdown report for compliance docs, audits, or offline review.' },
+      { title: '🔔 Free schema drift alerts', body: 'POST to the SchemaLens webhook for Slack/Teams notifications + shareable alert pages. No license key.' },
       { title: '⏭️ Smart skip saves CI minutes', body: 'The step only runs when .sql files change, so unrelated PRs don\'t waste pipeline minutes.' },
     ],
     analyticsPrefix: 'bitbucket_60s',
@@ -210,6 +225,7 @@ const platforms = [
       { title: '🛡️ Block breaking changes before merge', body: 'Dropped columns, removed indexes, and altered constraints fail the pipeline before they reach production.' },
       { title: '💬 PR thread comments', body: 'Reviewers see the diff summary directly in the Azure DevOps pull request — no external dashboards needed.' },
       { title: '📦 Published artifacts', body: 'Every build publishes a markdown report for compliance docs, audits, or offline review.' },
+      { title: '🔔 Free schema drift alerts', body: 'POST to the SchemaLens webhook for Slack/Teams notifications + shareable alert pages. No license key.' },
       { title: '⏭️ Path filters', body: 'The pipeline only runs when .sql files change, so unrelated PRs don\'t waste agent time.' },
     ],
     analyticsPrefix: 'azure_60s',
