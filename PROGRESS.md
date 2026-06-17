@@ -111,6 +111,42 @@
 
 ---
 
+## Day 297 — HTML Report Artifact Demo GIF (June 17, 2026)
+
+### Focus
+Create a shareable 30-second demo GIF that shows the SchemaLens self-contained HTML report artifact being downloaded from a GitHub PR and opened offline, then embed it on the report landing page and README.md.
+
+### What Was Done
+1. **New reproducible GIF generator** — `scripts/generate-report-artifact-demo-gif.py`
+   - 6-frame animated GIF (30s total) built with Pillow.
+   - Frame narrative: GitHub PR Check Run → download artifact → open self-contained report → view migration SQL → review breaking changes → share with the team.
+   - Output: `assets/schema-diff-report-demo.gif` (164 KB, 1280×720).
+
+2. **Landing page embed** — `github-action-schema-diff-report.html`
+   - Added hero figure with the GIF, alt text, and caption.
+   - Kept the existing static report mockup below for detail/context.
+
+3. **README.md promotion** — added a dedicated "📄 HTML Report Artifact Demo" sub-section under the GitHub Action docs with the GIF and a one-line value prop.
+
+4. **Backlog maintenance** — marked the GIF task complete in `BACKLOG.md`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 201 passed, 14 API tests skipped in static server mode
+- ✅ GIF renders correctly (1280×720, 30s, 6 frames)
+- ✅ `github-action-schema-diff-report.html` loads without console errors
+- ✅ README.md markdown structure preserved
+
+### Why This Matters
+- The report artifact is a tangible, shareable CI/CD deliverable; a visual demo makes the feature instantly understandable on the landing page and in README.
+- Animated hero media improves time-on-page and helps GitHub Marketplace visitors grasp value before reading YAML.
+
+### Next
+- Monitor whether the report landing page GIF increases scroll depth / wizard clicks.
+- Continue with the next unblocked P2: high-intent SEO landing page for "schema diff report" / "database migration review".
+
+---
+
 ## Day 296 — Live GitHub Action Demo Workflow (June 17, 2026)
 
 ### Focus

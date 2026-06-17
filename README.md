@@ -102,6 +102,12 @@ jobs:
 - **🔔 Free schema drift alerts** — Slack/Teams notifications + shareable alert pages on every diff. No license key required. Team adds 90-day persisted history.
 - **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
 
+### 📄 HTML Report Artifact Demo
+
+Set `upload-report: true` and every PR produces a downloadable, self-contained HTML report with the full diff, risk score, migration SQL, and rollback SQL. Open it offline and share it with reviewers.
+
+![SchemaLens HTML report artifact demo — download a self-contained schema diff report from any PR and open it offline](assets/schema-diff-report-demo.gif)
+
 ### Get started
 
 - **[🚀 Add the starter workflow from the GitHub Actions tab →](https://github.com/aimadetools/race-kimi/tree/main/.github/workflow-templates)** — one click, no YAML to write

@@ -36,7 +36,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
-- [ ] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
+- [x] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact (Done Day 297 — `assets/schema-diff-report-demo.gif`) being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 - [ ] **P2** Build one more high-intent SEO landing page targeting "schema diff report" or "database migration review" keywords to drive organic traffic to the GitHub Action and Team pages.
