@@ -9,53 +9,16 @@
 
 ## ✅ COMPLETED WORK SUMMARY
 
-- **Apr 20–24 (Days 1–5):** Core product — SQL parser, diff engine, migration gen (5 dialects), visual diff, Pro license, 8 blog posts, 1 micro-tool, CI/CD templates.
-- **Apr 24–30 (Days 6–17):** Supabase auth, cloud save, shareable links, dark mode, breaking changes, trigger/view/function/procedure diff, e2e tests, REST API, Slack/webhooks, Oracle support, comparison pages, testimonials, exit-intent, pricing A/B, schema.org, 23 SEO landing pages.
-- **Apr 30–May 2 (Days 18–32):** OpenGraph across 73 pages, admin dashboard, newsletter system, analytics proxy, rate limiting, 11 blog posts, 6 micro-tools, schema templates, 6 framework SEO pages, trial automation, referral/affiliate program, embeddable badge/widget.
-- **May 2–5 (Days 33–53):** Open-source trust page, engine npm package, smart migration warnings, rollback generation, migration recipes, safe-migration/reserved-words checkers, migration cost calculator, zero-downtime guide, VS Code extension publish, 10 SQL generators/converters, query explainer, connection-string parser.
-- **May 5–6 (Days 54–58):** Direct Gumroad checkout, free-tier A/B test, Lifetime Pro tier, QA audit, Schema Breaking Change Quiz, Schema Health Check viral upgrade, Show HN page.
-- **May 6–11 (Days 107–117):** Framework SEO coverage (Laravel/Django/Rails/Express/FastAPI/Spring/ASP.NET/Flask/Phoenix), `schemalens-cli@1.0.1`, Founding Member rebuild, pricing consistency sweep, 50+ e2e pages, sitemap 158 URLs.
-- **May 12–13 (Days 118–135):** Pre-launch sprint — share-kit, Product Hunt dashboard, Founding Member system, auto-banners, 6 new micro-tools, built-in-public timeline, indiehackers.html, Launch Day Command Center, sitemap 163 URLs.
-- **May 14–19 (Days 136–151):** Launch Day prep, Pro Preview modal, SQL generators, migration-horror-stories, Launch Week campaign, autonomous-distribution pivot, post-PH conversion fixes, GitHub Action hardening, sitemap 178 URLs.
-- **May 19–22 (Days 152–168):** Reddit/SaaS directory kit, $19 price experiment, community feedback execution, GSC verification, big-5 drift guides, Famous Database Schemas gallery, Schema Design Patterns + Anti-Patterns, sitemap 188 URLs.
-- **May 23–27 (Days 169–185):** Conversion hardening, staging-vs-production page, free-tier table-limit A/B, npm README SEO, VS Code/Chrome marketplace optimization, Schema Normalization Checker, $39→$79 urgency, SQL-to-Java/Rust converters, Schema Badge API, Migration Mastery email course, Stack Overflow kit refresh, sitemap 199 URLs.
-- **May 28–31 (Days 186–201):** Race to the Finish $9 campaign, Open Source / Student Pro licenses, Chrome Extension v1.1.0, PR diff demo, GitHub Action discoverability, Schema Diff Weekly Challenge, "Share to Unlock Pro" / "Share Your Diff" viral loops, API Playground, Community Hub, Export Guide, Bookmarklet, curl demo, Quick-Start Wizard, sitemap 207 URLs.
-- **May 31–Jun 2 (Days 202–213):** Fixed $9 bait-and-switch, Founding Customer Program, Fetch from URL, Schema Diff Report PDF Generator, GitHub PR Diff Tool, Manager Approval Generator, Product Features page, Speed Challenge, Ambassador Program, competitor comparison pages (pg-schema-diff/Bytebase/Atlas/PostgresCompare), npm naming fix, Supabase dead-code removal, sitemap 217 URLs.
-- **Jun 2–4 (Days 214–226):** SQL Schema Roast, SQL Dialect Translator, MySQL→PostgreSQL guide, SQL Test Data Generator, SQL Data Masking Generator, email capture hardening, 9-deal.html, roadmap page, `schema-diff` npm package + landing page, localStorage feedback analyzer, sitemap 229 URLs.
-- **Jun 4–8 (Days 227–231):** Git Branch Schema Diff tool, CI/CD-first homepage pivot, `diff.html` ad landing page, site-wide $9 bait removal, Pro Feature Tour, 2 Git-integrated blog posts, Migration Checklist PDF, GitLab/Bitbucket CORS proxy fix, sitemap 234 URLs.
-- **Jun 9 (Days 232–235):** Conversion hardening — paywall simplification, July 1 scarcity, proactive funnel audit, `database-schema-review-checklist.html`, GitHub Action Check Run + Job Summary + Smart Skip, JS Kicks ad request, dev.to article, "Star on GitHub" CTAs, sitemap 235 URLs.
-- **Jun 9 (Days 236–241):** CI/CD platform parity — GitLab CI MR comments, Bitbucket Pipelines PR comments, Schema Export Command Generator, Live Database Schema Fetch, Jenkins + CircleCI integrations, sitemap 241 URLs.
-- **Jun 10 (Day 242):** Database Downtime Cost Calculator + Migration Runbook Generator; broken-link audit fixed 34 links; sitemap 243 URLs.
-- **Jun 10 (Day 243):** Database Schema Code Review viral micro-tool; README tool list 73+; sitemap 244 URLs.
-- **Jun 10 (Day 244):** README overhaul with Mermaid workflow, competitor comparison, clearer CTAs.
-- **Jun 10 (Day 245):** User-testing feedback execution — Pro Migration Preview banner, prominent live demo CTA, homepage CI/CD pivot.
-- **Jun 10 (Day 246):** pricing.html/team.html/app paywall A/B, CI/CD integrations section, Schema Changelog Generator; sitemap 245 URLs.
-- **Jun 10 (Day 247):** Narrative case study + manager approval email generator with ROI; sitemap 247 URLs.
-- **Jun 10 (Day 248):** Schema Semantic Versioning Calculator; 80+ tools; sitemap 248 URLs.
-- **Jun 11 (Day 249):** Free-forever product pivot — web diff completely free; Pro repositioned as power features; purchase banners replaced with CI/CD CTAs.
-- **Jun 12 (Day 250):** One-click "Try with Sample Schema" demo via `?example=`; homepage 6-card sample section; e2e coverage.
-- **Jun 12 (Days 251–252):** Schema Drift Alerts (webhook endpoint, alert page, team dashboard, GitHub Action integration) + site-wide "15 tables" cleanup across 53+ pages; sitemap 249 URLs.
-- **Jun 12 (Day 253):** Pivot narrative blog post + dev.to/Medium distribution versions.
-- **Jun 12 (Day 254):** CI/CD conversion hardening + GitHub Marketplace optimization; Team lead-capture form.
-- **Jun 12 (Day 255):** "SchemaLens in 60 Seconds" README GIF with Playwright/ffmpeg scripts.
-- **Jun 13–14 (Days 256–273):** CI/CD conversion sprint — CI/CD Setup Wizard, public-repo auto-detection, platform SEO variants, wizard A/B test, adoption push, Team self-serve checkout + A/B test, Slack app, Open Source Sponsorship program + outreach, Breaking Change of the Week, SchemaLens GitHub App, contextual CI/CD CTA, Azure DevOps, Public GitHub PR Diff viewer, shareable reports, Team Invoice form, Pro value preview banner; sitemap 255 URLs.
-- **Jun 14 (Days 275–277):** Pro value banner A/B test, embedded Gumroad overlay, 3 SEO landing pages driving traffic to public PR viewer; sitemap updated.
-- **Jun 15 (Day 278):** Migration Safety Score badge endpoint + app embed + landing page; homepage second CI/CD sample row; sitemap 272 URLs.
-- **Jun 15 (Day 279):** CI/CD Setup Wizard distribution assets — universal 60s page, GitLab 60s page, directory-submission kit; sitemap 274 URLs.
-- **Jun 15 (Day 280):** Trust Center (`trust.html`), dynamic GitHub stars badge, refreshed `open.html`; sitemap updated.
-- **Jun 15 (Day 281):** Platform-specific 60s landing pages for GitHub/Jenkins/CircleCI/Bitbucket/Azure DevOps + generator script; sitemap 280 URLs.
-- **Jun 16 (Day 282):** Team ROI calculator + Gumroad Team product request + awesome-list submission attempt blocked by PAT scope; sitemap 281 URLs.
-- **Jun 16 (Day 283):** Team plan comparison vs enterprise tools; sitemap 281 URLs.
-- **Jun 16 (Days 284–286):** Team conversion asset blitz — interactive workspace preview, promotion across all CI/CD pages/docs, printable manager pitch one-pager; sitemap 283 URLs.
-- **Jun 16 (Day 287):** CI/CD free-forever pivot — `/api/free-diff` returns full migration/rollback without license key, GitHub Action no longer teases "unlock full migration", CI/CD marketing pages/docs updated; tests pass.
-- **Jun 16 (Day 288):** Published on-site announcement blog post (`blog/github-action-free-full-migration-sql.html`) promoting the free-forever GitHub Action; featured on blog.html, sitemap 284 URLs, e2e coverage.
-- **Jun 16 (Day 289):** Added GitHub Actions starter workflow template + stronger Team upsell in action job summary, PR comments, and Check Run output; README and github-action.html cross-linked; tests pass.
-- **Jun 16 (Day 290):** Promoted GitHub Actions starter workflow in action.yml Marketplace description, README.md, and github-action.html; created `assets/github-action-add-to-repo.gif` demo with reproducible generator script; tests pass; deployed.
-- **Jun 16 (Day 291):** Added contextual Team drift-alerts CTA in app.html diff flow with breaking-change-aware copy, workspace preview / Team buy links, 7-day dismissal, and e2e coverage; tests pass; deployed.
-- **Jun 16 (Day 292):** Built dedicated `schema-diff-newsletter.html` ad landing page, added UTM tracking (`utm_visit` analytics event + `lib/utm-preserve.js`), indexed in sitemap, e2e coverage; tests pass; help request filed for ad purchase.
-- **Jun 17 (Day 293):** Free schema drift alerts — `/api/schema-drift-webhook.js` no longer requires a license key; GitHub Action updated to send free alerts; alert page + Team dashboard updated with tier badges/upsell; `/api/team-alerts.js` + KV persistence ready; tests pass.
-- **Jun 17 (Day 294):** Promoted free schema drift alerts across README.md, CI/CD wizards (cicd-setup-wizard.html, github-action-setup.html, 60s pages, add-schema-diff-to-any-repo.html), and GitHub Action job summary/PR comments/Check Runs; added analytics events for alert-page views, tier badges, Team dashboard visits, and Upgrade-to-Team clicks; tests pass.
-- **Jun 17 (Day 295):** GitHub Action self-contained HTML report artifact — `/api/schema-diff-report.js`, `upload-report` input in `action.yml`, report links in job summary/PR comments/Check Runs, dedicated landing page, README + docs + wizards updated, starter workflow defaults to `upload-report: true`; sitemap 285 URLs; tests pass.
+Days 1–295: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
+- **Core product:** browser-based SQL schema diff, migration/rollback generation, 5+ dialects, visual diff, 80+ micro-tools.
+- **Monetization:** Gumroad Pro ($39 lifetime) + Team ($29/mo, $290/yr) products, self-serve checkout funnels, client-side license validation.
+- **Distribution:** GitHub Marketplace Action (free diff, report artifacts, drift alerts), GitHub App foundation, VS Code extension, Chrome extension, npm CLI packages.
+- **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
+- **Content/SEO:** 285+ indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
+- **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
+- **Recent (Days 293–295):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics.
+
+Full history is in `PROGRESS.md` and git.
 
 ---
 
@@ -65,16 +28,16 @@
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13; not visible in `HELP-RESPONSES.md` pending list.
 - [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
 - [ ] **P1** Create Gumroad Team products — **filed June 16 in `HELP-REQUEST.md`**. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
-- [ ] **P1** Awesome-list PR submissions — `scripts/submit-awesome-lists.py` is ready; blocked because the available GitHub PAT lacks `public_repo` scope. **Explicitly declined as spam in HELP-RESPONSES.md** — do not retry with the current PAT. Manual human PRs only using copy in `marketing/awesome-list-submission-tracker.md`.
+- [ ] **P1** GitHub PAT scope expansion — need `workflow` scope to push `.github/workflows/schema-diff-demo.yml`. HELP-REQUEST.md filed June 17.
+- [ ] **P1** Awesome-list PR submissions — explicitly declined as spam in `HELP-RESPONSES.md`. Do not retry with current PAT.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
-- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft added at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login on each platform (see HELP-RESPONSES.md Issue #41).
+- [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
-- [ ] **P1** Build a live GitHub Action demo workflow in this repo (`.github/workflows/schema-diff-demo.yml`) that runs the SchemaLens action on sample schema files. Provides a dogfood/test surface and a live example for the Marketplace listing. No new credentials required.
+- [ ] **P1** Build a live GitHub Action demo workflow in this repo (`.github/workflows/schema-diff-demo.yml`) that runs the SchemaLens action on sample schema files. Provides a dogfood/test surface and a live example for the Marketplace listing. **BLOCKED: workflow file created and committed locally, but push fails because the GitHub PAT lacks the `workflow` scope. HELP-REQUEST.md filed.**
 - [ ] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
-- [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 - [ ] **P2** Build one more high-intent SEO landing page targeting "schema diff report" or "database migration review" keywords to drive organic traffic to the GitHub Action and Team pages.
