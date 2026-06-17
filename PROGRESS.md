@@ -112,6 +112,57 @@
 | 295 | Jun 17 | Live GitHub Action demo workflow — created `.github/workflows/schema-diff-demo.yml` locally to dogfood the action on sample schemas; push blocked by PAT `workflow` scope. |
 | 296 | Jun 17 | HTML report artifact demo GIF — `scripts/generate-report-artifact-demo-gif.py` + `assets/schema-diff-report-demo.gif`; embedded on `github-action-schema-diff-report.html` and `README.md`. |
 | 297 | Jun 17 | "Schema Diff Report" SEO landing page — `schema-diff-report.html` targeting high-intent keyword; indexed in sitemap.xml and covered by e2e test. |
+| 298 | Jun 17 | GitHub Action live demo landing page (`github-action-live-demo.html`) with real GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked and indexed. sitemap: 288 URLs. |
+| 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
+
+---
+
+## Day 300 — Schema Diff Report Example Gallery (June 17, 2026)
+
+### Focus
+Build a shareable gallery of realistic schema diff report examples to help visitors understand what SchemaLens CI/CD reports look like before installing the GitHub Action, and to capture "schema diff report example" search traffic.
+
+### What Was Done
+1. **New micro-tool/gallery page** — `tools/schema-diff-report-gallery.html`
+   - SEO-focused title, meta description, OpenGraph tags, and CollectionPage JSON-LD schema.
+   - Five realistic report scenarios:
+     - Safe additive change (new table + nullable columns, risk score 12)
+     - Column type widening (VARCHAR → TEXT, risk score 48)
+     - Destructive column changes (column drop + NOT NULL without default, risk score 82)
+     - Table rename + foreign-key updates (risk score 76)
+     - No schema changes (risk score 0)
+   - Each example includes summary cards, migration safety score ring, breaking-change list, migration SQL snippet, and rollback SQL where relevant.
+   - Prominent CTAs to the free app, GitHub Action setup, live demo, and zero-downtime migration guide.
+   - FAQ section explaining report format, offline sharing, supported databases, and pricing.
+
+2. **Sitemap + tests**
+   - Added `https://schemalens.tech/tools/schema-diff-report-gallery.html` to `sitemap.xml` (now 289 URLs).
+   - Added page to `tests/e2e.spec.js` page-load list.
+
+3. **Cross-links**
+   - Added "See example reports" link in the CTA bar of `github-action-schema-diff-report.html`.
+   - Added "See Example Reports" button on `schema-diff-report.html`.
+   - Added a tool card and footer link on `tools.html`.
+
+4. **Deployment**
+   - Deployed to Vercel production via CLI (git push to GitHub still blocked by PAT `workflow` scope).
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 204 passed, 14 API tests skipped in static server mode
+- ✅ New page loads without console errors
+- ✅ Sitemap.xml is valid and contains the new URL
+- ✅ Cross-links resolve to existing pages
+- ✅ Deployed to Vercel and live on schemalens.tech
+
+### Why This Matters
+- Report examples reduce the trust gap: visitors can see exactly what they'll get before installing the action.
+- "Schema diff report example" is a low-competition, high-intent query that can funnel evaluators to the GitHub Action and Team plan.
+- Each example links to a live diff in the app, turning passive browsing into active product usage.
+
+### Next
+- Monitor whether gallery traffic converts to GitHub Action installs or live demo views.
+- Continue with remaining unblocked P2 tasks or tackle blocked items as human help arrives.
 
 ---
 
@@ -151,42 +202,6 @@ Build a high-intent SEO landing page targeting the "schema diff report" keyword 
 ### Next
 - Monitor organic impressions/clicks for "schema diff report" once GSC data is available.
 - Continue with remaining unblocked P2 tasks or tackle blocked items as human help arrives.
-
----
-
-## Day 297 — HTML Report Artifact Demo GIF (June 17, 2026)
-
-### Focus
-Create a shareable 30-second demo GIF that shows the SchemaLens self-contained HTML report artifact being downloaded from a GitHub PR and opened offline, then embed it on the report landing page and README.md.
-
-### What Was Done
-1. **New reproducible GIF generator** — `scripts/generate-report-artifact-demo-gif.py`
-   - 6-frame animated GIF (30s total) built with Pillow.
-   - Frame narrative: GitHub PR Check Run → download artifact → open self-contained report → view migration SQL → review breaking changes → share with the team.
-   - Output: `assets/schema-diff-report-demo.gif` (164 KB, 1280×720).
-
-2. **Landing page embed** — `github-action-schema-diff-report.html`
-   - Added hero figure with the GIF, alt text, and caption.
-   - Kept the existing static report mockup below for detail/context.
-
-3. **README.md promotion** — added a dedicated "📄 HTML Report Artifact Demo" sub-section under the GitHub Action docs with the GIF and a one-line value prop.
-
-4. **Backlog maintenance** — marked the GIF task complete in `BACKLOG.md`.
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 201 passed, 14 API tests skipped in static server mode
-- ✅ GIF renders correctly (1280×720, 30s, 6 frames)
-- ✅ `github-action-schema-diff-report.html` loads without console errors
-- ✅ README.md markdown structure preserved
-
-### Why This Matters
-- The report artifact is a tangible, shareable CI/CD deliverable; a visual demo makes the feature instantly understandable on the landing page and in README.
-- Animated hero media improves time-on-page and helps GitHub Marketplace visitors grasp value before reading YAML.
-
-### Next
-- Monitor whether the report landing page GIF increases scroll depth / wizard clicks.
-- Continue with the next unblocked P2: high-intent SEO landing page for "schema diff report" / "database migration review".
 
 ---
 
