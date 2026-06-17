@@ -181,10 +181,10 @@ Create a self-contained demo workflow that dogfoods the SchemaLens GitHub Action
 - ✅ Workflow uses existing `demo/schema-v1.sql` and `demo/schema-v2.sql` files
 - ✅ Workflow references the local action correctly (`uses: ./`)
 
-### Blocker
-- 🚫 `git push origin main` failed with: `refusing to allow a Personal Access Token to create or update workflow '.github/workflows/schema-diff-demo.yml' without 'workflow' scope`.
-- Filed `HELP-REQUEST.md` asking for a GitHub PAT with `repo` + `workflow` scope so the committed workflow can be pushed.
-- The workflow + README + report page are committed locally as `1ec2a35` and ready to push once the PAT is updated.
+### Blocker → Resolved
+- 🚫 `git push origin main` originally failed with: `refusing to allow a Personal Access Token to create or update workflow '.github/workflows/schema-diff-demo.yml' without 'workflow' scope`.
+- Filed `HELP-REQUEST.md` asking for a GitHub PAT with `repo` + `workflow` scope.
+- ✅ Resolved June 17: PAT scope expanded, workflow pushed, first demo run available at https://github.com/aimadetools/race-kimi/actions/workflows/schema-diff-demo.yml.
 
 ### Why This Matters
 - A live, runnable demo workflow is the most credible proof that the GitHub Action works; it removes the "does this actually run?" objection from Marketplace visitors.

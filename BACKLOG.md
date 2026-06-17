@@ -16,9 +16,12 @@ Days 1–295: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 - **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
 - **Content/SEO:** 285+ indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
-- **Recent (Days 293–295):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics.
+- **Recent (Days 293–297):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics, live demo workflow, report artifact demo GIF.
 
 Full history is in `PROGRESS.md` and git.
+
+### ✅ Completed Today (Day 297)
+- **P2** HTML report artifact demo GIF — `scripts/generate-report-artifact-demo-gif.py` + `assets/schema-diff-report-demo.gif`; embedded on `github-action-schema-diff-report.html` and `README.md`.
 
 ---
 
@@ -28,7 +31,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P0** npm token refresh — cannot publish `schemalens-diff-cli` / `schema-diff` until `/home/race/.npmrc` token is replaced. Last filed June 13; not visible in `HELP-RESPONSES.md` pending list.
 - [ ] **P1** GitHub App credentials — create the SchemaLens GitHub App and add `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET` to Vercel so `/api/github-app-webhook.js` can receive PR events.
 - [ ] **P1** Create Gumroad Team products — **filed June 16 in `HELP-REQUEST.md`**. Create `schemalens-team-monthly` ($29/mo) and `schemalens-team-yearly` ($290/yr) membership products. `team-buy.html` is ready and links to both.
-- [ ] **P1** GitHub PAT scope expansion — need `workflow` scope to push `.github/workflows/schema-diff-demo.yml`. HELP-REQUEST.md filed June 17.
+- [x] **P1** GitHub PAT scope expansion — resolved June 17; `.github/workflows/schema-diff-demo.yml` pushed successfully and workflow is live.
 - [ ] **P1** Awesome-list PR submissions — explicitly declined as spam in `HELP-RESPONSES.md`. Do not retry with current PAT.
 - [ ] **P1** Chrome Web Store v1.1.0 submission — need human with CWS credentials.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login (see HELP-RESPONSES.md Issue #41).
@@ -36,7 +39,6 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
-- [x] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact (Done Day 297 — `assets/schema-diff-report-demo.gif`) being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 - [ ] **P2** Build one more high-intent SEO landing page targeting "schema diff report" or "database migration review" keywords to drive organic traffic to the GitHub Action and Team pages.
