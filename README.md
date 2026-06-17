@@ -13,6 +13,8 @@
 
 **[🌐 Try the Web App](https://schemalens.tech)** · **[🔀 Diff a Public GitHub PR](https://schemalens.tech/github-pr-schema-diff.html)** · **[📦 Install CLI](https://schemalens.tech/cli/)** · **[⚡ Add GitHub Action](https://schemalens.tech/github-action.html)** · **[📖 API Docs](https://schemalens.tech/api-guide.html)** · **[💰 Get Pro — $39 Lifetime](https://schemalens.tech/pricing.html)**
 
+> 🔔 **NEW — Free schema drift alerts:** Add one line to the GitHub Action and get Slack/Teams notifications + shareable alert pages for every diff. [See setup →](https://schemalens.tech/github-action.html#-schema-drift-alerts)
+
 ![SchemaLens in 60 seconds — free browser schema diff, visual changes, migration SQL, and CI/CD integration](assets/schemalens-60-seconds.gif)
 
 SchemaLens is a zero-install, browser-based SQL schema diff tool. Paste two `CREATE TABLE` dumps, get an instant visual semantic diff (tables added/removed, columns changed, indexes modified, constraints compared) and generate ready-to-run migration scripts in your dialect.
@@ -95,7 +97,7 @@ jobs:
 - **GitHub Check Runs** — native PR status checks with risk scores
 - **Job Summary** — rich markdown report on every Actions run
 - **Smart skip** — only runs when `.sql` files change
-- **Schema drift alerts** — free Slack/Teams notifications with shareable alert pages; Team adds persisted history
+- **🔔 Free schema drift alerts** — Slack/Teams notifications + shareable alert pages on every diff. No license key required. Team adds 90-day persisted history.
 - **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
 
 ### Get started
@@ -105,9 +107,31 @@ jobs:
 - **[View full setup guide →](https://schemalens.tech/github-action.html)**
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
-- **[Free Slack alerts setup →](https://schemalens.tech/github-action.html)**
+- **[🔔 Free Slack/Teams alerts setup →](https://schemalens.tech/github-action.html#-schema-drift-alerts)**
 - **[Team plan with persisted history →](https://schemalens.tech/pricing.html)**
 - **[Calculate Team ROI →](https://schemalens.tech/tools/team-roi-calculator.html)**
+
+### 🔔 Free Schema Drift Alerts
+
+Add one input to the SchemaLens GitHub Action and every diff result becomes a Slack or Microsoft Teams notification — plus a shareable alert page the whole team can bookmark.
+
+```yaml
+- uses: aimadetools/race-kimi@main
+  with:
+    old-schema-path: ./schema/base.sql
+    new-schema-path: ./schema/current.sql
+    dialect: postgres
+    schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook
+    schema-drift-slack: ${{ secrets.SLACK_WEBHOOK_URL }}
+    schema-drift-teams: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    # Optional Team license key for 90-day persisted alert history
+    # license-key: ${{ secrets.SCHEMALENS_KEY }}
+```
+
+- **Free tier** — unlimited Slack/Teams alerts, shareable alert URLs, and local dashboard history. No license key.
+- **Team tier** — 90-day server-side alert history, higher rate limits, and admin controls.
+
+[View a sample alert →](https://schemalens.tech/schema-drift-alert.html) · [Open the Team dashboard →](https://schemalens.tech/team/schema-drift-dashboard.html)
 
 ---
 

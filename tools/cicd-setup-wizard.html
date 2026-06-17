@@ -265,22 +265,29 @@
           <span>Fail pipeline on breaking changes <span class="sub">Blocks merges that drop columns or tables.</span></span>
         </label>
 
-        <h2 style="margin-top: 24px;">3. Drift alerts <span class="hint">(Team plan)</span></h2>
+        <h2 style="margin-top: 24px;">3. Drift alerts <span class="hint">(free)</span></h2>
+
+        <label class="checkbox">
+          <input type="checkbox" id="driftAlerts">
+          <span>Send schema drift alerts <span class="sub">Free Slack/Teams notifications + shareable alert page on every diff. No license key required.</span></span>
+        </label>
 
         <div class="field">
-          <label for="licenseKey">SchemaLens Pro/Team license key</label>
-          <input type="text" id="licenseKey" placeholder="SL-XXXX-XXXX-XXXX-XXXX">
-          <small>Required for Slack/Teams alerts and shareable alert pages.</small>
-        </div>
-
-        <div class="field">
-          <label for="slackUrl">Slack webhook URL</label>
+          <label for="slackUrl">Slack webhook URL <span class="hint">(optional)</span></label>
           <input type="text" id="slackUrl" placeholder="https://hooks.slack.com/services/...">
+          <small>Get one from your Slack app's Incoming Webhooks settings.</small>
         </div>
 
         <div class="field">
-          <label for="teamsUrl">Microsoft Teams webhook URL</label>
+          <label for="teamsUrl">Microsoft Teams webhook URL <span class="hint">(optional)</span></label>
           <input type="text" id="teamsUrl" placeholder="https://outlook.office.com/webhook/...">
+          <small>Get one from your Teams channel connector settings.</small>
+        </div>
+
+        <div class="field">
+          <label for="licenseKey">SchemaLens Pro/Team license key <span class="hint">(optional)</span></label>
+          <input type="text" id="licenseKey" placeholder="SL-XXXX-XXXX-XXXX-XXXX">
+          <small>Add a Team key for 90-day persisted alert history and higher rate limits. Free alerts work without a key.</small>
         </div>
       </div>
 
@@ -298,10 +305,10 @@
         </div>
 
         <div class="team-upsell">
-          <h3>Need shared dashboards & unlimited members?</h3>
+          <h3>SchemaLens drift alerts</h3>
           <ul>
-            <li>Team schema drift dashboard with risk trends</li>
-            <li>Slack / Microsoft Teams notifications</li>
+            <li><strong>Free:</strong> Slack / Microsoft Teams notifications + shareable alert pages on every diff</li>
+            <li><strong>Team:</strong> 90-day persisted alert history + shared dashboard</li>
             <li>Unlimited team members and org-wide billing</li>
             <li>Priority support and migration review</li>
           </ul>
@@ -324,6 +331,7 @@
       createCheckRun: false,
       smartSkip: true,
       failBreaking: false,
+      driftAlerts: false,
       licenseKey: '',
       slackUrl: '',
       teamsUrl: '',
@@ -342,6 +350,7 @@
       createCheckRun: document.getElementById('createCheckRun'),
       smartSkip: document.getElementById('smartSkip'),
       failBreaking: document.getElementById('failBreaking'),
+      driftAlerts: document.getElementById('driftAlerts'),
       licenseKey: document.getElementById('licenseKey'),
       slackUrl: document.getElementById('slackUrl'),
       teamsUrl: document.getElementById('teamsUrl'),
@@ -417,6 +426,7 @@
         els.createCheckRun.checked = !!state.createCheckRun;
         els.smartSkip.checked = state.smartSkip !== false;
         els.failBreaking.checked = !!state.failBreaking;
+        els.driftAlerts.checked = !!state.driftAlerts;
         els.licenseKey.value = state.licenseKey || '';
         els.slackUrl.value = state.slackUrl || '';
         els.teamsUrl.value = state.teamsUrl || '';
@@ -608,7 +618,7 @@
     create-check-run: ${state.createCheckRun ? 'true' : 'false'}
     run-only-on-schema-change: ${state.smartSkip ? 'true' : 'false'}
     fail-on-breaking: ${state.failBreaking ? 'true' : 'false'}
-    github-token: \${{ secrets.GITHUB_TOKEN }}${state.licenseKey && (state.slackUrl || state.teamsUrl) ? '\n    schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook' : ''}${state.licenseKey && state.slackUrl ? '\n    schema-drift-slack: \${{ secrets.SCHEMALENS_SLACK_WEBHOOK }}' : ''}${state.licenseKey && state.teamsUrl ? '\n    schema-drift-teams: \${{ secrets.SCHEMALENS_TEAMS_WEBHOOK }}' : ''}`);
+    github-token: \${{ secrets.GITHUB_TOKEN }}${state.driftAlerts ? '\n    schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook' : ''}${state.driftAlerts && state.slackUrl ? '\n    schema-drift-slack: \${{ secrets.SCHEMALENS_SLACK_WEBHOOK }}' : ''}${state.driftAlerts && state.teamsUrl ? '\n    schema-drift-teams: \${{ secrets.SCHEMALENS_TEAMS_WEBHOOK }}' : ''}`);
 
       return `name: ${name}
 on:
@@ -628,7 +638,8 @@ ${indent(steps.join('\n'), 6)}`;
     }
 
     function generateGitLab() {
-      const alertBlock = state.licenseKey && (state.slackUrl || state.teamsUrl) ? `\n    # Send schema drift alert (requires Team/Pro license key)\n    - curl -X POST https://schemalens.tech/api/schema-drift-webhook \\\n        -H "Content-Type: application/json" \\\n        -d '{\n          "projectToken": "$SCHEMALENS_LICENSE_KEY",\n          "oldSchema": "$(cat ${state.oldPath})",\n          "newSchema": "$(cat ${state.newPath})",\n          "dialect": "${state.dialect}",\n          "metadata": {"repo":"$CI_PROJECT_PATH","branch":"$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME","commit":"$CI_COMMIT_SHA","prUrl":"$CI_MERGE_REQUEST_URL","ciProvider":"gitlab-ci","runId":"$CI_PIPELINE_ID"},\n          "notify": {${state.slackUrl ? '\"slack\": \"$SCHEMALENS_SLACK_WEBHOOK\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\"teams\": \"$SCHEMALENS_TEAMS_WEBHOOK\"' : ''}}\n        }'` : '';
+      const tokenLine = state.licenseKey ? `          "projectToken": "$SCHEMALENS_LICENSE_KEY",\n` : '';
+      const alertBlock = state.driftAlerts ? `\n    # Send free schema drift alert (add a Team key for persisted history)\n    - curl -X POST https://schemalens.tech/api/schema-drift-webhook \\\n        -H "Content-Type: application/json" \\\n        -d '{\n${tokenLine}          "oldSchema": "$(cat ${state.oldPath})",\n          "newSchema": "$(cat ${state.newPath})",\n          "dialect": "${state.dialect}",\n          "metadata": {"repo":"$CI_PROJECT_PATH","branch":"$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME","commit":"$CI_COMMIT_SHA","prUrl":"$CI_MERGE_REQUEST_URL","ciProvider":"gitlab-ci","runId":"$CI_PIPELINE_ID"},\n          "notify": {${state.slackUrl ? '\"slack\": \"$SCHEMALENS_SLACK_WEBHOOK\"' : ''}${state.slackUrl && state.teamsUrl ? ', ' : ''}${state.teamsUrl ? '\"teams\": \"$SCHEMALENS_TEAMS_WEBHOOK\"' : ''}}\n        }'` : '';
 
       return `schema-diff:
   stage: test
@@ -653,6 +664,9 @@ ${alertBlock ? indent(alertBlock, 4) : ''}`;
     }
 
     function generateJenkins() {
+      const alertComment = state.driftAlerts ? `
+    // Schema drift alerts: POST to https://schemalens.tech/api/schema-drift-webhook
+    // for free Slack/Teams notifications + shareable alert pages. Team key optional.` : '';
       return `pipeline {
   agent any
   environment {
@@ -678,7 +692,7 @@ ${alertBlock ? indent(alertBlock, 4) : ''}`;
           echo "Tables removed: \${result.summary.tablesRemoved}"
           echo "Tables modified: \${result.summary.tablesModified}"
           echo "Breaking changes: \${result.summary.breakingChangeCount}"
-${state.failBreaking ? '          if (result.summary.breakingChangeCount > 0) { error("Breaking schema changes detected") }' : '          // Set fail-on-breaking above to block builds with breaking changes'}
+${state.failBreaking ? '          if (result.summary.breakingChangeCount > 0) { error("Breaking schema changes detected") }' : '          // Set fail-on-breaking above to block builds with breaking changes'}${alertComment}
         }
       }
     }
@@ -692,6 +706,9 @@ ${state.failBreaking ? '          if (result.summary.breakingChangeCount > 0) { 
     }
 
     function generateCircleCI() {
+      const alertComment = state.driftAlerts ? `
+      # Schema drift alerts: POST to https://schemalens.tech/api/schema-drift-webhook
+      # for free Slack/Teams notifications + shareable alert pages. Team key optional.` : '';
       return `version: 2.1
 
 jobs:
@@ -709,7 +726,7 @@ jobs:
             echo "$RESPONSE" | jq .
             BREAKING=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // 0)')
             echo "Breaking changes: $BREAKING"
-${state.failBreaking ? '            if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '            # Set fail-on-breaking above to block merges with breaking changes'}
+${state.failBreaking ? '            if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '            # Set fail-on-breaking above to block merges with breaking changes'}${alertComment}
 
 workflows:
   schema-diff:
@@ -722,6 +739,9 @@ workflows:
     }
 
     function generateBitbucket() {
+      const alertComment = state.driftAlerts ? `
+              # Schema drift alerts: POST to https://schemalens.tech/api/schema-drift-webhook
+              # for free Slack/Teams notifications + shareable alert pages. Team key optional.` : '';
       return `image: node:20
 
 pipelines:
@@ -742,7 +762,7 @@ pipelines:
               echo "$RESPONSE" | jq .
               BREAKING=$(echo "$RESPONSE" | jq -r '(.summary.breakingChangeCount // 0)')
               echo "Breaking changes: $BREAKING"
-${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '              # Set fail-on-breaking above to block merges with breaking changes'}`;
+${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Breaking schema changes detected"; exit 1; fi' : '              # Set fail-on-breaking above to block merges with breaking changes'}${alertComment}`;
     }
 
     function generateAzure() {
@@ -758,14 +778,14 @@ ${state.failBreaking ? '              if [ "$BREAKING" != "0" ]; then echo "Brea
     displayName: 'Post PR comment'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))` : '';
 
-      const alertBlock = state.licenseKey && (state.slackUrl || state.teamsUrl) ? `
-  # Send schema drift alert (requires Team/Pro license key)
+      const tokenLineAzure = state.licenseKey ? `          "projectToken": "$(SCHEMALENS_LICENSE_KEY)",\n` : '';
+      const alertBlock = state.driftAlerts ? `
+  # Send free schema drift alert (add a Team key for persisted history)
   - script: |
       curl -X POST https://schemalens.tech/api/schema-drift-webhook \\
         -H "Content-Type: application/json" \\
         -d '{
-          "projectToken": "$(SCHEMALENS_LICENSE_KEY)",
-          "oldSchema": "$(cat /tmp/schema_base.sql)",
+${tokenLineAzure}          "oldSchema": "$(cat /tmp/schema_base.sql)",
           "newSchema": "$(cat ${state.newPath})",
           "dialect": "${state.dialect}",
           "metadata": {"repo":"$(Build.Repository.Name)","branch":"$(Build.SourceBranchName)","commit":"$(Build.SourceVersion)","prUrl":"$(System.PullRequest.PullRequestId)","ciProvider":"azure-devops","runId":"$(Build.BuildId)"},
@@ -834,6 +854,9 @@ ${alertBlock}`;
     }
 
     function generateSlackPreview() {
+      const ctaButton = state.licenseKey
+        ? '{ "type": "button", "text": { "type": "plain_text", "text": "Team Dashboard" }, "url": "https://schemalens.tech/team/schema-drift-dashboard.html", "style": "primary" }'
+        : '{ "type": "button", "text": { "type": "plain_text", "text": "Upgrade to Team" }, "url": "https://schemalens.tech/team-buy.html", "style": "primary" }';
       return `{
   "text": "Schema drift: 1 added, 0 removed, 2 modified, 1 breaking",
   "blocks": [
@@ -847,13 +870,16 @@ ${alertBlock}`;
     { "type": "section", "text": { "type": "mrkdwn", "text": "*Breaking Changes:*\\n⚠️ Dropped column \\"users.phone\\"" } },
     { "type": "actions", "elements": [
       { "type": "button", "text": { "type": "plain_text", "text": "View Alert" }, "url": "https://schemalens.tech/schema-drift-alert.html#...", "style": "primary" },
-      { "type": "button", "text": { "type": "plain_text", "text": "Team Dashboard" }, "url": "https://schemalens.tech/team/schema-drift-dashboard.html" }
+      ${ctaButton}
     ]}
   ]
 }`;
     }
 
     function generateTeamsPreview() {
+      const ctaButton = state.licenseKey
+        ? '{ "@type": "OpenUri", "name": "Team Dashboard", "targets": [{ "os": "default", "uri": "https://schemalens.tech/team/schema-drift-dashboard.html" }] }'
+        : '{ "@type": "OpenUri", "name": "Upgrade to Team", "targets": [{ "os": "default", "uri": "https://schemalens.tech/team-buy.html" }] }';
       return `{
   "@type": "MessageCard",
   "title": "SchemaLens Schema Drift Alert — org/repo",
@@ -871,7 +897,7 @@ ${alertBlock}`;
   ],
   "potentialAction": [
     { "@type": "OpenUri", "name": "View Alert", "targets": [{ "os": "default", "uri": "https://schemalens.tech/schema-drift-alert.html#..." }] },
-    { "@type": "OpenUri", "name": "Team Dashboard", "targets": [{ "os": "default", "uri": "https://schemalens.tech/team/schema-drift-dashboard.html" }] }
+    ${ctaButton}
   ]
 }`;
     }
@@ -885,6 +911,7 @@ ${alertBlock}`;
       state.createCheckRun = els.createCheckRun.checked;
       state.smartSkip = els.smartSkip.checked;
       state.failBreaking = els.failBreaking.checked;
+      state.driftAlerts = els.driftAlerts.checked;
       state.licenseKey = els.licenseKey.value;
       state.slackUrl = els.slackUrl.value;
       state.teamsUrl = els.teamsUrl.value;
@@ -920,7 +947,7 @@ ${alertBlock}`;
       ['dialect', 'oldPath', 'newPath'].forEach(id => {
         els[id].addEventListener('input', update);
       });
-      ['postComment', 'createCheckRun', 'smartSkip', 'failBreaking'].forEach(id => {
+      ['postComment', 'createCheckRun', 'smartSkip', 'failBreaking', 'driftAlerts'].forEach(id => {
         els[id].addEventListener('change', update);
       });
       ['licenseKey', 'slackUrl', 'teamsUrl'].forEach(id => {
