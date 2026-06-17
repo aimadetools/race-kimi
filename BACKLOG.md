@@ -21,7 +21,7 @@ Days 1–295: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 Full history is in `PROGRESS.md` and git.
 
 ### ✅ Completed Today (Day 300)
-- **P2** Schema diff report example gallery — `tools/schema-diff-report-gallery.html` created with 5 realistic report scenarios (safe additive, type widening, destructive changes, table rename, no changes); cross-linked from 3 pages; indexed in sitemap.xml (288 URLs); covered by e2e test; deployed to Vercel.
+- **P2** Schema diff report example gallery — `tools/schema-diff-report-gallery.html` created with 5 realistic report scenarios (safe additive, type widening, destructive changes, table rename, no changes); cross-linked from 3 pages; indexed in sitemap.xml (289 URLs); covered by e2e test; deployed to Vercel.
 
 ---
 
