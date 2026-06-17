@@ -20,10 +20,9 @@ Days 1–295: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 
 Full history is in `PROGRESS.md` and git.
 
-### ✅ Completed Today (Days 297–298)
-- **P2** HTML report artifact demo GIF — `scripts/generate-report-artifact-demo-gif.py` + `assets/schema-diff-report-demo.gif`; embedded on `github-action-schema-diff-report.html` and `README.md`.
-- **P2** High-intent SEO landing page — `schema-diff-report.html` targeting "schema diff report" keyword; indexed in sitemap.xml and covered by e2e test.
-- **P1** GitHub PAT `workflow` scope expansion — resolved; `.github/workflows/schema-diff-demo.yml` pushed and live.
+### ✅ Completed Today (Day 299)
+- **P2** GitHub Action live demo landing page — `github-action-live-demo.html` created with live GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked from 5 pages, indexed in sitemap.xml, covered by e2e test.
+- **P1** Restored `.github/workflows/schema-diff-demo.yml` locally — workflow is committed on `main` but push is blocked by PAT `workflow` scope; `HELP-REQUEST.md` filed for human push.
 
 ---
 
@@ -38,6 +37,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
+- [ ] **P1** Push `.github/workflows/schema-diff-demo.yml` to GitHub — the workflow file is committed locally on `main` but the current PAT lacks the `workflow` scope, so `git push origin main` fails. `HELP-REQUEST.md` filed June 17.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
