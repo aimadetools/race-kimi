@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Diff Report Examples — See Real CI/CD Reports | SchemaLens</title>
+<meta name="description" content="Explore real schema diff report examples from SchemaLens. See risk scores, breaking changes, migration SQL, and rollback SQL for safe, medium, and high-risk database migrations.">
+<meta property="og:title" content="Schema Diff Report Examples — See Real CI/CD Reports | SchemaLens">
+<meta property="og:description" content="Explore real schema diff report examples from SchemaLens. See risk scores, breaking changes, migration SQL, and rollback SQL.">
+<meta property="og:image" content="https://schemalens.tech/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://schemalens.tech/tools/schema-diff-report-gallery.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Schema Diff Report Examples",
+  "description": "A gallery of example schema diff reports showing safe, medium, and high-risk database migration scenarios.",
+  "url": "https://schemalens.tech/tools/schema-diff-report-gallery.html",
+  "isPartOf": { "@type": "WebSite", "name": "SchemaLens", "url": "https://schemalens.tech" }
+}
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  .page-header { padding: 48px 0 24px; text-align: center; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+  .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 700px; margin: 0 auto; }
+
+  .gallery-intro {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin: 24px 0; text-align: center;
+  }
+  .gallery-intro p { color: var(--text-muted); margin: 0; }
+
+  .report-example {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    margin: 28px 0; overflow: hidden;
+  }
+  .report-example-header {
+    background: var(--code-bg); border-bottom: 1px solid var(--border); padding: 18px 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .report-example-header h2 { font-size: 1.15rem; font-weight: 600; margin: 0; }
+  .risk-pill {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 999px; margin-left: auto;
+  }
+  .risk-pill.low { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+  .risk-pill.medium { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+  .risk-pill.high { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+
+  .report-example-body { padding: 24px; }
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-bottom: 20px;
+  }
+  .summary-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center;
+  }
+  .summary-card .value { font-size: 1.6rem; font-weight: 800; display: block; }
+  .summary-card .label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .summary-card .value.added { color: var(--success); }
+  .summary-card .value.removed { color: var(--danger); }
+  .summary-card .value.modified { color: var(--warning); }
+  .summary-card .value.breaking { color: var(--danger); }
+
+  .risk-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .risk-score-ring {
+    width: 86px; height: 86px; border-radius: 50%; border: 6px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0;
+  }
+  .risk-score-ring .score { font-size: 1.4rem; font-weight: 800; }
+  .risk-score-ring .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+  .report-section { margin-bottom: 20px; }
+  .report-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+  .breaking-list { list-style: none; padding: 0; margin: 0; }
+  .breaking-item {
+    background: rgba(248, 113, 113, 0.08); border-left: 3px solid var(--danger);
+    border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; font-size: 0.95rem;
+  }
+  .breaking-item.safe {
+    background: rgba(52, 211, 153, 0.08); border-left-color: var(--success);
+  }
+  .breaking-severity {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    background: var(--border); padding: 2px 8px; border-radius: 999px; margin-right: 8px;
+  }
+  .breaking-item.critical .breaking-severity, .breaking-item.high .breaking-severity { background: var(--danger); color: #fff; }
+  .breaking-item.medium .breaking-severity { background: var(--warning); color: #000; }
+  .breaking-item.none .breaking-severity { background: var(--success); color: #fff; }
+
+  .code-snippet {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 16px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; overflow-x: auto; white-space: pre;
+    color: var(--code-text);
+  }
+  .code-snippet .kw { color: #c084fc; }
+  .code-snippet .str { color: #fbbf24; }
+  .code-snippet .comment { color: var(--comment); }
+
+  .report-actions {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius-sm);
+    font-weight: 600; text-decoration: none; font-size: 0.95rem;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--surface-hover); }
+
+  .cta-bar {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 32px; text-align: center; margin: 32px 0;
+  }
+  .cta-bar h2 { font-size: 1.3rem; margin-bottom: 10px; }
+  .cta-bar p { color: var(--text-muted); margin-bottom: 20px; }
+
+  .faq-section { margin: 40px 0; }
+  .faq-section h2 { font-size: 1.4rem; margin-bottom: 20px; }
+  .faq-item { margin-bottom: 18px; }
+  .faq-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+  .faq-item p { color: var(--text-muted); font-size: 0.95rem; }
+
+  @media (max-width: 640px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .risk-pill { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo" style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.25rem;color:var(--text);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      SchemaLens
+    </a>
+    <div class="nav-links">
+      <a href="../app.html">App</a>
+      <a href="../tools.html">Tools</a>
+      <a href="../blog.html">Blog</a>
+      <a href="../pricing.html">Pricing</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="page-header">
+    <h1>Schema Diff Report Examples</h1>
+    <p>See what SchemaLens reports look like for real-world migration scenarios — from safe additive changes to high-risk destructive migrations.</p>
+  </div>
+
+  <div class="gallery-intro">
+    <p>Every example below is generated the same way as a <a href="../github-action-schema-diff-report.html">GitHub Actions report artifact</a>: summary cards, migration safety score, breaking-change list, migration SQL, and rollback SQL.</p>
+  </div>
+
+  <!-- Example 1: Safe additive change -->
+  <article class="report-example">
+    <div class="report-example-header">
+      <h2>1. Safe additive change</h2>
+      <span class="risk-pill low">Low risk</span>
+    </div>
+    <div class="report-example-body">
+      <div class="summary-grid">
+        <div class="summary-card"><span class="value added">1</span><span class="label">Tables Added</span></div>
+        <div class="summary-card"><span class="value removed">0</span><span class="label">Tables Removed</span></div>
+        <div class="summary-card"><span class="value modified">1</span><span class="label">Tables Modified</span></div>
+        <div class="summary-card"><span class="value breaking">0</span><span class="label">Breaking Changes</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-score-ring" style="border-color: var(--success);">
+          <span class="score" style="color: var(--success);">12</span>
+          <span class="label">Safe</span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px;">Migration Safety Score</h3>
+          <p style="color:var(--text-muted);margin:0;">Only additive changes — new nullable columns and a new table. Safe to deploy with standard monitoring.</p>
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>Breaking Changes</h3>
+        <ul class="breaking-list">
+          <li class="breaking-item safe"><span class="breaking-severity none">none</span>No breaking changes detected 🎉</li>
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Migration SQL</h3>
+        <div class="code-snippet"><span class="kw">CREATE TABLE</span> order_items (
+  id <span class="kw">SERIAL PRIMARY KEY</span>,
+  order_id <span class="kw">INTEGER NOT NULL REFERENCES</span> orders(id),
+  product_name <span class="kw">VARCHAR</span>(255) <span class="kw">NOT NULL</span>,
+  quantity <span class="kw">INTEGER NOT NULL</span>,
+  price <span class="kw">DECIMAL</span>(10,2) <span class="kw">NOT NULL</span>
+);
+
+<span class="kw">ALTER TABLE</span> orders
+  <span class="kw">ADD COLUMN</span> shipped_at <span class="kw">TIMESTAMP</span>,
+  <span class="kw">ADD COLUMN</span> tracking_number <span class="kw">VARCHAR</span>(100);
+
+<span class="kw">CREATE INDEX</span> idx_order_items_order <span class="kw">ON</span> order_items(order_id);</div>
+      </div>
+      <div class="report-actions">
+        <a class="btn btn-primary" href="../app.html?example=demo&dialect=postgres" data-event="report_gallery_try_demo">Try this diff →</a>
+        <a class="btn btn-secondary" href="../github-action.html" data-event="report_gallery_add_action">Add to GitHub Actions</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- Example 2: Medium risk — type change -->
+  <article class="report-example">
+    <div class="report-example-header">
+      <h2>2. Column type widening</h2>
+      <span class="risk-pill medium">Medium risk</span>
+    </div>
+    <div class="report-example-body">
+      <div class="summary-grid">
+        <div class="summary-card"><span class="value added">0</span><span class="label">Tables Added</span></div>
+        <div class="summary-card"><span class="value removed">0</span><span class="label">Tables Removed</span></div>
+        <div class="summary-card"><span class="value modified">1</span><span class="label">Tables Modified</span></div>
+        <div class="summary-card"><span class="value breaking">1</span><span class="label">Breaking Changes</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-score-ring" style="border-color: var(--warning);">
+          <span class="score" style="color: var(--warning);">48</span>
+          <span class="label">Risky</span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px;">Migration Safety Score</h3>
+          <p style="color:var(--text-muted);margin:0;">Widening a column type is usually safe, but it can cause subtle issues with ORM mappings, query plans, and downstream ETL.</p>
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>Breaking Changes</h3>
+        <ul class="breaking-list">
+          <li class="breaking-item medium"><span class="breaking-severity medium">medium</span>Possible data-truncation or ORM-mapping risk: users.bio changed from VARCHAR(500) to TEXT</li>
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Migration SQL</h3>
+        <div class="code-snippet"><span class="kw">ALTER TABLE</span> users
+  <span class="kw">ALTER COLUMN</span> bio <span class="kw">TYPE TEXT</span>;</div>
+      </div>
+      <div class="report-actions">
+        <a class="btn btn-primary" href="../app.html?example=type-change&dialect=postgres" data-event="report_gallery_try_type_change">Try this diff →</a>
+        <a class="btn btn-secondary" href="../github-action.html" data-event="report_gallery_add_action">Add to GitHub Actions</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- Example 3: High risk — column drop + NOT NULL -->
+  <article class="report-example">
+    <div class="report-example-header">
+      <h2>3. Destructive column changes</h2>
+      <span class="risk-pill high">High risk</span>
+    </div>
+    <div class="report-example-body">
+      <div class="summary-grid">
+        <div class="summary-card"><span class="value added">0</span><span class="label">Tables Added</span></div>
+        <div class="summary-card"><span class="value removed">0</span><span class="label">Tables Removed</span></div>
+        <div class="summary-card"><span class="value modified">2</span><span class="label">Tables Modified</span></div>
+        <div class="summary-card"><span class="value breaking">3</span><span class="label">Breaking Changes</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-score-ring" style="border-color: var(--danger);">
+          <span class="score" style="color: var(--danger);">82</span>
+          <span class="label">Dangerous</span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px;">Migration Safety Score</h3>
+          <p style="color:var(--text-muted);margin:0;">Dropping a column and adding NOT NULL without a default are destructive changes. Requires code changes, backfill, and careful rollout.</p>
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>Breaking Changes</h3>
+        <ul class="breaking-list">
+          <li class="breaking-item high"><span class="breaking-severity high">high</span>Column dropped: orders.legacy_notes</li>
+          <li class="breaking-item high"><span class="breaking-severity high">high</span>NOT NULL added without default: users.phone</li>
+          <li class="breaking-item medium"><span class="breaking-severity medium">medium</span>Index dropped: idx_orders_legacy</li>
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Migration SQL</h3>
+        <div class="code-snippet"><span class="comment">-- Backfill data before applying NOT NULL</span>
+<span class="kw">UPDATE</span> users <span class="kw">SET</span> phone = <span class="str">''</span> <span class="kw">WHERE</span> phone <span class="kw">IS NULL</span>;
+
+<span class="kw">ALTER TABLE</span> users
+  <span class="kw">ALTER COLUMN</span> phone <span class="kw">SET NOT NULL</span>;
+
+<span class="kw">ALTER TABLE</span> orders
+  <span class="kw">DROP COLUMN</span> legacy_notes;
+
+<span class="kw">DROP INDEX</span> idx_orders_legacy;</div>
+      </div>
+      <div class="report-section">
+        <h3>Rollback SQL</h3>
+        <div class="code-snippet"><span class="kw">ALTER TABLE</span> orders
+  <span class="kw">ADD COLUMN</span> legacy_notes <span class="kw">TEXT</span>;
+
+<span class="kw">ALTER TABLE</span> users
+  <span class="kw">ALTER COLUMN</span> phone <span class="kw">DROP NOT NULL</span>;
+
+<span class="kw">CREATE INDEX</span> idx_orders_legacy <span class="kw">ON</span> orders(legacy_notes);</div>
+      </div>
+      <div class="report-actions">
+        <a class="btn btn-primary" href="../app.html?example=destructive&dialect=postgres" data-event="report_gallery_try_destructive">Try this diff →</a>
+        <a class="btn btn-secondary" href="../zero-downtime-migration-guide.html" data-event="report_gallery_zero_downtime">Zero-downtime guide</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- Example 4: Table rename -->
+  <article class="report-example">
+    <div class="report-example-header">
+      <h2>4. Table rename + foreign-key updates</h2>
+      <span class="risk-pill high">High risk</span>
+    </div>
+    <div class="report-example-body">
+      <div class="summary-grid">
+        <div class="summary-card"><span class="value added">1</span><span class="label">Tables Added</span></div>
+        <div class="summary-card"><span class="value removed">1</span><span class="label">Tables Removed</span></div>
+        <div class="summary-card"><span class="value modified">2</span><span class="label">Tables Modified</span></div>
+        <div class="summary-card"><span class="value breaking">2</span><span class="label">Breaking Changes</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-score-ring" style="border-color: var(--danger);">
+          <span class="score" style="color: var(--danger);">76</span>
+          <span class="label">Dangerous</span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px;">Migration Safety Score</h3>
+          <p style="color:var(--text-muted);margin:0;">Renaming a table breaks every query, foreign key, and ORM reference. Requires coordinated code and migration deployment.</p>
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>Breaking Changes</h3>
+        <ul class="breaking-list">
+          <li class="breaking-item high"><span class="breaking-severity high">high</span>Table dropped: customers (detected as rename to clients)</li>
+          <li class="breaking-item high"><span class="breaking-severity high">high</span>Foreign key references updated: orders.customer_id → orders.client_id</li>
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Migration SQL</h3>
+        <div class="code-snippet"><span class="kw">ALTER TABLE</span> customers <span class="kw">RENAME TO</span> clients;
+
+<span class="kw">ALTER TABLE</span> orders
+  <span class="kw">DROP CONSTRAINT</span> fk_orders_customer_id,
+  <span class="kw">RENAME COLUMN</span> customer_id <span class="kw">TO</span> client_id,
+  <span class="kw">ADD CONSTRAINT</span> fk_orders_client_id
+    <span class="kw">FOREIGN KEY</span> (client_id) <span class="kw">REFERENCES</span> clients(id);</div>
+      </div>
+      <div class="report-actions">
+        <a class="btn btn-primary" href="../app.html?example=rename&dialect=postgres" data-event="report_gallery_try_rename">Try this diff →</a>
+        <a class="btn btn-secondary" href="../github-action.html" data-event="report_gallery_add_action">Add to GitHub Actions</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- Example 5: No changes -->
+  <article class="report-example">
+    <div class="report-example-header">
+      <h2>5. No schema changes</h2>
+      <span class="risk-pill low">Low risk</span>
+    </div>
+    <div class="report-example-body">
+      <div class="summary-grid">
+        <div class="summary-card"><span class="value added">0</span><span class="label">Tables Added</span></div>
+        <div class="summary-card"><span class="value removed">0</span><span class="label">Tables Removed</span></div>
+        <div class="summary-card"><span class="value modified">0</span><span class="label">Tables Modified</span></div>
+        <div class="summary-card"><span class="value breaking">0</span><span class="label">Breaking Changes</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-score-ring" style="border-color: var(--success);">
+          <span class="score" style="color: var(--success);">0</span>
+          <span class="label">Safe</span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px;">Migration Safety Score</h3>
+          <p style="color:var(--text-muted);margin:0;">No schema differences detected. The action can be configured to skip further steps when there are no changes.</p>
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>Breaking Changes</h3>
+        <ul class="breaking-list">
+          <li class="breaking-item safe"><span class="breaking-severity none">none</span>No breaking changes detected 🎉</li>
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Migration SQL</h3>
+        <div class="code-snippet"><span class="comment">-- No migration needed. Schema is unchanged.</span></div>
+      </div>
+      <div class="report-actions">
+        <a class="btn btn-primary" href="../github-action.html#smart-skip" data-event="report_gallery_smart_skip">Learn about smart skip →</a>
+        <a class="btn btn-secondary" href="../github-action-live-demo.html" data-event="report_gallery_live_demo">View live demo</a>
+      </div>
+    </div>
+  </article>
+
+  <div class="cta-bar">
+    <h2>Get schema diff reports on every PR</h2>
+    <p>The SchemaLens GitHub Action generates these reports automatically for PostgreSQL, MySQL, SQLite, SQL Server, and Oracle — no license key required.</p>
+    <div class="report-actions" style="justify-content:center;">
+      <a class="btn btn-primary" href="../github-action.html" data-event="report_gallery_main_cta">Add to GitHub Actions →</a>
+      <a class="btn btn-secondary" href="../github-action-live-demo.html" data-event="report_gallery_live_demo_cta">👁️ View live demo</a>
+    </div>
+  </div>
+
+  <section class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Are these real reports?</h3>
+      <p>They are realistic examples generated with the same engine that powers the SchemaLens GitHub Action. The layout matches the self-contained HTML report artifact.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I download these as HTML files?</h3>
+      <p>Yes — install the <a href="../github-action.html">GitHub Action</a> and set <code>upload-report: true</code>. Every PR will produce a downloadable, offline-ready HTML report.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What databases are supported?</h3>
+      <p>PostgreSQL, MySQL, SQLite, SQL Server, and Oracle. The report format is the same for every dialect.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Do I need a paid license?</h3>
+      <p>No. Schema diff reports, migration SQL, rollback SQL, and drift alerts are free forever. The Team plan adds shared workspaces, persistent alert history, and admin controls.</p>
+    </div>
+  </section>
+</main>
+
+<footer style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:40px 0;">
+  <p>Generated by <a href="../index.html">SchemaLens</a> · <a href="../github-action-schema-diff-report.html">Self-contained HTML report artifact</a></p>
+</footer>
+
+<script src="../lib/analytics-client.js" defer></script>
+<script>
+(function() {
+  function send(event, meta) {
+    if (window.SchemaLensAnalytics && window.SchemaLensAnalytics.track) {
+      window.SchemaLensAnalytics.track(event, meta || {});
+    }
+  }
+  document.querySelectorAll('[data-event]').forEach(el => {
+    el.addEventListener('click', () => send(el.dataset.event, { href: el.getAttribute('href') }));
+  });
+})();
+</script>
+
+</body>
+</html>
