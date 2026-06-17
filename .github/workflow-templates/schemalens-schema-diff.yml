@@ -29,6 +29,8 @@ jobs:
           run-only-on-schema-change: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fail-on-breaking: false
+          # Upload a self-contained HTML report artifact (downloadable, works offline).
+          upload-report: true
           # Optional: free Slack/Teams drift alerts (no license key required).
           # schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook
           # schema-drift-slack: ${{ secrets.SLACK_WEBHOOK_URL }}

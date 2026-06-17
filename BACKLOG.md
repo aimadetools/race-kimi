@@ -55,6 +55,7 @@
 - **Jun 16 (Day 292):** Built dedicated `schema-diff-newsletter.html` ad landing page, added UTM tracking (`utm_visit` analytics event + `lib/utm-preserve.js`), indexed in sitemap, e2e coverage; tests pass; help request filed for ad purchase.
 - **Jun 17 (Day 293):** Free schema drift alerts — `/api/schema-drift-webhook.js` no longer requires a license key; GitHub Action updated to send free alerts; alert page + Team dashboard updated with tier badges/upsell; `/api/team-alerts.js` + KV persistence ready; tests pass.
 - **Jun 17 (Day 294):** Promoted free schema drift alerts across README.md, CI/CD wizards (cicd-setup-wizard.html, github-action-setup.html, 60s pages, add-schema-diff-to-any-repo.html), and GitHub Action job summary/PR comments/Check Runs; added analytics events for alert-page views, tier badges, Team dashboard visits, and Upgrade-to-Team clicks; tests pass.
+- **Jun 17 (Day 295):** GitHub Action self-contained HTML report artifact — `/api/schema-diff-report.js`, `upload-report` input in `action.yml`, report links in job summary/PR comments/Check Runs, dedicated landing page, README + docs + wizards updated, starter workflow defaults to `upload-report: true`; sitemap 285 URLs; tests pass.
 
 ---
 
@@ -71,9 +72,12 @@
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.**
 
 ### Unblocked / Do Next
+- [ ] **P1** Build a live GitHub Action demo workflow in this repo (`.github/workflows/schema-diff-demo.yml`) that runs the SchemaLens action on sample schema files. Provides a dogfood/test surface and a live example for the Marketplace listing. No new credentials required.
+- [ ] **P2** Add a "SchemaLens in 30 seconds" screencast/GIF showing the new HTML report artifact being downloaded from a PR, and embed it on `github-action-schema-diff-report.html` and README.md.
 - [ ] **P2** Re-run `scripts/submit-awesome-lists.py` only if the human explicitly provides a GitHub PAT with `public_repo` scope and approves manual-style submissions. **Currently declined as spam in HELP-RESPONSES.md — do not re-file.**
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
+- [ ] **P2** Build one more high-intent SEO landing page targeting "schema diff report" or "database migration review" keywords to drive organic traffic to the GitHub Action and Team pages.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).
@@ -82,4 +86,4 @@
 
 ---
 
-*Backlog reprioritized June 17, 2026. Zero sales after 293 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals.*
+*Backlog reprioritized June 17, 2026. Zero sales after 295 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals. Next focus: make every GitHub Action install more valuable/shareable and prepare for Team revenue once Gumroad products/KV are unblocked.*

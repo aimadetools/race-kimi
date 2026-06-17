@@ -87,6 +87,7 @@ jobs:
           run-only-on-schema-change: true   # skip when no .sql files changed
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fail-on-breaking: true
+          upload-report: true                # generate a self-contained HTML report artifact
 ```
 
 ### Features
@@ -96,6 +97,7 @@ jobs:
 - **PR comments** — formatted diff summary posted automatically
 - **GitHub Check Runs** — native PR status checks with risk scores
 - **Job Summary** — rich markdown report on every Actions run
+- **📄 HTML Report Artifact** — self-contained report with risk score, breaking changes, migration & rollback SQL. [Learn more →](https://schemalens.tech/github-action-schema-diff-report.html)
 - **Smart skip** — only runs when `.sql` files change
 - **🔔 Free schema drift alerts** — Slack/Teams notifications + shareable alert pages on every diff. No license key required. Team adds 90-day persisted history.
 - **5 SQL dialects** — PostgreSQL, MySQL, SQLite, SQL Server, Oracle
@@ -108,6 +110,7 @@ jobs:
 - **[Try the web diff →](https://schemalens.tech/app.html)**
 - **[👁️ Preview the Team workspace →](https://schemalens.tech/team/workspace-preview.html)**
 - **[🔔 Free Slack/Teams alerts setup →](https://schemalens.tech/github-action.html#-schema-drift-alerts)**
+- **[📄 Self-contained HTML report artifact →](https://schemalens.tech/github-action-schema-diff-report.html)**
 - **[Team plan with persisted history →](https://schemalens.tech/pricing.html)**
 - **[Calculate Team ROI →](https://schemalens.tech/tools/team-roi-calculator.html)**
 

@@ -515,5 +515,71 @@ function testBadgeEndpoint() {
 
 if (testBadgeEndpoint()) ok += 4;
 
-console.log('\n' + ok + '/38 tests passed');
-process.exit(ok === 38 ? 0 : 1);
+// ───────────────────────────────────────────────
+// Schema Diff Report API
+// ───────────────────────────────────────────────
+
+function testSchemaDiffReportEndpoint() {
+  const reportHandler = require('./api/schema-diff-report.js');
+  let statusCode, headers, body;
+
+  const res = {
+    setHeader: (k, v) => { headers = headers || {}; headers[k] = v; },
+    status: (c) => {
+      statusCode = c;
+      return {
+        send: (b) => { body = b; },
+        json: (b) => { body = b; },
+        end: () => { body = body || ''; }
+      };
+    },
+    send: (b) => { body = b; },
+    json: (b) => { body = b; }
+  };
+
+  // Valid report request
+  statusCode = null; headers = {}; body = null;
+  reportHandler({
+    method: 'POST',
+    body: {
+      response: {
+        summary: { tablesAdded: 1, tablesRemoved: 0, tablesModified: 2, breakingChangeCount: 1 },
+        riskScore: { score: 75, label: 'High', icon: '🔴' },
+        breakingChanges: [{ severity: 'high', message: 'Dropped column', table: 'users' }],
+        migration: 'ALTER TABLE users ADD COLUMN email VARCHAR(255);',
+        rollback: 'ALTER TABLE users DROP COLUMN email;'
+      },
+      metadata: { repo: 'acme/app', branch: 'main', dialect: 'postgres' }
+    }
+  }, res);
+  if (statusCode !== 200 || !body || !body.includes('SchemaLens Schema Diff Report') || !body.includes('users')) {
+    console.log('schema-diff-report valid: FAIL');
+    return false;
+  }
+  console.log('schema-diff-report valid: OK');
+
+  // Missing response object
+  statusCode = null; headers = {}; body = null;
+  reportHandler({ method: 'POST', body: {} }, res);
+  if (statusCode !== 400 || !body.error) {
+    console.log('schema-diff-report missing response: FAIL');
+    return false;
+  }
+  console.log('schema-diff-report missing response: OK');
+
+  // Method not allowed
+  statusCode = null; headers = {}; body = null;
+  reportHandler({ method: 'GET' }, res);
+  if (statusCode !== 405) {
+    console.log('schema-diff-report method: FAIL');
+    return false;
+  }
+  console.log('schema-diff-report method: OK');
+
+  return true;
+}
+
+if (testSchemaDiffReportEndpoint()) ok += 3;
+
+console.log('\n' + ok + '/41 tests passed');
+process.exit(ok === 41 ? 0 : 1);

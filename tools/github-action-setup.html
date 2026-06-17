@@ -114,6 +114,16 @@
         </div>
         <div class="toggle-row">
           <div>
+            <div class="toggle-label">Upload HTML report artifact <span class="badge-recommended">New</span></div>
+            <div class="toggle-hint">Generates a self-contained HTML report with migration SQL, rollback SQL, and risk score</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="uploadReport" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
             <div class="toggle-label">Only run when schema changes</div>
             <div class="toggle-hint">Uses <code>paths</code> filter so the workflow only triggers on schema/migration file changes</div>
           </div>
@@ -206,6 +216,7 @@
       schemaPath: 'schema.sql',
       postComment: true,
       failBreaking: true,
+      uploadReport: true,
       pathsFilter: true,
       licenseKey: '',
       driftAlerts: false,
@@ -229,6 +240,9 @@
 
       const failLines = state.failBreaking ? `
           <span class="key">fail-on-breaking</span>: <span class="str">true</span>` : '';
+
+      const reportLines = state.uploadReport ? `
+          <span class="key">upload-report</span>: <span class="str">true</span>` : '';
 
       const licenseLines = state.licenseKey ? `
           <span class="key">license-key</span>: <span class="str">\${{ secrets.SCHEMALENS_KEY }}</span>` : '';
@@ -255,7 +269,7 @@
         <span class="key">with</span>:
           <span class="key">old-schema-path</span>: <span class="str">schema-base.sql</span>
           <span class="key">new-schema-path</span>: <span class="str">${state.schemaPath}</span>
-          <span class="key">dialect</span>: <span class="str">${state.dialect}</span>${postCommentLines}${failLines}${licenseLines}${driftLines}`;
+          <span class="key">dialect</span>: <span class="str">${state.dialect}</span>${postCommentLines}${failLines}${reportLines}${licenseLines}${driftLines}`;
     }
 
     function generatePreview() {
@@ -319,6 +333,11 @@ ${driftCta}
 
     document.getElementById('failBreaking').addEventListener('change', e => {
       state.failBreaking = e.target.checked;
+      render();
+    });
+
+    document.getElementById('uploadReport').addEventListener('change', e => {
+      state.uploadReport = e.target.checked;
       render();
     });
 

@@ -256,6 +256,11 @@
         </label>
 
         <label class="checkbox">
+          <input type="checkbox" id="uploadReport">
+          <span>Upload self-contained HTML report artifact <span class="sub">GitHub Actions only. Download a styled report with migration SQL and rollback SQL.</span></span>
+        </label>
+
+        <label class="checkbox">
           <input type="checkbox" id="smartSkip" checked>
           <span>Skip when no <code>.sql</code> files changed <span class="sub">Saves CI minutes on unrelated PRs.</span></span>
         </label>
@@ -329,6 +334,7 @@
       newPath: 'schema/current.sql',
       postComment: true,
       createCheckRun: false,
+      uploadReport: true,
       smartSkip: true,
       failBreaking: false,
       driftAlerts: false,
@@ -348,6 +354,7 @@
       newPath: document.getElementById('newPath'),
       postComment: document.getElementById('postComment'),
       createCheckRun: document.getElementById('createCheckRun'),
+      uploadReport: document.getElementById('uploadReport'),
       smartSkip: document.getElementById('smartSkip'),
       failBreaking: document.getElementById('failBreaking'),
       driftAlerts: document.getElementById('driftAlerts'),
@@ -424,6 +431,7 @@
         els.newPath.value = state.newPath || '';
         els.postComment.checked = !!state.postComment;
         els.createCheckRun.checked = !!state.createCheckRun;
+        els.uploadReport.checked = state.uploadReport !== false;
         els.smartSkip.checked = state.smartSkip !== false;
         els.failBreaking.checked = !!state.failBreaking;
         els.driftAlerts.checked = !!state.driftAlerts;
@@ -616,6 +624,7 @@
     dialect: ${state.dialect}${state.licenseKey ? '\n    license-key: ${{ secrets.SCHEMALENS_LICENSE_KEY }}' : ''}
     post-comment: ${state.postComment ? 'true' : 'false'}
     create-check-run: ${state.createCheckRun ? 'true' : 'false'}
+    upload-report: ${state.uploadReport ? 'true' : 'false'}
     run-only-on-schema-change: ${state.smartSkip ? 'true' : 'false'}
     fail-on-breaking: ${state.failBreaking ? 'true' : 'false'}
     github-token: \${{ secrets.GITHUB_TOKEN }}${state.driftAlerts ? '\n    schema-drift-webhook: https://schemalens.tech/api/schema-drift-webhook' : ''}${state.driftAlerts && state.slackUrl ? '\n    schema-drift-slack: \${{ secrets.SCHEMALENS_SLACK_WEBHOOK }}' : ''}${state.driftAlerts && state.teamsUrl ? '\n    schema-drift-teams: \${{ secrets.SCHEMALENS_TEAMS_WEBHOOK }}' : ''}`);
@@ -909,6 +918,7 @@ ${alertBlock}`;
       state.newPath = els.newPath.value || 'schema/current.sql';
       state.postComment = els.postComment.checked;
       state.createCheckRun = els.createCheckRun.checked;
+      state.uploadReport = els.uploadReport.checked;
       state.smartSkip = els.smartSkip.checked;
       state.failBreaking = els.failBreaking.checked;
       state.driftAlerts = els.driftAlerts.checked;
