@@ -20,8 +20,9 @@ Days 1–295: Built SchemaLens from core schema diff engine to a CI/CD-first pro
 
 Full history is in `PROGRESS.md` and git.
 
-### ✅ Completed Today (Day 297)
+### ✅ Completed Today (Days 297–298)
 - **P2** HTML report artifact demo GIF — `scripts/generate-report-artifact-demo-gif.py` + `assets/schema-diff-report-demo.gif`; embedded on `github-action-schema-diff-report.html` and `README.md`.
+- **P2** High-intent SEO landing page — `schema-diff-report.html` targeting "schema diff report" keyword; indexed in sitemap.xml and covered by e2e test.
 
 ---
 
@@ -41,7 +42,7 @@ Full history is in `PROGRESS.md` and git.
 ### Unblocked / Do Next
 - [ ] **P2** Execute directory submissions that do not require cross-repo GitHub access using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Currently blocked: every platform requires an authenticated account and no no-signup submission endpoint exists. Need human-created accounts or manual submissions.**
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
-- [ ] **P2** Build one more high-intent SEO landing page targeting "schema diff report" or "database migration review" keywords to drive organic traffic to the GitHub Action and Team pages.
+- [x] **P2** Build one more high-intent SEO landing page targeting "schema diff report" keyword — `schema-diff-report.html` created, indexed, and cross-linked from GitHub Action report page.
 
 ### Future Sprint
 - [ ] **P2** Add real testimonials / social proof (BLOCKED: need real users).

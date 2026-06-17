@@ -86,6 +86,7 @@ const pages = [
   { path: '/migration-recipes.html', name: 'Migration Recipes' },
   { path: '/github-action.html', name: 'GitHub Action Landing' },
   { path: '/github-action-schema-diff-report.html', name: 'GitHub Action Schema Diff Report Landing' },
+  { path: '/schema-diff-report.html', name: 'Schema Diff Report Landing' },
   { path: '/github-app.html', name: 'GitHub App Landing' },
   { path: '/github-pr-schema-diff.html', name: 'GitHub PR Schema Diff' },
   { path: '/schema-diff-github-pr.html', name: 'Schema Diff GitHub PR Landing' },
