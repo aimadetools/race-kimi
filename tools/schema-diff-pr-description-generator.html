@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.vercel-insights.com">
+  <link rel="dns-prefetch" href="https://cdn.vercel-insights.com">
+  <title>Schema Diff PR Description Generator — Migration Summary for Pull Requests | SchemaLens</title>
+  <meta name="description" content="Generate a production-ready pull request description from any SQL schema change. Includes risk score, breaking changes, migration SQL, rollback plan, and deploy checklist.">
+  <link rel="canonical" href="https://schemalens.tech/tools/schema-diff-pr-description-generator.html">
+  <meta property="og:title" content="Schema Diff PR Description Generator — Migration Summary for Pull Requests">
+  <meta property="og:description" content="Generate a production-ready pull request description from any SQL schema change. Includes risk score, breaking changes, migration SQL, rollback plan, and deploy checklist.">
+  <meta property="og:url" content="https://schemalens.tech/tools/schema-diff-pr-description-generator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://schemalens.tech/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schema Diff PR Description Generator — Migration Summary for Pull Requests">
+  <meta name="twitter:description" content="Generate a production-ready pull request description from any SQL schema change. Includes risk score, breaking changes, migration SQL, rollback plan, and deploy checklist.">
+  <meta name="twitter:image" content="https://schemalens.tech/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Schema Diff PR Description Generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Generates pull request descriptions from SQL schema diffs. Includes risk score, breaking change summary, migration SQL, rollback SQL, and deploy checklist.",
+    "url": "https://schemalens.tech/tools/schema-diff-pr-description-generator.html"
+  }
+  </script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <script>
+  (function() {
+    const saved = localStorage.getItem('schemalens-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (saved === 'light' || (!saved && prefersLight)) {
+      document.documentElement.dataset.theme = 'light';
+    }
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.dataset.theme === 'light';
+      document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+      localStorage.setItem('schemalens-theme', isLight ? 'dark' : 'light');
+    };
+  })();
+  </script>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+  <script src="../lib/analytics-client.js"></script>
+  <style>
+    .page-header { padding: 48px 0 24px; text-align: center; }
+    .page-header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 10px; }
+    .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto; }
+
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    @media (max-width: 960px) { .tool-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field label .hint { font-weight: 400; color: var(--text-muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 0.95rem; box-sizing: border-box;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 120px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .btn-copy { position: absolute; top: 12px; right: 12px; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .output-wrap { position: relative; }
+    .output { background: #0f172a; color: #e2e8f0; border-radius: var(--radius); padding: 20px; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; min-height: 200px; }
+    .output:empty::before { content: 'Your generated PR description will appear here...'; color: #64748b; }
+
+    .options { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+    .option { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; }
+    .option input { margin: 0; }
+
+    .upsell {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 20px;
+    }
+    .upsell h3 { font-size: 1rem; margin-bottom: 8px; }
+    .upsell ul { margin: 10px 0 14px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+    .upsell li { margin-bottom: 6px; }
+    .upsell a { color: var(--primary); font-weight: 600; }
+
+    .status { min-height: 22px; margin-top: 12px; font-weight: 500; font-size: 0.9rem; }
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--success); }
+
+    .preview-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .preview-tabs button { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.85rem; cursor: pointer; }
+    .preview-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .empty-help { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+    .empty-help ol { padding-left: 18px; }
+    .empty-help li { margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">
+        <span class="logo-mark">SL</span>
+        <span>SchemaLens</span>
+      </a>
+      <div class="nav-links">
+        <a href="../app.html">App</a>
+        <a href="../tools.html">Tools</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../github-action.html">GitHub Action</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Schema Diff PR Description Generator</h1>
+      <p>Paste two schema dumps and generate a production-ready pull request description with risk score, migration SQL, rollback plan, and deploy checklist.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="left-col">
+        <div class="panel">
+          <h2>1. Schemas to compare</h2>
+          <div class="field-row">
+            <div class="field">
+              <label for="dialect">SQL dialect</label>
+              <select id="dialect">
+                <option value="postgres">PostgreSQL</option>
+                <option value="mysql">MySQL / MariaDB</option>
+                <option value="sqlite">SQLite</option>
+                <option value="mssql">SQL Server</option>
+                <option value="oracle">Oracle</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="prTitle">PR title <span class="hint">(optional)</span></label>
+              <input type="text" id="prTitle" placeholder="e.g. Add user preferences table">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="oldSchema">Old schema (base branch)</label>
+            <textarea id="oldSchema" placeholder="CREATE TABLE users (id INT PRIMARY KEY, email VARCHAR(255));"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="newSchema">New schema (feature branch)</label>
+            <textarea id="newSchema" placeholder="CREATE TABLE users (id INT PRIMARY KEY, email VARCHAR(255), preferences JSONB);
+CREATE TABLE user_preferences (...);"></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="ticket">Ticket / issue <span class="hint">(optional)</span></label>
+              <input type="text" id="ticket" placeholder="e.g. PROJ-123">
+            </div>
+            <div class="field">
+              <label for="author">Author <span class="hint">(optional)</span></label>
+              <input type="text" id="author" placeholder="e.g. @alice">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="notes">Notes <span class="hint">(optional)</span></label>
+            <textarea id="notes" placeholder="Why is this change needed? Any special deployment considerations?"></textarea>
+          </div>
+
+          <div class="options">
+            <label class="option"><input type="checkbox" id="includeMigration" checked> Migration SQL</label>
+            <label class="option"><input type="checkbox" id="includeRollback" checked> Rollback SQL</label>
+            <label class="option"><input type="checkbox" id="includeChecklist" checked> Deploy checklist</label>
+            <label class="option"><input type="checkbox" id="includeAutomate" checked> Automate CTA</label>
+          </div>
+
+          <button class="btn btn-primary" id="generateBtn" style="width:100%;">Generate PR Description</button>
+          <p class="status" id="status"></p>
+        </div>
+
+        <div class="upsell">
+          <h3>🤖 Automate this on every PR</h3>
+          <ul>
+            <li>Auto-post schema diff summaries as PR comments.</li>
+            <li>Create GitHub Check Runs with risk scores.</li>
+            <li>Get Slack/Teams alerts for schema drift.</li>
+          </ul>
+          <a href="../github-action.html" class="btn btn-primary">Add SchemaLens GitHub Action →</a>
+          <span style="margin-left:12px;">or <a href="../team-buy.html">upgrade to Team</a> for shared workspaces.</span>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="panel" style="position:sticky;top:80px;">
+          <h2>2. Generated PR description</h2>
+          <div class="preview-tabs">
+            <button class="active" data-tab="markdown">Markdown</button>
+            <button data-tab="preview">Preview</button>
+          </div>
+          <div class="output-wrap">
+            <button class="btn btn-secondary btn-copy" id="copyBtn">Copy</button>
+            <div class="output" id="output" tabindex="0" aria-label="Generated PR description"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border);padding:40px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        Built with 💜 by <a href="../index.html">SchemaLens</a> ·
+        <a href="../open.html">Open Startup</a> ·
+        <a href="../privacy-policy.html">Privacy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../lib/analytics-client.js"></script>
+  <script>
+  (function() {
+    const oldSchema = document.getElementById('oldSchema');
+    const newSchema = document.getElementById('newSchema');
+    const dialect = document.getElementById('dialect');
+    const prTitle = document.getElementById('prTitle');
+    const ticket = document.getElementById('ticket');
+    const author = document.getElementById('author');
+    const notes = document.getElementById('notes');
+    const generateBtn = document.getElementById('generateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+
+    const includeMigration = document.getElementById('includeMigration');
+    const includeRollback = document.getElementById('includeRollback');
+    const includeChecklist = document.getElementById('includeChecklist');
+    const includeAutomate = document.getElementById('includeAutomate');
+
+    let currentMarkdown = '';
+    let currentTab = 'markdown';
+
+    // Pre-fill from URL params
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('dialect')) dialect.value = params.get('dialect');
+      if (params.get('old')) oldSchema.value = decodeURIComponent(params.get('old'));
+      if (params.get('new')) newSchema.value = decodeURIComponent(params.get('new'));
+      if (params.get('title')) prTitle.value = decodeURIComponent(params.get('title'));
+      if (params.get('ticket')) ticket.value = decodeURIComponent(params.get('ticket'));
+      if (params.get('author')) author.value = decodeURIComponent(params.get('author'));
+      if (params.get('notes')) notes.value = decodeURIComponent(params.get('notes'));
+    } catch (e) {}
+
+    function escapeMarkdown(str) {
+      return String(str).replace(/`/g, '\\`');
+    }
+
+    function renderPreview(md) {
+      // Simple markdown-to-HTML for preview
+      let html = md
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/^- \[ \] (.*$)/gim, '<div style="margin:4px 0;"><input type="checkbox" disabled style="margin-right:8px;">$1</div>')
+        .replace(/^- (.*$)/gim, '<li>$1</li>')
+        .replace(/```sql\n([\s\S]*?)\n```/g, '<pre style="background:#020617;padding:12px;border-radius:6px;overflow:auto;"><code>$1</code></pre>')
+        .replace(/```\n([\s\S]*?)\n```/g, '<pre style="background:#020617;padding:12px;border-radius:6px;overflow:auto;"><code>$1</code></pre>')
+        .replace(/`([^`]+)`/g, '<code style="background:#1e293b;padding:2px 4px;border-radius:4px;">$1</code>')
+        .replace(/\n/g, '<br>');
+      return html;
+    }
+
+    function renderOutput() {
+      if (currentTab === 'markdown') {
+        output.textContent = currentMarkdown;
+        output.style.whiteSpace = 'pre-wrap';
+      } else {
+        output.innerHTML = renderPreview(currentMarkdown);
+        output.style.whiteSpace = 'normal';
+      }
+    }
+
+    document.querySelectorAll('.preview-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preview-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        renderOutput();
+      });
+    });
+
+    generateBtn.addEventListener('click', async function() {
+      const oldText = oldSchema.value.trim();
+      const newText = newSchema.value.trim();
+
+      if (!oldText || !newText) {
+        status.textContent = 'Please paste both old and new schemas.';
+        status.className = 'status error';
+        return;
+      }
+
+      status.textContent = 'Generating diff...';
+      status.className = 'status';
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Analyzing...';
+
+      try {
+        const res = await fetch('/api/free-diff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            schemaA: oldText,
+            schemaB: newText,
+            dialect: dialect.value,
+            format: 'json'
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          status.textContent = data.error || 'Failed to generate diff. Please try again.';
+          status.className = 'status error';
+          generateBtn.disabled = false;
+          generateBtn.textContent = 'Generate PR Description';
+          return;
+        }
+
+        currentMarkdown = buildPRDescription(data);
+        renderOutput();
+
+        status.textContent = '✓ PR description generated. Click Copy to paste it into your pull request.';
+        status.className = 'status success';
+
+        if (window.SchemaLensAnalytics) {
+          window.SchemaLensAnalytics.track('tool_used', { tool: 'schema-diff-pr-description-generator', dialect: dialect.value });
+        }
+      } catch (err) {
+        status.textContent = 'Network error. Please check your connection and try again.';
+        status.className = 'status error';
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate PR Description';
+      }
+    });
+
+    function buildPRDescription(data) {
+      const s = data.summary || {};
+      const risk = data.riskScore || {};
+      const breaking = data.breakingChanges || [];
+      const migration = data.migration || '';
+      const rollback = data.rollback || '';
+
+      const title = prTitle.value.trim();
+      const ticketText = ticket.value.trim();
+      const authorText = author.value.trim();
+      const notesText = notes.value.trim();
+
+      const lines = [];
+
+      if (title) lines.push(`## ${title}`);
+      else lines.push('## Database schema changes');
+
+      if (ticketText) lines.push(`**Ticket:** ${ticketText}`);
+      if (authorText) lines.push(`**Author:** ${authorText}`);
+      if (notesText) lines.push('', `**Notes:** ${notesText}`);
+
+      lines.push(
+        '',
+        '## Schema diff summary',
+        '',
+        `| Metric | Value |`,
+        `|--------|-------|`,
+        `| Dialect | ${dialect.value} |`,
+        `| Risk score | **${risk.score ?? '—'}/100** — ${risk.label || '—'} |`,
+        `| Tables added | ${s.tablesAdded ?? 0} |`,
+        `| Tables removed | ${s.tablesRemoved ?? 0} |`,
+        `| Tables modified | ${s.tablesModified ?? 0} |`,
+        `| Breaking changes | ${breaking.length} |`,
+        ''
+      );
+
+      if (breaking.length > 0) {
+        lines.push('### ⚠️ Breaking changes');
+        breaking.forEach((bc, i) => {
+          const msg = typeof bc === 'string' ? bc : (bc.message || bc.description || JSON.stringify(bc));
+          lines.push(`${i + 1}. ${msg}`);
+        });
+        lines.push('');
+      }
+
+      if (includeMigration.checked && migration.trim()) {
+        lines.push(
+          '### Generated migration',
+          '',
+          '```sql',
+          migration.trim(),
+          '```',
+          ''
+        );
+      }
+
+      if (includeRollback.checked && rollback.trim()) {
+        lines.push(
+          '### Rollback',
+          '',
+          '```sql',
+          rollback.trim(),
+          '```',
+          ''
+        );
+      }
+
+      if (includeChecklist.checked) {
+        lines.push(
+          '### Pre-deploy checklist',
+          '',
+          '- [ ] Migration reviewed by a second engineer',
+          '- [ ] Rollback plan tested on a copy of production data',
+          '- [ ] Breaking changes communicated to dependents (APIs, analytics, ETL)',
+          '- [ ] Backups confirmed for affected databases',
+          '',
+          '### Deploy checklist',
+          '',
+          '- [ ] Run migration in a transaction or with a lock timeout',
+          '- [ ] Verify migration completes within maintenance window',
+          '- [ ] Monitor error rates and slow queries for 30 minutes post-deploy',
+          '',
+          '### Post-deploy verification',
+          '',
+          '- [ ] Schema matches target definition',
+          '- [ ] Application smoke tests pass',
+          '- [ ] Rollback command documented and executable',
+          ''
+        );
+      }
+
+      if (includeAutomate.checked) {
+        lines.push(
+          '---',
+          '',
+          '*Generated with [SchemaLens](https://schemalens.tech). Want this summary auto-posted on every PR? [Add the SchemaLens GitHub Action](https://schemalens.tech/github-action.html) in 60 seconds.*'
+        );
+      } else {
+        lines.push(
+          '---',
+          '',
+          '*Generated with [SchemaLens](https://schemalens.tech).*'
+        );
+      }
+
+      return lines.join('\n');
+    }
+
+    copyBtn.addEventListener('click', async function() {
+      if (!currentMarkdown) return;
+      try {
+        await navigator.clipboard.writeText(currentMarkdown);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1500);
+      } catch (err) {
+        // Fallback
+        const range = document.createRange();
+        range.selectNode(output);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+      }
+    });
+
+    // Initial empty state help
+    output.innerHTML = '<div class="empty-help"><p>Paste your old and new schema dumps, then click <strong>Generate PR Description</strong>.</p><ol><li>Old schema = the base branch (e.g., <code>main</code>)</li><li>New schema = the feature branch with your changes</li><li>Add optional PR metadata</li><li>Copy the markdown into your pull request</li></ol></div>';
+  })();
+  </script>
+</body>
+</html>
