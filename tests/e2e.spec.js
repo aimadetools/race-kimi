@@ -473,7 +473,7 @@ async function runDiffForBanner(page) {
   await page.waitForSelector('#results.active', { state: 'visible', timeout: 10000 });
 }
 
-test('app: pro value banner control variant renders above tabs', async ({ page }) => {
+test('app: pro value banner control variant renders save-revisit framing above tabs', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await page.evaluate(() => {
     localStorage.clear();
@@ -489,10 +489,10 @@ test('app: pro value banner control variant renders above tabs', async ({ page }
   await expect(banner).toBeVisible();
   await expect(banner).toHaveAttribute('data-variant', 'control');
   await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
-  await expect(banner.locator('.pro-value-title')).toContainText('Get more from this diff');
+  await expect(banner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
 });
 
-test('app: pro value banner v1 variant renders save-revisit framing above tabs', async ({ page }) => {
+test('app: pro value banner v1 variant renders power-features framing above tabs', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await page.evaluate(() => {
     localStorage.clear();
@@ -508,10 +508,10 @@ test('app: pro value banner v1 variant renders save-revisit framing above tabs',
   await expect(banner).toBeVisible();
   await expect(banner).toHaveAttribute('data-variant', 'v1');
   await expect(banner).toHaveAttribute('data-placement', 'above_tabs');
-  await expect(banner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
+  await expect(banner.locator('.pro-value-title')).toContainText('Unlock every power feature');
 });
 
-test('app: pro value banner v2 variant renders inside visual panel', async ({ page }) => {
+test('app: pro value banner v2 variant renders save-revisit framing inside visual panel', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await page.evaluate(() => {
     localStorage.clear();
@@ -530,10 +530,10 @@ test('app: pro value banner v2 variant renders inside visual panel', async ({ pa
   await expect(visualBanner).toBeVisible();
   await expect(visualBanner).toHaveAttribute('data-variant', 'v2');
   await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
-  await expect(visualBanner.locator('.pro-value-title')).toContainText('Get more from this diff');
+  await expect(visualBanner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
 });
 
-test('app: pro value banner v3 variant renders save-revisit framing inside visual panel', async ({ page }) => {
+test('app: pro value banner v3 variant renders power-features framing inside visual panel', async ({ page }) => {
   await page.goto(`${BASE_URL}/app.html`);
   await page.evaluate(() => {
     localStorage.clear();
@@ -552,7 +552,7 @@ test('app: pro value banner v3 variant renders save-revisit framing inside visua
   await expect(visualBanner).toBeVisible();
   await expect(visualBanner).toHaveAttribute('data-variant', 'v3');
   await expect(visualBanner).toHaveAttribute('data-placement', 'inside_visual');
-  await expect(visualBanner.locator('.pro-value-title')).toContainText('Save & revisit every diff');
+  await expect(visualBanner.locator('.pro-value-title')).toContainText('Unlock every power feature');
 });
 
 test('app: ORM export generates Prisma and Drizzle schemas', async ({ page }) => {

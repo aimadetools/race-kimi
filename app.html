@@ -1909,7 +1909,7 @@ function getFreeTierLimit() {
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      cd.textContent = days + 'd ' + hours + 'h ' + mins + 'm left';
+      cd.textContent = days + 'd ' + hours + 'h ' + mins + 'm';
     }
     update();
     setInterval(update, 60000);
@@ -5056,9 +5056,9 @@ function closeProPreviewInterstitial() {
 
 function revealDiffResults(confidenceA, confidenceB) {
   // Re-uses the globals set during compare
-  const diff = window.lastDiff;
-  const migrationSQL = window.lastMigrationSQL;
-  const rollbackSQL = window.lastRollbackSQL;
+  const diff = lastDiff;
+  const migrationSQL = lastMigrationSQL;
+  const rollbackSQL = lastRollbackSQL;
   const breakingChanges = window.lastBreakingChanges || [];
   const risk = window.lastRiskScore || 0;
 
@@ -5089,9 +5089,7 @@ function revealDiffResults(confidenceA, confidenceB) {
 
   document.getElementById('results').classList.add('active');
   document.getElementById('welcomeHint').classList.add('hidden');
-  console.log('DEBUG reveal: setting loading false');
   setCompareLoading(false);
-  console.log('DEBUG reveal: loading false set');
 
   const newDiffCount = incrementDiffCount();
   if (newDiffCount === 1) {
@@ -9234,7 +9232,6 @@ function showError(msg) {
 }
 
 document.getElementById('compareBtn').addEventListener('click', () => {
-  console.log('DEBUG compare: start');
   const sqlA = document.getElementById('schemaA').value;
   const sqlB = document.getElementById('schemaB').value;
   const dialect = document.getElementById('dialect').value;
@@ -9247,34 +9244,26 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   }
 
   setCompareLoading(true);
-  console.log('DEBUG compare: loading true');
 
   let schemaA, schemaB, diff;
   try {
-    console.log('DEBUG compare: parsing A');
     schemaA = parseSQL(sqlA, dialect);
-    console.log('DEBUG compare: parsing B');
     schemaB = parseSQL(sqlB, dialect);
-    console.log('DEBUG compare: parsed');
   } catch (e) {
     showError('Parse error: ' + e.message);
     setCompareLoading(false);
     return;
   }
 
-  console.log('DEBUG compare: diffing');
   diff = diffSchemas(schemaA, schemaB);
   diff.schemaA = schemaA;
   diff.schemaB = schemaB;
-  console.log('DEBUG compare: generating migration');
   const migrationSQL = generateMigration(diff, dialect);
-  console.log('DEBUG compare: generating rollback');
   const rollbackSQL = generateRollbackMigration(diff, dialect);
   lastMigrationSQL = migrationSQL;
   lastRollbackSQL = rollbackSQL;
   lastDiff = diff;
 
-  console.log('DEBUG compare: confidence/breaking');
   const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
   const confidenceB = calculateConfidence(sqlB, dialect, schemaB);
   const breakingChanges = detectBreakingChanges(diff);
@@ -9310,18 +9299,14 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   // Auto-send webhook if configured
   maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect);
 
-  console.log('DEBUG compare: before interstitial check, variant=', window.SchemaLensPaywallVariantV2);
   // Paywall timing A/B test v2: show Pro preview interstitial before result for interstitial variant
   if (shouldShowProInterstitial()) {
-    console.log('DEBUG compare: showing interstitial');
     setCompareLoading(false);
     openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingChanges, risk);
     return;
   }
 
-  console.log('DEBUG compare: revealing results');
   revealDiffResults(confidenceA, confidenceB);
-  console.log('DEBUG compare: done');
 });
 
 document.getElementById('clearBtn').addEventListener('click', () => {
