@@ -1775,9 +1775,8 @@ function getFreeTierLimit() {
 </head>
 <body>
   <div class="announcement-bar">
-    🚀 Launch week special — lock in early-access pricing before it goes up. <a href="pricing.html">View pricing →</a>
+    🏁 Final Week — Lifetime Pro <strong>$39</strong> until July 10. <a href="launch-special.html">Claim yours →</a>
   </div>
-  <script>(function(){const end=new Date('2026-05-21T23:59:59Z');if(Date.now()>end){document.querySelectorAll('.announcement-bar').forEach(el=>el.style.display='none');}})();</script>
     <div id="offlineBanner" class="offline-banner">You're offline. Your last diff is still available.</div>
   <nav class="nav">
     <div class="container nav-inner">
@@ -2312,24 +2311,22 @@ DROP TABLE audit_logs;</code></pre>
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);">Rollback Safety Net</span>
-              <span style="font-size:0.7rem;color:var(--warning);font-weight:600;background:rgba(245,158,11,0.1);padding:2px 8px;border-radius:12px;">Pro</span>
+              <span style="font-size:0.7rem;color:var(--success);font-weight:600;background:rgba(34,197,94,0.1);padding:2px 8px;border-radius:12px;">Free</span>
             </div>
-            <pre id="proInterstitialRollback" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.75rem;overflow-x:auto;color:var(--text);line-height:1.5;max-height:140px;filter:blur(3px);opacity:0.6;"><code></code></pre>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-              <span style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.75rem;color:var(--text-muted);box-shadow:0 4px 12px rgba(0,0,0,0.2);">Unlock Pro to view rollback</span>
-            </div>
+            <pre id="proInterstitialRollback" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:0.75rem;overflow-x:auto;color:var(--text);line-height:1.5;max-height:140px;"><code></code></pre>
+            <div style="position:absolute;bottom:14px;left:14px;right:14px;height:48px;background:linear-gradient(transparent,var(--surface));"></div>
           </div>
         </div>
 
         <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:14px 16px;margin-bottom:18px;">
           <div style="font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:8px;">✨ What Pro unlocks for this diff</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px 14px;font-size:0.82rem;color:var(--text);">
-            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Export Markdown / PDF / JSON</div>
             <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Shareable diff links</div>
             <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Unlimited saved diff history</div>
-            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Full rollback migration</div>
             <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Access to 80+ micro-tools</div>
             <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Priority email support</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> No exit-intent popups</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--success);">✓</span> Early access to new features</div>
           </div>
         </div>
 
@@ -5203,10 +5200,10 @@ function buildProValueBannerHTML(variant, placement) {
     ? window.ProValueBannerAB.getCopy(variant)
     : {
         headline: '✨ Get more from this diff',
-        body: 'The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run. Lifetime Pro is $39 until July 10, then $79.',
-        features: ['📄 Export Markdown / PDF / JSON', '🔗 Copy a shareable diff link', '🕐 Revisit past diffs anytime'],
+        body: 'The visual diff, migration SQL, rollback, and exports are free forever. Pro adds saved diff history, shareable links, all 80+ micro-tools, and priority support. Lifetime Pro is $39 until July 10, then $79.',
+        features: ['🕐 Revisit past diffs anytime', '🔗 Copy a shareable diff link', '🛠️ Access 80+ micro-tools', '💬 Priority email support'],
         ctaPrimary: '⚡ Get Lifetime Pro — $39',
-        framing: 'export_share',
+        framing: 'save_revisit',
       };
 
   const featuresHtml = copy.features.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('');
