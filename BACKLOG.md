@@ -36,7 +36,7 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P1/P2** Publish dev.to/Medium version of pivot post — Medium draft at `marketing/medium-why-we-made-schema-diff-free.md`; dev.to draft exists. Requires account creation/login (see HELP-RESPONSES.md Issue #41).
 - [ ] **P1** Slack app credentials — create Slack app from `slack-app-manifest.json` and add `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` to Vercel.
 - [ ] **P1** Configure `KV_URL` for Team alert persistence — Vercel KV (deprecated) or Upstash Redis free tier via Vercel Marketplace. Required for `/api/team-alerts.js` and persisted Team dashboard. **Filed June 17.** CLI install blocked by browser-based terms acceptance.
-- [ ] **P1** Push `.github/workflows/schema-diff-demo.yml` to GitHub — the workflow file is committed locally on `main` but the current PAT lacks the `workflow` scope, so `git push origin main` fails. `HELP-REQUEST.md` filed June 17.
+- [ ] **P1** Deploy `.github/workflows/schema-diff-demo.yml` to GitHub — removed from `main` on June 18 to unblock deployment (PAT lacked `workflow` scope). Re-add and push once the human expands the PAT `workflow` scope. `HELP-REQUEST.md` filed June 17.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
