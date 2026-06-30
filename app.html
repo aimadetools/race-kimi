@@ -1837,7 +1837,7 @@ function getFreeTierLimit() {
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
         <span style="font-size:1.2rem;">🏁</span>
-        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Race to the Finish — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — Help SchemaLens win the $100 AI Startup Race. <strong>Lifetime Pro for $39</strong>. <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;text-decoration:underline;">Claim Pro →</a></span>
+        <span style="font-size:0.9rem;color:var(--text);"><strong>🏁 Final Week — <span id="raceToFinishCountdown" style="color:var(--danger);font-weight:600;"></span> left</strong> — The $100 AI Startup Race ends July 10. <strong>Lifetime Pro for $39</strong>. <a href="launch-special.html" style="color:var(--danger);font-weight:600;text-decoration:underline;">See the offer →</a></span>
       </div>
       <button onclick="dismissRaceToFinishBanner()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;" aria-label="Dismiss banner">×</button>
     </div>
@@ -2205,8 +2205,9 @@ CREATE TABLE users (
 
   <div class="modal-overlay" id="licenseModal">
     <div class="modal">
+      <div style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
       <h3>🔓 Unlock SchemaLens Pro</h3>
-      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">The web diff is free forever. Pro adds power features for developers who live in their database. <strong>Lifetime Pro is $39 until July 10</strong>, then $79.</p>
       <ul style="font-size:0.85rem;color:var(--text);margin:0 0 14px 18px;padding:0;line-height:1.7;">
         <li>Unlimited diff history & saved diffs</li>
         <li>Shareable diff links with custom names</li>
@@ -2291,8 +2292,9 @@ DROP TABLE audit_logs;</code></pre>
   <div class="modal-overlay" id="proPreviewInterstitial">
     <div class="modal" style="max-width: 720px; max-height: 92vh; overflow-y: auto; padding: 0;">
       <div style="padding: 28px 28px 18px;">
+        <div style="display:inline-block;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--danger);font-weight:700;margin-bottom:10px;">🏁 Final Week — ends July 10</div>
         <h3 style="margin-bottom:6px;">🚀 Your schema diff is ready</h3>
-        <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:16px;">The visual diff and full migration SQL are <strong>free forever</strong>. Pro adds the power features teams rely on when shipping database changes every week.</p>
+        <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:16px;">The visual diff and full migration SQL are <strong>free forever</strong>. Pro adds the power features teams rely on when shipping database changes every week. <strong style="color:var(--text);">Lifetime Pro is $39 until July 10</strong>, then it moves to $79.</p>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="proInterstitialBadges">
           <!-- populated by JS -->
@@ -2332,7 +2334,7 @@ DROP TABLE audit_logs;</code></pre>
         </div>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;">
-          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" id="proInterstitialBuyBtn" class="btn btn-primary gumroad-button" style="flex:1;min-width:200px;text-align:center;" target="_blank" rel="noopener">⚡ Unlock Pro — $39 lifetime</a>
+          <a href="https://gumroad.com/l/schemalens-lifetime?wanted=true" id="proInterstitialBuyBtn" class="btn btn-primary gumroad-button" style="flex:1;min-width:200px;text-align:center;" target="_blank" rel="noopener">⚡ Get Lifetime Pro — $39 (Final Week)</a>
           <a href="team-buy.html?utm_source=pro-interstitial" id="proInterstitialTeamBtn" class="btn btn-secondary" style="flex:1;min-width:200px;text-align:center;">👥 See Team plan</a>
         </div>
         <div style="text-align:center;">
@@ -5090,7 +5092,9 @@ function revealDiffResults(confidenceA, confidenceB) {
 
   document.getElementById('results').classList.add('active');
   document.getElementById('welcomeHint').classList.add('hidden');
+  console.log('DEBUG reveal: setting loading false');
   setCompareLoading(false);
+  console.log('DEBUG reveal: loading false set');
 
   const newDiffCount = incrementDiffCount();
   if (newDiffCount === 1) {
@@ -5199,9 +5203,9 @@ function buildProValueBannerHTML(variant, placement) {
     ? window.ProValueBannerAB.getCopy(variant)
     : {
         headline: '✨ Get more from this diff',
-        body: 'The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run.',
+        body: 'The visual diff and migration SQL are free forever. Pro adds exports, shareable links, and a history of every diff you run. Lifetime Pro is $39 until July 10, then $79.',
         features: ['📄 Export Markdown / PDF / JSON', '🔗 Copy a shareable diff link', '🕐 Revisit past diffs anytime'],
-        ctaPrimary: '⚡ Unlock Pro — $39 lifetime',
+        ctaPrimary: '⚡ Get Lifetime Pro — $39',
         framing: 'export_share',
       };
 
@@ -9233,6 +9237,7 @@ function showError(msg) {
 }
 
 document.getElementById('compareBtn').addEventListener('click', () => {
+  console.log('DEBUG compare: start');
   const sqlA = document.getElementById('schemaA').value;
   const sqlB = document.getElementById('schemaB').value;
   const dialect = document.getElementById('dialect').value;
@@ -9245,26 +9250,34 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   }
 
   setCompareLoading(true);
+  console.log('DEBUG compare: loading true');
 
   let schemaA, schemaB, diff;
   try {
+    console.log('DEBUG compare: parsing A');
     schemaA = parseSQL(sqlA, dialect);
+    console.log('DEBUG compare: parsing B');
     schemaB = parseSQL(sqlB, dialect);
+    console.log('DEBUG compare: parsed');
   } catch (e) {
     showError('Parse error: ' + e.message);
     setCompareLoading(false);
     return;
   }
 
+  console.log('DEBUG compare: diffing');
   diff = diffSchemas(schemaA, schemaB);
   diff.schemaA = schemaA;
   diff.schemaB = schemaB;
+  console.log('DEBUG compare: generating migration');
   const migrationSQL = generateMigration(diff, dialect);
+  console.log('DEBUG compare: generating rollback');
   const rollbackSQL = generateRollbackMigration(diff, dialect);
   lastMigrationSQL = migrationSQL;
   lastRollbackSQL = rollbackSQL;
   lastDiff = diff;
 
+  console.log('DEBUG compare: confidence/breaking');
   const confidenceA = calculateConfidence(sqlA, dialect, schemaA);
   const confidenceB = calculateConfidence(sqlB, dialect, schemaB);
   const breakingChanges = detectBreakingChanges(diff);
@@ -9300,14 +9313,18 @@ document.getElementById('compareBtn').addEventListener('click', () => {
   // Auto-send webhook if configured
   maybeAutoWebhook(diff, migrationSQL, breakingChanges, dialect);
 
+  console.log('DEBUG compare: before interstitial check, variant=', window.SchemaLensPaywallVariantV2);
   // Paywall timing A/B test v2: show Pro preview interstitial before result for interstitial variant
   if (shouldShowProInterstitial()) {
+    console.log('DEBUG compare: showing interstitial');
     setCompareLoading(false);
     openProPreviewInterstitial(diff, migrationSQL, rollbackSQL, breakingChanges, risk);
     return;
   }
 
+  console.log('DEBUG compare: revealing results');
   revealDiffResults(confidenceA, confidenceB);
+  console.log('DEBUG compare: done');
 });
 
 document.getElementById('clearBtn').addEventListener('click', () => {

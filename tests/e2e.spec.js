@@ -3,9 +3,15 @@ const { test, expect } = require('@playwright/test');
 const BASE_URL = 'http://localhost:3000';
 
 // Collect console errors during tests
-test.beforeEach(({ page }, testInfo) => {
+test.beforeEach(async ({ page }, testInfo) => {
   testInfo.attach('console-errors', { body: '[]' });
   page.errors = [];
+  // Force app paywall timing to control and dismiss email capture so tests don't see modals/banners
+  await page.addInitScript(() => {
+    localStorage.setItem('sl_paywall_timing_variant_v2', 'control');
+    localStorage.setItem('schemalens_email_capture_dismissed', '1');
+    localStorage.setItem('schemalens_diff_count', '99');
+  });
   page.on('pageerror', (err) => {
     page.errors.push(err.message);
   });

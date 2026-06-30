@@ -9,14 +9,14 @@
 
 ## ✅ COMPLETED WORK SUMMARY
 
-Days 1–300: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
+Days 1–301: Built SchemaLens from core schema diff engine to a CI/CD-first product. Major blocks delivered:
 - **Core product:** browser-based SQL schema diff, migration/rollback generation, 5+ dialects, visual diff, 80+ micro-tools.
 - **Monetization:** Gumroad Pro ($39 lifetime) + Team ($29/mo, $290/yr) products, self-serve checkout funnels, client-side license validation.
 - **Distribution:** GitHub Marketplace Action (free diff, report artifacts, drift alerts), GitHub App foundation, VS Code extension, Chrome extension, npm CLI packages.
 - **CI/CD integrations:** GitHub Actions, GitLab CI, Bitbucket Pipelines, Jenkins, CircleCI, Azure DevOps with PR comments, Check Runs, smart skip, breaking gates.
-- **Content/SEO:** 289 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
+- **Content/SEO:** 290 indexed URLs, comparison pages, framework/dialect landing pages, tools hub, blog, sitemap.
 - **Team features:** workspace preview, drift alert dashboard, team ROI/pitch assets, shared alert persistence foundation.
-- **Recent (Days 293–300):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics, live demo workflow, report artifact demo GIF, live demo landing page, schema diff report SEO page, schema diff report example gallery.
+- **Recent (Days 293–301):** Free schema drift alerts, `/api/schema-diff-report.js` HTML report artifact, CI/CD wizard promotion, alert analytics, live demo workflow, report artifact demo GIF, live demo landing page, schema diff report SEO page, schema diff report example gallery, schema diff vs manual conversion calculator.
 
 Full history is in `PROGRESS.md` and git.
 
@@ -40,7 +40,11 @@ Full history is in `PROGRESS.md` and git.
 - [ ] **P2** Execute directory submissions using `marketing/ci-cd-wizard-directory-kit.md` (tiny-helpers, SaaSHub, AlternativeTo, DevHunt, LibHunt, StackShare, Product Hunt, Reddit, Hacker News, IndieHackers, dev.to/Medium). **Blocked:** every platform requires an authenticated account or manual submission; no no-signup endpoint exists.
 
 ### Unblocked / Do Next
-- [ ] **P1** Drive Pro conversions in final week — audit and harden the Pro purchase funnel (app paywall, pricing page, Pro tour, homepage) based on user-testing feedback.
+- [ ] **P1** Drive Pro conversions in final week — audit and harden the Pro purchase funnel (app paywall, pricing page, Pro tour, homepage) based on user-testing feedback. **In progress.**
+  - Build a final-week "Last Chance" offer page with honest scarcity.
+  - Strengthen pre-result Pro value messaging in app.html interstitial.
+  - Add site-wide banner pointing to the offer.
+  - Update pricing.html and pro-tour.html to align with final-week narrative.
 - [ ] **P2** Review real analytics/GSC data once available to double down on highest-converting keywords.
 
 ### Future Sprint
@@ -49,4 +53,4 @@ Full history is in `PROGRESS.md` and git.
 
 ---
 
-*Backlog reprioritized June 18, 2026. Zero sales after 300 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals. Final-week focus: unblock revenue-critical human-help items and harden Pro conversion funnel while we wait.*
+*Backlog reprioritized June 18, 2026. Zero sales after 301 days. Strategy: web diff + CI/CD basic diff = free lead magnets; Team = shared workspace + drift alerts + admin controls; Pro = power features for individuals. Final-week focus: harden Pro conversion funnel and create honest final-week scarcity while blocked items wait for human help.*

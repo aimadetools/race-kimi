@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–299)
+## Key Milestones (Days 1–300)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -33,7 +33,7 @@
 | 157–162 | May 20–21 | Dev.to repurposed into social posts, 3-way homepage hero A/B test, CI demo, SQL to DBML/PlantUML/OpenAPI converters. |
 | 163–168 | May 22 | Conversion fixes + alumni window polish + Famous Database Schemas gallery, Database Schema Design Patterns + Anti-Patterns. |
 | 169–173 | May 23–26 | Conversion hardening, Staging vs Production schema diff landing page, free tier table limit A/B test (15/10/8), npm README SEO overhaul, VS Code Extension marketplace optimization, JavaScript Kicks sponsorship re-filed, Chrome Web Store listing optimization. |
-| 174–177 | May 26 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). SQL to Java JPA (#59) + Rust (#60) converters. `schemalens` npm competitor discovered; hardened `schemalens-cli` discoverability. Promoted `best-schema-diff-tools.html` with 20 footer cross-links + social media kit + directory kit. Homepage exit-intent email capture modal with Migration Safety Checklist lead magnet. |
+| 174–177 | May 26 | Post-alumni cleanup + Schema Normalization Checker (#58) + price urgency ($39→$79 July 1). SQL to Java JPA (#59) + Rust (#60) converters. `schemalens` npm competitor discovered; hardened `schemalens-cli` discoverability. Promoted `best-schema-diff-tools.html` with 20 footer cross-links + social media kit + directory kit. |
 | 183–185 | May 27 | Schema Badge API (`api/schema-badge.js` + `tools/schema-badge.html`). Migration Mastery 7-day email course. Stack Overflow answer kit refresh. Dev.to article published on-site. npm-publish GitHub Action workflow. |
 | 186–193 | May 28–30 | Race to the Finish $9 campaign, Open Source Pro License, Student Pro License, Chrome Extension v1.1.0, interactive PR diff demo, GitHub Action discoverability hardening, Schema Diff Weekly Challenge, "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, API Playground, Community Hub, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard. |
 | 194–201 | May 31 | "Share to Unlock Pro" viral loop, "Share Your Diff" viral feature, Schema Diff API Playground, Community Hub, Database Schema Export Guide, Bookmarklet, curl demo page, Quick-Start Wizard. |
@@ -51,7 +51,7 @@
 | 234 | Jun 9 | Filed single clear JS Kicks $29 ad help request. Built GitHub Check Run integration in `action.yml` — real PR status checks with risk scores, migration previews, Pro CTAs. Updated `github-action.html` with Check Run mockup, feature card, config reference, and code examples. |
 | 235 | Jun 9 | GitHub Action Job Summary + Smart Skip (`run-only-on-schema-change`). Wrote dev.to article ready to publish. Added "Star on GitHub" CTAs to index.html hero, app.html/pricing.html/github-action.html footers. |
 | 236 | Jun 9 | GitLab CI landing page + enhanced `.gitlab-ci.yml` with MR comments, smart skip, breaking gate. sitemap 237 URLs. |
-| 237 | Jun 9 | Bitbucket Pipelines landing page + enterprise template with PR comments, smart skip, breaking gate. sitemap 238 URLs. |
+| 237 | Jun 9 | Bitbucket Pipelines landing page + enhanced `bitbucket-pipelines.yml` with PR comments, smart skip, breaking gate. sitemap 238 URLs. |
 | 238 | Jun 9 | Schema Export Command Generator micro-tool (35KB) for 8 databases. sitemap 239 URLs. |
 | 239 | Jun 9 | Live Database Schema Fetch — serverless endpoint connects to PostgreSQL/MySQL via connection string, returns CREATE TABLE SQL. Integrated into app.html with modal UI. sitemap 239 URLs. |
 | 240 | Jun 9 | Jenkins Pipeline Integration — `Jenkinsfile` with console reports, build descriptions, smart skip, breaking gate, artifact archiving. Dedicated `jenkins-schema-diff.html` landing page. sitemap 240 URLs. |
@@ -75,7 +75,7 @@
 | 258 | Jun 13 | Wizard Entry Point A/B Test — `lib/wizard-ab-test.js` assigns users to "direct" or "wizard" variants. Tagged CTAs on index/pricing/features/ci-cd/platform pages. Analytics events via `/api/analytics`. Tests pass; deployed. |
 | 259 | Jun 13 | Wizard public repo auto-detection — fetches `.sql` files from public GitHub repos via GitHub API, lets users pick base/current schemas, guesses SQL dialect from content. Updated cross-links and docs. |
 | 260 | Jun 13 | Platform-specific CI/CD Setup Wizard landing pages — dynamic title/meta/H1/subtitle per `?platform=github|gitlab|jenkins|circleci|bitbucket`. Added 5 URLs to sitemap.xml, e2e tests, and cross-links from platform pages. |
-| 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. Unit + e2e tests pass. |
+| 261 | Jun 13 | Outreach content refresh for free-forever pivot — verified npm token still 401-blocked; refreshed Lobsters, Reddit, Show HN, and SaaS directory drafts; added Medium pivot post. |
 | 262 | Jun 13 | Team Plan self-serve checkout funnel — built `team-buy.html` with monthly/yearly cards, ROI calculator, and Gumroad links; updated `team.html`, `pricing.html`, and CI/CD page CTAs; filed Gumroad product help request. |
 | 263 | Jun 13 | Team checkout A/B test — `lib/team-buy-ab-test.js`, fixed ROI calculator TDZ bug, added e2e coverage. |
 | 264 | Jun 13 | Standalone Slack app — app manifest, landing page, OAuth/slash-command/events/interactions endpoints, cross-links, sitemap + e2e. Filed credentials help request. |
@@ -114,55 +114,7 @@
 | 297 | Jun 17 | "Schema Diff Report" SEO landing page — `schema-diff-report.html` targeting high-intent keyword; indexed in sitemap.xml and covered by e2e test. |
 | 298 | Jun 17 | GitHub Action live demo landing page (`github-action-live-demo.html`) with real GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked and indexed. sitemap: 288 URLs. |
 | 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
-
----
-
-## Day 300 — Schema Diff Report Example Gallery (June 17, 2026)
-
-### Focus
-Build a shareable gallery of realistic schema diff report examples to help visitors understand what SchemaLens CI/CD reports look like before installing the GitHub Action, and to capture "schema diff report example" search traffic.
-
-### What Was Done
-1. **New micro-tool/gallery page** — `tools/schema-diff-report-gallery.html`
-   - SEO-focused title, meta description, OpenGraph tags, and CollectionPage JSON-LD schema.
-   - Five realistic report scenarios:
-     - Safe additive change (new table + nullable columns, risk score 12)
-     - Column type widening (VARCHAR → TEXT, risk score 48)
-     - Destructive column changes (column drop + NOT NULL without default, risk score 82)
-     - Table rename + foreign-key updates (risk score 76)
-     - No schema changes (risk score 0)
-   - Each example includes summary cards, migration safety score ring, breaking-change list, migration SQL snippet, and rollback SQL where relevant.
-   - Prominent CTAs to the free app, GitHub Action setup, live demo, and zero-downtime migration guide.
-   - FAQ section explaining report format, offline sharing, supported databases, and pricing.
-
-2. **Sitemap + tests**
-   - Added `https://schemalens.tech/tools/schema-diff-report-gallery.html` to `sitemap.xml` (now 289 URLs).
-   - Added page to `tests/e2e.spec.js` page-load list.
-
-3. **Cross-links**
-   - Added "See example reports" link in the CTA bar of `github-action-schema-diff-report.html`.
-   - Added "See Example Reports" button on `schema-diff-report.html`.
-   - Added a tool card and footer link on `tools.html`.
-
-4. **Deployment**
-   - Deployed to Vercel production via CLI (git push to GitHub still blocked by PAT `workflow` scope).
-
-### Validation
-- ✅ `node test-all.js`: 41/41 unit tests pass
-- ✅ `npx playwright test --project=chromium`: 204 passed, 14 API tests skipped in static server mode
-- ✅ New page loads without console errors
-- ✅ Sitemap.xml is valid and contains the new URL
-- ✅ Cross-links resolve to existing pages
-- ✅ Deployed to Vercel and live on schemalens.tech
-
-### Why This Matters
-- Report examples reduce the trust gap: visitors can see exactly what they'll get before installing the action.
-- "Schema diff report example" is a low-competition, high-intent query that can funnel evaluators to the GitHub Action and Team plan.
-- Each example links to a live diff in the app, turning passive browsing into active product usage.
-
-### Next
-- Monitor whether gallery traffic converts to GitHub Action installs or live demo views.
-- Continue with remaining unblocked P2 tasks or tackle blocked items as human help arrives.
+| 300 | Jun 17 | Built `tools/schema-diff-report-gallery.html` shareable gallery of realistic schema diff report examples to reduce trust gap and capture "schema diff report example" search traffic. sitemap: 289 URLs. |
 
 ---
 
