@@ -1,6 +1,6 @@
 # PROGRESS.md — SchemaLens Build Log
 
-## Key Milestones (Days 1–300)
+## Key Milestones (Days 1–299)
 
 | Day | Date | Milestone |
 |-----|------|-----------|
@@ -114,7 +114,36 @@
 | 297 | Jun 17 | "Schema Diff Report" SEO landing page — `schema-diff-report.html` targeting high-intent keyword; indexed in sitemap.xml and covered by e2e test. |
 | 298 | Jun 17 | GitHub Action live demo landing page (`github-action-live-demo.html`) with real GitHub API status, demo GIF, copy-paste YAML, and Team CTAs; cross-linked and indexed. sitemap: 288 URLs. |
 | 299 | Jun 17 | Restored `.github/workflows/schema-diff-demo.yml` locally; push blocked by PAT `workflow` scope. Live demo page deployed. |
-| 300 | Jun 17 | Built `tools/schema-diff-report-gallery.html` shareable gallery of realistic schema diff report examples to reduce trust gap and capture "schema diff report example" search traffic. sitemap: 289 URLs. |
+
+---
+
+## Day 300 — Schema Diff Report Example Gallery (June 17, 2026)
+
+### Focus
+Reduce the trust gap for evaluators searching for "schema diff report example" by showing realistic before/after reports they can inspect before using the tool.
+
+### What Was Done
+1. **New gallery micro-tool** — `tools/schema-diff-report-gallery.html`
+   - 5 realistic report scenarios: safe additive changes, type widening, destructive changes, table rename, and no changes.
+   - Each scenario includes risk score, breaking-change flags, migration SQL preview, and rollback SQL preview.
+   - SEO title/meta targeting "schema diff report example" keywords.
+   - Share buttons and CTA to run the same diff in the free app.
+
+2. **Cross-links**
+   - Linked from `github-action-schema-diff-report.html`, `schema-diff-report.html`, and `tools.html`.
+
+3. **Sitemap + tests**
+   - Added to `sitemap.xml` (289 URLs).
+   - Added to `tests/e2e.spec.js` page-load list.
+
+### Validation
+- ✅ Page loads without console errors
+- ✅ Gallery scenarios render realistic migration/rollback examples
+- ✅ Cross-links resolve correctly
+
+### Why This Matters
+- Gives prospects a concrete preview of SchemaLens output before they paste their own schemas.
+- Captures high-intent "schema diff report example" search traffic and funnels it to the app.
 
 ---
 
@@ -160,7 +189,56 @@ Change approach after three consecutive CI/CD/report days by building a conversi
 - Provides a manager-friendly asset engineers can share to justify Pro/Team purchase.
 - Adds another indexed page targeting comparison-intent keywords, funneling evaluators to the free app and paid plans.
 
-### Next
-- Monitor whether comparison-page traffic converts to Pro purchases or GitHub Action installs.
-- Harden the Pro conversion funnel in the app and pricing page based on the same user-testing feedback while blocked items wait for human help.
+---
 
+## Day 302 — Pro Conversion Funnel Hardening (June 30, 2026)
+
+### Focus
+Execute the top unblocked P1 backlog task: audit and harden the Pro purchase funnel in the final week before the July 10 price increase, while fixing bugs introduced by the partial interstitial implementation.
+
+### What Was Done
+1. **Critical bug fix — `revealDiffResults` scope bug**
+   - The pre-result Pro preview interstitial commit read `window.lastDiff`, `window.lastMigrationSQL`, and `window.lastRollbackSQL`, but those variables are module-scoped `let` declarations, not `window` properties.
+   - This caused the compare flow to silently return early for the control variant, leaving the "Comparing…" button stuck and results hidden.
+   - Fixed `revealDiffResults` to read the module-scoped variables directly.
+   - Removed leftover `console.log` debug statements from the compare function.
+
+2. **Pro preview interstitial copy aligned with free-forever pivot**
+   - Changed rollback preview label from "Pro" to "Free" and removed the blur overlay — rollback is free forever.
+   - Updated the "What Pro unlocks" list to actual Pro-only features: shareable links, saved diff history, 80+ micro-tools, priority support, no exit-intent popups, early access.
+   - Removed exports from the Pro exclusivity claims in the interstitial.
+
+3. **Pro value banner A/B test copy cleanup**
+   - Updated `lib/pro-value-banner-ab-test.js` and the fallback copy in `app.html` to remove "Export Markdown/PDF/JSON" as a Pro feature.
+   - Replaced with "Save & Revisit" and "Unlock every power feature" framings focused on history, share links, micro-tools, and support.
+   - Updated `tests/e2e.spec.js` assertions to match the new variant copy.
+
+4. **Site-wide final-week banner consistency**
+   - Updated `app.html` announcement bar from stale "Launch week special" (hidden after May 21) to "🏁 Final Week — Lifetime Pro $39 until July 10" linking to `launch-special.html`.
+   - Updated `blog.html` announcement bar to include the final-week offer link while keeping the free-forever message.
+   - Fixed duplicate "left" in the Race to Finish countdown (`10d 2h 27m left left` → `10d 2h 27m left`).
+
+5. **Pricing page FAQ accuracy**
+   - Fixed the "Can I try Pro before buying?" FAQ to clarify that exports are free forever and the 24-hour trial covers saved history, share links, and micro-tools.
+
+6. **Deployment + documentation**
+   - Committed changes with descriptive message.
+   - Deployed to Vercel production (aliased to `schemalens.tech`).
+   - Updated `PROGRESS.md` (this entry) and `BACKLOG.md`.
+
+### Validation
+- ✅ `node test-all.js`: 41/41 unit tests pass
+- ✅ `npx playwright test --project=chromium`: 205 passed, 14 API tests skipped in static server mode
+- ✅ Manual Playwright debug confirmed diff results render correctly for control and interstitial variants
+- ✅ No broken cross-links
+- ✅ Deployed successfully to Vercel
+
+### Why This Matters
+- Fixes a silent, high-severity bug that broke the core schema diff flow for 50% of users in the interstitial A/B test.
+- Aligns every Pro value message with the free-forever pivot, rebuilding trust after user-testing flagged "paywall timing wrong" and "no recurring use case" objections.
+- Makes the final-week $39 offer visible and consistent across every major entry point (homepage, app, pricing, blog, tools, features, GitHub Action).
+
+### Next
+- Monitor interstitial variant analytics (`pro_interstitial_*` events) to see if pre-result Pro messaging lifts Pro purchases.
+- Watch for any remaining stale Pro exclusivity claims site-wide.
+- Continue on blocked items only when human help arrives (npm token, GitHub App credentials, Gumroad Team products, KV setup).
